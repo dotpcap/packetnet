@@ -1,0 +1,94 @@
+Packet.Net is a rewrite of SharpPcap's packet parsers.
+
+SharpPcap's packet parsers have a few shortcomings in their design. To understand
+what these are it is important to know more about SharpPcap's design.
+
+
+SharpPcap's packet parsing
+--------------------------
+SharpPcap considers all packets to be of type 'Packet'. Packet types are subclassed, so
+a UdpPacket is an IpPacket which is an EthernetPacket which is a Packet. This is useful
+because a user can have a 'UdpPacket udp' and can access the source mac address via
+'udp.SourceHwAddress', without having to jump through any hoops.
+
+As packets are received they are classified into their most specific type, first by
+looking at whether they are an EthernetPacket, checking if the EthernetPacket is an IpPacket
+and then if the IpPacket is a Udp or Tcp packet. At this time the most specific packet is created
+by passing in the byte stream, like TcpPacket tcp = new TcpPacket(packetBytes);
+
+SharpPcap performs lazy field parsing. Each packet field is extracted from the byte stream
+when requested. Some caching is performed in the TcpPacket class but in most cases the
+values are re-parsed by reading a number of bytes from a specific offset each time
+the class property is read.
+
+
+Shortcomings of SharpPcap's design
+----------------------------------
+
+Creating packets from values is cumbersome. Because a TcpPacket is an IpPacket which is an
+EthernetPacket, to create a TcpPacket requires somehow knowing how many bytes to allocate for
+an Ethernet header + Ip header (ipv4 or ipv6 needs to be known) + TcpHeader + TcpPayload.
+The current packet constructor methods require that to construct a TcpPacket from values
+that an IpPacket, a tcp packet payload, and source and destination ports be passed in. This
+may confuse users because to create an IpPacket from values one must also pass in an ip packet
+payload, which is actually ignored by the TcpPacket constructor since its own header bytes
+plus payload replace the original ip payload.
+
+
+Shortcomings in SharpPcap's implementation
+------------------------------------------
+
+SharpPcap allows direct access to the header and content bytes of a packet. The Packet class,
+defined in Packet.cs, defines public accessors for retrieving the byte[] of the header and
+packet bytes, byte[] Bytes and byte[] Header. These routines do not take care to make the
+packets valid, ie. if the size of a TcpPacket changes, retrieving the IpPacket bytes does not
+update the IpPacket lengths for the corresponding changes to the TcpPacket size.
+
+
+Design improvements over SharpPcap
+----------------------------------
+
+The inheritance order should be reversed. A user refers to the payload of an EthernetPacket
+to get an IpPacket, and the IpPacket payload to get the TcpPacket. This has the advantage of
+allowing the packet bytes to be distributed among each container such that replacing the contents
+of an IpPacket does not require modifying or resizing the original EthernetPacket's bytes.
+
+(TODO - Not sure on this one, the user still has to pass an optional payload to
+ each value constructor. It seems like a natural way would be to create a IpPacket somewhat
+ like 'new IpPacket((new TcpPacket(a, b, c, d)).Bytes, sourceIpAddress, destinationIpAddress)'.
+ This is only somewhat nicer to look at than
+ 'new TcpPacket(new IpPacket(new EthernetPacket(a, b), c, d, e), e, f, g)'
+
+Eliminating the inheritance model of SharpPcap makes packets easier to construct by value.
+In SharpPcap a TcpPacket required building an EthernetPacket and an IpPacket and passing
+both to a TcpPacket constructor that would discard their payloads and copy their headers
+into a byte[] that was allocated to fit the headers plus the tcp payload. In Packet.Net because
+each packet is separate a user is less confused by having to build both an IpPacket, that
+contains an EthernetPacket, and an EthernetPacket separately.
+
+
+Implementation improvements over SharpPcap
+------------------------------------------
+
+Each Packet's 'byte[] Bytes' get accessor updates their header information based on changes
+to sub packets.
+
+System.Array is used to retrieve bytes from packets, instead of using helper classes.
+The helper classes in SharpPcap don't provide meaningful improvements over the standard
+System.Array methods.
+
+
+Differences from SharpPcap
+--------------------------
+
+Packet 'byte[] Bytes' get accessors will build a byte array by concatenating the containers of each
+sub packet onto the end of their own bytes. This may incur a performance cost over the SharpPcap
+approach of using a single array but it simplifies code where payloads are modified and the
+entire byte array has to be reallocated and copied over.
+
+
+Things kept the same as SharpPcap
+---------------------------------
+
+Lazy field evaluation should be kept. This saves cpu cycles by avoiding fully parsing
+a packet header when only one or two values are requested by the user.

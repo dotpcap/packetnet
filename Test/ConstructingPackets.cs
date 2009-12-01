@@ -5,10 +5,10 @@ namespace Test
 {
     
     
-    public class MyClass
+    public class ConstructingPackets
     {
         
-        public MyClass()
+        public ConstructingPackets()
         {
         }
     }

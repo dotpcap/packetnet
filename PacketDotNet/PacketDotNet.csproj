@@ -9,6 +9,7 @@
     <OutputType>Library</OutputType>
     <AssemblyName>packetnet</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <RootNamespace>Packet.Net</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,6 +34,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="ApplicationPacket.cs" />
+    <Compile Include="DataLinkPacket.cs" />
+    <Compile Include="EthernetPacket.cs" />
+    <Compile Include="EthernetPacketType.cs" />
+    <Compile Include="IpPacket.cs" />
+    <Compile Include="Packet.cs" />
+    <Compile Include="SessionPacket.cs" />
+    <Compile Include="TcpPacket.cs" />
+    <Compile Include="TransportProtocols.cs" />
+    <Compile Include="UdpPacket.cs" />
+    <Compile Include="EthernetFields.cs" />
+    <Compile Include="TransportPacket.cs" />
+    <Compile Include="Utils\ByteArrayAndOffset.cs" />
+    <Compile Include="IPProtocol.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Utils\" />
+  </ItemGroup>
 </Project>

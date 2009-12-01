@@ -1,15 +1,14 @@
-
 using System;
 
 namespace Test
 {
-    
-    
+    [TestFixture]
     public class ConstructingPackets
     {
-        
-        public ConstructingPackets()
+        [Test]
+        public void BuildEthernetPacket()
         {
+            
         }
     }
 }

@@ -14,9 +14,19 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with Packet.Net.  If not, see <http://www.gnu.org/licenses/>.
 */
-﻿namespace Packet.Net
+using System;
+
+namespace Packet.Net.Utils
 {
-    public abstract class SessionPacket : Packet
+    internal class ByteArrayAndOffset
     {
+        public byte[] Bytes { get; set; }
+        public int Offset { get; set; }
+
+        public ByteArrayAndOffset(byte[] Bytes, int Offset)
+        {
+            this.Bytes = Bytes;
+            this.Offset = Offset;
+        }
     }
 }

@@ -1,36 +1,69 @@
+/*
+This file is part of Packet.Net
+
+Packet.Net is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Packet.Net is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with Packet.Net.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/*
+ *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
+ */
+
 ﻿using System;
+using Packet.Net.Utils;
 
 namespace Packet.Net
 {
     public abstract class Packet
     {
-        private byte[] header;
-        private byte[] payload_data;
-        private Packet parent_packet, payload_packet;
+        private ByteArrayAndOffset header;
+        private ByteArrayAndOffset payloadData;
 
-        // A EthernetPacket may be tunneled through a TCP or UDP Packet
+        private Packet parentPacket, payloadPacket;
+
+        private bool hasOwnMemory;
+
+        /// <value>
+        /// Returns true if the packet owns its own byte[] vs.
+        /// if it is using a byte[] that was passed it 
+        /// </value>
+        public bool HasOwnMemory
+        {
+            get { return hasOwnMemory; }
+            set { hasOwnMemory = value; }
+        }
+
         /// <summary>
         /// The packet that is carrying this one
         /// </summary>
         public Packet ParentPacket
         {
-            get { return parent_packet; }
+            get { return parentPacket; }
+            set { parentPacket = value; }
         }
 
-        // I'm not sure if Layer 7 protocols can carry other protocols
         /// <summary>
-        /// Set the Packet that this packet will carry
+        /// Packet that this packet carries
         /// </summary>
         public Packet PayloadPacket
         {
-            get { return payload_packet; }
+            get { return payloadPacket; }
             set
             {
-                if (payload_packet == value)
+                if (payloadPacket == value)
                     throw new InvalidOperationException("A packet cannot have itself as its payload.");
 
-                payload_packet = value;
-                payload_packet.SetParentPacket(this);
+                payloadPacket = value;
+                payloadPacket.ParentPacket = this;
             }
         }
 
@@ -42,12 +75,10 @@ namespace Packet.Net
         /// <summary>
         /// The encapsulated data, this may be data sent by a program, or another protocol
         /// </summary>
-        // The reason that this property is here, is that an Ethernet Packet may be sent by a switch, which usually has no IP address
-        // A router running OSPF won't use TCP or UDP since it's a layer 4 protocol, I don't remember if OSPF updates are broadcasts or not.
         public byte[] PayloadData
         {
-            get { return payload_data; }
-            set { payload_data = value; }
+            get { return payloadData; }
+            set { payloadData = value; }
         }
 
         /// <summary>
@@ -68,18 +99,14 @@ namespace Packet.Net
             return EthernetPacket.Parse(data);
         }
 
-        /// <summary>
-        /// Sets the parent packet
-        /// </summary>
-        /// <param name="packet">The parent packet</param>
-        internal void SetParentPacket(Packet packet)
+        public virtual System.String ToColoredString(bool colored)
         {
-            this.parent_packet = packet;
+            return String.Empty;
         }
 
-        internal void SetPacketHeader(byte[] header)
+        public virtual System.String ToColoredVerboseString(bool colored)
         {
-            this.header = header;
+            return String.Empty;
         }
     }
 }

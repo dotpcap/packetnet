@@ -1,46 +1,92 @@
+/*
+This file is part of Packet.Net
+
+Packet.Net is free software: you can redistribute it and/or modify
+it under the terms of the GNU Lesser General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Packet.Net is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public License
+along with Packet.Net.  If not, see <http://www.gnu.org/licenses/>.
+*/
+/*
+ *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
+ */
 ﻿using System;
 using System.Net.NetworkInformation;
-using Packet.Net.NetworkLayer;
 
 namespace Packet.Net
 {
     public class EthernetPacket : DataLinkPacket
     {
-        private PhysicalAddress source_mac, dest_mac;
-
-        public PhysicalAddress DestinationHwAddress
+        /// <summary> MAC address of the host where the packet originated from.</summary>
+        public virtual PhysicalAddress SourceHwAddress
         {
             get
             {
-                if (this.dest_mac == null)
-                {
-                    byte[] mac = new byte[6];
-                    Array.Copy(this.Header, mac, 6);
-                    this.dest_mac = new PhysicalAddress(mac);
-                }
-                return dest_mac;
+                byte[] hwAddress = new byte[EthernetFields.MacAddressLength];
+                Array.Copy(_bytes, EthernetFields.SourceMacPosition,
+                           hwAddress, 0, hwAddress.Length);
+                return new PhysicalAddress(hwAddress);
             }
             set
             {
-                dest_mac = value;
+                byte[] hwAddress = value.GetAddressBytes();
+                if(hwAddress.Length != EthernetFields.MacAddressLength)
+                {
+                    throw new System.InvalidOperationException("address length " + hwAddress.Length
+                                                               + " not equal to the expected length of "
+                                                               + macAddressLength);
+                }
+
+                Array.Copy(hwAddress, 0, _bytes, EthernetFields_Fields.ETH_SRC_POS,
+                           hwAddress.Length);
             }
         }
 
-        public PhysicalAddress SourceHwAddress
+        /// <summary> MAC address of the host where the packet originated from.</summary>
+        public virtual PhysicalAddress DestinationHwAddress
         {
             get
             {
-                if (this.dest_mac == null)
-                {
-                    byte[] mac = new byte[6];
-                    Array.Copy(this.Header, 6, mac, 0, 6);
-                    this.source_mac = new PhysicalAddress(mac);
-                }
-                return source_mac;
+                byte[] hwAddress = new byte[macAddressLength];
+                Array.Copy(_bytes, EthernetFields_Fields.ETH_DST_POS,
+                           hwAddress, 0, hwAddress.Length);
+                return new PhysicalAddress(hwAddress);
             }
             set
             {
-                source_mac = value;
+                byte[] hwAddress = value.GetAddressBytes();
+                if(hwAddress.Length != macAddressLength)
+                {
+                    throw new System.InvalidOperationException("address length " + hwAddress.Length
+                                                               + " not equal to the expected length of "
+                                                               + macAddressLength);
+                }
+
+                Array.Copy(hwAddress, 0, _bytes, EthernetFields_Fields.ETH_DST_POS,
+                           hwAddress.Length);
+            }
+        }
+
+        /// <value>
+        /// Type of packet that this ethernet packet encapsulates
+        /// </value>
+        public virtual EthernetPacketType EthernetProtocol
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+
+            set
+            {
+                throw new System.NotImplementedException();
             }
         }
 
@@ -52,6 +98,77 @@ namespace Packet.Net
             }
         }
 
+        /// <summary>
+        /// Construct a new ethernet packet from source and destination mac addresses
+        /// </summary>
+        public EthernetPacket(PhysicalAddress SourceHwAddress,
+                              PhysicalAddress DestinationHwAddress,
+                              EthernetPacketType ethernetPacketType,
+                              byte[] EthernetPayload)
+        {
+#if false
+            int ethernetPayloadLength = 0;
+            if(EthernetPayload != null)
+            {
+                ethernetPayloadLength = EthernetPayload.Length;
+            }
+
+            _bytes = new byte[EthernetFields_Fields.ETH_HEADER_LEN + ethernetPayloadLength];
+            _ethernetHeaderLength = EthernetFields_Fields.ETH_HEADER_LEN;
+            _ethPayloadOffset = _ethernetHeaderLength;
+
+            // if we have a payload, copy it into the byte array
+            if(EthernetPayload != null)
+            {
+                Array.Copy(EthernetPayload, 0, _bytes, EthernetFields_Fields.ETH_HEADER_LEN, EthernetPayload.Length);
+            }
+#endif
+
+            // set the instance values
+            this.SourceHwAddress = SourceHwAddress;
+            this.DestinationHwAddress = DestinationHwAddress;
+            this.EthernetProtocol = ethernetPacketType;
+        }
+
+        /// <summary> Convert this ethernet packet to a readable string.</summary>
+        public override System.String ToString()
+        {
+            return ToColoredString(false);
+        }
+
+        /// <summary> Generate string with contents describing this ethernet packet.</summary>
+        /// <param name="colored">whether or not the string should contain ansi
+        /// color escape sequences.
+        /// </param>
+        public override System.String ToColoredString(bool colored)
+        {
+            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
+            buffer.Append('[');
+            if (colored)
+                buffer.Append(Color);
+            buffer.Append("EthernetPacket");
+            if (colored)
+                buffer.Append(AnsiEscapeSequences_Fields.RESET);
+            buffer.Append(": ");
+            buffer.Append(SourceHwAddress + " -> " + DestinationHwAddress);
+            buffer.Append(" proto=" + EthernetProtocol.ToString() + " (0x" + System.Convert.ToString((ushort)EthernetProtocol, 16) + ")");
+            buffer.Append(" l=" + EthernetHeaderLength); // + "," + data.length);
+            buffer.Append(']');
+
+            // append the base output
+            buffer.Append(base.ToColoredString(colored));
+
+            return buffer.ToString();
+        }
+
+        /// <summary> Convert this IP packet to a more verbose string.</summary>
+        public override System.String ToColoredVerboseString(bool colored)
+        {
+            //TODO: just output the colored output for now
+            return ToColoredString(colored);
+        }
+
+#if false
         new internal static Packet Parse(byte[] bytes)
         {
             byte[] header = new byte[14];
@@ -72,5 +189,6 @@ namespace Packet.Net
 
             return eth_packet;
         }
+#endif
     }
 }

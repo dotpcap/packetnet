@@ -14,9 +14,15 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with Packet.Net.  If not, see <http://www.gnu.org/licenses/>.
 */
-﻿namespace Packet.Net
+using System;
+
+namespace Packet.Net
 {
-    public abstract class SessionPacket : Packet
+    public abstract class TransportPacket : Packet
     {
+        
+        public TransportPacket()
+        {
+        }
     }
 }

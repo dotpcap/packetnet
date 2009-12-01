@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketNet", "PacketNet.csproj", "{55ABBA4C-AAF9-4726-A592-0C92436CEC92}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketDotNet", "PacketDotNet\PacketDotNet.csproj", "{55ABBA4C-AAF9-4726-A592-0C92436CEC92}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,6 +16,6 @@ Global
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		version = 0.1
-		StartupItem = PacketNet.csproj
+		StartupItem = PacketDotNet\PacketDotNet.csproj
 	EndGlobalSection
 EndGlobal

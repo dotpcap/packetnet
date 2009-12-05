@@ -20,13 +20,39 @@ namespace Packet.Net.Utils
 {
     internal class ByteArrayAndOffset
     {
-        public byte[] Bytes { get; set; }
-        public int Offset { get; set; }
+        public int Length { get; private set; }
+        public byte[] Bytes { get; private set; }
+        public int Offset { get; private set; }
 
-        public ByteArrayAndOffset(byte[] Bytes, int Offset)
+        public ByteArrayAndOffset(byte[] Bytes, int Offset, int Length)
         {
             this.Bytes = Bytes;
             this.Offset = Offset;
+        }
+
+        public byte[] ActualBytes()
+        {
+            if(NeedsCopyForActualBytes())
+            {
+                var newBytes = new byte[Length];
+                Array.Copy(Bytes, Offset, newBytes, 0, Length);
+                return newBytes;
+            } else
+            {
+                return Bytes;
+            }
+        }
+
+        /// <summary>
+        /// Return true if we don't need to perform a copy to get
+        /// the bytes represented by this class
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.Boolean"/>
+        /// </returns>
+        public bool NeedsCopyForActualBytes()
+        {
+            return ((Offset == 0) && (Length == Bytes.Length));
         }
     }
 }

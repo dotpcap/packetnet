@@ -95,6 +95,7 @@ namespace Packet.Net
         /// <summary> 'Human-readable' IP protocol descriptions.</summary>
         private static System.Collections.Hashtable messages = new System.Collections.Hashtable();
 
+#if false
         /// <summary> Extract the protocol code from packet data. The packet data 
         /// must contain an IP datagram.
         /// The protocol code specifies what kind of information is contained in the 
@@ -125,6 +126,7 @@ namespace Packet.Net
             }
             return packetBytes[lLen + protoOffset];
         }
+#endif
 
 #if false
         public static IPPacket.IPVersions ExtractVersion(int lLen, byte[] packetBytes)

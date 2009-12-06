@@ -41,7 +41,7 @@ namespace Packet.Net.Utils
         /// </returns>
         public byte[] ActualBytes()
         {
-            if(NeedsCopyForActualBytes())
+            if(NeedsCopyForActualBytes)
             {
                 var newBytes = new byte[Length];
                 Array.Copy(Bytes, Offset, newBytes, 0, Length);

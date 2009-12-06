@@ -43,9 +43,9 @@ namespace Packet.Net
 
         static EthernetFields()
         {
-            SourceMacPosition = EthernetFields.MAC_ADDRESS_LENGTH;
-            TypePosition = EthernetFields.MAC_ADDRESS_LENGTH * 2;
-            HeaderLength = EthernetFields.ETH_CODE_POS + EthernetFields.ETH_CODE_LEN;
+            SourceMacPosition = EthernetFields.MacAddressLength;
+            TypePosition = EthernetFields.MacAddressLength * 2;
+            HeaderLength = EthernetFields.TypePosition + EthernetFields.TypeLength;
         }
 
         // size of an ethernet mac address in bytes

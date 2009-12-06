@@ -30,10 +30,24 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\nunit.framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="ConstructingPackets.cs" />
+    <Compile Include="EndianReaderWriterPerformance.cs" />
+    <Compile Include="ArrayCopyBitConverterIpAddressPerformance.cs" />
+    <Compile Include="Rate.cs" />
+    <Compile Include="ByteSetupMethods.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\PacketDotNet\PacketDotNet.csproj">
+      <Project>{55ABBA4C-AAF9-4726-A592-0C92436CEC92}</Project>
+      <Name>PacketDotNet</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

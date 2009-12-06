@@ -190,6 +190,9 @@ namespace Packet.Net
         {
             get
             {
+                // if this, or any sub-packet, has their own memory
+                // then wwe need to reassemble data, header and payload, of this and
+                // all sub packets into a single byte array
                 if(HasOwnMemory)
                 {
                     var ms = new MemoryStream();
@@ -203,9 +206,14 @@ namespace Packet.Net
                     payloadPacketOrData.AppendToMemoryStream(ms);
 
                     return ms.ToArray();
-                } else // fast path, this is the path typically taken
-                       // for un-resized packets and payloads
+                } else
                 {
+                    // fast path, this is the path typically taken
+                    // for un-resized packets and payloads
+                    //
+                    // in the case where the original byte[] used to create this packet and
+                    // all of the sub-packets was not resized or altered in a way that required
+                    // reallocate of memory we can use the original byte array unmodified
                     return header.Bytes;
                 }  
             }

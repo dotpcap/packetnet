@@ -250,12 +250,20 @@ namespace Packet.Net
 
         public virtual System.String ToColoredString(bool colored)
         {
-            return String.Empty;
+            return ToString();
         }
 
         public virtual System.String ToColoredVerboseString(bool colored)
         {
-            return String.Empty;
+            return ToColoredString(colored);
+        }
+
+        public virtual System.String Color
+        {
+            get
+            {
+                return AnsiEscapeSequences.BLACK;
+            }
         }
     }
 }

@@ -49,9 +49,19 @@
     <Compile Include="Utils\ByteArrayAndOffset.cs" />
     <Compile Include="IPProtocol.cs" />
     <Compile Include="Utils\AnsiEscapeSequences.cs" />
+    <Compile Include="UdpFields.cs" />
+    <Compile Include="MiscUtil\IO\EndianBinaryReader.cs" />
+    <Compile Include="MiscUtil\IO\EndianBinaryWriter.cs" />
+    <Compile Include="MiscUtil\Conversion\BigEndianBitConverter.cs" />
+    <Compile Include="MiscUtil\Conversion\DoubleConverter.cs" />
+    <Compile Include="MiscUtil\Conversion\EndianBitConverter.cs" />
+    <Compile Include="MiscUtil\Conversion\Endianness.cs" />
+    <Compile Include="MiscUtil\Conversion\LittleEndianBitConverter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Utils\" />
+    <Folder Include="MiscUtil\" />
+    <Folder Include="MiscUtil\IO\" />
   </ItemGroup>
 </Project>

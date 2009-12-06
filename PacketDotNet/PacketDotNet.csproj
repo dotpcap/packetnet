@@ -48,6 +48,7 @@
     <Compile Include="TransportPacket.cs" />
     <Compile Include="Utils\ByteArrayAndOffset.cs" />
     <Compile Include="IPProtocol.cs" />
+    <Compile Include="Utils\AnsiEscapeSequences.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

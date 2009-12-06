@@ -60,79 +60,82 @@ namespace Packet.Net
             }
         }
 
+        /// <summary>
+        /// Appends to the MemoryStream either the byte[] represented by TheByteArray, or
+        /// if ThePacket is non-null, the Packet.Bytes will be appended to the memory stream
+        /// which will append ThePacket's header and any encapsulated packets it contains
+        /// </summary>
+        /// <param name="ms">
+        /// A <see cref="MemoryStream"/>
+        /// </param>
         public void AppendToMemoryStream(MemoryStream ms)
         {
             if(ThePacket != null)
             {
-                ms.Write(ThePacket.Bytes);
+                var theBytes = ThePacket.Bytes;
+                ms.Write(theBytes, 0, theBytes.Length);
             } else if(TheByteArray != null)
             {
-                ms.Write(TheByteArray.RawBytes());
+                var theBytes = TheByteArray.ActualBytes();
+                ms.Write(theBytes, 0, theBytes.Length);
             }
         }
     }
 
+    /// <summary>
+    /// Base class for all packet types.
+    /// Defines helper methods and accessors for the architecture that underlies how
+    /// packets interact and store their data.
+    /// </summary>
     public abstract class Packet
     {
-        private ByteArrayAndOffset header;
+        internal ByteArrayAndOffset header;
 
-        private PacketOrByteArray payloadPacketOrData;
+        internal PacketOrByteArray payloadPacketOrData;
 
-        private Packet parentPacket;
-
-#if false
-        private ByteArrayAndOffset payloadData;
-        private Packet payloadPacket;
-#endif
-
-#if false
-        private bool hasOwnMemory;
+        internal Packet parentPacket;
 
         /// <value>
-        /// Returns true if the packet owns its own byte[] vs.
-        /// if it is using a byte[] that was passed it 
+        /// Returns true if the same byte[] represents this packet's header byte[]
+        /// and payload byte[], or this packet's header byte[] and that of the payload packet
+        /// and that the offsets are contiguous
         /// </value>
-        public bool HasOwnMemory
-        {
-            get { return hasOwnMemory; }
-            set { hasOwnMemory = value; }
-        }
-#else
-        /// <value>
-        /// Returns true if this packet, and the packets encapsulated inside of it,
-        /// have allocated their own memory vs. are using the byte[] that was passed
-        /// in from the outside.
-        ///
-        /// This works because when we reallocate memory we do so in separate chunks
-        /// for header and payload and this causes ByteArrayAndOffset to indicate
-        /// NeedsCopyForRawBytes to be false
-        /// </value>
-        internal bool HasOwnMemory
+        internal bool SharesMemoryWithSubPackets
         {
             get
             {
-                // if the header doesn't need a copy then it owns its own memory
-                if(!header.NeedsCopyForActualBytes())
+                if(payloadPacketOrData.TheByteArray != null)
+                {
+                    // is the byte array payload the same byte[] and does the offset indicate
+                    // that the bytes are contiguous?
+                    if((header.Bytes == payloadPacketOrData.TheByteArray.Bytes) &&
+                       ((header.Offset + header.Length) == payloadPacketOrData.TheByteArray.Offset))
+                    {
+                        return true;
+                    } else
+                    {
+                        return false;
+                    }
+                } else if(payloadPacketOrData.ThePacket != null)
+                {
+                    // is the byte array payload the same as the payload packet header and does
+                    // the offset indicate that the bytes are contiguous?
+                    if((header.Bytes == payloadPacketOrData.ThePacket.header.Bytes) &&
+                       ((header.Offset + header.Length) == payloadPacketOrData.ThePacket.header.Offset))
+                    {
+                        // and does the sub packet share memory with its sub packets?
+                        return payloadPacketOrData.ThePacket.SharesMemoryWithSubPackets;
+                    } else
+                    {
+                        return false;
+                    }
+                } else // no payload data or packet thus we must share memory with
+                       // our non-existent sub packets
+                {
                     return true;
-
-                // if we have no data or payload and we didn't already own the header bytes
-                // then we must not own the data or payload bytes either
-                if((payloadPacketOrData.TheByteArray == null) &&
-                   (payloadPacketOrData.ThePacket == null))
-                {
-                    return false;
-                }
-
-                if(payloadPacketOrData.ThePacket == null)
-                {
-                    return !payloadPacketOrData.TheByteArray.NeedsCopyForActualBytes();
-                } else
-                {
-                    return payloadPacketOrData.ThePacket.HasOwnMemory;
                 }
             }
         }
-#endif
 
         /// <summary>
         /// The packet that is carrying this one
@@ -159,6 +162,9 @@ namespace Packet.Net
             }
         }
 
+        /// <value>
+        /// Returns a 
+        /// </value>
         public byte[] Header
         {
             get { return this.header.ActualBytes(); }
@@ -185,15 +191,35 @@ namespace Packet.Net
 
         /// <summary>
         /// byte[] containing this packet and its payload
+        /// NOTE: Use 'public virtual ByteArrayAndOffset BytesHighPerformance' for highest performance
         /// </summary>
         public virtual byte[] Bytes
         {
             get
             {
-                // if this, or any sub-packet, has their own memory
-                // then wwe need to reassemble data, header and payload, of this and
-                // all sub packets into a single byte array
-                if(HasOwnMemory)
+                // Retrieve the byte array container
+                var ba = BytesHighPerformance;
+
+                // ActualBytes() will copy bytes if necessary but will avoid a copy in the
+                // case where our offset is zero and the byte[] length matches the
+                // encapsulated Length
+                return ba.ActualBytes();
+            }
+        }
+
+        public virtual ByteArrayAndOffset BytesHighPerformance
+        {
+            get
+            {
+                // if we share memory with all of our sub packets we can take a
+                // higher performance path to retrieve the bytes
+                if(SharesMemoryWithSubPackets)
+                {
+                    // The high performance path that is often taken because it is called on
+                    // packets that have not had their header, or any of their sub packets, resized
+                    var newByteArrayAndOffset = new ByteArrayAndOffset(header.Bytes, header.Offset, header.Bytes.Length);
+                    return newByteArrayAndOffset;
+                } else // need to rebuild things from scratch
                 {
                     var ms = new MemoryStream();
 
@@ -205,16 +231,9 @@ namespace Packet.Net
 
                     payloadPacketOrData.AppendToMemoryStream(ms);
 
-                    return ms.ToArray();
-                } else
-                {
-                    // fast path, this is the path typically taken
-                    // for un-resized packets and payloads
-                    //
-                    // in the case where the original byte[] used to create this packet and
-                    // all of the sub-packets was not resized or altered in a way that required
-                    // reallocate of memory we can use the original byte array unmodified
-                    return header.Bytes;
+                    var newBytes = ms.ToArray();
+
+                    return new ByteArrayAndOffset(newBytes, 0, newBytes.Length);
                 }  
             }
         }

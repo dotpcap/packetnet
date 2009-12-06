@@ -91,9 +91,10 @@ namespace Packet.Net
             byte protocol = header[9];
 
             IpV4Packet ipv4_packet = new IpV4Packet();
-            ipv4_packet.SetPacketHeader(header);
-            ipv4_packet.PayloadData = payload;
-            ipv4_packet.PayloadPacket = (TransportPacket)TransportPacket.Parse((TransportProtocols)protocol, payload);
+            throw new System.NotImplementedException();
+            //ipv4_packet.PacketHeader(header);
+//            ipv4_packet.PayloadData = payload;
+//            ipv4_packet.PayloadPacket = (TransportPacket)TransportPacket.Parse((TransportProtocols)protocol, payload);
 
             return ipv4_packet;
         }

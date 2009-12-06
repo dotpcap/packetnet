@@ -19,6 +19,7 @@ along with Packet.Net.  If not, see <http://www.gnu.org/licenses/>.
  */
 ﻿using System;
 using System.Net.NetworkInformation;
+using Packet.Net.Utils;
 
 namespace Packet.Net
 {
@@ -30,10 +31,11 @@ namespace Packet.Net
             get
             {
                 byte[] hwAddress = new byte[EthernetFields.MacAddressLength];
-                Array.Copy(_bytes, EthernetFields.SourceMacPosition,
+                Array.Copy(header.Bytes, header.Offset + EthernetFields.SourceMacPosition,
                            hwAddress, 0, hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
+
             set
             {
                 byte[] hwAddress = value.GetAddressBytes();
@@ -41,10 +43,10 @@ namespace Packet.Net
                 {
                     throw new System.InvalidOperationException("address length " + hwAddress.Length
                                                                + " not equal to the expected length of "
-                                                               + macAddressLength);
+                                                               + EthernetFields.MacAddressLength);
                 }
 
-                Array.Copy(hwAddress, 0, _bytes, EthernetFields_Fields.ETH_SRC_POS,
+                Array.Copy(hwAddress, 0, header.Bytes, header.Offset + EthernetFields.SourceMacPosition,
                            hwAddress.Length);
             }
         }
@@ -54,22 +56,23 @@ namespace Packet.Net
         {
             get
             {
-                byte[] hwAddress = new byte[macAddressLength];
-                Array.Copy(_bytes, EthernetFields_Fields.ETH_DST_POS,
+                byte[] hwAddress = new byte[EthernetFields.MacAddressLength];
+                Array.Copy(header.Bytes, header.Offset + EthernetFields.DestinationMacPosition,
                            hwAddress, 0, hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
+
             set
             {
                 byte[] hwAddress = value.GetAddressBytes();
-                if(hwAddress.Length != macAddressLength)
+                if(hwAddress.Length != EthernetFields.MacAddressLength)
                 {
                     throw new System.InvalidOperationException("address length " + hwAddress.Length
                                                                + " not equal to the expected length of "
-                                                               + macAddressLength);
+                                                               + EthernetFields.MacAddressLength);
                 }
 
-                Array.Copy(hwAddress, 0, _bytes, EthernetFields_Fields.ETH_DST_POS,
+                Array.Copy(hwAddress, 0, header.Bytes, header.Offset + EthernetFields.DestinationMacPosition,
                            hwAddress.Length);
             }
         }
@@ -136,6 +139,15 @@ namespace Packet.Net
             return ToColoredString(false);
         }
 
+        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public System.String Color
+        {
+            get
+            {
+                return AnsiEscapeSequences.DARK_GRAY;
+            }
+        }
+
         /// <summary> Generate string with contents describing this ethernet packet.</summary>
         /// <param name="colored">whether or not the string should contain ansi
         /// color escape sequences.
@@ -148,11 +160,11 @@ namespace Packet.Net
                 buffer.Append(Color);
             buffer.Append("EthernetPacket");
             if (colored)
-                buffer.Append(AnsiEscapeSequences_Fields.RESET);
+                buffer.Append(AnsiEscapeSequences.RESET);
             buffer.Append(": ");
             buffer.Append(SourceHwAddress + " -> " + DestinationHwAddress);
             buffer.Append(" proto=" + EthernetProtocol.ToString() + " (0x" + System.Convert.ToString((ushort)EthernetProtocol, 16) + ")");
-            buffer.Append(" l=" + EthernetHeaderLength); // + "," + data.length);
+            buffer.Append(" l=" + EthernetFields.HeaderLength); // + "," + data.length);
             buffer.Append(']');
 
             // append the base output

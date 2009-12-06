@@ -18,7 +18,7 @@ using System;
 
 namespace Packet.Net.Utils
 {
-    internal class ByteArrayAndOffset
+    public class ByteArrayAndOffset
     {
         public int Length { get; private set; }
         public byte[] Bytes { get; private set; }
@@ -30,6 +30,15 @@ namespace Packet.Net.Utils
             this.Offset = Offset;
         }
 
+        /// <summary>
+        /// Returns a contiguous byte[] from this container, if necessary, by copying
+        /// the bytes from the current offset into a newly allocated byte[].
+        /// NeedsCopyForActualBytes can be used to determine if the copy is necessary
+        /// 
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.Byte"/>
+        /// </returns>
         public byte[] ActualBytes()
         {
             if(NeedsCopyForActualBytes())
@@ -50,9 +59,12 @@ namespace Packet.Net.Utils
         /// <returns>
         /// A <see cref="System.Boolean"/>
         /// </returns>
-        public bool NeedsCopyForActualBytes()
+        public bool NeedsCopyForActualBytes
         {
-            return ((Offset == 0) && (Length == Bytes.Length));
+            get
+            {
+                return ((Offset == 0) && (Length == Bytes.Length));
+            }
         }
     }
 }

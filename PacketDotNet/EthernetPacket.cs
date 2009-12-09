@@ -20,6 +20,7 @@ along with Packet.Net.  If not, see <http://www.gnu.org/licenses/>.
 ﻿using System;
 using System.Net.NetworkInformation;
 using Packet.Net.Utils;
+using MiscUtil.Conversion;
 
 namespace Packet.Net
 {
@@ -80,24 +81,20 @@ namespace Packet.Net
         /// <value>
         /// Type of packet that this ethernet packet encapsulates
         /// </value>
-        public virtual EthernetPacketType EthernetProtocol
+        public virtual EthernetPacketType Type
         {
             get
             {
-                throw new System.NotImplementedException();
+                return (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
+                                                                          header.Offset + EthernetFields.TypePosition);
             }
 
             set
             {
-                throw new System.NotImplementedException();
-            }
-        }
-
-        public override byte[] Bytes
-        {
-            get 
-            { 
-                throw new NotImplementedException();
+                Int16 val = (Int16)value;
+                EndianBitConverter.Big.CopyBytes(val,
+                                                 header.Bytes,
+                                                 header.Offset + EthernetFields.TypePosition);
             }
         }
 
@@ -106,46 +103,50 @@ namespace Packet.Net
         /// </summary>
         public EthernetPacket(PhysicalAddress SourceHwAddress,
                               PhysicalAddress DestinationHwAddress,
-                              EthernetPacketType ethernetPacketType,
-                              byte[] EthernetPayload)
+                              EthernetPacketType ethernetPacketType)
         {
-#if false
-            int ethernetPayloadLength = 0;
-            if(EthernetPayload != null)
-            {
-                ethernetPayloadLength = EthernetPayload.Length;
-            }
-
-            _bytes = new byte[EthernetFields_Fields.ETH_HEADER_LEN + ethernetPayloadLength];
-            _ethernetHeaderLength = EthernetFields_Fields.ETH_HEADER_LEN;
-            _ethPayloadOffset = _ethernetHeaderLength;
-
-            // if we have a payload, copy it into the byte array
-            if(EthernetPayload != null)
-            {
-                Array.Copy(EthernetPayload, 0, _bytes, EthernetFields_Fields.ETH_HEADER_LEN, EthernetPayload.Length);
-            }
-#endif
+            // allocate memory for this packet
+            int offset = 0;
+            int length = EthernetFields.HeaderLength;
+            var headerBytes = new byte[length];
+            header = new ByteArrayAndOffset(headerBytes, offset, length);
 
             // set the instance values
             this.SourceHwAddress = SourceHwAddress;
             this.DestinationHwAddress = DestinationHwAddress;
-            this.EthernetProtocol = ethernetPacketType;
+            this.Type = ethernetPacketType;
+        }
+
+        /// <summary>
+        /// Create an EthernetPacket from a byte array 
+        /// </summary>
+        /// <param name="bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        public EthernetPacket(byte[] bytes, int offset)
+        {
+            header = new ByteArrayAndOffset(bytes, offset, EthernetFields.HeaderLength);
+
+            //TODO: we need to add more code here to parse the containing packet
+            // and either assign the bytes to payloaddata or payloadpacket
+        }
+
+        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override System.String Color
+        {
+            get
+            {
+                return AnsiEscapeSequences.DARK_GRAY;
+            }
         }
 
         /// <summary> Convert this ethernet packet to a readable string.</summary>
         public override System.String ToString()
         {
             return ToColoredString(false);
-        }
-
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.DARK_GRAY;
-            }
         }
 
         /// <summary> Generate string with contents describing this ethernet packet.</summary>
@@ -163,7 +164,7 @@ namespace Packet.Net
                 buffer.Append(AnsiEscapeSequences.RESET);
             buffer.Append(": ");
             buffer.Append(SourceHwAddress + " -> " + DestinationHwAddress);
-            buffer.Append(" proto=" + EthernetProtocol.ToString() + " (0x" + System.Convert.ToString((ushort)EthernetProtocol, 16) + ")");
+            buffer.Append(" proto=" + Type.ToString() + " (0x" + System.Convert.ToString((ushort)Type, 16) + ")");
             buffer.Append(" l=" + EthernetFields.HeaderLength); // + "," + data.length);
             buffer.Append(']');
 
@@ -179,28 +180,5 @@ namespace Packet.Net
             //TODO: just output the colored output for now
             return ToColoredString(colored);
         }
-
-#if false
-        new internal static Packet Parse(byte[] bytes)
-        {
-            byte[] header = new byte[14];
-            byte[] payload = new byte[bytes.Length - 14];
-
-            Array.Copy(bytes, header, 14);
-            Array.Copy(bytes, 14, payload, 0, payload.Length);
-
-            ushort ether_type = BitConverter.ToUInt16(new byte[] { header[13], header[12] }, 0);
-
-            EthernetPacket eth_packet = new EthernetPacket();
-            eth_packet.SetPacketHeader(header);
-
-            eth_packet.PayloadData = payload;
-
-            // This could be put in a try+catch block because there may be no Network Protocol encapsulated here
-            eth_packet.PayloadPacket = (NetworkingPacket)NetworkingPacket.Parse((NetworkingProtocols)ether_type, payload);
-
-            return eth_packet;
-        }
-#endif
     }
 }

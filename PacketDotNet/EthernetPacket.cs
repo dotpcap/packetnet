@@ -126,7 +126,24 @@ namespace Packet.Net
         /// <param name="offset">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public EthernetPacket(byte[] bytes, int offset)
+        public EthernetPacket(byte[] bytes, int offset) :
+            this(bytes, offset, new Timeval())
+        { }
+
+        /// <summary>
+        /// Create an EthernetPacket from a byte array and a Timeval 
+        /// </summary>
+        /// <param name="bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="timeval">
+        /// A <see cref="Timeval"/>
+        /// </param>
+        public EthernetPacket(byte[] bytes, int offset, Timeval timeval) :
+            base(timeval)
         {
             header = new ByteArrayAndOffset(bytes, offset, EthernetFields.HeaderLength);
 

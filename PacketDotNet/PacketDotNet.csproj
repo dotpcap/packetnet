@@ -57,6 +57,15 @@
     <Compile Include="MiscUtil\Conversion\EndianBitConverter.cs" />
     <Compile Include="MiscUtil\Conversion\Endianness.cs" />
     <Compile Include="MiscUtil\Conversion\LittleEndianBitConverter.cs" />
+    <Compile Include="InternetPacket.cs" />
+    <Compile Include="IPv4Fields.cs" />
+    <Compile Include="IPv4Packet.cs" />
+    <Compile Include="IPv6Fields.cs" />
+    <Compile Include="IPv6Packet.cs" />
+    <Compile Include="IpPort.cs" />
+    <Compile Include="Utils\Timeval.cs" />
+    <Compile Include="Utils\ChecksumUtils.cs" />
+    <Compile Include="TcpFields.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

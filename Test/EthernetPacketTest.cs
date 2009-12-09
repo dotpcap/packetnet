@@ -29,11 +29,6 @@ namespace Test
     [TestFixture]
     public class EthernetPacketTest
     {
-        static EthernetPacketTest()
-        {
-            log4net.Config.BasicConfigurator.Configure();
-        }
-
 #if false
         // tcp
         public void VerifyPacket0(Packet p)

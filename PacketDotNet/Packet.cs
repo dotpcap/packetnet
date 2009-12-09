@@ -80,6 +80,30 @@ namespace Packet.Net
                 ms.Write(theBytes, 0, theBytes.Length);
             }
         }
+
+        public PayloadType Type
+        {
+            get
+            {
+                if(ThePacket != null)
+                {
+                    return PayloadType.Packet;
+                } else if(TheByteArray != null)
+                {
+                    return PayloadType.Bytes;
+                } else
+                {
+                    return PayloadType.None;
+                }
+            }
+        }
+    }
+
+    internal enum PayloadType
+    {
+        Packet,
+        Bytes,
+        None
     }
 
     /// <summary>
@@ -95,6 +119,8 @@ namespace Packet.Net
 
         internal Packet parentPacket;
 
+        internal Timeval timeval;
+
         /// <value>
         /// Returns true if the same byte[] represents this packet's header byte[]
         /// and payload byte[], or this packet's header byte[] and that of the payload packet
@@ -104,8 +130,16 @@ namespace Packet.Net
         {
             get
             {
-                if(payloadPacketOrData.TheByteArray != null)
+                if(payloadPacketOrData == null)
                 {
+                    // no payload packet or data so we must share memory with the
+                    // non-existent payload
+                    return true;
+                }
+
+                switch(payloadPacketOrData.Type)
+                {
+                case PayloadType.Bytes:
                     // is the byte array payload the same byte[] and does the offset indicate
                     // that the bytes are contiguous?
                     if((header.Bytes == payloadPacketOrData.TheByteArray.Bytes) &&
@@ -116,8 +150,7 @@ namespace Packet.Net
                     {
                         return false;
                     }
-                } else if(payloadPacketOrData.ThePacket != null)
-                {
+                case PayloadType.Packet:
                     // is the byte array payload the same as the payload packet header and does
                     // the offset indicate that the bytes are contiguous?
                     if((header.Bytes == payloadPacketOrData.ThePacket.header.Bytes) &&
@@ -129,10 +162,12 @@ namespace Packet.Net
                     {
                         return false;
                     }
-                } else // no payload data or packet thus we must share memory with
-                       // our non-existent sub packets
-                {
+                case PayloadType.None:
+                    // no payload data or packet thus we must share memory with
+                    // our non-existent sub packets
                     return true;
+                default:
+                    throw new System.NotImplementedException();
                 }
             }
         }
@@ -238,6 +273,16 @@ namespace Packet.Net
             }
         }
 
+        public Packet(Timeval timeval)
+        {
+            this.timeval = timeval;
+        }
+
+        public Packet()
+        {
+            this.timeval = new Timeval();
+        }
+
         /// <summary>
         /// Turns an array of bytes into a packet
         /// </summary>
@@ -248,14 +293,50 @@ namespace Packet.Net
             return EthernetPacket.Parse(data);
         }
 
+        /// <summary>
+        /// Returns a ansi colored string. This routine calls
+        /// the ToColoredString() of the payload packet if one
+        /// is present.
+        /// </summary>
+        /// <param name="colored">
+        /// A <see cref="System.Boolean"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public virtual System.String ToColoredString(bool colored)
         {
-            return ToString();
+            if((payloadPacketOrData != null) &&
+               (payloadPacketOrData.Type == PayloadType.Packet))
+            {
+                return payloadPacketOrData.ThePacket.ToColoredString(colored);
+            } else
+            {
+                return String.Empty;
+            }
         }
 
+        /// <summary>
+        /// Returns a verbose ansi colored string. This routine calls
+        /// the ToColoredVerboseString() of the payload packet if one
+        /// is present.
+        /// </summary>
+        /// <param name="colored">
+        /// A <see cref="System.Boolean"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public virtual System.String ToColoredVerboseString(bool colored)
         {
-            return ToColoredString(colored);
+            if((payloadPacketOrData != null) &&
+               (payloadPacketOrData.Type == PayloadType.Packet))
+            {
+                return payloadPacketOrData.ThePacket.ToColoredVerboseString(colored);
+            } else
+            {
+                return String.Empty;
+            }
         }
 
         public virtual System.String Color

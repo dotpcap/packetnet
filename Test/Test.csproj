@@ -38,10 +38,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\SharpPcap.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\PacketDotNet\Lib\log4net.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
@@ -50,6 +46,8 @@
     <Compile Include="ByteSetupMethods.cs" />
     <Compile Include="BitConversionPerformance.cs" />
     <Compile Include="EthernetPacketTest.cs" />
+    <Compile Include="UdpTest.cs" />
+    <Compile Include="ChecksumUtilsTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

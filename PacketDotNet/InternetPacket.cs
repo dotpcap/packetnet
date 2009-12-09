@@ -14,20 +14,22 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with Packet.Net.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using Packet.Net.Utils;
+/*
+ * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
+ */
 
-﻿namespace Packet.Net
+using System;
+
+namespace Packet.Net
 {
     /// <summary>
-    /// Represents a Layer 2 protocol.
+    /// Internet packets include IPv4, IPv6, IGMP etc, see
+    /// http://en.wikipedia.org/wiki/Internet_Layer
     /// </summary>
-    public abstract class DataLinkPacket : Packet
+    public class InternetPacket : Packet
     {
-        public DataLinkPacket()
-        {}
-
-        public DataLinkPacket(Timeval timeval) : base(timeval)
-        {}
+        public InternetPacket()
+        {
+        }
     }
 }

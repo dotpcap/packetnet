@@ -34,7 +34,7 @@ namespace Packet.Net
         /// <summary> Position of the header length.</summary>
         public readonly static int HeaderLengthPosition;
         /// <summary> Position of the header checksum length.</summary>
-        public readonly static int ChecksumLengthPosition;
+        public readonly static int ChecksumPosition;
         /// <summary> Length of a UDP header in bytes.</summary>
         public readonly static int HeaderLength; // == 8
 
@@ -42,8 +42,8 @@ namespace Packet.Net
         {
             DestinationPortPosition = PortLength;
             HeaderLengthPosition = DestinationPortPosition + PortLength;
-            ChecksumLengthPosition = HeaderLengthPosition + HeaderLengthLength;
-            HeaderLength = ChecksumLengthPosition + ChecksumLength;
+            ChecksumPosition = HeaderLengthPosition + HeaderLengthLength;
+            HeaderLength = ChecksumPosition + ChecksumLength;
         }
     }
 }

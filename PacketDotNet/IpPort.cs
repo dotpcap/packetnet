@@ -14,20 +14,37 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with Packet.Net.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
-using Packet.Net.Utils;
+/*
+ * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
+ */
 
-﻿namespace Packet.Net
+namespace Packet.Net
 {
-    /// <summary>
-    /// Represents a Layer 2 protocol.
-    /// </summary>
-    public abstract class DataLinkPacket : Packet
+    /// <summary> Code constants for ip ports. </summary>
+    public enum IpPort : ushort
     {
-        public DataLinkPacket()
-        {}
-
-        public DataLinkPacket(Timeval timeval) : base(timeval)
-        {}
+        Echo = 7,
+        DayTime = 13,
+        FtpData = 20,
+        Ftp = 21,
+        Ssh = 22,
+        Telnet = 23,
+        Smtp = 25,
+        Time = 37,
+        Whois = 63,
+        Tftp = 69,
+        Gopher = 70,
+        Finger = 79,
+        Http = 80,
+        Www = 80,
+        Kerberos = 88,
+        Pop3 = 110,
+        Ident = 113,
+        Auth = 113,
+        Sftp = 115,
+        Ntp = 123,
+        Imap = 143,
+        Snmp = 161,
+        PrivilegedPortLimit = 1024
     }
 }

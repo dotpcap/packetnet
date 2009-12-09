@@ -20,11 +20,12 @@ using System.Net;
 
 namespace Packet.Net
 {
-    //TODO: what layer is this at?
-    public abstract class IpPacket : Packet
+    /// <summary>
+    /// Base class for IPv4 and IPv6 packets that exports the common
+    /// functionality that both of these classes has in common
+    /// </summary>
+    public abstract class IpPacket : InternetPacket
     {
-        protected IPAddress source_ip, dest_ip;
-
         public abstract IPAddress DestinationAddress
         {
             get;
@@ -36,67 +37,46 @@ namespace Packet.Net
             get;
             set;
         }
-    }
 
-    public class IpV4Packet : IpPacket
-    {
-        public override byte[] Bytes
+        /// <value>
+        /// The IP version, 4 for IPv4, 6 for IPv6 etc 
+        /// </value>
+        public abstract int Version
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
 
-        public override IPAddress DestinationAddress
+        /// <summary>
+        /// Adds a pseudo ip header to a given packet. Used to generate the full
+        /// byte array required to generate a udp or tcp checksum.
+        /// </summary>
+        /// <param name="origHeader">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Byte"/>
+        /// </returns>
+        internal abstract byte[] AttachPseudoIPHeader(byte[] origHeader);
+
+        public static System.Net.IPAddress GetIPAddress(System.Net.Sockets.AddressFamily ipType, int fieldOffset, byte[] bytes)
         {
-            get
+            byte[] address;
+            if(ipType == System.Net.Sockets.AddressFamily.InterNetwork) // ipv4
             {
-                if (this.dest_ip == null)
-                {
-                    this.DestinationAddress = new IPAddress(new byte[] { this.Header[16], this.Header[17], this.Header[18], this.Header[19] });
-                }
-                return this.dest_ip;
-            }
-            set
+                address = new byte[IPv4Fields.AddressLength];
+            } else if(ipType == System.Net.Sockets.AddressFamily.InterNetworkV6)
             {
-                this.dest_ip = value;
-            }
-        }
-
-        public override IPAddress SourceAddress
-        {
-            get
+                address = new byte[IPv6Fields.AddressLength];
+            } else
             {
-                if (this.source_ip == null)
-                {
-                    this.source_ip = new IPAddress(new byte[] { this.Header[12], this.Header[13], this.Header[14], this.Header[15] }); // Commented these out so I don't forget them
-                }
-                return this.source_ip;
+                throw new System.InvalidOperationException("ipType " + ipType + " unknown");
             }
-            set
-            {
-                this.source_ip = value;
-            }
-        }
 
-        new internal static Packet Parse(byte[] bytes)
-        {
-            byte[] header = new byte[20];
-            byte[] payload = new byte[bytes.Length - 20];
+            System.Array.Copy(bytes, fieldOffset,
+                              address, 0, address.Length);
 
-            Array.Copy(bytes, header, 20);
-            Array.Copy(bytes, 20, payload, 0, payload.Length);
-
-            byte protocol = header[9];
-
-            IpV4Packet ipv4_packet = new IpV4Packet();
-            throw new System.NotImplementedException();
-            //ipv4_packet.PacketHeader(header);
-//            ipv4_packet.PayloadData = payload;
-//            ipv4_packet.PayloadPacket = (TransportPacket)TransportPacket.Parse((TransportProtocols)protocol, payload);
-
-            return ipv4_packet;
+            return new System.Net.IPAddress(address);
         }
     }
 }

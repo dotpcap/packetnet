@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Packet.Net
+namespace PacketDotNet
 {
     public class IPProtocol
     {

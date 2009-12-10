@@ -5,7 +5,7 @@
 // *************************************************************************
 using System;
 
-namespace Packet.Net.Utils
+namespace PacketDotNet.Utils
 {   
     /// <summary> String constants for color console output.
     /// <p>

@@ -22,7 +22,7 @@ using System;
 using System.Net.NetworkInformation;
 using NUnit.Framework;
 using SharpPcap;
-using Packet.Net;
+using PacketDotNet;
 
 namespace Test
 {

@@ -77,12 +77,12 @@
     <Compile Include="IGMPv2Packet.cs" />
     <Compile Include="InternetLinkLayerPacket.cs" />
     <Compile Include="IGMPv2Fields.cs" />
-    <Compile Include="LinkLayers.cs" />
     <Compile Include="LinuxSLLPacket.cs" />
     <Compile Include="LinuxSLLFields.cs" />
     <Compile Include="LinuxSLLType.cs" />
     <Compile Include="IPProtocolType.cs" />
     <Compile Include="IpVersion.cs" />
+    <Compile Include="LinkLayers.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

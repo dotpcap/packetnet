@@ -495,6 +495,7 @@ namespace PacketDotNet
             header = new ByteArrayAndOffset(Bytes, Offset, Bytes.Length - Offset);
 
             // update the header length with the correct value
+            // NOTE: we take care to convert from 32bit words into bytes
             header.Length = HeaderLength * 4;
 
             // parse the payload

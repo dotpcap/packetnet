@@ -156,7 +156,7 @@ namespace PacketDotNet
         {
             get
             {
-                return AnsiEscapeSequences.DARK_GRAY;
+                return AnsiEscapeSequences.DarkGray;
             }
         }
 
@@ -178,7 +178,7 @@ namespace PacketDotNet
                 buffer.Append(Color);
             buffer.Append("EthernetPacket");
             if (colored)
-                buffer.Append(AnsiEscapeSequences.RESET);
+                buffer.Append(AnsiEscapeSequences.Reset);
             buffer.Append(": ");
             buffer.Append(SourceHwAddress + " -> " + DestinationHwAddress);
             buffer.Append(" proto=" + Type.ToString() + " (0x" + System.Convert.ToString((ushort)Type, 16) + ")");

@@ -3,6 +3,10 @@
 // Distributed under the Mozilla Public License                            *
 // http://www.mozilla.org/NPL/MPL-1.1.txt                                *
 // *************************************************************************
+/*
+ * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
+ */
+
 using System;
 
 namespace PacketDotNet.Utils
@@ -21,71 +25,71 @@ namespace PacketDotNet.Utils
     /// </author>
     public class AnsiEscapeSequences
     {
-        public readonly static String ESCAPE_BEGIN;
-        public readonly static String ESCAPE_END = "m";
-        public readonly static String RESET;
-        public readonly static String BOLD;
-        public readonly static String UNDERLINE;
-        public readonly static String INVERSE;
-        public readonly static String BLACK;
-        public readonly static String BLUE;
-        public readonly static String GREEN;
-        public readonly static String CYAN;
-        public readonly static String RED;
-        public readonly static String PURPLE;
-        public readonly static String BROWN;
-        public readonly static String LIGHT_GRAY;
-        public readonly static String DARK_GRAY;
-        public readonly static String LIGHT_BLUE;
-        public readonly static String LIGHT_GREEN;
-        public readonly static String LIGHT_CYAN;
-        public readonly static String LIGHT_RED;
+        public readonly static String EscapeBegin;
+        public readonly static String EscapeEnd = "m";
+        public readonly static String Reset;
+        public readonly static String Bold;
+        public readonly static String Underline;
+        public readonly static String Inverse;
+        public readonly static String Black;
+        public readonly static String Blue;
+        public readonly static String Green;
+        public readonly static String Cyan;
+        public readonly static String Red;
+        public readonly static String Purple;
+        public readonly static String Brown;
+        public readonly static String LightGray;
+        public readonly static String DarkGray;
+        public readonly static String LightBlue;
+        public readonly static String LightGreen;
+        public readonly static String LightCyan;
+        public readonly static String LightRed;
         public readonly static String LIGHT_PURPLE;
-        public readonly static String YELLOW;
-        public readonly static String WHITE;
-        public readonly static String RED_BACKGROUND;
-        public readonly static String GREEN_BACKGROUND;
-        public readonly static String YELLOW_BACKGROUND;
-        public readonly static String BLUE_BACKGROUND;
-        public readonly static String PURPLE_BACKGROUND;
-        public readonly static String CYAN_BACKGROUND;
-        public readonly static String LIGHT_GRAY_BACKGROUND;
+        public readonly static String Yellow;
+        public readonly static String White;
+        public readonly static String RedBackground;
+        public readonly static String GreenBackground;
+        public readonly static String YellowBackground;
+        public readonly static String BlueBackground;
+        public readonly static String PurpleBackground;
+        public readonly static String CyanBackground;
+        public readonly static String LightGrayBackground;
 
         private static string BuildValue(string ColorCode)
         {
-            return ESCAPE_BEGIN + ColorCode + ESCAPE_END;
+            return EscapeBegin + ColorCode + EscapeEnd;
         }
 
         static AnsiEscapeSequences()
         {
-            ESCAPE_BEGIN = "" + (char) 27 + "[";
-            RESET = BuildValue("0");
-            BOLD = BuildValue("0;1");
-            UNDERLINE = BuildValue("0;4");
-            INVERSE = BuildValue("0;7");
-            BLACK = BuildValue("0;30");
-            BLUE = BuildValue("0;34");
-            GREEN = BuildValue("0;32");
-            CYAN = BuildValue("0;36");
-            RED = BuildValue("0;31");
-            PURPLE = BuildValue("0;35");
-            BROWN = BuildValue("0;33");
-            LIGHT_GRAY = BuildValue("0;37");
-            DARK_GRAY = BuildValue("1;30");
-            LIGHT_BLUE = BuildValue("1;34");
-            LIGHT_GREEN = BuildValue("1;32");
-            LIGHT_CYAN = BuildValue("1;36");
-            LIGHT_RED = BuildValue("1;31");
+            EscapeBegin = "" + (char) 27 + "[";
+            Reset = BuildValue("0");
+            Bold = BuildValue("0;1");
+            Underline = BuildValue("0;4");
+            Inverse = BuildValue("0;7");
+            Black = BuildValue("0;30");
+            Blue = BuildValue("0;34");
+            Green = BuildValue("0;32");
+            Cyan = BuildValue("0;36");
+            Red = BuildValue("0;31");
+            Purple = BuildValue("0;35");
+            Brown = BuildValue("0;33");
+            LightGray = BuildValue("0;37");
+            DarkGray = BuildValue("1;30");
+            LightBlue = BuildValue("1;34");
+            LightGreen = BuildValue("1;32");
+            LightCyan = BuildValue("1;36");
+            LightRed = BuildValue("1;31");
             LIGHT_PURPLE = BuildValue("1;35");
-            YELLOW = BuildValue("1;33");
-            WHITE = BuildValue("1;37");
-            RED_BACKGROUND = BuildValue("0;41");
-            GREEN_BACKGROUND = BuildValue("0;42");
-            YELLOW_BACKGROUND = BuildValue("0;43");
-            BLUE_BACKGROUND = BuildValue("0;44");
-            PURPLE_BACKGROUND = BuildValue("0;45");
-            CYAN_BACKGROUND = BuildValue("0;46");
-            LIGHT_GRAY_BACKGROUND = BuildValue("0;47");
+            Yellow = BuildValue("1;33");
+            White = BuildValue("1;37");
+            RedBackground = BuildValue("0;41");
+            GreenBackground = BuildValue("0;42");
+            YellowBackground = BuildValue("0;43");
+            BlueBackground = BuildValue("0;44");
+            PurpleBackground = BuildValue("0;45");
+            CyanBackground = BuildValue("0;46");
+            LightGrayBackground = BuildValue("0;47");
         }
     }
 }

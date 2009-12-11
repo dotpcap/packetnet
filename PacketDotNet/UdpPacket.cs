@@ -106,7 +106,7 @@ namespace PacketDotNet
         {
             get
             {
-                return AnsiEscapeSequences.LIGHT_GREEN;
+                return AnsiEscapeSequences.LightGreen;
             }
         }
 
@@ -182,7 +182,7 @@ namespace PacketDotNet
                 buffer.Append(Color);
             buffer.Append("UDPPacket");
             if (colored)
-                buffer.Append(AnsiEscapeSequences.RESET);
+                buffer.Append(AnsiEscapeSequences.Reset);
             buffer.Append(": ");
             if(Enum.IsDefined(typeof(IpPort), SourcePort))
             {

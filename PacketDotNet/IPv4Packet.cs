@@ -253,7 +253,7 @@ namespace PacketDotNet
         {
             get
             {
-                return AnsiEscapeSequences.WHITE;
+                return AnsiEscapeSequences.White;
             }
 
         }
@@ -502,7 +502,7 @@ namespace PacketDotNet
                 buffer.Append(Color);
             buffer.Append("IPv4Packet");
             if (colored)
-                buffer.Append(AnsiEscapeSequences.RESET);
+                buffer.Append(AnsiEscapeSequences.Reset);
             buffer.Append(": ");
             buffer.Append(SourceAddress + " -> " + DestinationAddress);
             buffer.Append(" proto=" + Protocol);
@@ -525,7 +525,7 @@ namespace PacketDotNet
                 buffer.Append(Color);
             buffer.Append("IPv4Packet");
             if (colored)
-                buffer.Append(AnsiEscapeSequences.RESET);
+                buffer.Append(AnsiEscapeSequences.Reset);
             buffer.Append(": ");
             buffer.Append("version=" + Version + ", ");
             buffer.Append("hlen=" + HeaderLength + ", ");

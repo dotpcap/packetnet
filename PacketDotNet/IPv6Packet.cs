@@ -342,7 +342,7 @@ namespace PacketDotNet
                 buffer.Append(Color);
             buffer.Append("IPv6Packet");
             if (colored)
-                buffer.Append(AnsiEscapeSequences.RESET);
+                buffer.Append(AnsiEscapeSequences.Reset);
             buffer.Append(": ");
             buffer.Append(SourceAddress + " -> " + DestinationAddress);
             buffer.Append(" next header=" + NextHeader);
@@ -372,7 +372,7 @@ namespace PacketDotNet
         {
             get
             {
-                return AnsiEscapeSequences.WHITE;
+                return AnsiEscapeSequences.White;
             }
         }
     }

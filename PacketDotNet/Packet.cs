@@ -343,7 +343,7 @@ namespace PacketDotNet
         {
             get
             {
-                return AnsiEscapeSequences.BLACK;
+                return AnsiEscapeSequences.Black;
             }
         }
     }

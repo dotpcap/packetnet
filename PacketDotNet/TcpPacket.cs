@@ -396,7 +396,7 @@ namespace PacketDotNet
         {
             get
             {
-                return AnsiEscapeSequences.YELLOW;
+                return AnsiEscapeSequences.Yellow;
             }
         }
 
@@ -611,7 +611,7 @@ namespace PacketDotNet
                 buffer.Append(Color);
             buffer.Append("TCPPacket");
             if (colored)
-                buffer.Append(AnsiEscapeSequences.RESET);
+                buffer.Append(AnsiEscapeSequences.Reset);
             buffer.Append(": ");
 #if false
             buffer.Append(SourceAddress);
@@ -669,7 +669,7 @@ namespace PacketDotNet
                 buffer.Append(Color);
             buffer.Append("TCPPacket");
             if (colored)
-                buffer.Append(AnsiEscapeSequences.RESET);
+                buffer.Append(AnsiEscapeSequences.Reset);
             buffer.Append(": ");
             buffer.Append("sport=" + SourcePort + ", ");
             buffer.Append("dport=" + DestinationPort + ", ");

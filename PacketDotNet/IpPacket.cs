@@ -17,6 +17,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 ﻿using System;
 using System.Net;
+using PacketDotNet.Utils;
 
 namespace PacketDotNet
 {
@@ -39,12 +40,54 @@ namespace PacketDotNet
         }
 
         /// <value>
-        /// The IP version, 4 for IPv4, 6 for IPv6 etc 
+        /// The IP version
         /// </value>
-        public abstract int Version
+        public abstract IpVersion Version
         {
             get;
             set;
+        }
+
+        /// <value>
+        /// The protocol of the ip packet's payload
+        /// Named 'Protocol' in IPv4
+        /// Named 'NextHeader' in IPv6'
+        /// </value>
+        public abstract IPProtocolType Protocol
+        {
+            get;
+            set;
+        }
+
+        /// <value>
+        /// The protocol of the ip packet's payload
+        /// Included along side Protocol for user convienence
+        /// </value>
+        public IPProtocolType NextHeader
+        {
+            get { return Protocol; }
+            set { Protocol = value; }
+        }
+
+        /// <value>
+        /// The number of hops remaining before this packet is discarded
+        /// Named 'TimeToLive' in IPv4
+        /// Named 'HopLimit' in IPv6
+        /// </value>
+        public abstract int TimeToLive
+        {
+            get;
+            set;
+        }
+
+        /// <value>
+        /// The number of hops remaining for this packet
+        /// Included along side of TimeToLive for user convienence
+        /// </value>
+        public int HopLimit
+        {
+            get { return TimeToLive; }
+            set { TimeToLive = value; }
         }
 
         /// <summary>
@@ -77,6 +120,56 @@ namespace PacketDotNet
                               address, 0, address.Length);
 
             return new System.Net.IPAddress(address);
+        }
+
+        /// <summary>
+        /// IpPacket constructor 
+        /// </summary>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        public IpPacket(PosixTimeval Timeval) : base(Timeval)
+        {}
+
+        /// <summary>
+        /// Called by IPv4 and IPv6 packets to parse their packet payload 
+        /// </summary>
+        /// <param name="Header">
+        /// A <see cref="ByteArrayAndOffset"/>
+        /// </param>
+        /// <param name="ProtocolType">
+        /// A <see cref="IPProtocolType"/>
+        /// </param>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="PacketOrByteArray"/>
+        /// </returns>
+        internal static PacketOrByteArray ParseEncapsulatedBytes(ByteArrayAndOffset Header,
+                                               IPProtocolType ProtocolType,
+                                               PosixTimeval Timeval)
+        {
+            // slice off the payload
+            var payload = Header.EncapsulatedBytes();
+
+            var payloadPacketOrData = new PacketOrByteArray();
+
+            switch(ProtocolType)
+            {
+            case IPProtocolType.TCP:
+                payloadPacketOrData.ThePacket = new TcpPacket(payload.Bytes, payload.Offset, Timeval);
+                break;
+            case IPProtocolType.UDP:
+                payloadPacketOrData.ThePacket = new UdpPacket(payload.Bytes, payload.Offset, Timeval);
+                break;
+            /// NOTE: new payload parsing entries go here
+            default:
+                payloadPacketOrData.TheByteArray = payload;
+                break;
+            }
+
+            return payloadPacketOrData;
         }
     }
 }

@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AssemblyName>packetnet</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
-    <RootNamespace>Packet.Net</RootNamespace>
+    <RootNamespace>PacketDotNet</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -20,6 +20,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <GenerateDocumentation>true</GenerateDocumentation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -28,6 +29,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <GenerateDocumentation>true</GenerateDocumentation>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -63,9 +65,24 @@
     <Compile Include="IPv6Fields.cs" />
     <Compile Include="IPv6Packet.cs" />
     <Compile Include="IpPort.cs" />
-    <Compile Include="Utils\Timeval.cs" />
+    <Compile Include="Utils\PosixTimeval.cs" />
     <Compile Include="Utils\ChecksumUtils.cs" />
     <Compile Include="TcpFields.cs" />
+    <Compile Include="ARPFields.cs" />
+    <Compile Include="ARPPacket.cs" />
+    <Compile Include="ICMPFields.cs" />
+    <Compile Include="ICMPTypeCode.cs" />
+    <Compile Include="ICMPPacket.cs" />
+    <Compile Include="IGMPMessageType.cs" />
+    <Compile Include="IGMPv2Packet.cs" />
+    <Compile Include="InternetLinkLayerPacket.cs" />
+    <Compile Include="IGMPv2Fields.cs" />
+    <Compile Include="LinkLayers.cs" />
+    <Compile Include="LinuxSLLPacket.cs" />
+    <Compile Include="LinuxSLLFields.cs" />
+    <Compile Include="LinuxSLLType.cs" />
+    <Compile Include="IPProtocolType.cs" />
+    <Compile Include="IpVersion.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

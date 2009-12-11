@@ -6,10 +6,8 @@ using SharpPcap.Packets;
 
 namespace Test
 {
-    
     public class UdpTest
-    {
-       
+    {       
         public static void Run(string[] args)
         {
             int lLen = EthernetFields_Fields.ETH_HEADER_LEN;      

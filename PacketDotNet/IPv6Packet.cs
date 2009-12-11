@@ -57,20 +57,22 @@ namespace PacketDotNet
         /// <summary>
         /// The version field of the IPv6 Packet.
         /// </summary>
-        public override int Version
+        public override IpVersion Version
         {
             get
             {
-                return ((VersionTrafficClassFlowLabel >> 28) & 0xF);
+                return (IpVersion)((VersionTrafficClassFlowLabel >> 28) & 0xF);
             }
 
             set
             {
+                var theValue = (Int32)value;
+
                 // read the existing value
                 var field = (UInt32)VersionTrafficClassFlowLabel;
 
                 // mask the new field into place
-                field = (UInt32)((field & 0x0FFFFFFF) | ((value << 28) & 0xF0000000));
+                field = (UInt32)((field & 0x0FFFFFFF) | ((theValue << 28) & 0xF0000000));
 
                 // write the updated value back
                 VersionTrafficClassFlowLabel = (int)field;
@@ -145,15 +147,15 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// The next header field of the IPv6 Packet.
+        /// Identifies the protocol encapsulated by this packet
         /// 
         /// Replaces IPv4's 'protocol' field, has compatible values
         /// </summary>
-        public virtual IPProtocol.IPProtocolType NextHeader
+        public virtual IPProtocolType NextHeader
         {
             get
             {
-                return (IPProtocol.IPProtocolType)(header.Bytes[header.Offset + IPv6Fields.NextHeaderPosition]);
+                return (IPProtocolType)(header.Bytes[header.Offset + IPv6Fields.NextHeaderPosition]);
             }
 
             set
@@ -161,6 +163,16 @@ namespace PacketDotNet
                 header.Bytes[header.Offset + IPv6Fields.NextHeaderPosition] = (byte)value;
             }
         }
+
+        /// <value>
+        /// The protocol of the packet encapsulated in this ip packet
+        /// </value>
+        public override IPProtocolType Protocol
+        {
+            get { return NextHeader; }
+            set { NextHeader = value; }
+        }
+
 
         /// <summary>
         /// The hop limit field of the IPv6 Packet.
@@ -179,6 +191,14 @@ namespace PacketDotNet
             {
                 header.Bytes[header.Offset + IPv6Fields.HopLimitPosition] = (byte)value;
             }
+        }
+
+        /// <value>
+        /// Helper alias for 'HopLimit'
+        /// </value>
+        public override int TimeToLive {
+            get { return HopLimit; }
+            set { HopLimit = value; }
         }
 
         /// <summary>
@@ -223,48 +243,42 @@ namespace PacketDotNet
             }
         }
 
-#if false
         /// <summary>
-        /// Returns the IP data.
+        /// byte[]/int offset constructor, timeval defaults to the current time
         /// </summary>
-        virtual public byte[] IPData
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        public IPv6Packet(byte[] Bytes, int Offset) :
+            this(Bytes, Offset, new PosixTimeval())
+        { }
+
+        /// <summary>
+        /// byte[]/int offset/PosixTimeval constructor
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        public IPv6Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
+            base(Timeval)
         {
-            get
-            {
-                return PacketEncoding.extractData(_ethPayloadOffset,
-                                                  IPv6Fields_Fields.IPv6_HEADER_LEN,
-                                                  Bytes,
-                                                  IPPayloadLength);
-            }
-            set
-            {
-                // retrieve the current payload length
-                int currentIPPayloadLength = IPPayloadLength;
+            // slice off the header
+            header = new ByteArrayAndOffset(Bytes, Offset, EthernetFields.HeaderLength);
 
-                // compute the difference between the current and the
-                // requested payload lengths
-                int changeInLength = value.Length - currentIPPayloadLength;
-
-                // create a new buffer for the entire packet
-                byte[] newByteArray = new Byte[Bytes.Length + changeInLength];
-
-                // copy the old contents over to the new buffer, less
-                // the payload
-                Array.Copy(Bytes, newByteArray, Bytes.Length - currentIPPayloadLength);
-
-                // copy the new payload into place
-                Array.Copy(value, 0,
-                           newByteArray, Bytes.Length - currentIPPayloadLength,
-                           value.Length);
-
-                // update the Bytes to the new byte array
-                Bytes = newByteArray;
-
-                // update the IP length
-                IPPayloadLength = value.Length;
-            }
+            // parse the payload
+            payloadPacketOrData = IpPacket.ParseEncapsulatedBytes(header,
+                                                                  NextHeader,
+                                                                  Timeval);
         }
-#endif
 
         // Prepend to the given byte[] origHeader the portion of the IPv6 header used for
         // generating an tcp checksum

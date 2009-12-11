@@ -91,9 +91,40 @@ namespace PacketDotNet
         {
             get
             {
-                return AnsiEscapeSequences.BROWN;
+                return AnsiEscapeSequences.Brown;
             }
 
+        }
+
+        /// <summary>
+        /// byte[]/int Offset constructor
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        public IGMPv2Packet(byte[] Bytes, int Offset) :
+            this(Bytes, Offset, new PosixTimeval())
+        { }
+
+        /// <summary>
+        /// byte[]/int offset/PosixTimeval constructor
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        public IGMPv2Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
+            base(Timeval)
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary> Convert this IGMP packet to a readable string.</summary>
@@ -114,7 +145,7 @@ namespace PacketDotNet
                 buffer.Append(Color);
             buffer.Append("IGMPPacket");
             if (colored)
-                buffer.Append(AnsiEscapeSequences.RESET);
+                buffer.Append(AnsiEscapeSequences.Reset);
             buffer.Append(": ");
             buffer.Append(Type);
             buffer.Append(", ");

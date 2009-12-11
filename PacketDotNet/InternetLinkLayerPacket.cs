@@ -18,13 +18,18 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
+using System;
 using PacketDotNet.Utils;
 
-﻿namespace PacketDotNet
+namespace PacketDotNet
 {
-    public abstract class SessionPacket : Packet
+    /// <summary>
+    /// Internet Link layer packet
+    /// See http://en.wikipedia.org/wiki/Link_Layer
+    /// </summary>
+    public class InternetLinkLayerPacket : Packet
     {
-        public SessionPacket(PosixTimeval Timeval) : base(Timeval)
+        public InternetLinkLayerPacket(PosixTimeval timeval) : base(timeval)
         {}
     }
 }

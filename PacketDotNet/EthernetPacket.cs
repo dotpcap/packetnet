@@ -24,7 +24,10 @@ using MiscUtil.Conversion;
 
 namespace PacketDotNet
 {
-    public class EthernetPacket : DataLinkPacket
+    /// <summary>
+    /// See http://en.wikipedia.org/wiki/Ethernet#Ethernet_frame_types_and_the_EtherType_field 
+    /// </summary>
+    public class EthernetPacket : InternetLinkLayerPacket
     {
         /// <summary> MAC address of the host where the packet originated from.</summary>
         public virtual PhysicalAddress SourceHwAddress
@@ -104,6 +107,7 @@ namespace PacketDotNet
         public EthernetPacket(PhysicalAddress SourceHwAddress,
                               PhysicalAddress DestinationHwAddress,
                               EthernetPacketType ethernetPacketType)
+            : base(new PosixTimeval())
         {
             // allocate memory for this packet
             int offset = 0;
@@ -120,35 +124,78 @@ namespace PacketDotNet
         /// <summary>
         /// Create an EthernetPacket from a byte array 
         /// </summary>
-        /// <param name="bytes">
+        /// <param name="Bytes">
         /// A <see cref="System.Byte"/>
         /// </param>
-        /// <param name="offset">
+        /// <param name="Offset">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public EthernetPacket(byte[] bytes, int offset) :
-            this(bytes, offset, new Timeval())
+        public EthernetPacket(byte[] Bytes, int Offset) :
+            this(Bytes, Offset, new PosixTimeval())
         { }
 
         /// <summary>
         /// Create an EthernetPacket from a byte array and a Timeval 
         /// </summary>
-        /// <param name="bytes">
+        /// <param name="Bytes">
         /// A <see cref="System.Byte"/>
         /// </param>
-        /// <param name="offset">
+        /// <param name="Offset">
         /// A <see cref="System.Int32"/>
         /// </param>
-        /// <param name="timeval">
-        /// A <see cref="Timeval"/>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
         /// </param>
-        public EthernetPacket(byte[] bytes, int offset, Timeval timeval) :
-            base(timeval)
+        public EthernetPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
+            base(Timeval)
         {
-            header = new ByteArrayAndOffset(bytes, offset, EthernetFields.HeaderLength);
+            // slice off the header portion
+            header = new ByteArrayAndOffset(Bytes, Offset, EthernetFields.HeaderLength);
 
-            //TODO: we need to add more code here to parse the containing packet
-            // and either assign the bytes to payloaddata or payloadpacket
+            // parse the encapsulated bytes
+            payloadPacketOrData = ParseEncapsulatedBytes(header, Type, Timeval);
+        }
+
+        /// <summary>
+        /// Used by the EthernetPacket constructor. Located here because the LinuxSLL constructor
+        /// also needs to perform the same operations as it contains an ethernet type
+        /// </summary>
+        /// <param name="Header">
+        /// A <see cref="ByteArrayAndOffset"/>
+        /// </param>
+        /// <param name="Type">
+        /// A <see cref="EthernetPacketType"/>
+        /// </param>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="PacketOrByteArray"/>
+        /// </returns>
+        internal static PacketOrByteArray ParseEncapsulatedBytes(ByteArrayAndOffset Header,
+                                                                 EthernetPacketType Type,
+                                                                 PosixTimeval Timeval)
+        {
+            // slice off the payload
+            var payload = Header.EncapsulatedBytes();
+
+            var payloadPacketOrData = new PacketOrByteArray();
+
+            // parse the encapsulated bytes
+            switch(Type)
+            {
+            case EthernetPacketType.IpV4:
+                payloadPacketOrData.ThePacket = new IPv4Packet(payload.Bytes, payload.Offset, Timeval);
+                break;
+            case EthernetPacketType.IpV6:
+                payloadPacketOrData.ThePacket = new IPv6Packet(payload.Bytes, payload.Offset, Timeval);
+                break;
+            default: // consider the sub-packet to be a byte array
+                payloadPacketOrData.TheByteArray = payload;
+                break;
+            }
+
+            return payloadPacketOrData;
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>

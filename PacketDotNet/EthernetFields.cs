@@ -24,7 +24,7 @@ namespace PacketDotNet
     /// <summary> Ethernet protocol field encoding information.
     /// 
     /// </summary>
-    public struct EthernetFields
+    public class EthernetFields
     {
         /// <summary> Width of the ethernet type code in bytes.</summary>
         public readonly static int TypeLength = 2;
@@ -48,7 +48,9 @@ namespace PacketDotNet
             HeaderLength = EthernetFields.TypePosition + EthernetFields.TypeLength;
         }
 
-        // size of an ethernet mac address in bytes
+        /// <summary>
+        /// size of an ethernet mac address in bytes
+        /// </summary>
         public readonly static int MacAddressLength = 6;
     }
 }

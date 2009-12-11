@@ -20,7 +20,14 @@ namespace PacketDotNet.Utils
 {
     public class ByteArrayAndOffset
     {
-        public int Length { get; private set; }
+        //FIXME: we need to set the length in ipv4packet
+        // because we don't know the encapsulated payload size
+        // until we read the HeaderLength field and we can't
+        // read that field until we've setup the header field with
+        // a ByteArrayAndOffset, which we default to the remaining
+        // bytes in the byte[]. Think about this issue to see if
+        // there is a better way
+        public int Length { get; internal set; }
         public byte[] Bytes { get; private set; }
         public int Offset { get; private set; }
 
@@ -28,6 +35,7 @@ namespace PacketDotNet.Utils
         {
             this.Bytes = Bytes;
             this.Offset = Offset;
+            this.Length = Length;
         }
 
         /// <summary>
@@ -65,6 +73,31 @@ namespace PacketDotNet.Utils
             {
                 return ((Offset == 0) && (Length == Bytes.Length));
             }
+        }
+
+        /// <summary>
+        /// Helper method that returns the segment immediately following
+        /// this instance, useful for processing where the parent
+        /// wants to pass the next segment to a sub class for processing
+        /// </summary>
+        /// <returns>
+        /// A <see cref="ByteArrayAndOffset"/>
+        /// </returns>
+        public ByteArrayAndOffset EncapsulatedBytes()
+        {
+            int startingOffset = Offset + Length; // start at the end of the current segment
+            return new ByteArrayAndOffset(Bytes, startingOffset, Bytes.Length - startingOffset);
+        }
+
+        /// <summary>
+        /// Format the class information as a string
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
+        public override string ToString ()
+        {
+            return string.Format("[ByteArrayAndOffset: Length={0}, Bytes={1}, Offset={2}, NeedsCopyForActualBytes={3}]", Length, Bytes, Offset, NeedsCopyForActualBytes);
         }
     }
 }

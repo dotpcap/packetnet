@@ -95,12 +95,43 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// byte[]/int offset constructor
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        public ICMPPacket(byte[] Bytes, int Offset) :
+            this(Bytes, Offset, new PosixTimeval())
+        {}
+
+        /// <summary>
+        /// byte[]/int Offset/PosixTimeval constructor
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        public ICMPPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
+            base(Timeval)
+        {
+            throw new System.NotImplementedException();
+        }
+
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         override public System.String Color
         {
             get
             {
-                return AnsiEscapeSequences.LIGHT_BLUE;
+                return AnsiEscapeSequences.LightBlue;
             }
         }
 

@@ -90,16 +90,16 @@ namespace PacketDotNet
 
         static IPv4Fields()
         {
-            DifferentiatedServicesPosition = IPv4Fields.VersionAndHeaderLengthPosition + IPv4Fields.VersionAndHeaderLengthLength;
-            TotalLengthPosition = IPv4Fields.DifferentiatedServicesPosition + IPv4Fields.DifferentiatedServicesLength;
-            IdPosition = IPv4Fields.TotalLengthPosition + IPv4Fields.TotalLengthLength;
-            FragmentOffsetAndFlagsPosition = IPv4Fields.IdPosition + IPv4Fields.IdLength;
-            TtlPosition = IPv4Fields.FragmentOffsetAndFlagsPosition + IPv4Fields.FragmentOffsetAndFlagsLength;
-            ProtocolPosition = IPv4Fields.TtlPosition + IPv4Fields.TtlLength;
-            ChecksumPosition = IPv4Fields.ProtocolPosition + IPv4Fields.ProtocolLength;
-            SourcePosition = IPv4Fields.ChecksumPosition + IPv4Fields.ChecksumLength;
-            DestinationPosition = IPv4Fields.SourcePosition + IPv4Fields.AddressLength;
-            HeaderLength = IPv4Fields.DestinationPosition + IPv4Fields.AddressLength;
+            DifferentiatedServicesPosition = VersionAndHeaderLengthPosition + VersionAndHeaderLengthLength;
+            TotalLengthPosition = DifferentiatedServicesPosition + DifferentiatedServicesLength;
+            IdPosition = TotalLengthPosition + TotalLengthLength;
+            FragmentOffsetAndFlagsPosition = IdPosition + IdLength;
+            TtlPosition = FragmentOffsetAndFlagsPosition + FragmentOffsetAndFlagsLength;
+            ProtocolPosition = TtlPosition + TtlLength;
+            ChecksumPosition = ProtocolPosition + ProtocolLength;
+            SourcePosition = ChecksumPosition + ChecksumLength;
+            DestinationPosition = SourcePosition + AddressLength;
+            HeaderLength = DestinationPosition + AddressLength;
         }
     }
 }

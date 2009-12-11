@@ -25,7 +25,13 @@ namespace PacketDotNet.Utils
     /// </author>
     public class AnsiEscapeSequences
     {
+        /// <summary>
+        /// Delimits the start of an ansi color sequence, the color code goes after this
+        /// </summary>
         public readonly static String EscapeBegin;
+        /// <summary>
+        /// Delimits the stop of the ansi color sequence, the color code comes before this
+        /// </summary>
         public readonly static String EscapeEnd = "m";
         public readonly static String Reset;
         public readonly static String Bold;
@@ -44,7 +50,7 @@ namespace PacketDotNet.Utils
         public readonly static String LightGreen;
         public readonly static String LightCyan;
         public readonly static String LightRed;
-        public readonly static String LIGHT_PURPLE;
+        public readonly static String LightPurple;
         public readonly static String Yellow;
         public readonly static String White;
         public readonly static String RedBackground;
@@ -80,7 +86,7 @@ namespace PacketDotNet.Utils
             LightGreen = BuildValue("1;32");
             LightCyan = BuildValue("1;36");
             LightRed = BuildValue("1;31");
-            LIGHT_PURPLE = BuildValue("1;35");
+            LightPurple = BuildValue("1;35");
             Yellow = BuildValue("1;33");
             White = BuildValue("1;37");
             RedBackground = BuildValue("0;41");

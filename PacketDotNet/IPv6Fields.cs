@@ -36,7 +36,7 @@ namespace PacketDotNet
         public readonly static int PayloadLengthLength = 2;
 
         /// <summary>
-        /// The next header field length.
+        /// The next header field length, identifies protocol encapsulated by the packet
         /// </summary>
         public readonly static int NextHeaderLength = 1;
 
@@ -91,12 +91,12 @@ namespace PacketDotNet
         /// </summary>
         static IPv6Fields( )
         {
-            PayloadLengthPosition = IPv6Fields.VersionTrafficClassFlowLabelPosition + IPv6Fields.VersionTrafficClassFlowLabelLength;
-            NextHeaderPosition = IPv6Fields.PayloadLengthPosition + IPv6Fields.PayloadLengthLength;
-            HopLimitPosition = IPv6Fields.NextHeaderPosition + IPv6Fields.NextHeaderLength;
-            SourceAddressPosition = IPv6Fields.HopLimitPosition + IPv6Fields.HopLimitLength;
-            DestinationAddressPosition = IPv6Fields.SourceAddressPosition + IPv6Fields.AddressLength;
-            HeaderLength = IPv6Fields.DestinationAddressPosition + IPv6Fields.AddressLength;
+            PayloadLengthPosition = VersionTrafficClassFlowLabelPosition + VersionTrafficClassFlowLabelLength;
+            NextHeaderPosition = PayloadLengthPosition + PayloadLengthLength;
+            HopLimitPosition = NextHeaderPosition + NextHeaderLength;
+            SourceAddressPosition = HopLimitPosition + HopLimitLength;
+            DestinationAddressPosition = SourceAddressPosition + AddressLength;
+            HeaderLength = DestinationAddressPosition + AddressLength;
         }
     }
 }

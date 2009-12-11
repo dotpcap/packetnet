@@ -23,6 +23,10 @@ using MiscUtil.Conversion;
 
 namespace PacketDotNet
 {
+    /// <summary>
+    /// User datagram protocol
+    /// See http://en.wikipedia.org/wiki/Udp
+    /// </summary>
     public class UdpPacket : TransportPacket
     {
         /// <summary> Fetch the port number on the source host.</summary>
@@ -70,10 +74,8 @@ namespace PacketDotNet
                                                       header.Offset + UdpFields.HeaderLengthPosition);
             }
 
-            /// <value>
-            /// Internal because it is updated based on the payload when
-            /// its bytes are retrieved
-            /// </value>
+            // Internal because it is updated based on the payload when
+            // its bytes are retrieved
             internal set
             {
                 var val = (Int16)value;
@@ -121,6 +123,37 @@ namespace PacketDotNet
             {
                 UDPChecksum = value;
             }
+        }
+
+        /// <summary>
+        /// byte[]/int offset constructor, timeval defaults to the current time
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        public UdpPacket(byte[] Bytes, int Offset) :
+            this(Bytes, Offset, new PosixTimeval())
+        { }
+
+        /// <summary>
+        /// byte[]/int offset/PosixTimeval constructor
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        public UdpPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
+            base(Timeval)
+        {
+            throw new System.NotImplementedException();
         }
 
         /// <summary>

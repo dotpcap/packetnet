@@ -25,7 +25,7 @@ namespace PacketDotNet
     /// TcpPacket
     /// See: http://en.wikipedia.org/wiki/Transmission_Control_Protocol
     /// </summary>
-    public abstract class TcpPacket : Packet
+    public class TcpPacket : Packet
     {
         public const int HeaderMinimumLength = 20; // 20 bytes is the smallest tcp header
 
@@ -99,7 +99,7 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Fetch the TCP data offset in 32bit words.</summary>
+        /// <summary> The size of the tcp header in 32bit words </summary>
         virtual public int DataOffset
         {
             get
@@ -121,27 +121,11 @@ namespace PacketDotNet
             }
         }
 
-#if false
-        /// <summary> Fetches the packet TCP header length.</summary>
-        override public int HeaderLength
-        {
-            get
-            {
-                return TCPHeaderLength;
-            }
-        }
-
-        /// <summary> Fetches the length of the payload data.</summary>
-        virtual public int PayloadDataLength
-        {
-            get
-            {
-                return (IPPayloadLength - TCPHeaderLength);
-            }
-        }
-#endif
-
-        /// <summary> Fetch the window size.</summary>
+        /// <summary>
+        /// The size of the receive window, which specifies the number of
+        /// bytes (beyond the sequence number in the acknowledgment field) that
+        /// the receiver is currently willing to receive.
+        /// </summary>
         virtual public int WindowSize
         {
             get
@@ -159,24 +143,22 @@ namespace PacketDotNet
             }
         }
 
-#if false
-        /// <summary> Fetch the header checksum.</summary>
-        /// <summary> Set the checksum of the TCP header</summary>
-        /// <param name="cs">the checksum value
-        /// </param>
-        virtual public int TCPChecksum
+        virtual public int Checksum
         {
             get
             {
-                return GetTransportLayerChecksum(_ipPayloadOffset + TCPFields_Fields.TCP_CSUM_POS);
+                return EndianBitConverter.Big.ToInt16(header.Bytes,
+                                                      header.Offset + TcpFields.ChecksumPosition);
             }
 
             set
             {
-                base.SetTransportLayerChecksum(value, TCPFields_Fields.TCP_CSUM_POS);
+                var theValue = (Int16)value;
+                EndianBitConverter.Big.CopyBytes(theValue,
+                                                 header.Bytes,
+                                                 header.Offset + TcpFields.ChecksumPosition);
             }
         }
-#endif
 
 #if false
         /// <summary> Check if the TCP packet is valid, checksum-wise.</summary>
@@ -198,19 +180,6 @@ namespace PacketDotNet
         }
 #endif
 
-#if false
-        /// <returns> The TCP packet length in bytes.  This is the size of the
-        /// IP packet minus the size of the IP header.
-        /// </returns>
-        virtual public int TCPPacketByteLength
-        {
-            get
-            {
-                return IPPayloadLength;
-            }
-        }
-#endif
-
         private int AllFlags
         {
             get
@@ -227,29 +196,15 @@ namespace PacketDotNet
         /// <summary> Check the URG flag, flag indicates if the urgent pointer is valid.</summary>
         virtual public bool Urg
         {
-            get
-            {
-                return (AllFlags & TcpFields.TCP_URG_MASK) != 0;
-            }
-
-            set
-            {
-                setFlag(value, TcpFields.TCP_URG_MASK);
-            }
+            get { return (AllFlags & TcpFields.TCP_URG_MASK) != 0; }
+            set { setFlag(value, TcpFields.TCP_URG_MASK); }
         }
 
         /// <summary> Check the ACK flag, flag indicates if the ack number is valid.</summary>
         virtual public bool Ack
         {
-            get
-            {
-                return (AllFlags & TcpFields.TCP_ACK_MASK) != 0;
-            }
-
-            set
-            {
-                setFlag(value, TcpFields.TCP_ACK_MASK);
-            }
+            get { return (AllFlags & TcpFields.TCP_ACK_MASK) != 0; }
+            set { setFlag(value, TcpFields.TCP_ACK_MASK); }
         }
 
         /// <summary> Check the PSH flag, flag indicates the receiver should pass the
@@ -257,15 +212,8 @@ namespace PacketDotNet
         /// </summary>
         virtual public bool Psh
         {
-            get
-            {
-                return (AllFlags & TcpFields.TCP_PSH_MASK) != 0;
-            }
-
-            set
-            {
-                setFlag(value, TcpFields.TCP_PSH_MASK);
-            }
+            get { return (AllFlags & TcpFields.TCP_PSH_MASK) != 0; }
+            set { setFlag(value, TcpFields.TCP_PSH_MASK); }
         }
 
         /// <summary> Check the RST flag, flag indicates the session should be reset between
@@ -273,15 +221,8 @@ namespace PacketDotNet
         /// </summary>
         virtual public bool Rst
         {
-            get
-            {
-                return (AllFlags & TcpFields.TCP_RST_MASK) != 0;
-            }
-
-            set
-            {
-                setFlag(value, TcpFields.TCP_RST_MASK);
-            }
+            get { return (AllFlags & TcpFields.TCP_RST_MASK) != 0; }
+            set { setFlag(value, TcpFields.TCP_RST_MASK); }
         }
 
         /// <summary> Check the SYN flag, flag indicates the sequence numbers should
@@ -290,55 +231,27 @@ namespace PacketDotNet
         /// </summary>
         virtual public bool Syn
         {
-            get
-            {
-                return (AllFlags & TcpFields.TCP_SYN_MASK) != 0;
-            }
-
-            set
-            {
-                setFlag(value, TcpFields.TCP_SYN_MASK);
-            }
+            get { return (AllFlags & TcpFields.TCP_SYN_MASK) != 0; }
+            set { setFlag(value, TcpFields.TCP_SYN_MASK); }
         }
 
         /// <summary> Check the FIN flag, flag indicates the sender is finished sending.</summary>
         virtual public bool Fin
         {
-            get
-            {
-                return (AllFlags & TcpFields.TCP_FIN_MASK) != 0;
-            }
-
-            set
-            {
-                setFlag(value, TcpFields.TCP_FIN_MASK);
-            }
+            get { return (AllFlags & TcpFields.TCP_FIN_MASK) != 0; }
+            set { setFlag(value, TcpFields.TCP_FIN_MASK); }
         }
 
         virtual public bool ECN
         {
-            get
-            {
-                return (AllFlags & TcpFields.TCP_ECN_MASK) != 0;
-            }
-
-            set
-            {
-                setFlag(value, TcpFields.TCP_ECN_MASK);
-            }
+            get { return (AllFlags & TcpFields.TCP_ECN_MASK) != 0; }
+            set { setFlag(value, TcpFields.TCP_ECN_MASK); }
         }
 
         virtual public bool CWR
         {
-            get
-            {
-                return (AllFlags & TcpFields.TCP_CWR_MASK) != 0;
-            }
-
-            set
-            {
-                setFlag(value, TcpFields.TCP_CWR_MASK);
-            }
+            get { return (AllFlags & TcpFields.TCP_CWR_MASK) != 0; }
+            set { setFlag(value, TcpFields.TCP_CWR_MASK); }
         }
 
         private void setFlag(bool on, int MASK)
@@ -348,48 +261,6 @@ namespace PacketDotNet
             else
                 AllFlags = AllFlags & ~MASK;
         }
-
-#if false
-        /// <summary> Fetch the TCP header a byte array.</summary>
-        virtual public byte[] TCPHeader
-        {
-            get
-            {
-                if (_tcpHeaderBytes == null)
-                {
-                    _tcpHeaderBytes = PacketEncoding.extractHeader(_ipPayloadOffset, TCPHeaderLength, Bytes);
-                }
-                return _tcpHeaderBytes;
-            }
-        }
-
-        /// <summary> Fetch the TCP header as a byte array.</summary>
-        override public byte[] Header
-        {
-            get
-            {
-                return TCPHeader;
-            }
-        }
-
-        /// <summary> Fetch the TCP data as a byte array.</summary>
-        virtual public byte[] TCPData
-        {
-            get
-            {
-                if (_tcpDataBytes == null)
-                {
-                    _tcpDataBytes = new byte[PayloadDataLength];
-                    Array.Copy(Bytes, _ipPayloadOffset + TCPHeaderLength, _tcpDataBytes, 0, PayloadDataLength);
-                }
-                return _tcpDataBytes;
-            }
-            set
-            {
-                SetData(value);
-            }
-        }
-#endif
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         override public System.String Color
@@ -406,80 +277,50 @@ namespace PacketDotNet
         /// <summary>
         /// Create a new TCP packet from values
         /// </summary>
-        public TcpPacket(int sourcePort,
-                         int destinationPort)
+        public TcpPacket(int SourcePort,
+                         int DestinationPort) : base(new PosixTimeval())
         {
-#if false
-            int tcpHeaderLength = TCPFields_Fields.TCP_HEADER_LEN;
-            int tcpPayloadLength = (tcpPayload != null) ? tcpPayload.Length : 0;
+            this.SourcePort = SourcePort;
+            this.DestinationPort = DestinationPort;
+        }
 
-            int totalBytesRequired = 0;
-            totalBytesRequired += ipPacket.EthernetHeaderLength;
-            totalBytesRequired += ipPacket.IPHeaderLength;
-            totalBytesRequired += tcpHeaderLength;
-            totalBytesRequired += tcpPayloadLength;
+        /// <summary>
+        /// byte[]/int offset constructor, timeval defaults to the current time
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        public TcpPacket(byte[] Bytes, int Offset) :
+            this(Bytes, Offset, new PosixTimeval())
+        { }
 
-            byte[] newBytes = new byte[totalBytesRequired];
+        /// <summary>
+        /// byte[]/int offset/PosixTimeval constructor
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        public TcpPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
+            base(Timeval)
+        {
+            header = new ByteArrayAndOffset(Bytes, Offset, Bytes.Length - Offset);
+            header.Length = DataOffset * 4;
 
-            // copy the contents of the ip packet in, excluding the ip payload
-            // since this TCPPacket IS the new payload
-            Array.Copy(ipPacket.Bytes, newBytes,
-                       ipPacket.EthernetHeaderLength + ipPacket.IPHeaderLength);
-
-            // update the buffer that this packet is overlayed upon
-            this.Bytes = newBytes;
-
-            // set the port values
-            this.SourcePort = sourcePort;
-            this.DestinationPort = destinationPort;
-
-            // set the TCPHeaderLength
-            this.TCPHeaderLength = tcpHeaderLength;
-
-            // set the ippacket protocol to tcp
-            this.IPProtocol = SharpPcap.Packets.IPProtocol.IPProtocolType.TCP;
-
-            // copy the data payload in, if we were given one
-            if(tcpPayload != null)
-            {
-                TCPData = tcpPayload;
-            }
-#endif
+            //TODO: for now just store the bytes as our payload
+            payloadPacketOrData = new PacketOrByteArray();
+            payloadPacketOrData.TheByteArray = header.EncapsulatedBytes();
         }
 
 #if false
-        /// <summary> Create a new TCP packet.</summary>
-        public TCPPacket(int byteOffsetToEthernetPayload, byte[] bytes)
-            : this(byteOffsetToEthernetPayload, bytes, false)
-        {
-        }
-
-        /// <summary> Create a new TCP packet.</summary>
-        public TCPPacket(int byteOffsetToEthernetPayload, byte[] bytes, bool isEmpty)
-            : base(byteOffsetToEthernetPayload, bytes)
-        {
-        }
-
-        /// <summary> Create a new TCP packet.</summary>
-        public TCPPacket(int byteOffsetToEthernetPayload, byte[] bytes, Timeval tv)
-            : this(byteOffsetToEthernetPayload, bytes)
-        {
-            this._timeval = tv;
-        }
-
-        /// <summary> Fetch the header checksum.</summary>
-        public int Checksum
-        {
-            get
-            {
-                return TCPChecksum;
-            }
-            set
-            {
-                TCPChecksum=value;
-            }
-        }
-
         /// <summary> Computes the TCP checksum, optionally updating the TCP checksum header.
         /// 
         /// </summary>
@@ -613,11 +454,8 @@ namespace PacketDotNet
             if (colored)
                 buffer.Append(AnsiEscapeSequences.Reset);
             buffer.Append(": ");
-#if false
-            buffer.Append(SourceAddress);
-            buffer.Append('.');
-#endif
-            if(Enum.IsDefined(typeof(IpPort), SourcePort))
+            buffer.Append(" SourcePort: ");
+            if(Enum.IsDefined(typeof(IpPort), (ushort)SourcePort))
             {
                 buffer.Append((IpPort)SourcePort);
             } else
@@ -625,17 +463,15 @@ namespace PacketDotNet
                 buffer.Append(SourcePort);
             }
             buffer.Append(" -> ");
-#if false
-            buffer.Append(DestinationAddress);
-            buffer.Append('.');
-#endif
-            if(Enum.IsDefined(typeof(IpPort), DestinationPort))
+            buffer.Append(" DestinationPort: ");
+            if(Enum.IsDefined(typeof(IpPort), (ushort)DestinationPort))
             {
                 buffer.Append((IpPort)DestinationPort);
             } else
             {
                 buffer.Append(DestinationPort);
             }
+
             if (Urg)
                 buffer.Append(" urg[0x" + System.Convert.ToString(UrgentPointer, 16) + "]");
             if (Ack)

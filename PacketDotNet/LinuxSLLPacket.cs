@@ -19,6 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
 using MiscUtil.Conversion;
+using PacketDotNet.Utils;
 
 namespace PacketDotNet
 {
@@ -26,7 +27,7 @@ namespace PacketDotNet
     /// Represents a Linux cooked capture packet, the kinds of packets
     /// received when capturing on an 'any' device
     /// </summary>
-    public class LinuxSLLPacket : LinkLayer
+    public class LinuxSLLPacket : InternetLinkLayerPacket
     {
         /// <value>
         /// Information about the packet direction
@@ -136,6 +137,52 @@ namespace PacketDotNet
                                                  header.Bytes,
                                                  header.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
             }
+        }
+
+        /// <summary>
+        /// Create an LinuxSLLPacket from a byte array 
+        /// </summary>
+        /// <param name="bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        public LinuxSLLPacket(byte[] bytes, int offset) :
+            this(bytes, offset, new PosixTimeval())
+        { }
+
+        /// <summary>
+        /// Create an LinuxSLLPacket from a byte array and a Timeval 
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        public LinuxSLLPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
+            base(Timeval)
+        {
+            header = new ByteArrayAndOffset(Bytes, Offset, EthernetFields.HeaderLength);
+
+            // parse the payload via an EthernetPacket method
+            payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(header,
+                                                                        EthernetProtocolType,
+                                                                        Timeval);
+        }
+
+        public override string ToString ()
+        {
+            return string.Format("[LinuxSLLPacket: Type={0}, ARPHRDValue={1}, LinkLayerAddressLength={2}, LinkLayerHeader={3}, EthernetProtocolType={4}]",
+                                 Type,
+                                 ARPHRDValue,
+                                 LinkLayerAddressLength,
+                                 LinkLayerHeader,
+                                 EthernetProtocolType);
         }
     }
 }

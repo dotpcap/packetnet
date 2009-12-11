@@ -15,16 +15,20 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
+ *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
+using System;
 
-using PacketDotNet.Utils;
-
-﻿namespace PacketDotNet
+namespace PacketDotNet
 {
-    public abstract class SessionPacket : Packet
+    /// <summary> Code constants for internet protocol versions.
+    /// 
+    /// </summary>
+    public enum IpVersion
     {
-        public SessionPacket(PosixTimeval Timeval) : base(Timeval)
-        {}
+        /// <summary> Internet protocol version 4.</summary>
+        IPv4 = 4,
+        /// <summary> Internet protocol version 6.</summary>
+        IPv6 = 6
     }
 }

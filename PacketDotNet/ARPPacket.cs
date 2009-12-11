@@ -27,7 +27,7 @@ namespace PacketDotNet
     /// <summary>
     /// An ARP protocol packet.
     /// </summary>
-    public class ARPPacket : LinkLayer
+    public class ARPPacket : InternetLinkLayerPacket
     {
         /// <value>
         /// Also known as HardwareType
@@ -166,15 +166,6 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.PURPLE;
-            }
-        }
-
         /// <value>
         /// Sender hardware address, usually an ethernet mac address
         /// </value>
@@ -245,6 +236,46 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        override public System.String Color
+        {
+            get
+            {
+                return AnsiEscapeSequences.Purple;
+            }
+        }
+
+        /// <summary>
+        /// byte[]/int Offset constructor
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        public ARPPacket(byte[] Bytes, int Offset) :
+            this(Bytes, Offset, new PosixTimeval())
+        { }
+
+        /// <summary>
+        /// byte[]/int offset/PosixTimeval constructor
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        public ARPPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
+            base(Timeval)
+        {
+            throw new System.NotImplementedException();
+        }
+
         /// <summary> Convert this ARP packet to a readable string.</summary>
         public override System.String ToString()
         {
@@ -263,7 +294,7 @@ namespace PacketDotNet
                 buffer.Append(Color);
             buffer.Append("ARPPacket");
             if (colored)
-                buffer.Append(AnsiEscapeSequences.RESET);
+                buffer.Append(AnsiEscapeSequences.Reset);
             buffer.Append(": ");
             buffer.Append(Operation);
             buffer.Append(' ');

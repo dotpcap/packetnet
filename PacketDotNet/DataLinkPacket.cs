@@ -24,10 +24,13 @@ using PacketDotNet.Utils;
     /// </summary>
     public abstract class DataLinkPacket : Packet
     {
-        public DataLinkPacket()
-        {}
-
-        public DataLinkPacket(Timeval timeval) : base(timeval)
+        /// <summary>
+        /// DataLinkPacket constructor
+        /// </summary>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        public DataLinkPacket(PosixTimeval Timeval) : base(Timeval)
         {}
     }
 }

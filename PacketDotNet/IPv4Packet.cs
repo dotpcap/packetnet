@@ -58,11 +58,11 @@ namespace PacketDotNet
         public static int ipVersion = 4;
 
         /// <summary> Get the IP version code.</summary>
-        public override int Version
+        public override IpVersion Version
         {
             get
             {
-                return (header.Bytes[header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] >> 4) & 0x0F;
+                return (IpVersion)((header.Bytes[header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] >> 4) & 0x0F);
             }
 
             set
@@ -282,7 +282,7 @@ namespace PacketDotNet
             set { DifferentiatedServices = value; }
         }
 
-        /// <summary> Fetch the IP length in bytes.</summary>
+        /// <summary> The entire datagram size including header and data </summary>
         public virtual int TotalLength
         {
             get
@@ -335,12 +335,13 @@ namespace PacketDotNet
         /// 
         /// 8-bit value
         /// </summary>
-        public virtual int TimeToLive
+        public override int TimeToLive
         {
             get
             {
                 return header.Bytes[header.Offset + IPv4Fields.TtlPosition];
             }
+
             set
             {
                 header.Bytes[header.Offset + IPv4Fields.TtlPosition] = (byte)value;
@@ -348,13 +349,13 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the code indicating the type of protocol embedded in the IP</summary>
-        /// <seealso cref="IPProtocol.IPProtocolType">
+        /// <seealso cref="IPProtocolType">
         /// </seealso>
-        public virtual IPProtocol.IPProtocolType Protocol
+        public override IPProtocolType Protocol
         {
             get
             {
-                return (IPProtocol.IPProtocolType)header.Bytes[header.Offset + IPv4Fields.ProtocolPosition];
+                return (IPProtocolType)header.Bytes[header.Offset + IPv4Fields.ProtocolPosition];
             }
 
             set
@@ -484,6 +485,24 @@ namespace PacketDotNet
         }
 #endif
 
+        public IPv4Packet(byte[] Bytes, int Offset) :
+            this(Bytes, Offset, new PosixTimeval())
+        { }
+
+        public IPv4Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
+            base(Timeval)
+        {
+            header = new ByteArrayAndOffset(Bytes, Offset, Bytes.Length - Offset);
+
+            // update the header length with the correct value
+            header.Length = HeaderLength * 4;
+
+            // parse the payload
+            payloadPacketOrData = IpPacket.ParseEncapsulatedBytes(header,
+                                                                  NextHeader,
+                                                                  Timeval);
+        }
+
         /// <summary> Convert this IP packet to a readable string.</summary>
         public override System.String ToString()
         {
@@ -505,7 +524,9 @@ namespace PacketDotNet
                 buffer.Append(AnsiEscapeSequences.Reset);
             buffer.Append(": ");
             buffer.Append(SourceAddress + " -> " + DestinationAddress);
-            buffer.Append(" proto=" + Protocol);
+            buffer.Append(" HeaderLength=" + HeaderLength);
+            buffer.Append(" Protocol=" + Protocol);
+            buffer.Append(" TimeToLive=" + TimeToLive);            
             // FIXME: what would we use for Length?
 //            buffer.Append(" l=" + HeaderLength + "," + Length);
             buffer.Append(']');
@@ -582,14 +603,6 @@ namespace PacketDotNet
             virtual public int ComputedSenderIPChecksum()
             {
                 return Enclosing_Instance.ComputeIPChecksum(false);
-            }
-
-            public IPv4Packet Enclosing_Instance
-            {
-                get
-                {
-                    return enclosingInstance;
-                }
             }
         }       
 #endif

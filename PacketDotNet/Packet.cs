@@ -119,7 +119,12 @@ namespace PacketDotNet
 
         internal Packet parentPacket;
 
-        internal Timeval timeval;
+        internal PosixTimeval timeval;
+
+        public PosixTimeval Timeval
+        {
+            get { return timeval; }
+        }
 
         /// <value>
         /// Returns true if the same byte[] represents this packet's header byte[]
@@ -273,14 +278,9 @@ namespace PacketDotNet
             }
         }
 
-        public Packet(Timeval timeval)
+        public Packet(PosixTimeval timeval)
         {
             this.timeval = timeval;
-        }
-
-        public Packet()
-        {
-            this.timeval = new Timeval();
         }
 
         /// <summary>
@@ -339,11 +339,29 @@ namespace PacketDotNet
             }
         }
 
+        /// <value>
+        /// Color used when generating the text description of a packet
+        /// </value>
         public virtual System.String Color
         {
             get
             {
                 return AnsiEscapeSequences.Black;
+            }
+        }
+
+        public static Packet ParsePacket(LinkLayers LinkLayer,
+                                         PosixTimeval Timeval,
+                                         byte[] PacketData)
+        {
+            switch(LinkLayer)
+            {
+            case LinkLayers.Ethernet:
+                return new EthernetPacket(PacketData, 0, Timeval);
+            case LinkLayers.LinuxSLL:
+                return new LinuxSLLPacket(PacketData, 0, Timeval);
+            default:
+                throw new System.NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");
             }
         }
     }

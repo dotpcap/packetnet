@@ -48,6 +48,8 @@
     <Compile Include="EthernetPacketTest.cs" />
     <Compile Include="UdpTest.cs" />
     <Compile Include="ChecksumUtilsTest.cs" />
+    <Compile Include="ArpPacketTest.cs" />
+    <Compile Include="IPv6PacketTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -19,6 +19,10 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace PacketDotNet
 {
+    /// <summary>
+    /// Defines the lengths and positions of the udp fields within
+    /// a udp packet
+    /// </summary>
     public struct UdpFields
     {
         /// <summary> Length of a UDP port in bytes.</summary>

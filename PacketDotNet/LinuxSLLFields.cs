@@ -21,6 +21,9 @@ using System;
 
 namespace PacketDotNet
 {
+    /// <summary>
+    /// Lengths and offsets to the fields in the LinuxSLL packet
+    /// </summary>
     public class LinuxSLLFields
     {
         public readonly static int PacketTypeLength = 2;

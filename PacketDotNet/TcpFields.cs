@@ -39,6 +39,7 @@ namespace PacketDotNet
 
         /// <summary> Length of a TCP port in bytes.</summary>
         public readonly static int PortLength = 2;
+
         /// <summary> Length of the sequence number in bytes.</summary>
         public readonly static int SequenceNumberLength = 4;
         /// <summary> Length of the acknowledgment number in bytes.</summary>
@@ -53,6 +54,7 @@ namespace PacketDotNet
         public readonly static int ChecksumLength = 2;
         /// <summary> Length of the urgent field in bytes.</summary>
         public readonly static int UrgentPointerLength = 2;
+
         /// <summary> Position of the source port field.</summary>
         public readonly static int SourcePortPosition = 0;
         /// <summary> Position of the destination port field.</summary>
@@ -71,6 +73,7 @@ namespace PacketDotNet
         public readonly static int ChecksumPosition;
         /// <summary> Position of the urgent pointer field.</summary>
         public readonly static int UrgentPointerPosition;
+
         /// <summary> Length in bytes of a TCP header.</summary>
         public readonly static int HeaderLength; // == 20
 

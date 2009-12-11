@@ -22,7 +22,7 @@ using System;
 namespace PacketDotNet.Utils
 {
     /// <summary> POSIX.4 timeval</summary>
-    public class Timeval
+    public class PosixTimeval
     {
         private static readonly System.DateTime epochDateTime = new System.DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
 
@@ -73,13 +73,13 @@ namespace PacketDotNet.Utils
             return dt;
         }
 
-        public Timeval(ulong Seconds, ulong MicroSeconds)
+        public PosixTimeval(ulong Seconds, ulong MicroSeconds)
         {
             this.Seconds = Seconds;
             this.MicroSeconds = MicroSeconds;
         }
 
-        public Timeval()
+        public PosixTimeval()
         {
             ulong seconds;
             ulong microseconds;

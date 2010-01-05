@@ -2,6 +2,9 @@ using System;
 
 namespace Test
 {
+    /// <summary>
+    /// Compute a rate given a start and end DateTime and an event count
+    /// </summary>
     public class Rate
     {
         private TimeSpan Elapsed;
@@ -16,12 +19,23 @@ namespace Test
             this.EventType = EventType;
         }
 
+        /// <value>
+        /// Returns the rate in terms of events per second
+        /// </value>
+        public double RatePerSecond
+        {
+            get
+            {
+                return ((Double)EventCount / (Double)Elapsed.Ticks) * TimeSpan.TicksPerSecond;
+            }
+        }
+
         public override string ToString ()
         {
             return String.Format(" {0,10} {1} at a rate of {2,12} / second ({3} seconds elapsed)",
                                  EventCount,
                                  EventType,
-                                 (((Double)EventCount / (Double)Elapsed.Ticks) * TimeSpan.TicksPerSecond).ToString("n"),
+                                 RatePerSecond.ToString("n"),
                                  Elapsed);
         }
     }

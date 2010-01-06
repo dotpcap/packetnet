@@ -65,7 +65,6 @@
     <Compile Include="IPv6Fields.cs" />
     <Compile Include="IPv6Packet.cs" />
     <Compile Include="IpPort.cs" />
-    <Compile Include="Utils\PosixTimeval.cs" />
     <Compile Include="Utils\ChecksumUtils.cs" />
     <Compile Include="TcpFields.cs" />
     <Compile Include="ARPFields.cs" />
@@ -84,6 +83,7 @@
     <Compile Include="IpVersion.cs" />
     <Compile Include="LinkLayers.cs" />
     <Compile Include="Utils\HexPrinter.cs" />
+    <Compile Include="PosixTimeval.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

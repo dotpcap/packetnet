@@ -19,7 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-namespace PacketDotNet.Utils
+namespace PacketDotNet
 {
     /// <summary> POSIX.4 timeval</summary>
     public class PosixTimeval
@@ -28,12 +28,18 @@ namespace PacketDotNet.Utils
 
         internal long microsecondsPerMillisecond = 1000;
 
+        /// <value>
+        /// Number of seconds in the timeval
+        /// </value>
         virtual public ulong Seconds
         {
             get;
             set;
         }
 
+        /// <value>
+        /// Number of microseconds in the timeval
+        /// </value>
         virtual public ulong MicroSeconds
         {
             get;
@@ -73,12 +79,24 @@ namespace PacketDotNet.Utils
             return dt;
         }
 
+        /// <summary>
+        /// Constructor with Seconds and MicroSeconds fields
+        /// </summary>
+        /// <param name="Seconds">
+        /// A <see cref="System.UInt64"/>
+        /// </param>
+        /// <param name="MicroSeconds">
+        /// A <see cref="System.UInt64"/>
+        /// </param>
         public PosixTimeval(ulong Seconds, ulong MicroSeconds)
         {
             this.Seconds = Seconds;
             this.MicroSeconds = MicroSeconds;
         }
 
+        /// <summary>
+        /// Construct a PosixTimeval using the current UTC time
+        /// </summary>
         public PosixTimeval()
         {
             ulong seconds;
@@ -92,6 +110,12 @@ namespace PacketDotNet.Utils
             this.MicroSeconds = microseconds;
         }
 
+        /// <summary>
+        /// Convert the timeval to a string like 'SECONDS.MICROSECONDSs'
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public override System.String ToString()
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();

@@ -22,6 +22,10 @@ using System;
 
 namespace PacketDotNet
 {
+    /// <summary>
+    /// The types of cooked packets
+    /// See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
+    /// </summary>
     public enum LinuxSLLType
     {
         /// <summary>

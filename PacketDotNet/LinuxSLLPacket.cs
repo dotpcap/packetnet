@@ -26,6 +26,8 @@ namespace PacketDotNet
     /// <summary>
     /// Represents a Linux cooked capture packet, the kinds of packets
     /// received when capturing on an 'any' device
+    ///
+    /// See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
     /// </summary>
     public class LinuxSLLPacket : InternetLinkLayerPacket
     {
@@ -50,14 +52,14 @@ namespace PacketDotNet
         }
 
         /// <value>
-        /// The Linux ARPHRD_ value
+        /// The 
         /// </value>
-        public int ARPHRDValue
+        public int LinkLayerAddressType
         {
             get
             {
                 return EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + LinuxSLLFields.LinuxARPHRDPosition);
+                                                      header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
             }
 
             set
@@ -65,7 +67,7 @@ namespace PacketDotNet
                 var theValue = (Int16)value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  header.Bytes,
-                                                 header.Offset + LinuxSLLFields.LinuxARPHRDPosition);
+                                                 header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
             }
         }
 
@@ -98,13 +100,13 @@ namespace PacketDotNet
         /// <value>
         /// Link layer header bytes, maximum of 8 bytes
         /// </value>
-        public byte[] LinkLayerHeader
+        public byte[] LinkLayerAddress
         {
             get
             {
                 var headerLength = LinkLayerAddressLength;
                 var theHeader = new Byte[headerLength];
-                Array.Copy(header.Bytes, header.Offset + LinuxSLLFields.LinkLayerHeaderPosition,
+                Array.Copy(header.Bytes, header.Offset + LinuxSLLFields.LinkLayerAddressPosition,
                            theHeader, 0,
                            headerLength);
                 return theHeader;
@@ -117,11 +119,14 @@ namespace PacketDotNet
 
                 // copy in the new link layer header bytes
                 Array.Copy(value, 0,
-                           header.Bytes, header.Offset + LinuxSLLFields.LinkLayerHeaderPosition,
+                           header.Bytes, header.Offset + LinuxSLLFields.LinkLayerAddressPosition,
                            value.Length);
             }
         }
 
+        /// <value>
+        /// The encapsulated protocol type
+        /// </value>
         public EthernetPacketType EthernetProtocolType
         {
             get
@@ -175,13 +180,19 @@ namespace PacketDotNet
                                                                         Timeval);
         }
 
+        /// <summary>
+        /// ToString implementation
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public override string ToString ()
         {
-            return string.Format("[LinuxSLLPacket: Type={0}, ARPHRDValue={1}, LinkLayerAddressLength={2}, LinkLayerHeader={3}, EthernetProtocolType={4}]",
+            return string.Format("[LinuxSLLPacket: Type={0}, LinkLayerAddressType={1}, LinkLayerAddressLength={2}, LinkLayerHeader={3}, EthernetProtocolType={4}]",
                                  Type,
-                                 ARPHRDValue,
+                                 LinkLayerAddressType,
                                  LinkLayerAddressLength,
-                                 LinkLayerHeader,
+                                 LinkLayerAddress,
                                  EthernetProtocolType);
         }
     }

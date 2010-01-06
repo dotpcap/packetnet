@@ -83,6 +83,7 @@
     <Compile Include="IPProtocolType.cs" />
     <Compile Include="IpVersion.cs" />
     <Compile Include="LinkLayers.cs" />
+    <Compile Include="Utils\HexPrinter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

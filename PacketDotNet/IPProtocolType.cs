@@ -8,6 +8,9 @@ using System;
 
 namespace PacketDotNet
 {
+    /// <summary>
+    /// The protocol encapsulated inside of the IP packet
+    /// </summary>
     public enum IPProtocolType
     {
         /// <summary> Dummy protocol for TCP. </summary>

@@ -27,6 +27,7 @@ namespace PacketDotNet
     /// </summary>
     public enum ICMPTypeCode : ushort
     {
+#pragma warning disable 1591
         EchoReply = 0x0000,
 
         // Destination Unreachable replies
@@ -42,6 +43,7 @@ namespace PacketDotNet
         NetworkUnreachableForTos = 0x030A,
         HostUnreachableForTos = 0x030B,
         CommunicationAdministrativelyProhibited = 0x030C
+#pragma warning restore 1591
 
         //TODO: continue this list as user requested
     }

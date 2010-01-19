@@ -57,13 +57,36 @@ namespace PacketDotNet.Utils
             return (~OnesSum(bytes, start, len)) & 0xFFFF;
         }
 
+        /// <summary>
+        /// Compute a ones sum of a byte array
+        /// </summary>
+        /// <param name="bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
         public static int OnesSum(byte[] bytes)
         {
             return OnesSum(bytes, 0, bytes.Length);
         }
 
-        // 16 bit sum of all values
-        // http://en.wikipedia.org/wiki/Signed_number_representations#Ones.27_complement
+        /// <summary>
+        /// 16 bit sum of all values
+        /// http://en.wikipedia.org/wiki/Signed_number_representations#Ones.27_complement
+        /// </summary>
+        /// <param name="bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="start">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="len">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
         public static int OnesSum(byte[] bytes, int start, int len)
         {
             MemoryStream memStream = new MemoryStream(bytes, start, len);

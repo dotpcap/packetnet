@@ -25,122 +25,50 @@ using PacketDotNet.Utils;
 namespace PacketDotNet
 {
     /// <summary>
-    /// Encapsulates and ensures that we have either a Packet OR
-    /// a ByteArrayAndOffset, but not both
-    /// </summary>
-    internal class PacketOrByteArray
-    {
-        private ByteArrayAndOffset theByteArray;
-        public ByteArrayAndOffset TheByteArray
-        {
-            get
-            {
-                return theByteArray;
-            }
-
-            set
-            {
-                thePacket = null;
-                theByteArray = value;
-            }
-        }
-
-        private Packet thePacket;
-        public Packet ThePacket
-        {
-            get
-            {
-                return thePacket;
-            }
-
-            set
-            {
-                theByteArray = null;
-                thePacket = value;
-            }
-        }
-
-        /// <summary>
-        /// Appends to the MemoryStream either the byte[] represented by TheByteArray, or
-        /// if ThePacket is non-null, the Packet.Bytes will be appended to the memory stream
-        /// which will append ThePacket's header and any encapsulated packets it contains
-        /// </summary>
-        /// <param name="ms">
-        /// A <see cref="MemoryStream"/>
-        /// </param>
-        public void AppendToMemoryStream(MemoryStream ms)
-        {
-            if(ThePacket != null)
-            {
-                var theBytes = ThePacket.Bytes;
-                ms.Write(theBytes, 0, theBytes.Length);
-            } else if(TheByteArray != null)
-            {
-                var theBytes = TheByteArray.ActualBytes();
-                ms.Write(theBytes, 0, theBytes.Length);
-            }
-        }
-
-        public PayloadType Type
-        {
-            get
-            {
-                if(ThePacket != null)
-                {
-                    return PayloadType.Packet;
-                } else if(TheByteArray != null)
-                {
-                    return PayloadType.Bytes;
-                } else
-                {
-                    return PayloadType.None;
-                }
-            }
-        }
-    }
-
-    internal enum PayloadType
-    {
-        Packet,
-        Bytes,
-        None
-    }
-
-    /// <summary>
     /// Base class for all packet types.
     /// Defines helper methods and accessors for the architecture that underlies how
     /// packets interact and store their data.
     /// </summary>
     public abstract class Packet
     {
+#if DEBUG
+        private static readonly log4net.ILog log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#else
+        private static readonly ILogActive log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#endif
+
         internal ByteArrayAndOffset header;
 
-        internal PacketOrByteArray payloadPacketOrData;
+        internal PacketOrByteArray payloadPacketOrData = new PacketOrByteArray();
 
         internal Packet parentPacket;
 
         internal PosixTimeval timeval;
 
-        public PosixTimeval Timeval
+        /// <value>
+        /// PosixTimeval of this packet, can be the packet arrival time
+        /// or the packet creation time
+        /// </value>
+        public virtual PosixTimeval Timeval
         {
             get { return timeval; }
         }
 
         /// <value>
-        /// Returns true if the same byte[] represents this packet's header byte[]
-        /// and payload byte[], or this packet's header byte[] and that of the payload packet
-        /// and that the offsets are contiguous
+        /// Returns true if we already have a contiguous byte[] in either
+        /// of these conditions:
+        ///
+        /// - This packet's header byte[] and payload byte[] are the same instance
+        /// or
+        /// - This packet's header byte[] and this packet's payload packet
+        /// are the same instance and the offsets indicate that the bytes
+        /// are contiguous
         /// </value>
         internal bool SharesMemoryWithSubPackets
         {
             get
             {
-                if(payloadPacketOrData == null)
-                {
-                    // no payload packet or data so we must share memory with the
-                    // non-existent payload
-                    return true;
-                }
+                log.Debug("");
 
                 switch(payloadPacketOrData.Type)
                 {
@@ -150,9 +78,11 @@ namespace PacketDotNet
                     if((header.Bytes == payloadPacketOrData.TheByteArray.Bytes) &&
                        ((header.Offset + header.Length) == payloadPacketOrData.TheByteArray.Offset))
                     {
+                        log.Debug("PayloadType.Bytes returning true");
                         return true;
                     } else
                     {
+                        log.Debug("PayloadType.Bytes returning false");
                         return false;
                     }
                 case PayloadType.Packet:
@@ -162,14 +92,18 @@ namespace PacketDotNet
                        ((header.Offset + header.Length) == payloadPacketOrData.ThePacket.header.Offset))
                     {
                         // and does the sub packet share memory with its sub packets?
-                        return payloadPacketOrData.ThePacket.SharesMemoryWithSubPackets;
+                        var retval = payloadPacketOrData.ThePacket.SharesMemoryWithSubPackets;
+                        log.DebugFormat("PayloadType.Packet retval {0}", retval);
+                        return retval;
                     } else
                     {
+                        log.Debug("PayloadType.Packet returning false");
                         return false;
                     }
                 case PayloadType.None:
                     // no payload data or packet thus we must share memory with
                     // our non-existent sub packets
+                    log.Debug("PayloadType.None, returning true");
                     return true;
                 default:
                     throw new System.NotImplementedException();
@@ -180,16 +114,26 @@ namespace PacketDotNet
         /// <summary>
         /// The packet that is carrying this one
         /// </summary>
-        public Packet ParentPacket
+        public virtual Packet ParentPacket
         {
             get { return parentPacket; }
             set { parentPacket = value; }
         }
 
+        /// <value>
+        /// Returns a 
+        /// </value>
+        public virtual byte[] Header
+        {
+            get { return this.header.ActualBytes(); }
+        }
+
         /// <summary>
-        /// Packet that this packet carries
+        /// Packet that this packet carries if one is present.
+        /// Note that the packet MAY have a null PayloadPacket but
+        /// a non-null PayloadData
         /// </summary>
-        public Packet PayloadPacket
+        public virtual Packet PayloadPacket
         {
             get { return payloadPacketOrData.ThePacket; }
             set
@@ -202,16 +146,10 @@ namespace PacketDotNet
             }
         }
 
-        /// <value>
-        /// Returns a 
-        /// </value>
-        public byte[] Header
-        {
-            get { return this.header.ActualBytes(); }
-        }
-
         /// <summary>
-        /// The encapsulated data, this may be data sent by a program, or another protocol
+        /// Payload byte[] if one is present.
+        /// Note that the packet MAY have a null PayloadData but a
+        /// non-null PayloadPacket
         /// </summary>
         public byte[] PayloadData
         {
@@ -219,14 +157,22 @@ namespace PacketDotNet
             {
                 if(payloadPacketOrData.TheByteArray == null)
                 {
+                    log.Debug("returning null");
                     return null;
                 } else
                 {
-                    return payloadPacketOrData.TheByteArray.ActualBytes();
+                    var retval = payloadPacketOrData.TheByteArray.ActualBytes();
+                    log.DebugFormat("retval.Length: {0}", retval.Length);
+                    return retval;
                 }
             }
 
-            //set { payloadData = value; }
+            set
+            {
+                log.DebugFormat("value.Length {0}", value.Length);
+
+                payloadPacketOrData.TheByteArray = new ByteArrayAndOffset(value, 0, value.Length);
+            }
         }
 
         /// <summary>
@@ -237,6 +183,8 @@ namespace PacketDotNet
         {
             get
             {
+                log.Debug("");
+
                 // Retrieve the byte array container
                 var ba = BytesHighPerformance;
 
@@ -247,20 +195,33 @@ namespace PacketDotNet
             }
         }
 
+        /// <value>
+        /// The option to return a ByteArrayAndOffset means that this method
+        /// is higher performance as the data can start at an offset other than
+        /// the first byte.
+        /// </value>
         public virtual ByteArrayAndOffset BytesHighPerformance
         {
             get
             {
+                log.Debug("");
+
                 // if we share memory with all of our sub packets we can take a
                 // higher performance path to retrieve the bytes
                 if(SharesMemoryWithSubPackets)
                 {
                     // The high performance path that is often taken because it is called on
                     // packets that have not had their header, or any of their sub packets, resized
-                    var newByteArrayAndOffset = new ByteArrayAndOffset(header.Bytes, header.Offset, header.Bytes.Length);
+                    var newByteArrayAndOffset = new ByteArrayAndOffset(header.Bytes,
+                                                                       header.Offset,
+                                                                       (header.Bytes.Length - header.Offset));
+                    log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}",
+                                    newByteArrayAndOffset.ToString());
                     return newByteArrayAndOffset;
                 } else // need to rebuild things from scratch
                 {
+                    log.Debug("rebuilding the byte array");
+
                     var ms = new MemoryStream();
 
                     // TODO: not sure if this is a performance gain or if
@@ -278,19 +239,55 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Basic Packet constructor
+        /// </summary>
+        /// <param name="timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
         public Packet(PosixTimeval timeval)
         {
             this.timeval = timeval;
         }
 
         /// <summary>
-        /// Turns an array of bytes into a packet
+        /// Turns an array of bytes into an EthernetPacket
         /// </summary>
         /// <param name="data">The packets caught</param>
         /// <returns>An ethernet packet which has references to the higher protocols</returns>
         public static Packet Parse(byte[] data)
         {
             return EthernetPacket.Parse(data);
+        }
+
+        /// <summary>
+        /// Parse bytes into a packet
+        /// </summary>
+        /// <param name="LinkLayer">
+        /// A <see cref="LinkLayers"/>
+        /// </param>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <param name="PacketData">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="Packet"/>
+        /// </returns>
+        public static Packet ParsePacket(LinkLayers LinkLayer,
+                                         PosixTimeval Timeval,
+                                         byte[] PacketData)
+        {
+            switch(LinkLayer)
+            {
+            case LinkLayers.Ethernet:
+                return new EthernetPacket(PacketData, 0, Timeval);
+            case LinkLayers.LinuxSLL:
+                return new LinuxSLLPacket(PacketData, 0, Timeval);
+            default:
+                throw new System.NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");
+            }
         }
 
         /// <summary>
@@ -306,8 +303,7 @@ namespace PacketDotNet
         /// </returns>
         public virtual System.String ToColoredString(bool colored)
         {
-            if((payloadPacketOrData != null) &&
-               (payloadPacketOrData.Type == PayloadType.Packet))
+            if(payloadPacketOrData.Type == PayloadType.Packet)
             {
                 return payloadPacketOrData.ThePacket.ToColoredString(colored);
             } else
@@ -329,8 +325,7 @@ namespace PacketDotNet
         /// </returns>
         public virtual System.String ToColoredVerboseString(bool colored)
         {
-            if((payloadPacketOrData != null) &&
-               (payloadPacketOrData.Type == PayloadType.Packet))
+            if(payloadPacketOrData.Type == PayloadType.Packet)
             {
                 return payloadPacketOrData.ThePacket.ToColoredVerboseString(colored);
             } else
@@ -347,21 +342,6 @@ namespace PacketDotNet
             get
             {
                 return AnsiEscapeSequences.Black;
-            }
-        }
-
-        public static Packet ParsePacket(LinkLayers LinkLayer,
-                                         PosixTimeval Timeval,
-                                         byte[] PacketData)
-        {
-            switch(LinkLayer)
-            {
-            case LinkLayers.Ethernet:
-                return new EthernetPacket(PacketData, 0, Timeval);
-            case LinkLayers.LinuxSLL:
-                return new LinuxSLLPacket(PacketData, 0, Timeval);
-            default:
-                throw new System.NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");
             }
         }
     }

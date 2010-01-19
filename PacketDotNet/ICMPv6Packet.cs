@@ -25,73 +25,70 @@ namespace PacketDotNet
 {
     /// <summary>
     /// An ICMP packet.
-    /// See http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol
+    /// See http://en.wikipedia.org/wiki/ICMPv6
     /// </summary>
     [Serializable]
-    public class ICMPPacket : InternetPacket
+    public class ICMPv6Packet : InternetPacket
     {
-        /// <summary> Fetch the ICMP message type code.</summary>
-        /// <remarks>This could be an enum based on the table at http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol#List_of_permitted_control_messages_.28incomplete_list.29</remarks>
-        virtual public int Type
+#if DEBUG
+        private static readonly log4net.ILog log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#else
+        private static readonly ILogActive log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#endif
+
+        /// <value>
+        /// The Type value
+        /// </value>
+        virtual public ICMPv6Types Type
         {
             get
             {
-                return header.Bytes[header.Offset + ICMPFields.TypePosition];
+                var val = header.Bytes[header.Offset + ICMPv6Fields.TypePosition];
+
+                //TODO: how to handle a mismatch in the mapping? maybe throw here?
+                if(Enum.IsDefined(typeof(ICMPv6Types), val))
+                    return (ICMPv6Types)val;
+                else
+                    throw new System.NotImplementedException("Type of " + val + " is not defined in ICMPv6Types");
             }
 
             set
             {
-                header.Bytes[header.Offset + ICMPFields.TypePosition] = (byte)value;
+                header.Bytes[header.Offset + ICMPv6Fields.TypePosition] = (byte)value;
             }
         }
 
         /// <summary> Fetch the ICMP code </summary>
-        virtual public int Code
+        virtual public byte Code
         {
             get
             {
-                return header.Bytes[header.Offset + ICMPFields.CodePosition];
+                return header.Bytes[header.Offset + ICMPv6Fields.CodePosition];
             }
 
             set
             {
-                header.Bytes[header.Offset + ICMPFields.CodePosition] = (byte)value;
+                header.Bytes[header.Offset + ICMPv6Fields.CodePosition] = (byte)value;
             }
         }
 
         /// <value>
-        /// Return the combined type and code as a value of the ICMPTypeCode enum
-        /// <exception cref="System.NotImplementedException">If ICMPTypeCode has no entry for the given type and code</exception>
+        /// Checksum value
         /// </value>
-        virtual public ICMPTypeCode TypeCode
+        public ushort Checksum
         {
             get
             {
-                var val = EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                         header.Offset + ICMPFields.TypePosition);
-
-                //TODO: how to handle a mismatch in the mapping? maybe throw here?
-                if(Enum.IsDefined(typeof(ICMPTypeCode), val))
-                    return (ICMPTypeCode)val;
-                else
-                    throw new System.NotImplementedException("TypeCode of " + val + " is not defined in ICMPTypeCode");
-            }
-        }
-
-        public int Checksum
-        {
-            get
-            {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + ICMPFields.ChecksumPosition);
+                return EndianBitConverter.Big.ToUInt16(header.Bytes,
+                                                      header.Offset + ICMPv6Fields.ChecksumPosition);
             }
 
             set
             {
-                var theValue = (Int16)value;
+                var theValue = value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  header.Bytes,
-                                                 header.Offset + ICMPFields.ChecksumPosition);
+                                                 header.Offset + ICMPv6Fields.ChecksumPosition);
             }
         }
 
@@ -104,7 +101,7 @@ namespace PacketDotNet
         /// <param name="Offset">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public ICMPPacket(byte[] Bytes, int Offset) :
+        public ICMPv6Packet(byte[] Bytes, int Offset) :
             this(Bytes, Offset, new PosixTimeval())
         {}
 
@@ -120,10 +117,12 @@ namespace PacketDotNet
         /// <param name="Timeval">
         /// A <see cref="PosixTimeval"/>
         /// </param>
-        public ICMPPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
+        public ICMPv6Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
             base(Timeval)
         {
-            throw new System.NotImplementedException();
+            log.Debug("");
+
+            header = new ByteArrayAndOffset(Bytes, Offset, Bytes.Length - Offset);
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
@@ -155,7 +154,8 @@ namespace PacketDotNet
             if (colored)
                 buffer.Append(AnsiEscapeSequences.Reset);
             buffer.Append(": ");
-            buffer.Append(TypeCode);
+            buffer.Append(Type);
+            buffer.Append(Code);
             buffer.Append(", ");
             buffer.Append(" l=" + header.Length);
             buffer.Append(']');

@@ -36,9 +36,21 @@ namespace PacketDotNet
     /// </summary>
     public class IPv6Packet : IpPacket
     {
+#if DEBUG
+        private static readonly log4net.ILog log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#else
+        private static readonly ILogActive log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#endif
+
+        /// <value>
+        /// Minimum number of bytes in an IPv6 header
+        /// </value>
         public const int HeaderMinimumLength = 40;
 
-        public static int ipVersion = 6;
+        /// <value>
+        /// The version of the IP protocol. The '6' in IPv6 indicates the version of the protocol
+        /// </value>
+        public static IpVersion ipVersion = IpVersion.IPv6;
 
         private Int32 VersionTrafficClassFlowLabel
         {
@@ -130,11 +142,11 @@ namespace PacketDotNet
         /// NOTE: Differs from the IPv4 'Total length' field that includes the length of the header as
         ///       payload length is ONLY the size of the payload.
         /// </summary>
-        public int PayloadLength
+        public override ushort PayloadLength
         {
             get
             {
-                return EndianBitConverter.Big.ToInt32(header.Bytes,
+                return EndianBitConverter.Big.ToUInt16(header.Bytes,
                                                       header.Offset + IPv6Fields.PayloadLengthPosition);
             }
 
@@ -146,12 +158,45 @@ namespace PacketDotNet
             }
         }
 
+        /// <value>
+        /// Backwards compatibility property for IPv4.HeaderLength
+        /// NOTE: This field is the number of 32bit words
+        /// </value>
+        public override int HeaderLength
+        {
+            get
+            {
+                return (IPv6Fields.HeaderLength / 4);
+            }
+
+            set
+            {
+                throw new System.NotImplementedException ();
+            }
+        }
+
+        /// <value>
+        /// Backwards compatibility property for IPv4.TotalLength
+        /// </value>
+        public override int TotalLength
+        {
+            get
+            {
+                return PayloadLength + (HeaderLength * 4);
+            }
+
+            set
+            {
+                PayloadLength = (ushort)(value - (HeaderLength * 4));
+            }
+        }
+
         /// <summary>
         /// Identifies the protocol encapsulated by this packet
         /// 
         /// Replaces IPv4's 'protocol' field, has compatible values
         /// </summary>
-        public virtual IPProtocolType NextHeader
+        public override IPProtocolType NextHeader
         {
             get
             {
@@ -173,14 +218,13 @@ namespace PacketDotNet
             set { NextHeader = value; }
         }
 
-
         /// <summary>
         /// The hop limit field of the IPv6 Packet.
         /// NOTE: Replaces the 'time to live' field of IPv4
         /// 
         /// 8-bit value
         /// </summary>
-        public virtual int HopLimit
+        public override int HopLimit
         {
             get
             {
@@ -196,7 +240,8 @@ namespace PacketDotNet
         /// <value>
         /// Helper alias for 'HopLimit'
         /// </value>
-        public override int TimeToLive {
+        public override int TimeToLive
+        {
             get { return HopLimit; }
             set { HopLimit = value; }
         }
@@ -244,6 +289,35 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Create an IPv6 packet from values
+        /// </summary>
+        /// <param name="SourceAddress">
+        /// A <see cref="System.Net.IPAddress"/>
+        /// </param>
+        /// <param name="DestinationAddress">
+        /// A <see cref="System.Net.IPAddress"/>
+        /// </param>
+        public IPv6Packet(System.Net.IPAddress SourceAddress,
+                          System.Net.IPAddress DestinationAddress)
+            : base(new PosixTimeval())
+        {
+            log.Debug("");
+
+            // allocate memory for this packet
+            int offset = 0;
+            int length = IPv6Fields.HeaderLength;
+            var headerBytes = new byte[length];
+            header = new ByteArrayAndOffset(headerBytes, offset, length);
+
+            // set some default values to make this packet valid
+            PayloadLength = 0;
+
+            // set instance values
+            this.SourceAddress = SourceAddress;
+            this.DestinationAddress = DestinationAddress;
+        }
+
+        /// <summary>
         /// byte[]/int offset constructor, timeval defaults to the current time
         /// </summary>
         /// <param name="Bytes">
@@ -254,7 +328,9 @@ namespace PacketDotNet
         /// </param>
         public IPv6Packet(byte[] Bytes, int Offset) :
             this(Bytes, Offset, new PosixTimeval())
-        { }
+        {
+            log.Debug("");
+        }
 
         /// <summary>
         /// byte[]/int offset/PosixTimeval constructor
@@ -271,20 +347,38 @@ namespace PacketDotNet
         public IPv6Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
             base(Timeval)
         {
+            log.DebugFormat("Bytes.Length {0}, Offset {1}",
+                            Bytes.Length,
+                            Offset);
+
             // slice off the header
-            header = new ByteArrayAndOffset(Bytes, Offset, EthernetFields.HeaderLength);
+            header = new ByteArrayAndOffset(Bytes, Offset, IPv6Packet.HeaderMinimumLength);
+
+            // set the actual length, we need to do this because we need to set
+            // header to something valid above before we can retrieve the PayloadLength
+            log.DebugFormat("PayloadLength: {0}", PayloadLength);
+            header.Length = (Bytes.Length - Offset) - PayloadLength;
 
             // parse the payload
             payloadPacketOrData = IpPacket.ParseEncapsulatedBytes(header,
                                                                   NextHeader,
-                                                                  Timeval);
+                                                                  Timeval,
+                                                                  this);
         }
 
-        // Prepend to the given byte[] origHeader the portion of the IPv6 header used for
-        // generating an tcp checksum
-        //
-        // http://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_checksum_using_IPv6
-        // http://tools.ietf.org/html/rfc2460#page-27
+        /// <summary>
+        /// Prepend to the given byte[] origHeader the portion of the IPv6 header used for
+        /// generating an tcp checksum
+        ///
+        /// http://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_checksum_using_IPv6
+        /// http://tools.ietf.org/html/rfc2460#page-27
+        /// </summary>
+        /// <param name="origHeader">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Byte"/>
+        /// </returns>
         internal override byte[] AttachPseudoIPHeader(byte[] origHeader)
         {
             MemoryStream ms = new MemoryStream();
@@ -311,7 +405,7 @@ namespace PacketDotNet
 
             // prefix the pseudoHeader to the header+data
             byte[] pseudoHeader = ms.ToArray();
-            int headerSize = pseudoHeader.Length + origHeader.Length; 
+            int headerSize = pseudoHeader.Length + origHeader.Length;
             bool odd = origHeader.Length % 2 != 0;
             if (odd)
                 headerSize++;
@@ -388,6 +482,30 @@ namespace PacketDotNet
             {
                 return AnsiEscapeSequences.White;
             }
+        }
+
+        /// <summary> Check if the IP packet is valid, checksum-wise.</summary>
+        public override bool ValidIPChecksum
+        {
+            get
+            {
+                // ipv6 packets don't have checksums
+                log.Debug("returning true, ipv6 packets don't have checksums");
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Generate a random packet
+        /// </summary>
+        /// <returns>
+        /// A <see cref="Packet"/>
+        /// </returns>
+        public static IPv6Packet RandomPacket()
+        {
+            var srcAddress = RandomUtils.GetIPAddress(ipVersion);
+            var dstAddress = RandomUtils.GetIPAddress(ipVersion);
+            return new IPv6Packet(srcAddress, dstAddress);
         }
     }
 }

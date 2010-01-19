@@ -19,8 +19,17 @@ using PacketDotNet.Utils;
 
 namespace PacketDotNet
 {
+    /// <summary>
+    /// Transport layer packet
+    /// </summary>
     public abstract class TransportPacket : Packet
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
         public TransportPacket(PosixTimeval Timeval) : base(Timeval)
         {
         }

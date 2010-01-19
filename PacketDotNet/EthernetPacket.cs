@@ -29,6 +29,44 @@ namespace PacketDotNet
     /// </summary>
     public class EthernetPacket : InternetLinkLayerPacket
     {
+#if DEBUG
+        private static readonly log4net.ILog log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#else
+        private static readonly ILogActive log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#endif
+
+        /// <value>
+        /// Payload packet, overridden to set the 'Type' field based on
+        /// the type of packet being used here if the PayloadPacket is being set
+        /// </value>
+        public override Packet PayloadPacket
+        {
+            get
+            {
+                return base.PayloadPacket;
+            }
+
+            set
+            {
+                base.PayloadPacket = value;
+
+                // set Type based on the type of the payload
+                if(value is IPv4Packet)
+                {
+                    Type = EthernetPacketType.IpV4;
+                } else if(value is IPv6Packet)
+                {
+                    Type = EthernetPacketType.IpV6;
+                } else if(value is ARPPacket)
+                {
+                    Type = EthernetPacketType.Arp;
+                } else // NOTE: new types should be inserted here
+                {
+                    Type = EthernetPacketType.None;
+                }
+            }
+        }
+
         /// <summary> MAC address of the host where the packet originated from.</summary>
         public virtual PhysicalAddress SourceHwAddress
         {
@@ -109,6 +147,8 @@ namespace PacketDotNet
                               EthernetPacketType ethernetPacketType)
             : base(new PosixTimeval())
         {
+            log.Debug("");
+
             // allocate memory for this packet
             int offset = 0;
             int length = EthernetFields.HeaderLength;
@@ -132,7 +172,9 @@ namespace PacketDotNet
         /// </param>
         public EthernetPacket(byte[] Bytes, int Offset) :
             this(Bytes, Offset, new PosixTimeval())
-        { }
+        {
+            log.Debug("");
+        }
 
         /// <summary>
         /// Create an EthernetPacket from a byte array and a Timeval 
@@ -149,6 +191,8 @@ namespace PacketDotNet
         public EthernetPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
             base(Timeval)
         {
+            log.Debug("");
+
             // slice off the header portion
             header = new ByteArrayAndOffset(Bytes, Offset, EthernetFields.HeaderLength);
 
@@ -178,6 +222,7 @@ namespace PacketDotNet
         {
             // slice off the payload
             var payload = Header.EncapsulatedBytes();
+            log.DebugFormat("payload {0}", payload.ToString());
 
             var payloadPacketOrData = new PacketOrByteArray();
 
@@ -189,6 +234,9 @@ namespace PacketDotNet
                 break;
             case EthernetPacketType.IpV6:
                 payloadPacketOrData.ThePacket = new IPv6Packet(payload.Bytes, payload.Offset, Timeval);
+                break;
+            case EthernetPacketType.Arp:
+                payloadPacketOrData.ThePacket = new ARPPacket(payload.Bytes, payload.Offset, Timeval);
                 break;
             default: // consider the sub-packet to be a byte array
                 payloadPacketOrData.TheByteArray = payload;
@@ -243,6 +291,28 @@ namespace PacketDotNet
         {
             //TODO: just output the colored output for now
             return ToColoredString(colored);
+        }
+
+        /// <summary>
+        /// Generate a random EthernetPacket 
+        /// TODO: could improve this routine to set a random payload as well
+        /// </summary>
+        /// <returns>
+        /// A <see cref="EthernetPacket"/>
+        /// </returns>
+        public static EthernetPacket RandomPacket()
+        {
+            var rnd = new Random();
+
+            byte[] srcPhysicalAddress = new byte[EthernetFields.MacAddressLength];
+            byte[] dstPhysicalAddress = new byte[EthernetFields.MacAddressLength];
+
+            rnd.NextBytes(srcPhysicalAddress);
+            rnd.NextBytes(dstPhysicalAddress);
+
+            return new EthernetPacket(new PhysicalAddress(srcPhysicalAddress),
+                                      new PhysicalAddress(dstPhysicalAddress),
+                                      EthernetPacketType.None);
         }
     }
 }

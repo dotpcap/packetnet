@@ -273,7 +273,10 @@ namespace PacketDotNet
         public ARPPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
             base(Timeval)
         {
-            throw new System.NotImplementedException();
+            header = new ByteArrayAndOffset(Bytes, Offset, ARPFields.HeaderLength);
+
+            // NOTE: no need to set the payloadPacketOrData field, arp packets have
+            //       no payload
         }
 
         /// <summary> Convert this ARP packet to a readable string.</summary>
@@ -308,6 +311,50 @@ namespace PacketDotNet
             buffer.Append(base.ToColoredString(colored));
 
             return buffer.ToString();
+        }
+
+        /// <summary>
+        /// Returns true if Packet is an ARPPacket, ie.
+        /// an EthernetPacket that contains an ARPPacket
+        /// </summary>
+        /// <param name="p">
+        /// A <see cref="Packet"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Boolean"/>
+        /// </returns>
+        public static bool IsType(Packet p)
+        {
+            // an arp packet is a type of InternetLinkLayerPacket
+            if(p is InternetLinkLayerPacket)
+            {
+                if(p.PayloadPacket is ARPPacket)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the encapsulated ARPPacket of the Packet p or null if
+        /// there is no encapsulated packet
+        /// </summary>
+        /// <param name="p">
+        /// A <see cref="Packet"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="ARPPacket"/>
+        /// </returns>
+        public static ARPPacket GetType(Packet p)
+        {
+            if(IsType(p))
+            {
+                return (ARPPacket)p.PayloadPacket;
+            }
+
+            return null;
         }
     }
 }

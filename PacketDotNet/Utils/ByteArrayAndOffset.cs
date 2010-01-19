@@ -18,21 +18,67 @@ using System;
 
 namespace PacketDotNet.Utils
 {
+    /// <summary>
+    /// Container class for a byte array that contains an offset and
+    /// a length
+    /// </summary>
     public class ByteArrayAndOffset
     {
-        //FIXME: we need to set the length in ipv4packet
-        // because we don't know the encapsulated payload size
-        // until we read the HeaderLength field and we can't
-        // read that field until we've setup the header field with
-        // a ByteArrayAndOffset, which we default to the remaining
-        // bytes in the byte[]. Think about this issue to see if
-        // there is a better way
-        public int Length { get; internal set; }
+#if DEBUG
+        private static readonly log4net.ILog log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#else
+        private static readonly ILogActive log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#endif
+
+        private int length;
+
+        /// <value>
+        /// Number of bytes beyond the offset into Bytes
+        /// </value>
+        public int Length
+        {
+            get { return length; }
+            internal set
+            {
+                // check for invalid values
+                if(value < 0)
+                    throw new System.InvalidOperationException("attempting to set a negative length of " + value);
+
+                length = value;
+                log.DebugFormat("Length: {0}", value);
+            }
+        }
+
+        /// <value>
+        /// The byte[] array
+        /// </value>
         public byte[] Bytes { get; private set; }
+
+        /// <value>
+        /// Offset into Bytes
+        /// </value>
         public int Offset { get; private set; }
 
+        /// <summary>
+        /// Constructor from a byte array, offset into the byte array and
+        /// a length beyond that offset of the bytes this class is referencing
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="Length">
+        /// A <see cref="System.Int32"/>
+        /// </param>
         public ByteArrayAndOffset(byte[] Bytes, int Offset, int Length)
         {
+            log.DebugFormat("Bytes.Length {0}, Offset {1}, Length {2}",
+                            Bytes.Length,
+                            Offset,
+                            Length);
+
             this.Bytes = Bytes;
             this.Offset = Offset;
             this.Length = Length;
@@ -49,19 +95,23 @@ namespace PacketDotNet.Utils
         /// </returns>
         public byte[] ActualBytes()
         {
+            log.DebugFormat("{0}", ToString());
+
             if(NeedsCopyForActualBytes)
             {
+                log.Debug("needs copy");
                 var newBytes = new byte[Length];
                 Array.Copy(Bytes, Offset, newBytes, 0, Length);
                 return newBytes;
             } else
             {
+                log.Debug("does not need copy");
                 return Bytes;
             }
         }
 
         /// <summary>
-        /// Return true if we don't need to perform a copy to get
+        /// Return true if we need to perform a copy to get
         /// the bytes represented by this class
         /// </summary>
         /// <returns>
@@ -71,7 +121,14 @@ namespace PacketDotNet.Utils
         {
             get
             {
-                return ((Offset == 0) && (Length == Bytes.Length));
+                // we need a copy unless we are at the start of the byte[]
+                // and the length is the total byte[] length
+                var okWithoutCopy = ((Offset == 0) && (Length == Bytes.Length));
+                var retval = !okWithoutCopy;
+
+                log.DebugFormat("retval {0}", retval);
+
+                return retval;
             }
         }
 
@@ -86,7 +143,10 @@ namespace PacketDotNet.Utils
         public ByteArrayAndOffset EncapsulatedBytes()
         {
             int startingOffset = Offset + Length; // start at the end of the current segment
-            return new ByteArrayAndOffset(Bytes, startingOffset, Bytes.Length - startingOffset);
+            var newLength = Bytes.Length - startingOffset;
+            log.DebugFormat("Offset {0}, Length {1}, startingOffset {2}, newLength {3}",
+                            Offset, Length, startingOffset, newLength);
+            return new ByteArrayAndOffset(Bytes, startingOffset, newLength);
         }
 
         /// <summary>
@@ -97,7 +157,8 @@ namespace PacketDotNet.Utils
         /// </returns>
         public override string ToString ()
         {
-            return string.Format("[ByteArrayAndOffset: Length={0}, Bytes={1}, Offset={2}, NeedsCopyForActualBytes={3}]", Length, Bytes, Offset, NeedsCopyForActualBytes);
+            return string.Format("[ByteArrayAndOffset: Length={0}, Bytes.Length={1}, Offset={2}, NeedsCopyForActualBytes={3}]",
+                                 Length, Bytes.Length, Offset, NeedsCopyForActualBytes);
         }
     }
 }

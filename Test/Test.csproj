@@ -34,9 +34,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="SharpPcap, Version=2.2.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="SharpPcap, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\SharpPcap.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=a5715cc6d5c3540b">
+      <Package>log4net</Package>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -50,6 +53,12 @@
     <Compile Include="ChecksumUtilsTest.cs" />
     <Compile Include="ArpPacketTest.cs" />
     <Compile Include="IPv6PacketTest.cs" />
+    <Compile Include="TcpPacketTest.cs" />
+    <Compile Include="IpPacketTest.cs" />
+    <Compile Include="NUnitSetupClass.cs" />
+    <Compile Include="SharpPcapRawPacketToPacket.cs" />
+    <Compile Include="PacketTest.cs" />
+    <Compile Include="IPv4PacketTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -57,5 +66,8 @@
       <Project>{55ABBA4C-AAF9-4726-A592-0C92436CEC92}</Project>
       <Name>PacketDotNet</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="log4net.config" />
   </ItemGroup>
 </Project>

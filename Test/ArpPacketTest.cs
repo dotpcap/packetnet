@@ -3,6 +3,7 @@ using System.Net;
 using NUnit.Framework;
 using SharpPcap;
 using PacketDotNet;
+using PacketDotNet.Utils;
 
 namespace Test
 {
@@ -12,9 +13,8 @@ namespace Test
         // arp request
         private void VerifyPacket0(Packet p)
         {
-            Assert.IsTrue(p is ARPPacket, "p isn't an ARPPacket");
-
-            ARPPacket arpPacket = (ARPPacket)p;
+            Assert.IsTrue(ARPPacket.IsType(p), "p isn't an ARPPacket");
+            var arpPacket = ARPPacket.GetType(p);
 
             IPAddress senderIp = IPAddress.Parse("192.168.1.202");
             IPAddress targetIp = IPAddress.Parse("192.168.1.214");
@@ -31,8 +31,8 @@ namespace Test
         // arp response
         private void VerifyPacket1(Packet p)
         {
-            Assert.IsTrue(p is ARPPacket, "p isn't an ARPPacket");
-            ARPPacket arpPacket = (ARPPacket)p;
+            Assert.IsTrue(ARPPacket.IsType(p), "p isn't an ARPPacket");
+            var arpPacket = ARPPacket.GetType(p);
 
             IPAddress senderIp = IPAddress.Parse("192.168.1.214");
             IPAddress targetIp = IPAddress.Parse("192.168.1.202");
@@ -49,16 +49,18 @@ namespace Test
         [Test]
         public void ParsingArpPacketRequestResponse()
         {
-            PcapOfflineDevice dev = Pcap.GetPcapOfflineDevice("../../capture_files/arp_request_response.pcap");
+            PcapOfflineDevice dev = Pcap.GetPcapOfflineDevice("../../CaptureFiles/arp_request_response.pcap");
             dev.Open();                                                                           
 
-            throw new System.NotImplementedException();
-#if false
             SharpPcap.Packets.RawPacket rawPacket;
             int packetIndex = 0;
             while((rawPacket = dev.GetNextRawPacket()) != null)
             {
-//                Packet p = new Packet(rawPacket.
+                var p = Packet.ParsePacket((LinkLayers)rawPacket.LinkLayerType,
+                                           new PosixTimeval(rawPacket.Timeval.Seconds,
+                                                            rawPacket.Timeval.MicroSeconds),
+                                           rawPacket.Data);
+                
                 Console.WriteLine("got packet");
                 Console.WriteLine("{0}", p.ToString());
                 switch(packetIndex)
@@ -76,7 +78,6 @@ namespace Test
 
                 packetIndex++;
             }
-#endif
 
             dev.Close();
         }

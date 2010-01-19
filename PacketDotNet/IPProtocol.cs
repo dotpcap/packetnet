@@ -8,9 +8,11 @@ using System;
 
 namespace PacketDotNet
 {
+    /// <summary>
+    /// String representation of an IP protocol value
+    /// </summary>
     public class IPProtocol
     {
-
         /// <summary> Fetch a protocol description.</summary>
         /// <param name="code">the code associated with the message.
         /// </param>

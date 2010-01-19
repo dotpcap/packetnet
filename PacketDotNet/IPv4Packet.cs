@@ -30,6 +30,15 @@ namespace PacketDotNet
     /// </summary>
     public class IPv4Packet : IpPacket
     {
+#if DEBUG
+        private static readonly log4net.ILog log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#else
+        private static readonly ILogActive log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#endif
+
+        /// <value>
+        /// Number of bytes in the smallest valid ipv4 packet
+        /// </value>
         public const int HeaderMinimumLength = 20;
 
         /// <summary> Type of service code constants for IP. Type of service describes 
@@ -48,14 +57,19 @@ namespace PacketDotNet
         /// </summary>
         public struct TypesOfService_Fields
         {
+#pragma warning disable 1591
             public readonly static int MINIMIZE_DELAY = 0x10;
             public readonly static int MAXIMIZE_THROUGHPUT = 0x08;
             public readonly static int MAXIMIZE_RELIABILITY = 0x04;
             public readonly static int MINIMIZE_MONETARY_COST = 0x02;
             public readonly static int UNUSED = 0x01;
+#pragma warning restore 1591
         }
 
-        public static int ipVersion = 4;
+        /// <value>
+        /// Version number of the IP protocol being used
+        /// </value>
+        public static IpVersion ipVersion = IpVersion.IPv4;
 
         /// <summary> Get the IP version code.</summary>
         public override IpVersion Version
@@ -78,15 +92,30 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Fetch the IP header length in bytes. </summary>
-        /// <summary> Sets the IP header length field.  At most, this can be a 
+        /// <value>
+        /// Forwards compatibility IPv6.PayloadLength property
+        /// </value>
+        public override ushort PayloadLength
+        {
+            get
+            {
+                return (ushort)(TotalLength - (HeaderLength * 4));
+            }
+
+            set
+            {
+                TotalLength = value + (HeaderLength * 4);
+            }
+        }
+
+        /// <summary>
+        /// The IP header length field.  At most, this can be a 
         /// four-bit value.  The high order bits beyond the fourth bit
         /// will be ignored.
-        /// 
         /// </summary>
         /// <param name="length">The length of the IP header in 32-bit words.
         /// </param>
-        public int HeaderLength
+        public override int HeaderLength
         {
             get
             {
@@ -106,14 +135,11 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Fetch the unique ID of this IP datagram. The ID normally 
+        /// <summary>
+        /// The unique ID of this IP datagram. The ID normally
         /// increments by one each time a datagram is sent by a host.
+        /// A 16-bit unsigned integer.
         /// </summary>
-        /// <summary> Sets the IP identification header value.
-        /// 
-        /// </summary>
-        /// <param name="id">A 16-bit unsigned integer.
-        /// </param>
         virtual public int Id
         {
             get
@@ -130,13 +156,11 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Fetch fragmentation offset.</summary>
-        /// <summary> Sets the fragment offset header value.  The offset specifies a
-        /// number of octets (i.e., bytes).
-        /// 
+        /// <summary>
+        /// Fragmentation offset
+        /// The offset specifies a number of octets (i.e., bytes).
+        /// A 13-bit unsigned integer.
         /// </summary>
-        /// <param name="offset">A 13-bit unsigned integer.
-        /// </param>
         virtual public int FragmentOffset
         {
             get
@@ -217,7 +241,6 @@ namespace PacketDotNet
             }
         }
 
-#if false
         /// <summary> Check if the IP packet is valid, checksum-wise.</summary>
         virtual public bool ValidChecksum
         {
@@ -228,25 +251,38 @@ namespace PacketDotNet
 
         }
 
-        /// <summary> Check if the IP packet is valid, checksum-wise.</summary>
-        virtual public bool ValidIPChecksum
+        /// <summary>
+        /// Check if the IP packet header is valid, checksum-wise.
+        /// </summary>
+        public override bool ValidIPChecksum
         {
             get
             {
+                log.Debug("");
+
                 // first validate other information about the packet. if this stuff
                 // is not true, the packet (and therefore the checksum) is invalid
                 // - ip_hl >= 5 (ip_hl is the length in 4-byte words)
-                if (IPHeaderLength < IPv4Fields_Fields.IP_HEADER_LEN)
+                if (Header.Length < IPv4Fields.HeaderLength)
                 {
+                    log.DebugFormat("invalid length, returning false");
                     return false;
                 }
                 else
                 {
-                    return (ChecksumUtils.OnesSum(Bytes, _ethPayloadOffset, IPHeaderLength) == 0xffff);
+                    var headerOnesSum = ChecksumUtils.OnesSum(Header);
+                    log.DebugFormat(HexPrinter.GetString(Header, 0, Header.Length));
+                    const int expectedHeaderOnesSum = 0xffff;
+                    var retval = (headerOnesSum == expectedHeaderOnesSum);
+                    log.DebugFormat("headerOnesSum: {0}, expectedHeaderOnesSum {1}, returning {2}",
+                                    headerOnesSum,
+                                    expectedHeaderOnesSum,
+                                    retval);
+                    log.DebugFormat("Header.Length {0}", Header.Length);
+                    return retval;
                 }
             }
         }
-#endif
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         override public System.String Color
@@ -255,7 +291,6 @@ namespace PacketDotNet
             {
                 return AnsiEscapeSequences.White;
             }
-
         }
 
         /// <summary> Fetch the type of service. </summary>
@@ -273,7 +308,7 @@ namespace PacketDotNet
         }
 
         /// <value>
-        /// Renamed to DifferentiatedServices but present here
+        /// Renamed to DifferentiatedServices in IPv6 but present here
         /// for backwards compatibility
         /// </value>
         public int TypeOfService
@@ -282,8 +317,10 @@ namespace PacketDotNet
             set { DifferentiatedServices = value; }
         }
 
-        /// <summary> The entire datagram size including header and data </summary>
-        public virtual int TotalLength
+        /// <value>
+        /// The entire datagram size including header and data
+        /// </value>
+        public override int TotalLength
         {
             get
             {
@@ -377,51 +414,45 @@ namespace PacketDotNet
         }
 #endif
 
-#if false
-        /// <summary> Computes the IP checksum, optionally updating the IP checksum header.
-        /// 
+        /// <summary>
+        /// Computes the IP checksum, optionally updating the IP checksum header.
         /// </summary>
-        /// <param name="update">Specifies whether or not to update the IP checksum
-        /// header after computing the checksum.  A value of true indicates
-        /// the header should be updated, a value of false indicates it
-        /// should not be updated.
-        /// </param>
         /// <returns> The computed IP checksum.
         /// </returns>
-        public int ComputeIPChecksum(bool update)
+        public int ComputeIPChecksum()
         {
             //copy the ip header
-            byte[] ip = ArrayHelper.copy(Bytes, _ethPayloadOffset, IPHeaderLength);
+            var theHeader = Header;
+            byte[] ip = new byte[theHeader.Length];
+            Array.Copy(theHeader, ip, theHeader.Length);
+
             //reset the checksum field (checksum is calculated when this field is zeroed)
-            ArrayHelper.insertLong(ip, 0, IPv4Fields_Fields.IP_CSUM_POS, 2);
+            var theValue = (UInt16)0;
+            EndianBitConverter.Big.CopyBytes(theValue, ip, IPv4Fields.ChecksumPosition);
+
             //compute the one's complement sum of the ip header
             int cs = ChecksumUtils.OnesComplementSum(ip, 0, ip.Length);
-            if (update)
-            {
-                IPChecksum = cs;
-            }
 
             return cs;
         }
 
-        /// <summary> Same as <code>computeIPChecksum(true);</code>
-        /// 
+        /// <summary>
+        /// Prepend to the given byte[] origHeader the portion of the IPv6 header used for
+        /// generating an tcp checksum
+        ///
+        /// http://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_checksum_using_IPv4
+        /// http://tools.ietf.org/html/rfc793
         /// </summary>
-        /// <returns> The computed IP checksum value.
+        /// <param name="origHeader">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Byte"/>
         /// </returns>
-        public int ComputeIPChecksum()
-        {
-            return ComputeIPChecksum(true);
-        }
-#endif
-
-        // Prepend to the given byte[] origHeader the portion of the IPv6 header used for
-        // generating an tcp checksum
-        //
-        // http://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_checksum_using_IPv4
-        // http://tools.ietf.org/html/rfc793
         internal override byte[] AttachPseudoIPHeader(byte[] origHeader)
         {
+            log.Debug("");
+
             bool odd = origHeader.Length % 2 != 0;
             int numberOfBytesFromIPHeaderUsedToGenerateChecksum = 12;
             int headerSize = numberOfBytesFromIPHeaderUsedToGenerateChecksum + origHeader.Length;
@@ -440,7 +471,7 @@ namespace PacketDotNet
             // 9: ip protocol
             headerForChecksum[9] = (byte)Protocol;
             // 10-11: header+data length
-            var length = (Int32)origHeader.Length;
+            var length = (Int16)origHeader.Length;
             EndianBitConverter.Big.CopyBytes(length, headerForChecksum,
                                              10);
 
@@ -474,34 +505,63 @@ namespace PacketDotNet
 
             return baseValid;
         }
-
-        public virtual bool IsValidTransportLayerChecksum(bool pseudoIPHeader)
-        {
-            byte[] upperLayer = IPData;
-            if (pseudoIPHeader)
-                upperLayer = AttachPseudoIPHeader(upperLayer);
-            int onesSum = ChecksumUtils.OnesSum(upperLayer);
-            return (onesSum == 0xffff);
-        }
 #endif
 
+        public IPv4Packet(System.Net.IPAddress SourceAddress,
+                          System.Net.IPAddress DestinationAddress)
+            : base(new PosixTimeval())
+        {
+            // allocate memory for this packet
+            int offset = 0;
+            int length = IPv4Fields.HeaderLength;
+            var headerBytes = new byte[length];
+            header = new ByteArrayAndOffset(headerBytes, offset, length);
+
+            // set some default values to make this packet valid
+            PayloadLength = 0;
+            HeaderLength = (HeaderMinimumLength / 4); // NOTE: HeaderLength is the number of 32bit words in the header
+
+            // set instance values
+            this.SourceAddress = SourceAddress;
+            this.DestinationAddress = DestinationAddress;
+        }
+
+        /// <summary>
+        /// Parse bytes into an IP packet
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
         public IPv4Packet(byte[] Bytes, int Offset) :
             this(Bytes, Offset, new PosixTimeval())
-        { }
+        {
+            log.Debug("");
+        }
 
         public IPv4Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
             base(Timeval)
         {
+            log.Debug("");
+
             header = new ByteArrayAndOffset(Bytes, Offset, Bytes.Length - Offset);
 
             // update the header length with the correct value
             // NOTE: we take care to convert from 32bit words into bytes
+            // NOTE: we do this *after* setting header because we need header to be valid
+            //       before we can retrieve the HeaderLength property
             header.Length = HeaderLength * 4;
+
+            log.DebugFormat("IPv4Packet HeaderLength {0}", HeaderLength);
+            log.DebugFormat("header {0}", header);
 
             // parse the payload
             payloadPacketOrData = IpPacket.ParseEncapsulatedBytes(header,
                                                                   NextHeader,
-                                                                  Timeval);
+                                                                  Timeval,
+                                                                  this);
         }
 
         /// <summary> Convert this IP packet to a readable string.</summary>
@@ -576,36 +636,17 @@ namespace PacketDotNet
             return buffer.ToString();
         }
 
-#if false
-        /// <summary> This inner class provides access to private methods for unit testing.</summary>
-        public class TestProbe
+        /// <summary>
+        /// Generate a random packet
+        /// </summary>
+        /// <returns>
+        /// A <see cref="Packet"/>
+        /// </returns>
+        public static IPv4Packet RandomPacket()
         {
-            public TestProbe(IPv4Packet enclosingInstance)
-            {
-                InitBlock(enclosingInstance);
-            }
-
-            private void InitBlock(IPv4Packet enclosingInstance)
-            {
-                this.enclosingInstance = enclosingInstance;
-            }
-
-            private IPv4Packet enclosingInstance;
-            virtual public int ComputedReceiverIPChecksum
-            {
-                get
-                {
-                    return ChecksumUtils.OnesSum(Enclosing_Instance.Bytes,
-                                                 Enclosing_Instance._ethPayloadOffset,
-                                                 Enclosing_Instance.IPHeaderLength);
-                }
-            }
-
-            virtual public int ComputedSenderIPChecksum()
-            {
-                return Enclosing_Instance.ComputeIPChecksum(false);
-            }
-        }       
-#endif
+            var srcAddress = RandomUtils.GetIPAddress(ipVersion);
+            var dstAddress = RandomUtils.GetIPAddress(ipVersion);
+            return new IPv4Packet(srcAddress, dstAddress);
+        }
     }
 }

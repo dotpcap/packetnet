@@ -29,33 +29,39 @@ namespace PacketDotNet
     /// </summary>
     public class UdpPacket : TransportPacket
     {
+#if DEBUG
+        private static readonly log4net.ILog log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#else
+        private static readonly ILogActive log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#endif
+
         /// <summary> Fetch the port number on the source host.</summary>
-        virtual public int SourcePort
+        virtual public ushort SourcePort
         {
             get
             {
-                return EndianBitConverter.Big.ToInt16(header.Bytes, header.Offset + UdpFields.SourcePortPosition);
+                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + UdpFields.SourcePortPosition);
             }
 
             set
             {
-                var val = (Int16)value;
+                var val = value;
                 EndianBitConverter.Big.CopyBytes(val, header.Bytes, header.Offset + UdpFields.SourcePortPosition);
             }
         }
 
         /// <summary> Fetch the port number on the target host.</summary>
-        virtual public int DestinationPort
+        virtual public ushort DestinationPort
         {
             get
             {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
+                return EndianBitConverter.Big.ToUInt16(header.Bytes,
                                                       header.Offset + UdpFields.DestinationPortPosition);
             }
 
             set
             {
-                var val = (Int16)value;
+                var val = value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  header.Bytes,
                                                  header.Offset + UdpFields.DestinationPortPosition);
@@ -63,8 +69,7 @@ namespace PacketDotNet
         }
 
         /// <value>
-        /// Retrieves the length field from this udp packet. Note that this is not
-        /// necessarily the correct length 
+        /// Retrieves the length field from this udp packet
         /// </value>
         virtual public int Length
         {
@@ -86,17 +91,17 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the header checksum.</summary>
-        virtual public int UDPChecksum
+        virtual public ushort Checksum
         {
             get
             {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + UdpFields.ChecksumPosition);
+                return EndianBitConverter.Big.ToUInt16(header.Bytes,
+                                                       header.Offset + UdpFields.ChecksumPosition);
             }
 
             set
             {
-                var val = (Int16)value;
+                var val = value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  header.Bytes,
                                                  header.Offset + UdpFields.ChecksumPosition);
@@ -112,17 +117,29 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Fetch the header checksum.</summary>
-        public int Checksum
+        /// <summary>
+        /// Create from values
+        /// </summary>
+        /// <param name="SourcePort">
+        /// A <see cref="System.UInt16"/>
+        /// </param>
+        /// <param name="DestinationPort">
+        /// A <see cref="System.UInt16"/>
+        /// </param>
+        public UdpPacket(ushort SourcePort, ushort DestinationPort)
+            : base(new PosixTimeval())
         {
-            get
-            {
-                return UDPChecksum;
-            }
-            set
-            {
-                UDPChecksum = value;
-            }
+            log.Debug("");
+
+            // allocate memory for this packet
+            int offset = 0;
+            int length = UdpFields.HeaderLength;
+            var headerBytes = new byte[length];
+            header = new ByteArrayAndOffset(headerBytes, offset, length);
+
+            // set instance values
+            this.SourcePort = SourcePort;
+            this.DestinationPort = DestinationPort;
         }
 
         /// <summary>
@@ -153,7 +170,38 @@ namespace PacketDotNet
         public UdpPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
             base(Timeval)
         {
-            throw new System.NotImplementedException();
+            // set the header field, header field values are retrieved from this byte array
+            header = new ByteArrayAndOffset(Bytes, Offset, Bytes.Length - Offset);
+
+            // NOTE: we update the Length field AFTER the header field because
+            // we need the header to be valid to retrieve the value
+            header.Length = Length;
+
+            // store the payload bytes
+            payloadPacketOrData = new PacketOrByteArray();
+            payloadPacketOrData.TheByteArray = header.EncapsulatedBytes();
+        }
+
+        /// <summary>
+        /// Constructor when this packet is encapsulated in another packet
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <param name="ParentPacket">
+        /// A <see cref="Packet"/>
+        /// </param>
+        public UdpPacket(byte[] Bytes, int Offset, PosixTimeval Timeval,
+                         Packet ParentPacket) :
+            this(Bytes, Offset, Timeval)
+        {
+            this.ParentPacket = ParentPacket;
         }
 
         /// <summary>
@@ -186,12 +234,18 @@ namespace PacketDotNet
             int cs = ChecksumUtils.OnesComplementSum(dataAndPseudoIpHeader);
             if (update)
             {
-                UDPChecksum = cs;
+                Checksum = (ushort)cs;
             }
 
             return cs;
         }
 
+        /// <summary>
+        /// Compute the checksum for this packet
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
         public int ComputeUDPChecksum()
         {
             return ComputeUDPChecksum(true);
@@ -236,6 +290,66 @@ namespace PacketDotNet
             buffer.Append(']');
 
             return buffer.ToString();
+        }
+
+        /// <summary>
+        /// Returns true if this Packet contains this type 
+        /// </summary>
+        /// <param name="p">
+        /// A <see cref="Packet"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Boolean"/>
+        /// </returns>
+        public static bool IsType(Packet p)
+        {
+            if(p is InternetLinkLayerPacket)
+            {
+                if(p.PayloadPacket is IpPacket)
+                {
+                    if(p.PayloadPacket.PayloadPacket is UdpPacket)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the UdpPacket inside of the Packet p or null if
+        /// there is no encapsulated packet
+        /// </summary>
+        /// <param name="p">
+        /// A <see cref="Packet"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="UdpPacket"/>
+        /// </returns>
+        public static UdpPacket GetType(Packet p)
+        {
+            if(IsType(p))
+            {
+                return (UdpPacket)p.PayloadPacket.PayloadPacket;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Generate a random packet 
+        /// </summary>
+        /// <returns>
+        /// A <see cref="UdpPacket"/>
+        /// </returns>
+        public static UdpPacket RandomPacket()
+        {
+            var rnd = new Random();
+            var SourcePort = (ushort)rnd.Next(ushort.MinValue, ushort.MaxValue);
+            var DestinationPort = (ushort)rnd.Next(ushort.MinValue, ushort.MaxValue);
+
+            return new UdpPacket(SourcePort, DestinationPort);
         }
     }
 }

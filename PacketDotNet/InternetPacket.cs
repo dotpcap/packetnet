@@ -29,6 +29,12 @@ namespace PacketDotNet
     /// </summary>
     public class InternetPacket : Packet
     {
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
         public InternetPacket(PosixTimeval Timeval) : base(Timeval)
         { }
     }

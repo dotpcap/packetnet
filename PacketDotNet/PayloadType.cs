@@ -15,25 +15,21 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
+ * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using PacketDotNet.Utils;
+using System;
 
-﻿namespace PacketDotNet
+namespace PacketDotNet
 {
     /// <summary>
-    /// Session layer packet
+    /// Differentiates between a packet class payload, a byte[] payload
+    /// or no payload
     /// </summary>
-    public abstract class SessionPacket : Packet
+    internal enum PayloadType
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public SessionPacket(PosixTimeval Timeval) : base(Timeval)
-        {}
+        Packet,
+        Bytes,
+        None
     }
 }

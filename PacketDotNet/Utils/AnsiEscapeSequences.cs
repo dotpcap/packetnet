@@ -33,6 +33,8 @@ namespace PacketDotNet.Utils
         /// Delimits the stop of the ansi color sequence, the color code comes before this
         /// </summary>
         public readonly static String EscapeEnd = "m";
+
+#pragma warning disable 1591
         public readonly static String Reset;
         public readonly static String Bold;
         public readonly static String Underline;
@@ -60,6 +62,7 @@ namespace PacketDotNet.Utils
         public readonly static String PurpleBackground;
         public readonly static String CyanBackground;
         public readonly static String LightGrayBackground;
+#pragma warning restore 1591
 
         private static string BuildValue(string ColorCode)
         {

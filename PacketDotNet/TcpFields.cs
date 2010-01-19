@@ -27,6 +27,7 @@ namespace PacketDotNet
     /// </summary>
     public struct TcpFields
     {
+#pragma warning disable 1591
         // flag bitmasks
         public readonly static int TCP_CWR_MASK = 0x0080;
         public readonly static int TCP_ECN_MASK = 0x0040;
@@ -36,6 +37,7 @@ namespace PacketDotNet
         public readonly static int TCP_RST_MASK = 0x0004;
         public readonly static int TCP_SYN_MASK = 0x0002;
         public readonly static int TCP_FIN_MASK = 0x0001;
+#pragma warning restore 1591
 
         /// <summary> Length of a TCP port in bytes.</summary>
         public readonly static int PortLength = 2;

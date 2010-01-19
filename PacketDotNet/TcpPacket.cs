@@ -14,6 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*
+ * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
+ */
+
 ﻿using System;
 using System.Collections.Generic;
 using MiscUtil.Conversion;
@@ -27,20 +31,29 @@ namespace PacketDotNet
     /// </summary>
     public class TcpPacket : Packet
     {
-        public const int HeaderMinimumLength = 20; // 20 bytes is the smallest tcp header
+#if DEBUG
+        private static readonly log4net.ILog log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#else
+        private static readonly ILogActive log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#endif
+
+        /// <value>
+        /// 20 bytes is the smallest tcp header
+        /// </value>
+        public const int HeaderMinimumLength = 20;
 
         /// <summary> Fetch the port number on the source host.</summary>
-        virtual public int SourcePort
+        virtual public ushort SourcePort
         {
             get
             {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
+                return EndianBitConverter.Big.ToUInt16(header.Bytes,
                                                       header.Offset + TcpFields.SourcePortPosition);
             }
 
             set
             {
-                var theValue = (Int16)value;
+                var theValue = value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  header.Bytes,
                                                  header.Offset + TcpFields.SourcePortPosition);
@@ -48,17 +61,17 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetches the port number on the destination host.</summary>
-        virtual public int DestinationPort
+        virtual public ushort DestinationPort
         {
             get
             {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
+                return EndianBitConverter.Big.ToUInt16(header.Bytes,
                                                       header.Offset + TcpFields.DestinationPortPosition);
             }
 
             set
             {
-                var theValue = (Int16)value;
+                var theValue = value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  header.Bytes,
                                                  header.Offset + TcpFields.DestinationPortPosition);
@@ -143,42 +156,48 @@ namespace PacketDotNet
             }
         }
 
-        virtual public int Checksum
+        /// <value>
+        /// Tcp checksum field value of type UInt16
+        /// </value>
+        virtual public ushort Checksum
         {
             get
             {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + TcpFields.ChecksumPosition);
+                return EndianBitConverter.Big.ToUInt16(header.Bytes,
+                                                       header.Offset + TcpFields.ChecksumPosition);
             }
 
             set
             {
-                var theValue = (Int16)value;
+                var theValue = value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  header.Bytes,
                                                  header.Offset + TcpFields.ChecksumPosition);
             }
         }
 
-#if false
         /// <summary> Check if the TCP packet is valid, checksum-wise.</summary>
-        public override bool ValidChecksum
+        public bool ValidChecksum
         {
             get
             {
-                return ValidIPChecksum && ValidTCPChecksum;
+                return ((IpPacket)ParentPacket).ValidIPChecksum && ValidTCPChecksum;
             }
-
         }
 
+        /// <value>
+        /// True if the tcp checksum is valid
+        /// </value>
         virtual public bool ValidTCPChecksum
         {
             get
             {
-                return base.IsValidTransportLayerChecksum(true);
+                log.Debug("ValidTCPChecksum");
+                var retval = ((IpPacket)ParentPacket).IsValidTransportLayerChecksum(IpPacket.TransportChecksumOption.AttachPseudoIPHeader);
+                log.DebugFormat("ValidTCPChecksum {0}", retval);
+                return retval;
             }
         }
-#endif
 
         private int AllFlags
         {
@@ -242,12 +261,18 @@ namespace PacketDotNet
             set { setFlag(value, TcpFields.TCP_FIN_MASK); }
         }
 
+        /// <value>
+        /// ECN flag
+        /// </value>
         virtual public bool ECN
         {
             get { return (AllFlags & TcpFields.TCP_ECN_MASK) != 0; }
             set { setFlag(value, TcpFields.TCP_ECN_MASK); }
         }
 
+        /// <value>
+        /// CWR flag
+        /// </value>
         virtual public bool CWR
         {
             get { return (AllFlags & TcpFields.TCP_CWR_MASK) != 0; }
@@ -277,9 +302,21 @@ namespace PacketDotNet
         /// <summary>
         /// Create a new TCP packet from values
         /// </summary>
-        public TcpPacket(int SourcePort,
-                         int DestinationPort) : base(new PosixTimeval())
+        public TcpPacket(ushort SourcePort,
+                         ushort DestinationPort) : base(new PosixTimeval())
         {
+            log.Debug("");
+
+            // allocate memory for this packet
+            int offset = 0;
+            int length = TcpFields.HeaderLength;
+            var headerBytes = new byte[length];
+            header = new ByteArrayAndOffset(headerBytes, offset, length);
+
+            // make this packet valid
+            DataOffset = length / 4;
+
+            // set instance values
             this.SourcePort = SourcePort;
             this.DestinationPort = DestinationPort;
         }
@@ -295,7 +332,9 @@ namespace PacketDotNet
         /// </param>
         public TcpPacket(byte[] Bytes, int Offset) :
             this(Bytes, Offset, new PosixTimeval())
-        { }
+        {
+            log.Debug("");
+        }
 
         /// <summary>
         /// byte[]/int offset/PosixTimeval constructor
@@ -312,15 +351,71 @@ namespace PacketDotNet
         public TcpPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
             base(Timeval)
         {
+            log.Debug("");
+
+            // set the header field, header field values are retrieved from this byte array
             header = new ByteArrayAndOffset(Bytes, Offset, Bytes.Length - Offset);
+
+            // NOTE: we update the Length field AFTER the header field because
+            // we need the header to be valid to retrieve the value of DataOffset
             header.Length = DataOffset * 4;
 
-            //TODO: for now just store the bytes as our payload
+            // store the payload bytes
             payloadPacketOrData = new PacketOrByteArray();
             payloadPacketOrData.TheByteArray = header.EncapsulatedBytes();
+            Console.WriteLine("TcpPacket payloadPacketOrData.TheByteArray {0}",
+                              payloadPacketOrData.TheByteArray.ToString());
         }
 
-#if false
+        /// <summary>
+        /// Constructor when this packet is encapsulated in another packet
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <param name="ParentPacket">
+        /// A <see cref="Packet"/>
+        /// </param>
+        public TcpPacket(byte[] Bytes, int Offset, PosixTimeval Timeval,
+                         Packet ParentPacket) :
+            this(Bytes, Offset, Timeval)
+        {
+            log.DebugFormat("ParentPacket.GetType() {0}", ParentPacket.GetType());
+
+            this.ParentPacket = ParentPacket;
+
+            // if the parent packet is an IPv4Packet we need to adjust
+            // the payload length because it is possible for us to have
+            // X bytes of data but only (X - Y) bytes are actually valid
+            if(this.ParentPacket is IPv4Packet)
+            {
+                // actual total length (tcp header + tcp payload)
+                var ipv4Parent = (IPv4Packet)this.ParentPacket;
+                var ipPayloadTotalLength = ipv4Parent.TotalLength - (ipv4Parent.HeaderLength * 4);
+
+                log.DebugFormat("ipv4Parent.TotalLength {0}, ipv4Parent.HeaderLength {1}",
+                                ipv4Parent.TotalLength,
+                                ipv4Parent.HeaderLength * 4);
+
+                var newTcpPayloadLength = ipPayloadTotalLength - this.Header.Length;
+
+                log.DebugFormat("Header.Length {0}, Current payload length: {1}, new payload length {2}",
+                                this.header.Length,
+                                payloadPacketOrData.TheByteArray.Length,
+                                newTcpPayloadLength);
+
+                // the length of the payload is the total payload length
+                // above, minus the length of the tcp header
+                payloadPacketOrData.TheByteArray.Length = newTcpPayloadLength;
+            }
+        }
+
         /// <summary> Computes the TCP checksum, optionally updating the TCP checksum header.
         /// 
         /// </summary>
@@ -333,7 +428,11 @@ namespace PacketDotNet
         /// </returns>
         public int ComputeTCPChecksum(bool update)
         {
-            return base.ComputeTransportLayerChecksum(TCPFields_Fields.TCP_CSUM_POS, update, true);
+            if(update == true)
+                throw new System.NotImplementedException();
+
+            var newChecksum = ((IpPacket)ParentPacket).ComputeTransportLayerChecksum(TcpFields.ChecksumPosition, true);
+            return newChecksum;
         }
 
         /// <summary> Same as <code>computeTCPChecksum(true);</code>
@@ -345,7 +444,6 @@ namespace PacketDotNet
         {
             return ComputeTCPChecksum(true);
         }
-#endif
 
         /// <summary> Fetch the urgent pointer.</summary>
         public int UrgentPointer
@@ -365,41 +463,7 @@ namespace PacketDotNet
             }
         }
 
-#if false
-        /// <summary> Sets the data section of this tcp packet</summary>
-        /// <param name="data">the data bytes
-        /// </param>
-        private void SetData(byte[] data)
-        {
-            //reset cached tcp data
-            _tcpDataBytes = null;
-
-            // the new packet is the length of the headers + the size of the TCPPacket data payload
-            int headerLength = TCPHeaderLength + IPHeaderLength + EthernetHeaderLength;
-            int newPacketLength = headerLength + data.Length;
-
-            byte[] newPacketBytes = new byte[newPacketLength];
-
-            // copy the headers into the new packet
-            Array.Copy(Bytes, newPacketBytes, headerLength);
-
-            // copy the data into the new packet, immediately after the headers
-            Array.Copy(data, 0, newPacketBytes, headerLength, data.Length);
-
-            // make the old headers and new data bytes the new packet bytes
-            this.Bytes = newPacketBytes;
-
-            // NOTE: TCPHeaderLength remains the same, we only updated the data portion
-            // of the tcp packet
-
-            //update ip total length
-            IPPayloadLength = TCPHeaderLength + data.Length;
-
-            //update also offset and pcap header
-            OnOffsetChanged();
-        }
-#endif
-
+#pragma warning disable 1591
         public enum OptionTypes
         {
             EndOfList = 0x0,
@@ -412,7 +476,14 @@ namespace PacketDotNet
             Unknown7 = 0x7,
             Timestamp = 0x8 // http://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_Timestamps
         }
+#pragma warning restore 1591
 
+        /// <summary>
+        /// Bytes that represent the tcp options
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public byte[] Options
         {
             get
@@ -535,6 +606,61 @@ namespace PacketDotNet
             buffer.Append(base.ToColoredVerboseString(colored));
 
             return buffer.ToString();
+        }
+
+        /// <summary>
+        /// Returns true if Packet p contains a TcpPacket
+        /// </summary>
+        public static bool IsType(Packet p)
+        {
+            if(p is InternetLinkLayerPacket)
+            {
+                if(p.PayloadPacket is IpPacket)
+                {
+                    if(p.PayloadPacket.PayloadPacket is TcpPacket)
+                    {
+                        log.Debug("returning true");
+                        return true;
+                    }
+                }
+            }
+
+            log.Debug("returning false");
+            return false;
+        }
+
+        /// <summary>
+        /// Returns the TcpPacket embedded in Packet p or null if
+        /// there is no embedded TcpPacket
+        /// </summary>
+        public static TcpPacket GetType(Packet p)
+        {
+            if(IsType(p))
+            {
+                log.Debug("returning PayloadPacket");
+                return (TcpPacket)p.PayloadPacket.PayloadPacket;
+            }
+
+            log.Debug("returning null");
+            return null;
+        }
+
+        /// <summary>
+        /// Create a randomized tcp packet with the given ip version
+        /// </summary>
+        /// <returns>
+        /// A <see cref="Packet"/>
+        /// </returns>
+        public static TcpPacket RandomPacket()
+        {
+            var rnd = new Random();
+
+            // create a randomized TcpPacket
+            var srcPort = (ushort)rnd.Next(ushort.MinValue, ushort.MaxValue);
+            var dstPort = (ushort)rnd.Next(ushort.MinValue, ushort.MaxValue);
+            var tcpPacket = new TcpPacket(srcPort, dstPort);
+
+            return tcpPacket;
         }
     }
 }

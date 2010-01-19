@@ -19,8 +19,11 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace PacketDotNet
 {
-    /// <summary> ICMP protocol field encoding information. </summary>
-    public class ICMPFields
+    /// <summary>
+    /// ICMP protocol field encoding information.
+    /// See http://en.wikipedia.org/wiki/ICMPv6
+    /// </summary>
+    public class ICMPv6Fields
     {
         /// <summary> Length of the ICMP message type code in bytes.</summary>
         public readonly static int TypeLength = 1;
@@ -37,7 +40,7 @@ namespace PacketDotNet
         /// <summary> Length in bytes of an ICMP header.</summary>
         public readonly static int HeaderLength; // == 4
 
-        static ICMPFields()
+        static ICMPv6Fields()
         {
             CodePosition = TypePosition + TypeLength;
             ChecksumPosition = CodePosition + CodeLength;

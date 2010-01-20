@@ -68,23 +68,19 @@ namespace Test
         }
 
         [Test]
-        public void TCPDataIPv4()
+        public void PayloadModification()
         {
-            throw new System.InvalidOperationException();
-
-#if false
             String s = "-++++=== HELLLLOOO ===++++-";
             byte[] data = System.Text.Encoding.UTF8.GetBytes(s);
 
             //create random pkt
-            var p = TcpPacket.RandomPacket(IPPacket.IPVersions.IPv4);
+            var p = TcpPacket.RandomPacket();
 
             //replace pkt's data with our string
-            p.TCPData = data;
+            p.PayloadData = data;
 
             //sanity check
-            Assert.AreEqual(s, System.Text.Encoding.Default.GetString(p.TCPData));
-#endif
+            Assert.AreEqual(s, System.Text.Encoding.Default.GetString(p.PayloadData));
         }
 
         [Test]

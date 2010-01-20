@@ -59,6 +59,8 @@
     <Compile Include="SharpPcapRawPacketToPacket.cs" />
     <Compile Include="PacketTest.cs" />
     <Compile Include="IPv4PacketTest.cs" />
+    <Compile Include="ByteRetrievalPerformancs.cs" />
+    <Compile Include="LoggingConfiguration.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

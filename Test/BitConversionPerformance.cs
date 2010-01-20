@@ -13,6 +13,13 @@ namespace Test
         [Test]
         public void ArrayCopyBitConverterIpAddressPerformance()
         {
+            // store the logging value
+            var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
+
+            // disable logging to improve performance
+            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+
+
             byte[] bytes;
             int testRuns;
             int startIndex;
@@ -38,6 +45,9 @@ namespace Test
 
             var endTime = DateTime.Now;
 
+            // restore logging
+            LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
+
             var rate = new Rate(startTime, endTime, testRuns, "Test runs");
 
             Console.WriteLine(rate.ToString());
@@ -46,6 +56,12 @@ namespace Test
         [Test]
         public void EndianReaderWriterPerformance()
         {
+            // store the logging value
+            var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
+
+            // disable logging to improve performance
+            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+
             byte[] bytes;
             int testRuns;
             int startIndex;
@@ -75,6 +91,9 @@ namespace Test
 
             var endTime = DateTime.Now;
 
+            // restore logging
+            LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
+
             var rate = new Rate(startTime, endTime, testRuns, "Test runs");
 
             Console.WriteLine(rate.ToString());
@@ -83,6 +102,12 @@ namespace Test
         [Test]
         public void EndianBitConverterPerformance()
         {
+            // store the logging value
+            var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
+
+            // disable logging to improve performance
+            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+
             byte[] bytes;
             int testRuns;
             int startIndex;
@@ -107,6 +132,9 @@ namespace Test
             }
 
             var endTime = DateTime.Now;
+
+            // restore logging
+            LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
 
             var rate = new Rate(startTime, endTime, testRuns, "Test runs");
 

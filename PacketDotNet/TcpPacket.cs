@@ -529,6 +529,7 @@ namespace PacketDotNet
             if(Enum.IsDefined(typeof(IpPort), (ushort)SourcePort))
             {
                 buffer.Append((IpPort)SourcePort);
+                buffer.Append(" (" + SourcePort + ") ");
             } else
             {
                 buffer.Append(SourcePort);
@@ -538,6 +539,7 @@ namespace PacketDotNet
             if(Enum.IsDefined(typeof(IpPort), (ushort)DestinationPort))
             {
                 buffer.Append((IpPort)DestinationPort);
+                buffer.Append(" (" + DestinationPort + ") ");
             } else
             {
                 buffer.Append(DestinationPort);

@@ -29,6 +29,9 @@ namespace PacketDotNet
     [Serializable]
     public class IGMPv2Packet : InternetPacket
     {
+        /// <value>
+        /// The type of IGMP message
+        /// </value>
         virtual public IGMPMessageType Type
         {
             get

@@ -507,6 +507,9 @@ namespace PacketDotNet
         }
 #endif
 
+        /// <summary>
+        /// Construct an instance by values
+        /// </summary>
         public IPv4Packet(System.Net.IPAddress SourceAddress,
                           System.Net.IPAddress DestinationAddress)
             : base(new PosixTimeval())
@@ -541,6 +544,18 @@ namespace PacketDotNet
             log.Debug("");
         }
 
+        /// <summary>
+        /// Parse bytes into an IP packet
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="Timeval">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
         public IPv4Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
             base(Timeval)
         {

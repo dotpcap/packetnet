@@ -10,6 +10,9 @@ namespace Test
         {
         }
 
+        // NOTE: These are used by nunit but they appear to the compiler to be unused
+        //       so silence the incorrect warning CS0169
+#pragma warning disable 0169
         [SetUp]
         void RunBeforeAnyTests()
         {
@@ -22,5 +25,6 @@ namespace Test
         {
             // ...
         }
+#pragma warning restore 0169
     }
 }

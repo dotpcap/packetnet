@@ -286,7 +286,7 @@ namespace PacketDotNet
             return buffer.ToString();
         }
 
-        /// <summary> Convert this IP packet to a more verbose string.</summary>
+        /// <summary> Convert a more verbose string.</summary>
         public override System.String ToColoredVerboseString(bool colored)
         {
             //TODO: just output the colored output for now

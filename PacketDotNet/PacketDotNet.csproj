@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{55ABBA4C-AAF9-4726-A592-0C92436CEC92}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>packetnet</AssemblyName>
+    <AssemblyName>PacketDotNet</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <RootNamespace>PacketDotNet</RootNamespace>
   </PropertyGroup>

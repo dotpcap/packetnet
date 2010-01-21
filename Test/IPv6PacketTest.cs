@@ -41,7 +41,7 @@ namespace Test
         [Test]
         public void IPv6PacketTestParsing()
         {
-            var dev = new PcapOfflineDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
             dev.Open();                                                                           
 
             SharpPcap.Packets.RawPacket rawPacket;
@@ -73,7 +73,7 @@ namespace Test
         [Test]
         public void TCPChecksumIPv6()
         {
-            var dev = new PcapOfflineDevice("../../CaptureFiles/ipv6_http.pcap");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/ipv6_http.pcap");
             dev.Open();
 
             // checksums from wireshark of the capture file

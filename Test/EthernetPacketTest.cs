@@ -168,7 +168,7 @@ namespace Test
         [Test]
         public void TestParsingKnownPackets()
         {
-            PcapOfflineDevice dev = Pcap.GetPcapOfflineDevice("../../CaptureFiles/test_stream.pcap");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
             dev.Open();
 
             SharpPcap.Packets.RawPacket rawPacket;
@@ -241,7 +241,7 @@ namespace Test
         [Test]
         public void ParsingPacket()
         {
-            PcapOfflineDevice dev = Pcap.GetPcapOfflineDevice("../../CaptureFiles/test_stream.pcap");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
             dev.Open();
 
             SharpPcap.Packets.Packet p;

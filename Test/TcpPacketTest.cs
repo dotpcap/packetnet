@@ -23,7 +23,7 @@ namespace Test
         [Test]
         public void ByteLengthInternalLengthMismatch()
         {
-            var dev = new PcapOfflineDevice("../../CaptureFiles/tcp_with_extra_bytes.pcap");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/tcp_with_extra_bytes.pcap");
             dev.Open();
 
             SharpPcap.Packets.RawPacket rawPacket;
@@ -48,7 +48,7 @@ namespace Test
         [Test]
         public virtual void Checksum()
         {
-            var dev = new PcapOfflineDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
 
             SharpPcap.Packets.RawPacket rawPacket;
@@ -86,7 +86,7 @@ namespace Test
         [Test]
         public void TCPOptions()
         {
-            var dev = new PcapOfflineDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
 
             SharpPcap.Packets.RawPacket rawPacket;

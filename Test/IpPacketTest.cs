@@ -14,7 +14,7 @@ namespace Test
         [Test]
         public void IpPacketFields()
         {
-            var dev = new PcapOfflineDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
             var rawPacket = dev.GetNextRawPacket();
             dev.Close();

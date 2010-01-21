@@ -30,3 +30,9 @@ tcp_with_extra_bytes.pcap
 ip_packet_bogus_length.pcap
 - A single IP packet that has an invalid total length less than the length
   of the header.
+
+LinuxCookedCapture.pcap
+3 packets captured from the Linux 'all' network device
+- ARP packet
+- UDP (dns) packet 192.168.1.102:37824 -> 66.189.0.29:53
+- TCP packet 192.168.1.102:60604 -> 216.34.181.60:443

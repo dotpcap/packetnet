@@ -172,7 +172,7 @@ namespace PacketDotNet
         public LinuxSLLPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
             base(Timeval)
         {
-            header = new ByteArrayAndOffset(Bytes, Offset, EthernetFields.HeaderLength);
+            header = new ByteArrayAndOffset(Bytes, Offset, LinuxSLLFields.SLLHeaderLength);
 
             // parse the payload via an EthernetPacket method
             payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(header,
@@ -188,12 +188,40 @@ namespace PacketDotNet
         /// </returns>
         public override string ToString ()
         {
-            return string.Format("[LinuxSLLPacket: Type={0}, LinkLayerAddressType={1}, LinkLayerAddressLength={2}, LinkLayerHeader={3}, EthernetProtocolType={4}]",
+            return ToColoredString(false);
+        }
+
+        /// <summary>
+        /// Colored string that represents the values in this class instance
+        /// </summary>
+        /// <param name="colored">
+        /// A <see cref="System.Boolean"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
+        public override string ToColoredString (bool colored)
+        {
+            var sb = new System.Text.StringBuilder();
+
+            sb.AppendFormat("[LinuxSLLPacket: Type={0}, LinkLayerAddressType={1}, LinkLayerAddressLength={2}, LinkLayerHeader={3}, EthernetProtocolType={4}]",
                                  Type,
                                  LinkLayerAddressType,
                                  LinkLayerAddressLength,
                                  LinkLayerAddress,
                                  EthernetProtocolType);
+
+            // append the base output
+            sb.Append(base.ToColoredString(colored));
+
+            return sb.ToString();
+        }
+
+        /// <summary> Convert a more verbose string.</summary>
+        public override System.String ToColoredVerboseString(bool colored)
+        {
+            //TODO: just output the colored output for now
+            return ToColoredString(colored);
         }
     }
 }

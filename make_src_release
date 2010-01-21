@@ -23,7 +23,7 @@ fi
 
 baseOutputDirectory=$1
 releaseVersion=$2
-gitRemotePublicPath=git://packetdotnet.git.sourceforge.net/gitroot/packetdotnet/packetdotnet
+gitRemotePublicPath=git://packetnet.git.sourceforge.net/gitroot/packetnet/packetnet
 
 # setup some variables
 baseOutputDirectory=${baseOutputDirectory}/src

@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# script to help with building a binary release package
+#
+# parameter 1 is the output directory
+# parameter 2 is the version being released
+
+function PrintUsage()
+{
+  echo "example:";
+  echo "  ./make_bin_release ~/packetdotnet_releases 2.0.0";
+}
+
+if [ "$#" -ne 2 ]; then
+  PrintUsage
+  exit
+fi
+
+baseOutputDirectory=$1
+releaseVersion=$2
+
+binDirectory=${baseOutputDirectory}/bin
+dirName=PacketDotNet-${releaseVersion}
+releaseDirectory=${binDirectory}/${dirName}
+
+mkdir -p ${releaseDirectory}
+
+debugDirectory=${releaseDirectory}/Debug
+releaseDirectory=${releaseDirectory}/Release
+
+mkdir ${debugDirectory}
+mkdir ${releaseDirectory}
+
+# remove any existing files
+rm PacketDotNet/bin/Debug/*
+rm PacketDotNet/bin/Release/*
+rmdir PacketDotNet/bin/Debug
+rmdir PacketDotNet/bin/Release
+rmdir PacketDotNet/bin
+
+# build the code
+mdtool build --buildfile:PacketNet.sln --configuration:Debug
+mdtool build --buildfile:PacketNet.sln --configuration:Release
+
+# copy the assembly files over
+cp PacketDotNet/bin/Debug/PacketDotNet.dll ${debugDirectory}
+cp PacketDotNet/bin/Release/PacketDotNet.dll ${releaseDirectory}
+
+# copy the xml documentation files
+cp PacketDotNet/bin/Debug/PacketDotNet.xml ${debugDirectory}
+cp PacketDotNet/bin/Release/PacketDotNet.xml ${releaseDirectory}
+
+# make a zip file of the binary files
+cd ${binDirectory}
+zip -r ${binDirectory}/${dirName}.bin.zip ${dirName}

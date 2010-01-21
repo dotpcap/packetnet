@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# script to help with building a source release package
+#
+# parameter 1 is the output directory
+# parameter 2 is the version being released
+# parameter 3 is the svn path
+#
+
+function PrintUsage()
+{
+  echo "usage:";
+  echo "  ./make_src_release OutputDirectory VersionNumber TagName";
+  echo "";
+  echo "example:";
+  echo "  ./make_src_release ~/packetdotnet_releases 2.0.0 PacketDotNet_2_0_0";
+}
+
+if [ "$#" -ne 3 ]; then
+  PrintUsage
+  exit
+fi
+
+baseOutputDirectory=$1
+releaseVersion=$2
+gitRemotePublicPath=git://packetdotnet.git.sourceforge.net/gitroot/packetdotnet/packetdotnet
+
+# setup some variables
+baseOutputDirectory=${baseOutputDirectory}/src
+mkdir -p ${baseOutputDirectory}
+outputName=PacketDotNet-${releaseVersion}
+
+# create a zip file of the appropriate tag
+git archive --format=zip --remote=${gitRemotePublicPath} $3 > ${baseOutputDirectory}/${outputName}.src.zip
+

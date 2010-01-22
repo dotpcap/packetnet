@@ -2,7 +2,7 @@ Packet.Net
 
 The high level design goals of Packet.Net are:
 - High performance. As little memory allocation/access and cpu usage as possible
-- Simple, modular design
+- Simpler, modular design
 - Clear and well documented api
 
 
@@ -34,13 +34,17 @@ Shortcomings of SharpPcap's design
 ----------------------------------
 
 Creating packets from values is cumbersome. Because a TcpPacket is an IpPacket which is an
-EthernetPacket, to create a TcpPacket requires somehow knowing how many bytes to allocate for
-an Ethernet header + Ip header (ipv4 or ipv6 needs to be known) + TcpHeader + TcpPayload.
-The current packet constructor methods require that to construct a TcpPacket from values
-that an IpPacket, a tcp packet payload, and source and destination ports be passed in. This
-may confuse users because to create an IpPacket from values one must also pass in an ip packet
-payload, which is actually ignored by the TcpPacket constructor since its own header bytes
-plus payload replace the original ip payload.
+EthernetPacket, creating a TcpPacket means we need to somehow simultaniously create the
+TcpPacket and all of the sub packets. The most natural way to do this was to have the
+TcpPacket constructor take in the parameters that make up a TcpPacket in addition to an IpPacket.
+The IpPacket constructor follows the same rule, it takes in its unique parameters plus an EthernetPacket.
+One user reported that this hierarchy seems confusing to them because technically an ethernet packet
+would contain an ip packet etc. Another issue of a more technical aspect is the internal method
+used to actually build the TcpPacket. Because packet bytes are contiguous the TcpPacket
+constructor has to allocate enough bytes for the IpPacket plus enough bytes for itself.
+The constructor then has to set its internal buffer to the new buffer, copy in
+the IpPacket's bytes and then set its own values. This code can be a bit confusing.
+The same complexity exists in almost all of the value constructors.
 
 
 Shortcomings in SharpPcap's implementation

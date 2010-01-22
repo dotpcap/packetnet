@@ -33,8 +33,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=a5715cc6d5c3540b">
-      <Package>log4net</Package>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=a5715cc6d5c3540b" Condition=" '$(Configuration)' == 'DEBUG' ">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libraries\log4net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -87,7 +88,7 @@
     <Compile Include="LinkLayers.cs" />
     <Compile Include="Utils\HexPrinter.cs" />
     <Compile Include="PosixTimeval.cs" />
-    <Compile Include="ILogActive.cs" />
+    <Compile Include="ILogInactive.cs" />
     <Compile Include="Utils\RandomUtils.cs" />
     <Compile Include="PacketOrByteArray.cs" />
     <Compile Include="PayloadType.cs" />

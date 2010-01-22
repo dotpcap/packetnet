@@ -37,12 +37,12 @@ namespace PacketDotNet
     public class IPv6Packet : IpPacket
     {
 #if DEBUG
-        private static readonly log4net.ILog log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169
-        private static readonly ILogActive log;
+        private static readonly ILogInactive log;
 #pragma warning restore 0169
 #endif
 

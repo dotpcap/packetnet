@@ -5,17 +5,9 @@ using log4net.Core;
 
 namespace PacketDotNet
 {
-#if DEBUG
-    internal class ILogActive
-    {
-        public static log4net.ILog GetLogger(Type type)
-        {
-            return log4net.LogManager.GetLogger(type);
-        }
-    }
-#else
+#if !DEBUG
     // For Release builds we disable logging
-    internal class ILogActive
+    internal class ILogInactive
     {
 #if false
         public bool IsDebugEnabled
@@ -254,9 +246,9 @@ namespace PacketDotNet
             throw new System.NotImplementedException ();
         }
 
-        public static ILogActive GetLogger(Type type)
+        public static ILogInactive GetLogger(Type type)
         {
-            return new ILogActive();
+            return new ILogInactive();
         }
     }
 #endif

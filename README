@@ -1,0 +1,40 @@
+Packet.Net
+
+Packet.Net is a high performance .Net assembly for dissecting and constructing
+network packets such as ethernet, ip, tcp, udp etc.
+
+Author: Chris Morgan <chmorgan@gmail.com>
+
+http://packetnet.sourceforge.net
+
+Code is found in the PacketDotNet namespace.
+
+Getting started
+===============
+
+A few basic examples can be found in the Examples/ directory.
+
+
+Debug vs. Release builds
+========================
+
+The Debug build depends on log4net and has log4net calls in some of its classes and
+code paths.
+
+The Release build does NOT depend on log4net and, taking advantage of conditional
+method attributes, does not include any calls to log4net methods.
+
+
+Performance benchmarks
+======================
+
+The Test/ directory contains a few benchmarks that were used to guide the design
+and implementation of Packet.Net. These benchmarks either contain 'performance' or
+'benchmark' in their names.
+
+If you have a performance concern or issue you'll want to write a concise test that reproduces
+your usage case in a controlled manner. It will then be possible to run and re-run
+this test case in various profiling modes in order to look at potential ways of
+optimizing code. The tests will also provide a baseline from which to compare
+any proposed performance improvements in order to ensure that changes are not
+inadvertantly reducing instead of increasing performance.

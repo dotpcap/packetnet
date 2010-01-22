@@ -46,6 +46,9 @@ mdtool build --buildfile:PacketNet.sln --configuration:Release
 cp PacketDotNet/bin/Debug/PacketDotNet.dll ${debugDirectory}
 cp PacketDotNet/bin/Release/PacketDotNet.dll ${releaseDirectory}
 
+# copy the log4net.dll file over only for the debug build
+cp PacketDotNet/bin/Debug/log4net.dll ${debugDirectory}
+
 # copy the xml documentation files
 cp PacketDotNet/bin/Debug/PacketDotNet.xml ${debugDirectory}
 cp PacketDotNet/bin/Release/PacketDotNet.xml ${releaseDirectory}

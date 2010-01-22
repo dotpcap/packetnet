@@ -6,7 +6,8 @@ using log4net.Core;
 namespace PacketDotNet
 {
 #if !DEBUG
-    // For Release builds we disable logging
+    // For Release builds we disable logging by using this class
+    // in place of a log4net logger
     internal class ILogInactive
     {
 #if false

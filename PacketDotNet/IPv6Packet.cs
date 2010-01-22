@@ -39,7 +39,11 @@ namespace PacketDotNet
 #if DEBUG
         private static readonly log4net.ILog log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
-        private static readonly ILogActive log = ILogActive.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        // NOTE: No need to warn about lack of use, the compiler won't
+        //       put any calls to 'log' here but we need 'log' to exist to compile
+#pragma warning disable 0169
+        private static readonly ILogActive log;
+#pragma warning restore 0169
 #endif
 
         /// <value>

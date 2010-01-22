@@ -1,5 +1,7 @@
 using System;
+#if DEBUG
 using log4net.Core;
+#endif
 
 namespace PacketDotNet
 {
@@ -12,49 +14,40 @@ namespace PacketDotNet
         }
     }
 #else
+    // For Release builds we disable logging
     internal class ILogActive
     {
-        private log4net.ILog wrappedLogger;
-
-        private ILogActive(log4net.ILog wrappedLogger)
-        {
-            this.wrappedLogger = wrappedLogger;
-        }
-
-        public ILogger Logger
-        {
-            get { return wrappedLogger.Logger; }
-        }
-
+#if false
         public bool IsDebugEnabled
         {
-            get { return wrappedLogger.IsDebugEnabled; }
+            get { return false; }
         }
 
         public bool IsInfoEnabled
         {
-            get { return wrappedLogger.IsInfoEnabled; }
+            get { return false; }
         }
 
         public bool IsWarnEnabled
         {
-            get { return wrappedLogger.IsWarnEnabled; }
+            get { return false; }
         }
 
         public bool IsErrorEnabled
         {
-            get { return wrappedLogger.IsErrorEnabled; }
+            get { return false; }
         }
 
         public bool IsFatalEnabled
         {
-            get { return wrappedLogger.IsFatalEnabled; }
+            get { return false; }
         }
+#endif
 
         [System.Diagnostics.ConditionalAttribute("DEBUG")]
         public void Debug (object message)
         {
-            wrappedLogger.Debug(message);
+            throw new System.NotImplementedException();
         }
 
         [System.Diagnostics.ConditionalAttribute("DEBUG")]
@@ -66,31 +59,31 @@ namespace PacketDotNet
         [System.Diagnostics.ConditionalAttribute("DEBUG")]
         public void DebugFormat(string format, params object[] args)
         {
-            wrappedLogger.DebugFormat(format, args);
+            throw new System.NotImplementedException ();
         }
 
         [System.Diagnostics.ConditionalAttribute("DEBUG")]
         public void DebugFormat (System.IFormatProvider provider, string format, params object[] args)
         {
-            wrappedLogger.DebugFormat(provider, format, args);
+            throw new System.NotImplementedException ();
         }
 
         [System.Diagnostics.ConditionalAttribute("DEBUG")]
         public void DebugFormat (string format, object arg0)
         {
-            wrappedLogger.DebugFormat(format, arg0);
+            throw new System.NotImplementedException ();
         }
 
         [System.Diagnostics.ConditionalAttribute("DEBUG")]
         public void DebugFormat (string format, object arg0, object arg1)
         {
-            wrappedLogger.DebugFormat(format, arg0, arg1);
+            throw new System.NotImplementedException ();
         }
 
         [System.Diagnostics.ConditionalAttribute("DEBUG")]
         public void DebugFormat (string format, object arg0, object arg1, object arg2)
         {
-            wrappedLogger.DebugFormat(format, arg0, arg1, arg2);
+            throw new System.NotImplementedException ();
         }
 
         [System.Diagnostics.ConditionalAttribute("DEBUG")]
@@ -263,7 +256,7 @@ namespace PacketDotNet
 
         public static ILogActive GetLogger(Type type)
         {
-            return new ILogActive(log4net.LogManager.GetLogger(type));
+            return new ILogActive();
         }
     }
 #endif

@@ -552,7 +552,7 @@ namespace PacketDotNet
             if (Urg)
                 buffer.Append(" urg[0x" + System.Convert.ToString(UrgentPointer, 16) + "]");
             if (Ack)
-                buffer.Append(" ack[0x" + System.Convert.ToString(AcknowledgmentNumber, 16) + "]");
+                buffer.Append(" ack[" + AcknowledgmentNumber + " (0x" + System.Convert.ToString(AcknowledgmentNumber, 16) + ")]");
             if (Psh)
                 buffer.Append(" psh");
             if (Rst)

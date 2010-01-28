@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>/home/cmorgan/sharppcap_git/SharpPcap/bin/Debug/SharpPcap</name>
+        <name>/home/cmorgan/sharppcap_git/SharpPcap/bin/Release/SharpPcap</name>
     </assembly>
     <members>
         <member name="T:SharpPcap.Packets.ARPFields_Fields">
@@ -2723,6 +2723,12 @@
             Return a value indicating if the capturing process of this adapter is started
             </summary>
         </member>
+        <member name="P:SharpPcap.PcapDevice.StopCaptureTimeout">
+            <summary>
+            Maximum time within which the capture thread must join the main thread (on
+            <see cref="M:SharpPcap.PcapDevice.StopCapture" />) or else the thread is aborted and an exception thrown.
+            </summary>
+        </member>
         <member name="P:SharpPcap.PcapDevice.Interface">
             <value>
             Low level pcap device values
@@ -2794,6 +2800,11 @@
             </summary>
             <param name="packetCount">The number of packets to be captured.
             Value of '-1' means infinite.</param>
+        </member>
+        <member name="M:SharpPcap.PcapDevice.CaptureThread">
+            <summary>
+            The capture thread
+            </summary>
         </member>
         <member name="M:SharpPcap.PcapDevice.GetLastError(System.IntPtr)">
             <summary>
@@ -2931,42 +2942,6 @@
             </summary>
             <param name="hardwareAddress">
             A <see cref="T:System.Net.NetworkInformation.PhysicalAddress" /></param>
-        </member>
-        <member name="T:SharpPcap.LivePcapDeviceList">
-            <summary>
-            List of available Pcap Interfaces.
-            </summary>
-        </member>
-        <member name="M:SharpPcap.LivePcapDeviceList.#ctor">
-            <summary>
-            Represents a strongly typed, read-only list of PcapDevices.
-            </summary>
-        </member>
-        <member name="P:SharpPcap.LivePcapDeviceList.Item(System.String)">
-            <param name="Name">The name or description of the pcap interface to get.</param>
-        </member>
-        <member name="M:SharpPcap.LivePcapDeviceList.New">
-            <summary>
-            Caution: Use the singlton instance unless you know why you need to call this.
-            One use is for multiple filters on the same physical device. The work around
-            is to simply open the same physical device multiple times, one for each
-            filter by calling this routine and picking the same device out of each
-            PcapDeviceList.
-            </summary>
-            <returns>
-            A <see cref="T:SharpPcap.LivePcapDeviceList" /></returns>
-        </member>
-        <member name="M:SharpPcap.LivePcapDeviceList.GetDevices">
-            <summary>
-            Retrieve a list of the current PcapDevices
-            </summary>
-            <returns>
-            A <see cref="!:List" /></returns>
-        </member>
-        <member name="M:SharpPcap.LivePcapDeviceList.Refresh">
-            <summary>
-            Refresh the device list
-            </summary>
         </member>
         <member name="P:SharpPcap.PcapInterface.Name">
             <value>
@@ -3277,6 +3252,42 @@
             <summary>
             Set a Pcap device to report statistics, Statistics mode
             WinPcap only
+            </summary>
+        </member>
+        <member name="T:SharpPcap.LivePcapDeviceList">
+            <summary>
+            List of available Pcap Interfaces.
+            </summary>
+        </member>
+        <member name="M:SharpPcap.LivePcapDeviceList.#ctor">
+            <summary>
+            Represents a strongly typed, read-only list of PcapDevices.
+            </summary>
+        </member>
+        <member name="P:SharpPcap.LivePcapDeviceList.Item(System.String)">
+            <param name="Name">The name or description of the pcap interface to get.</param>
+        </member>
+        <member name="M:SharpPcap.LivePcapDeviceList.New">
+            <summary>
+            Caution: Use the singlton instance unless you know why you need to call this.
+            One use is for multiple filters on the same physical device. The work around
+            is to simply open the same physical device multiple times, one for each
+            filter by calling this routine and picking the same device out of each
+            PcapDeviceList.
+            </summary>
+            <returns>
+            A <see cref="T:SharpPcap.LivePcapDeviceList" /></returns>
+        </member>
+        <member name="M:SharpPcap.LivePcapDeviceList.GetDevices">
+            <summary>
+            Retrieve a list of the current PcapDevices
+            </summary>
+            <returns>
+            A <see cref="!:List" /></returns>
+        </member>
+        <member name="M:SharpPcap.LivePcapDeviceList.Refresh">
+            <summary>
+            Refresh the device list
             </summary>
         </member>
         <member name="T:SharpPcap.PacketArrivalEventHandler">

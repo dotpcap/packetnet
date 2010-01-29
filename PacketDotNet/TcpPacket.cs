@@ -367,8 +367,6 @@ namespace PacketDotNet
             // store the payload bytes
             payloadPacketOrData = new PacketOrByteArray();
             payloadPacketOrData.TheByteArray = header.EncapsulatedBytes();
-            Console.WriteLine("TcpPacket payloadPacketOrData.TheByteArray {0}",
-                              payloadPacketOrData.TheByteArray.ToString());
         }
 
         /// <summary>

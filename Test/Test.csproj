@@ -34,7 +34,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="SharpPcap, Version=2.3.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="SharpPcap, Version=2.4.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\SharpPcap.dll</HintPath>
     </Reference>
@@ -62,6 +62,7 @@
     <Compile Include="ByteRetrievalPerformancs.cs" />
     <Compile Include="LoggingConfiguration.cs" />
     <Compile Include="LinuxCookedCaptureTest.cs" />
+    <Compile Include="PacketDotNet_vs_SharpPcapPerformance.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

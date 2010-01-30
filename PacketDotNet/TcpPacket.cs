@@ -619,9 +619,10 @@ namespace PacketDotNet
         {
             if(p is InternetLinkLayerPacket)
             {
-                if(p.PayloadPacket is IpPacket)
+                var payloadPacket = p.PayloadPacket;
+                if(payloadPacket is IpPacket)
                 {
-                    if(p.PayloadPacket.PayloadPacket is TcpPacket)
+                    if(payloadPacket.PayloadPacket is TcpPacket)
                     {
                         log.Debug("returning true");
                         return true;

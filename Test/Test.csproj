@@ -43,7 +43,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="ConstructingPackets.cs" />
     <Compile Include="Rate.cs" />
     <Compile Include="ByteSetupMethods.cs" />

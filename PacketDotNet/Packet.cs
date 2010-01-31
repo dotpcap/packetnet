@@ -265,6 +265,22 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Parse a raw packet into its specific packets and payloads
+        /// </summary>
+        /// <param name="rawPacket">
+        /// A <see cref="RawPacket"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="Packet"/>
+        /// </returns>
+        public static Packet ParsePacket(RawPacket rawPacket)
+        {
+            return ParsePacket(rawPacket.LinkLayerType,
+                               rawPacket.Timeval,
+                               rawPacket.Data);
+        }
+
+        /// <summary>
         /// Parse bytes into a packet
         /// </summary>
         /// <param name="LinkLayer">

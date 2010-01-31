@@ -423,7 +423,7 @@ namespace PacketDotNet
         /// </summary>
         /// <returns> The computed IP checksum.
         /// </returns>
-        public int ComputeIPChecksum()
+        public override int ComputeIPChecksum()
         {
             //copy the ip header
             var theHeader = Header;
@@ -438,6 +438,14 @@ namespace PacketDotNet
             int cs = ChecksumUtils.OnesComplementSum(ip, 0, ip.Length);
 
             return cs;
+        }
+
+        /// <summary>
+        /// Update the checksum value
+        /// </summary>
+        public override void UpdateIPChecksum ()
+        {
+            this.Checksum = ComputeIPChecksum();
         }
 
         /// <summary>

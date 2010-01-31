@@ -342,6 +342,22 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Compute the checksum of the ip packet
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
+        public abstract int ComputeIPChecksum();
+
+        /// <summary>
+        /// Update the value of the IP checksum 
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
+        public abstract void UpdateIPChecksum();
+
+        /// <summary>
         /// Computes the transport layer checksum, either for the
         /// tcp or udp packet
         /// </summary>

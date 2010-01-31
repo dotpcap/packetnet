@@ -488,6 +488,27 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Calculate the IP checksum of this packet
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
+        public override int ComputeIPChecksum ()
+        {
+            return 0;
+        }
+
+        /// <summary>
+        /// Update the IP checksum, nothing to do for IPv6 packets
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
+        public override void UpdateIPChecksum ()
+        {
+        }
+
         /// <summary> Check if the IP packet is valid, checksum-wise.</summary>
         public override bool ValidIPChecksum
         {

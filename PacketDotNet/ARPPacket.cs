@@ -32,17 +32,17 @@ namespace PacketDotNet
         /// <value>
         /// Also known as HardwareType
         /// </value>
-        virtual public int HardwareAddressType
+        virtual public LinkLayers HardwareAddressType
         {
             get
             {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + ARPFields.HardwareAddressTypePosition);
+                return (LinkLayers)EndianBitConverter.Big.ToUInt16(header.Bytes,
+                                                                  header.Offset + ARPFields.HardwareAddressTypePosition);
             }
 
             set
             {
-                var theValue = (Int16)value;
+                var theValue = (UInt16)value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  header.Bytes,
                                                  header.Offset + ARPFields.HardwareAddressTypePosition);
@@ -52,17 +52,17 @@ namespace PacketDotNet
         /// <value>
         /// Also known as ProtocolType
         /// </value>
-        virtual public int ProtocolAddressType
+        virtual public EthernetPacketType ProtocolAddressType
         {
             get
             {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + ARPFields.ProtocolAddressTypePosition);
+                return (EthernetPacketType)EndianBitConverter.Big.ToUInt16(header.Bytes,
+                                                                           header.Offset + ARPFields.ProtocolAddressTypePosition);
             }
 
             set
             {
-                var theValue = (Int16)value;
+                var theValue = (UInt16)value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  header.Bytes,
                                                  header.Offset + ARPFields.ProtocolAddressTypePosition);
@@ -243,6 +243,45 @@ namespace PacketDotNet
             {
                 return AnsiEscapeSequences.Purple;
             }
+        }
+
+        /// <summary>
+        /// Create an ARPPacket from values
+        /// </summary>
+        /// <param name="Operation">
+        /// A <see cref="ARPOperation"/>
+        /// </param>
+        /// <param name="TargetHardwareAddress">
+        /// A <see cref="PhysicalAddress"/>
+        /// </param>
+        /// <param name="TargetProtocolAddress">
+        /// A <see cref="System.Net.IPAddress"/>
+        /// </param>
+        /// <param name="SenderHardwareAddress">
+        /// A <see cref="PhysicalAddress"/>
+        /// </param>
+        /// <param name="SenderProtocolAddress">
+        /// A <see cref="System.Net.IPAddress"/>
+        /// </param>
+        public ARPPacket(ARPOperation Operation,
+                         PhysicalAddress TargetHardwareAddress,
+                         System.Net.IPAddress TargetProtocolAddress,
+                         PhysicalAddress SenderHardwareAddress,
+                         System.Net.IPAddress SenderProtocolAddress)
+            : base(new PosixTimeval())
+        {
+            this.Operation = Operation;
+            this.TargetHardwareAddress = TargetHardwareAddress;
+            this.TargetProtocolAddress = TargetProtocolAddress;
+            this.SenderHardwareAddress = SenderHardwareAddress;
+            this.SenderProtocolAddress = SenderProtocolAddress;
+
+            // set some internal properties to fully define the packet
+            this.HardwareAddressType = LinkLayers.Ethernet;
+            this.HardwareAddressLength = EthernetFields.MacAddressLength;
+
+            this.ProtocolAddressType = EthernetPacketType.IpV4;
+            this.ProtocolAddressLength = IPv4Fields.AddressLength;
         }
 
         /// <summary>

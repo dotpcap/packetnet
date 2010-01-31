@@ -19,22 +19,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace PacketDotNet
 {
-    /// <summary>
-    /// The possible ARP operation values
-    /// </summary>
-    public enum ARPOperation : ushort
-    {
-        /// <summary>
-        /// Arp request
-        /// </summary>
-        Request = 0x1,
-
-        /// <summary>
-        /// Arp response
-        /// </summary>
-        Response = 0x2
-    }
-
     /// <summary> IP protocol field encoding information.
     /// 
     /// </summary>

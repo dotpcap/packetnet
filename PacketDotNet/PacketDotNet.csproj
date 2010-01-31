@@ -93,6 +93,8 @@
     <Compile Include="PacketOrByteArray.cs" />
     <Compile Include="PayloadType.cs" />
     <Compile Include="ICMPv6Types.cs" />
+    <Compile Include="RawPacket.cs" />
+    <Compile Include="ARPOperation.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

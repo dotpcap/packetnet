@@ -9,6 +9,7 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>CapturingAndParsingPackets</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <RootNamespace>CapturingAndParsingPackets</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

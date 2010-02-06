@@ -39,7 +39,12 @@ Global
 		{6AF85EE0-52EB-47D2-B753-4676F286DFF5} = {E51AE6D2-86DD-425B-A4DF-E56A3AA6B651}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		version = 0.1
 		StartupItem = PacketDotNet\PacketDotNet.csproj
+		Policies = $0
+		$0.TextStylePolicy = $1
+		$1.FileWidth = 120
+		$1.inheritsSet = VisualStudio
+		$1.inheritsScope = text/plain
+		$1.scope = text/plain
 	EndGlobalSection
 EndGlobal

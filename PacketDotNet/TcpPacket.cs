@@ -300,9 +300,6 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> </summary>
-        private const long serialVersionUID = 1L;
-
         /// <summary>
         /// Create a new TCP packet from values
         /// </summary>

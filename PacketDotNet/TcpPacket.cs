@@ -612,7 +612,7 @@ namespace PacketDotNet
         /// <summary>
         /// Returns true if Packet p contains a TcpPacket
         /// </summary>
-        public static bool IsType(Packet p)
+        private static bool IsType(Packet p)
         {
             if(p is InternetLinkLayerPacket)
             {

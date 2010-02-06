@@ -362,7 +362,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Boolean"/>
         /// </returns>
-        public static bool IsType(Packet p)
+        private static bool IsType(Packet p)
         {
             // an arp packet is a type of InternetLinkLayerPacket
             if(p is InternetLinkLayerPacket)

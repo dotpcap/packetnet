@@ -9,6 +9,7 @@
     <OutputType>Library</OutputType>
     <AssemblyName>Test</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <RootNamespace>Test</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,7 +40,8 @@
       <HintPath>lib\SharpPcap.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=a5715cc6d5c3540b">
-      <Package>log4net</Package>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\PacketDotNet\Libraries\log4net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

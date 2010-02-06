@@ -93,8 +93,8 @@ namespace Test
             while ((rawPacket = dev.GetNextRawPacket()) != null)
             {
                 var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
-                Assert.IsTrue(TcpPacket.IsType(p), "p is not TcpPacket");
                 var t = TcpPacket.GetType(p);
+                Assert.IsNotNull(t, "Expected t to not be null");
                 Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
 
                 // compare the computed checksum to the expected one

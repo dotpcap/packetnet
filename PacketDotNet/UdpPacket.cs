@@ -305,7 +305,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Boolean"/>
         /// </returns>
-        public static bool IsType(Packet p)
+        private static bool IsType(Packet p)
         {
             if(p is InternetLinkLayerPacket)
             {

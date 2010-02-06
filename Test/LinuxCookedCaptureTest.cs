@@ -11,7 +11,8 @@ namespace Test
         private void VerifyPacket0(Packet p)
         {
             // expect an arp packet
-            Assert.IsTrue(ARPPacket.IsType(p), "expected an arp packet");
+            var arpPacket = ARPPacket.GetType(p);
+            Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             // validate some of the LinuxSSLPacket fields
             var l = (LinuxSLLPacket)p;
@@ -20,7 +21,6 @@ namespace Test
             Assert.AreEqual(LinuxSLLType.PacketSentToUs, l.Type);
 
             // validate some of the arp fields
-            var arpPacket = ARPPacket.GetType(p);
             Assert.AreEqual("192.168.1.1",
                             arpPacket.SenderProtocolAddress.ToString(),
                             "Arp SenderProtocolAddress");
@@ -32,13 +32,13 @@ namespace Test
         private void VerifyPacket1(Packet p)
         {
             // expect a udp packet
-            Assert.IsTrue(UdpPacket.IsType(p), "expected a udp packet");
+            Assert.IsNotNull(UdpPacket.GetType(p), "expected a udp packet");
         }
 
         private void VerifyPacket2(Packet p)
         {
             // expecting a tcp packet
-            Assert.IsTrue(TcpPacket.IsType(p), "expected a tcp packet");
+            Assert.IsNotNull(TcpPacket.GetType(p), "expected a tcp packet");
         }
 
         [Test]

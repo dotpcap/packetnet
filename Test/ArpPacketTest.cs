@@ -13,8 +13,8 @@ namespace Test
         // arp request
         private void VerifyPacket0(Packet p)
         {
-            Assert.IsTrue(ARPPacket.IsType(p), "p isn't an ARPPacket");
             var arpPacket = ARPPacket.GetType(p);
+            Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             IPAddress senderIp = IPAddress.Parse("192.168.1.202");
             IPAddress targetIp = IPAddress.Parse("192.168.1.214");
@@ -31,8 +31,8 @@ namespace Test
         // arp response
         private void VerifyPacket1(Packet p)
         {
-            Assert.IsTrue(ARPPacket.IsType(p), "p isn't an ARPPacket");
             var arpPacket = ARPPacket.GetType(p);
+            Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             IPAddress senderIp = IPAddress.Parse("192.168.1.214");
             IPAddress targetIp = IPAddress.Parse("192.168.1.202");

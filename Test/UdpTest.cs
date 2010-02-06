@@ -29,9 +29,9 @@ namespace Test
                                                     rawPacket.Timeval.MicroSeconds),
                                    rawPacket.Data);
             Assert.IsNotNull(p);
-            Assert.IsTrue(UdpPacket.IsType(p));
 
             u = UdpPacket.GetType(p);
+            Assert.IsNotNull(u, "Expected a non-null UdpPacket");
             Assert.AreEqual(41 - u.Header.Length,
                             u.PayloadData.Length, "UDPData.Length mismatch");
 
@@ -43,9 +43,9 @@ namespace Test
                                     rawPacket.Data);
 
             Assert.IsNotNull(p);
-            Assert.IsTrue(UdpPacket.IsType(p));
 
             u = UdpPacket.GetType(p);
+            Assert.IsNotNull(u, "Expected u to be a UdpPacket");
             Assert.AreEqual(356 - u.Header.Length,
                             u.PayloadData.Length, "UDPData.Length mismatch");
 

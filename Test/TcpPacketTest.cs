@@ -33,8 +33,8 @@ namespace Test
             Assert.IsNotNull(p);
 
             Console.WriteLine(p.GetType());
-            Assert.IsTrue(TcpPacket.IsType(p));
             var t = TcpPacket.GetType(p);
+            Assert.IsNotNull(t, "Expected t not to be null");
 
             // even though the packet has 6 bytes of extra data, the ip packet shows a size of
             // 40 and the ip header has a length of 20. The TCP header is also 20 bytes so
@@ -58,9 +58,9 @@ namespace Test
             Assert.IsNotNull(p);
 
             Console.WriteLine(p.GetType());
-            Assert.IsTrue(TcpPacket.IsType(p), "p is not a TcpPacket");
 
             var t = TcpPacket.GetType(p);
+            Assert.IsNotNull(t, "Expected t to not be null");
             Console.WriteLine("Checksum: " + t.Checksum.ToString("X"));
             Assert.IsTrue(t.ValidChecksum, "ValidChecksum indicates invalid checksum");
 
@@ -95,8 +95,8 @@ namespace Test
 
             Assert.IsNotNull(p);
 
-            Assert.IsTrue(TcpPacket.IsType(p));
             var t = TcpPacket.GetType(p);
+            Assert.IsNotNull(t, "Expected t to not be null");
 
             // verify that the options byte match what we expect
             byte[] expectedOptions = new byte[] { 0x1, 0x1, 0x8, 0xa, 0x0, 0x14,

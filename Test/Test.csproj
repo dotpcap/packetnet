@@ -65,6 +65,7 @@
     <Compile Include="LinuxCookedCaptureTest.cs" />
     <Compile Include="PacketDotNet_vs_SharpPcapPerformance.cs" />
     <Compile Include="PPPoEPPPTest.cs" />
+    <Compile Include="StringOutput.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

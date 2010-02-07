@@ -95,6 +95,12 @@
     <Compile Include="ICMPv6Types.cs" />
     <Compile Include="RawPacket.cs" />
     <Compile Include="ARPOperation.cs" />
+    <Compile Include="PPPoEPacket.cs" />
+    <Compile Include="PPPoEFields.cs" />
+    <Compile Include="PPPoECode.cs" />
+    <Compile Include="PPPPacket.cs" />
+    <Compile Include="PPPFields.cs" />
+    <Compile Include="PPPProtocol.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

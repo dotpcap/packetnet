@@ -36,3 +36,8 @@ LinuxCookedCapture.pcap
 - ARP packet
 - UDP (dns) packet 192.168.1.102:37824 -> 66.189.0.29:53
 - TCP packet 192.168.1.102:60604 -> 216.34.181.60:443
+
+PPPoePtp.pcap
+2 packets captured
+- Ethernet/IPv4/Udp/Data
+- Ethernet/PPPoe/PtP/IPv4/Udp/Data

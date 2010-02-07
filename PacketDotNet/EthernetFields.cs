@@ -21,8 +21,8 @@ using System;
 
 namespace PacketDotNet
 {
-    /// <summary> Ethernet protocol field encoding information.
-    /// 
+    /// <summary>
+    /// Ethernet protocol field encoding information.
     /// </summary>
     public class EthernetFields
     {

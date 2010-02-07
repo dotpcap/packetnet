@@ -610,40 +610,24 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns true if Packet p contains a TcpPacket
-        /// </summary>
-        private static bool IsType(Packet p)
-        {
-            if(p is InternetLinkLayerPacket)
-            {
-                var payloadPacket = p.PayloadPacket;
-                if(payloadPacket is IpPacket)
-                {
-                    if(payloadPacket.PayloadPacket is TcpPacket)
-                    {
-                        log.Debug("returning true");
-                        return true;
-                    }
-                }
-            }
-
-            log.Debug("returning false");
-            return false;
-        }
-
-        /// <summary>
         /// Returns the TcpPacket embedded in Packet p or null if
         /// there is no embedded TcpPacket
         /// </summary>
         public static TcpPacket GetType(Packet p)
         {
-            if(IsType(p))
+            if(p is InternetLinkLayerPacket)
             {
-                log.Debug("returning PayloadPacket");
-                return (TcpPacket)p.PayloadPacket.PayloadPacket;
+                var payload = InternetLinkLayerPacket.GetInnerPayload((InternetLinkLayerPacket)p);
+                if(payload is IpPacket)
+                {
+                    var innerPayload = payload.PayloadPacket;
+                    if(innerPayload is TcpPacket)
+                    {
+                        return (TcpPacket)innerPayload;
+                    }
+                }
             }
 
-            log.Debug("returning null");
             return null;
         }
 

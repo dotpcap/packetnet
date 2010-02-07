@@ -297,31 +297,6 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns true if this Packet contains this type 
-        /// </summary>
-        /// <param name="p">
-        /// A <see cref="Packet"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="System.Boolean"/>
-        /// </returns>
-        private static bool IsType(Packet p)
-        {
-            if(p is InternetLinkLayerPacket)
-            {
-                if(p.PayloadPacket is IpPacket)
-                {
-                    if(p.PayloadPacket.PayloadPacket is UdpPacket)
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Returns the UdpPacket inside of the Packet p or null if
         /// there is no encapsulated packet
         /// </summary>
@@ -333,9 +308,17 @@ namespace PacketDotNet
         /// </returns>
         public static UdpPacket GetType(Packet p)
         {
-            if(IsType(p))
+            if(p is InternetLinkLayerPacket)
             {
-                return (UdpPacket)p.PayloadPacket.PayloadPacket;
+                var payload = InternetLinkLayerPacket.GetInnerPayload((InternetLinkLayerPacket)p);
+                if(payload is IpPacket)
+                {
+                    var innerPayload = payload.PayloadPacket;
+                    if(innerPayload is UdpPacket)
+                    {
+                        return (UdpPacket)innerPayload;
+                    }
+                }
             }
 
             return null;

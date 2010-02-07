@@ -391,29 +391,6 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns true if Packet p contains this type 
-        /// </summary>
-        /// <param name="p">
-        /// A <see cref="Packet"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="System.Boolean"/>
-        /// </returns>
-        private static bool IsType(Packet p)
-        {
-            // an arp packet is a type of InternetLinkLayerPacket
-            if(p is InternetLinkLayerPacket)
-            {
-                if(p.PayloadPacket is IpPacket)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Returns the IpPacket inside of the Packet p or null if
         /// there is no encapsulated packet
         /// </summary>
@@ -427,9 +404,13 @@ namespace PacketDotNet
         {
             log.Debug("");
 
-            if(IsType(p))
+            if(p is InternetLinkLayerPacket)
             {
-                return (IpPacket)p.PayloadPacket;
+                var payload = InternetLinkLayerPacket.GetInnerPayload((InternetLinkLayerPacket)p);
+                if(payload is IpPacket)
+                {
+                    return (IpPacket)payload;
+                }
             }
 
             return null;

@@ -242,6 +242,9 @@ namespace PacketDotNet
             case EthernetPacketType.Arp:
                 payloadPacketOrData.ThePacket = new ARPPacket(payload.Bytes, payload.Offset, Timeval);
                 break;
+            case EthernetPacketType.PointToPointProtocolOverEthernetSessionStage:
+                payloadPacketOrData.ThePacket = new PPPoEPacket(payload.Bytes, payload.Offset, Timeval);
+                break;
             default: // consider the sub-packet to be a byte array
                 payloadPacketOrData.TheByteArray = payload;
                 break;

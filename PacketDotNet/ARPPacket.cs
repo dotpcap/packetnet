@@ -353,30 +353,6 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns true if Packet is an ARPPacket, ie.
-        /// an EthernetPacket that contains an ARPPacket
-        /// </summary>
-        /// <param name="p">
-        /// A <see cref="Packet"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="System.Boolean"/>
-        /// </returns>
-        private static bool IsType(Packet p)
-        {
-            // an arp packet is a type of InternetLinkLayerPacket
-            if(p is InternetLinkLayerPacket)
-            {
-                if(p.PayloadPacket is ARPPacket)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Returns the encapsulated ARPPacket of the Packet p or null if
         /// there is no encapsulated packet
         /// </summary>
@@ -388,9 +364,13 @@ namespace PacketDotNet
         /// </returns>
         public static ARPPacket GetType(Packet p)
         {
-            if(IsType(p))
+            if(p is InternetLinkLayerPacket)
             {
-                return (ARPPacket)p.PayloadPacket;
+                var payload = InternetLinkLayerPacket.GetInnerPayload((InternetLinkLayerPacket)p);
+                if(payload is ARPPacket)
+                {
+                    return (ARPPacket)payload;
+                }
             }
 
             return null;

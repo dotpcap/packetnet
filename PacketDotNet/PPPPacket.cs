@@ -146,6 +146,56 @@ namespace PacketDotNet
 
             return payloadPacketOrData;
         }
+
+        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override System.String Color
+        {
+            get
+            {
+                return AnsiEscapeSequences.DarkGray;
+            }
+        }
+
+        /// <summary> Convert this packet to a readable string.</summary>
+        public override System.String ToString()
+        {
+            return ToColoredString(false);
+        }
+
+        /// <summary> Generate string with contents describing this packet.</summary>
+        /// <param name="colored">whether or not the string should contain ansi
+        /// color escape sequences.
+        /// </param>
+        public override System.String ToColoredString(bool colored)
+        {
+            var buffer = new System.Text.StringBuilder();
+
+            buffer.AppendFormat("[PPPPacket] Protocol {0}",
+                                Protocol);
+
+            // append the base output
+            buffer.Append(base.ToColoredString(colored));
+
+            return buffer.ToString();
+        }
+
+        /// <summary> Convert a more verbose string.</summary>
+        public override System.String ToColoredVerboseString(bool colored)
+        {
+            //TODO: just output the colored output for now
+            return ToColoredString(colored);
+        }
+
+        /// <summary>
+        /// Generate a random PPPoEPacket
+        /// </summary>
+        /// <returns>
+        /// A <see cref="PPPoEPacket"/>
+        /// </returns>
+        public static PPPoEPacket RandomPacket()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
 

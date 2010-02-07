@@ -244,13 +244,13 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Convert this ethernet packet to a readable string.</summary>
+        /// <summary> Convert this packet to a readable string.</summary>
         public override System.String ToString()
         {
             return ToColoredString(false);
         }
 
-        /// <summary> Generate string with contents describing this ethernet packet.</summary>
+        /// <summary> Generate string with contents describing this packet.</summary>
         /// <param name="colored">whether or not the string should contain ansi
         /// color escape sequences.
         /// </param>
@@ -258,7 +258,8 @@ namespace PacketDotNet
         {
             var buffer = new System.Text.StringBuilder();
 
-            buffer.Append(ToString());
+            buffer.AppendFormat("[PPPoEPacket] Version {0}, Type {1}, Code {2}, SessionId {3}, Length {4}",
+                                Version, Type, Code, SessionId, Length);
 
             // append the base output
             buffer.Append(base.ToColoredString(colored));

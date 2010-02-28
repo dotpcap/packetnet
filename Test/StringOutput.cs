@@ -219,10 +219,34 @@ namespace Test
             }
         }
 
-        private void OutputPacket(Packet p)
+        enum OutputType
         {
-            Console.WriteLine(currentPacketDescription);
-            Console.WriteLine(p.ToColoredVerboseString(true));
+            ToString,
+            ToColoredString,
+            ToColoredVerboseString
+        }
+
+        private void OutputPacket(Packet p, OutputType outputType)
+        {
+            Console.WriteLine(currentPacketDescription + " - " + outputType);
+
+            string output = null;
+            switch(outputType)
+            {
+            case OutputType.ToString:
+                output = p.ToString();
+                break;
+            case OutputType.ToColoredString:
+                output = p.ToColoredString(true);
+                break;
+            case OutputType.ToColoredVerboseString:
+                output = p.ToColoredVerboseString(false);
+                break;
+            default:
+                throw new NotImplementedException("unknown OutputType of " + outputType);
+            }
+
+            Console.WriteLine(output);
             Console.WriteLine();
         }
 
@@ -240,7 +264,7 @@ namespace Test
             Packet p;
             while((p = GetNextPacket()) != null)
             {
-                OutputPacket(p);
+                OutputPacket(p, OutputType.ToString);
             }
 
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
@@ -260,7 +284,7 @@ namespace Test
             Packet p;
             while((p = GetNextPacket()) != null)
             {
-                OutputPacket(p);
+                OutputPacket(p, OutputType.ToColoredString);
             }
 
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
@@ -280,7 +304,7 @@ namespace Test
             Packet p;
             while((p = GetNextPacket()) != null)
             {
-                OutputPacket(p);
+                OutputPacket(p, OutputType.ToColoredVerboseString);
             }
 
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;

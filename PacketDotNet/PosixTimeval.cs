@@ -55,6 +55,155 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Operator &lt; overload
+        /// </summary>
+        /// <param name="a">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <param name="b">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Boolean"/>
+        /// </returns>
+        public static bool operator<(PosixTimeval a, PosixTimeval b)
+        {
+            if(a.Seconds < b.Seconds) return true;
+            if((a.Seconds == b.Seconds) &&
+               (a.MicroSeconds < b.MicroSeconds))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Operator &gt; overload
+        /// </summary>
+        /// <param name="a">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <param name="b">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Boolean"/>
+        /// </returns>
+        public static bool operator>(PosixTimeval a, PosixTimeval b)
+        {
+            return (b < a);
+        }
+
+        /// <summary>
+        /// Operator &lt;=
+        /// </summary>
+        /// <param name="a">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <param name="b">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Boolean"/>
+        /// </returns>
+        public static bool operator<=(PosixTimeval a, PosixTimeval b)
+        {
+            if(a < b) return true;
+
+            if((a.Seconds == b.Seconds) &&
+               (a.MicroSeconds <= b.MicroSeconds))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Operator &gt;=
+        /// </summary>
+        /// <param name="a">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <param name="b">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Boolean"/>
+        /// </returns>
+        public static bool operator>=(PosixTimeval a, PosixTimeval b)
+        {
+            return (b <= a);
+        }
+
+        /// <summary>
+        /// Operator ==
+        /// </summary>
+        /// <param name="a">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <param name="b">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Boolean"/>
+        /// </returns>
+        public static bool operator==(PosixTimeval a, PosixTimeval b)
+        {
+            return ((a.Seconds == b.Seconds) &&
+                    (a.MicroSeconds == b.MicroSeconds));
+        }
+
+        /// <summary>
+        /// Operator !=
+        /// </summary>
+        /// <param name="a">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <param name="b">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Boolean"/>
+        /// </returns>
+        public static bool operator!=(PosixTimeval a, PosixTimeval b)
+        {
+            return !(a == b);
+        }
+
+        /// <summary>
+        /// Equals override
+        /// </summary>
+        /// <param name="obj">
+        /// A <see cref="System.Object"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Boolean"/>
+        /// </returns>
+        public override bool Equals (object obj)
+        {
+            // Check for null values and compare run-time types.
+            if (obj == null || GetType() != obj.GetType()) 
+                return false;
+
+            var pt = (PosixTimeval)obj;
+
+            return ((Seconds == pt.Seconds) && (MicroSeconds == pt.MicroSeconds));
+        }
+
+        /// <summary>
+        /// GetHashCode override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
+        public override int GetHashCode ()
+        {
+            return Seconds.GetHashCode() + MicroSeconds.GetHashCode();
+        }
+
         private static void DateTimeToUnixTimeVal(DateTime dateTime,
                                                   out UInt64 tvSec,
                                                   out UInt64 tvUsec)

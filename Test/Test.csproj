@@ -66,6 +66,7 @@
     <Compile Include="PacketDotNet_vs_SharpPcapPerformance.cs" />
     <Compile Include="PPPoEPPPTest.cs" />
     <Compile Include="StringOutput.cs" />
+    <Compile Include="PosixTimevalTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

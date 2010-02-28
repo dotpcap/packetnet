@@ -8,7 +8,7 @@
 function PrintUsage()
 {
   echo "example:";
-  echo "  ./make_bin_release ~/packetdotnet_releases 2.0.0";
+  echo "  ./make_bin_release ~/release_directory 2.0.0";
 }
 
 if [ "$#" -ne 2 ]; then

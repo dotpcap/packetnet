@@ -14,14 +14,14 @@ namespace Test
         //       so silence the incorrect warning CS0169
 #pragma warning disable 0169
         [SetUp]
-        void RunBeforeAnyTests()
+        public void RunBeforeAnyTests()
         {
             // load the configuration file
             log4net.Config.XmlConfigurator.Configure(new System.IO.FileInfo("../../log4net.config"));
         }
 
         [TearDown]
-        void RunAfterAnyTests()
+        public void RunAfterAnyTests()
         {
             // ...
         }

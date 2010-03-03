@@ -43,9 +43,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\PacketDotNet\Libraries\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ByteCopyPerformance.cs" />
     <Compile Include="ConstructingPackets.cs" />
     <Compile Include="Rate.cs" />
     <Compile Include="ByteSetupMethods.cs" />

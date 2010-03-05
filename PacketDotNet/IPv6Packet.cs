@@ -315,6 +315,7 @@ namespace PacketDotNet
 
             // set some default values to make this packet valid
             PayloadLength = 0;
+            TimeToLive = DefaultTimeToLive;
 
             // set instance values
             this.SourceAddress = SourceAddress;

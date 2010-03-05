@@ -41,6 +41,11 @@ namespace PacketDotNet
 #pragma warning restore 0169
 #endif
 
+        /// <summary>
+        /// The default time to live value for Ip packets being constructed 
+        /// </summary>
+        protected int DefaultTimeToLive = 64;
+
         /// <value>
         /// Payload packet, overridden to set the NextHeader/Protocol based
         /// on the type of payload packet when the payload packet is set

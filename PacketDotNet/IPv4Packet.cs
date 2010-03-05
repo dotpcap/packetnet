@@ -535,6 +535,7 @@ namespace PacketDotNet
             // set some default values to make this packet valid
             PayloadLength = 0;
             HeaderLength = (HeaderMinimumLength / 4); // NOTE: HeaderLength is the number of 32bit words in the header
+            TimeToLive = DefaultTimeToLive;
 
             // set instance values
             this.SourceAddress = SourceAddress;

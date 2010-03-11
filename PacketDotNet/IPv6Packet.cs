@@ -398,7 +398,7 @@ namespace PacketDotNet
                      IPv6Fields.AddressLength);
 
             // 33-36: TCP length
-            bw.Write((UInt32)System.Net.IPAddress.HostToNetworkOrder((UInt32)origHeader.Length));
+            bw.Write((UInt32)System.Net.IPAddress.HostToNetworkOrder((Int32)origHeader.Length));
 
             // 37-39: 3 bytes of zeros
             bw.Write((byte)0);

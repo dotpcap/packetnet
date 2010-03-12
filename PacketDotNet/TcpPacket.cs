@@ -29,7 +29,7 @@ namespace PacketDotNet
     /// TcpPacket
     /// See: http://en.wikipedia.org/wiki/Transmission_Control_Protocol
     /// </summary>
-    public class TcpPacket : Packet
+    public class TcpPacket : TransportPacket
     {
 #if DEBUG
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

@@ -297,12 +297,6 @@ namespace PacketDotNet
             return payloadPacketOrData;
         }
 
-        /// <summary> Check if the IP packet is valid, checksum-wise.</summary>
-        public abstract bool ValidIPChecksum
-        {
-            get;
-        }
-
         /// <summary>
         /// Options for use when creating a transport layer checksum
         /// </summary>
@@ -345,22 +339,6 @@ namespace PacketDotNet
 
             return (onesSum == expectedOnesSum);
         }
-
-        /// <summary>
-        /// Compute the checksum of the ip packet
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.Int32"/>
-        /// </returns>
-        public abstract int ComputeIPChecksum();
-
-        /// <summary>
-        /// Update the value of the IP checksum 
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.Int32"/>
-        /// </returns>
-        public abstract void UpdateIPChecksum();
 
         /// <summary>
         /// Computes the transport layer checksum, either for the

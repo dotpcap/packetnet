@@ -258,7 +258,7 @@ namespace PacketDotNet
         /// <summary>
         /// Check if the IP packet header is valid, checksum-wise.
         /// </summary>
-        public override bool ValidIPChecksum
+        public bool ValidIPChecksum
         {
             get
             {
@@ -423,7 +423,7 @@ namespace PacketDotNet
         /// </summary>
         /// <returns> The computed IP checksum.
         /// </returns>
-        public override int ComputeIPChecksum()
+        public int ComputeIPChecksum()
         {
             //copy the ip header
             var theHeader = Header;
@@ -443,7 +443,7 @@ namespace PacketDotNet
         /// <summary>
         /// Update the checksum value
         /// </summary>
-        public override void UpdateIPChecksum ()
+        public void UpdateIPChecksum ()
         {
             this.Checksum = ComputeIPChecksum();
         }

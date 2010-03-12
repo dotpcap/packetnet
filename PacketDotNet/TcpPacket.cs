@@ -83,11 +83,11 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the packet sequence number.</summary>
-        public int SequenceNumber
+        public uint SequenceNumber
         {
             get
             {
-                return EndianBitConverter.Big.ToInt32(header.Bytes,
+                return EndianBitConverter.Big.ToUInt32(header.Bytes,
                                                       header.Offset + TcpFields.SequenceNumberPosition);
             }
 

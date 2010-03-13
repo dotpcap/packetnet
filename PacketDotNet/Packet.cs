@@ -210,6 +210,9 @@ namespace PacketDotNet
             {
                 log.Debug("");
 
+                // ensure calculated values are properly updated
+                RecursivelyUpdateCalculatedValues();
+
                 // if we share memory with all of our sub packets we can take a
                 // higher performance path to retrieve the bytes
                 if(SharesMemoryWithSubPackets)
@@ -309,6 +312,33 @@ namespace PacketDotNet
                 throw new System.NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");
             }
         }
+
+        /// <summary>
+        /// Used to ensure that values like checksums and lengths are
+        /// properly updated
+        /// </summary>
+        protected void RecursivelyUpdateCalculatedValues()
+        {
+            // call the possibly overridden method
+            UpdateCalculatedValues();
+
+            // if the packet contains another packet, call its
+            if(payloadPacketOrData.Type == PayloadType.Packet)
+            {
+                payloadPacketOrData.ThePacket.RecursivelyUpdateCalculatedValues();
+            }
+        }
+
+        /// <summary>
+        /// Called to ensure that calculated values are updated before
+        /// the packet bytes are retrieved
+        /// 
+        /// Classes should override this method to update things like
+        /// checksums and lengths that take too much time or are too complex
+        /// to update for each packet parameter change
+        /// </summary>
+        public virtual void UpdateCalculatedValues()
+        { }
 
         /// <summary>
         /// Returns a ansi colored string. This routine calls

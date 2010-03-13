@@ -88,7 +88,7 @@ namespace PacketDotNet
             get
             {
                 return EndianBitConverter.Big.ToUInt32(header.Bytes,
-                                                      header.Offset + TcpFields.SequenceNumberPosition);
+                                                       header.Offset + TcpFields.SequenceNumberPosition);
             }
 
             set
@@ -100,12 +100,12 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the packet acknowledgment number.</summary>
-        public int AcknowledgmentNumber
+        public uint AcknowledgmentNumber
         {
             get
             {
-                return EndianBitConverter.Big.ToInt32(header.Bytes,
-                                                      header.Offset + TcpFields.AckNumberPosition);
+                return EndianBitConverter.Big.ToUInt32(header.Bytes,
+                                                       header.Offset + TcpFields.AckNumberPosition);
             }
 
             set

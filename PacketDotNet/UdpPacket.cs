@@ -175,11 +175,7 @@ namespace PacketDotNet
             base(Timeval)
         {
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArrayAndOffset(Bytes, Offset, Bytes.Length - Offset);
-
-            // NOTE: we update the Length field AFTER the header field because
-            // we need the header to be valid to retrieve the value
-            header.Length = Length;
+            header = new ByteArrayAndOffset(Bytes, Offset, UdpFields.HeaderLength);
 
             // store the payload bytes
             payloadPacketOrData = new PacketOrByteArray();

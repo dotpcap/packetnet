@@ -73,7 +73,8 @@ namespace PacketDotNet
         }
 
         /// <value>
-        /// Retrieves the length field from this udp packet
+        /// Length in bytes of the header and payload, minimum size of 8,
+        /// the size of the Udp header
         /// </value>
         virtual public int Length
         {

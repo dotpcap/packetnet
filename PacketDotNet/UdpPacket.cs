@@ -123,6 +123,16 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Update the Udp length
+        /// </summary>
+        public override void UpdateCalculatedValues ()
+        {
+            // update the length field based on the length of this packet header
+            // plus the length of all of the packets it contains
+            Length = TotalPacketLength;
+        }
+
+        /// <summary>
         /// Create from values
         /// </summary>
         /// <param name="SourcePort">

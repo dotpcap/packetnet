@@ -58,6 +58,27 @@ namespace PacketDotNet
             get { return timeval; }
         }
 
+        // recursively finds the length of this packet and all of the packets
+        // encapsulated by this packet
+        internal int TotalPacketLength
+        {
+            get
+            {
+                int totalLength = 0;
+                totalLength += header.Length;
+    
+                if(payloadPacketOrData.Type == PayloadType.Bytes)
+                {
+                    totalLength += payloadPacketOrData.TheByteArray.Length;
+                } else if(payloadPacketOrData.Type == PayloadType.Packet)
+                {
+                    totalLength += payloadPacketOrData.ThePacket.TotalPacketLength;
+                }
+
+                return totalLength;
+            }
+        }
+
         /// <value>
         /// Returns true if we already have a contiguous byte[] in either
         /// of these conditions:

@@ -31,6 +31,10 @@ namespace Test
     [TestFixture]
     public class UdpTest
     {
+        /// <summary>
+        /// Test that we can load a udp packet and that the udp properties are
+        /// as we expect them
+        /// </summary>
         [Test]
         public void UDPData()
         {
@@ -72,6 +76,50 @@ namespace Test
             Console.WriteLine("u is {0}", u.ToString());
 
             dev.Close();
+        }
+
+        /// <summary>
+        /// Test that we can build a udp packet from values, convert it into a byte[]
+        /// and then re-parse it back into a UdpPacket.
+        /// 
+        /// Also test that the UdpPacket.Length field is updated properly in the
+        /// conversion to a byte[]
+        /// </summary>
+        [Test]
+        public void ConstructUdpPacketFromValuesAndCheckThatLengthIsUpdated()
+        {
+            // build a udp packet
+            ushort sourcePort = 200;
+            ushort destinationPort = 300;
+            byte[] dataBytes = new byte[32];
+            for(int i = 0; i < dataBytes.Length; i++)
+            {
+                dataBytes[i] = (byte)i;
+            }
+
+            var udpPacket = new UdpPacket(sourcePort, destinationPort);
+            udpPacket.PayloadData = dataBytes;
+
+            // retrieve the bytes, this should cause UdpPacket.Length to be updated
+            var packetBytes = udpPacket.Bytes;
+
+            // now reparse the packet again
+            var udpPacket2 = new UdpPacket(packetBytes, 0);
+
+            Assert.AreEqual(sourcePort, udpPacket.SourcePort);
+            Assert.AreEqual(destinationPort, udpPacket.DestinationPort);
+
+            Console.WriteLine("udpPacket.Length {0}", udpPacket.Length);
+            udpPacket.PayloadData = dataBytes;
+
+            Assert.AreEqual(sourcePort, udpPacket.SourcePort);
+            Assert.AreEqual(destinationPort, udpPacket.DestinationPort);
+
+            // make sure the data matches up
+            Assert.AreEqual(dataBytes, udpPacket2.PayloadData, "PayloadData mismatch");
+
+            // and make sure the length is what we expect
+            Assert.AreEqual(dataBytes.Length + UdpFields.HeaderLength, udpPacket2.Length);
         }
 
         [Test]

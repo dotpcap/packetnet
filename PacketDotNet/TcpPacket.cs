@@ -202,7 +202,7 @@ namespace PacketDotNet
             get
             {
                 log.Debug("ValidTCPChecksum");
-                var retval = IsValidTransportLayerChecksum(TransportPacket.TransportChecksumOption.AttachPseudoIPHeader);
+                var retval = IsValidChecksum(TransportPacket.TransportChecksumOption.AttachPseudoIPHeader);
                 log.DebugFormat("ValidTCPChecksum {0}", retval);
                 return retval;
             }
@@ -426,7 +426,7 @@ namespace PacketDotNet
         /// <returns> The calculated TCP checksum.</returns>
         public int CalculateTCPChecksum()
         {
-            var newChecksum = CalculateTransportLayerChecksum(TcpFields.ChecksumPosition, true);
+            var newChecksum = CalculateChecksum(TcpFields.ChecksumPosition, true);
             return newChecksum;
         }
 

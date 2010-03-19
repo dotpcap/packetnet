@@ -57,7 +57,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        internal int CalculateTransportLayerChecksum(int checksumOffset, bool pseudoIPHeader)
+        internal int CalculateChecksum(int checksumOffset, bool pseudoIPHeader)
         {
             // copy the tcp section with data
             byte[] dataToChecksum = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
@@ -86,7 +86,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Boolean"/>
         /// </returns>
-        public virtual bool IsValidTransportLayerChecksum(TransportChecksumOption option)
+        public virtual bool IsValidChecksum(TransportChecksumOption option)
         {
             log.DebugFormat("option: {0}", option);
 

@@ -45,7 +45,7 @@ namespace PacketDotNet
         }
 		
 		/// <summary>
-        /// Computes the transport layer checksum, either for the
+        /// Calculates the transport layer checksum, either for the
         /// tcp or udp packet
         /// </summary>
         /// <param name="checksumOffset">
@@ -57,7 +57,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        internal int ComputeTransportLayerChecksum(int checksumOffset, bool pseudoIPHeader)
+        internal int CalculateTransportLayerChecksum(int checksumOffset, bool pseudoIPHeader)
         {
             // copy the tcp section with data
             byte[] dataToChecksum = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
@@ -72,7 +72,7 @@ namespace PacketDotNet
             if (pseudoIPHeader)
                 dataToChecksum = ((IpPacket)ParentPacket).AttachPseudoIPHeader(dataToChecksum);
 
-            // compute the one's complement sum of the tcp header
+            // calculate the one's complement sum of the tcp header
             int cs = ChecksumUtils.OnesComplementSum(dataToChecksum);
             return cs;
         }

@@ -423,10 +423,10 @@ namespace PacketDotNet
         /// <summary> Computes the TCP checksum, optionally updating the TCP checksum header.
         /// 
         /// </summary>
-        /// <returns> The computed TCP checksum.</returns>
+        /// <returns> The calculated TCP checksum.</returns>
         public int CalculateTCPChecksum()
         {
-            var newChecksum = ComputeTransportLayerChecksum(TcpFields.ChecksumPosition, true);
+            var newChecksum = CalculateTransportLayerChecksum(TcpFields.ChecksumPosition, true);
             return newChecksum;
         }
 

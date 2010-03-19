@@ -216,21 +216,21 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Computes the UDP checksum, optionally updating the UDP checksum header.
+        /// Calculates the UDP checksum, optionally updating the UDP checksum header.
         /// </summary>
         /// <param name="update">Specifies whether or not to update the UDP checksum header
         /// after computing the checksum. A value of true indicates the
         /// header should be updated, a value of false indicates it should
         /// not be updated.
         /// </param>
-        /// <returns> The computed UDP checksum.
+        /// <returns> The calculated UDP checksum.
         /// </returns>
-        public int ComputeUDPChecksum(bool update)
+        public int CalculateUDPChecksum(bool update)
         {
             // make sure that the parent packet is the correct type
             if(!(ParentPacket is IpPacket))
             {
-                throw new System.NotImplementedException("ParentPacket is not IpPacket, cannot compute udp checksum for parent packet");
+                throw new System.NotImplementedException("ParentPacket is not IpPacket, cannot calculate udp checksum for parent packet");
             }
 
             var ipPacket = ParentPacket as IpPacket;
@@ -241,7 +241,7 @@ namespace PacketDotNet
 
             var dataAndPseudoIpHeader = ipPacket.AttachPseudoIPHeader(Bytes);
 
-            // compute the one's complement sum of the udp header
+            // calculate the one's complement sum of the udp header
             int cs = ChecksumUtils.OnesComplementSum(dataAndPseudoIpHeader);
             if (update)
             {
@@ -252,14 +252,14 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Compute the checksum for this packet
+        /// Calculate the checksum for this packet
         /// </summary>
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        public int ComputeUDPChecksum()
+        public int CalculateUDPChecksum()
         {
-            return ComputeUDPChecksum(true);
+            return CalculateUDPChecksum(true);
         }
 
         /// <summary> Convert this UDP packet to a readable string.</summary>

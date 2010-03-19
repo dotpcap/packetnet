@@ -419,11 +419,11 @@ namespace PacketDotNet
 #endif
 
         /// <summary>
-        /// Computes the IP checksum, optionally updating the IP checksum header.
+        /// Calculates the IP checksum, optionally updating the IP checksum header.
         /// </summary>
-        /// <returns> The computed IP checksum.
+        /// <returns> The calculated IP checksum.
         /// </returns>
-        public int ComputeIPChecksum()
+        public int CalculateIPChecksum()
         {
             //copy the ip header
             var theHeader = Header;
@@ -434,7 +434,7 @@ namespace PacketDotNet
             var theValue = (UInt16)0;
             EndianBitConverter.Big.CopyBytes(theValue, ip, IPv4Fields.ChecksumPosition);
 
-            //compute the one's complement sum of the ip header
+            //calculate the one's complement sum of the ip header
             int cs = ChecksumUtils.OnesComplementSum(ip, 0, ip.Length);
 
             return cs;
@@ -445,7 +445,7 @@ namespace PacketDotNet
         /// </summary>
         public void UpdateIPChecksum ()
         {
-            this.Checksum = ComputeIPChecksum();
+            this.Checksum = CalculateIPChecksum();
         }
 
         /// <summary>

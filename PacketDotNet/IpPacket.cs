@@ -151,7 +151,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// ipv4 header length field, computed for ipv6 packets
+        /// ipv4 header length field, calculated for ipv6 packets
         /// NOTE: This field is the number of 32bit words in the ip header,
         ///       ie. the number of bytes is 4x this value
         /// </summary>
@@ -171,7 +171,7 @@ namespace PacketDotNet
 
         /// <summary>
         /// ipv6 payload length in bytes,
-        /// computed from ipv4.TotalLength - (ipv4.HeaderLength * 4)
+        /// calculate from ipv4.TotalLength - (ipv4.HeaderLength * 4)
         /// </summary>
         public abstract ushort PayloadLength
         {

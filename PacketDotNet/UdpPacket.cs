@@ -218,14 +218,8 @@ namespace PacketDotNet
         /// <summary>
         /// Calculates the UDP checksum, optionally updating the UDP checksum header.
         /// </summary>
-        /// <param name="update">Specifies whether or not to update the UDP checksum header
-        /// after computing the checksum. A value of true indicates the
-        /// header should be updated, a value of false indicates it should
-        /// not be updated.
-        /// </param>
-        /// <returns> The calculated UDP checksum.
-        /// </returns>
-        public int CalculateUDPChecksum(bool update)
+        /// <returns>The calculated UDP checksum.</returns>
+        public int CalculateUDPChecksum()
         {
             // make sure that the parent packet is the correct type
             if(!(ParentPacket is IpPacket))
@@ -243,23 +237,16 @@ namespace PacketDotNet
 
             // calculate the one's complement sum of the udp header
             int cs = ChecksumUtils.OnesComplementSum(dataAndPseudoIpHeader);
-            if (update)
-            {
-                Checksum = (ushort)cs;
-            }
 
             return cs;
         }
 
         /// <summary>
-        /// Calculate the checksum for this packet
+        /// Update the checksum value.
         /// </summary>
-        /// <returns>
-        /// A <see cref="System.Int32"/>
-        /// </returns>
-        public int CalculateUDPChecksum()
+        public void UpdateUDPChecksum()
         {
-            return CalculateUDPChecksum(true);
+            this.Checksum = (ushort)CalculateUDPChecksum();
         }
 
         /// <summary> Convert this UDP packet to a readable string.</summary>

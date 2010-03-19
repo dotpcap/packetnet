@@ -119,7 +119,7 @@ namespace Test
 
                 // compare the computed checksum to the expected one
                 Assert.AreEqual(expectedChecksum[packetIndex],
-                                t.ComputeTCPChecksum(),
+                                t.CalculateTCPChecksum(),
                                 "Checksum mismatch");
 
                 packetIndex++;

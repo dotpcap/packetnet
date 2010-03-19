@@ -423,30 +423,19 @@ namespace PacketDotNet
         /// <summary> Computes the TCP checksum, optionally updating the TCP checksum header.
         /// 
         /// </summary>
-        /// <param name="update">Specifies whether or not to update the TCP checksum header
-        /// after computing the checksum. A value of true indicates the
-        /// header should be updated, a value of false indicates it should
-        /// not be updated.
-        /// </param>
-        /// <returns> The computed TCP checksum.
-        /// </returns>
-        public int ComputeTCPChecksum(bool update)
+        /// <returns> The computed TCP checksum.</returns>
+        public int CalculateTCPChecksum()
         {
-            if(update == true)
-                throw new System.NotImplementedException();
-
             var newChecksum = ((IpPacket)ParentPacket).ComputeTransportLayerChecksum(TcpFields.ChecksumPosition, true);
             return newChecksum;
         }
 
-        /// <summary> Same as <code>computeTCPChecksum(true);</code>
-        /// 
+        /// <summary>
+        /// Update the checksum value.
         /// </summary>
-        /// <returns> The computed TCP checksum value.
-        /// </returns>
-        public int ComputeTCPChecksum()
+        public void UpdateTCPChecksum()
         {
-            return ComputeTCPChecksum(true);
+            this.Checksum = (ushort)CalculateTCPChecksum();
         }
 
         /// <summary> Fetch the urgent pointer.</summary>

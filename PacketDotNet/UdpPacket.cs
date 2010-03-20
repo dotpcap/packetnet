@@ -221,24 +221,8 @@ namespace PacketDotNet
         /// <returns>The calculated UDP checksum.</returns>
         public int CalculateUDPChecksum()
         {
-            // make sure that the parent packet is the correct type
-            if(!(ParentPacket is IpPacket))
-            {
-                throw new System.NotImplementedException("ParentPacket is not IpPacket, cannot calculate udp checksum for parent packet");
-            }
-
-            var ipPacket = ParentPacket as IpPacket;
-
-            // zero out the checksum field, we don't want its
-            // value to affect the checksum calculation itself
-            Checksum = 0;
-
-            var dataAndPseudoIpHeader = ipPacket.AttachPseudoIPHeader(Bytes);
-
-            // calculate the one's complement sum of the udp header
-            int cs = ChecksumUtils.OnesComplementSum(dataAndPseudoIpHeader);
-
-            return cs;
+            var newChecksum = CalculateChecksum(true);
+            return newChecksum;
         }
 
         /// <summary>

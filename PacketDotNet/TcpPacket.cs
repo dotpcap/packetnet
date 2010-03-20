@@ -426,7 +426,7 @@ namespace PacketDotNet
         /// <returns> The calculated TCP checksum.</returns>
         public int CalculateTCPChecksum()
         {
-            var newChecksum = CalculateChecksum(true);
+            var newChecksum = CalculateChecksum(TransportChecksumOption.AttachPseudoIPHeader);
             return newChecksum;
         }
 

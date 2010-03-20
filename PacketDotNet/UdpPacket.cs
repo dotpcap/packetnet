@@ -250,7 +250,7 @@ namespace PacketDotNet
         /// <returns>The calculated UDP checksum.</returns>
         public int CalculateUDPChecksum()
         {
-            var newChecksum = CalculateChecksum(true);
+            var newChecksum = CalculateChecksum(TransportChecksumOption.AttachPseudoIPHeader);
             return newChecksum;
         }
 

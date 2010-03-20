@@ -96,7 +96,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the header checksum.</summary>
-        virtual public ushort Checksum
+        override public ushort Checksum
         {
             get
             {

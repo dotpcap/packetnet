@@ -163,7 +163,7 @@ namespace PacketDotNet
         /// <value>
         /// Tcp checksum field value of type UInt16
         /// </value>
-        virtual public ushort Checksum
+        override public ushort Checksum
         {
             get
             {

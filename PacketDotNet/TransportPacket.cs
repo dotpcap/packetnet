@@ -44,6 +44,15 @@ namespace PacketDotNet
         {
         }
 		
+		/// <value>
+        /// The Checksum version
+        /// </value>
+        public abstract ushort Checksum
+        {
+            get;
+            set;
+        }
+		
 		/// <summary>
         /// Calculates the transport layer checksum, either for the
         /// tcp or udp packet

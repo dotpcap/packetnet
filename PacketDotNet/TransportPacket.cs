@@ -57,26 +57,20 @@ namespace PacketDotNet
         /// Calculates the transport layer checksum, either for the
         /// tcp or udp packet
         /// </summary>
-        /// <param name="checksumOffset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
         /// <param name="pseudoIPHeader">
         /// A <see cref="System.Boolean"/>
         /// </param>
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        internal int CalculateChecksum(int checksumOffset, bool pseudoIPHeader)
+        internal int CalculateChecksum(bool pseudoIPHeader)
         {
-            // copy the tcp section with data
-            byte[] dataToChecksum = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
-
             // reset the checksum field (checksum is calculated when this field is
             // zeroed)
-            UInt16 theValue = 0;
-            EndianBitConverter.Big.CopyBytes(theValue,
-                                             dataToChecksum,
-                                             checksumOffset);
+                Checksum = 0;
+	
+            // copy the tcp section with data
+            byte[] dataToChecksum = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
 
             if (pseudoIPHeader)
                 dataToChecksum = ((IpPacket)ParentPacket).AttachPseudoIPHeader(dataToChecksum);

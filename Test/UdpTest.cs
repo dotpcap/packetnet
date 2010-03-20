@@ -127,5 +127,48 @@ namespace Test
         {
             UdpPacket.RandomPacket();
         }
+		
+		/// <summary>
+        /// Test that we can load and parse a UDP packet and that
+        /// the computed checksum matches the expected checksum
+        /// </summary>
+        [Test]
+        public void UDPChecksum()
+        {
+            var dev = new OfflinePcapDevice("../../CaptureFiles/udp.pcap");
+            dev.Open();
+
+            // checksums from wireshark of the capture file
+            int[] expectedChecksum = {0x2be9,
+                                      0x9e06,
+                                      0xd279,
+                                      0x4709,
+                                      0x61cd,
+                                      0x9939,
+                                      0x4937,
+                                      0x4dfc,
+                                      0xb8e6,
+                                      0x932c};
+
+            int packetIndex = 0;
+            SharpPcap.Packets.RawPacket rawPacket;
+            while ((rawPacket = dev.GetNextRawPacket()) != null)
+            {
+                var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+                var t = UdpPacket.GetType(p);
+                Assert.IsNotNull(t, "Expected t to not be null");
+                Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
+
+                // compare the computed checksum to the expected one
+                Assert.AreEqual(expectedChecksum[packetIndex],
+                                t.CalculateUDPChecksum(),
+                                "Checksum mismatch");
+
+                packetIndex++;
+            }
+
+            dev.Close();
+        }
+		
     }
 }

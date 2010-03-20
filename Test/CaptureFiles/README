@@ -2,6 +2,10 @@ arp_request_response.pcap
 - arp request
 - arp response
 
+udp.pcap
+- Some UDP packets containing DNS requests to verify that checksums for 
+UDP packets are calculated properly
+
 udp_dns_request_response.pcap
 - dns request
 - dns response

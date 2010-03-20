@@ -113,6 +113,35 @@ namespace PacketDotNet
             }
         }
 
+		/// <summary> Check if the UDP packet is valid, checksum-wise.</summary>
+        public bool ValidChecksum
+        {
+            get
+            {
+                // IPv6 has no checksum so only the TCP checksum needs evaluation
+                if (parentPacket.GetType() == typeof(IPv6Packet))
+                    return ValidUDPChecksum;
+                // For IPv4 both the IP layer and the TCP layer contain checksums 
+                else
+                    return ((IPv4Packet)ParentPacket).ValidIPChecksum && ValidUDPChecksum;
+            }
+        }
+		
+		/// <value>
+        /// True if the udp checksum is valid
+        /// </value>
+        virtual public bool ValidUDPChecksum
+        {
+            get
+            {
+                log.Debug("ValidUDPChecksum");
+                var retval = IsValidChecksum(TransportPacket.TransportChecksumOption.AttachPseudoIPHeader);
+                log.DebugFormat("ValidUDPChecksum {0}", retval);
+                return retval;
+            }
+        }
+		
+		
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         override public System.String Color
         {

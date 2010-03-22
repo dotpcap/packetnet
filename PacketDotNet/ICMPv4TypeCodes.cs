@@ -25,7 +25,7 @@ namespace PacketDotNet
     /// Note that these values represent the combined
     /// type and code fields, where the type field is the upper byte
     /// </summary>
-    public enum ICMPTypeCode : ushort
+    public enum ICMPv4TypeCodes : ushort
     {
 #pragma warning disable 1591
         EchoReply = 0x0000,
@@ -42,7 +42,8 @@ namespace PacketDotNet
         NetworkAdministrativelyProhibited = 0x0309,
         NetworkUnreachableForTos = 0x030A,
         HostUnreachableForTos = 0x030B,
-        CommunicationAdministrativelyProhibited = 0x030C
+        CommunicationAdministrativelyProhibited = 0x030C,
+        EchoRequest = 0x0800,
 #pragma warning restore 1591
 
         //TODO: continue this list as user requested

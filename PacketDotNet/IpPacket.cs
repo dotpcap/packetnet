@@ -68,6 +68,12 @@ namespace PacketDotNet
                 } else if(value is UdpPacket)
                 {
                     NextHeader = IPProtocolType.UDP;
+                } else if(value is ICMPv6Packet)
+                {
+                    NextHeader = IPProtocolType.ICMPV6;
+                } else if(value is ICMPv4Packet)
+                {
+                    NextHeader = IPProtocolType.ICMP;
                 } else // NOTE: new checks go here
                 {
                     NextHeader = IPProtocolType.NONE;
@@ -282,6 +288,11 @@ namespace PacketDotNet
                                                               payload.Offset,
                                                               Timeval,
                                                               ParentPacket);
+                break;
+            case IPProtocolType.ICMP:
+                payloadPacketOrData.ThePacket = new ICMPv4Packet(payload.Bytes,
+                                                                 payload.Offset,
+                                                                 Timeval);
                 break;
             case IPProtocolType.ICMPV6:
                 payloadPacketOrData.ThePacket = new ICMPv6Packet(payload.Bytes,

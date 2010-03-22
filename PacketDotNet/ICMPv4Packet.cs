@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
+ *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 using System;
 using MiscUtil.Conversion;
@@ -24,11 +24,11 @@ using PacketDotNet.Utils;
 namespace PacketDotNet
 {
     /// <summary>
-    /// An ICMP packet.
-    /// See http://en.wikipedia.org/wiki/ICMPv6
+    /// An ICMP packet
+    /// See http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol
     /// </summary>
     [Serializable]
-    public class ICMPv6Packet : InternetPacket
+    public class ICMPv4Packet : InternetPacket
     {
 #if DEBUG
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -41,38 +41,28 @@ namespace PacketDotNet
 #endif
 
         /// <value>
-        /// The Type value
+        /// The Type/Code enum value
         /// </value>
-        virtual public ICMPv6Types Type
+        virtual public ICMPv4TypeCodes TypeCode
         {
             get
             {
-                var val = header.Bytes[header.Offset + ICMPv6Fields.TypePosition];
+                var val = EndianBitConverter.Big.ToUInt16(header.Bytes,
+                                                          header.Offset + ICMPv4Fields.TypeCodePosition);
 
                 //TODO: how to handle a mismatch in the mapping? maybe throw here?
-                if(Enum.IsDefined(typeof(ICMPv6Types), val))
-                    return (ICMPv6Types)val;
+                if(Enum.IsDefined(typeof(ICMPv4TypeCodes), val))
+                    return (ICMPv4TypeCodes)val;
                 else
-                    throw new System.NotImplementedException("Type of " + val + " is not defined in ICMPv6Types");
+                    throw new System.NotImplementedException("TypeCode of " + val + " is not defined in ICMPv4TypeCode");
             }
 
             set
             {
-                header.Bytes[header.Offset + ICMPv6Fields.TypePosition] = (byte)value;
-            }
-        }
-
-        /// <summary> Fetch the ICMP code </summary>
-        virtual public byte Code
-        {
-            get
-            {
-                return header.Bytes[header.Offset + ICMPv6Fields.CodePosition];
-            }
-
-            set
-            {
-                header.Bytes[header.Offset + ICMPv6Fields.CodePosition] = (byte)value;
+                var theValue = (UInt16)value;
+                EndianBitConverter.Big.CopyBytes(theValue,
+                                                 header.Bytes,
+                                                 header.Offset + ICMPv4Fields.TypeCodePosition);
             }
         }
 
@@ -84,7 +74,7 @@ namespace PacketDotNet
             get
             {
                 return EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                      header.Offset + ICMPv6Fields.ChecksumPosition);
+                                                       header.Offset + ICMPv4Fields.ChecksumPosition);
             }
 
             set
@@ -92,7 +82,62 @@ namespace PacketDotNet
                 var theValue = value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  header.Bytes,
-                                                 header.Offset + ICMPv6Fields.ChecksumPosition);
+                                                 header.Offset + ICMPv4Fields.ChecksumPosition);
+            }
+        }
+
+        /// <summary>
+        /// ID field
+        /// </summary>
+        public ushort ID
+        {
+            get
+            {
+                return EndianBitConverter.Big.ToUInt16(header.Bytes,
+                                                       header.Offset + ICMPv4Fields.IDPosition);
+            }
+
+            set
+            {
+                var theValue = value;
+                EndianBitConverter.Big.CopyBytes(theValue,
+                                                 header.Bytes,
+                                                 header.Offset + ICMPv4Fields.IDPosition);
+            }
+        }
+
+        /// <summary>
+        /// Sequence field
+        /// </summary>
+        public ushort Sequence
+        {
+            get
+            {
+                return EndianBitConverter.Big.ToUInt16(header.Bytes,
+                                                       header.Offset + ICMPv4Fields.SequencePosition);
+            }
+
+            set
+            {
+                EndianBitConverter.Big.CopyBytes(value,
+                                                 header.Bytes,
+                                                 header.Offset + ICMPv4Fields.SequencePosition);
+            }
+        }
+
+        /// <summary>
+        /// Contents of the ICMP packet
+        /// </summary>
+        public byte[] Data
+        {
+            get
+            {
+                return payloadPacketOrData.TheByteArray.ActualBytes();
+            }
+
+            set
+            {
+                payloadPacketOrData.TheByteArray = new ByteArrayAndOffset(value, 0, value.Length);
             }
         }
 
@@ -105,7 +150,7 @@ namespace PacketDotNet
         /// <param name="Offset">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public ICMPv6Packet(byte[] Bytes, int Offset) :
+        public ICMPv4Packet(byte[] Bytes, int Offset) :
             this(Bytes, Offset, new PosixTimeval())
         {}
 
@@ -121,12 +166,18 @@ namespace PacketDotNet
         /// <param name="Timeval">
         /// A <see cref="PosixTimeval"/>
         /// </param>
-        public ICMPv6Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
+        public ICMPv4Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
             base(Timeval)
         {
             log.Debug("");
 
-            header = new ByteArrayAndOffset(Bytes, Offset, Bytes.Length - Offset);
+            header = new ByteArrayAndOffset(Bytes, Offset, ICMPv4Fields.HeaderLength);
+
+            // store the payload bytes
+            payloadPacketOrData = new PacketOrByteArray();
+            payloadPacketOrData.TheByteArray = header.EncapsulatedBytes();
+
+            
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
@@ -158,8 +209,7 @@ namespace PacketDotNet
             if (colored)
                 buffer.Append(AnsiEscapeSequences.Reset);
             buffer.Append(": ");
-            buffer.Append(Type);
-            buffer.Append(Code);
+            buffer.Append(TypeCode);
             buffer.Append(", ");
             buffer.Append(" l=" + header.Length);
             buffer.Append(']');
@@ -168,16 +218,16 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns the ICMPv6Packet inside of Packet p or null if
-        /// there is no encapsulated ICMPv6Packet
+        /// Returns the ICMPv4Packet inside of Packet p or null if
+        /// there is no encapsulated ICMPv4Packet
         /// </summary>
         /// <param name="p">
         /// A <see cref="Packet"/>
         /// </param>
         /// <returns>
-        /// A <see cref="ICMPv6Packet"/>
+        /// A <see cref="ICMPv4Packet"/>
         /// </returns>
-        public static ICMPv6Packet GetType(Packet p)
+        public static ICMPv4Packet GetType(Packet p)
         {
             log.Debug("");
 
@@ -187,9 +237,9 @@ namespace PacketDotNet
                 if(payload is IpPacket)
                 {
                     var payload2 = payload.PayloadPacket;
-                    if(payload2 is ICMPv6Packet)
+                    if(payload2 is ICMPv4Packet)
                     {
-                        return (ICMPv6Packet)payload2;
+                        return (ICMPv4Packet)payload2;
                     }
                 }
             }

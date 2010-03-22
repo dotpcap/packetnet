@@ -44,7 +44,7 @@
       <HintPath>..\PacketDotNet\Libraries\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System.Data" />
-    <Reference Include="System.XML" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ByteCopyPerformance.cs" />
@@ -70,6 +70,8 @@
     <Compile Include="PPPoEPPPTest.cs" />
     <Compile Include="StringOutput.cs" />
     <Compile Include="PosixTimevalTest.cs" />
+    <Compile Include="ICMPv4PacketTest.cs" />
+    <Compile Include="ICMPv6PacketTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

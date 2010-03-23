@@ -103,11 +103,43 @@
     <Compile Include="ICMPv4Packet.cs" />
     <Compile Include="Utils\ByteArraySegment.cs" />
     <Compile Include="PacketOrByteArraySegment.cs" />
+    <Compile Include="LLDPPacket.cs" />
+    <Compile Include="LLDP\TLVTypes.cs" />
+    <Compile Include="LLDP\ChassisSubTypes.cs" />
+    <Compile Include="LLDP\PortSubTypes.cs" />
+    <Compile Include="LLDP\CapabilityOptions.cs" />
+    <Compile Include="LLDP\TLV.cs" />
+    <Compile Include="LLDP\NetworkAddress.cs" />
+    <Compile Include="LLDP\InterfaceNumbering.cs" />
+    <Compile Include="LLDP\EndOfLLDPDU.cs" />
+    <Compile Include="LLDP\ChassisID.cs" />
+    <Compile Include="LLDP\PortID.cs" />
+    <Compile Include="LLDP\TimeToLive.cs" />
+    <Compile Include="LLDP\PortDescription.cs" />
+    <Compile Include="LLDP\SystemName.cs" />
+    <Compile Include="LLDP\SystemDescription.cs" />
+    <Compile Include="LLDP\SystemCapabilities.cs" />
+    <Compile Include="LLDP\ManagementAddress.cs" />
+    <Compile Include="LLDP\OrganizationSpecific.cs" />
+    <Compile Include="LLDP\TLVTypeLength.cs" />
+    <Compile Include="LLDP\AddressFamily.cs" />
+    <Compile Include="LLDP\StringTLV.cs" />
+    <Compile Include="LLDP\TLVCollection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Utils\" />
     <Folder Include="MiscUtil\" />
     <Folder Include="MiscUtil\IO\" />
+    <Folder Include="LLDP\" />
   </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <TextStylePolicy FileWidth="120" RemoveTrailingWhitespace="True" inheritsSet="VisualStudio" inheritsScope="text/plain" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>

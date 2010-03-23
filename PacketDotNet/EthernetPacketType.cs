@@ -119,6 +119,10 @@ namespace PacketDotNet
         /// </summary>
         AvbTransportProtocol = 0x88B5,
         /// <summary>
+        /// Link Layer Discovery Protocol (LLDP)
+        /// </summary>
+        LLDP = 0x88CC,
+        /// <summary>
         /// SERCOS III
         /// </summary>
         SerialRealTimeCommunicationSystemIii = 0x88CD,

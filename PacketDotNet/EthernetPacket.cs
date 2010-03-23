@@ -64,7 +64,12 @@ namespace PacketDotNet
                 } else if(value is ARPPacket)
                 {
                     Type = EthernetPacketType.Arp;
-                } else // NOTE: new types should be inserted here
+                }
+                else if(value is LLDPPacket)
+                {
+                    Type = EthernetPacketType.LLDP;
+                }
+                else // NOTE: new types should be inserted here
                 {
                     Type = EthernetPacketType.None;
                 }
@@ -241,6 +246,9 @@ namespace PacketDotNet
                 break;
             case EthernetPacketType.Arp:
                 payloadPacketOrData.ThePacket = new ARPPacket(payload.Bytes, payload.Offset, Timeval);
+                break;
+            case EthernetPacketType.LLDP:
+                payloadPacketOrData.ThePacket = new LLDPPacket(payload.Bytes, payload.Offset, Timeval);
                 break;
             case EthernetPacketType.PointToPointProtocolOverEthernetSessionStage:
                 payloadPacketOrData.ThePacket = new PPPoEPacket(payload.Bytes, payload.Offset, Timeval);

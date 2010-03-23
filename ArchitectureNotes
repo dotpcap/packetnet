@@ -35,15 +35,16 @@ Shortcomings of SharpPcap's design
 
 Creating packets from values is cumbersome. Because a TcpPacket is an IpPacket which is an
 EthernetPacket, creating a TcpPacket means we need to somehow simultaniously create the
-TcpPacket and all of the sub packets. The most natural way to do this was to have the
+TcpPacket, IpPacket and EthernetPacket. The most natural way to do this was to have the
 TcpPacket constructor take in the parameters that make up a TcpPacket in addition to an IpPacket.
 The IpPacket constructor follows the same rule, it takes in its unique parameters plus an EthernetPacket.
-One user reported that this hierarchy seems confusing to them because technically an ethernet packet
-would contain an ip packet etc. Another issue of a more technical aspect is the internal method
+One user reported that this hierarchy seems confusing because the encapsulation is usually
+thought of in the reverse order where an ethernet packet contains an ip packet which contains a
+tcp packet. Another issue of a more technical aspect is the internal method
 used to actually build the TcpPacket. Because packet bytes are contiguous the TcpPacket
 constructor has to allocate enough bytes for the IpPacket plus enough bytes for itself.
-The constructor then has to set its internal buffer to the new buffer, copy in
-the IpPacket's bytes and then set its own values. This code can be a bit confusing.
+The constructor then has to set its internal buffer to point to this newly allocated buffer, copy in
+the IpPacket's bytes and then set its own values. This code is complex and can be error prone.
 The same complexity exists in almost all of the value constructors.
 
 
@@ -53,21 +54,23 @@ Shortcomings in SharpPcap's implementation
 SharpPcap allows direct access to the header and content bytes of a packet. The Packet class,
 defined in Packet.cs, defines public accessors for retrieving the byte[] of the header and
 packet bytes, byte[] Bytes and byte[] Header. These routines do not take care to make the
-packets valid, ie. if the size of a TcpPacket changes, retrieving the IpPacket bytes does not
-update the IpPacket lengths for the corresponding changes to the TcpPacket size.
+packets valid, ie. if the size of a TcpPacket changes the IpPacket length field is not
+updated to reflect the change.
 
 
 Design improvements over SharpPcap
 ----------------------------------
 
 The inheritance order should be reversed. A user refers to the payload of an EthernetPacket
-to get an IpPacket, and the IpPacket payload to get the TcpPacket. Reversing the encapsulation
-better matches how packets are parsed. It also allows for modifying the type of packet without
-conflicting with the original class type, such as if a TcpPacket has its IpPacket payload
-modified to contain a UdpPacket with SharpPcap we have an impossible situation because
-we can't convert a TcpPacket instance to a UdpPacket instance.
+to get an IpPacket and the IpPacket payload to get the TcpPacket. Reversing the encapsulation
+better matches how packets are parsed. Reversing the encapsulation also allows for modifying
+the type of packet without conflicting with the original class type for example when
+an IpPacket's payload is changed from a TcpPacket to a UdpPacket. With SharpPcap this is
+an impossible change because the packet instance is of type TcpPacket. There is no way to
+convert it to a UdpPacket without creating a new packet that is a copy of the original but with
+a its type altered.
 
-Eliminating the inheritance model of SharpPcap makes packets easier to construct by value.
+Eliminating the inheritance model of SharpPcap also makes packets easier to construct by value.
 In SharpPcap a TcpPacket required building an EthernetPacket and an IpPacket and passing
 both to a TcpPacket constructor that would discard their payloads and copy their headers
 into a byte[] that was allocated to fit the headers plus the tcp payload. In Packet.Net because
@@ -79,16 +82,18 @@ Implementation improvements over SharpPcap
 ------------------------------------------
 
 Packet.Net's Packet has a 'byte[] Bytes' get accessor retrieves packet bytes from
-the current packet as well as all sub packets.
-
-System.Array is used to retrieve bytes from packets, instead of using helper classes.
-The helper classes in SharpPcap don't provide meaningful improvements over the standard
-System.Array methods.
+the current packet as well as all sub packets. It does so using a fast mechanism in the case
+where memory is contiguous. Packet data will be contiguous unless the packet was constructed
+by values or had its payload altered. The contiguous fast case is the typical usage case as it
+reflects the condition when a packet is captured over the line by a capture library like
+SharpPcap and parsed using Packet.Net. In the case of non-contiguous memory a fallback
+mechanism is used that is slightly slower.
 
 
 Things kept the same as SharpPcap
 ---------------------------------
 
 Packet.Net does as much lazy field evaluation as possible. Values are read from memory only when
-the user calls the appropriate get accessor. This greatly simplifies the number of memory
-reads in most cases and is a close match in the cases where the user wants to read all fields.
+requested by a call to the appropriate accessor. This reduces the number of memory
+reads in most cases and performs well even in the case when a user wants to retrieve
+each of the fields of a packet.

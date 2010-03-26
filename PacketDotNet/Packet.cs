@@ -285,7 +285,7 @@ namespace PacketDotNet
         /// <returns>An ethernet packet which has references to the higher protocols</returns>
         public static Packet Parse(byte[] data)
         {
-            return EthernetPacket.Parse(data);
+            return new EthernetPacket(data, 0);
         }
 
         /// <summary>

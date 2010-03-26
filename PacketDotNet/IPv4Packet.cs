@@ -576,6 +576,12 @@ namespace PacketDotNet
 
             header = new ByteArrayAndOffset(Bytes, Offset, Bytes.Length - Offset);
 
+            // Check that the TotalLength is valid, at least HeaderMinimumLength long
+            if(TotalLength < HeaderMinimumLength)
+            {
+                throw new System.InvalidOperationException("TotalLength " + TotalLength + " < HeaderMinimumLength " + HeaderMinimumLength);
+            }
+
             // update the header length with the correct value
             // NOTE: we take care to convert from 32bit words into bytes
             // NOTE: we do this *after* setting header because we need header to be valid

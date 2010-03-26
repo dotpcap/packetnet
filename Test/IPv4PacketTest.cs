@@ -22,6 +22,7 @@ using System;
 using NUnit.Framework;
 using PacketDotNet;
 using PacketDotNet.Utils;
+using SharpPcap;
 
 namespace Test
 {
@@ -43,6 +44,33 @@ namespace Test
         public void RandomPacket()
         {
             IPv4Packet.RandomPacket();
+        }
+
+        /// <summary>
+        /// Test that an ipv4 packet with an invalid total length field
+        /// is caught when being parsed
+        /// </summary>
+        [Test]
+        public void IPv4InvalidTotalLength()
+        {
+            var dev = new OfflinePcapDevice("../../CaptureFiles/ipv4_invalid_total_length.pcap");
+            dev.Open();
+
+            var rawPacket = dev.GetNextRawPacket();
+
+            dev.Close();
+
+            Packet p;
+            bool caughtExpectedException = false;
+            try
+            {
+                p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            } catch(System.InvalidOperationException)
+            {
+                caughtExpectedException = true;
+            }
+
+            Assert.IsTrue(caughtExpectedException);
         }
     }
 }

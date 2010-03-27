@@ -144,12 +144,12 @@ namespace PacketDotNet
         /// increments by one each time a datagram is sent by a host.
         /// A 16-bit unsigned integer.
         /// </summary>
-        virtual public int Id
+        virtual public ushort Id
         {
             get
             {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + IPv4Fields.IdPosition);
+                return EndianBitConverter.Big.ToUInt16(header.Bytes,
+                                                       header.Offset + IPv4Fields.IdPosition);
             }
 
             set

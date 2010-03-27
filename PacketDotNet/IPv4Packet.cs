@@ -405,19 +405,6 @@ namespace PacketDotNet
             }
         }
 
-#if false
-        /// <summary> Sets the IP header checksum.</summary>
-        protected internal virtual void SetChecksum(int cs, int checkSumOffset)
-        {
-            ArrayHelper.insertLong(Bytes, cs, checkSumOffset, 2);
-        }
-
-        protected internal virtual void SetTransportLayerChecksum(int cs, int csPos)
-        {
-            SetChecksum(cs, _ipOffset + csPos);
-        }
-#endif
-
         /// <summary>
         /// Calculates the IP checksum, optionally updating the IP checksum header.
         /// </summary>
@@ -498,26 +485,6 @@ namespace PacketDotNet
 
             return headerForChecksum;
         }
-
-#if false
-        public override bool IsValid(out string errorString)
-        {
-            errorString = string.Empty;
-
-            // validate the base class(es)
-            bool baseValid = base.IsValid(out errorString);
-
-            // perform some quick validation
-            if(IPTotalLength < IPHeaderLength)
-            {
-                errorString += string.Format("IPTotalLength {0} < IPHeaderLength {1}",
-                                            IPTotalLength, IPHeaderLength);
-                return false;
-            }
-
-            return baseValid;
-        }
-#endif
 
         /// <summary>
         /// Construct an instance by values

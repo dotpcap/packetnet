@@ -60,11 +60,10 @@ namespace Test
 
             dev.Close();
 
-            Packet p;
             bool caughtExpectedException = false;
             try
             {
-                p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+                SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
             } catch(System.InvalidOperationException)
             {
                 caughtExpectedException = true;

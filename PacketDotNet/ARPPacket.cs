@@ -29,6 +29,16 @@ namespace PacketDotNet
     /// </summary>
     public class ARPPacket : InternetLinkLayerPacket
     {
+#if DEBUG
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#else
+        // NOTE: No need to warn about lack of use, the compiler won't
+        //       put any calls to 'log' here but we need 'log' to exist to compile
+#pragma warning disable 0169
+        private static readonly ILogInactive log;
+#pragma warning restore 0169
+#endif
+
         /// <value>
         /// Also known as HardwareType
         /// </value>
@@ -270,6 +280,14 @@ namespace PacketDotNet
                          System.Net.IPAddress SenderProtocolAddress)
             : base(new PosixTimeval())
         {
+            log.Debug("");
+
+            // allocate memory for this packet
+            int offset = 0;
+            int length = ARPFields.HeaderLength;
+            var headerBytes = new byte[length];
+            header = new ByteArrayAndOffset(headerBytes, offset, length);
+
             this.Operation = Operation;
             this.TargetHardwareAddress = TargetHardwareAddress;
             this.TargetProtocolAddress = TargetProtocolAddress;

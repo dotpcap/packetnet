@@ -101,5 +101,26 @@ namespace Test
 
             dev.Close();
         }
+
+        /// <summary>
+        /// Test that we can build an ARPPacket from values
+        /// </summary>
+        [Test]
+        public void ConstructingFromValues()
+        {
+            var localIPBytes = new byte[4] {124, 10, 10, 20};
+            var localIP = new System.Net.IPAddress(localIPBytes);
+
+            var destinationIPBytes = new byte[4] {192, 168, 1, 10};
+            var destinationIP = new System.Net.IPAddress(destinationIPBytes);
+
+            var localMac = System.Net.NetworkInformation.PhysicalAddress.Parse("AA-BB-CC-DD-EE-FF");
+
+            new PacketDotNet.ARPPacket(PacketDotNet.ARPOperation.Request,
+                                       System.Net.NetworkInformation.PhysicalAddress.Parse("00-00-00-00-00-00"),
+                                       destinationIP,
+                                       localMac,
+                                       localIP);
+        }
     }
 }

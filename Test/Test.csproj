@@ -49,20 +49,9 @@
   <ItemGroup>
     <Compile Include="Rate.cs" />
     <Compile Include="ByteSetupMethods.cs" />
-    <Compile Include="EthernetPacketTest.cs" />
-    <Compile Include="UdpTest.cs" />
-    <Compile Include="ArpPacketTest.cs" />
-    <Compile Include="IPv6PacketTest.cs" />
-    <Compile Include="TcpPacketTest.cs" />
-    <Compile Include="IpPacketTest.cs" />
     <Compile Include="NUnitSetupClass.cs" />
     <Compile Include="SharpPcapRawPacketToPacket.cs" />
-    <Compile Include="IPv4PacketTest.cs" />
     <Compile Include="LoggingConfiguration.cs" />
-    <Compile Include="LinuxCookedCaptureTest.cs" />
-    <Compile Include="PPPoEPPPTest.cs" />
-    <Compile Include="ICMPv4PacketTest.cs" />
-    <Compile Include="ICMPv6PacketTest.cs" />
     <Compile Include="Performance\BitConversionPerformance.cs" />
     <Compile Include="Performance\ByteCopyPerformance.cs" />
     <Compile Include="Performance\ByteRetrievalPerformancs.cs" />
@@ -72,6 +61,17 @@
     <Compile Include="Misc\PacketTest.cs" />
     <Compile Include="Misc\PosixTimevalTest.cs" />
     <Compile Include="Misc\StringOutput.cs" />
+    <Compile Include="PacketType\ArpPacketTest.cs" />
+    <Compile Include="PacketType\EthernetPacketTest.cs" />
+    <Compile Include="PacketType\ICMPv4PacketTest.cs" />
+    <Compile Include="PacketType\ICMPv6PacketTest.cs" />
+    <Compile Include="PacketType\IpPacketTest.cs" />
+    <Compile Include="PacketType\IPv4PacketTest.cs" />
+    <Compile Include="PacketType\IPv6PacketTest.cs" />
+    <Compile Include="PacketType\LinuxCookedCaptureTest.cs" />
+    <Compile Include="PacketType\PPPoEPPPTest.cs" />
+    <Compile Include="PacketType\TcpPacketTest.cs" />
+    <Compile Include="PacketType\UdpTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -86,5 +86,6 @@
   <ItemGroup>
     <Folder Include="Performance\" />
     <Folder Include="Misc\" />
+    <Folder Include="PacketType\" />
   </ItemGroup>
 </Project>

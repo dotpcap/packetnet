@@ -23,18 +23,18 @@ using NUnit.Framework;
 using SharpPcap;
 using PacketDotNet;
 
-namespace Test
+namespace Test.PacketType
 {
     [TestFixture]
-    public class ICMPv6PacketTest
+    public class IpPacketTest
     {
         /// <summary>
-        /// Test that we can parse a icmp v4 request and reply
+        /// Test that parsing an ip packet yields the proper field values
         /// </summary>
         [Test]
-        public void ICMPv6Parsing ()
+        public void IpPacketFields()
         {
-            var dev = new OfflinePcapDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
             var rawPacket = dev.GetNextRawPacket();
             dev.Close();
@@ -46,15 +46,11 @@ namespace Test
 
             Assert.IsNotNull(p);
 
-            var icmp = ICMPv6Packet.GetType(p);
-            Console.WriteLine(icmp.GetType());
+            var ip = IpPacket.GetType(p);
+            Console.WriteLine(ip.GetType());
 
-            Assert.AreEqual(ICMPv6Types.RouterSolicitation, icmp.Type);
-            Assert.AreEqual(0, icmp.Code);
-            Assert.AreEqual(0x5d50, icmp.Checksum);
-
-            // Payload differs based on the icmp.Type field
+            Assert.AreEqual(20, ip.Header.Length, "Header.Length doesn't match expected length");
+            Console.WriteLine(ip.ToString());
         }
     }
 }
-

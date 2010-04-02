@@ -23,7 +23,7 @@ using NUnit.Framework;
 using log4net.Core;
 using PacketDotNet;
 
-namespace Test
+namespace Test.Performance
 {
     [TestFixture]
     public class ByteRetrievalPerformancs

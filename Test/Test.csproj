@@ -47,11 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ByteCopyPerformance.cs" />
     <Compile Include="ConstructingPackets.cs" />
     <Compile Include="Rate.cs" />
     <Compile Include="ByteSetupMethods.cs" />
-    <Compile Include="BitConversionPerformance.cs" />
     <Compile Include="EthernetPacketTest.cs" />
     <Compile Include="UdpTest.cs" />
     <Compile Include="ChecksumUtilsTest.cs" />
@@ -63,15 +61,17 @@
     <Compile Include="SharpPcapRawPacketToPacket.cs" />
     <Compile Include="PacketTest.cs" />
     <Compile Include="IPv4PacketTest.cs" />
-    <Compile Include="ByteRetrievalPerformancs.cs" />
     <Compile Include="LoggingConfiguration.cs" />
     <Compile Include="LinuxCookedCaptureTest.cs" />
-    <Compile Include="PacketDotNet_vs_SharpPcapPerformance.cs" />
     <Compile Include="PPPoEPPPTest.cs" />
     <Compile Include="StringOutput.cs" />
     <Compile Include="PosixTimevalTest.cs" />
     <Compile Include="ICMPv4PacketTest.cs" />
     <Compile Include="ICMPv6PacketTest.cs" />
+    <Compile Include="Performance\BitConversionPerformance.cs" />
+    <Compile Include="Performance\ByteCopyPerformance.cs" />
+    <Compile Include="Performance\ByteRetrievalPerformancs.cs" />
+    <Compile Include="Performance\PacketDotNet_vs_SharpPcapPerformance.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -82,5 +82,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="log4net.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Performance\" />
   </ItemGroup>
 </Project>

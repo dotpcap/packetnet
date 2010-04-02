@@ -22,24 +22,35 @@ using System;
 using NUnit.Framework;
 using PacketDotNet;
 
-namespace Test
+namespace Test.Misc
 {
     [TestFixture]
-    public class PacketTest
+    public class PosixTimevalTest
     {
+        // Test posix timeval comparison operators
         [Test]
-        public void TestSettingPayloadData()
+        public void OperatorTest ()
         {
-            byte[] data = new byte[10];
-            for(int i = 0; i < data.Length; i++)
-            {
-                data[i] = (byte)i;
-            }
+            var p1 = new PosixTimeval(100, 50);
+            var p2 = new PosixTimeval(100, 100);
+            var p3 = new PosixTimeval(200, 20);
 
-            // NOTE: we use TcpPacket because it has a simple constructor. We can't
-            //       create a Packet() instance because Packet is an abstract class
-            var p = new TcpPacket(10, 10);
-            p.PayloadData = data;
+            var p4 = new PosixTimeval(100, 50);
+
+            Assert.IsTrue(p1 < p2, "p1 < p2");
+            Assert.IsTrue(p2 < p3, "p2 < p3");
+            Assert.IsTrue(p1 < p3, "p1 < p3");
+
+            Assert.IsTrue(p2 > p1, "p2 > p1");
+            Assert.IsTrue(p3 > p2, "p3 > p2");
+            Assert.IsTrue(p3 > p1, "p3 > p1");
+
+            Assert.IsTrue(p1 != p2, "p1 != p2");
+
+            Assert.IsTrue(p1 == p4, "p1 == p4");
+
+            Assert.IsTrue(p1 <= p2, "p1 <= p2");
+            Assert.IsTrue(p2 >= p1, "p2 >= p1");
         }
     }
 }

@@ -24,7 +24,7 @@ using PacketDotNet;
 using PacketDotNet.Utils;
 using SharpPcap;
 
-namespace Test
+namespace Test.PacketType
 {
     [TestFixture]
     public class IPv4PacketTest

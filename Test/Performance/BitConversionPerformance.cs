@@ -25,7 +25,7 @@ using NUnit.Framework;
 using MiscUtil.IO;
 using MiscUtil.Conversion;
 
-namespace Test
+namespace Test.Performance
 {
     [TestFixture]
     public class BitConversionPerformance

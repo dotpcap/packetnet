@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using PacketDotNet;
 
-namespace Test
+namespace Test.Misc
 {
     /// <summary>
     /// Unit test that tries to exercise the string output methods in all of the

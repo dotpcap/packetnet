@@ -22,7 +22,7 @@ using System;
 using NUnit.Framework;
 using PacketDotNet;
 
-namespace Test
+namespace Test.PacketType
 {
     [TestFixture]
     public class PPPoEPPPTest

@@ -23,22 +23,23 @@ using NUnit.Framework;
 using SharpPcap;
 using PacketDotNet;
 
-namespace Test
+namespace Test.PacketType
 {
     [TestFixture]
-    public class ICMPv6PacketTest
+    public class ICMPv4PacketTest
     {
         /// <summary>
         /// Test that we can parse a icmp v4 request and reply
         /// </summary>
         [Test]
-        public void ICMPv6Parsing ()
+        public void ICMPv4Parsing ()
         {
-            var dev = new OfflinePcapDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/ICMPv4.pcap");
             dev.Open();
             var rawPacket = dev.GetNextRawPacket();
             dev.Close();
 
+            // Parse an icmp request
             Packet p = Packet.ParsePacket((LinkLayers)rawPacket.LinkLayerType,
                                           new PosixTimeval(rawPacket.Timeval.Seconds,
                                                            rawPacket.Timeval.MicroSeconds),
@@ -46,14 +47,18 @@ namespace Test
 
             Assert.IsNotNull(p);
 
-            var icmp = ICMPv6Packet.GetEncapsulated(p);
+            var icmp = ICMPv4Packet.GetEncapsulated(p);
             Console.WriteLine(icmp.GetType());
 
-            Assert.AreEqual(ICMPv6Types.RouterSolicitation, icmp.Type);
-            Assert.AreEqual(0, icmp.Code);
-            Assert.AreEqual(0x5d50, icmp.Checksum);
+            Assert.AreEqual(ICMPv4TypeCodes.EchoRequest, icmp.TypeCode);
+            Assert.AreEqual(0xe05b, icmp.Checksum);
+            Assert.AreEqual(0x0200, icmp.ID);
+            Assert.AreEqual(0x6b00, icmp.Sequence);
 
-            // Payload differs based on the icmp.Type field
+            // check that the message matches
+            string expectedString = "abcdefghijklmnopqrstuvwabcdefghi";
+            byte[] expectedData = System.Text.ASCIIEncoding.ASCII.GetBytes(expectedString);
+            Assert.AreEqual(expectedData, icmp.Data);
         }
     }
 }

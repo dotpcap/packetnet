@@ -22,7 +22,7 @@ using System;
 using NUnit.Framework;
 using SharpPcap.Util;
 
-namespace Test
+namespace Test.Misc
 {
     [TestFixture]
     public class ChecksumUtils

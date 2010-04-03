@@ -22,7 +22,7 @@ using System;
 using NUnit.Framework;
 using PacketDotNet;
 
-namespace Test
+namespace Test.Performance
 {
     [TestFixture]
     public class PacketDotNet_vs_SharpPcapPerformance

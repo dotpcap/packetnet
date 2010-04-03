@@ -5,7 +5,7 @@ using log4net.Core;
 using NUnit.Framework;
 using PacketDotNet;
 
-namespace Test
+namespace Test.Performance
 {
     [TestFixture]
     public class ByteCopyPerformance

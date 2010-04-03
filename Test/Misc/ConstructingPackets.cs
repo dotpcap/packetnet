@@ -22,7 +22,7 @@ using System;
 using NUnit.Framework;
 using PacketDotNet;
 
-namespace Test
+namespace Test.Misc
 {
     [TestFixture]
     public class ConstructingPackets

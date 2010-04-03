@@ -41,7 +41,7 @@ namespace Test
             Assert.AreEqual(PhysicalAddress.Parse("00-A0-CC-D9-41-75"), e.SourceHwAddress);
             Assert.AreEqual(PhysicalAddress.Parse("33-33-00-00-00-02"), e.DestinationHwAddress);
 
-            var ip = IpPacket.GetType(p);
+            var ip = IpPacket.GetEncapsulated(p);
             Console.WriteLine("ip {0}", ip.ToString());
             Assert.AreEqual(System.Net.IPAddress.Parse("fe80::2a0:ccff:fed9:4175"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("ff02::2"), ip.DestinationAddress);
@@ -113,7 +113,7 @@ namespace Test
             while ((rawPacket = dev.GetNextRawPacket()) != null)
             {
                 var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
-                var t = TcpPacket.GetType(p);
+                var t = TcpPacket.GetEncapsulated(p);
                 Assert.IsNotNull(t, "Expected t to not be null");
                 Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
 

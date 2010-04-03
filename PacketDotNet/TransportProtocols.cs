@@ -1,4 +1,4 @@
-﻿namespace PacketDotNet
+namespace PacketDotNet
 {
 #if false
     public enum TransportProtocols : ushort

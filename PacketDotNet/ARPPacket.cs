@@ -380,7 +380,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="ARPPacket"/>
         /// </returns>
-        public static ARPPacket GetType(Packet p)
+        public static ARPPacket GetEncapsulated(Packet p)
         {
             if(p is InternetLinkLayerPacket)
             {

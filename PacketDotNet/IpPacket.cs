@@ -271,7 +271,7 @@ namespace PacketDotNet
 
             log.DebugFormat("payload: {0}, ParentPacket.GetType() {1}",
                             payload,
-                            ParentPacket);
+                            ParentPacket.GetType());
 
             var payloadPacketOrData = new PacketOrByteArray();
 
@@ -318,7 +318,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="IpPacket"/>
         /// </returns>
-        public static IpPacket GetType(Packet p)
+        public static IpPacket GetEncapsulated(Packet p)
         {
             log.Debug("");
 

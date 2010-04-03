@@ -313,7 +313,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="UdpPacket"/>
         /// </returns>
-        public static UdpPacket GetType(Packet p)
+        public static UdpPacket GetEncapsulated(Packet p)
         {
             if(p is InternetLinkLayerPacket)
             {

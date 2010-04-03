@@ -54,7 +54,7 @@ namespace Test
                                    rawPacket.Data);
             Assert.IsNotNull(p);
 
-            u = UdpPacket.GetType(p);
+            u = UdpPacket.GetEncapsulated(p);
             Assert.IsNotNull(u, "Expected a non-null UdpPacket");
             Assert.AreEqual(41 - u.Header.Length,
                             u.PayloadData.Length, "UDPData.Length mismatch");
@@ -68,7 +68,7 @@ namespace Test
 
             Assert.IsNotNull(p);
 
-            u = UdpPacket.GetType(p);
+            u = UdpPacket.GetEncapsulated(p);
             Assert.IsNotNull(u, "Expected u to be a UdpPacket");
             Assert.AreEqual(356 - u.Header.Length,
                             u.PayloadData.Length, "UDPData.Length mismatch");
@@ -155,7 +155,7 @@ namespace Test
             while ((rawPacket = dev.GetNextRawPacket()) != null)
             {
                 var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
-                var t = UdpPacket.GetType(p);
+                var t = UdpPacket.GetEncapsulated(p);
                 Assert.IsNotNull(t, "Expected t to not be null");
                 Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
 

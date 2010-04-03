@@ -227,7 +227,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="ICMPv4Packet"/>
         /// </returns>
-        public static ICMPv4Packet GetType(Packet p)
+        public static ICMPv4Packet GetEncapsulated(Packet p)
         {
             log.Debug("");
 

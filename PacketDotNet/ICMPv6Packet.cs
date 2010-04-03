@@ -177,7 +177,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="ICMPv6Packet"/>
         /// </returns>
-        public static ICMPv6Packet GetType(Packet p)
+        public static ICMPv6Packet GetEncapsulated(Packet p)
         {
             log.Debug("");
 

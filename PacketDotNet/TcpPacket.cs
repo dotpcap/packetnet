@@ -607,7 +607,7 @@ namespace PacketDotNet
         /// Returns the TcpPacket embedded in Packet p or null if
         /// there is no embedded TcpPacket
         /// </summary>
-        public static TcpPacket GetType(Packet p)
+        public static TcpPacket GetEncapsulated(Packet p)
         {
             if(p is InternetLinkLayerPacket)
             {

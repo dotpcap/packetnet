@@ -78,7 +78,7 @@ namespace Test
         {
             var packet = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
 
-            var tcpPacket = TcpPacket.GetType(packet);
+            var tcpPacket = TcpPacket.GetEncapsulated(packet);
             if(tcpPacket != null)
             {
                 if((tcpPacket.SourcePort == expectedSourcePort) &&

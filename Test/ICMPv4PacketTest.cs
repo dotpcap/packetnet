@@ -47,7 +47,7 @@ namespace Test
 
             Assert.IsNotNull(p);
 
-            var icmp = ICMPv4Packet.GetType(p);
+            var icmp = ICMPv4Packet.GetEncapsulated(p);
             Console.WriteLine(icmp.GetType());
 
             Assert.AreEqual(ICMPv4TypeCodes.EchoRequest, icmp.TypeCode);

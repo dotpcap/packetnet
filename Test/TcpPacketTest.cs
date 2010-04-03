@@ -53,7 +53,7 @@ namespace Test
             Assert.IsNotNull(p);
 
             Console.WriteLine(p.GetType());
-            var t = TcpPacket.GetType(p);
+            var t = TcpPacket.GetEncapsulated(p);
             Assert.IsNotNull(t, "Expected t not to be null");
 
             // even though the packet has 6 bytes of extra data, the ip packet shows a size of
@@ -79,7 +79,7 @@ namespace Test
 
             Console.WriteLine(p.GetType());
 
-            var t = TcpPacket.GetType(p);
+            var t = TcpPacket.GetEncapsulated(p);
             Assert.IsNotNull(t, "Expected t to not be null");
             Console.WriteLine("Checksum: " + t.Checksum.ToString("X"));
             Assert.IsTrue(t.ValidChecksum, "ValidChecksum indicates invalid checksum");
@@ -115,7 +115,7 @@ namespace Test
 
             Assert.IsNotNull(p);
 
-            var t = TcpPacket.GetType(p);
+            var t = TcpPacket.GetEncapsulated(p);
             Assert.IsNotNull(t, "Expected t to not be null");
 
             // verify that the options byte match what we expect

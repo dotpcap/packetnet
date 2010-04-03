@@ -31,7 +31,7 @@ namespace Test
         private void VerifyPacket0(Packet p)
         {
             // expect an arp packet
-            var arpPacket = ARPPacket.GetType(p);
+            var arpPacket = ARPPacket.GetEncapsulated(p);
             Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             // validate some of the LinuxSSLPacket fields
@@ -52,13 +52,13 @@ namespace Test
         private void VerifyPacket1(Packet p)
         {
             // expect a udp packet
-            Assert.IsNotNull(UdpPacket.GetType(p), "expected a udp packet");
+            Assert.IsNotNull(UdpPacket.GetEncapsulated(p), "expected a udp packet");
         }
 
         private void VerifyPacket2(Packet p)
         {
             // expecting a tcp packet
-            Assert.IsNotNull(TcpPacket.GetType(p), "expected a tcp packet");
+            Assert.IsNotNull(TcpPacket.GetEncapsulated(p), "expected a tcp packet");
         }
 
         [Test]

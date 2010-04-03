@@ -33,7 +33,7 @@ namespace Test
         // arp request
         private void VerifyPacket0(Packet p)
         {
-            var arpPacket = ARPPacket.GetType(p);
+            var arpPacket = ARPPacket.GetEncapsulated(p);
             Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             IPAddress senderIp = IPAddress.Parse("192.168.1.202");
@@ -51,7 +51,7 @@ namespace Test
         // arp response
         private void VerifyPacket1(Packet p)
         {
-            var arpPacket = ARPPacket.GetType(p);
+            var arpPacket = ARPPacket.GetEncapsulated(p);
             Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             IPAddress senderIp = IPAddress.Parse("192.168.1.214");

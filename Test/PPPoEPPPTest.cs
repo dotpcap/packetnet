@@ -39,13 +39,13 @@ namespace Test
             // first packet is a udp packet
             rawPacket = dev.GetNextRawPacket();
             packet = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
-            var udpPacket = UdpPacket.GetType(packet);
+            var udpPacket = UdpPacket.GetEncapsulated(packet);
             Assert.IsNotNull(udpPacket, "Expected a valid udp packet for the first packet");
 
             // second packet is the PPPoe Ptp packet
             rawPacket = dev.GetNextRawPacket();
             packet = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
-            var anotherUdpPacket = UdpPacket.GetType(packet);
+            var anotherUdpPacket = UdpPacket.GetEncapsulated(packet);
             Assert.IsNotNull(anotherUdpPacket, "Expected a valid udp packet for the second packet as well");
 
             dev.Close();

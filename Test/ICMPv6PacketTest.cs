@@ -46,7 +46,7 @@ namespace Test
 
             Assert.IsNotNull(p);
 
-            var icmp = ICMPv6Packet.GetType(p);
+            var icmp = ICMPv6Packet.GetEncapsulated(p);
             Console.WriteLine(icmp.GetType());
 
             Assert.AreEqual(ICMPv6Types.RouterSolicitation, icmp.Type);

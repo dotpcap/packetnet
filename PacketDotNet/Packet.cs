@@ -41,9 +41,9 @@ namespace PacketDotNet
 #pragma warning restore 0169
 #endif
 
-        internal ByteArrayAndOffset header;
+        internal ByteArraySegment header;
 
-        internal PacketOrByteArray payloadPacketOrData = new PacketOrByteArray();
+        internal PacketOrByteArraySegment payloadPacketOrData = new PacketOrByteArraySegment();
 
         internal Packet parentPacket;
 
@@ -69,7 +69,7 @@ namespace PacketDotNet
     
                 if(payloadPacketOrData.Type == PayloadType.Bytes)
                 {
-                    totalLength += payloadPacketOrData.TheByteArray.Length;
+                    totalLength += payloadPacketOrData.TheByteArraySegment.Length;
                 } else if(payloadPacketOrData.Type == PayloadType.Packet)
                 {
                     totalLength += payloadPacketOrData.ThePacket.TotalPacketLength;
@@ -100,8 +100,8 @@ namespace PacketDotNet
                 case PayloadType.Bytes:
                     // is the byte array payload the same byte[] and does the offset indicate
                     // that the bytes are contiguous?
-                    if((header.Bytes == payloadPacketOrData.TheByteArray.Bytes) &&
-                       ((header.Offset + header.Length) == payloadPacketOrData.TheByteArray.Offset))
+                    if((header.Bytes == payloadPacketOrData.TheByteArraySegment.Bytes) &&
+                       ((header.Offset + header.Length) == payloadPacketOrData.TheByteArraySegment.Offset))
                     {
                         log.Debug("PayloadType.Bytes returning true");
                         return true;
@@ -180,13 +180,13 @@ namespace PacketDotNet
         {
             get
             {
-                if(payloadPacketOrData.TheByteArray == null)
+                if(payloadPacketOrData.TheByteArraySegment == null)
                 {
                     log.Debug("returning null");
                     return null;
                 } else
                 {
-                    var retval = payloadPacketOrData.TheByteArray.ActualBytes();
+                    var retval = payloadPacketOrData.TheByteArraySegment.ActualBytes();
                     log.DebugFormat("retval.Length: {0}", retval.Length);
                     return retval;
                 }
@@ -196,13 +196,13 @@ namespace PacketDotNet
             {
                 log.DebugFormat("value.Length {0}", value.Length);
 
-                payloadPacketOrData.TheByteArray = new ByteArrayAndOffset(value, 0, value.Length);
+                payloadPacketOrData.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
             }
         }
 
         /// <summary>
         /// byte[] containing this packet and its payload
-        /// NOTE: Use 'public virtual ByteArrayAndOffset BytesHighPerformance' for highest performance
+        /// NOTE: Use 'public virtual ByteArraySegment BytesHighPerformance' for highest performance
         /// </summary>
         public virtual byte[] Bytes
         {
@@ -221,11 +221,11 @@ namespace PacketDotNet
         }
 
         /// <value>
-        /// The option to return a ByteArrayAndOffset means that this method
+        /// The option to return a ByteArraySegment means that this method
         /// is higher performance as the data can start at an offset other than
         /// the first byte.
         /// </value>
-        public virtual ByteArrayAndOffset BytesHighPerformance
+        public virtual ByteArraySegment BytesHighPerformance
         {
             get
             {
@@ -240,12 +240,12 @@ namespace PacketDotNet
                 {
                     // The high performance path that is often taken because it is called on
                     // packets that have not had their header, or any of their sub packets, resized
-                    var newByteArrayAndOffset = new ByteArrayAndOffset(header.Bytes,
-                                                                       header.Offset,
-                                                                       (header.Bytes.Length - header.Offset));
+                    var newByteArraySegment = new ByteArraySegment(header.Bytes,
+                                                                   header.Offset,
+                                                                   (header.Bytes.Length - header.Offset));
                     log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}",
-                                    newByteArrayAndOffset.ToString());
-                    return newByteArrayAndOffset;
+                                    newByteArraySegment.ToString());
+                    return newByteArraySegment;
                 } else // need to rebuild things from scratch
                 {
                     log.Debug("rebuilding the byte array");
@@ -262,7 +262,7 @@ namespace PacketDotNet
 
                     var newBytes = ms.ToArray();
 
-                    return new ByteArrayAndOffset(newBytes, 0, newBytes.Length);
+                    return new ByteArraySegment(newBytes, 0, newBytes.Length);
                 }  
             }
         }

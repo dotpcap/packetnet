@@ -157,7 +157,7 @@ namespace PacketDotNet
             int offset = 0;
             int length = EthernetFields.HeaderLength;
             var headerBytes = new byte[length];
-            header = new ByteArrayAndOffset(headerBytes, offset, length);
+            header = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
             this.SourceHwAddress = SourceHwAddress;
@@ -198,7 +198,7 @@ namespace PacketDotNet
             log.Debug("");
 
             // slice off the header portion
-            header = new ByteArrayAndOffset(Bytes, Offset, EthernetFields.HeaderLength);
+            header = new ByteArraySegment(Bytes, Offset, EthernetFields.HeaderLength);
 
             // parse the encapsulated bytes
             payloadPacketOrData = ParseEncapsulatedBytes(header, Type, Timeval);
@@ -209,7 +209,7 @@ namespace PacketDotNet
         /// also needs to perform the same operations as it contains an ethernet type
         /// </summary>
         /// <param name="Header">
-        /// A <see cref="ByteArrayAndOffset"/>
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
         /// <param name="Type">
         /// A <see cref="EthernetPacketType"/>
@@ -218,17 +218,17 @@ namespace PacketDotNet
         /// A <see cref="PosixTimeval"/>
         /// </param>
         /// <returns>
-        /// A <see cref="PacketOrByteArray"/>
+        /// A <see cref="PacketOrByteArraySegment"/>
         /// </returns>
-        internal static PacketOrByteArray ParseEncapsulatedBytes(ByteArrayAndOffset Header,
-                                                                 EthernetPacketType Type,
-                                                                 PosixTimeval Timeval)
+        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
+                                                                        EthernetPacketType Type,
+                                                                        PosixTimeval Timeval)
         {
             // slice off the payload
             var payload = Header.EncapsulatedBytes();
             log.DebugFormat("payload {0}", payload.ToString());
 
-            var payloadPacketOrData = new PacketOrByteArray();
+            var payloadPacketOrData = new PacketOrByteArraySegment();
 
             // parse the encapsulated bytes
             switch(Type)
@@ -246,7 +246,7 @@ namespace PacketDotNet
                 payloadPacketOrData.ThePacket = new PPPoEPacket(payload.Bytes, payload.Offset, Timeval);
                 break;
             default: // consider the sub-packet to be a byte array
-                payloadPacketOrData.TheByteArray = payload;
+                payloadPacketOrData.TheByteArraySegment = payload;
                 break;
             }
 

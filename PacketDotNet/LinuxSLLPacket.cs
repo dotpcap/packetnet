@@ -172,7 +172,7 @@ namespace PacketDotNet
         public LinuxSLLPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
             base(Timeval)
         {
-            header = new ByteArrayAndOffset(Bytes, Offset, LinuxSLLFields.SLLHeaderLength);
+            header = new ByteArraySegment(Bytes, Offset, LinuxSLLFields.SLLHeaderLength);
 
             // parse the payload via an EthernetPacket method
             payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(header,

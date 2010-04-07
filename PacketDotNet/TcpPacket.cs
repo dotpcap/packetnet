@@ -317,7 +317,7 @@ namespace PacketDotNet
             int offset = 0;
             int length = TcpFields.HeaderLength;
             var headerBytes = new byte[length];
-            header = new ByteArrayAndOffset(headerBytes, offset, length);
+            header = new ByteArraySegment(headerBytes, offset, length);
 
             // make this packet valid
             DataOffset = length / 4;
@@ -360,15 +360,15 @@ namespace PacketDotNet
             log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArrayAndOffset(Bytes, Offset, Bytes.Length - Offset);
+            header = new ByteArraySegment(Bytes, Offset, Bytes.Length - Offset);
 
             // NOTE: we update the Length field AFTER the header field because
             // we need the header to be valid to retrieve the value of DataOffset
             header.Length = DataOffset * 4;
 
             // store the payload bytes
-            payloadPacketOrData = new PacketOrByteArray();
-            payloadPacketOrData.TheByteArray = header.EncapsulatedBytes();
+            payloadPacketOrData = new PacketOrByteArraySegment();
+            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
         }
 
         /// <summary>
@@ -411,12 +411,12 @@ namespace PacketDotNet
 
                 log.DebugFormat("Header.Length {0}, Current payload length: {1}, new payload length {2}",
                                 this.header.Length,
-                                payloadPacketOrData.TheByteArray.Length,
+                                payloadPacketOrData.TheByteArraySegment.Length,
                                 newTcpPayloadLength);
 
                 // the length of the payload is the total payload length
                 // above, minus the length of the tcp header
-                payloadPacketOrData.TheByteArray.Length = newTcpPayloadLength;
+                payloadPacketOrData.TheByteArraySegment.Length = newTcpPayloadLength;
             }
         }
 

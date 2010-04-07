@@ -167,7 +167,7 @@ namespace PacketDotNet
             int offset = 0;
             int length = PPPoEFields.HeaderLength;
             var headerBytes = new byte[length];
-            header = new ByteArrayAndOffset(headerBytes, offset, length);
+            header = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
             this.Code = Code;
@@ -212,20 +212,20 @@ namespace PacketDotNet
             log.Debug("");
 
             // slice off the header portion
-            header = new ByteArrayAndOffset(Bytes, Offset, PPPoEFields.HeaderLength);
+            header = new ByteArraySegment(Bytes, Offset, PPPoEFields.HeaderLength);
 
             // parse the encapsulated bytes
             payloadPacketOrData = ParseEncapsulatedBytes(header, Timeval);
         }
 
-        internal static PacketOrByteArray ParseEncapsulatedBytes(ByteArrayAndOffset Header,
-                                                                 PosixTimeval Timeval)
+        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
+                                                                        PosixTimeval Timeval)
         {
             // slice off the payload
             var payload = Header.EncapsulatedBytes();
             log.DebugFormat("payload {0}", payload.ToString());
 
-            var payloadPacketOrData = new PacketOrByteArray();
+            var payloadPacketOrData = new PacketOrByteArraySegment();
 
             // we assume that we have a PPPPacket as the payload
             payloadPacketOrData.ThePacket = new PPPPacket(payload.Bytes,

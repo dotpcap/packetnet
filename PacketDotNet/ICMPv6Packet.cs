@@ -126,7 +126,7 @@ namespace PacketDotNet
         {
             log.Debug("");
 
-            header = new ByteArrayAndOffset(Bytes, Offset, Bytes.Length - Offset);
+            header = new ByteArraySegment(Bytes, Offset, Bytes.Length - Offset);
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>

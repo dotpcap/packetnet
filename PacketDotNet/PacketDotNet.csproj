@@ -52,7 +52,6 @@
     <Compile Include="UdpPacket.cs" />
     <Compile Include="EthernetFields.cs" />
     <Compile Include="TransportPacket.cs" />
-    <Compile Include="Utils\ByteArrayAndOffset.cs" />
     <Compile Include="IPProtocol.cs" />
     <Compile Include="Utils\AnsiEscapeSequences.cs" />
     <Compile Include="UdpFields.cs" />
@@ -89,7 +88,6 @@
     <Compile Include="PosixTimeval.cs" />
     <Compile Include="ILogInactive.cs" />
     <Compile Include="Utils\RandomUtils.cs" />
-    <Compile Include="PacketOrByteArray.cs" />
     <Compile Include="PayloadType.cs" />
     <Compile Include="ICMPv6Types.cs" />
     <Compile Include="RawPacket.cs" />
@@ -103,6 +101,8 @@
     <Compile Include="ICMPv4TypeCodes.cs" />
     <Compile Include="ICMPv4Fields.cs" />
     <Compile Include="ICMPv4Packet.cs" />
+    <Compile Include="Utils\ByteArraySegment.cs" />
+    <Compile Include="PacketOrByteArraySegment.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

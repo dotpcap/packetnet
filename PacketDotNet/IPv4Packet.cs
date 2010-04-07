@@ -497,7 +497,7 @@ namespace PacketDotNet
             int offset = 0;
             int length = IPv4Fields.HeaderLength;
             var headerBytes = new byte[length];
-            header = new ByteArrayAndOffset(headerBytes, offset, length);
+            header = new ByteArraySegment(headerBytes, offset, length);
 
             // set some default values to make this packet valid
             PayloadLength = 0;
@@ -541,7 +541,7 @@ namespace PacketDotNet
         {
             log.Debug("");
 
-            header = new ByteArrayAndOffset(Bytes, Offset, Bytes.Length - Offset);
+            header = new ByteArraySegment(Bytes, Offset, Bytes.Length - Offset);
 
             // Check that the TotalLength is valid, at least HeaderMinimumLength long
             if(TotalLength < HeaderMinimumLength)

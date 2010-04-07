@@ -286,7 +286,7 @@ namespace PacketDotNet
             int offset = 0;
             int length = ARPFields.HeaderLength;
             var headerBytes = new byte[length];
-            header = new ByteArrayAndOffset(headerBytes, offset, length);
+            header = new ByteArraySegment(headerBytes, offset, length);
 
             this.Operation = Operation;
             this.TargetHardwareAddress = TargetHardwareAddress;
@@ -330,7 +330,7 @@ namespace PacketDotNet
         public ARPPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
             base(Timeval)
         {
-            header = new ByteArrayAndOffset(Bytes, Offset, ARPFields.HeaderLength);
+            header = new ByteArraySegment(Bytes, Offset, ARPFields.HeaderLength);
 
             // NOTE: no need to set the payloadPacketOrData field, arp packets have
             //       no payload

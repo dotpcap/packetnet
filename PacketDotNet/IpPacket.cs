@@ -247,7 +247,7 @@ namespace PacketDotNet
         /// Called by IPv4 and IPv6 packets to parse their packet payload  
         /// </summary>
         /// <param name="Header">
-        /// A <see cref="ByteArrayAndOffset"/>
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
         /// <param name="ProtocolType">
         /// A <see cref="IPProtocolType"/>
@@ -259,12 +259,12 @@ namespace PacketDotNet
         /// A <see cref="Packet"/>
         /// </param>
         /// <returns>
-        /// A <see cref="PacketOrByteArray"/>
+        /// A <see cref="PacketOrByteArraySegment"/>
         /// </returns>
-        internal static PacketOrByteArray ParseEncapsulatedBytes(ByteArrayAndOffset Header,
-                                                                 IPProtocolType ProtocolType,
-                                                                 PosixTimeval Timeval,
-                                                                 Packet ParentPacket)
+        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
+                                                                        IPProtocolType ProtocolType,
+                                                                        PosixTimeval Timeval,
+                                                                        Packet ParentPacket)
         {
             // slice off the payload
             var payload = Header.EncapsulatedBytes();
@@ -273,7 +273,7 @@ namespace PacketDotNet
                             payload,
                             ParentPacket.GetType());
 
-            var payloadPacketOrData = new PacketOrByteArray();
+            var payloadPacketOrData = new PacketOrByteArraySegment();
 
             switch(ProtocolType)
             {
@@ -301,7 +301,7 @@ namespace PacketDotNet
                 break;
             // NOTE: new payload parsing entries go here
             default:
-                payloadPacketOrData.TheByteArray = payload;
+                payloadPacketOrData.TheByteArraySegment = payload;
                 break;
             }
 

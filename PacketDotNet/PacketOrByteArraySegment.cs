@@ -26,22 +26,22 @@ namespace PacketDotNet
 {
     /// <summary>
     /// Encapsulates and ensures that we have either a Packet OR
-    /// a ByteArrayAndOffset, but not both
+    /// a ByteArraySegment but not both
     /// </summary>
-    internal class PacketOrByteArray
+    internal class PacketOrByteArraySegment
     {
-        private ByteArrayAndOffset theByteArray;
-        public ByteArrayAndOffset TheByteArray
+        private ByteArraySegment theByteArraySegment;
+        public ByteArraySegment TheByteArraySegment
         {
             get
             {
-                return theByteArray;
+                return theByteArraySegment;
             }
 
             set
             {
                 thePacket = null;
-                theByteArray = value;
+                theByteArraySegment = value;
             }
         }
 
@@ -55,7 +55,7 @@ namespace PacketDotNet
 
             set
             {
-                theByteArray = null;
+                theByteArraySegment = null;
                 thePacket = value;
             }
         }
@@ -74,9 +74,9 @@ namespace PacketDotNet
             {
                 var theBytes = ThePacket.Bytes;
                 ms.Write(theBytes, 0, theBytes.Length);
-            } else if(TheByteArray != null)
+            } else if(TheByteArraySegment != null)
             {
-                var theBytes = TheByteArray.ActualBytes();
+                var theBytes = TheByteArraySegment.ActualBytes();
                 ms.Write(theBytes, 0, theBytes.Length);
             }
         }
@@ -91,7 +91,7 @@ namespace PacketDotNet
                 if(ThePacket != null)
                 {
                     return PayloadType.Packet;
-                } else if(TheByteArray != null)
+                } else if(TheByteArraySegment != null)
                 {
                     return PayloadType.Bytes;
                 } else

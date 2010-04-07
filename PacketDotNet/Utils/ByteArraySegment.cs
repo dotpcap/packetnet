@@ -19,10 +19,9 @@ using System;
 namespace PacketDotNet.Utils
 {
     /// <summary>
-    /// Container class for a byte array that contains an offset and
-    /// a length
+    /// Container class that refers to a segment of bytes in a byte[]
     /// </summary>
-    public class ByteArrayAndOffset
+    public class ByteArraySegment
     {
 #if DEBUG
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -76,7 +75,7 @@ namespace PacketDotNet.Utils
         /// <param name="Length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public ByteArrayAndOffset(byte[] Bytes, int Offset, int Length)
+        public ByteArraySegment(byte[] Bytes, int Offset, int Length)
         {
             log.DebugFormat("Bytes.Length {0}, Offset {1}, Length {2}",
                             Bytes.Length,
@@ -142,15 +141,15 @@ namespace PacketDotNet.Utils
         /// wants to pass the next segment to a sub class for processing
         /// </summary>
         /// <returns>
-        /// A <see cref="ByteArrayAndOffset"/>
+        /// A <see cref="ByteArraySegment"/>
         /// </returns>
-        public ByteArrayAndOffset EncapsulatedBytes()
+        public ByteArraySegment EncapsulatedBytes()
         {
             int startingOffset = Offset + Length; // start at the end of the current segment
             var newLength = Bytes.Length - startingOffset;
             log.DebugFormat("Offset {0}, Length {1}, startingOffset {2}, newLength {3}",
                             Offset, Length, startingOffset, newLength);
-            return new ByteArrayAndOffset(Bytes, startingOffset, newLength);
+            return new ByteArraySegment(Bytes, startingOffset, newLength);
         }
 
         /// <summary>
@@ -161,7 +160,7 @@ namespace PacketDotNet.Utils
         /// </returns>
         public override string ToString ()
         {
-            return string.Format("[ByteArrayAndOffset: Length={0}, Bytes.Length={1}, Offset={2}, NeedsCopyForActualBytes={3}]",
+            return string.Format("[ByteArraySegment: Length={0}, Bytes.Length={1}, Offset={2}, NeedsCopyForActualBytes={3}]",
                                  Length, Bytes.Length, Offset, NeedsCopyForActualBytes);
         }
     }

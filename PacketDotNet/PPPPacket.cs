@@ -72,7 +72,7 @@ namespace PacketDotNet
             int offset = 0;
             int length = PPPFields.HeaderLength;
             var headerBytes = new byte[length];
-            header = new ByteArrayAndOffset(headerBytes, offset, length);
+            header = new ByteArraySegment(headerBytes, offset, length);
 
             // setup some typical values and default values
             this.Protocol = PPPProtocol.Padding;
@@ -111,22 +111,22 @@ namespace PacketDotNet
             log.Debug("");
 
             // slice off the header portion as our header
-            header = new ByteArrayAndOffset(Bytes, Offset, PPPFields.HeaderLength);
+            header = new ByteArraySegment(Bytes, Offset, PPPFields.HeaderLength);
 
             // parse the encapsulated bytes
             payloadPacketOrData = ParseEncapsulatedBytes(header, Timeval, Protocol);
         }
 
-        internal static PacketOrByteArray ParseEncapsulatedBytes(ByteArrayAndOffset Header,
-                                                                 PosixTimeval Timeval,
-                                                                 PPPProtocol Protocol)
+        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
+                                                                        PosixTimeval Timeval,
+                                                                        PPPProtocol Protocol)
         {
             // slice off the payload
             var payload = Header.EncapsulatedBytes();
 
             log.DebugFormat("payload: {0}", payload);
 
-            var payloadPacketOrData = new PacketOrByteArray();
+            var payloadPacketOrData = new PacketOrByteArraySegment();
 
             switch(Protocol)
             {

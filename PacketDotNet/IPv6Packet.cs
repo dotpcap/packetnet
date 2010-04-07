@@ -311,7 +311,7 @@ namespace PacketDotNet
             int offset = 0;
             int length = IPv6Fields.HeaderLength;
             var headerBytes = new byte[length];
-            header = new ByteArrayAndOffset(headerBytes, offset, length);
+            header = new ByteArraySegment(headerBytes, offset, length);
 
             // set some default values to make this packet valid
             PayloadLength = 0;
@@ -357,7 +357,7 @@ namespace PacketDotNet
                             Offset);
 
             // slice off the header
-            header = new ByteArrayAndOffset(Bytes, Offset, IPv6Packet.HeaderMinimumLength);
+            header = new ByteArraySegment(Bytes, Offset, IPv6Packet.HeaderMinimumLength);
 
             // set the actual length, we need to do this because we need to set
             // header to something valid above before we can retrieve the PayloadLength

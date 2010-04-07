@@ -179,7 +179,7 @@ namespace PacketDotNet
             int offset = 0;
             int length = UdpFields.HeaderLength;
             var headerBytes = new byte[length];
-            header = new ByteArrayAndOffset(headerBytes, offset, length);
+            header = new ByteArraySegment(headerBytes, offset, length);
 
             // set instance values
             this.SourcePort = SourcePort;
@@ -215,11 +215,11 @@ namespace PacketDotNet
             base(Timeval)
         {
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArrayAndOffset(Bytes, Offset, UdpFields.HeaderLength);
+            header = new ByteArraySegment(Bytes, Offset, UdpFields.HeaderLength);
 
             // store the payload bytes
-            payloadPacketOrData = new PacketOrByteArray();
-            payloadPacketOrData.TheByteArray = header.EncapsulatedBytes();
+            payloadPacketOrData = new PacketOrByteArraySegment();
+            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
         }
 
         /// <summary>

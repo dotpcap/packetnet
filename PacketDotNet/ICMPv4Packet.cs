@@ -132,12 +132,12 @@ namespace PacketDotNet
         {
             get
             {
-                return payloadPacketOrData.TheByteArray.ActualBytes();
+                return payloadPacketOrData.TheByteArraySegment.ActualBytes();
             }
 
             set
             {
-                payloadPacketOrData.TheByteArray = new ByteArrayAndOffset(value, 0, value.Length);
+                payloadPacketOrData.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
             }
         }
 
@@ -171,11 +171,11 @@ namespace PacketDotNet
         {
             log.Debug("");
 
-            header = new ByteArrayAndOffset(Bytes, Offset, ICMPv4Fields.HeaderLength);
+            header = new ByteArraySegment(Bytes, Offset, ICMPv4Fields.HeaderLength);
 
             // store the payload bytes
-            payloadPacketOrData = new PacketOrByteArray();
-            payloadPacketOrData.TheByteArray = header.EncapsulatedBytes();
+            payloadPacketOrData = new PacketOrByteArraySegment();
+            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
 
             
         }

@@ -30,7 +30,7 @@ with=_
 fromTag=PacketDotNet_${fromVersion//$replace/$with}
 toTag=PacketDotNet_${toVersion//$replace/$with}
 
-outputFile=$destinationDirectory/PacketdotNet_${toVersion}_ReleaseNotes.txt
+outputFile=$destinationDirectory/PacketDotNet_${toVersion}_ReleaseNotes.txt
 
 echo "Packet.Net ChangeLog" > $outputFile
 echo "v$fromVersion -> v$toVersion" >> $outputFile

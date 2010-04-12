@@ -143,18 +143,17 @@ namespace PacketDotNet
         /// bytes (beyond the sequence number in the acknowledgment field) that
         /// the receiver is currently willing to receive.
         /// </summary>
-        virtual public int WindowSize
+        virtual public UInt16 WindowSize
         {
             get
             {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
+                return EndianBitConverter.Big.ToUInt16(header.Bytes,
                                                       header.Offset + TcpFields.WindowSizePosition);
             }
 
             set
             {
-                var theValue = (Int16)value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                EndianBitConverter.Big.CopyBytes(value,
                                                  header.Bytes,
                                                  header.Offset + TcpFields.WindowSizePosition);
             }

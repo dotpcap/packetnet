@@ -44,7 +44,6 @@ namespace CapturingAndParsingPackets
             Console.Write("-- Please choose a device to capture: ");
             i = int.Parse( Console.ReadLine() );
 
-
             // Register a cancle handler that lets us break out of our capture loop
             // since we currently need to synchronously receive packets in order to get
             // raw packets. Future versions of SharpPcap are likely to
@@ -54,12 +53,6 @@ namespace CapturingAndParsingPackets
 
             LivePcapDevice device = devices[i];
 
-#if false
-            // Register our handler function to the 'packet arrival' event
-            device.OnPacketArrival += 
-                new PacketArrivalEventHandler( device_OnPacketArrival );
-#endif
-
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
             device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
@@ -68,19 +61,12 @@ namespace CapturingAndParsingPackets
             Console.WriteLine("-- Listening on {0}, hit 'ctrl-c' to stop...",
                 device.Description);
 
-#if false
             // Start the capturing process
             device.StartCapture();
 
-            // Wait for 'Enter' from the user.
-            Console.ReadLine();
-
-            // Stop the capturing process
-            device.StopCapture();
-#else
             while(stopCapturing == false)
             {
-                var rawPacket = device.GetNextRawPacket();
+                var rawPacket = device.GetNextPacket();
 
                 // null packets can be returned in the case where
                 // the GetNextRawPacket() timed out, we should just attempt
@@ -105,7 +91,6 @@ namespace CapturingAndParsingPackets
 
                 Console.WriteLine(p.ToString());
             }
-#endif
 
             Console.WriteLine("-- Capture stopped");
 
@@ -127,18 +112,16 @@ namespace CapturingAndParsingPackets
             e.Cancel = true;
         }
 
-#if false
         /// <summary>
         /// Prints the time and length of each received packet
         /// </summary>
         private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
-            DateTime time = e.Packet.PcapHeader.Date;
-            uint len = e.Packet.PcapHeader.PacketLength;
+            var time = e.Packet.Timeval.Date;
+            var len = e.Packet.Data.Length;
             Console.WriteLine("{0}:{1}:{2},{3} Len={4}", 
                 time.Hour, time.Minute, time.Second, time.Millisecond, len);
             Console.WriteLine(e.Packet.ToString());
         }
-#endif
     }
 }

@@ -37,7 +37,7 @@
     </Reference>
     <Reference Include="SharpPcap, Version=2.4.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\SharpPcap.dll</HintPath>
+      <HintPath>lib\SharpPcap-2.4.0\SharpPcap.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=a5715cc6d5c3540b">
       <SpecificVersion>False</SpecificVersion>

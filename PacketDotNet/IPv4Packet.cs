@@ -173,7 +173,7 @@ namespace PacketDotNet
                                                                            header.Offset + IPv4Fields.FragmentOffsetAndFlagsPosition);
 
                 // mask off the high flag bits
-                return (fragmentOffsetAndFlags & 0x1FFFF);
+                return (fragmentOffsetAndFlags & 0x1FFF);
             }
 
             set
@@ -183,7 +183,7 @@ namespace PacketDotNet
                                                                            header.Offset + IPv4Fields.FragmentOffsetAndFlagsPosition);
 
                 // mask the fragementation offset in
-                fragmentOffsetAndFlags = (short)((fragmentOffsetAndFlags & 0xE000) | (value & 0x1FFFF));
+                fragmentOffsetAndFlags = (short)((fragmentOffsetAndFlags & 0xE000) | (value & 0x1FFF));
 
                 EndianBitConverter.Big.CopyBytes(fragmentOffsetAndFlags,
                                                  header.Bytes,

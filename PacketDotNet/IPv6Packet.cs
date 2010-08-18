@@ -320,6 +320,7 @@ namespace PacketDotNet
             // set instance values
             this.SourceAddress = SourceAddress;
             this.DestinationAddress = DestinationAddress;
+            this.Version = ipVersion;
         }
 
         /// <summary>

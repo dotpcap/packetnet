@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>/home/cmorgan/sharppcap_git/SharpPcap/bin/Release/SharpPcap</name>
+        <name>/home/cmorgan/sharppcap_git/SharpPcap/bin/Debug/SharpPcap</name>
     </assembly>
     <members>
         <member name="T:SharpPcap.LivePcapDevice">
@@ -791,6 +791,13 @@
             The last pcap error associated with this pcap device
             </summary>
         </member>
+        <member name="P:SharpPcap.PcapDevice.Filter">
+            <summary>
+            Kernel level filtering expression associated with this device.
+            For more info on filter expression syntax, see:
+            http://www.winpcap.org/docs/docs31/html/group__language.html
+            </summary>
+        </member>
         <member name="M:SharpPcap.PcapDevice.UnixSetupMonoUnixNative">
             <summary>
             Setup the reflection type and methodinfo for invocation of
@@ -933,9 +940,8 @@
         </member>
         <member name="M:SharpPcap.PcapDevice.SetFilter(System.String)">
             <summary>
-            Compile a kernel level filtering expression, and associate the filter
-            with this device. For more info on filter expression syntax, see:
-            http://www.winpcap.org/docs/docs31/html/group__language.html
+            Deprecated: Use the Filter property instead. This api will be removed in
+            the next release
             </summary>
             <param name="filterExpression">The filter expression to compile</param>
         </member>
@@ -1372,6 +1378,15 @@
             prior to using this method.
             </summary>
             <param name="destIP">The IP address to resolve</param>
+            <returns>The MAC address that matches to the given IP address</returns>
+        </member>
+        <member name="M:SharpPcap.ARP.Resolve(System.Net.IPAddress,System.String,System.Net.IPAddress)">
+            <summary>
+            Resolves the MAC address of the specified IP address.
+            </summary>
+            <param name="destIP">The IP address to resolve</param>
+            <param name="deviceName">The local network device name on which to send the ARP request</param>
+            <param name="srcIP">The local IP address from which to send the ARP request</param>
             <returns>The MAC address that matches to the given IP address</returns>
         </member>
         <member name="M:SharpPcap.ARP.Resolve(System.Net.IPAddress,System.String)">

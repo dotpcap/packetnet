@@ -507,6 +507,7 @@ namespace PacketDotNet
             // set instance values
             this.SourceAddress = SourceAddress;
             this.DestinationAddress = DestinationAddress;
+            this.Version = ipVersion;
         }
 
         /// <summary>
@@ -648,6 +649,16 @@ namespace PacketDotNet
             var srcAddress = RandomUtils.GetIPAddress(ipVersion);
             var dstAddress = RandomUtils.GetIPAddress(ipVersion);
             return new IPv4Packet(srcAddress, dstAddress);
+        }
+
+        /// <summary>
+        /// Update the length fields
+        /// </summary>
+        public override void UpdateCalculatedValues ()
+        {
+            // update the length field based on the length of this packet header
+            // plus the length of all of the packets it contains
+            TotalLength = TotalPacketLength;
         }
     }
 }

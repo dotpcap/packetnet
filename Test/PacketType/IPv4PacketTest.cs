@@ -38,6 +38,18 @@ namespace Test.PacketType
 
             Assert.AreEqual(sourceAddress, ip.SourceAddress);
             Assert.AreEqual(destinationAddress, ip.DestinationAddress);
+
+            // make sure the version is what we expect
+            Assert.AreEqual(IPv4Packet.ipVersion, ip.Version);
+
+            // retrieve the bytes for this IPv4Packet and construct another IPv4 packet from
+            // these bytes
+            var bytes = ip.Bytes;
+            var ip2 = new IPv4Packet(bytes, 0);
+
+            // compare some of the the values
+            //TODO: add more values here or implement an IPv4Packet equals method and use that here
+            Assert.AreEqual(ip.Version, ip2.Version);
         }
 
         [Test]

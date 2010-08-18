@@ -33,7 +33,8 @@ namespace PacketDotNet
         // Destination Unreachable replies
         DestinationNetworkUnreachable = 0x0300,
         DestinationHostUnreachable = 0x0301,
-        DestinationProtocolUnreachable = 0x0303,
+        DestinationProtocolUnreachable = 0x0302,
+        DestinationPortUnreachable = 0x303,
         FragmentationRequiredAndDFFlagSet = 0x0304,
         SourceRouteFailed = 0x0305,
         DestinationNetworkUnknown = 0x0306,

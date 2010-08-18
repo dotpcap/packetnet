@@ -361,7 +361,7 @@ namespace PacketDotNet
                                                                            header.Offset + IPv4Fields.FragmentOffsetAndFlagsPosition);
 
                 // mask the flags in
-                fragmentOffsetAndFlags = (short)((fragmentOffsetAndFlags & 0x1FFF) | ((value & 0xE0) << (16 - 3)));
+                fragmentOffsetAndFlags = (short)((fragmentOffsetAndFlags & 0x1FFF) | ((value & 0x07) << (16 - 3)));
 
                 EndianBitConverter.Big.CopyBytes(fragmentOffsetAndFlags,
                                                  header.Bytes,

@@ -32,7 +32,7 @@ namespace PacketDotNet.Utils
 
             for(int i = Offset; i < Offset + Length; i++)
             {
-                sb.AppendFormat("[{0:x4}]", Byte[i]);
+                sb.AppendFormat("[{0:x2}]", Byte[i]);
             }
 
             return sb.ToString();

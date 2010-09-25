@@ -328,13 +328,13 @@ namespace PacketDotNet
         {
             get
             {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + IPv4Fields.TotalLengthPosition);
+                return EndianBitConverter.Big.ToUInt16(header.Bytes,
+                                                       header.Offset + IPv4Fields.TotalLengthPosition);
             }
 
             set
             {
-                var theValue = (Int16)value;
+                var theValue = (UInt16)value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  header.Bytes,
                                                  header.Offset + IPv4Fields.TotalLengthPosition);

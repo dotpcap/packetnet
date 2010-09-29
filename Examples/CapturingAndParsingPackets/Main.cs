@@ -59,10 +59,7 @@ namespace CapturingAndParsingPackets
 
             Console.WriteLine();
             Console.WriteLine("-- Listening on {0}, hit 'ctrl-c' to stop...",
-                device.Description);
-
-            // Start the capturing process
-            device.StartCapture();
+                device.Name);
 
             while(stopCapturing == false)
             {
@@ -79,15 +76,7 @@ namespace CapturingAndParsingPackets
 
                 // use PacketDotNet to parse this packet and print out
                 // its high level information
-
-                // NOTE: Please feel free to copy this code, its a pain to convert the types
-                //       but future versions of SharpPcap may come bundled with PacketDotNet
-                //       so SharpPcap can provide packets in the PacketDotNet format, avoiding
-                //       this odd looking conversion
-                Packet p = Packet.ParsePacket((LinkLayers)rawPacket.LinkLayerType,
-                                          new PosixTimeval(rawPacket.Timeval.Seconds,
-                                                           rawPacket.Timeval.MicroSeconds),
-                                          rawPacket.Data);
+                Packet p = Packet.ParsePacket(rawPacket);;
 
                 Console.WriteLine(p.ToString());
             }
@@ -110,18 +99,6 @@ namespace CapturingAndParsingPackets
             // shut us down after we return because we need to do just a little
             // bit more processing to close the open capture device etc
             e.Cancel = true;
-        }
-
-        /// <summary>
-        /// Prints the time and length of each received packet
-        /// </summary>
-        private static void device_OnPacketArrival(object sender, CaptureEventArgs e)
-        {
-            var time = e.Packet.Timeval.Date;
-            var len = e.Packet.Data.Length;
-            Console.WriteLine("{0}:{1}:{2},{3} Len={4}", 
-                time.Hour, time.Minute, time.Second, time.Millisecond, len);
-            Console.WriteLine(e.Packet.ToString());
         }
     }
 }

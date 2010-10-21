@@ -57,6 +57,12 @@
             WinPcap extension
             </value>
         </member>
+        <member name="P:SharpPcap.LivePcapDevice.MinToCopy">
+            <value>
+            Set the minumum amount of data (in bytes) received by the kernel in a single call.
+            WinPcap extension
+            </value>
+        </member>
         <member name="M:SharpPcap.LivePcapDevice.Finalize">
             <summary>
             PcapDevice finalizer.  Ensure PcapDevices are stopped and closed before exit.
@@ -647,6 +653,19 @@
             <returns>
             A <see cref="T:System.Int32" /></returns>
         </member>
+        <member name="M:SharpPcap.SafeNativeMethods.pcap_setmintocopy(System.IntPtr,System.Int32)">
+            <summary>
+            changes the minimum amount of data in the kernel buffer that causes
+            a read from the application to return (unless the timeout expires)
+            See http://www.winpcap.org/docs/docs_412/html/group__wpcapfunc.html#gab14ceacbf1c2f63026416dd73f80dc0d
+            </summary>
+            <param name="adapter">
+            A <see cref="T:System.IntPtr" /></param>
+            <param name="sizeInBytes">
+            A <see cref="T:System.Int32" /></param>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
         <member name="M:SharpPcap.SafeNativeMethods.pcap_sendqueue_alloc(System.Int32)">
             <summary>
             Allocate a send queue.
@@ -807,7 +826,8 @@
         </member>
         <member name="M:SharpPcap.PcapDevice.StartCapture">
             <summary>
-            Starts the capturing process
+            Starts the capturing process via a background thread
+            OnPacketArrival() will be called for each captured packet
             </summary>
         </member>
         <member name="M:SharpPcap.PcapDevice.StopCapture">
@@ -940,8 +960,7 @@
         </member>
         <member name="M:SharpPcap.PcapDevice.SetFilter(System.String)">
             <summary>
-            Deprecated: Use the Filter property instead. This api will be removed in
-            the next release
+            Assign a filter to this device given a filterExpression
             </summary>
             <param name="filterExpression">The filter expression to compile</param>
         </member>
@@ -1411,6 +1430,19 @@
             <summary>
             Error while capturing
             </summary>
+        </member>
+        <member name="T:SharpPcap.InvalidOperationDuringBackgroundCaptureException">
+            <summary>
+            Thrown when an operation can't be performed because
+            a background capture has been started via PcapDevice.StartCapture()
+            </summary>
+        </member>
+        <member name="M:SharpPcap.InvalidOperationDuringBackgroundCaptureException.#ctor(System.String)">
+            <summary>
+            string constructor
+            </summary>
+            <param name="msg">
+            A <see cref="T:System.String" /></param>
         </member>
         <member name="T:SharpPcap.PacketArrivalEventHandler">
             <summary>A delegate for Packet Arrival events</summary>

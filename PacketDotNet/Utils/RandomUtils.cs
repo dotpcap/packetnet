@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Net;
 
 namespace PacketDotNet.Utils
 {
@@ -35,6 +37,23 @@ namespace PacketDotNet.Utils
             }
 
             return new System.Net.IPAddress(randomAddressBytes);
+        }
+
+        /// <summary>
+        /// Checks equality on the values (not references) of two byte arrays
+        /// </summary>
+        public static bool ByteArrayEquals(byte[] arrayA, byte[] arrayB)
+        {
+            if(arrayA.Length != arrayB.Length)
+                return false;
+
+            for(int i=0; i < arrayA.Length; i++)
+            {
+                if(arrayA[i] != arrayB[i])
+                    return false;
+            }
+
+            return true;
         }
     }
 }

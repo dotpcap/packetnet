@@ -47,6 +47,10 @@ namespace PacketDotNet
         /// </summary>
         ReverseArp = 0x8035,
         /// <summary>
+        /// Wake-On-Lan (WOL)
+        /// </summary>
+        WakeOnLan = 0x0842,
+        /// <summary>
         /// AppleTalk (Ethertalk)
         /// </summary>
         AppleTalk = 0x809B,

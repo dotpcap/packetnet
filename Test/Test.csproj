@@ -73,6 +73,7 @@
     <Compile Include="PacketType\TcpPacketTest.cs" />
     <Compile Include="PacketType\UdpTest.cs" />
     <Compile Include="PacketType\LldpTest.cs" />
+    <Compile Include="PacketType\WakeOnLanTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

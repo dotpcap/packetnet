@@ -125,6 +125,7 @@
     <Compile Include="LLDP\AddressFamily.cs" />
     <Compile Include="LLDP\StringTLV.cs" />
     <Compile Include="LLDP\TLVCollection.cs" />
+    <Compile Include="WakeOnLanPacket.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

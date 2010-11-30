@@ -24,6 +24,7 @@ namespace PacketDotNet
     /// <summary>
     /// Wake-On-Lan
     /// See: http://en.wikipedia.org/wiki/Wake-on-LAN
+    /// See: http://wiki.wireshark.org/WakeOnLAN
     /// </summary>
     public class WakeOnLanPacket : Packet
     {
@@ -54,14 +55,14 @@ namespace PacketDotNet
         {
             log.Debug("");
 
-            int payloadLength = syncSequence.Length + (EthernetFields.MacAddressLength * 16);
+            int payloadLength = syncSequence.Length + (EthernetFields.MacAddressLength * macRepetitions);
             byte[] payload = new byte[payloadLength];
             byte[] destinationMACBytes = destinationMAC.GetAddressBytes();
 
             // write the data to the payload
             // - synchronization sequence (6 bytes)
             // - destination MAC (16 copies of 6 bytes)
-            for(int i = 0; i < payloadLength; i++)
+            for(int i = 0; i < payloadLength; i+=EthernetFields.MacAddressLength)
             {
                 // copy the syncSequence on the first pass
                 if(i == 0)
@@ -74,7 +75,7 @@ namespace PacketDotNet
                 }
             }
 
-            // Assigh the newly created payload array to the
+            // assign the newly created payload array to the
             //  packet's PayloadData property
             PayloadData = payload;
         }
@@ -92,7 +93,6 @@ namespace PacketDotNet
             this(bytes, offset, new PosixTimeval())
         {
             log.Debug("");
-            this.PayloadData = bytes;
         }
 
         /// <summary>
@@ -112,7 +112,8 @@ namespace PacketDotNet
         {
             log.Debug("");
 
-            header = new ByteArraySegment(bytes, offset, bytes.Length - offset);
+            if(WakeOnLanPacket.IsValid(bytes))
+                this.PayloadData = bytes;
         }
 
         #endregion
@@ -195,12 +196,13 @@ namespace PacketDotNet
             byte[] destinationMAC = new byte[EthernetFields.MacAddressLength];
             Array.Copy(payloadData, syncSequence.Length, destinationMAC, 0, EthernetFields.MacAddressLength);
 
-            // 6 is the length (in bytes) of both the syncSequence and EthernetFields.MacAddressLength
-            byte[] buffer = new byte[6];
+            // the buffer is used to store both the synchronization sequence
+            //  and the MAC address, both of which are the same length (in bytes)
+            byte[] buffer = new byte[EthernetFields.MacAddressLength];
 
             // validate the 16 repetitions of the wolDestinationMAC
             // - verify that the wolDestinationMAC address repeats 16 times in sequence
-            for(int i = 0; i<(EthernetFields.MacAddressLength * 16); i+=EthernetFields.MacAddressLength)
+            for(int i = 0; i<(EthernetFields.MacAddressLength * macRepetitions); i+=EthernetFields.MacAddressLength)
             {
                 // Extract the sample from the payload for comparison
                 Array.Copy(payloadData, i, buffer, 0, buffer.Length);
@@ -226,9 +228,12 @@ namespace PacketDotNet
 
         #region Members
 
-        // The WOL synchronization sequence
-        private static byte[] syncSequence = new byte[6] { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
+        // the WOL synchronization sequence
+        private static readonly byte[] syncSequence = new byte[6] { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 
+        // the number of times the Destination MAC appears in the payload
+        private static readonly int macRepetitions = 16;
+        
         #endregion
     }
 }

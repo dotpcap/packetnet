@@ -26,7 +26,15 @@ namespace Test.PacketType
     [TestFixture]
     public class WakeOnLanTest
     {
-        /// TODO: Add tests for Wake-On-Lan
+        [Test]
+        public void CreateFromValues()
+        {
+            var wol = new WakeOnLanPacket(new PhysicalAddress(new byte[6] { 0xCA, 0xFE, 0xBA, 0xBE, 0xC0, 0x01 }));
+        
+            Assert.IsTrue(wol.IsValid());
+            Assert.AreEqual(wol.DestinationMAC, PhysicalAddress.Parse("CA-FE-BA-BE-C0-01"));
+        }
+
         [Test]
         public void WakeOnLanParsing()
         {

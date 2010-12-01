@@ -8,7 +8,7 @@
     <ProjectGuid>{7CA1E07C-DB49-40B6-820A-5A8F1370127B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AssemblyName>ConstructingPackets</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <RootNamespace>ConstructingPackets</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

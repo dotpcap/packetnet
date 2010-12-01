@@ -16,8 +16,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System;
+using System.Linq;
 using System.Net.NetworkInformation;
-using PacketDotNet.Utils;
 
 namespace PacketDotNet
 {
@@ -211,13 +211,13 @@ namespace PacketDotNet
                 if(i == 0)
                 {
                     // validate the synchronization sequence
-                    if(!RandomUtils.ByteArrayEquals(buffer, syncSequence))
+                    if(!buffer.SequenceEqual(syncSequence))
                         return false;
                 }
                 else
                 {
                     // fail the validation on malformed WOL Magic Packets
-                    if(!RandomUtils.ByteArrayEquals(buffer, destinationMAC))
+                    if(!buffer.SequenceEqual(destinationMAC))
                         return false;
                 }
             }

@@ -8,7 +8,7 @@
     <ProjectGuid>{D1FEC3AA-A58B-4E14-AC50-5008E97D1BBC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>Test</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <RootNamespace>Test</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

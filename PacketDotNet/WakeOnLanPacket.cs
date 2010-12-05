@@ -14,10 +14,15 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*
+ * Copyright 2010 Evan Plaice <evanplaice@gmail.com>
+ * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
+ */
 
 using System;
 using System.Linq;
 using System.Net.NetworkInformation;
+using PacketDotNet.Utils;
 
 namespace PacketDotNet
 {
@@ -55,42 +60,42 @@ namespace PacketDotNet
         {
             log.Debug("");
 
-            int payloadLength = syncSequence.Length + (EthernetFields.MacAddressLength * macRepetitions);
-            byte[] payload = new byte[payloadLength];
-            byte[] destinationMACBytes = destinationMAC.GetAddressBytes();
+            // allocate memory for this packet
+            int offset = 0;
+            int packetLength = syncSequence.Length + (EthernetFields.MacAddressLength * macRepetitions);
+            var packetBytes = new byte[packetLength];
+            var destinationMACBytes = destinationMAC.GetAddressBytes();
 
             // write the data to the payload
             // - synchronization sequence (6 bytes)
             // - destination MAC (16 copies of 6 bytes)
-            for(int i = 0; i < payloadLength; i+=EthernetFields.MacAddressLength)
+            for(int i = 0; i < packetLength; i+=EthernetFields.MacAddressLength)
             {
                 // copy the syncSequence on the first pass
                 if(i == 0)
                 {
-                    Array.Copy(syncSequence, 0, payload, i, syncSequence.Length);
+                    Array.Copy(syncSequence, 0, packetBytes, i, syncSequence.Length);
                 }
                 else
                 {
-                    Array.Copy(destinationMACBytes, 0, payload, i, EthernetFields.MacAddressLength);
+                    Array.Copy(destinationMACBytes, 0, packetBytes, i, EthernetFields.MacAddressLength);
                 }
             }
 
-            // assign the newly created payload array to the
-            //  packet's PayloadData property
-            PayloadData = payload;
+            header = new ByteArraySegment(packetBytes, offset, packetLength);
         }
 
         /// <summary>
         /// Creates a Wake-On-LAN packet from a byte[]
         /// </summary>
-        /// <param name="bytes">
+        /// <param name="Bytes">
         /// A <see cref="System.Byte"/>
         /// </param>
-        /// <param name="offset">
+        /// <param name="Offset">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public WakeOnLanPacket(byte[] bytes, int offset) :
-            this(bytes, offset, new PosixTimeval())
+        public WakeOnLanPacket(byte[] Bytes, int Offset) :
+            this(Bytes, Offset, new PosixTimeval())
         {
             log.Debug("");
         }
@@ -98,22 +103,25 @@ namespace PacketDotNet
         /// <summary>
         /// Creates a Wake-On-LAN packet from a byte[]
         /// </summary>
-        /// <param name="bytes">
+        /// <param name="Bytes">
         /// A <see cref="System.Byte"/>
         /// </param>
-        /// <param name="offset">
+        /// <param name="Offset">
         /// A <see cref="System.Int32"/>
         /// </param>
-        /// <param name="timeval">
+        /// <param name="Timeval">
         /// A <see cref="PosixTimeval"/>
         /// </param>
-        public WakeOnLanPacket(byte[] bytes, int offset, PosixTimeval timeval) :
-            base(timeval)
+        public WakeOnLanPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
+            base(Timeval)
         {
             log.Debug("");
 
-            if(WakeOnLanPacket.IsValid(bytes))
-                this.PayloadData = bytes;
+            if(WakeOnLanPacket.IsValid(Bytes))
+            {
+                // set the header field, header field values are retrieved from this byte array
+                header = new ByteArraySegment(Bytes, Offset, Bytes.Length);
+            }
         }
 
         #endregion
@@ -128,13 +136,17 @@ namespace PacketDotNet
             get
             {
                 byte[] destinationMAC = new byte[EthernetFields.MacAddressLength];
-                Array.Copy(this.PayloadData, syncSequence.Length, destinationMAC, 0, EthernetFields.MacAddressLength);
+                Array.Copy(header.Bytes, header.Offset + syncSequence.Length,
+                           destinationMAC, 0,
+                           EthernetFields.MacAddressLength);
                 return new PhysicalAddress(destinationMAC);
             }
             set
             {
                 byte[] destinationMAC = value.GetAddressBytes();
-                Array.Copy(destinationMAC, 0, this.PayloadData, syncSequence.Length, EthernetFields.MacAddressLength);
+                Array.Copy(destinationMAC, 0,
+                           header.Bytes, header.Offset + syncSequence.Length,
+                           EthernetFields.MacAddressLength);
             }
         }
 
@@ -187,9 +199,18 @@ namespace PacketDotNet
         /// </returns>
         public bool IsValid()
         {
-            return IsValid(this.PayloadData);
+            return IsValid(header.ActualBytes());
         }
 
+        /// <summary>
+        /// See IsValid()
+        /// </summary>
+        /// <param name="payloadData">
+        /// A <see cref="System.Byte[]"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Boolean"/>
+        /// </returns>
         public static bool IsValid(byte[] payloadData)
         {
             // fetch the destination MAC from the payload
@@ -222,6 +243,48 @@ namespace PacketDotNet
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Compare two instances
+        /// </summary>
+        /// <param name="obj">
+        /// A <see cref="System.Object"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Boolean"/>
+        /// </returns>
+        public override bool Equals (object obj)
+        {
+            // Check for null values and compare run-time types.
+            if (obj == null || GetType() != obj.GetType()) 
+                return false;
+
+            var wol = (WakeOnLanPacket)obj;
+
+            return DestinationMAC.Equals(wol.DestinationMAC);
+        }
+
+        /// <summary>
+        /// GetHashCode override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
+        public override int GetHashCode ()
+        {
+            return header.GetHashCode();
+        }
+
+        /// <summary>
+        /// ToString override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
+        public override string ToString ()
+        {
+            return string.Format ("[WakeOnLanPacket: DestinationMAC={0}]", DestinationMAC);
         }
 
         #endregion

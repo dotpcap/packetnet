@@ -14,6 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
+/*
+ * Copyright 2010 Evan Plaice <evanplaice@gmail.com>
+ * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
+ */
 
 using System;
 using System.Net.NetworkInformation;
@@ -29,10 +33,20 @@ namespace Test.PacketType
         [Test]
         public void CreateFromValues()
         {
-            var wol = new WakeOnLanPacket(new PhysicalAddress(new byte[6] { 0xCA, 0xFE, 0xBA, 0xBE, 0xC0, 0x01 }));
-        
+            var physicalAddress = PhysicalAddress.Parse("CA-FE-BA-BE-C0-01");
+            var wol = new WakeOnLanPacket(physicalAddress);
+
             Assert.IsTrue(wol.IsValid());
-            Assert.AreEqual(wol.DestinationMAC, PhysicalAddress.Parse("CA-FE-BA-BE-C0-01"));
+            Assert.AreEqual(wol.DestinationMAC, physicalAddress);
+
+            // convert the wol packet back into bytes
+            var wolBytes = wol.Bytes;
+
+            // and now parse it back from bytes into a wol packet
+            var wol2 = new WakeOnLanPacket(wolBytes, 0);
+
+            // make sure the packets match
+            Assert.AreEqual(wol, wol2);
         }
 
         [Test]

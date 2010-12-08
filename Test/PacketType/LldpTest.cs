@@ -159,7 +159,7 @@ namespace Test.PacketType
             var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
 
             Console.WriteLine("Parsing");
-            var l = LLDPPacket.GetType(p);
+            var l = LLDPPacket.GetEncapsulated(p);
 
             int count = 1;
             Console.WriteLine(l.TlvCollection.Count.ToString());
@@ -257,7 +257,7 @@ namespace Test.PacketType
             var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
 
             Console.WriteLine("Parsing");
-            var l = LLDPPacket.GetType(p);
+            var l = LLDPPacket.GetEncapsulated(p);
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(l.ToString());
@@ -275,7 +275,7 @@ namespace Test.PacketType
             var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
 
             Console.WriteLine("Parsing");
-            var l = LLDPPacket.GetType(p);
+            var l = LLDPPacket.GetEncapsulated(p);
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(l.ToColoredVerboseString(false));

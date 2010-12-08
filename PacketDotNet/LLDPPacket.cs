@@ -248,7 +248,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="IpPacket"/>
         /// </returns>
-        public static LLDPPacket GetType(Packet p)
+        public static LLDPPacket GetEncapsulated(Packet p)
         {
             log.Debug("");
 

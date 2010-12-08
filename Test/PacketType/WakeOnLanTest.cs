@@ -76,7 +76,13 @@ namespace Test.PacketType
             }
             dev.Close();
         }
-        
+
+        [Test]
+        public void RandomPacket()
+        {
+            WakeOnLanPacket.RandomPacket();
+        }
+
         [Test]
         public void PrintString()
         {

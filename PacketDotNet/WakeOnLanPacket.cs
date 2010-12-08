@@ -190,6 +190,23 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Generate a random WakeOnLanPacket
+        /// </summary>
+        /// <returns>
+        /// A <see cref="WakeOnLanPacket"/>
+        /// </returns>
+        public static WakeOnLanPacket RandomPacket()
+        {
+            var rnd = new Random();
+
+            byte[] destAddress = new byte[EthernetFields.MacAddressLength];
+
+            rnd.NextBytes(destAddress);
+
+            return new WakeOnLanPacket(new PhysicalAddress(destAddress));
+        }
+
+        /// <summary>
         /// Checks the validity of the Wake-On-LAN payload
         ///  - by checking the synchronization sequence
         ///  - by checking to see if there are 16 iterations of the Destination MAC address

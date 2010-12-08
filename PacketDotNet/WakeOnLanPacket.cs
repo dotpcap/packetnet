@@ -254,10 +254,10 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Boolean"/>
         /// </returns>
-        public override bool Equals (object obj)
+        public override bool Equals(object obj)
         {
             // Check for null values and compare run-time types.
-            if (obj == null || GetType() != obj.GetType()) 
+            if (obj == null || GetType() != obj.GetType())
                 return false;
 
             var wol = (WakeOnLanPacket)obj;
@@ -271,7 +271,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        public override int GetHashCode ()
+        public override int GetHashCode()
         {
             return header.GetHashCode();
         }
@@ -282,9 +282,9 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString ()
+        public override string ToString()
         {
-            return string.Format ("[WakeOnLanPacket: DestinationMAC={0}]", DestinationMAC);
+            return string.Format("[WakeOnLanPacket: DestinationMAC={0}]", DestinationMAC);
         }
 
         #endregion
@@ -296,7 +296,7 @@ namespace PacketDotNet
 
         // the number of times the Destination MAC appears in the payload
         private static readonly int macRepetitions = 16;
-        
+
         #endregion
     }
 }

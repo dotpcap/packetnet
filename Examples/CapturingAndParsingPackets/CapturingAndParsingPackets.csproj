@@ -8,7 +8,7 @@
     <ProjectGuid>{6AF85EE0-52EB-47D2-B753-4676F286DFF5}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AssemblyName>CapturingAndParsingPackets</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <RootNamespace>CapturingAndParsingPackets</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

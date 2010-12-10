@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -8,7 +8,7 @@
     <ProjectGuid>{6AF85EE0-52EB-47D2-B753-4676F286DFF5}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AssemblyName>CapturingAndParsingPackets</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <RootNamespace>CapturingAndParsingPackets</RootNamespace>
     <FileUpgradeFlags>
     </FileUpgradeFlags>

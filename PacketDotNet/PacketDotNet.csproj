@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -8,7 +8,7 @@
     <ProjectGuid>{55ABBA4C-AAF9-4726-A592-0C92436CEC92}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>PacketDotNet</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <RootNamespace>PacketDotNet</RootNamespace>
     <FileUpgradeFlags>
     </FileUpgradeFlags>

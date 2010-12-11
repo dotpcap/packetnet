@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 using System;
+using System.Text;
 using MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
@@ -180,48 +181,41 @@ namespace PacketDotNet
                                                                         Timeval);
         }
 
-        /// <summary>
-        /// ToString implementation
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/>
-        /// </returns>
-        public override string ToString ()
+        /// <summary cref="Packet.ToString(StringOutputType)" />
+        public override string ToString (StringOutputType outputFormat)
         {
-            return ToColoredString(false);
-        }
+            var buffer = new StringBuilder();
+            string color = "";
+            string colorEscape = "";
 
-        /// <summary>
-        /// Colored string that represents the values in this class instance
-        /// </summary>
-        /// <param name="colored">
-        /// A <see cref="System.Boolean"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="System.String"/>
-        /// </returns>
-        public override string ToColoredString (bool colored)
-        {
-            var sb = new System.Text.StringBuilder();
+            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
 
-            sb.AppendFormat("[LinuxSLLPacket: Type={0}, LinkLayerAddressType={1}, LinkLayerAddressLength={2}, LinkLayerHeader={3}, EthernetProtocolType={4}]",
-                                 Type,
-                                 LinkLayerAddressType,
-                                 LinkLayerAddressLength,
-                                 LinkLayerAddress,
-                                 EthernetProtocolType);
+            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            {
+                buffer.AppendFormat("[{0}LinuxSLLPacket{1}: Type={2}, LinkLayerAddressType={3}, LinkLayerAddressLength={4}, LinkLayerHeader={5}, EthernetProtocolType={6}]",
+                    color,
+                    colorEscape,
+                    Type,
+                    LinkLayerAddressType,
+                    LinkLayerAddressLength,
+                    LinkLayerAddress,
+                    EthernetProtocolType);
+            }
 
+             // TODO: Add verbose string support here
+            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            {
+                throw new NotImplementedException("The following feature is under developemnt");
+            }
+            
             // append the base output
-            sb.Append(base.ToColoredString(colored));
+            buffer.Append(base.ToString(outputFormat));
 
-            return sb.ToString();
-        }
-
-        /// <summary> Convert a more verbose string.</summary>
-        public override System.String ToColoredVerboseString(bool colored)
-        {
-            //TODO: just output the colored output for now
-            return ToColoredString(colored);
+            return buffer.ToString();
         }
     }
 }

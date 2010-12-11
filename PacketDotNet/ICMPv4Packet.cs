@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 using System;
+using System.Text;
 using MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
@@ -189,30 +190,34 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Convert this ICMP packet to a readable string.</summary>
-        public override System.String ToString()
+        /// <summary cref="Packet.ToString(StringOutputType)" />
+        public override string ToString(StringOutputType outputFormat)
         {
-            return ToColoredString(false);
-        }
+            var buffer = new StringBuilder();
 
-        /// <summary> Generate string with contents describing this ICMP packet.</summary>
-        /// <param name="colored">whether or not the string should contain ansi
-        /// color escape sequences.
-        /// </param>
-        public override System.String ToColoredString(bool colored)
-        {
-            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-            buffer.Append('[');
-            if (colored)
-                buffer.Append(Color);
-            buffer.Append("ICMPPacket");
-            if (colored)
-                buffer.Append(AnsiEscapeSequences.Reset);
-            buffer.Append(": ");
-            buffer.Append(TypeCode);
-            buffer.Append(", ");
-            buffer.Append(" l=" + header.Length);
-            buffer.Append(']');
+            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            {
+                buffer.Append('[');
+                if(outputFormat == StringOutputType.Colored)
+                    buffer.Append(Color);
+                buffer.Append("ICMPPacket");
+                if(outputFormat == StringOutputType.Colored)
+                    buffer.Append(AnsiEscapeSequences.Reset);
+                buffer.Append(": ");
+                buffer.Append(TypeCode);
+                buffer.Append(", ");
+                buffer.Append(" l=" + header.Length);
+                buffer.Append(']');
+            }
+
+              // TODO: Add verbose string support here
+            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            {
+                throw new NotImplementedException("The following feature is under developemnt");
+            }
+
+            // append the base string output
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
         }

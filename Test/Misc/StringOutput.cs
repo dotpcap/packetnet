@@ -226,27 +226,10 @@ namespace Test.Misc
             ToColoredVerboseString
         }
 
-        private void OutputPacket(Packet p, OutputType outputType)
+        private void OutputPacket(Packet p, StringOutputType outputType)
         {
             Console.WriteLine(currentPacketDescription + " - " + outputType);
-
-            string output = null;
-            switch(outputType)
-            {
-            case OutputType.ToString:
-                output = p.ToString();
-                break;
-            case OutputType.ToColoredString:
-                output = p.ToColoredString(true);
-                break;
-            case OutputType.ToColoredVerboseString:
-                output = p.ToColoredVerboseString(false);
-                break;
-            default:
-                throw new NotImplementedException("unknown OutputType of " + outputType);
-            }
-
-            Console.WriteLine(output);
+            Console.WriteLine(p.ToString(outputType));
             Console.WriteLine();
         }
 
@@ -264,7 +247,7 @@ namespace Test.Misc
             Packet p;
             while((p = GetNextPacket()) != null)
             {
-                OutputPacket(p, OutputType.ToString);
+                OutputPacket(p, StringOutputType.Normal);
             }
 
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
@@ -284,7 +267,27 @@ namespace Test.Misc
             Packet p;
             while((p = GetNextPacket()) != null)
             {
-                OutputPacket(p, OutputType.ToColoredString);
+                OutputPacket(p, StringOutputType.Colored);
+            }
+
+            LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
+        }
+
+        [Test]
+        public void ToVerboseString()
+        {
+            ResetPacketPosition();
+
+            // store the logging value
+            var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
+
+            // disable logging to reduce console output
+            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+
+            Packet p;
+            while((p = GetNextPacket()) != null)
+            {
+                OutputPacket(p, StringOutputType.Verbose);
             }
 
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
@@ -304,11 +307,10 @@ namespace Test.Misc
             Packet p;
             while((p = GetNextPacket()) != null)
             {
-                OutputPacket(p, OutputType.ToColoredVerboseString);
+                OutputPacket(p, StringOutputType.VerboseColored);
             }
 
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
         }
     }
 }
-

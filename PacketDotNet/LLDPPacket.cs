@@ -23,6 +23,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Text;
 using System.Text.RegularExpressions;
 using MiscUtil.Conversion;
 using PacketDotNet.Utils;
@@ -311,80 +312,56 @@ namespace PacketDotNet
             
             return lldpPacket;
         }
-        
-        /// <summary>
-        /// Convert this LLDP packet to a readable string.
-        /// </summary>
-        /// <returns>
-        /// A human readable string.
-        /// </returns>
-        public override string ToString ()
-        {
-            return ToColoredString(false);
-        }
 
-        /// <summary>
-        /// Convert this LLDP packet to a readable string.
-        /// </summary>
-        /// <param name="colored">
-        /// Sets whether the output includes coloring.
-        /// </param>
-        /// <returns>
-        /// A human readable string.
-        /// </returns>
-        public override string ToColoredString(bool colored)
+        /// <summary cref="Packet.ToString(StringOutputType)" />
+        public override string ToString(StringOutputType outputFormat)
         {
-            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-            buffer.Append('[');
-            if (colored)
-                buffer.Append(AnsiEscapeSequences.Blue);
-            buffer.Append("LLDPPacket");
-            if (colored)
-                buffer.Append(AnsiEscapeSequences.Reset);
-            buffer.Append(":");
-            
-            foreach(TLV tlv in TlvCollection)
+            var buffer = new StringBuilder();
+
+            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                // the regex trims the parent namespaces off of the class type
-                // ex. "PacketDotNet.LLDP.TimeToLive" returns "TimeToLive"
-                var r = new Regex(@"[^(\.)]([^\.]*)$");
-                var m = r.Match(tlv.GetType().ToString());
-                buffer.Append(" [" + m.Groups[0].Value + " length:" + tlv.Length + "]");
+                buffer.Append('[');
+                if(outputFormat == StringOutputType.Colored)
+                    buffer.Append(AnsiEscapeSequences.Blue);
+                buffer.Append("LLDPPacket");
+                if (outputFormat == StringOutputType.Colored)
+                    buffer.Append(AnsiEscapeSequences.Reset);
+                buffer.Append(":");
+                
+                foreach(TLV tlv in TlvCollection)
+                {
+                    // the regex trims the parent namespaces off of the class type
+                    // ex. "PacketDotNet.LLDP.TimeToLive" returns "TimeToLive"
+                    var r = new Regex(@"[^(\.)]([^\.]*)$");
+                    var m = r.Match(tlv.GetType().ToString());
+                    buffer.Append(" [" + m.Groups[0].Value + " length:" + tlv.Length + "]");
+                }
+                buffer.Append(']');
             }
-            buffer.Append(']');
+
+            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            {
+                buffer.Append('[');
+                if(outputFormat == StringOutputType.VerboseColored)
+                    buffer.Append(AnsiEscapeSequences.Blue);
+                buffer.Append("LLDPPacket");
+                if(outputFormat == StringOutputType.VerboseColored)
+                    buffer.Append(AnsiEscapeSequences.Reset);
+                buffer.Append(":");
+                
+                foreach(TLV tlv in TlvCollection)
+                {
+                    buffer.Append(" " + tlv.ToString());
+                }
+                buffer.Append(']');
+            }
+
+            // append the base string output
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
         }
 
-        /// <summary>
-        /// Convert this LLDP packet to a verbose readable string.
-        /// </summary>
-        /// <param name="colored">
-        /// Sets whether the output includes coloring.
-        /// </param>
-        /// <returns>
-        /// A verbose human readable string.
-        /// </returns>
-        public override string ToColoredVerboseString (bool colored)
-        {
-            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-            buffer.Append('[');
-            if (colored)
-                buffer.Append(AnsiEscapeSequences.Blue);
-            buffer.Append("LLDPPacket");
-            if (colored)
-                buffer.Append(AnsiEscapeSequences.Reset);
-            buffer.Append(":");
-            
-            foreach(TLV tlv in TlvCollection)
-            {
-                buffer.Append(" " + tlv.ToString());
-            }
-            buffer.Append(']');
-
-            return buffer.ToString();
-        }
-        
         #endregion
 
         #region Members

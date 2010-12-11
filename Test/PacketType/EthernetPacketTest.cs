@@ -33,7 +33,7 @@ namespace Test.PacketType
         // tcp
         public void VerifyPacket0(Packet p)
         {
-            Console.WriteLine(p.ToColoredVerboseString(false));
+            Console.WriteLine(p.ToString());
 
             EthernetPacket e = (EthernetPacket)p;
             Assert.AreEqual(PhysicalAddress.Parse("00-13-10-03-71-47"), e.SourceHwAddress);

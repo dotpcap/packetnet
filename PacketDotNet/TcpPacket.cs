@@ -19,6 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 ﻿using System;
+using System.Text;
 using System.Collections.Generic;
 using MiscUtil.Conversion;
 using PacketDotNet.Utils;
@@ -497,107 +498,87 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Convert this TCP packet to a readable string.</summary>
-        public override System.String ToString()
+        /// <summary cref="Packet.ToString(StringOutputType)" />
+        public override string ToString(StringOutputType outputFormat)
         {
-            return ToColoredString(false);
-        }
+            var buffer = new StringBuilder();
 
-        /// <summary> Generate string with contents describing this TCP packet.</summary>
-        /// <param name="colored">whether or not the string should contain ansi
-        /// color escape sequences.
-        /// </param>
-        public override System.String ToColoredString(bool colored)
-        {
-            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-            buffer.Append('[');
-            if (colored)
-                buffer.Append(Color);
-            buffer.Append("TCPPacket");
-            if (colored)
-                buffer.Append(AnsiEscapeSequences.Reset);
-            buffer.Append(": ");
-            buffer.Append(" SourcePort: ");
-            if(Enum.IsDefined(typeof(IpPort), (ushort)SourcePort))
+            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.Append((IpPort)SourcePort);
-                buffer.Append(" (" + SourcePort + ") ");
-            } else
-            {
-                buffer.Append(SourcePort);
+                buffer.Append('[');
+                if (outputFormat == StringOutputType.Colored)
+                    buffer.Append(Color);
+                buffer.Append("TCPPacket");
+                if (outputFormat == StringOutputType.Colored)
+                    buffer.Append(AnsiEscapeSequences.Reset);
+                buffer.Append(": ");
+                buffer.Append(" SourcePort: ");
+                if(Enum.IsDefined(typeof(IpPort), (ushort)SourcePort))
+                {
+                    buffer.Append((IpPort)SourcePort);
+                    buffer.Append(" (" + SourcePort + ") ");
+                } else
+                {
+                    buffer.Append(SourcePort);
+                }
+                buffer.Append(" -> ");
+                buffer.Append(" DestinationPort: ");
+                if(Enum.IsDefined(typeof(IpPort), (ushort)DestinationPort))
+                {
+                    buffer.Append((IpPort)DestinationPort);
+                    buffer.Append(" (" + DestinationPort + ") ");
+                } else
+                {
+                    buffer.Append(DestinationPort);
+                }
+                if (Urg)
+                    buffer.Append(" urg[0x" + System.Convert.ToString(UrgentPointer, 16) + "]");
+                if (Ack)
+                    buffer.Append(" ack[" + AcknowledgmentNumber + " (0x" + System.Convert.ToString(AcknowledgmentNumber, 16) + ")]");
+                if (Psh)
+                    buffer.Append(" psh");
+                if (Rst)
+                    buffer.Append(" rst");
+                if (Syn)
+                    buffer.Append(" syn[0x" + System.Convert.ToString(SequenceNumber, 16) + "," +
+                                  SequenceNumber + "]");
+                if (Fin)
+                    buffer.Append(" fin");
+                //FIXME: not sure what to put here
+                //buffer.Append(" l=" + TCPHeaderLength + "," + PayloadDataLength);
+                buffer.Append(']');
             }
-            buffer.Append(" -> ");
-            buffer.Append(" DestinationPort: ");
-            if(Enum.IsDefined(typeof(IpPort), (ushort)DestinationPort))
+
+            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
-                buffer.Append((IpPort)DestinationPort);
-                buffer.Append(" (" + DestinationPort + ") ");
-            } else
-            {
-                buffer.Append(DestinationPort);
+                buffer.Append('[');
+                if (outputFormat == StringOutputType.VerboseColored)
+                    buffer.Append(Color);
+                buffer.Append("TCPPacket");
+                if (outputFormat == StringOutputType.VerboseColored)
+                    buffer.Append(AnsiEscapeSequences.Reset);
+                buffer.Append(": ");
+                buffer.Append("sport=" + SourcePort + ", ");
+                buffer.Append("dport=" + DestinationPort + ", ");
+                buffer.Append("seqn=0x" + System.Convert.ToString(SequenceNumber, 16) + ", ");
+                buffer.Append("ackn=0x" + System.Convert.ToString(AcknowledgmentNumber, 16) + ", ");
+                //FIXME: what is header length now?
+                //buffer.Append("hlen=" + HeaderLength + ", ");
+                buffer.Append("urg=" + Urg + ", ");
+                buffer.Append("ack=" + Ack + ", ");
+                buffer.Append("psh=" + Psh + ", ");
+                buffer.Append("rst=" + Rst + ", ");
+                buffer.Append("syn=" + Syn + ", ");
+                buffer.Append("fin=" + Fin + ", ");
+                buffer.Append("wsize=" + WindowSize + ", ");
+                //FIXME: probably want to fix this one
+                //buffer.Append("sum=0x" + System.Convert.ToString(Checksum, 16));
+                buffer.Append("uptr=0x" + System.Convert.ToString(UrgentPointer, 16));
+                buffer.Append(']');
             }
-
-            if (Urg)
-                buffer.Append(" urg[0x" + System.Convert.ToString(UrgentPointer, 16) + "]");
-            if (Ack)
-                buffer.Append(" ack[" + AcknowledgmentNumber + " (0x" + System.Convert.ToString(AcknowledgmentNumber, 16) + ")]");
-            if (Psh)
-                buffer.Append(" psh");
-            if (Rst)
-                buffer.Append(" rst");
-            if (Syn)
-                buffer.Append(" syn[0x" + System.Convert.ToString(SequenceNumber, 16) + "," +
-                              SequenceNumber + "]");
-            if (Fin)
-                buffer.Append(" fin");
-
-            //FIXME: not sure what to put here
-//            buffer.Append(" l=" + TCPHeaderLength + "," + PayloadDataLength);
-            buffer.Append(']');
 
             // append the base class output
-            buffer.Append(base.ToColoredString(colored));
-
-            return buffer.ToString();
-        }
-
-        /// <summary> Convert this TCP packet to a verbose.</summary>
-        public override System.String ToColoredVerboseString(bool colored)
-        {
-            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-            buffer.Append('[');
-            if (colored)
-                buffer.Append(Color);
-            buffer.Append("TCPPacket");
-            if (colored)
-                buffer.Append(AnsiEscapeSequences.Reset);
-            buffer.Append(": ");
-            buffer.Append("sport=" + SourcePort + ", ");
-            buffer.Append("dport=" + DestinationPort + ", ");
-            buffer.Append("seqn=0x" + System.Convert.ToString(SequenceNumber, 16) + ", ");
-            buffer.Append("ackn=0x" + System.Convert.ToString(AcknowledgmentNumber, 16) + ", ");
-            //FIXME: what is header length now?
-//            buffer.Append("hlen=" + HeaderLength + ", ");
-            buffer.Append("urg=" + Urg + ", ");
-            buffer.Append("ack=" + Ack + ", ");
-            buffer.Append("psh=" + Psh + ", ");
-            buffer.Append("rst=" + Rst + ", ");
-            buffer.Append("syn=" + Syn + ", ");
-            buffer.Append("fin=" + Fin + ", ");
-            buffer.Append("wsize=" + WindowSize + ", ");
-            //FIXME: probably want to fix this one
-//            buffer.Append("sum=0x" + System.Convert.ToString(Checksum, 16));
-#if false
-            if (this.ValidTCPChecksum)
-                buffer.Append(" (correct), ");
-            else
-                buffer.Append(" (incorrect, should be " + ComputeTCPChecksum(false) + "), ");
-#endif
-            buffer.Append("uptr=0x" + System.Convert.ToString(UrgentPointer, 16));
-            buffer.Append(']');
-
-            // append the base class output
-            buffer.Append(base.ToColoredVerboseString(colored));
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
         }

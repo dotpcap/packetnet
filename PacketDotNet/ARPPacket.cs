@@ -19,6 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
 using System.Net.NetworkInformation;
+using System.Text;
 using MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
@@ -336,36 +337,37 @@ namespace PacketDotNet
             //       no payload
         }
 
-        /// <summary> Convert this ARP packet to a readable string.</summary>
-        public override System.String ToString()
+        /// <summary cref="Packet.ToString(StringOutputType)" />
+        public override string ToString(StringOutputType outputFormat)
         {
-            return ToColoredString(false);
-        }
+            var buffer = new StringBuilder();
 
-        /// <summary> Generate string with contents describing this ARP packet.</summary>
-        /// <param name="colored">whether or not the string should contain ansi
-        /// color escape sequences.
-        /// </param>
-        public override System.String ToColoredString(bool colored)
-        {
-            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-            buffer.Append('[');
-            if (colored)
-                buffer.Append(Color);
-            buffer.Append("ARPPacket");
-            if (colored)
-                buffer.Append(AnsiEscapeSequences.Reset);
-            buffer.Append(": ");
-            buffer.Append(Operation);
-            buffer.Append(' ');
-            buffer.Append(SenderHardwareAddress + " -> " + TargetHardwareAddress);
-            buffer.Append(", ");
-            buffer.Append(SenderProtocolAddress + " -> " + TargetProtocolAddress);
-            //buffer.append(" l=" + header.length + "," + data.length);
-            buffer.Append(']');
+            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            {
+                buffer.Append('[');
+                if(outputFormat == StringOutputType.Colored)
+                    buffer.Append(Color);
+                buffer.Append("ARPPacket");
+                if(outputFormat == StringOutputType.Colored)
+                    buffer.Append(AnsiEscapeSequences.Reset);
+                buffer.Append(": ");
+                buffer.Append(Operation);
+                buffer.Append(' ');
+                buffer.Append(SenderHardwareAddress + " -> " + TargetHardwareAddress);
+                buffer.Append(", ");
+                buffer.Append(SenderProtocolAddress + " -> " + TargetProtocolAddress);
+                //buffer.append(" l=" + header.length + "," + data.length);
+                buffer.Append(']');
+            }
+
+            // TODO: Add verbose string support here
+            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            {
+                throw new NotImplementedException("The following feature is under developemnt");
+            }
 
             // append the base string output
-            buffer.Append(base.ToColoredString(colored));
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
         }

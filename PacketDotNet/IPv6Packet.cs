@@ -20,6 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Text;
 using System.IO;
 using MiscUtil.Conversion;
 using PacketDotNet.Utils;
@@ -431,52 +432,35 @@ namespace PacketDotNet
             return finalData;
         }
 
-        /// <summary>
-        /// Converts the packet to a string.
-        /// </summary>
-        /// <returns></returns>
-        public override String ToString( )
+        /// <summary cref="Packet.ToString(StringOutputType)" />
+        public override string ToString(StringOutputType outputFormat)
         {
-            return base.ToString( ) + "\r\nIPv6 Packet [\r\n"
-                   + "\tIPv6 Source Address: " + SourceAddress.ToString() + ", \r\n"
-                   + "\tIPv6 Destination Address: " + DestinationAddress.ToString() + "\r\n"
-                   + "]";
-            // TODO Implement Better ToString
-        }
+            var buffer = new StringBuilder();
 
-        /// <summary> Generate string with contents describing this IP packet.</summary>
-        /// <param name="colored">whether or not the string should contain ansi
-        /// color escape sequences.
-        /// </param>
-        public override System.String ToColoredString(bool colored)
-        {
-            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-            buffer.Append('[');
-            if (colored)
-                buffer.Append(Color);
-            buffer.Append("IPv6Packet");
-            if (colored)
-                buffer.Append(AnsiEscapeSequences.Reset);
-            buffer.Append(": ");
-            buffer.Append(SourceAddress + " -> " + DestinationAddress);
-            buffer.Append(" next header=" + NextHeader);
-            //FIXME: figure out what to use for the lengths
-#if false
-            buffer.Append(" l=" + this.IPPayloadLength);
-            buffer.Append(" sum=" + this.IPPayloadLength);
-#endif
-            buffer.Append(']');
+            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            {
+                buffer.Append('[');
+                if(outputFormat == StringOutputType.Colored)
+                    buffer.Append(Color);
+                buffer.Append("IPv6Packet");
+                if(outputFormat == StringOutputType.Colored)
+                    buffer.Append(AnsiEscapeSequences.Reset);
+                buffer.Append(": ");
+                buffer.Append(SourceAddress + " -> " + DestinationAddress);
+                buffer.Append(" next header=" + NextHeader);
+                buffer.Append(']');
+            }
+
+            // TODO: Add verbose string support here
+            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            {
+                throw new NotImplementedException("The following feature is under developemnt");
+            }
 
             // append the base class output
-            buffer.Append(base.ToColoredString(colored));
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
-        }
-
-        /// <summary> Convert this IP packet to a more verbose string.</summary>
-        public override System.String ToColoredVerboseString(bool colored)
-        {
-            throw new System.NotImplementedException();
         }
 
         /// <summary>

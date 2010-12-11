@@ -1,4 +1,6 @@
 using System;
+using System.Text;
+using PacketDotNet.Utils;
 
 namespace PacketDotNet
 {
@@ -53,15 +55,47 @@ namespace PacketDotNet
             this.Data = Data;
         }
 
-        /// <summary>
-        /// ToString() override
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/>
-        /// </returns>
-        public override string ToString ()
+        /// <value>
+        /// Color used when generating the text description of a packet
+        /// </value>
+        public virtual System.String Color
         {
-            return string.Format("[RawPacket: LinkLayerType={0}, Timeval={1}, Data={2}]", LinkLayerType, Timeval, Data);
+            get
+            {
+                return AnsiEscapeSequences.Black;
+            }
+        }
+
+        /// <summary cref="Packet.ToString(StringOutputType)" />
+        public string ToString(StringOutputType outputFormat)
+        {
+            var buffer = new StringBuilder();
+            string color = "";
+            string colorEscape = "";
+
+            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
+
+            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            {
+                buffer.AppendFormat("[{0}RawPacket{1}: LinkLayerType={2}, Timeval={3}, Data={4}]",
+                    color,
+                    colorEscape,
+                    LinkLayerType,
+                    Timeval,
+                    Data);
+            }
+
+            // TODO: Add verbose string support here
+            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            {
+                throw new NotImplementedException("The following feature is under developemnt");
+            }
+
+            return buffer.ToString();
         }
     }
 }

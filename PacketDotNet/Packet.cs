@@ -361,44 +361,28 @@ namespace PacketDotNet
         public virtual void UpdateCalculatedValues()
         { }
 
-        /// <summary>
-        /// Returns a ansi colored string. This routine calls
-        /// the ToColoredString() of the payload packet if one
-        /// is present.
-        /// </summary>
-        /// <param name="colored">
-        /// A <see cref="System.Boolean"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="System.String"/>
-        /// </returns>
-        public virtual System.String ToColoredString(bool colored)
+        /// <summary>Output this packet as a readable string</summary>
+        public override System.String ToString()
         {
-            if(payloadPacketOrData.Type == PayloadType.Packet)
-            {
-                return payloadPacketOrData.ThePacket.ToColoredString(colored);
-            } else
-            {
-                return String.Empty;
-            }
+            return ToString(StringOutputType.Normal);
         }
 
-        /// <summary>
-        /// Returns a verbose ansi colored string. This routine calls
-        /// the ToColoredVerboseString() of the payload packet if one
-        /// is present.
+        /// <summary cref="Packet.ToString()">
+        ///
+        /// Output the packet information in the specified format
+        ///   Normal - outputs the packet info to a single line
+        ///   Colored - outputs the packet info to a single line with coloring
+        ///   Verbose - outputs detailed info about the packet
+        ///   VerboseColored - outputs detailed info about the packet with coloring
         /// </summary>
-        /// <param name="colored">
-        /// A <see cref="System.Boolean"/>
+        /// <param name="outputFormat">
+        /// <see cref="StringOutputType" />
         /// </param>
-        /// <returns>
-        /// A <see cref="System.String"/>
-        /// </returns>
-        public virtual System.String ToColoredVerboseString(bool colored)
+        public virtual string ToString(StringOutputType outputFormat)
         {
             if(payloadPacketOrData.Type == PayloadType.Packet)
             {
-                return payloadPacketOrData.ThePacket.ToColoredVerboseString(colored);
+                return payloadPacketOrData.ThePacket.ToString(outputFormat);
             } else
             {
                 return String.Empty;

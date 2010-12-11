@@ -19,6 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Text;
 using MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
@@ -566,74 +567,56 @@ namespace PacketDotNet
                                                                   this);
         }
 
-        /// <summary> Convert this IP packet to a readable string.</summary>
-        public override System.String ToString()
+        /// <summary cref="Packet.ToString(StringOutputType)" />
+        public override string ToString(StringOutputType outputFormat)
         {
-            return ToColoredString(false);
-        }
+            var buffer = new StringBuilder();
 
-        /// <summary> Generate string with contents describing this IP packet.</summary>
-        /// <param name="colored">whether or not the string should contain ansi
-        /// color escape sequences.
-        /// </param>
-        public override System.String ToColoredString(bool colored)
-        {
-            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-            buffer.Append('[');
-            if (colored)
-                buffer.Append(Color);
-            buffer.Append("IPv4Packet");
-            if (colored)
-                buffer.Append(AnsiEscapeSequences.Reset);
-            buffer.Append(": ");
-            buffer.Append(SourceAddress + " -> " + DestinationAddress);
-            buffer.Append(" HeaderLength=" + HeaderLength);
-            buffer.Append(" Protocol=" + Protocol);
-            buffer.Append(" TimeToLive=" + TimeToLive);            
-            // FIXME: what would we use for Length?
-//            buffer.Append(" l=" + HeaderLength + "," + Length);
-            buffer.Append(']');
+            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            {
+                buffer.Append('[');
+                if(outputFormat == StringOutputType.Colored)
+                    buffer.Append(Color);
+                buffer.Append("IPv4Packet");
+                if(outputFormat == StringOutputType.Colored)
+                    buffer.Append(AnsiEscapeSequences.Reset);
+                buffer.Append(": ");
+                buffer.Append(SourceAddress + " -> " + DestinationAddress);
+                buffer.Append(" HeaderLength=" + HeaderLength);
+                buffer.Append(" Protocol=" + Protocol);
+                buffer.Append(" TimeToLive=" + TimeToLive);            
+                // FIXME: what would we use for Length?
+                //buffer.Append(" l=" + HeaderLength + "," + Length);
+                buffer.Append(']');
+            }
+
+            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            {
+                buffer.Append('[');
+                if(outputFormat == StringOutputType.VerboseColored)
+                    buffer.Append(Color);
+                buffer.Append("IPv4Packet");
+                if(outputFormat == StringOutputType.VerboseColored)
+                    buffer.Append(AnsiEscapeSequences.Reset);
+                buffer.Append(": ");
+                buffer.Append("version=" + Version + ", ");
+                buffer.Append("hlen=" + HeaderLength + ", ");
+                buffer.Append("tos=" + TypeOfService + ", ");
+                //FIXME: what to use for length here?
+                //buffer.Append("length=" + Length + ", ");
+                buffer.Append("id=" + Id + ", ");
+                buffer.Append("flags=0x" + System.Convert.ToString(FragmentFlags, 16) + ", ");
+                buffer.Append("offset=" + FragmentOffset + ", ");
+                buffer.Append("ttl=" + TimeToLive + ", ");
+                buffer.Append("proto=" + Protocol + ", ");
+                buffer.Append("sum=0x" + System.Convert.ToString(Checksum, 16));
+                buffer.Append("src=" + SourceAddress + ", ");
+                buffer.Append("dest=" + DestinationAddress);
+                buffer.Append(']');
+            }
 
             // append the base class output
-            buffer.Append(base.ToColoredString(colored));
-
-            return buffer.ToString();
-        }
-
-        /// <summary> Convert this IP packet to a more verbose string.</summary>
-        public override System.String ToColoredVerboseString(bool colored)
-        {
-            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-            buffer.Append('[');
-            if (colored)
-                buffer.Append(Color);
-            buffer.Append("IPv4Packet");
-            if (colored)
-                buffer.Append(AnsiEscapeSequences.Reset);
-            buffer.Append(": ");
-            buffer.Append("version=" + Version + ", ");
-            buffer.Append("hlen=" + HeaderLength + ", ");
-            buffer.Append("tos=" + TypeOfService + ", ");
-            //FIXME: what to use for length here?
-//            buffer.Append("length=" + Length + ", ");
-            buffer.Append("id=" + Id + ", ");
-            buffer.Append("flags=0x" + System.Convert.ToString(FragmentFlags, 16) + ", ");
-            buffer.Append("offset=" + FragmentOffset + ", ");
-            buffer.Append("ttl=" + TimeToLive + ", ");
-            buffer.Append("proto=" + Protocol + ", ");
-            buffer.Append("sum=0x" + System.Convert.ToString(Checksum, 16));
-#if false
-            if (this.ValidChecksum)
-                buffer.Append(" (correct), ");
-            else
-                buffer.Append(" (incorrect, should be " + ComputeIPChecksum(false) + "), ");
-#endif
-            buffer.Append("src=" + SourceAddress + ", ");
-            buffer.Append("dest=" + DestinationAddress);
-            buffer.Append(']');
-
-            // append the base class output
-            buffer.Append(base.ToColoredVerboseString(colored));
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
         }

@@ -296,7 +296,7 @@ namespace Test.PacketType
             var l = LLDPPacket.GetEncapsulated(p);
 
             Console.WriteLine("Printing human readable string");
-            Console.WriteLine(l.ToColoredVerboseString(false));
+            Console.WriteLine(l.ToString(StringOutputType.Verbose));
         }
     }
 }

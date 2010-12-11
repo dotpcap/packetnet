@@ -22,6 +22,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Linq;
 using System.Net.NetworkInformation;
+using System.Text;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -293,15 +294,37 @@ namespace PacketDotNet
             return header.GetHashCode();
         }
 
-        /// <summary>
-        /// ToString override
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/>
-        /// </returns>
-        public override string ToString()
+        /// <summary cref="Packet.ToString(StringOutputType)" />
+        public override string ToString(StringOutputType outputFormat)
         {
-            return string.Format("[WakeOnLanPacket: DestinationMAC={0}]", DestinationMAC);
+            var buffer = new StringBuilder();
+            string color = "";
+            string colorEscape = "";
+
+            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
+
+            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            {
+                buffer.AppendFormat("[{0}WakeOnLanPacket{1}: DestinationMAC={2}]",
+                    color,
+                    colorEscape,
+                    DestinationMAC);
+            }
+
+             // TODO: Add verbose string support here
+            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            {
+                throw new NotImplementedException("The following feature is under developemnt");
+            }
+
+            // append the base string output
+            buffer.Append(base.ToString(outputFormat));
+
+            return buffer.ToString();
         }
 
         #endregion

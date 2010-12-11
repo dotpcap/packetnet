@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 using System;
+using System.Text;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
 
@@ -156,34 +157,37 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Convert this packet to a readable string.</summary>
-        public override System.String ToString()
+        /// <summary cref="Packet.ToString(StringOutputType)" />
+        public override string ToString(StringOutputType outputFormat)
         {
-            return ToColoredString(false);
-        }
+            var buffer = new StringBuilder();
+            string color = "";
+            string colorEscape = "";
 
-        /// <summary> Generate string with contents describing this packet.</summary>
-        /// <param name="colored">whether or not the string should contain ansi
-        /// color escape sequences.
-        /// </param>
-        public override System.String ToColoredString(bool colored)
-        {
-            var buffer = new System.Text.StringBuilder();
+            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
 
-            buffer.AppendFormat("[PPPPacket] Protocol {0}",
-                                Protocol);
+            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            {
+                buffer.AppendFormat("[{0}PPPPacket{1}: Protocol={2};",
+                    color,
+                    colorEscape,
+                    Protocol);
+            }
+
+            // TODO: Add verbose string support here
+            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            {
+                throw new NotImplementedException("The following feature is under developemnt");
+            }
 
             // append the base output
-            buffer.Append(base.ToColoredString(colored));
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
-        }
-
-        /// <summary> Convert a more verbose string.</summary>
-        public override System.String ToColoredVerboseString(bool colored)
-        {
-            //TODO: just output the colored output for now
-            return ToColoredString(colored);
         }
 
         /// <summary>

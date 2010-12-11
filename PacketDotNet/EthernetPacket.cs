@@ -19,6 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 ﻿using System;
 using System.Net.NetworkInformation;
+using System.Text;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
 
@@ -270,42 +271,36 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Convert this ethernet packet to a readable string.</summary>
-        public override System.String ToString()
+        /// <summary cref="Packet.ToString(StringOutputType)" />
+        public override string ToString(StringOutputType outputFormat)
         {
-            return ToColoredString(false);
-        }
+            var buffer = new StringBuilder();
 
-        /// <summary> Generate string with contents describing this ethernet packet.</summary>
-        /// <param name="colored">whether or not the string should contain ansi
-        /// color escape sequences.
-        /// </param>
-        public override System.String ToColoredString(bool colored)
-        {
-            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-            buffer.Append('[');
-            if (colored)
-                buffer.Append(Color);
-            buffer.Append("EthernetPacket");
-            if (colored)
-                buffer.Append(AnsiEscapeSequences.Reset);
-            buffer.Append(": ");
-            buffer.Append(SourceHwAddress + " -> " + DestinationHwAddress);
-            buffer.Append(" proto=" + Type.ToString() + " (0x" + System.Convert.ToString((ushort)Type, 16) + ")");
-            buffer.Append(" l=" + EthernetFields.HeaderLength); // + "," + data.length);
-            buffer.Append(']');
+            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            {
+                buffer.Append('[');
+                if(outputFormat == StringOutputType.Colored)
+                    buffer.Append(Color);
+                buffer.Append("EthernetPacket");
+                if(outputFormat == StringOutputType.Colored)
+                    buffer.Append(AnsiEscapeSequences.Reset);
+                buffer.Append(": ");
+                buffer.Append(SourceHwAddress + " -> " + DestinationHwAddress);
+                buffer.Append(" proto=" + Type.ToString() + " (0x" + System.Convert.ToString((ushort)Type, 16) + ")");
+                buffer.Append(" l=" + EthernetFields.HeaderLength); // + "," + data.length);
+                buffer.Append(']');
+            }
+
+            // TODO: Add verbose string support here
+            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            {
+                throw new NotImplementedException("The following feature is under developemnt");
+            }
 
             // append the base output
-            buffer.Append(base.ToColoredString(colored));
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
-        }
-
-        /// <summary> Convert a more verbose string.</summary>
-        public override System.String ToColoredVerboseString(bool colored)
-        {
-            //TODO: just output the colored output for now
-            return ToColoredString(colored);
         }
 
         /// <summary>

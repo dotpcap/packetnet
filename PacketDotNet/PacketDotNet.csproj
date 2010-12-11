@@ -131,6 +131,7 @@
     <Compile Include="LLDP\StringTLV.cs" />
     <Compile Include="LLDP\TLVCollection.cs" />
     <Compile Include="WakeOnLanPacket.cs" />
+    <Compile Include="StringOutputType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

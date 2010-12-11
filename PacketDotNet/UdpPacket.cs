@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 ﻿using System;
+using System.Text;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
 
@@ -262,43 +263,47 @@ namespace PacketDotNet
             this.Checksum = (ushort)CalculateUDPChecksum();
         }
 
-        /// <summary> Convert this UDP packet to a readable string.</summary>
-        public override System.String ToString()
+        /// <summary cref="Packet.ToString(StringOutputType)" />
+        public override string ToString(StringOutputType outputFormat)
         {
-            return ToColoredString(false);
-        }
+            var buffer = new StringBuilder();
 
-        /// <summary> Generate string with contents describing this UDP packet.</summary>
-        /// <param name="colored">whether or not the string should contain ansi
-        /// color escape sequences.
-        /// </param>
-        public override System.String ToColoredString(bool colored)
-        {
-            System.Text.StringBuilder buffer = new System.Text.StringBuilder();
-            buffer.Append('[');
-            if (colored)
-                buffer.Append(Color);
-            buffer.Append("UDPPacket");
-            if (colored)
-                buffer.Append(AnsiEscapeSequences.Reset);
-            buffer.Append(": ");
-            if(Enum.IsDefined(typeof(IpPort), SourcePort))
+            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.Append((IpPort)SourcePort);
-            } else
-            {
-                buffer.Append(SourcePort);
+                buffer.Append('[');
+                if (outputFormat == StringOutputType.Colored)
+                    buffer.Append(Color);
+                buffer.Append("UDPPacket");
+                if (outputFormat == StringOutputType.Colored)
+                    buffer.Append(AnsiEscapeSequences.Reset);
+                buffer.Append(": ");
+                if(Enum.IsDefined(typeof(IpPort), SourcePort))
+                {
+                    buffer.Append((IpPort)SourcePort);
+                } else
+                {
+                    buffer.Append(SourcePort);
+                }
+                buffer.Append(" -> ");
+                if(Enum.IsDefined(typeof(IpPort), DestinationPort))
+                {
+                    buffer.Append((IpPort)DestinationPort);
+                } else
+                {
+                    buffer.Append(DestinationPort);
+                }
+                buffer.Append(" l=" + UdpFields.HeaderLengthLength + "," + (Length - UdpFields.HeaderLengthLength));
+                buffer.Append(']');
             }
-            buffer.Append(" -> ");
-            if(Enum.IsDefined(typeof(IpPort), DestinationPort))
+
+            // TODO: Add verbose string support here
+            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
-                buffer.Append((IpPort)DestinationPort);
-            } else
-            {
-                buffer.Append(DestinationPort);
+                throw new NotImplementedException("The following feature is under developemnt");
             }
-            buffer.Append(" l=" + UdpFields.HeaderLengthLength + "," + (Length - UdpFields.HeaderLengthLength));
-            buffer.Append(']');
+
+            // append the base string output
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
         }

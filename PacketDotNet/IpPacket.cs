@@ -74,6 +74,9 @@ namespace PacketDotNet
                 } else if(value is ICMPv4Packet)
                 {
                     NextHeader = IPProtocolType.ICMP;
+                } else if(value is IGMPv2Packet)
+                {
+                    NextHeader = IPProtocolType.IGMP;
                 } else // NOTE: new checks go here
                 {
                     NextHeader = IPProtocolType.NONE;
@@ -296,6 +299,11 @@ namespace PacketDotNet
                 break;
             case IPProtocolType.ICMPV6:
                 payloadPacketOrData.ThePacket = new ICMPv6Packet(payload.Bytes,
+                                                                 payload.Offset,
+                                                                 Timeval);
+                break;
+            case IPProtocolType.IGMP:
+                payloadPacketOrData.ThePacket = new IGMPv2Packet(payload.Bytes,
                                                                  payload.Offset,
                                                                  Timeval);
                 break;

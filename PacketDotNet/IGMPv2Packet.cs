@@ -16,7 +16,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
- */
+ *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
+  */
 using System;
 using System.Text;
 using MiscUtil.Conversion;
@@ -47,34 +48,32 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the IGMP max response time.</summary>
-        virtual public int MaxResponseTime
+        virtual public float MaxResponseTime
         {
             get
             {
-                return header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition];
+                return ((int)header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition] / 10);
             }
 
             set
             {
-                header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition] = (byte)value;
+                header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition] = (byte)(value * 10);
             }
         }
 
         /// <summary> Fetch the IGMP header checksum.</summary>
-        virtual public int Checksum
+        virtual public short Checksum
         {
             get
             {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
+                return BitConverter.ToInt16(header.Bytes,
                                                       header.Offset + IGMPv2Fields.ChecksumPosition);
             }
 
             set
             {
-                var theValue = (Int16)value;
-                EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + IGMPv2Fields.ChecksumPosition);
+                byte[] theValue = BitConverter.GetBytes(value);
+                Array.Copy(theValue, 0, header.Bytes, (header.Offset + IGMPv2Fields.ChecksumPosition), 2); 
             }
         }
 
@@ -128,28 +127,66 @@ namespace PacketDotNet
         public IGMPv2Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
             base(Timeval)
         {
-            throw new System.NotImplementedException();
+            // set the header field, header field values are retrieved from this byte array
+            header = new ByteArraySegment(Bytes, Offset, UdpFields.HeaderLength);
+
+            // store the payload bytes
+            payloadPacketOrData = new PacketOrByteArraySegment();
+            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
+        }
+
+        /// <summary>
+        /// Returns the encapsulated IGMPv2Packet of the Packet p or null if
+        /// there is no encapsulated packet
+        /// </summary>
+        /// <param name="p">
+        /// A <see cref="Packet"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="IGMPv2Packet"/>
+        /// </returns>
+        public static IGMPv2Packet GetEncapsulated(Packet p)
+        {
+            if(p is InternetLinkLayerPacket)
+            {
+                var payload = InternetLinkLayerPacket.GetInnerPayload((InternetLinkLayerPacket)p);
+                if(payload is IpPacket)
+                {
+                    Console.WriteLine("Is an IP packet");
+                    var innerPayload = payload.PayloadPacket;
+                    if(innerPayload is IGMPv2Packet)
+                    {
+                        return (IGMPv2Packet)innerPayload;
+                    }
+                }
+            }
+
+            return null;
+            
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
+            string color = "";
+            string colorEscape = "";
+
+            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
 
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.Append('[');
-                if(outputFormat == StringOutputType.Colored)
-                    buffer.Append(Color);
-                buffer.Append("IGMPPacket");
-                if(outputFormat == StringOutputType.Colored)
-                    buffer.Append(AnsiEscapeSequences.Reset);
-                buffer.Append(": ");
-                buffer.Append(Type);
-                buffer.Append(", ");
-                buffer.Append(GroupAddress + ": ");
-                buffer.Append(" l=" + IGMPv2Fields.HeaderLength);
-                buffer.Append(']');
+                // build the output string
+                buffer.AppendFormat("{0}[IGMPPacket: Type={2}, MaxResponseTime={3}, GroupAddress={4}]{1}",
+                    color,
+                    colorEscape,
+                    Type,
+                    MaxResponseTime,
+                    GroupAddress);
             }
 
             // TODO: Add verbose string support here

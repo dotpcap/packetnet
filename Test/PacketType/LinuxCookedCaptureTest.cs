@@ -71,7 +71,6 @@ namespace Test.PacketType
             int packetIndex = 0;
             while((rawPacket = dev.GetNextRawPacket()) != null)
             {
-                Console.WriteLine("got packet");
                 Packet p = Packet.ParsePacket((LinkLayers)rawPacket.LinkLayerType,
                                               new PosixTimeval(rawPacket.Timeval.Seconds, rawPacket.Timeval.MicroSeconds),
                                               rawPacket.Data);
@@ -95,6 +94,26 @@ namespace Test.PacketType
             }
 
             dev.Close();
+        }
+
+        [Test]
+        public void PrintString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/LinuxCookedCapture.pcap");
+            dev.Open();
+            SharpPcap.Packets.RawPacket rawPacket;
+            Console.WriteLine("Reading packet data");
+            rawPacket = dev.GetNextRawPacket();
+            Packet p = Packet.ParsePacket((LinkLayers)rawPacket.LinkLayerType,
+                              new PosixTimeval(rawPacket.Timeval.Seconds, rawPacket.Timeval.MicroSeconds),
+                              rawPacket.Data);
+
+            Console.WriteLine("Parsing");
+            var l = (LinuxSLLPacket)p;
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(l.ToString());
         }
     }
 }

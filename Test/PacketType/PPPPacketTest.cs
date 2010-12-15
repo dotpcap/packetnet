@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
+ *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
 using System;
@@ -27,32 +27,8 @@ using SharpPcap;
 namespace Test.PacketType
 {
     [TestFixture]
-    public class PPPoEPPPTest
+    public class PPPPacketTest
     {
-        [Test]
-        public void TestParsingPPPoePPPPacket()
-        {
-            var dev = new SharpPcap.OfflinePcapDevice("../../CaptureFiles/PPPoEPPP.pcap");
-            dev.Open();
-
-            SharpPcap.Packets.RawPacket rawPacket;
-            Packet packet;
-
-            // first packet is a udp packet
-            rawPacket = dev.GetNextRawPacket();
-            packet = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
-            var udpPacket = UdpPacket.GetEncapsulated(packet);
-            Assert.IsNotNull(udpPacket, "Expected a valid udp packet for the first packet");
-
-            // second packet is the PPPoe Ptp packet
-            rawPacket = dev.GetNextRawPacket();
-            packet = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
-            var anotherUdpPacket = UdpPacket.GetEncapsulated(packet);
-            Assert.IsNotNull(anotherUdpPacket, "Expected a valid udp packet for the second packet as well");
-
-            dev.Close();
-        }
-
         [Test]
         public void PrintString()
         {
@@ -66,10 +42,10 @@ namespace Test.PacketType
             var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
 
             Console.WriteLine("Parsing");
-            var pppoe = PPPoEPacket.GetEncapsulated(p);
+            var ppp = PPPPacket.GetEncapsulated(p);
 
             Console.WriteLine("Printing human readable string");
-            Console.WriteLine(pppoe.ToString());
+            Console.WriteLine(ppp.ToString());
         }
     }
 }

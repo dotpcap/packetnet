@@ -175,7 +175,6 @@ namespace Test.PacketType
             int packetIndex = 0;
             while((rawPacket = dev.GetNextRawPacket()) != null)
             {
-                Console.WriteLine("got packet");
                 Packet p = Packet.ParsePacket((LinkLayers)rawPacket.LinkLayerType,
                                               new PosixTimeval(rawPacket.Timeval.Seconds, rawPacket.Timeval.MicroSeconds),
                                               rawPacket.Data);
@@ -256,6 +255,24 @@ namespace Test.PacketType
             Assert.AreEqual(EthernetPacketType.IpV4, e.Type);
 
             dev.Close();
+        }
+
+        [Test]
+        public void PrintString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
+            dev.Open();
+            SharpPcap.Packets.RawPacket rawPacket;
+            Console.WriteLine("Reading packet data");
+            rawPacket = dev.GetNextRawPacket();
+            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+
+            Console.WriteLine("Parsing");
+            var eth = (EthernetPacket)p;
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(eth.ToString());
         }
 
         [Test]

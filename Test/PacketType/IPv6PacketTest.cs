@@ -157,6 +157,24 @@ namespace Test.PacketType
         }
 
         [Test]
+        public void PrintString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/ipv6_http.pcap");
+            dev.Open();
+            SharpPcap.Packets.RawPacket rawPacket;
+            Console.WriteLine("Reading packet data");
+            rawPacket = dev.GetNextRawPacket();
+            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+
+            Console.WriteLine("Parsing");
+            var ip = IPv6Packet.GetEncapsulated(p);
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(ip.ToString());
+        }
+
+        [Test]
         public void RandomPacket()
         {
             IPv6Packet.RandomPacket();

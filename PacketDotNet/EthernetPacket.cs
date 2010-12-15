@@ -70,6 +70,10 @@ namespace PacketDotNet
                 {
                     Type = EthernetPacketType.LLDP;
                 }
+                else if(value is PPPoEPacket)
+                {
+                    Type = EthernetPacketType.PointToPointProtocolOverEthernetSessionStage;
+                }
                 else // NOTE: new types should be inserted here
                 {
                     Type = EthernetPacketType.None;

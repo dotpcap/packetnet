@@ -56,6 +56,7 @@ namespace PacketDotNet
         /// <summary>
         /// PPPoe version, must be 0x1 according to RFC
         /// </summary>
+        /// FIXME: This currently outputs the wrong version number
         public byte Version
         {
             get
@@ -98,6 +99,7 @@ namespace PacketDotNet
         /// <summary>
         ///
         /// </summary>
+        /// FIXME: This currently outputs the wrong code
         public PPPoECode Code
         {
             get
@@ -283,6 +285,27 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Returns the encapsulated PPPoE of the Packet p or null if
+        /// there is no encapsulated packet
+        /// </summary>
+        /// <param name="p">
+        /// A <see cref="Packet"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="ARPPacket"/>
+        /// </returns>
+        public static PPPoEPacket GetEncapsulated(Packet p)
+        {
+            if(p is EthernetPacket)
+            {
+                if(p.PayloadPacket is PPPoEPacket)
+                {
+                    return (PPPoEPacket)p.PayloadPacket;
+                }
+            }
+
+            return null;
+        }        /// <summary>
         /// Generate a random PPPoEPacket
         /// </summary>
         /// <returns>

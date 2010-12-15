@@ -329,6 +329,8 @@ namespace PacketDotNet
                 return new EthernetPacket(PacketData, 0, Timeval);
             case LinkLayers.LinuxSLL:
                 return new LinuxSLLPacket(PacketData, 0, Timeval);
+            case LinkLayers.Ppp:
+                return new PPPPacket(PacketData, 0, Timeval);
             default:
                 throw new System.NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");
             }

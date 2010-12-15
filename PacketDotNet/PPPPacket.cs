@@ -191,6 +191,31 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Returns the encapsulated PPPPacket of the Packet p or null if
+        /// there is no encapsulated packet
+        /// </summary>
+        /// <param name="p">
+        /// A <see cref="Packet"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="PPPPacket"/>
+        /// </returns>
+        public static PPPPacket GetEncapsulated(Packet p)
+        {
+            if(p is EthernetPacket)
+            {
+                var payload = p.PayloadPacket;
+                if(payload is PPPoEPacket)
+                {
+                    return (PPPPacket)payload.PayloadPacket;
+                
+                }
+            }
+
+            return null;
+        }
+        
+        /// <summary>
         /// Generate a random PPPoEPacket
         /// </summary>
         /// <returns>

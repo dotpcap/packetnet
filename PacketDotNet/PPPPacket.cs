@@ -170,9 +170,10 @@ namespace PacketDotNet
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.AppendFormat("[{0}PPPPacket{1}: Protocol={2};",
+                // build the output string
+                buffer.AppendFormat("{0}[PPPPacket: Protocol={2}]{1}",
                     color,
                     colorEscape,
                     Protocol);

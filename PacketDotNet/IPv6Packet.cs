@@ -436,19 +436,24 @@ namespace PacketDotNet
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
+            string color = "";
+            string colorEscape = "";
+
+            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
 
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.Append('[');
-                if(outputFormat == StringOutputType.Colored)
-                    buffer.Append(Color);
-                buffer.Append("IPv6Packet");
-                if(outputFormat == StringOutputType.Colored)
-                    buffer.Append(AnsiEscapeSequences.Reset);
-                buffer.Append(": ");
-                buffer.Append(SourceAddress + " -> " + DestinationAddress);
-                buffer.Append(" next header=" + NextHeader);
-                buffer.Append(']');
+                // build the output string
+                buffer.AppendFormat("{0}[IPv6Packet: SourceAddress={2}, DestinationAddress={3}, NextHeader={4}]{1}",
+                    color,
+                    colorEscape,
+                    SourceAddress,
+                    DestinationAddress,
+                    NextHeader);
             }
 
             // TODO: Add verbose string support here

@@ -196,13 +196,14 @@ namespace PacketDotNet
 
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.AppendFormat("[{0}LinuxSLLPacket{1}: Type={2}, LinkLayerAddressType={3}, LinkLayerAddressLength={4}, LinkLayerHeader={5}, EthernetProtocolType={6}]",
+                // build the output string
+                buffer.AppendFormat("[{0}LinuxSLLPacket{1}: Type={2}, LinkLayerAddressType={3}, LinkLayerAddressLength={4}, LinkLayerAddress={5}, EthernetProtocolType={6}]",
                     color,
                     colorEscape,
                     Type,
                     LinkLayerAddressType,
                     LinkLayerAddressLength,
-                    LinkLayerAddress,
+                    BitConverter.ToString(LinkLayerAddress, 0),
                     EthernetProtocolType);
             }
 

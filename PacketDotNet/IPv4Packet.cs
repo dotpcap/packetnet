@@ -571,23 +571,26 @@ namespace PacketDotNet
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
+            string color = "";
+            string colorEscape = "";
+
+            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
 
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.Append('[');
-                if(outputFormat == StringOutputType.Colored)
-                    buffer.Append(Color);
-                buffer.Append("IPv4Packet");
-                if(outputFormat == StringOutputType.Colored)
-                    buffer.Append(AnsiEscapeSequences.Reset);
-                buffer.Append(": ");
-                buffer.Append(SourceAddress + " -> " + DestinationAddress);
-                buffer.Append(" HeaderLength=" + HeaderLength);
-                buffer.Append(" Protocol=" + Protocol);
-                buffer.Append(" TimeToLive=" + TimeToLive);            
-                // FIXME: what would we use for Length?
-                //buffer.Append(" l=" + HeaderLength + "," + Length);
-                buffer.Append(']');
+                // build the output string
+                buffer.AppendFormat("{0}[IPv4Packet: SourceAddress={2}, DestinationAddress={3}, HeaderLength={4}, Protocol={5}, TimeToLive={6}]{1}",
+                    color,
+                    colorEscape,
+                    SourceAddress,
+                    DestinationAddress,
+                    HeaderLength,
+                    Protocol,
+                    TimeToLive);
             }
 
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)

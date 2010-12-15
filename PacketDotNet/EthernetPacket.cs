@@ -279,20 +279,24 @@ namespace PacketDotNet
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
+            string color = "";
+            string colorEscape = "";
+
+            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
 
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.Append('[');
-                if(outputFormat == StringOutputType.Colored)
-                    buffer.Append(Color);
-                buffer.Append("EthernetPacket");
-                if(outputFormat == StringOutputType.Colored)
-                    buffer.Append(AnsiEscapeSequences.Reset);
-                buffer.Append(": ");
-                buffer.Append(SourceHwAddress + " -> " + DestinationHwAddress);
-                buffer.Append(" proto=" + Type.ToString() + " (0x" + System.Convert.ToString((ushort)Type, 16) + ")");
-                buffer.Append(" l=" + EthernetFields.HeaderLength); // + "," + data.length);
-                buffer.Append(']');
+                // build the output string
+                buffer.AppendFormat("{0}[EthernetPacket: SourceHwAddress={2}, DestinationHwAddress={3}, Type={4}]{1}",
+                    color,
+                    colorEscape,
+                    BitConverter.ToString(SourceHwAddress.GetAddressBytes()),
+                    BitConverter.ToString(DestinationHwAddress.GetAddressBytes()),
+                    Type.ToString());
             }
 
             // TODO: Add verbose string support here

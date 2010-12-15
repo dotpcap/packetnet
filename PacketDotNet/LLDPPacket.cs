@@ -317,26 +317,36 @@ namespace PacketDotNet
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
+            string color = "";
+            string colorEscape = "";
+
+            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
 
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.Append('[');
-                if(outputFormat == StringOutputType.Colored)
-                    buffer.Append(AnsiEscapeSequences.Blue);
-                buffer.Append("LLDPPacket");
-                if (outputFormat == StringOutputType.Colored)
-                    buffer.Append(AnsiEscapeSequences.Reset);
-                buffer.Append(":");
-                
+                // build the string of tlvs
+                string tlvs = "{";
+                var r = new Regex(@"[^(\.)]([^\.]*)$");
                 foreach(TLV tlv in TlvCollection)
                 {
-                    // the regex trims the parent namespaces off of the class type
-                    // ex. "PacketDotNet.LLDP.TimeToLive" returns "TimeToLive"
-                    var r = new Regex(@"[^(\.)]([^\.]*)$");
+
+                    // regex trim the parent namespaces from the class type
+                    //   (ex. "PacketDotNet.LLDP.TimeToLive" becomes "TimeToLive")
                     var m = r.Match(tlv.GetType().ToString());
-                    buffer.Append(" [" + m.Groups[0].Value + " length:" + tlv.Length + "]");
+                    tlvs += m.Groups[0].Value + "|";
                 }
-                buffer.Append(']');
+                tlvs = tlvs.TrimEnd('|');
+                tlvs += "}";
+
+                // build the output string
+                buffer.AppendFormat("{0}[LLDPPacket: TLVs={2}]{1}",
+                color,
+                colorEscape,
+                tlvs);
             }
 
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)

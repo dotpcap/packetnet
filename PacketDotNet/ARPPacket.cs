@@ -341,23 +341,26 @@ namespace PacketDotNet
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
+            string color = "";
+            string colorEscape = "";
+
+            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
 
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.Append('[');
-                if(outputFormat == StringOutputType.Colored)
-                    buffer.Append(Color);
-                buffer.Append("ARPPacket");
-                if(outputFormat == StringOutputType.Colored)
-                    buffer.Append(AnsiEscapeSequences.Reset);
-                buffer.Append(": ");
-                buffer.Append(Operation);
-                buffer.Append(' ');
-                buffer.Append(SenderHardwareAddress + " -> " + TargetHardwareAddress);
-                buffer.Append(", ");
-                buffer.Append(SenderProtocolAddress + " -> " + TargetProtocolAddress);
-                //buffer.append(" l=" + header.length + "," + data.length);
-                buffer.Append(']');
+                // build the output string
+                buffer.AppendFormat("{0}[ARPPacket: Operation={2}, SenderHardwareAddress={3}, TargetHardwareAddress={4}, SenderProtocolAddress={5}, TargetProtocolAddress={6}]{1}",
+                    color,
+                    colorEscape,
+                    Operation,
+                    BitConverter.ToString(SenderHardwareAddress.GetAddressBytes()),
+                    BitConverter.ToString(TargetHardwareAddress.GetAddressBytes()),
+                    SenderProtocolAddress,
+                    TargetProtocolAddress);
             }
 
             // TODO: Add verbose string support here

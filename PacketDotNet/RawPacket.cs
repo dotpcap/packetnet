@@ -81,12 +81,12 @@ namespace PacketDotNet
 
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.AppendFormat("[{0}RawPacket{1}: LinkLayerType={2}, Timeval={3}, Data={4}]",
+                // build the output string
+                buffer.AppendFormat("[{0}RawPacket: LinkLayerType={2}, Timeval={3}]{1}",
                     color,
                     colorEscape,
                     LinkLayerType,
-                    Timeval,
-                    Data);
+                    Timeval);
             }
 
             // TODO: Add verbose string support here

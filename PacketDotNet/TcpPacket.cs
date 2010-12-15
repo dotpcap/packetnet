@@ -502,51 +502,39 @@ namespace PacketDotNet
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
+            string color = "";
+            string colorEscape = "";
+
+            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
 
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.Append('[');
-                if (outputFormat == StringOutputType.Colored)
-                    buffer.Append(Color);
-                buffer.Append("TCPPacket");
-                if (outputFormat == StringOutputType.Colored)
-                    buffer.Append(AnsiEscapeSequences.Reset);
-                buffer.Append(": ");
-                buffer.Append(" SourcePort: ");
-                if(Enum.IsDefined(typeof(IpPort), (ushort)SourcePort))
-                {
-                    buffer.Append((IpPort)SourcePort);
-                    buffer.Append(" (" + SourcePort + ") ");
-                } else
-                {
-                    buffer.Append(SourcePort);
-                }
-                buffer.Append(" -> ");
-                buffer.Append(" DestinationPort: ");
-                if(Enum.IsDefined(typeof(IpPort), (ushort)DestinationPort))
-                {
-                    buffer.Append((IpPort)DestinationPort);
-                    buffer.Append(" (" + DestinationPort + ") ");
-                } else
-                {
-                    buffer.Append(DestinationPort);
-                }
+                // build flagstring
+                string flags = "{";
                 if (Urg)
-                    buffer.Append(" urg[0x" + System.Convert.ToString(UrgentPointer, 16) + "]");
+                    flags += "urg[0x" + System.Convert.ToString(UrgentPointer, 16) + "]|";
                 if (Ack)
-                    buffer.Append(" ack[" + AcknowledgmentNumber + " (0x" + System.Convert.ToString(AcknowledgmentNumber, 16) + ")]");
+                    flags += "ack[" + AcknowledgmentNumber + " (0x" + System.Convert.ToString(AcknowledgmentNumber, 16) + ")]|";
                 if (Psh)
-                    buffer.Append(" psh");
+                    flags += "psh|";
                 if (Rst)
-                    buffer.Append(" rst");
+                    flags += "rst|";
                 if (Syn)
-                    buffer.Append(" syn[0x" + System.Convert.ToString(SequenceNumber, 16) + "," +
-                                  SequenceNumber + "]");
-                if (Fin)
-                    buffer.Append(" fin");
-                //FIXME: not sure what to put here
-                //buffer.Append(" l=" + TCPHeaderLength + "," + PayloadDataLength);
-                buffer.Append(']');
+                    flags += "syn[0x" + System.Convert.ToString(SequenceNumber, 16) + "," + SequenceNumber + "]|";
+                flags = flags.TrimEnd('|');
+                flags += "}";
+
+                // build the output string
+                buffer.AppendFormat("{0}[TCPPacket: SourcePort={2}, DestinationPort={3}, Flags={4}]{1}",
+                    color,
+                    colorEscape,
+                    SourcePort,
+                    DestinationPort,
+                    flags);
             }
 
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)

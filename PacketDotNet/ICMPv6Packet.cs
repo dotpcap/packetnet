@@ -143,21 +143,23 @@ namespace PacketDotNet
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
+            string color = "";
+            string colorEscape = "";
+
+            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
 
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.Append('[');
-                if(outputFormat == StringOutputType.Colored)
-                    buffer.Append(Color);
-                buffer.Append("ICMPPacket");
-                if(outputFormat == StringOutputType.Colored)
-                    buffer.Append(AnsiEscapeSequences.Reset);
-                buffer.Append(": ");
-                buffer.Append(Type);
-                buffer.Append(Code);
-                buffer.Append(", ");
-                buffer.Append(" l=" + header.Length);
-                buffer.Append(']');
+                // build the output string
+                buffer.AppendFormat("{0}[ICMPPacket: Type={2}, Code={3}]{1}",
+                    color,
+                    colorEscape,
+                    Type,
+                    Code);
             }
 
             // TODO: Add verbose string support here

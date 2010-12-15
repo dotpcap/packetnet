@@ -262,7 +262,8 @@ namespace PacketDotNet
 
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.AppendFormat("[{0}PPPoEPacket{1} Version {2}, Type {3}, Code {4}, SessionId {5}, Length {6}]",
+                // build the output string
+                buffer.AppendFormat("{0}[PPPoEPacket: Version={2}, Type={3}, Code={4}, SessionId={5}, Length={6}]{1}",
                     color,
                     colorEscape,
                     Version,

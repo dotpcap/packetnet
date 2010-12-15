@@ -267,33 +267,22 @@ namespace PacketDotNet
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
+            string color = "";
+            string colorEscape = "";
+
+            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
 
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
-                buffer.Append('[');
-                if (outputFormat == StringOutputType.Colored)
-                    buffer.Append(Color);
-                buffer.Append("UDPPacket");
-                if (outputFormat == StringOutputType.Colored)
-                    buffer.Append(AnsiEscapeSequences.Reset);
-                buffer.Append(": ");
-                if(Enum.IsDefined(typeof(IpPort), SourcePort))
-                {
-                    buffer.Append((IpPort)SourcePort);
-                } else
-                {
-                    buffer.Append(SourcePort);
-                }
-                buffer.Append(" -> ");
-                if(Enum.IsDefined(typeof(IpPort), DestinationPort))
-                {
-                    buffer.Append((IpPort)DestinationPort);
-                } else
-                {
-                    buffer.Append(DestinationPort);
-                }
-                buffer.Append(" l=" + UdpFields.HeaderLengthLength + "," + (Length - UdpFields.HeaderLengthLength));
-                buffer.Append(']');
+                buffer.AppendFormat("{0}[UDPPacket: SourcePort={2}, DestinationPort={3}]{1}",
+                color,
+                colorEscape,
+                SourcePort,
+                DestinationPort);
             }
 
             // TODO: Add verbose string support here

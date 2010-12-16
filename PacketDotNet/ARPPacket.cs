@@ -337,8 +337,8 @@ namespace PacketDotNet
                     color,
                     colorEscape,
                     Operation,
-                    BitConverter.ToString(SenderHardwareAddress.GetAddressBytes()),
-                    BitConverter.ToString(TargetHardwareAddress.GetAddressBytes()),
+                    HexPrinter.PrintMACAddress(SenderHardwareAddress),
+                    HexPrinter.PrintMACAddress(TargetHardwareAddress),
                     SenderProtocolAddress,
                     TargetProtocolAddress);
             }

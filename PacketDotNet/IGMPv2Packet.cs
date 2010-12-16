@@ -162,11 +162,11 @@ namespace PacketDotNet
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
-                buffer.AppendFormat("{0}[IGMPPacket: Type={2}, MaxResponseTime={3}, GroupAddress={4}]{1}",
+                buffer.AppendFormat("{0}[IGMPv2Packet: Type={2}, MaxResponseTime={3}, GroupAddress={4}]{1}",
                     color,
                     colorEscape,
                     Type,
-                    MaxResponseTime,
+                    String.Format("{0:0.0}", (MaxResponseTime / 10)),
                     GroupAddress);
             }
 

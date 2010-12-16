@@ -272,8 +272,8 @@ namespace PacketDotNet
                 buffer.AppendFormat("{0}[EthernetPacket: SourceHwAddress={2}, DestinationHwAddress={3}, Type={4}]{1}",
                     color,
                     colorEscape,
-                    BitConverter.ToString(SourceHwAddress.GetAddressBytes()),
-                    BitConverter.ToString(DestinationHwAddress.GetAddressBytes()),
+                    HexPrinter.PrintMACAddress(SourceHwAddress),
+                    HexPrinter.PrintMACAddress(DestinationHwAddress),
                     Type.ToString());
             }
 

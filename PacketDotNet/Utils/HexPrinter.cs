@@ -1,4 +1,5 @@
 using System;
+using System.Net.NetworkInformation;
 using System.Text;
 
 namespace PacketDotNet.Utils
@@ -36,6 +37,27 @@ namespace PacketDotNet.Utils
             }
 
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Creates a string from a Physical address in the format "xx:xx:xx:xx:xx:xx"
+        /// </summary>
+        /// <param name="address">
+        /// A <see cref="PhysicalAddress"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
+        public static string PrintMACAddress(PhysicalAddress address)
+        {
+            byte[] bytes = address.GetAddressBytes();
+            string output = "";
+
+            for(int i = 0; i < bytes.Length; i++)
+            {
+                output += bytes[i].ToString("x").PadLeft(2, '0') + ":";
+            }
+            return output.TrimEnd(':');
         }
     }
 }

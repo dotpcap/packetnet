@@ -45,7 +45,7 @@ namespace Test.PacketType
             // retrieve the bytes for this IPv4Packet and construct another IPv4 packet from
             // these bytes
             var bytes = ip.Bytes;
-            var ip2 = new IPv4Packet(bytes, 0);
+            var ip2 = new IPv4Packet(new ByteArraySegment(bytes));
 
             // compare some of the the values
             //TODO: add more values here or implement an IPv4Packet equals method and use that here

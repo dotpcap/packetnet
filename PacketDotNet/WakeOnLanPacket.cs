@@ -57,7 +57,7 @@ namespace PacketDotNet
         /// <param name="destinationMAC">
         /// A <see cref="System.Net.NetworkInformation.PhysicalAddress"/>
         /// </param>
-        public WakeOnLanPacket(PhysicalAddress destinationMAC) : base(new PosixTimeval())
+        public WakeOnLanPacket(PhysicalAddress destinationMAC)
         {
             log.Debug("");
 
@@ -87,41 +87,20 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Creates a Wake-On-LAN packet from a byte[]
+        /// Constructor
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public WakeOnLanPacket(byte[] Bytes, int Offset) :
-            this(Bytes, Offset, new PosixTimeval())
-        {
-            log.Debug("");
-        }
-
-        /// <summary>
-        /// Creates a Wake-On-LAN packet from a byte[]
-        /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public WakeOnLanPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
-            base(Timeval)
+        public WakeOnLanPacket(ByteArraySegment bas)
         {
             log.Debug("");
 
-            if(WakeOnLanPacket.IsValid(Bytes))
+            if(WakeOnLanPacket.IsValid(bas))
             {
                 // set the header field, header field values are retrieved from this byte array
-                header = new ByteArraySegment(Bytes, Offset, Bytes.Length);
+                header = new ByteArraySegment(bas);
+                header.Length = Bytes.Length;
             }
         }
 
@@ -167,22 +146,25 @@ namespace PacketDotNet
             if(p is EthernetPacket)
             {
                 var payload = EthernetPacket.GetInnerPayload((InternetLinkLayerPacket)p);
-
                 if(((EthernetPacket)p).Type == EthernetPacketType.WakeOnLan)
                 {
-                    if(WakeOnLanPacket.IsValid(p.PayloadData))
-                        return new WakeOnLanPacket(p.PayloadData, 0);
+                    var payloadBas = new ByteArraySegment(p.PayloadData);
+                    if(WakeOnLanPacket.IsValid(payloadBas))
+                        return new WakeOnLanPacket(payloadBas);
                 }
 
                 if(payload != null && payload is IpPacket)
                 {
                     var innerPayload = payload.PayloadPacket;
 
-                    if(innerPayload != null && innerPayload is UdpPacket)
+                    if((innerPayload != null)
+                       && (innerPayload.PayloadData != null)
+                       && (innerPayload is UdpPacket))
                     {
-                        if(innerPayload.PayloadData != null && WakeOnLanPacket.IsValid(innerPayload.PayloadData))
+                        var innerPayloadBas = new ByteArraySegment(innerPayload.PayloadData);
+                        if(WakeOnLanPacket.IsValid(innerPayloadBas))
                         {
-                            return new WakeOnLanPacket(innerPayload.PayloadData, 0);
+                            return new WakeOnLanPacket(innerPayloadBas);
                         }
                     }
                 }
@@ -217,23 +199,23 @@ namespace PacketDotNet
         /// </returns>
         public bool IsValid()
         {
-            return IsValid(header.ActualBytes());
+            return IsValid(header);
         }
 
         /// <summary>
-        /// See IsValid()
+        /// See IsValid
         /// </summary>
-        /// <param name="payloadData">
-        /// A <see cref="System.Byte[]"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
         /// <returns>
         /// A <see cref="System.Boolean"/>
         /// </returns>
-        public static bool IsValid(byte[] payloadData)
+        public static bool IsValid(ByteArraySegment bas)
         {
             // fetch the destination MAC from the payload
             byte[] destinationMAC = new byte[EthernetFields.MacAddressLength];
-            Array.Copy(payloadData, syncSequence.Length, destinationMAC, 0, EthernetFields.MacAddressLength);
+            Array.Copy(bas.Bytes, bas.Offset + syncSequence.Length, destinationMAC, 0, EthernetFields.MacAddressLength);
 
             // the buffer is used to store both the synchronization sequence
             //  and the MAC address, both of which are the same length (in bytes)
@@ -244,7 +226,7 @@ namespace PacketDotNet
             for(int i = 0; i<(EthernetFields.MacAddressLength * macRepetitions); i+=EthernetFields.MacAddressLength)
             {
                 // Extract the sample from the payload for comparison
-                Array.Copy(payloadData, i, buffer, 0, buffer.Length);
+                Array.Copy(bas.Bytes, bas.Offset + i, buffer, 0, buffer.Length);
 
                 // check the synchronization sequence on the first pass
                 if(i == 0)

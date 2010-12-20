@@ -159,7 +159,6 @@ namespace PacketDotNet
         public EthernetPacket(PhysicalAddress SourceHwAddress,
                               PhysicalAddress DestinationHwAddress,
                               EthernetPacketType ethernetPacketType)
-            : base(new PosixTimeval())
         {
             log.Debug("");
 
@@ -176,39 +175,18 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Create an EthernetPacket from a byte array 
+        /// Constructor 
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public EthernetPacket(byte[] Bytes, int Offset) :
-            this(Bytes, Offset, new PosixTimeval())
-        {
-            log.Debug("");
-        }
-
-        /// <summary>
-        /// Create an EthernetPacket from a byte array and a Timeval 
-        /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public EthernetPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
-            base(Timeval)
+        public EthernetPacket(ByteArraySegment bas)
         {
             log.Debug("");
 
             // slice off the header portion
-            header = new ByteArraySegment(Bytes, Offset, EthernetFields.HeaderLength);
+            header = new ByteArraySegment(bas);
+            header.Length = EthernetFields.HeaderLength;
 
             // parse the encapsulated bytes
             payloadPacketOrData = ParseEncapsulatedBytes(header, Type, Timeval);
@@ -244,19 +222,19 @@ namespace PacketDotNet
             switch(Type)
             {
             case EthernetPacketType.IpV4:
-                payloadPacketOrData.ThePacket = new IPv4Packet(payload.Bytes, payload.Offset, Timeval);
+                payloadPacketOrData.ThePacket = new IPv4Packet(payload);
                 break;
             case EthernetPacketType.IpV6:
-                payloadPacketOrData.ThePacket = new IPv6Packet(payload.Bytes, payload.Offset, Timeval);
+                payloadPacketOrData.ThePacket = new IPv6Packet(payload);
                 break;
             case EthernetPacketType.Arp:
-                payloadPacketOrData.ThePacket = new ARPPacket(payload.Bytes, payload.Offset, Timeval);
+                payloadPacketOrData.ThePacket = new ARPPacket(payload);
                 break;
             case EthernetPacketType.LLDP:
-                payloadPacketOrData.ThePacket = new LLDPPacket(payload.Bytes, payload.Offset, Timeval);
+                payloadPacketOrData.ThePacket = new LLDPPacket(payload);
                 break;
             case EthernetPacketType.PointToPointProtocolOverEthernetSessionStage:
-                payloadPacketOrData.ThePacket = new PPPoEPacket(payload.Bytes, payload.Offset, Timeval);
+                payloadPacketOrData.ThePacket = new PPPoEPacket(payload);
                 break;
             default: // consider the sub-packet to be a byte array
                 payloadPacketOrData.TheByteArraySegment = payload;

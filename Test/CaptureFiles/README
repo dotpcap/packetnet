@@ -45,3 +45,7 @@ PPPoePtp.pcap
 2 packets captured
 - Ethernet/IPv4/Udp/Data
 - Ethernet/PPPoe/PtP/IPv4/Udp/Data
+
+udpPacketWithEthernetTrailers.pcap
+1 packet, Ethernet/IPv4/Udp/Data with an ethernet packet that has
+three trailing bytes

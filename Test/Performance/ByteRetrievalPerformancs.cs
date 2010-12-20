@@ -50,7 +50,7 @@ namespace Test.Performance
             var contiguousBytes = ethernetPacket.Bytes;
 
             // and re-parse the packet
-            var contiguousEthernetPacket = new EthernetPacket(contiguousBytes, 0);
+            var contiguousEthernetPacket = new EthernetPacket(new PacketDotNet.Utils.ByteArraySegment(contiguousBytes));
 
             // used to make sure we get the same byte[] reference returned each time
             // because thats what we expect

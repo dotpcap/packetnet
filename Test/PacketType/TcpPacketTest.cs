@@ -34,7 +34,7 @@ namespace Test.PacketType
         {
             var tcpPacket = TcpPacket.RandomPacket();
 
-            var tcpPacket2 = new TcpPacket(tcpPacket.Bytes, 0);
+            var tcpPacket2 = new TcpPacket(new ByteArraySegment(tcpPacket.Bytes));
 
             Console.WriteLine("tcpPacket {0}", tcpPacket);
             Console.WriteLine("tcpPacket2 {0}", tcpPacket2);

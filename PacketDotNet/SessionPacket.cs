@@ -30,10 +30,7 @@ using PacketDotNet.Utils;
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public SessionPacket(PosixTimeval Timeval) : base(Timeval)
+        public SessionPacket()
         {}
     }
 }

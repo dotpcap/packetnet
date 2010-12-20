@@ -172,7 +172,6 @@ namespace PacketDotNet
         /// A <see cref="System.UInt16"/>
         /// </param>
         public UdpPacket(ushort SourcePort, ushort DestinationPort)
-            : base(new PosixTimeval())
         {
             log.Debug("");
 
@@ -188,35 +187,18 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// byte[]/int offset constructor, timeval defaults to the current time
+        /// Constructor 
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public UdpPacket(byte[] Bytes, int Offset) :
-            this(Bytes, Offset, new PosixTimeval())
-        { }
-
-        /// <summary>
-        /// byte[]/int offset/PosixTimeval constructor
-        /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public UdpPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
-            base(Timeval)
+        public UdpPacket(ByteArraySegment bas)
         {
+            log.DebugFormat("bas {0}", bas.ToString());
+
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(Bytes, Offset, UdpFields.HeaderLength);
+            header = new ByteArraySegment(bas);
+            header.Length = UdpFields.HeaderLength;
 
             // store the payload bytes
             payloadPacketOrData = new PacketOrByteArraySegment();
@@ -224,23 +206,17 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Constructor when this packet is encapsulated in another packet
+        /// Constructor 
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
         /// <param name="ParentPacket">
         /// A <see cref="Packet"/>
         /// </param>
-        public UdpPacket(byte[] Bytes, int Offset, PosixTimeval Timeval,
+        public UdpPacket(ByteArraySegment bas,
                          Packet ParentPacket) :
-            this(Bytes, Offset, Timeval)
+            this(bas)
         {
             this.ParentPacket = ParentPacket;
         }

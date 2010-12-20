@@ -27,10 +27,7 @@ using PacketDotNet.Utils;
         /// <summary>
         /// DataLinkPacket constructor
         /// </summary>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public DataLinkPacket(PosixTimeval Timeval) : base(Timeval)
+        public DataLinkPacket()
         {}
     }
 }

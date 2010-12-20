@@ -146,34 +146,15 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Create an LinuxSLLPacket from a byte array 
+        /// Constructor
         /// </summary>
-        /// <param name="bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public LinuxSLLPacket(byte[] bytes, int offset) :
-            this(bytes, offset, new PosixTimeval())
-        { }
-
-        /// <summary>
-        /// Create an LinuxSLLPacket from a byte array and a Timeval 
-        /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public LinuxSLLPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
-            base(Timeval)
+        public LinuxSLLPacket(ByteArraySegment bas)
         {
-            header = new ByteArraySegment(Bytes, Offset, LinuxSLLFields.SLLHeaderLength);
+            header = new ByteArraySegment(bas);
+            header.Length = LinuxSLLFields.SLLHeaderLength;
 
             // parse the payload via an EthernetPacket method
             payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(header,

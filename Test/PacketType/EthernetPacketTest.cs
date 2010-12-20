@@ -45,10 +45,9 @@ namespace Test.PacketType
             Assert.AreEqual(IpVersion.IPv4, ip.Version);
             Assert.AreEqual(IPProtocolType.TCP, ip.Protocol);
             Assert.AreEqual(254, ip.TimeToLive);
-            //FIXME: Should probably implement this
-//            Assert.AreEqual(0x0df8, ip.ComputeIPChecksum());
-            Assert.AreEqual(1176685346, ip.Timeval.Seconds);
-            Assert.AreEqual(885259.000, ip.Timeval.MicroSeconds);
+            Assert.AreEqual(0x0df8, ((IPv4Packet)ip).CalculateIPChecksum());
+            Assert.AreEqual(1176685346, p.Timeval.Seconds);
+            Assert.AreEqual(885259.000, p.Timeval.MicroSeconds);
 
             TcpPacket tcp = (TcpPacket)ip.PayloadPacket;
             Assert.AreEqual(80, tcp.SourcePort);
@@ -75,9 +74,9 @@ namespace Test.PacketType
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.104"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("86.42.196.13"), ip.DestinationAddress);
             Assert.AreEqual(64, ip.TimeToLive);
-//            Assert.AreEqual(0x2ff4, ip.ComputeIPChecksum());
-            Assert.AreEqual(1171483600, ip.Timeval.Seconds);
-            Assert.AreEqual(125234.000, ip.Timeval.MicroSeconds);
+            Assert.AreEqual(0x2ff4, ((IPv4Packet)ip).CalculateIPChecksum());
+            Assert.AreEqual(1171483600, p.Timeval.Seconds);
+            Assert.AreEqual(125234.000, p.Timeval.MicroSeconds);
 
             TcpPacket tcp = (TcpPacket)ip.PayloadPacket;
             Assert.AreEqual(56925, tcp.SourcePort);
@@ -105,9 +104,9 @@ namespace Test.PacketType
             Assert.AreEqual(IpVersion.IPv4, ip.Version);
             Assert.AreEqual(IPProtocolType.UDP, ip.Protocol);
             Assert.AreEqual(112, ip.TimeToLive);
-//            Assert.AreEqual(0xe0a2, ip.ComputeIPChecksum());
-            Assert.AreEqual(1171483602, ip.Timeval.Seconds);
-            Assert.AreEqual(578641.000, ip.Timeval.MicroSeconds);
+            Assert.AreEqual(0xe0a2, ((IPv4Packet)ip).CalculateIPChecksum());
+            Assert.AreEqual(1171483602, p.Timeval.Seconds);
+            Assert.AreEqual(578641.000, p.Timeval.MicroSeconds);
 
             var udp = UdpPacket.GetEncapsulated(p);
             Assert.AreEqual(52886, udp.SourcePort);
@@ -129,7 +128,7 @@ namespace Test.PacketType
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.172"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("66.189.0.29"), ip.DestinationAddress);
             Assert.AreEqual(IPProtocolType.UDP, ip.Protocol);
-//            Assert.AreEqual(0x7988, ip.ComputeIPChecksum());
+            Assert.AreEqual(0x7988, ((IPv4Packet)ip).CalculateIPChecksum());
 
             var udp = UdpPacket.GetEncapsulated(p);
             Assert.AreEqual(3619, udp.SourcePort);
@@ -246,7 +245,7 @@ namespace Test.PacketType
             SharpPcap.Packets.Packet p;
             p = dev.GetNextPacket();
 
-            var e = new EthernetPacket(p.Bytes, 0);
+            var e = new EthernetPacket(new ByteArraySegment(p.Bytes));
             Console.WriteLine("ethernet.ToString() {0}", e.ToString());
 
             Assert.AreEqual(PhysicalAddress.Parse("00-13-10-03-71-47"), e.SourceHwAddress);

@@ -104,7 +104,7 @@ namespace Test.PacketType
             var packetBytes = udpPacket.Bytes;
 
             // now reparse the packet again
-            var udpPacket2 = new UdpPacket(packetBytes, 0);
+            var udpPacket2 = new UdpPacket(new ByteArraySegment(packetBytes));
 
             Assert.AreEqual(sourcePort, udpPacket.SourcePort);
             Assert.AreEqual(destinationPort, udpPacket.DestinationPort);
@@ -127,8 +127,8 @@ namespace Test.PacketType
         {
             UdpPacket.RandomPacket();
         }
-		
-		/// <summary>
+
+        /// <summary>
         /// Test that we can load and parse a UDP packet and that
         /// the computed checksum matches the expected checksum
         /// </summary>
@@ -186,6 +186,37 @@ namespace Test.PacketType
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(udp.ToString());
+        }
+
+        [Test]
+        public void UdpPacketInsideOfEthernetPacketWithTrailer()
+        {
+            var dev = new OfflinePcapDevice("../../CaptureFiles/udpPacketWithEthernetTrailers.pcap");
+            dev.Open();
+
+            // checksums from wireshark of the capture file
+            int[] expectedChecksum = {0x61fb};
+
+            int packetIndex = 0;
+            SharpPcap.Packets.RawPacket rawPacket;
+            while ((rawPacket = dev.GetNextRawPacket()) != null)
+            {
+                var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+                Console.WriteLine("Converted a raw packet to a Packet");
+                Console.WriteLine(p.ToString());
+                var u = UdpPacket.GetEncapsulated(p);
+                Assert.IsNotNull(u, "Expected u to not be null");
+                Assert.IsTrue(u.ValidChecksum, "u.ValidChecksum isn't true");
+
+                // compare the computed checksum to the expected one
+                Assert.AreEqual(expectedChecksum[packetIndex],
+                                u.CalculateUDPChecksum(),
+                                "Checksum mismatch");
+
+                packetIndex++;
+            }
+
+            dev.Close();
         }
     }
 }

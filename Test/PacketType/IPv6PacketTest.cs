@@ -52,9 +52,8 @@ namespace Test.PacketType
             Assert.AreEqual(255, ip.TimeToLive);
             Assert.AreEqual(0x3a, (byte)ip.NextHeader);
             Console.WriteLine("Failed: ip.ComputeIPChecksum() not implemented.");
-//            Assert.AreEqual(0x5d50, ip.ComputeIPChecksum());
-            Assert.AreEqual(1221145299, ip.Timeval.Seconds);
-            Assert.AreEqual(453568.000, ip.Timeval.MicroSeconds);
+            Assert.AreEqual(1221145299, p.Timeval.Seconds);
+            Assert.AreEqual(453568.000, p.Timeval.MicroSeconds);
         }
 
         // Test that we can load and parse an IPv6 packet

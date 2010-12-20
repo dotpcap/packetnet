@@ -98,36 +98,16 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// byte[]/int offset constructor
+        /// Constructor
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public ICMPv6Packet(byte[] Bytes, int Offset) :
-            this(Bytes, Offset, new PosixTimeval())
-        {}
-
-        /// <summary>
-        /// byte[]/int Offset/PosixTimeval constructor
-        /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public ICMPv6Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
-            base(Timeval)
+        public ICMPv6Packet(ByteArraySegment bas)
         {
             log.Debug("");
 
-            header = new ByteArraySegment(Bytes, Offset, Bytes.Length - Offset);
+            header = new ByteArraySegment(bas);
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>

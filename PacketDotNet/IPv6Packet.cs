@@ -304,7 +304,6 @@ namespace PacketDotNet
         /// </param>
         public IPv6Packet(System.Net.IPAddress SourceAddress,
                           System.Net.IPAddress DestinationAddress)
-            : base(new PosixTimeval())
         {
             log.Debug("");
 
@@ -325,49 +324,27 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// byte[]/int offset constructor, timeval defaults to the current time
+        /// Constructor
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public IPv6Packet(byte[] Bytes, int Offset) :
-            this(Bytes, Offset, new PosixTimeval())
+        public IPv6Packet(ByteArraySegment bas)
         {
-            log.Debug("");
-        }
-
-        /// <summary>
-        /// byte[]/int offset/PosixTimeval constructor
-        /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public IPv6Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
-            base(Timeval)
-        {
-            log.DebugFormat("Bytes.Length {0}, Offset {1}",
-                            Bytes.Length,
-                            Offset);
+            log.Debug(bas.ToString());
 
             // slice off the header
-            header = new ByteArraySegment(Bytes, Offset, IPv6Packet.HeaderMinimumLength);
+            header = new ByteArraySegment(bas);
+            header.Length = IPv6Packet.HeaderMinimumLength;
 
             // set the actual length, we need to do this because we need to set
             // header to something valid above before we can retrieve the PayloadLength
             log.DebugFormat("PayloadLength: {0}", PayloadLength);
-            header.Length = (Bytes.Length - Offset) - PayloadLength;
+            header.Length = bas.Length - PayloadLength;
 
             // parse the payload
-            payloadPacketOrData = IpPacket.ParseEncapsulatedBytes(header,
+            var payload = header.EncapsulatedBytes(PayloadLength);
+            payloadPacketOrData = IpPacket.ParseEncapsulatedBytes(payload,
                                                                   NextHeader,
                                                                   Timeval,
                                                                   this);

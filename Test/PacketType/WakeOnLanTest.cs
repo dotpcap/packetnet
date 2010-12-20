@@ -24,6 +24,7 @@ using System.Net.NetworkInformation;
 using NUnit.Framework;
 using SharpPcap;
 using PacketDotNet;
+using PacketDotNet.Utils;
 
 namespace Test.PacketType
 {
@@ -43,7 +44,7 @@ namespace Test.PacketType
             var wolBytes = wol.Bytes;
 
             // and now parse it back from bytes into a wol packet
-            var wol2 = new WakeOnLanPacket(wolBytes, 0);
+            var wol2 = new WakeOnLanPacket(new ByteArraySegment(wolBytes));
 
             // make sure the packets match
             Assert.AreEqual(wol, wol2);

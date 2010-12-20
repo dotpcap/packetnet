@@ -100,35 +100,16 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// byte[]/int Offset constructor
+        /// Constructor
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public IGMPv2Packet(byte[] Bytes, int Offset) :
-            this(Bytes, Offset, new PosixTimeval())
-        { }
-
-        /// <summary>
-        /// byte[]/int offset/PosixTimeval constructor
-        /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public IGMPv2Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
-            base(Timeval)
+        public IGMPv2Packet(ByteArraySegment bas)
         {
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(Bytes, Offset, UdpFields.HeaderLength);
+            header = new ByteArraySegment(bas);
+            header.Length = UdpFields.HeaderLength;
 
             // store the payload bytes
             payloadPacketOrData = new PacketOrByteArraySegment();

@@ -309,7 +309,7 @@ namespace PacketDotNet
         /// Create a new TCP packet from values
         /// </summary>
         public TcpPacket(ushort SourcePort,
-                         ushort DestinationPort) : base(new PosixTimeval())
+                         ushort DestinationPort)
         {
             log.Debug("");
 
@@ -328,39 +328,17 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// byte[]/int offset constructor, timeval defaults to the current time
+        /// Constructor
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public TcpPacket(byte[] Bytes, int Offset) :
-            this(Bytes, Offset, new PosixTimeval())
-        {
-            log.Debug("");
-        }
-
-        /// <summary>
-        /// byte[]/int offset/PosixTimeval constructor
-        /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public TcpPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
-            base(Timeval)
+        public TcpPacket(ByteArraySegment bas)
         {
             log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(Bytes, Offset, Bytes.Length - Offset);
+            header = new ByteArraySegment(bas);
 
             // NOTE: we update the Length field AFTER the header field because
             // we need the header to be valid to retrieve the value of DataOffset
@@ -372,23 +350,17 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Constructor when this packet is encapsulated in another packet
+        /// Constructor
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
         /// <param name="ParentPacket">
         /// A <see cref="Packet"/>
         /// </param>
-        public TcpPacket(byte[] Bytes, int Offset, PosixTimeval Timeval,
+        public TcpPacket(ByteArraySegment bas,
                          Packet ParentPacket) :
-            this(Bytes, Offset, Timeval)
+            this(bas)
         {
             log.DebugFormat("ParentPacket.GetType() {0}", ParentPacket.GetType());
 

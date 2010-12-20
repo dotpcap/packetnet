@@ -279,7 +279,6 @@ namespace PacketDotNet
                          System.Net.IPAddress TargetProtocolAddress,
                          PhysicalAddress SenderHardwareAddress,
                          System.Net.IPAddress SenderProtocolAddress)
-            : base(new PosixTimeval())
         {
             log.Debug("");
 
@@ -304,34 +303,15 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// byte[]/int Offset constructor
+        /// Constructor
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public ARPPacket(byte[] Bytes, int Offset) :
-            this(Bytes, Offset, new PosixTimeval())
-        { }
-
-        /// <summary>
-        /// byte[]/int offset/PosixTimeval constructor
-        /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public ARPPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
-            base(Timeval)
+        public ARPPacket(ByteArraySegment bas)
         {
-            header = new ByteArraySegment(Bytes, Offset, ARPFields.HeaderLength);
+            header = new ByteArraySegment(bas);
+            header.Length = ARPFields.HeaderLength;
 
             // NOTE: no need to set the payloadPacketOrData field, arp packets have
             //       no payload

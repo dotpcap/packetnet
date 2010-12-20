@@ -242,7 +242,7 @@ namespace PacketDotNet
                     // packets that have not had their header, or any of their sub packets, resized
                     var newByteArraySegment = new ByteArraySegment(header.Bytes,
                                                                    header.Offset,
-                                                                   (header.Bytes.Length - header.Offset));
+                                                                   header.BytesLength - header.Offset);
                     log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}",
                                     newByteArraySegment.ToString());
                     return newByteArraySegment;
@@ -268,14 +268,11 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Basic Packet constructor
+        /// Constructor
         /// </summary>
-        /// <param name="timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public Packet(PosixTimeval timeval)
+        public Packet()
         {
-            this.timeval = timeval;
+            timeval = new PosixTimeval();
         }
 
         /// <summary>
@@ -285,7 +282,7 @@ namespace PacketDotNet
         /// <returns>An ethernet packet which has references to the higher protocols</returns>
         public static Packet Parse(byte[] data)
         {
-            return new EthernetPacket(data, 0);
+            return new EthernetPacket(new ByteArraySegment(data));
         }
 
         /// <summary>
@@ -323,17 +320,26 @@ namespace PacketDotNet
                                          PosixTimeval Timeval,
                                          byte[] PacketData)
         {
+            Packet p;
+            var bas = new ByteArraySegment(PacketData);
+
             switch(LinkLayer)
             {
             case LinkLayers.Ethernet:
-                return new EthernetPacket(PacketData, 0, Timeval);
+                p = new EthernetPacket(bas);
+                break;
             case LinkLayers.LinuxSLL:
-                return new LinuxSLLPacket(PacketData, 0, Timeval);
+                p = new LinuxSLLPacket(bas);
+                break;
             case LinkLayers.Ppp:
-                return new PPPPacket(PacketData, 0, Timeval);
+                p = new PPPPacket(bas);
+                break;
             default:
                 throw new System.NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");
             }
+
+            p.timeval = Timeval;
+            return p;
         }
 
         /// <summary>

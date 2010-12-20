@@ -162,7 +162,6 @@ namespace PacketDotNet
         /// </summary>
         public PPPoEPacket(PPPoECode Code,
                      UInt16 SessionId)
-            : base(new PosixTimeval())
         {
             log.Debug("");
 
@@ -183,39 +182,18 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Create an PPPoEPacket from a byte array
+        /// Constructor
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public PPPoEPacket(byte[] Bytes, int Offset) :
-            this(Bytes, Offset, new PosixTimeval())
-        {
-            log.Debug("");
-        }
-
-        /// <summary>
-        /// Create an PPPoEPacket from a byte array and a Timeval
-        /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public PPPoEPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
-            base(Timeval)
+        public PPPoEPacket(ByteArraySegment bas)
         {
             log.Debug("");
 
             // slice off the header portion
-            header = new ByteArraySegment(Bytes, Offset, PPPoEFields.HeaderLength);
+            header = new ByteArraySegment(bas);
+            header.Length = PPPoEFields.HeaderLength;
 
             // parse the encapsulated bytes
             payloadPacketOrData = ParseEncapsulatedBytes(header, Timeval);
@@ -231,9 +209,7 @@ namespace PacketDotNet
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
             // we assume that we have a PPPPacket as the payload
-            payloadPacketOrData.ThePacket = new PPPPacket(payload.Bytes,
-                                                          payload.Offset,
-                                                          Timeval);
+            payloadPacketOrData.ThePacket = new PPPPacket(payload);
 
             return payloadPacketOrData;
         }

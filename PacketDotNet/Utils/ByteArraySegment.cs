@@ -20,6 +20,8 @@ namespace PacketDotNet.Utils
 {
     /// <summary>
     /// Container class that refers to a segment of bytes in a byte[]
+    /// Used to ensure high performance by allowing memory copies to
+    /// be avoided
     /// </summary>
     public class ByteArraySegment
     {
@@ -34,6 +36,17 @@ namespace PacketDotNet.Utils
 #endif
 
         private int length;
+
+        /// <value>
+        /// The byte[] array
+        /// </value>
+        public byte[] Bytes { get; private set; }
+
+        /// <value>
+        /// The maximum number of bytes we should treat Bytes as having, allows
+        /// for controling the number of bytes produced by EncapsulatedBytes()
+        /// </value>
+        public int BytesLength { get; private set; }
 
         /// <value>
         /// Number of bytes beyond the offset into Bytes
@@ -53,14 +66,19 @@ namespace PacketDotNet.Utils
         }
 
         /// <value>
-        /// The byte[] array
-        /// </value>
-        public byte[] Bytes { get; private set; }
-
-        /// <value>
         /// Offset into Bytes
         /// </value>
         public int Offset { get; private set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte[]"/>
+        /// </param>
+        public ByteArraySegment(byte[] Bytes) :
+            this(Bytes, 0, Bytes.Length)
+        { }
 
         /// <summary>
         /// Constructor from a byte array, offset into the byte array and
@@ -76,15 +94,50 @@ namespace PacketDotNet.Utils
         /// A <see cref="System.Int32"/>
         /// </param>
         public ByteArraySegment(byte[] Bytes, int Offset, int Length)
+            : this(Bytes, Offset, Length, Bytes.Length)
+        { }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="Bytes">
+        /// A <see cref="System.Byte[]"/>
+        /// </param>
+        /// <param name="Offset">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="Length">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        /// <param name="BytesLength">
+        /// A <see cref="System.Int32"/>
+        /// </param>
+        public ByteArraySegment(byte[] Bytes, int Offset, int Length, int BytesLength)
         {
-            log.DebugFormat("Bytes.Length {0}, Offset {1}, Length {2}",
+            log.DebugFormat("Bytes.Length {0}, Offset {1}, Length {2}, BytesLength {3}",
                             Bytes.Length,
                             Offset,
-                            Length);
+                            Length,
+                            BytesLength);
 
             this.Bytes = Bytes;
             this.Offset = Offset;
             this.Length = Length;
+            this.BytesLength = Math.Min(BytesLength, Bytes.Length);
+        }
+
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="original">
+        /// A <see cref="ByteArraySegment"/>
+        /// </param>
+        public ByteArraySegment(ByteArraySegment original)
+        {
+            this.Bytes = original.Bytes;
+            this.Offset = original.Offset;
+            this.Length = original.Length;
+            this.BytesLength = original.BytesLength;
         }
 
         /// <summary>
@@ -145,11 +198,41 @@ namespace PacketDotNet.Utils
         /// </returns>
         public ByteArraySegment EncapsulatedBytes()
         {
+            var numberOfBytesAfterThisSegment = BytesLength - (Offset + Length);
+            return EncapsulatedBytes(numberOfBytesAfterThisSegment);
+        }
+
+        /// <summary>
+        /// Create the segment after the current one
+        /// </summary>
+        /// <param name="NewSegmentLength">
+        /// A <see cref="System.Int32"/> that can be used to limit the segment length
+        /// of the ByteArraySegment that is to be returned. Often used to exclude trailing bytes.
+        /// </param>
+        /// <returns>
+        /// A <see cref="ByteArraySegment"/>
+        /// </returns>
+        public ByteArraySegment EncapsulatedBytes(int NewSegmentLength)
+        {
+            log.DebugFormat("NewSegmentLength {0}", NewSegmentLength);
+
             int startingOffset = Offset + Length; // start at the end of the current segment
-            var newLength = Bytes.Length - startingOffset;
-            log.DebugFormat("Offset {0}, Length {1}, startingOffset {2}, newLength {3}",
-                            Offset, Length, startingOffset, newLength);
-            return new ByteArraySegment(Bytes, startingOffset, newLength);
+            log.DebugFormat("startingOffset({0}) = Offset({1}) + Length({2})",
+                            startingOffset,
+                            Offset,
+                            Length);
+
+            // ensure that the new segment length isn't longer than the number of bytes
+            // available after the current segment
+            NewSegmentLength = Math.Min(NewSegmentLength, BytesLength - startingOffset);
+
+            // calculate the ByteLength property of the new ByteArraySegment
+            int NewByteLength = startingOffset + NewSegmentLength;
+
+            log.DebugFormat("NewSegmentLength {0}, NewByteLength {1}, BytesLength {2}",
+                            NewSegmentLength, NewByteLength, BytesLength);
+
+            return new ByteArraySegment(Bytes, startingOffset, NewSegmentLength, NewByteLength);
         }
 
         /// <summary>
@@ -160,8 +243,8 @@ namespace PacketDotNet.Utils
         /// </returns>
         public override string ToString ()
         {
-            return string.Format("[ByteArraySegment: Length={0}, Bytes.Length={1}, Offset={2}, NeedsCopyForActualBytes={3}]",
-                                 Length, Bytes.Length, Offset, NeedsCopyForActualBytes);
+            return string.Format("[ByteArraySegment: Length={0}, Bytes.Length={1}, BytesLength={2}, Offset={3}, NeedsCopyForActualBytes={4}]",
+                                 Length, Bytes.Length, BytesLength, Offset, NeedsCopyForActualBytes);
         }
     }
 }

@@ -143,42 +143,21 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// byte[]/int offset constructor
+        /// Constructor
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public ICMPv4Packet(byte[] Bytes, int Offset) :
-            this(Bytes, Offset, new PosixTimeval())
-        {}
-
-        /// <summary>
-        /// byte[]/int Offset/PosixTimeval constructor
-        /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public ICMPv4Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
-            base(Timeval)
+        public ICMPv4Packet(ByteArraySegment bas)
         {
             log.Debug("");
 
-            header = new ByteArraySegment(Bytes, Offset, ICMPv4Fields.HeaderLength);
+            header = new ByteArraySegment(bas);
+            header.Length = ICMPv4Fields.HeaderLength;
 
             // store the payload bytes
             payloadPacketOrData = new PacketOrByteArraySegment();
-            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
-
-            
+            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();           
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>

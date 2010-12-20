@@ -33,18 +33,15 @@ namespace PacketDotNet
 #pragma warning disable 0169
         private static readonly ILogInactive log;
 #pragma warning restore 0169
-#endif		
+#endif
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public TransportPacket(PosixTimeval Timeval) : base(Timeval)
+        public TransportPacket()
         {
         }
-		
-		/// <value>
+
+        /// <value>
         /// The Checksum version
         /// </value>
         public abstract ushort Checksum
@@ -52,8 +49,8 @@ namespace PacketDotNet
             get;
             set;
         }
-		
-		/// <summary>
+
+        /// <summary>
         /// Calculates the transport layer checksum, either for the
         /// tcp or udp packet
         /// </summary>
@@ -89,9 +86,10 @@ namespace PacketDotNet
         /// </returns>
         public virtual bool IsValidChecksum(TransportChecksumOption option)
         {
-            log.DebugFormat("option: {0}", option);
-
             var upperLayer = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
+
+            log.DebugFormat("option: {0}, upperLayer.Length {1}",
+                            option, upperLayer.Length);
 
             if (option == TransportChecksumOption.AttachPseudoIPHeader)
                 upperLayer = ((IpPacket)ParentPacket).AttachPseudoIPHeader(upperLayer);

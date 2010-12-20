@@ -61,7 +61,7 @@ namespace PacketDotNet
         /// <summary>
         /// Create an empty LLDPPacket
         /// </summary>
-        public LLDPPacket() : base(new PosixTimeval())
+        public LLDPPacket()
         {
             log.Debug("");
 
@@ -71,38 +71,16 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Creates a LLDP packet from a byte[]
+        /// Constructor
         /// </summary>
-        /// <param name="bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public LLDPPacket(byte[] bytes, int offset) :
-            this(bytes, offset, new PosixTimeval())
-        {
-            log.Debug("");
-        }
-
-        /// <summary>
-        /// Creates a LLDP packet from a byte[]
-        /// </summary>
-        /// <param name="bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public LLDPPacket(byte[] bytes, int offset, PosixTimeval timeval) :
-            base(timeval)
+        public LLDPPacket(ByteArraySegment bas)
         {
             log.Debug("");
 
-            header = new ByteArraySegment(bytes, offset, bytes.Length - offset);
+            header = new ByteArraySegment(bas);
 
             // Initiate the TLV list from the existing data
             ParseByteArrayIntoTlvs(header.Bytes, header.Offset);

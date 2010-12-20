@@ -76,7 +76,7 @@ namespace Test.PacketType
             Console.WriteLine("valuesLLDPPacket.ToString() {0}", valuesLLDPPacket.ToString());
 
             // reparse these bytes back into a lldp packet
-            var lldpPacket = new LLDPPacket(lldpBytes, 0);
+            var lldpPacket = new LLDPPacket(new ByteArraySegment(lldpBytes));
 
             Console.WriteLine("lldpPacket.ToString() {0}", lldpPacket.ToString());
 

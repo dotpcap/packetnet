@@ -451,7 +451,8 @@ namespace PacketDotNet
         /// </returns>
         internal override byte[] AttachPseudoIPHeader(byte[] origHeader)
         {
-            log.Debug("");
+            log.DebugFormat("origHeader.Length {0}",
+                            origHeader.Length);
 
             bool odd = origHeader.Length % 2 != 0;
             int numberOfBytesFromIPHeaderUsedToGenerateChecksum = 12;
@@ -492,7 +493,6 @@ namespace PacketDotNet
         /// </summary>
         public IPv4Packet(System.Net.IPAddress SourceAddress,
                           System.Net.IPAddress DestinationAddress)
-            : base(new PosixTimeval())
         {
             // allocate memory for this packet
             int offset = 0;
@@ -512,38 +512,16 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Parse bytes into an IP packet
+        /// Constructor
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public IPv4Packet(byte[] Bytes, int Offset) :
-            this(Bytes, Offset, new PosixTimeval())
-        {
-            log.Debug("");
-        }
-
-        /// <summary>
-        /// Parse bytes into an IP packet
-        /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public IPv4Packet(byte[] Bytes, int Offset, PosixTimeval Timeval) :
-            base(Timeval)
+        public IPv4Packet(ByteArraySegment bas)
         {
             log.Debug("");
 
-            header = new ByteArraySegment(Bytes, Offset, Bytes.Length - Offset);
+            header = new ByteArraySegment(bas);
 
             // Check that the TotalLength is valid, at least HeaderMinimumLength long
             if(TotalLength < HeaderMinimumLength)
@@ -561,7 +539,8 @@ namespace PacketDotNet
             log.DebugFormat("header {0}", header);
 
             // parse the payload
-            payloadPacketOrData = IpPacket.ParseEncapsulatedBytes(header,
+            var payload = header.EncapsulatedBytes(PayloadLength);
+            payloadPacketOrData = IpPacket.ParseEncapsulatedBytes(payload,
                                                                   NextHeader,
                                                                   Timeval,
                                                                   this);

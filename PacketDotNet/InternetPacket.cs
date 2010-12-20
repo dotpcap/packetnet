@@ -32,10 +32,7 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public InternetPacket(PosixTimeval Timeval) : base(Timeval)
+        public InternetPacket()
         { }
     }
 }

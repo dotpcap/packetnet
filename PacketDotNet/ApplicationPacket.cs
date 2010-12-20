@@ -27,10 +27,7 @@ using PacketDotNet.Utils;
         /// <summary>
         /// ApplicationPacket constructor
         /// </summary>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public ApplicationPacket(PosixTimeval Timeval) : base(Timeval)
+        public ApplicationPacket()
         {}
     }
 }

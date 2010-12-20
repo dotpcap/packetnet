@@ -65,7 +65,6 @@ namespace PacketDotNet
         /// </summary>
         public PPPPacket(PPPoECode Code,
                      UInt16 SessionId)
-            : base(new PosixTimeval())
         {
             log.Debug("");
 
@@ -80,39 +79,18 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Create an PPPPacket from a byte array
+        /// Constructor
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public PPPPacket(byte[] Bytes, int Offset) :
-            this(Bytes, Offset, new PosixTimeval())
-        {
-            log.Debug("");
-        }
-
-        /// <summary>
-        /// Create an PPPPacket from a byte array and a Timeval
-        /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
-        public PPPPacket(byte[] Bytes, int Offset, PosixTimeval Timeval) :
-            base(Timeval)
+        public PPPPacket(ByteArraySegment bas)
         {
             log.Debug("");
 
             // slice off the header portion as our header
-            header = new ByteArraySegment(Bytes, Offset, PPPFields.HeaderLength);
+            header = new ByteArraySegment(bas);
+            header.Length = PPPFields.HeaderLength;
 
             // parse the encapsulated bytes
             payloadPacketOrData = ParseEncapsulatedBytes(header, Timeval, Protocol);
@@ -132,14 +110,10 @@ namespace PacketDotNet
             switch(Protocol)
             {
             case PPPProtocol.IPv4:
-                payloadPacketOrData.ThePacket = new IPv4Packet(payload.Bytes,
-                                                               payload.Offset,
-                                                               Timeval);
+                payloadPacketOrData.ThePacket = new IPv4Packet(payload);
                 break;
             case PPPProtocol.IPv6:
-                payloadPacketOrData.ThePacket = new IPv6Packet(payload.Bytes,
-                                                               payload.Offset,
-                                                               Timeval);
+                payloadPacketOrData.ThePacket = new IPv6Packet(payload);
                 break;
             default:
                 throw new System.NotImplementedException("Protocol of " + Protocol + " is not implemented");

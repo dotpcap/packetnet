@@ -392,8 +392,8 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Computes the TCP checksum, optionally updating the TCP checksum header.
-        /// 
+        /// <summary>
+        /// Computes the TCP checksum. Does not update the current checksum value
         /// </summary>
         /// <returns> The calculated TCP checksum.</returns>
         public int CalculateTCPChecksum()
@@ -407,6 +407,7 @@ namespace PacketDotNet
         /// </summary>
         public void UpdateTCPChecksum()
         {
+            log.Debug("");
             this.Checksum = (ushort)CalculateTCPChecksum();
         }
 

@@ -54,11 +54,10 @@ namespace Test.PacketType
             Assert.AreEqual(4324, tcp.DestinationPort);
             Assert.IsTrue(tcp.Ack);
             Assert.AreEqual(3536, tcp.WindowSize);
-            //FIXME: should reenable these when we've fixed the algorithm
-//            Assert.AreEqual(0x0df8, tcp.ComputeIPChecksum());
-//            Assert.AreEqual(0xc835, tcp.ComputeTCPChecksum());
-            Assert.AreEqual(0xc835, tcp.Checksum);
-//            Assert.IsTrue(tcp.ValidTCPChecksum);
+            Assert.AreEqual(0xc835, tcp.CalculateTCPChecksum());
+            Console.WriteLine("tcp.Checksum is {0}", tcp.Checksum);
+            Assert.AreEqual(0xc835, tcp.Checksum, "tcp.Checksum mismatch");
+            Assert.IsTrue(tcp.ValidTCPChecksum);
         }
 
         // tcp
@@ -84,10 +83,9 @@ namespace Test.PacketType
             Assert.IsTrue(tcp.Ack);
             Assert.IsTrue(tcp.Psh);
             Assert.AreEqual(16666, tcp.WindowSize);
-//            Assert.AreEqual(0x2ff4, tcp.ComputeIPChecksum());
-//            Assert.AreEqual(0x9b02, tcp.ComputeTCPChecksum());
+            Assert.AreEqual(0x9b02, tcp.CalculateTCPChecksum());
             Assert.AreEqual(0x9b02, tcp.Checksum);
-//            Assert.IsTrue(tcp.ValidTCPChecksum);
+            Assert.IsTrue(tcp.ValidTCPChecksum);
         }
 
         // udp
@@ -111,8 +109,7 @@ namespace Test.PacketType
             var udp = UdpPacket.GetEncapsulated(p);
             Assert.AreEqual(52886, udp.SourcePort);
             Assert.AreEqual(56924, udp.DestinationPort);
-//            Assert.AreEqual(71, udp.UDPLength);
-//            Assert.AreEqual(0xe0a2, udp.ComputeIPChecksum());
+            Assert.AreEqual(71, udp.Length);
             Assert.AreEqual(0xc8b8, udp.Checksum);
         }
 
@@ -133,8 +130,7 @@ namespace Test.PacketType
             var udp = UdpPacket.GetEncapsulated(p);
             Assert.AreEqual(3619, udp.SourcePort);
             Assert.AreEqual(53, udp.DestinationPort);
-//            Assert.AreEqual(47, udp.UDPLength);
-//            Assert.AreEqual(0x7988, udp.ComputeIPChecksum());
+            Assert.AreEqual(47, udp.Length);
             Assert.AreEqual(0xbe2d, udp.Checksum);
         }
 

@@ -60,10 +60,14 @@ namespace PacketDotNet
         /// </returns>
         internal int CalculateChecksum(TransportChecksumOption option)
         {
+            // save the checksum field value so it can be restored, altering the checksum is not
+            // an intended side effect of this method
+            var originalChecksum = Checksum;
+
             // reset the checksum field (checksum is calculated when this field is
             // zeroed)
-                Checksum = 0;
-	
+            Checksum = 0;
+
             // copy the tcp section with data
             byte[] dataToChecksum = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
 
@@ -72,6 +76,10 @@ namespace PacketDotNet
 
             // calculate the one's complement sum of the tcp header
             int cs = ChecksumUtils.OnesComplementSum(dataToChecksum);
+
+            // restore the checksum field value
+            Checksum = originalChecksum;
+
             return cs;
         }
 		

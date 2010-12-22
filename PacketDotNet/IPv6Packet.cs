@@ -20,6 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using MiscUtil.Conversion;
@@ -433,10 +434,40 @@ namespace PacketDotNet
                     NextHeader);
             }
 
-            // TODO: Add verbose string support here
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
-                throw new NotImplementedException("The following feature is under developemnt");
+                // collect the properties and their value
+                Dictionary<string,string> properties = new Dictionary<string,string>();
+                string ipVersion = Convert.ToString((int)Version, 2).PadLeft(4, '0');
+                properties.Add("version", ipVersion + " .... .... .... .... .... .... .... = " + (int)Version);
+                string trafficClass = Convert.ToString(TrafficClass, 2).PadLeft(8, '0').Insert(4, " ");
+                properties.Add("traffic class", ".... " + trafficClass + " .... .... .... .... .... = 0x" + TrafficClass.ToString("x").PadLeft(8, '0'));
+                string flowLabel = Convert.ToString(FlowLabel, 2).PadLeft(20, '0').Insert(16, " ").Insert(12, " ").Insert(8, " ").Insert(4, " ");
+                properties.Add("flow label", ".... .... .... " + flowLabel + " = 0x" + FlowLabel.ToString("x").PadLeft(8, '0'));
+                properties.Add("payload length", PayloadLength.ToString()); 
+                properties.Add("next header", NextHeader.ToString() + " (0x" + NextHeader.ToString("x") + ")");
+                properties.Add("hop limit", HopLimit.ToString());
+                properties.Add("source", SourceAddress.ToString());
+                properties.Add("destination", DestinationAddress.ToString());
+
+                // calculate the padding needed to right-justify the property names
+                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+
+                // build the output string
+                buffer.AppendLine("IP:  ******* IP - \"Internet Protocol (Version 6)\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("IP:");
+                foreach(var property in properties)
+                {
+                    if(property.Key.Trim() != "")
+                    {
+                        buffer.AppendLine("IP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    }
+                    else
+                    {
+                        buffer.AppendLine("IP: " + property.Key.PadLeft(padLength) + "   " + property.Value);
+                    }
+                }
+                buffer.AppendLine("IP");
             }
 
             // append the base class output

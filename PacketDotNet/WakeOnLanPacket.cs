@@ -20,6 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
@@ -297,10 +298,23 @@ namespace PacketDotNet
                     DestinationMAC);
             }
 
-             // TODO: Add verbose string support here
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
-                throw new NotImplementedException("The following feature is under developemnt");
+                // collect the properties and their value
+                Dictionary<string,string> properties = new Dictionary<string,string>();
+                properties.Add("destination", HexPrinter.PrintMACAddress(DestinationMAC));
+
+                // calculate the padding needed to right-justify the property names
+                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+
+                // build the output string
+                buffer.AppendLine("WOL:  ******* WOL - \"Wake-On-Lan\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("WOL:");
+                foreach(var property in properties)
+                {
+                    buffer.AppendLine("WOL: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                }
+                buffer.AppendLine("WOL:");
             }
 
             // append the base string output

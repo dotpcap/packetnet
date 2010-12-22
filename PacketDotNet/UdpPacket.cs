@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
@@ -261,10 +262,26 @@ namespace PacketDotNet
                 DestinationPort);
             }
 
-            // TODO: Add verbose string support here
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
-                throw new NotImplementedException("The following feature is under developemnt");
+                // collect the properties and their value
+                Dictionary<string,string> properties = new Dictionary<string,string>();
+                properties.Add("source", SourcePort.ToString());
+                properties.Add("destination", DestinationPort.ToString());
+                properties.Add("length", Length.ToString());
+                properties.Add("checksum", "0x" + Checksum.ToString("x") + " [" + (ValidUDPChecksum ? "valid" : "invalid") + "]");
+
+                // calculate the padding needed to right-justify the property names
+                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+
+                // build the output string
+                buffer.AppendLine("UDP:  ******* UDP - \"User Datagram Protocol\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("UDP:");
+                foreach(var property in properties)
+                {
+                    buffer.AppendLine("UDP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                }
+                buffer.AppendLine("UDP:");
             }
 
             // append the base string output

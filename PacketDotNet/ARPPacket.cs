@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 using System;
+using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Text;
 using MiscUtil.Conversion;
@@ -343,10 +344,29 @@ namespace PacketDotNet
                     TargetProtocolAddress);
             }
 
-            // TODO: Add verbose string support here
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
-                throw new NotImplementedException("The following feature is under developemnt");
+                // collect the properties and their value
+                Dictionary<string,string> properties = new Dictionary<string,string>();
+                properties.Add("hardware type", HardwareAddressType.ToString() + " (0x" + HardwareAddressType.ToString("x") + ")");
+                properties.Add("protocol type", ProtocolAddressType.ToString() + " (0x" + ProtocolAddressType.ToString("x") + ")");
+                properties.Add("operation", Operation.ToString() + " (0x" + Operation.ToString("x") + ")");
+                properties.Add("source hardware address", HexPrinter.PrintMACAddress(SenderHardwareAddress));
+                properties.Add("destination hardware address", HexPrinter.PrintMACAddress(TargetHardwareAddress));
+                properties.Add("source protocol address", SenderProtocolAddress.ToString());
+                properties.Add("destination protocol address", TargetProtocolAddress.ToString());
+
+                // calculate the padding needed to right-justify the property names
+                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+
+                // build the output string
+                buffer.AppendLine("ARP:  ******* ARP - \"Address Resolution Protocol\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("ARP:");
+                foreach(var property in properties)
+                {
+                    buffer.AppendLine("ARP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                }
+                buffer.AppendLine("ARP:");
             }
 
             // append the base string output

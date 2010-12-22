@@ -512,30 +512,47 @@ namespace PacketDotNet
 
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
-                buffer.Append('[');
-                if (outputFormat == StringOutputType.VerboseColored)
-                    buffer.Append(Color);
-                buffer.Append("TCPPacket");
-                if (outputFormat == StringOutputType.VerboseColored)
-                    buffer.Append(AnsiEscapeSequences.Reset);
-                buffer.Append(": ");
-                buffer.Append("sport=" + SourcePort + ", ");
-                buffer.Append("dport=" + DestinationPort + ", ");
-                buffer.Append("seqn=0x" + System.Convert.ToString(SequenceNumber, 16) + ", ");
-                buffer.Append("ackn=0x" + System.Convert.ToString(AcknowledgmentNumber, 16) + ", ");
-                //FIXME: what is header length now?
-                //buffer.Append("hlen=" + HeaderLength + ", ");
-                buffer.Append("urg=" + Urg + ", ");
-                buffer.Append("ack=" + Ack + ", ");
-                buffer.Append("psh=" + Psh + ", ");
-                buffer.Append("rst=" + Rst + ", ");
-                buffer.Append("syn=" + Syn + ", ");
-                buffer.Append("fin=" + Fin + ", ");
-                buffer.Append("wsize=" + WindowSize + ", ");
-                //FIXME: probably want to fix this one
-                //buffer.Append("sum=0x" + System.Convert.ToString(Checksum, 16));
-                buffer.Append("uptr=0x" + System.Convert.ToString(UrgentPointer, 16));
-                buffer.Append(']');
+                // collect the properties and their value
+                Dictionary<string,string> properties = new Dictionary<string,string>();
+                properties.Add("source port", SourcePort.ToString());
+                properties.Add("destination port", DestinationPort.ToString());
+                properties.Add("sequence number", SequenceNumber.ToString() + " (0x" + SequenceNumber.ToString("x") + ")");
+                properties.Add("acknowledgement number", AcknowledgmentNumber.ToString() + " (0x" + AcknowledgmentNumber.ToString("x") + ")");
+                // TODO: Implement a HeaderLength property for TCPPacket
+                //properties.Add("header length", HeaderLength.ToString());
+                properties.Add("flags", "(0x" + AllFlags.ToString("x") + ")");
+                string flags = Convert.ToString(AllFlags, 2).PadLeft(8, '0');
+                properties.Add("", flags[0] + "... .... = [" + flags[0] + "] congestion window reduced");
+                properties.Add(" ", "." + flags[1] + ".. .... = [" + flags[1] + "] ECN - echo");
+                properties.Add("  ", ".." + flags[2] + ". .... = [" + flags[2] + "] urgent");
+                properties.Add("   ", "..." + flags[3] + " .... = [" + flags[3] + "] acknowledgement");
+                properties.Add("    ", ".... " + flags[4] + "... = [" + flags[4] + "] push");
+                properties.Add("     ", ".... ." + flags[5] + ".. = [" + flags[5] + "] reset");
+                properties.Add("      ", ".... .."+ flags[6] + ". = [" + flags[6] + "] syn");
+                properties.Add("       ", ".... ..." + flags[7] + " = [" + flags[7] + "] fin");
+                properties.Add("window size", WindowSize.ToString());
+                properties.Add("checksum", "0x" + Checksum.ToString() + " [" + (ValidChecksum ? "valid" : "invalid") + "]");
+                // TODO: Implement an Options property to parse the options field
+                properties.Add("options", "0x" + BitConverter.ToString(Options).Replace("-", "").PadLeft(12, '0'));
+
+                // calculate the padding needed to right-justify the property names
+                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+
+                // build the output string
+                buffer.AppendLine("TCP:  ******* TCP - \"Transmission Control Protocol\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("TCP:");
+                foreach(var property in properties)
+                {
+                    if(property.Key.Trim() != "")
+                    {
+                        buffer.AppendLine("TCP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    }
+                    else
+                    {
+                        buffer.AppendLine("TCP: " + property.Key.PadLeft(padLength) + "   " + property.Value);
+                    }
+                }
+                buffer.AppendLine("TCP:");
             }
 
             // append the base class output

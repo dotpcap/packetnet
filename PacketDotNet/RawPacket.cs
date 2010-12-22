@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Utils;
 
@@ -89,10 +90,24 @@ namespace PacketDotNet
                     Timeval);
             }
 
-            // TODO: Add verbose string support here
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
-                throw new NotImplementedException("The following feature is under developemnt");
+                // collect the properties and their value
+                Dictionary<string,string> properties = new Dictionary<string,string>();
+                properties.Add("link layer type", LinkLayerType.ToString() + " (0x" + LinkLayerType.ToString("x") + ")");
+                properties.Add("timeval", Timeval.ToString());
+
+                // calculate the padding needed to right-justify the property names
+                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+
+                // build the output string
+                buffer.AppendLine("Raw:  ******* Raw - \"Raw Packet\"");
+                buffer.AppendLine("Raw:");
+                foreach(var property in properties)
+                {
+                    buffer.AppendLine("Raw: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                }
+                buffer.AppendLine("Raw:");
             }
 
             return buffer.ToString();

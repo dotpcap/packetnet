@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 using System;
+using System.Collections.Generic;
 using System.Text;
 using MiscUtil.Conversion;
 using PacketDotNet.Utils;
@@ -142,10 +143,27 @@ namespace PacketDotNet
                     Code);
             }
 
-            // TODO: Add verbose string support here
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
-                throw new NotImplementedException("The following feature is under developemnt");
+                // collect the properties and their value
+                Dictionary<string,string> properties = new Dictionary<string,string>();
+                properties.Add("type", Type.ToString() + " (" + (int)Type + ")");
+                properties.Add("code", Code.ToString());
+                // TODO: Implement a checksum verification for ICMPv6
+                properties.Add("checksum", "0x" + Checksum.ToString("x"));
+                // TODO: Implement ICMPv6 Option fields here?
+
+                // calculate the padding needed to right-justify the property names
+                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+
+                // build the output string
+                buffer.AppendLine("ICMP:  ******* ICMPv6 - \"Internet Control Message Protocol (Version 6)\"- offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("ICMP:");
+                foreach (var property in properties)
+                {
+                    buffer.AppendLine("ICMP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                }
+                buffer.AppendLine("ICMP:");
             }
 
             // append the base string output

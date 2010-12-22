@@ -19,6 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using MiscUtil.Conversion;
 using PacketDotNet.Utils;
@@ -574,27 +575,48 @@ namespace PacketDotNet
 
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
-                buffer.Append('[');
-                if(outputFormat == StringOutputType.VerboseColored)
-                    buffer.Append(Color);
-                buffer.Append("IPv4Packet");
-                if(outputFormat == StringOutputType.VerboseColored)
-                    buffer.Append(AnsiEscapeSequences.Reset);
-                buffer.Append(": ");
-                buffer.Append("version=" + Version + ", ");
-                buffer.Append("hlen=" + HeaderLength + ", ");
-                buffer.Append("tos=" + TypeOfService + ", ");
-                //FIXME: what to use for length here?
-                //buffer.Append("length=" + Length + ", ");
-                buffer.Append("id=" + Id + ", ");
-                buffer.Append("flags=0x" + System.Convert.ToString(FragmentFlags, 16) + ", ");
-                buffer.Append("offset=" + FragmentOffset + ", ");
-                buffer.Append("ttl=" + TimeToLive + ", ");
-                buffer.Append("proto=" + Protocol + ", ");
-                buffer.Append("sum=0x" + System.Convert.ToString(Checksum, 16));
-                buffer.Append("src=" + SourceAddress + ", ");
-                buffer.Append("dest=" + DestinationAddress);
-                buffer.Append(']');
+                // collect the properties and their value
+                Dictionary<string,string> properties = new Dictionary<string,string>();
+                properties.Add("version", Version.ToString());
+                // FIXME: Header length output is incorrect
+                properties.Add("header length", HeaderLength + " bytes");
+                string diffServices =  Convert.ToString(DifferentiatedServices, 2).PadLeft(8, '0').Insert(4, " ");
+                properties.Add("differentiated services", "0x" + DifferentiatedServices.ToString("x").PadLeft(2, '0'));
+                properties.Add("", diffServices.Substring(0, 7) + ".. = [" + (DifferentiatedServices >> 2) + "] code point"); 
+                properties.Add(" ",".... .." + diffServices[6] + ". = [" + diffServices[6] + "] ECN"); 
+                properties.Add("  ",".... ..." + diffServices[7] + " = [" + diffServices[7] + "] ECE"); 
+                properties.Add("total length", TotalLength.ToString());
+                properties.Add("identification", "0x" + Id.ToString("x") + " (" + Id + ")");
+                string flags = Convert.ToString(FragmentFlags, 2).PadLeft(8, '0').Substring(5, 3);
+                properties.Add("flags", "0x" + FragmentFlags.ToString("x").PadLeft(2, '0'));
+                properties.Add("   ", flags[0] + ".. = [" +  flags[0] + "] reserved");
+                properties.Add("    ", "." + flags[1] + ". = [" + flags[1] + "] don't fragment");
+                properties.Add("     ", ".." + flags[2] + " = [" + flags[2] + "] more fragments");
+                properties.Add("fragment offset", FragmentOffset.ToString());
+                properties.Add("time to live", TimeToLive.ToString());
+                properties.Add("protocol", Protocol.ToString() + " (0x" + Protocol.ToString("x") + ")");
+                properties.Add("header checksum", "0x" + Checksum.ToString("x") + " [" + (ValidChecksum ? "valid" : "invalid") + "]");
+                properties.Add("source", SourceAddress.ToString());
+                properties.Add("destination", DestinationAddress.ToString());
+
+                // calculate the padding needed to right-justify the property names
+                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+
+                // build the output string
+                buffer.AppendLine("IP:  ******* IPv4 - \"Internet Protocol (Version 4)\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("IP:");
+                foreach(var property in properties)
+                {
+                    if(property.Key.Trim() != "")
+                    {
+                        buffer.AppendLine("IP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    }
+                    else
+                    {
+                        buffer.AppendLine("IP: " + property.Key.PadLeft(padLength) + "   " + property.Value);
+                    }
+                }
+                buffer.AppendLine("IP:");
             }
 
             // append the base class output

@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 using System;
+using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
@@ -249,10 +250,37 @@ namespace PacketDotNet
                     Length);
             }
 
-            // TODO: Add verbose string support here
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
-                throw new NotImplementedException("The following feature is under developemnt");
+                // collect the properties and their value
+                Dictionary<string,string> properties = new Dictionary<string,string>();
+                // FIXME: The version output is incorrect
+                properties.Add("", Convert.ToString(Version, 2).PadLeft(4, '0') + " .... = version: " + Version.ToString());
+                properties.Add(" ", ".... " + Convert.ToString(Type, 2).PadLeft(4, '0') + " = type: " + Type.ToString());
+                // FIXME: The Code output is incorrect
+                properties.Add("code", Code.ToString() + " (0x" + Code.ToString("x") + ")");
+                properties.Add("session id", "0x" + SessionId.ToString("x"));
+                // TODO: Implement a PayloadLength property for PPPoE
+                //properties.Add("payload length", PayloadLength.ToString());
+                
+                // calculate the padding needed to right-justify the property names
+                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+
+                // build the output string
+                buffer.AppendLine("PPPoE:  ******* PPPoE - \"Point-to-Point Protocol over Ethernet\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("PPPoE:");
+                foreach(var property in properties)
+                {
+                    if(property.Key.Trim() != "")
+                    {
+                        buffer.AppendLine("PPPoE: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    }
+                    else
+                    {
+                        buffer.AppendLine("PPPoE: " + property.Key.PadLeft(padLength) + "   " + property.Value);
+                    }
+                }
+                buffer.AppendLine("PPPoE:");
             }
 
             // append the base output

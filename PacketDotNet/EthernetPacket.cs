@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Text;
 using PacketDotNet.Utils;
@@ -277,10 +278,25 @@ namespace PacketDotNet
                     Type.ToString());
             }
 
-            // TODO: Add verbose string support here
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
-                throw new NotImplementedException("The following feature is under developemnt");
+                // collect the properties and their value
+                Dictionary<string,string> properties = new Dictionary<string,string>();
+                properties.Add("destination", HexPrinter.PrintMACAddress(DestinationHwAddress));
+                properties.Add("source", HexPrinter.PrintMACAddress(SourceHwAddress));
+                properties.Add("type", Type.ToString() + " (0x" + Type.ToString("x") + ")");
+                
+                // calculate the padding needed to right-justify the property names
+                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+
+                // build the output string
+                buffer.AppendLine("Eth:  ******* Ethernet - \"Ethernet\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("Eth:");
+                foreach(var property in properties)
+                {
+                    buffer.AppendLine("Eth: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                }
+                buffer.AppendLine("Eth:");
             }
 
             // append the base output

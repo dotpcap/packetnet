@@ -329,19 +329,14 @@ namespace PacketDotNet
 
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
-                buffer.Append('[');
-                if(outputFormat == StringOutputType.VerboseColored)
-                    buffer.Append(AnsiEscapeSequences.Blue);
-                buffer.Append("LLDPPacket");
-                if(outputFormat == StringOutputType.VerboseColored)
-                    buffer.Append(AnsiEscapeSequences.Reset);
-                buffer.Append(":");
-                
-                foreach(TLV tlv in TlvCollection)
+                // build the output string
+                buffer.AppendLine("LLDP:  ******* LLDP - \"Link Layer Discovery Protocol\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("LLDP:");
+                foreach(var tlv in TlvCollection)
                 {
-                    buffer.Append(" " + tlv.ToString());
+                    buffer.AppendLine("LLDP:" + tlv.ToString());
                 }
-                buffer.Append(']');
+                buffer.AppendLine("LLDP:");
             }
 
             // append the base string output

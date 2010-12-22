@@ -115,5 +115,25 @@ namespace Test.PacketType
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(l.ToString());
         }
+
+        [Test]
+        public void PrintVerboseString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/LinuxCookedCapture.pcap");
+            dev.Open();
+            SharpPcap.Packets.RawPacket rawPacket;
+            Console.WriteLine("Reading packet data");
+            rawPacket = dev.GetNextRawPacket();
+            Packet p = Packet.ParsePacket((LinkLayers)rawPacket.LinkLayerType,
+                              new PosixTimeval(rawPacket.Timeval.Seconds, rawPacket.Timeval.MicroSeconds),
+                              rawPacket.Data);
+
+            Console.WriteLine("Parsing");
+            var l = (LinuxSLLPacket)p;
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(l.ToString(StringOutputType.Verbose));
+        }
     }
 }

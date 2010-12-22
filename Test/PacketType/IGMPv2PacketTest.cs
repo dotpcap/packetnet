@@ -88,5 +88,23 @@ namespace Test.PacketType
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(igmpV2.ToString());
         }
+
+        [Test]
+        public void PrintVerboseString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/IGMP dataset.pcap");
+            dev.Open();
+            SharpPcap.Packets.RawPacket rawPacket;
+            Console.WriteLine("Reading packet data");
+            rawPacket = dev.GetNextRawPacket();
+            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+
+            Console.WriteLine("Parsing");
+            var igmpV2 = IGMPv2Packet.GetEncapsulated(p);
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(igmpV2.ToString(StringOutputType.Verbose));
+        }
     }
 }

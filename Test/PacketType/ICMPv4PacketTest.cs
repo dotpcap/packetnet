@@ -78,6 +78,24 @@ namespace Test.PacketType
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(icmp.ToString());
         }
+
+        [Test]
+        public void PrintVerboseString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/ICMPv4.pcap");
+            dev.Open();
+            SharpPcap.Packets.RawPacket rawPacket;
+            Console.WriteLine("Reading packet data");
+            rawPacket = dev.GetNextRawPacket();
+            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+
+            Console.WriteLine("Parsing");
+            var icmp = ICMPv4Packet.GetEncapsulated(p);
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(icmp.ToString(StringOutputType.Verbose));
+        }
     }
 }
 

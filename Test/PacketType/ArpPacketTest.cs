@@ -140,5 +140,23 @@ namespace Test.PacketType
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(arp.ToString());
         }
+
+        [Test]
+        public void PrintVerboseString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/arp_request_response.pcap");
+            dev.Open();
+            SharpPcap.Packets.RawPacket rawPacket;
+            Console.WriteLine("Reading packet data");
+            rawPacket = dev.GetNextRawPacket();
+            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+
+            Console.WriteLine("Parsing");
+            var arp = ARPPacket.GetEncapsulated(p);
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(arp.ToString(StringOutputType.Verbose));
+        }
     }
 }

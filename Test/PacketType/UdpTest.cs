@@ -171,24 +171,6 @@ namespace Test.PacketType
         }
 
         [Test]
-        public void PrintString()
-        {
-            Console.WriteLine("Loading the sample capture file");
-            var dev = new OfflinePcapDevice("../../CaptureFiles/udp.pcap");
-            dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
-            Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
-
-            Console.WriteLine("Parsing");
-            var udp = UdpPacket.GetEncapsulated(p);
-
-            Console.WriteLine("Printing human readable string");
-            Console.WriteLine(udp.ToString());
-        }
-
-        [Test]
         public void UdpPacketInsideOfEthernetPacketWithTrailer()
         {
             var dev = new OfflinePcapDevice("../../CaptureFiles/udpPacketWithEthernetTrailers.pcap");
@@ -217,6 +199,42 @@ namespace Test.PacketType
             }
 
             dev.Close();
+        }
+
+        [Test]
+        public void PrintString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/udp.pcap");
+            dev.Open();
+            SharpPcap.Packets.RawPacket rawPacket;
+            Console.WriteLine("Reading packet data");
+            rawPacket = dev.GetNextRawPacket();
+            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+
+            Console.WriteLine("Parsing");
+            var udp = UdpPacket.GetEncapsulated(p);
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(udp.ToString());
+        }
+
+        [Test]
+        public void PrintVerboseString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/udp.pcap");
+            dev.Open();
+            SharpPcap.Packets.RawPacket rawPacket;
+            Console.WriteLine("Reading packet data");
+            rawPacket = dev.GetNextRawPacket();
+            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+
+            Console.WriteLine("Parsing");
+            var udp = UdpPacket.GetEncapsulated(p);
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(udp.ToString(StringOutputType.Verbose));
         }
     }
 }

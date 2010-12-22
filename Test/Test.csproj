@@ -80,7 +80,6 @@
     <Compile Include="PacketType\WakeOnLanTest.cs" />
     <Compile Include="PacketType\IGMPv2PacketTest.cs" />
     <Compile Include="PacketType\PPPPacketTest.cs" />
-    <Compile Include="PacketType\RawPacketTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -47,6 +47,25 @@ namespace Test.PacketType
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ppp.ToString());
         }
+
+        [Test]
+        public void PrintVerboseString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/PPPoEPPP.pcap");
+            dev.Open();
+            Console.WriteLine("Reading packet data");
+            dev.GetNextRawPacket();
+            var rawPacket = dev.GetNextRawPacket();
+            dev.Close();
+            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+
+            Console.WriteLine("Parsing");
+            var ppp = PPPPacket.GetEncapsulated(p);
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(ppp.ToString(StringOutputType.Verbose));
+        }
     }
 }
 

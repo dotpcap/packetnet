@@ -71,6 +71,25 @@ namespace Test.PacketType
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(pppoe.ToString());
         }
+
+        [Test]
+        public void PrintVerboseString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/PPPoEPPP.pcap");
+            dev.Open();
+            Console.WriteLine("Reading packet data");
+            dev.GetNextRawPacket();
+            var rawPacket = dev.GetNextRawPacket();
+            dev.Close();
+            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+
+            Console.WriteLine("Parsing");
+            var pppoe = PPPoEPacket.GetEncapsulated(p);
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(pppoe.ToString(StringOutputType.Verbose));
+        }
     }
 }
 

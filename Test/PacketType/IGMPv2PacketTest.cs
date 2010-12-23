@@ -50,7 +50,7 @@ namespace Test.PacketType
                 if(packetIndex == 0)
                 {
                     Assert.AreEqual(igmp.Type, IGMPMessageType.MembershipQuery);
-                    Assert.AreEqual(igmp.MaxResponseTime, 10.0);
+                    Assert.AreEqual(igmp.MaxResponseTime, 100);
                     Assert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new byte[2] { 0xEE, 0x9B }, 0));
                     Assert.AreEqual(igmp.GroupAddress, IPAddress.Parse("0.0.0.0"));
                 }

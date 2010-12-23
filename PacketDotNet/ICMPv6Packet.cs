@@ -51,11 +51,10 @@ namespace PacketDotNet
             {
                 var val = header.Bytes[header.Offset + ICMPv6Fields.TypePosition];
 
-                //TODO: how to handle a mismatch in the mapping? maybe throw here?
                 if(Enum.IsDefined(typeof(ICMPv6Types), val))
                     return (ICMPv6Types)val;
                 else
-                    throw new System.NotImplementedException("Type of " + val + " is not defined in ICMPv6Types");
+                    throw new ArgumentOutOfRangeException("Type of \"" + val + "\" is not defined in ICMPv6Types");
             }
 
             set

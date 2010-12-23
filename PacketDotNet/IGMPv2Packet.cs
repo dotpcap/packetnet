@@ -49,16 +49,16 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the IGMP max response time.</summary>
-        virtual public float MaxResponseTime
+        virtual public byte MaxResponseTime
         {
             get
             {
-                return ((int)header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition] / 10);
+                return header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition];
             }
 
             set
             {
-                header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition] = (byte)(value * 10);
+                header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition] = value;
             }
         }
 

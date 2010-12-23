@@ -11,7 +11,7 @@ namespace PacketDotNet
     /// <summary>
     /// The protocol encapsulated inside of the IP packet
     /// </summary>
-    public enum IPProtocolType
+    public enum IPProtocolType : byte
     {
         /// <summary> Dummy protocol for TCP. </summary>
         IP = 0,
@@ -65,13 +65,6 @@ namespace PacketDotNet
         COMP = 108,
         /// <summary> Raw IP packets. </summary>
         RAW = 255,
-
-        /// <summary> Unrecognized IP protocol.
-        /// WARNING: this only works because the int storage for the protocol
-        /// code has more bits than the field in the IP header where it is stored.
-        /// </summary>
-        INVALID = -1,
-
         /// <summary> IP protocol mask.</summary>
         MASK = 0xff
     }

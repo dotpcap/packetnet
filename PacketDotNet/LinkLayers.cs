@@ -40,51 +40,69 @@ namespace PacketDotNet
     /// are not encapsulated in any ethernet header.
     /// </p>
     /// </summary>
-    public enum LinkLayers
+    public enum LinkLayers : byte
     {
         /// <summary> no link-layer encapsulation </summary>
         Null = 0,
+
         /// <summary> Ethernet (10Mb) </summary>
         Ethernet = 1,
+
         /// <summary> Experimental Ethernet (3Mb) </summary>
         ExperimentalEthernet3MB = 2,
+
         /// <summary> Amateur Radio AX.25 </summary>
         AmateurRadioAX25 = 3,
+
         /// <summary> Proteon ProNET Token Ring </summary>
         ProteonProNetTokenRing = 4,
+
         /// <summary> Chaos </summary>
         Chaos = 5,
+
         /// <summary> IEEE 802 Networks </summary>
         Ieee802 = 6,
+
         /// <summary> ARCNET </summary>
         ArcNet = 7,
+
         /// <summary> Serial Line IP </summary>
         Slip = 8,
+
         /// <summary> Point-to-point Protocol </summary>
         Ppp = 9,
+
         /// <summary> FDDI </summary>
         Fddi = 10,
+
         /// <summary> LLC/SNAP encapsulated atm </summary>
         AtmRfc1483 = 11,
+
         /// <summary> raw IP </summary>
         Raw = 12,
+
         /// <summary> BSD Slip.</summary>
         SlipBSD = 15,
+
         /// <summary> BSD PPP.</summary>
         PppBSD = 16,
+
         /// <summary> IP over ATM.</summary>
         AtmClip = 19,
+
         /// <summary> PPP over HDLC.</summary>
         PppSerial = 50,
+
         /// <summary> Cisco HDLC.</summary>
         CiscoHDLC = 104,
+
         /// <summary> IEEE 802.11 wireless.</summary>
         Ieee80211 = 105,
+
         /// <summary> OpenBSD loopback.</summary>
         Loop = 108,
+
         /// <summary> Linux cooked sockets.</summary>
         LinuxSLL = 113,
-        /// <summary> unknown link-layer type</summary>
-        Unknown = - 1,
     }
 }

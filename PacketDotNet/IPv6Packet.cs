@@ -476,9 +476,7 @@ namespace PacketDotNet
             return buffer.ToString();
         }
 
-        /// <summary>
-        /// Converts the packet to a color string. TODO add a method for colored to string.
-        /// </summary>
+        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         override public String Color
         {
             get

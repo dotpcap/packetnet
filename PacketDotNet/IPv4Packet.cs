@@ -230,17 +230,17 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the header checksum.</summary>
-        virtual public int Checksum
+        virtual public ushort Checksum
         {
             get
             {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
+                return EndianBitConverter.Big.ToUInt16(header.Bytes,
                                                       header.Offset + IPv4Fields.ChecksumPosition);
             }
 
             set
             {
-                var val = (Int16)value;
+                var val = (UInt16)value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  header.Bytes,
                                                  header.Offset + IPv4Fields.ChecksumPosition);
@@ -412,7 +412,7 @@ namespace PacketDotNet
         /// </summary>
         /// <returns> The calculated IP checksum.
         /// </returns>
-        public int CalculateIPChecksum()
+        public ushort CalculateIPChecksum()
         {
             //copy the ip header
             var theHeader = Header;
@@ -426,7 +426,7 @@ namespace PacketDotNet
             //calculate the one's complement sum of the ip header
             int cs = ChecksumUtils.OnesComplementSum(ip, 0, ip.Length);
 
-            return cs;
+            return (ushort)cs;
         }
 
         /// <summary>

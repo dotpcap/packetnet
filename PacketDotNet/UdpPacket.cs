@@ -115,7 +115,7 @@ namespace PacketDotNet
             }
         }
 
-		/// <summary> Check if the UDP packet is valid, checksum-wise.</summary>
+        /// <summary> Check if the UDP packet is valid, checksum-wise.</summary>
         public bool ValidChecksum
         {
             get

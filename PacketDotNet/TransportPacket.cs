@@ -111,7 +111,7 @@ namespace PacketDotNet
             return (onesSum == expectedOnesSum);
         }
 
-		/// <summary>
+        /// <summary>
         /// Options for use when creating a transport layer checksum
         /// </summary>
         public enum TransportChecksumOption

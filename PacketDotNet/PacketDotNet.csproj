@@ -56,7 +56,6 @@
     <Compile Include="UdpPacket.cs" />
     <Compile Include="EthernetFields.cs" />
     <Compile Include="TransportPacket.cs" />
-    <Compile Include="IPProtocol.cs" />
     <Compile Include="Utils\AnsiEscapeSequences.cs" />
     <Compile Include="UdpFields.cs" />
     <Compile Include="MiscUtil\IO\EndianBinaryReader.cs" />

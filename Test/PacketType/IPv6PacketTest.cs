@@ -30,7 +30,7 @@ namespace Test.PacketType
 {
     [TestFixture]
     public class IPv6PacketTest
-    { 
+    {
         // icmpv6
         public void VerifyPacket0(Packet p)
         {
@@ -61,7 +61,7 @@ namespace Test.PacketType
         public void IPv6PacketTestParsing()
         {
             var dev = new OfflinePcapDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
-            dev.Open();                                                                           
+            dev.Open();
 
             SharpPcap.Packets.RawPacket rawPacket;
             int packetIndex = 0;
@@ -172,7 +172,7 @@ namespace Test.PacketType
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ip.ToString());
         }
-        
+
         [Test]
         public void PrintVerboseString()
         {

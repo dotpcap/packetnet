@@ -197,13 +197,13 @@ namespace PacketDotNet
                 if(payload is PPPoEPacket)
                 {
                     return (PPPPacket)payload.PayloadPacket;
-                
+
                 }
             }
 
             return null;
         }
-        
+
         /// <summary>
         /// Generate a random PPPoEPacket
         /// </summary>

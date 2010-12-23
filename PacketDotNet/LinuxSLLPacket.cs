@@ -54,7 +54,7 @@ namespace PacketDotNet
         }
 
         /// <value>
-        /// The 
+        /// The
         /// </value>
         public int LinkLayerAddressType
         {
@@ -198,7 +198,7 @@ namespace PacketDotNet
                 properties.Add("link layer address length", LinkLayerAddressLength.ToString());
                 properties.Add("source", BitConverter.ToString(LinkLayerAddress));
                 properties.Add("protocol", EthernetProtocolType.ToString() + " (0x" + EthernetProtocolType.ToString("x") + ")");
-                
+
 
                 // calculate the padding needed to right-justify the property names
                 int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
@@ -212,7 +212,7 @@ namespace PacketDotNet
                 }
                 buffer.AppendLine("LCC:");
             }
-            
+
             // append the base output
             buffer.Append(base.ToString(outputFormat));
 

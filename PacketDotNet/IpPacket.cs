@@ -42,7 +42,7 @@ namespace PacketDotNet
 #endif
 
         /// <summary>
-        /// The default time to live value for Ip packets being constructed 
+        /// The default time to live value for Ip packets being constructed
         /// </summary>
         protected int DefaultTimeToLive = 64;
 
@@ -238,13 +238,13 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// IpPacket constructor 
+        /// IpPacket constructor
         /// </summary>
         public IpPacket()
         {}
 
         /// <summary>
-        /// Called by IPv4 and IPv6 packets to parse their packet payload  
+        /// Called by IPv4 and IPv6 packets to parse their packet payload
         /// </summary>
         /// <param name="payload">
         /// A <see cref="ByteArraySegment"/>
@@ -327,7 +327,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Generate a random packet of a specific ip version 
+        /// Generate a random packet of a specific ip version
         /// </summary>
         /// <param name="version">
         /// A <see cref="IpVersion"/>

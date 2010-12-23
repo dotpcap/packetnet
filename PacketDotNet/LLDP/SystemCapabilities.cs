@@ -172,7 +172,7 @@ namespace PacketDotNet.LLDP
         {
             return string.Format("[SystemCapabilities: Capabilities={0}, Enabled={1}]", Capabilities, Enabled);
         }
-        
+
         #endregion
     }
 }

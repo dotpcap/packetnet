@@ -74,7 +74,7 @@ namespace PacketDotNet
             set
             {
                 byte[] theValue = BitConverter.GetBytes(value);
-                Array.Copy(theValue, 0, header.Bytes, (header.Offset + IGMPv2Fields.ChecksumPosition), 2); 
+                Array.Copy(theValue, 0, header.Bytes, (header.Offset + IGMPv2Fields.ChecksumPosition), 2);
             }
         }
 
@@ -144,7 +144,7 @@ namespace PacketDotNet
             }
 
             return null;
-            
+
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />

@@ -81,7 +81,7 @@ namespace Test.PacketType
         /// <summary>
         /// Test that we can build a udp packet from values, convert it into a byte[]
         /// and then re-parse it back into a UdpPacket.
-        /// 
+        ///
         /// Also test that the UdpPacket.Length field is updated properly in the
         /// conversion to a byte[]
         /// </summary>

@@ -10,14 +10,14 @@
 using System;
 
 namespace PacketDotNet.Utils
-{   
+{
     /// <summary> String constants for color console output.
     /// <p>
-    /// This file contains control sequences to print color text on a text 
+    /// This file contains control sequences to print color text on a text
     /// console capable of interpreting and displaying control sequences.
     /// </p>
     /// <p>
-    /// A capable console would be 
+    /// A capable console would be
     /// unix bash, os/2 shell, or command.com w/ ansi.sys loaded
     /// </p>
     /// </summary>

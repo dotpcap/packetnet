@@ -12,7 +12,7 @@ namespace MiscUtil.Conversion
 		/// </summary>
 		/// <remarks>
 		/// Different computer architectures store data using different byte orders. "Big-endian"
-		/// means the most significant byte is on the left end of a word. "Little-endian" means the 
+		/// means the most significant byte is on the left end of a word. "Little-endian" means the
 		/// most significant byte is on the right end of a word.
 		/// </remarks>
 		/// <returns>true if this converter is little-endian, false otherwise.</returns>
@@ -24,8 +24,8 @@ namespace MiscUtil.Conversion
 		/// <summary>
 		/// Indicates the byte order ("endianess") in which data is converted using this class.
 		/// </summary>
-		public sealed override Endianness Endianness 
-		{ 
+		public sealed override Endianness Endianness
+		{
 			get { return Endianness.LittleEndian; }
 		}
 
@@ -44,7 +44,7 @@ namespace MiscUtil.Conversion
 				value = value >> 8;
 			}
 		}
-		
+
 		/// <summary>
 		/// Returns a value built from the specified number of bytes from the given buffer,
 		/// starting at index.

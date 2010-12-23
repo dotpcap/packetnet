@@ -27,7 +27,7 @@ using MiscUtil.Conversion;
 namespace PacketDotNet
 {
     /// <summary>
-    /// See http://en.wikipedia.org/wiki/Ethernet#Ethernet_frame_types_and_the_EtherType_field 
+    /// See http://en.wikipedia.org/wiki/Ethernet#Ethernet_frame_types_and_the_EtherType_field
     /// </summary>
     public class EthernetPacket : InternetLinkLayerPacket
     {
@@ -176,7 +176,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Constructor 
+        /// Constructor
         /// </summary>
         /// <param name="bas">
         /// A <see cref="ByteArraySegment"/>
@@ -285,7 +285,7 @@ namespace PacketDotNet
                 properties.Add("destination", HexPrinter.PrintMACAddress(DestinationHwAddress));
                 properties.Add("source", HexPrinter.PrintMACAddress(SourceHwAddress));
                 properties.Add("type", Type.ToString() + " (0x" + Type.ToString("x") + ")");
-                
+
                 // calculate the padding needed to right-justify the property names
                 int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
@@ -306,7 +306,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Generate a random EthernetPacket 
+        /// Generate a random EthernetPacket
         /// TODO: could improve this routine to set a random payload as well
         /// </summary>
         /// <returns>

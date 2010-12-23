@@ -82,9 +82,9 @@ namespace PacketDotNet
 
             return cs;
         }
-		
-		/// <summary>
-        /// Determine if the transport layer checksum is valid 
+
+        /// <summary>
+        /// Determine if the transport layer checksum is valid
         /// </summary>
         /// <param name="option">
         /// A <see cref="TransportChecksumOption"/>
@@ -110,19 +110,19 @@ namespace PacketDotNet
 
             return (onesSum == expectedOnesSum);
         }
-		
+
 		/// <summary>
         /// Options for use when creating a transport layer checksum
         /// </summary>
         public enum TransportChecksumOption
         {
             /// <summary>
-            /// No extra options 
+            /// No extra options
             /// </summary>
             None,
 
             /// <summary>
-            /// Attach a pseudo IP header to the transport data being checksummed 
+            /// Attach a pseudo IP header to the transport data being checksummed
             /// </summary>
             AttachPseudoIPHeader,
         }

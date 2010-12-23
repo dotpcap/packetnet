@@ -164,7 +164,7 @@ namespace Test.PacketType
                 count++;
             }
         }
-        
+
         [Test]
         public void LLDPParsing()
         {
@@ -262,7 +262,7 @@ namespace Test.PacketType
         {
             LLDPPacket.RandomPacket();
         }
-        
+
         [Test]
         public void PrintString()
         {

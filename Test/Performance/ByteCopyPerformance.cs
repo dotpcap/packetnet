@@ -26,7 +26,7 @@ namespace Test.Performance
 
             // disable logging to improve performance
             LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
-            
+
             // Store the time before the processing starts
             var startTime = DateTime.Now;
 
@@ -86,6 +86,6 @@ namespace Test.Performance
             // output the statistics to the console
             Console.WriteLine(rate.ToString());
         }
-    
+
     }
 }

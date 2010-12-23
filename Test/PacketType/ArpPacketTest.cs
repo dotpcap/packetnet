@@ -70,7 +70,7 @@ namespace Test.PacketType
         public void ParsingArpPacketRequestResponse()
         {
             var dev = new OfflinePcapDevice("../../CaptureFiles/arp_request_response.pcap");
-            dev.Open();                                                                           
+            dev.Open();
 
             SharpPcap.Packets.RawPacket rawPacket;
             int packetIndex = 0;
@@ -80,7 +80,7 @@ namespace Test.PacketType
                                            new PosixTimeval(rawPacket.Timeval.Seconds,
                                                             rawPacket.Timeval.MicroSeconds),
                                            rawPacket.Data);
-                
+
                 Console.WriteLine("got packet");
                 Console.WriteLine("{0}", p.ToString());
                 switch(packetIndex)

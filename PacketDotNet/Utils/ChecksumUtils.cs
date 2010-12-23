@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
-/* 
+/*
  * Copyright 2005 Tamir Gal <tamir@tamirgal.com>
  * Copyright 2008-2009 Chris Morgan <chmorgan@gmail.com>
  * Copyright 2008-2009 Phillip Lemon <lucidcomms@gmail.com>
@@ -48,7 +48,7 @@ namespace PacketDotNet.Utils
             return OnesComplementSum(bytes, 0, bytes.Length);
         }
 
-        /// <summary> 
+        /// <summary>
         /// Computes the one's complement sum on a byte array
         /// </summary>
         public static int OnesComplementSum(byte[] bytes, int start, int len)

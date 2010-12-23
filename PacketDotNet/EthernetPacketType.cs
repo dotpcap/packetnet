@@ -19,11 +19,11 @@ using System;
 namespace PacketDotNet
 {
     /// Copied from Pcap.Net @ 20091117
-    /// 
+    ///
     /// <summary>
     /// Code constants for well-defined ethernet protocols.
-    /// 
-    /// EtherType is a two-octet field in an Ethernet frame, as defined by the Ethernet II framing networking standard. 
+    ///
+    /// EtherType is a two-octet field in an Ethernet frame, as defined by the Ethernet II framing networking standard.
     /// It is used to indicate which protocol is encapsulated in the payload.
     ///
     /// Also contains entries taken from linux/if_ether.h and tcpdump/ethertype.h
@@ -95,7 +95,7 @@ namespace PacketDotNet
         /// </summary>
         PointToPointProtocolOverEthernetDiscoveryStage = 0x8863,
         /// <summary>
-        /// PPPoE Session Stage 
+        /// PPPoE Session Stage
         /// </summary>
         PointToPointProtocolOverEthernetSessionStage = 0x8864,
         /// <summary>

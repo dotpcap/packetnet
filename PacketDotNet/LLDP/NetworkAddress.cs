@@ -176,11 +176,11 @@ namespace PacketDotNet.LLDP
         public override bool Equals (object obj)
         {
             // Check for null values and compare run-time types.
-            if (obj == null || GetType() != obj.GetType()) 
+            if (obj == null || GetType() != obj.GetType())
                 return false;
 
             var na = (NetworkAddress)obj;
-            
+
             if(this.AddressFamily.Equals(na.AddressFamily) &&
                this.Address.Equals(na.Address))
             {

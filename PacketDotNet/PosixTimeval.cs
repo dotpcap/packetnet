@@ -185,7 +185,7 @@ namespace PacketDotNet
         public override bool Equals (object obj)
         {
             // Check for null values and compare run-time types.
-            if (obj == null || GetType() != obj.GetType()) 
+            if (obj == null || GetType() != obj.GetType())
                 return false;
 
             var pt = (PosixTimeval)obj;
@@ -272,7 +272,7 @@ namespace PacketDotNet
             sb.Append('.');
             sb.Append(MicroSeconds);
             sb.Append('s');
-            
+
             return sb.ToString();
         }
     }

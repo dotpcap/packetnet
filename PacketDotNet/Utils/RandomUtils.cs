@@ -52,7 +52,7 @@ namespace PacketDotNet.Utils
         {
             string longest="";
 
-            foreach(string L in stringsList) 
+            foreach(string L in stringsList)
             {
                 if (L.Length > longest.Length)
                 {

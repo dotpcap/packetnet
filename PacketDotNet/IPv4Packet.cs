@@ -47,10 +47,10 @@ namespace PacketDotNet
         /// </value>
         public const int HeaderMinimumLength = 20;
 
-        /// <summary> Type of service code constants for IP. Type of service describes 
+        /// <summary> Type of service code constants for IP. Type of service describes
         /// how a packet should be handled.
         /// <p>
-        /// TOS is an 8-bit record in an IP header which contains a 3-bit 
+        /// TOS is an 8-bit record in an IP header which contains a 3-bit
         /// precendence field, 4 TOS bit fields and a 0 bit.
         /// </p>
         /// <p>
@@ -115,7 +115,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// The IP header length field.  At most, this can be a 
+        /// The IP header length field.  At most, this can be a
         /// four-bit value.  The high order bits beyond the fourth bit
         /// will be ignored.
         /// </summary>
@@ -371,11 +371,11 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Fetch the time to live. TTL sets the upper limit on the number of 
+        /// <summary> Fetch the time to live. TTL sets the upper limit on the number of
         /// routers through which this IP datagram is allowed to pass.
         /// Originally intended to be the number of seconds the packet lives it is now decremented
         /// by one each time a router passes the packet on
-        /// 
+        ///
         /// 8-bit value
         /// </summary>
         public override int TimeToLive
@@ -582,9 +582,9 @@ namespace PacketDotNet
                 properties.Add("header length", HeaderLength + " bytes");
                 string diffServices =  Convert.ToString(DifferentiatedServices, 2).PadLeft(8, '0').Insert(4, " ");
                 properties.Add("differentiated services", "0x" + DifferentiatedServices.ToString("x").PadLeft(2, '0'));
-                properties.Add("", diffServices.Substring(0, 7) + ".. = [" + (DifferentiatedServices >> 2) + "] code point"); 
-                properties.Add(" ",".... .." + diffServices[6] + ". = [" + diffServices[6] + "] ECN"); 
-                properties.Add("  ",".... ..." + diffServices[7] + " = [" + diffServices[7] + "] ECE"); 
+                properties.Add("", diffServices.Substring(0, 7) + ".. = [" + (DifferentiatedServices >> 2) + "] code point");
+                properties.Add(" ",".... .." + diffServices[6] + ". = [" + diffServices[6] + "] ECN");
+                properties.Add("  ",".... ..." + diffServices[7] + " = [" + diffServices[7] + "] ECE");
                 properties.Add("total length", TotalLength.ToString());
                 properties.Add("identification", "0x" + Id.ToString("x") + " (" + Id + ")");
                 string flags = Convert.ToString(FragmentFlags, 2).PadLeft(8, '0').Substring(5, 3);

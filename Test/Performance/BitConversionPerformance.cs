@@ -59,7 +59,7 @@ namespace Test.Performance
                 //       This doesn't reduce performance by a noticable amount
                 if(actualValue != expectedValue)
                 {
-                    Assert.AreEqual(expectedValue, actualValue);                    
+                    Assert.AreEqual(expectedValue, actualValue);
                 }
             }
 
@@ -147,7 +147,7 @@ namespace Test.Performance
                 //       This doesn't reduce performance by a noticable amount
                 if(actualValue != expectedValue)
                 {
-                    Assert.AreEqual(expectedValue, actualValue);                    
+                    Assert.AreEqual(expectedValue, actualValue);
                 }
             }
 

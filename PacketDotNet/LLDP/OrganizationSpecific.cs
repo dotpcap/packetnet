@@ -187,7 +187,7 @@ namespace PacketDotNet.LLDP
         {
             return string.Format("[OrganizationSpecific: OrganizationUniqueID={0}, OrganizationDefinedSubType={1}, OrganizationDefinedInfoString={2}]", OrganizationUniqueID, OrganizationDefinedSubType, OrganizationDefinedInfoString);
         }
-        
+
         #endregion
     }
 }

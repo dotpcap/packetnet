@@ -30,7 +30,7 @@ namespace PacketDotNet
 {
     /// <summary>
     /// IPv6 packet
-    /// 
+    ///
     /// References
     /// ----------
     /// http://tools.ietf.org/html/rfc2460
@@ -199,7 +199,7 @@ namespace PacketDotNet
 
         /// <summary>
         /// Identifies the protocol encapsulated by this packet
-        /// 
+        ///
         /// Replaces IPv4's 'protocol' field, has compatible values
         /// </summary>
         public override IPProtocolType NextHeader
@@ -227,7 +227,7 @@ namespace PacketDotNet
         /// <summary>
         /// The hop limit field of the IPv6 Packet.
         /// NOTE: Replaces the 'time to live' field of IPv4
-        /// 
+        ///
         /// 8-bit value
         /// </summary>
         public override int HopLimit
@@ -444,7 +444,7 @@ namespace PacketDotNet
                 properties.Add("traffic class", ".... " + trafficClass + " .... .... .... .... .... = 0x" + TrafficClass.ToString("x").PadLeft(8, '0'));
                 string flowLabel = Convert.ToString(FlowLabel, 2).PadLeft(20, '0').Insert(16, " ").Insert(12, " ").Insert(8, " ").Insert(4, " ");
                 properties.Add("flow label", ".... .... .... " + flowLabel + " = 0x" + FlowLabel.ToString("x").PadLeft(8, '0'));
-                properties.Add("payload length", PayloadLength.ToString()); 
+                properties.Add("payload length", PayloadLength.ToString());
                 properties.Add("next header", NextHeader.ToString() + " (0x" + NextHeader.ToString("x") + ")");
                 properties.Add("hop limit", HopLimit.ToString());
                 properties.Add("source", SourceAddress.ToString());

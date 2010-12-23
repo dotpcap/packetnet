@@ -22,7 +22,7 @@ using System;
 namespace PacketDotNet
 {
     /// <summary> Code constants for internet protocol versions.
-    /// 
+    ///
     /// </summary>
     public enum IpVersion
     {

@@ -23,7 +23,7 @@ namespace PacketDotNet
     /// <summary> Code constants for ip ports. </summary>
     public enum IpPort : ushort
     {
-#pragma warning disable 1591        
+#pragma warning disable 1591
         Echo = 7,
         DayTime = 13,
         FtpData = 20,
@@ -70,7 +70,7 @@ namespace PacketDotNet
         /// Simple network management protocol
         /// </summary>
         Snmp = 161,
-        PrivilegedPortLimit = 1024        
+        PrivilegedPortLimit = 1024
 #pragma warning restore 1591
     }
 }

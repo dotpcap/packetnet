@@ -144,7 +144,7 @@ namespace Test.Misc
 
                     Assert.AreEqual(expectedTotalPackets, totalPacketsReturned,
                                    "expectedTotalPackets does not match totalPacketsReturned");
-                    
+
                     return null;
                 } else
                 {
@@ -192,7 +192,7 @@ namespace Test.Misc
                 // advance our index into the current packet file
                 indexIntoPacketFile++;
             } while((indexIntoPacketFile -1) != currentFAPI.PacketIndexes[currentPacketIndex]);
-            // does the current index match the index of the packet we want?            
+            // does the current index match the index of the packet we want?
 
             // and because we got a packet we advance our index into the FileAndPacketIndex class
             currentPacketIndex++;

@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet
 {
     /// <summary> IP protocol field encoding information.
-    /// 
+    ///
     /// </summary>
     /// FIXME: These fields are partially broken because they assume the offset for
     /// several fields and the offset is actually based on the accumulated offset

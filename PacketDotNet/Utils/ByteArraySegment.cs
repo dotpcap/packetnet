@@ -144,7 +144,7 @@ namespace PacketDotNet.Utils
         /// Returns a contiguous byte[] from this container, if necessary, by copying
         /// the bytes from the current offset into a newly allocated byte[].
         /// NeedsCopyForActualBytes can be used to determine if the copy is necessary
-        /// 
+        ///
         /// </summary>
         /// <returns>
         /// A <see cref="System.Byte"/>

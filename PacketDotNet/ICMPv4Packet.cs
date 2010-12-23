@@ -158,7 +158,7 @@ namespace PacketDotNet
 
             // store the payload bytes
             payloadPacketOrData = new PacketOrByteArraySegment();
-            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();           
+            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>

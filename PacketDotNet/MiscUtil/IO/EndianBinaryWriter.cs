@@ -97,7 +97,7 @@ namespace MiscUtil.IO
 			get { return stream; }
 		}
 		#endregion
-	
+
 		#region Public methods
 		/// <summary>
 		/// Closes the writer, including the underlying stream.

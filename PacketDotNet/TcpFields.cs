@@ -23,7 +23,7 @@ using System;
 namespace PacketDotNet
 {
     /// <summary> IP protocol field encoding information.
-    /// 
+    ///
     /// </summary>
     public struct TcpFields
     {

@@ -123,13 +123,13 @@ namespace PacketDotNet
                 // IPv6 has no checksum so only the TCP checksum needs evaluation
                 if (parentPacket.GetType() == typeof(IPv6Packet))
                     return ValidUDPChecksum;
-                // For IPv4 both the IP layer and the TCP layer contain checksums 
+                // For IPv4 both the IP layer and the TCP layer contain checksums
                 else
                     return ((IPv4Packet)ParentPacket).ValidIPChecksum && ValidUDPChecksum;
             }
         }
-		
-		/// <value>
+
+        /// <value>
         /// True if the udp checksum is valid
         /// </value>
         virtual public bool ValidUDPChecksum
@@ -142,8 +142,7 @@ namespace PacketDotNet
                 return retval;
             }
         }
-		
-		
+
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         override public System.String Color
         {
@@ -188,7 +187,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Constructor 
+        /// Constructor
         /// </summary>
         /// <param name="bas">
         /// A <see cref="ByteArraySegment"/>
@@ -207,7 +206,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Constructor 
+        /// Constructor
         /// </summary>
         /// <param name="bas">
         /// A <see cref="ByteArraySegment"/>
@@ -319,7 +318,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Generate a random packet 
+        /// Generate a random packet
         /// </summary>
         /// <returns>
         /// A <see cref="UdpPacket"/>

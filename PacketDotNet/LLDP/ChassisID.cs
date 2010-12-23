@@ -365,7 +365,7 @@ namespace PacketDotNet.LLDP
         {
             return string.Format("[ChassisID: SubType={0}, SubTypeValue={1}]", SubType, SubTypeValue);
         }
-        
+
         #endregion
     }
 }

@@ -193,7 +193,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="Bytes">
         /// A <see cref="System.Byte[]"/>
@@ -271,14 +271,14 @@ namespace PacketDotNet
         public static LLDPPacket RandomPacket()
         {
             var rnd = new Random();
-            
+
             var lldpPacket = new LLDPPacket();
 
             byte[] physicalAddressBytes = new byte[EthernetFields.MacAddressLength];
             rnd.NextBytes(physicalAddressBytes);
             var physicalAddress = new PhysicalAddress(physicalAddressBytes);
             lldpPacket.TlvCollection.Add(new ChassisID(physicalAddress));
-            
+
             byte[] networkAddress = new byte[IPv4Fields.AddressLength];
             rnd.NextBytes(networkAddress);
             lldpPacket.TlvCollection.Add(new PortID(new NetworkAddress(new IPAddress(networkAddress))));
@@ -287,7 +287,7 @@ namespace PacketDotNet
             lldpPacket.TlvCollection.Add(new TimeToLive(seconds));
 
             lldpPacket.TlvCollection.Add(new EndOfLLDPDU());
-            
+
             return lldpPacket;
         }
 

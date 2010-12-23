@@ -262,7 +262,7 @@ namespace PacketDotNet
                 properties.Add("session id", "0x" + SessionId.ToString("x"));
                 // TODO: Implement a PayloadLength property for PPPoE
                 //properties.Add("payload length", PayloadLength.ToString());
-                
+
                 // calculate the padding needed to right-justify the property names
                 int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
@@ -310,7 +310,9 @@ namespace PacketDotNet
             }
 
             return null;
-        }        /// <summary>
+        }
+
+        /// <summary>
         /// Generate a random PPPoEPacket
         /// </summary>
         /// <returns>

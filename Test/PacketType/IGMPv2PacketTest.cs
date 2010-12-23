@@ -69,7 +69,7 @@ namespace Test.PacketType
                 packetIndex++;
             }
             dev.Close();
-        }       
+        }
 
          [Test]
         public void PrintString()

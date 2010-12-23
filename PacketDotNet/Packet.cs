@@ -66,7 +66,7 @@ namespace PacketDotNet
             {
                 int totalLength = 0;
                 totalLength += header.Length;
-    
+
                 if(payloadPacketOrData.Type == PayloadType.Bytes)
                 {
                     totalLength += payloadPacketOrData.TheByteArraySegment.Length;
@@ -146,7 +146,7 @@ namespace PacketDotNet
         }
 
         /// <value>
-        /// Returns a 
+        /// Returns a
         /// </value>
         public virtual byte[] Header
         {
@@ -263,7 +263,7 @@ namespace PacketDotNet
                     var newBytes = ms.ToArray();
 
                     return new ByteArraySegment(newBytes, 0, newBytes.Length);
-                }  
+                }
             }
         }
 
@@ -361,7 +361,7 @@ namespace PacketDotNet
         /// <summary>
         /// Called to ensure that calculated values are updated before
         /// the packet bytes are retrieved
-        /// 
+        ///
         /// Classes should override this method to update things like
         /// checksums and lengths that take too much time or are too complex
         /// to update for each packet parameter change

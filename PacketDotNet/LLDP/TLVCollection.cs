@@ -48,7 +48,7 @@ namespace PacketDotNet
         /// - Prevent duplicate end tlvs from being added
         /// - Ensure that an end tlv is present
         /// - Replace any automatically added end tlvs with the user provided tlv
-        /// 
+        ///
         /// </summary>
         /// <param name="index">
         /// A <see cref="System.Int32"/>

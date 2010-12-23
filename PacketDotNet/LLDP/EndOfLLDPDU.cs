@@ -68,7 +68,7 @@ namespace PacketDotNet.LLDP
         {
             return string.Format("[EndOfLLDPDU]");
         }
-        
+
         #endregion
     }
 }

@@ -14,7 +14,7 @@ namespace MiscUtil.Conversion
 		/// </summary>
 		/// <remarks>
 		/// Different computer architectures store data using different byte orders. "Big-endian"
-		/// means the most significant byte is on the left end of a word. "Little-endian" means the 
+		/// means the most significant byte is on the left end of a word. "Little-endian" means the
 		/// most significant byte is on the right end of a word.
 		/// </remarks>
 		/// <returns>true if this converter is little-endian, false otherwise.</returns>
@@ -50,7 +50,7 @@ namespace MiscUtil.Conversion
 
 		#region Double/primitive conversions
 		/// <summary>
-		/// Converts the specified double-precision floating point number to a 
+		/// Converts the specified double-precision floating point number to a
 		/// 64-bit signed integer. Note: the endianness of this converter does not
 		/// affect the returned value.
 		/// </summary>
@@ -62,7 +62,7 @@ namespace MiscUtil.Conversion
 		}
 
 		/// <summary>
-		/// Converts the specified 64-bit signed integer to a double-precision 
+		/// Converts the specified 64-bit signed integer to a double-precision
 		/// floating point number. Note: the endianness of this converter does not
 		/// affect the returned value.
 		/// </summary>
@@ -74,7 +74,7 @@ namespace MiscUtil.Conversion
 		}
 
 		/// <summary>
-		/// Converts the specified single-precision floating point number to a 
+		/// Converts the specified single-precision floating point number to a
 		/// 32-bit signed integer. Note: the endianness of this converter does not
 		/// affect the returned value.
 		/// </summary>
@@ -86,7 +86,7 @@ namespace MiscUtil.Conversion
 		}
 
 		/// <summary>
-		/// Converts the specified 32-bit signed integer to a single-precision floating point 
+		/// Converts the specified 32-bit signed integer to a single-precision floating point
 		/// number. Note: the endianness of this converter does not
 		/// affect the returned value.
 		/// </summary>
@@ -123,7 +123,7 @@ namespace MiscUtil.Conversion
 		}
 
 		/// <summary>
-		/// Returns a double-precision floating point number converted from eight bytes 
+		/// Returns a double-precision floating point number converted from eight bytes
 		/// at a specified position in a byte array.
 		/// </summary>
 		/// <param name="value">An array of bytes.</param>
@@ -135,7 +135,7 @@ namespace MiscUtil.Conversion
 		}
 
 		/// <summary>
-		/// Returns a single-precision floating point number converted from four bytes 
+		/// Returns a single-precision floating point number converted from four bytes
 		/// at a specified position in a byte array.
 		/// </summary>
 		/// <param name="value">An array of bytes.</param>
@@ -267,7 +267,7 @@ namespace MiscUtil.Conversion
 		/// <param name="value">An array of bytes.</param>
 		/// <remarks>All the elements of value are converted.</remarks>
 		/// <returns>
-		/// A String of hexadecimal pairs separated by hyphens, where each pair 
+		/// A String of hexadecimal pairs separated by hyphens, where each pair
 		/// represents the corresponding element in value; for example, "7F-2C-4A".
 		/// </returns>
 		public static string ToString(byte[] value)
@@ -282,7 +282,7 @@ namespace MiscUtil.Conversion
 		/// <param name="startIndex">The starting position within value.</param>
 		/// <remarks>The elements from array position startIndex to the end of the array are converted.</remarks>
 		/// <returns>
-		/// A String of hexadecimal pairs separated by hyphens, where each pair 
+		/// A String of hexadecimal pairs separated by hyphens, where each pair
 		/// represents the corresponding element in value; for example, "7F-2C-4A".
 		/// </returns>
 		public static string ToString(byte[] value, int startIndex)
@@ -298,7 +298,7 @@ namespace MiscUtil.Conversion
 		/// <param name="length">The number of bytes to convert.</param>
 		/// <remarks>The length elements from array position startIndex are converted.</remarks>
 		/// <returns>
-		/// A String of hexadecimal pairs separated by hyphens, where each pair 
+		/// A String of hexadecimal pairs separated by hyphens, where each pair
 		/// represents the corresponding element in value; for example, "7F-2C-4A".
 		/// </returns>
 		public static string ToString(byte[] value, int startIndex, int length)
@@ -309,7 +309,7 @@ namespace MiscUtil.Conversion
 
 		#region	Decimal conversions
 		/// <summary>
-		/// Returns a decimal value converted from sixteen bytes 
+		/// Returns a decimal value converted from sixteen bytes
 		/// at a specified position in a byte array.
 		/// </summary>
 		/// <param name="value">An array of bytes.</param>
@@ -405,7 +405,7 @@ namespace MiscUtil.Conversion
 		{
 			return GetBytes(DoubleToInt64Bits(value), 8);
 		}
-		
+
 		/// <summary>
 		/// Returns the specified 16-bit signed integer value as an array of bytes.
 		/// </summary>
@@ -550,7 +550,7 @@ namespace MiscUtil.Conversion
 		{
 			CopyBytes(DoubleToInt64Bits(value), 8, buffer, index);
 		}
-		
+
 		/// <summary>
 		/// Copies the specified 16-bit signed integer value into the specified byte array,
 		/// beginning at the specified index.

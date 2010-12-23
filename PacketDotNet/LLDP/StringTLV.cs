@@ -115,7 +115,7 @@ namespace PacketDotNet.LLDP
         {
             return string.Format("[{0}: Description={0}]", Type, StringValue);
         }
-        
+
         #endregion
     }
 }

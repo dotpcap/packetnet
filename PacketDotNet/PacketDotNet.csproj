@@ -130,6 +130,17 @@
     <Compile Include="LLDP\TLVCollection.cs" />
     <Compile Include="WakeOnLanPacket.cs" />
     <Compile Include="StringOutputType.cs" />
+    <Compile Include="Tcp\NoOperation.cs" />
+    <Compile Include="Tcp\EndOfOptions.cs" />
+    <Compile Include="Tcp\MaximumSegmentSize.cs" />
+    <Compile Include="Tcp\Option.cs" />
+    <Compile Include="Tcp\WindowScaleFactor.cs" />
+    <Compile Include="Tcp\OptionTypes.cs" />
+    <Compile Include="Tcp\SACKPermitted.cs" />
+    <Compile Include="Tcp\SACK.cs" />
+    <Compile Include="Tcp\EchoReply.cs" />
+    <Compile Include="Tcp\TimeStamp.cs" />
+    <Compile Include="Tcp\Echo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -137,6 +148,7 @@
     <Folder Include="MiscUtil\" />
     <Folder Include="MiscUtil\IO\" />
     <Folder Include="LLDP\" />
+    <Folder Include="Tcp\" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>

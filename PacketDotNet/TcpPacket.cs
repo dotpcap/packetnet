@@ -22,6 +22,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System.Text;
 using System.Collections.Generic;
 using MiscUtil.Conversion;
+using PacketDotNet.Tcp;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -389,6 +390,10 @@ namespace PacketDotNet
                 // the length of the payload is the total payload length
                 // above, minus the length of the tcp header
                 payloadPacketOrData.TheByteArraySegment.Length = newTcpPayloadLength;
+
+                // evaluates the options field and generates a list of
+                // attached options
+                ParseOptions();
             }
         }
 
@@ -429,21 +434,6 @@ namespace PacketDotNet
             }
         }
 
-#pragma warning disable 1591
-        public enum OptionTypes
-        {
-            EndOfList = 0x0,
-            Nop = 0x1,
-            MaximumSegmentSize = 0x2,
-            WindowScale = 0x3,
-            SelectiveAckSupported = 0x4,
-            Unknown5 = 0x5,
-            Unknown6 = 0x6,
-            Unknown7 = 0x7,
-            Timestamp = 0x8 // http://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_Timestamps
-        }
-#pragma warning restore 1591
-
         /// <summary>
         /// Bytes that represent the tcp options
         /// </summary>
@@ -468,6 +458,62 @@ namespace PacketDotNet
                            optionsLength);
 
                 return optionBytes;
+            }
+        }
+
+        private void ParseOptions()
+        {
+            int offset = 0;
+            OptionTypes type;
+            byte length;
+
+            while(offset < Options.Length)
+            {
+                type = (OptionTypes)Options[offset + Option.KindFieldOffset];
+                length = Options[offset + Option.LengthFieldOffset];
+
+                switch(type)
+                {
+                    case OptionTypes.EndOfOptionList:
+                        OptionsCollection.Add(new EndOfOptions(Options, offset, length));
+                        offset += EndOfOptions.OptionLength;
+                        break;
+                    case OptionTypes.NoOperation:
+                        OptionsCollection.Add(new NoOperation(Options, offset, length));
+                        offset += NoOperation.OptionLength;
+                        break;
+                    case OptionTypes.MaximumSegmentSize:
+                        OptionsCollection.Add(new MaximumSegmentSize(Options, offset, length));
+                        offset += length;
+                        break;
+                    case OptionTypes.WindowScaleFactor:
+                        OptionsCollection.Add(new WindowScaleFactor(Options, offset, length));
+                        offset += length;
+                        break;
+                    case OptionTypes.SACKPermitted:
+                        OptionsCollection.Add(new SACKPermitted(Options, offset, length));
+                        offset += length;
+                        break;
+                    case OptionTypes.SACK:
+                        OptionsCollection.Add(new SACK(Options, offset, length));
+                        offset += length;
+                        break;
+                    case OptionTypes.Echo:
+                        OptionsCollection.Add(new Echo(Options, offset, length));
+                        offset += length;
+                        break;
+                    case OptionTypes.EchoReply:
+                        OptionsCollection.Add(new EchoReply(Options, offset, length));
+                        offset += length;
+                        break;
+                    case OptionTypes.Timestamp:
+                        OptionsCollection.Add(new TimeStamp(Options, offset, length));
+                        offset += length;
+                        break;
+                    // add more options types here
+                    default:
+                        throw new NotImplementedException("Option: " + type.ToString() + " not supported in Packet.Net yet");
+                }
             }
         }
 
@@ -532,8 +578,11 @@ namespace PacketDotNet
                 properties.Add("       ", ".... ..." + flags[7] + " = [" + flags[7] + "] fin");
                 properties.Add("window size", WindowSize.ToString());
                 properties.Add("checksum", "0x" + Checksum.ToString() + " [" + (ValidChecksum ? "valid" : "invalid") + "]");
-                // TODO: Implement an Options property to parse the options field
                 properties.Add("options", "0x" + BitConverter.ToString(Options).Replace("-", "").PadLeft(12, '0'));
+                for(int i = 0; i < OptionsCollection.Count; i++)
+                {
+                    properties.Add("option" + (i + 1).ToString(), OptionsCollection[i].ToString());
+                }
 
                 // calculate the padding needed to right-justify the property names
                 int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
@@ -600,5 +649,10 @@ namespace PacketDotNet
 
             return tcpPacket;
         }
+
+        /// <summary>
+        /// Contains the Options list attached to the TCP header
+        /// </summary>
+        public List<Option> OptionsCollection = new List<Option>();
     }
 }

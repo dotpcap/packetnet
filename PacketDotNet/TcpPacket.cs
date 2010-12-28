@@ -390,10 +390,6 @@ namespace PacketDotNet
                 // the length of the payload is the total payload length
                 // above, minus the length of the tcp header
                 payloadPacketOrData.TheByteArraySegment.Length = newTcpPayloadLength;
-
-                // evaluates the options field and generates a list of
-                // attached options
-                ParseOptions();
             }
         }
 
@@ -457,57 +453,65 @@ namespace PacketDotNet
                            optionBytes, 0,
                            optionsLength);
 
+                // evaluates the options field and generates a list of
+                //  attached options
+                ParseOptions(optionBytes);
+
                 return optionBytes;
             }
         }
 
-        private void ParseOptions()
+        private void ParseOptions(byte[] optionBytes)
         {
             int offset = 0;
             OptionTypes type;
             byte length;
 
-            while(offset < Options.Length)
+            // reset the OptionsCollection list to prepare
+            //  to be re-populated with new data
+            OptionsCollection = new List<Option>();
+
+            while(offset < optionBytes.Length)
             {
-                type = (OptionTypes)Options[offset + Option.KindFieldOffset];
-                length = Options[offset + Option.LengthFieldOffset];
+                type = (OptionTypes)optionBytes[offset + Option.KindFieldOffset];
+                length = optionBytes[offset + Option.LengthFieldOffset];
 
                 switch(type)
                 {
                     case OptionTypes.EndOfOptionList:
-                        OptionsCollection.Add(new EndOfOptions(Options, offset, length));
+                        OptionsCollection.Add(new EndOfOptions(optionBytes, offset, length));
                         offset += EndOfOptions.OptionLength;
                         break;
                     case OptionTypes.NoOperation:
-                        OptionsCollection.Add(new NoOperation(Options, offset, length));
+                        OptionsCollection.Add(new NoOperation(optionBytes, offset, length));
                         offset += NoOperation.OptionLength;
                         break;
                     case OptionTypes.MaximumSegmentSize:
-                        OptionsCollection.Add(new MaximumSegmentSize(Options, offset, length));
+                        OptionsCollection.Add(new MaximumSegmentSize(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.WindowScaleFactor:
-                        OptionsCollection.Add(new WindowScaleFactor(Options, offset, length));
+                        OptionsCollection.Add(new WindowScaleFactor(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.SACKPermitted:
-                        OptionsCollection.Add(new SACKPermitted(Options, offset, length));
+                        OptionsCollection.Add(new SACKPermitted(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.SACK:
-                        OptionsCollection.Add(new SACK(Options, offset, length));
+                        OptionsCollection.Add(new SACK(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.Echo:
-                        OptionsCollection.Add(new Echo(Options, offset, length));
+                        OptionsCollection.Add(new Echo(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.EchoReply:
-                        OptionsCollection.Add(new EchoReply(Options, offset, length));
+                        OptionsCollection.Add(new EchoReply(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.Timestamp:
-                        OptionsCollection.Add(new TimeStamp(Options, offset, length));
+                        OptionsCollection.Add(new TimeStamp(optionBytes, offset, length));
                         offset += length;
                         break;
                     // add more options types here

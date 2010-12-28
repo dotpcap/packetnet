@@ -514,6 +514,31 @@ namespace PacketDotNet
                         OptionsCollection.Add(new TimeStamp(optionBytes, offset, length));
                         offset += length;
                         break;
+                    case OptionTypes.AlternateChecksumRequest:
+                        OptionsCollection.Add(new AlternateChecksumRequest(optionBytes, offset, length));
+                        offset += length;
+                        break;
+                    case OptionTypes.AlternateChecksumData:
+                        OptionsCollection.Add(new AlternateChecksumData(optionBytes, offset, length));
+                        offset += length;
+                        break;
+                    case OptionTypes.MD5Signature:
+                        OptionsCollection.Add(new MD5Signature(optionBytes, offset, length));
+                        offset += length;
+                        break;
+                    case OptionTypes.UserTimeout:
+                        OptionsCollection.Add(new UserTimeout(optionBytes, offset, length));
+                        offset += length;
+                        break;
+                    // these fields aren't supported because they're still considered
+                    //  experimental in their respecive RFC specifications
+                    case OptionTypes.POConnectionPermitted:
+                    case OptionTypes.POServiceProfile:
+                    case OptionTypes.ConnectionCount:
+                    case OptionTypes.ConnectionCountNew:
+                    case OptionTypes.ConnectionCountEcho:
+                    case OptionTypes.QuickStartResponse:
+                        throw new NotSupportedException("Option: " + type.ToString() + " is not supported because its RFC specification is still experimental");
                     // add more options types here
                     default:
                         throw new NotImplementedException("Option: " + type.ToString() + " not supported in Packet.Net yet");

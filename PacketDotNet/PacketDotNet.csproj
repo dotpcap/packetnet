@@ -141,6 +141,11 @@
     <Compile Include="Tcp\EchoReply.cs" />
     <Compile Include="Tcp\TimeStamp.cs" />
     <Compile Include="Tcp\Echo.cs" />
+    <Compile Include="Tcp\AlternateChecksumRequest.cs" />
+    <Compile Include="Tcp\ChecksumAlgorighmType.cs" />
+    <Compile Include="Tcp\AlternateChecksumData.cs" />
+    <Compile Include="Tcp\MD5Signature.cs" />
+    <Compile Include="Tcp\UserTimeout.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

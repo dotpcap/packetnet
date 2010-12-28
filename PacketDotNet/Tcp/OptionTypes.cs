@@ -66,6 +66,46 @@ namespace PacketDotNet.Tcp
 
         /// <summary>Timestamp</summary>
         /// <remarks>See RFC 1323</remarks>
-        Timestamp = 8
+        Timestamp = 8,
+
+        /// <summary>Partial Order Connection Permitted (experimental)</summary>
+        /// <remarks>See RFC 1693</remarks>
+        POConnectionPermitted = 9,
+
+        /// <summary>Partial Order Service Profile (experimental)</summary>
+        /// <remarks>See RFC 1693</remarks>
+        POServiceProfile = 10,
+
+        /// <summary>Connection Count (experimental)</summary>
+        /// <remarks>See RFC 1644</remarks>
+        ConnectionCount = 11,
+
+        /// <summary>Connection Count New (experimental)</summary>
+        /// <remarks>See RFC 1644</remarks>
+        ConnectionCountNew = 12,
+
+        /// <summary>Connection Count Echo (experimental)</summary>
+        /// <remarks>See RFC 1644</remarks>
+        ConnectionCountEcho = 13,
+
+        /// <summary>Alternate Checksum Request</summary>
+        /// <remarks>See RFC 1146</remarks>
+        AlternateChecksumRequest = 14,
+
+        /// <summary>Alternate Checksum Data</summary>
+        /// <remarks>See RFC 1146</remarks>
+        AlternateChecksumData = 15,
+
+        /// <summary>MD5 Signature</summary>
+        /// <remarks>See RFC 2385</remarks>
+        MD5Signature = 19,
+
+        /// <summary>Quick-Start Response (experimental)</summary>
+        /// <remarks>See RFC 4782</remarks>
+        QuickStartResponse = 27,
+
+        /// <summary>User Timeout</summary>
+        /// <remarks>See RFC 5482</remarks>
+        UserTimeout = 28
     }
 }

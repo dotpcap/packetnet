@@ -229,7 +229,9 @@ namespace Test.Misc
         private void OutputPacket(Packet p, StringOutputType outputType)
         {
             Console.WriteLine(currentPacketDescription + " - " + outputType);
-            Console.WriteLine(p.ToString(outputType));
+            Console.Write(p.ToString(outputType));
+            if(outputType == StringOutputType.Verbose || outputType == StringOutputType.VerboseColored)
+                Console.Write(p.PrintHex());
             Console.WriteLine();
         }
 

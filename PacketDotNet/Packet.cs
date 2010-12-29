@@ -20,6 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 ﻿using System;
 using System.IO;
+using System.Text;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -395,6 +396,81 @@ namespace PacketDotNet
             {
                 return String.Empty;
             }
+        }
+
+        /// <summary>
+        /// Prints the Packet PayloadData in Hex format
+        ///  With the 16-byte segment number, raw bytes, and parsed ascii output
+        /// Ex:
+        ///  0010  00 18 82 6c 7c 7f 00 c0  9f 77 a3 b0 88 64 11 00   ...1|... .w...d..
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
+        public string PrintHex()
+        {
+            byte[] data = BytesHighPerformance.Bytes;
+            var buffer = new StringBuilder();
+            string segmentNumber = "";
+            string bytes = "";
+            string ascii = "";
+
+            buffer.AppendLine("Data:  ******* Raw Hex Output - length=" + data.Length + " bytes");
+            buffer.AppendLine("Data: Segment:                   Bytes:                              Ascii:");
+            buffer.AppendLine("Data: --------------------------------------------------------------------------");
+
+            // parse the raw data
+            for(int i = 1; i <= data.Length; i++)
+            {
+                // add the current byte to the bytes hex string
+                bytes += (data[i-1].ToString("x")).PadLeft(2, '0') + " ";
+
+                // add the current byte to the asciiBytes array for later processing
+                if(data[i-1] < 0x21 || data[i-1] > 0x7e)
+                {
+                    ascii += ".";
+                }
+                else
+                {
+                    ascii += Encoding.ASCII.GetString(new byte[1] { data[i-1] });
+                }
+
+                // add an additional space to split the bytes into
+                //  two groups of 8 bytes
+                if(i % 16 != 0 && i % 8 == 0)
+                {
+                    bytes += " ";
+                    ascii += " ";
+                }
+
+                // append the output string
+                if(i % 16 == 0)
+                {
+                    // add the 16 byte segment number
+                    segmentNumber = ((((i - 16) / 16) * 10).ToString()).PadLeft(4, '0');
+
+                    // build the line
+                    buffer.AppendLine("Data: " + segmentNumber + "  " + bytes + "  " + ascii);
+
+                    // reset for the next line
+                    bytes = "";
+                    ascii = "";
+
+                    continue;
+                }
+
+                // handle the last pass
+                if(i == data.Length)
+                {
+                    // add the 16 byte segment number
+                    segmentNumber = (((((i - 16) / 16) + 1) * 10).ToString()).PadLeft(4, '0');
+
+                    // build the line
+                    buffer.AppendLine("Data: " + (segmentNumber.ToString()).PadLeft(4, '0') + "  " + bytes.PadRight(49, ' ') + "  " + ascii);
+                }
+            }
+
+            return buffer.ToString();
         }
 
         /// <value>

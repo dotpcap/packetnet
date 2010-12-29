@@ -618,9 +618,13 @@ namespace PacketDotNet
                 properties.Add("window size", WindowSize.ToString());
                 properties.Add("checksum", "0x" + Checksum.ToString() + " [" + (ValidChecksum ? "valid" : "invalid") + "]");
                 properties.Add("options", "0x" + BitConverter.ToString(Options).Replace("-", "").PadLeft(12, '0'));
-                for(int i = 0; i < OptionsCollection.Count; i++)
+                var parsedOptions = OptionsCollection;
+                if(parsedOptions != null)
                 {
-                    properties.Add("option" + (i + 1).ToString(), OptionsCollection[i].ToString());
+                    for(int i = 0; i < parsedOptions.Count; i++)
+                    {
+                        properties.Add("option" + (i + 1).ToString(), parsedOptions[i].ToString());
+                    }
                 }
 
                 // calculate the padding needed to right-justify the property names

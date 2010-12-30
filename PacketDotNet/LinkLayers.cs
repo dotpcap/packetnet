@@ -104,5 +104,19 @@ namespace PacketDotNet
 
         /// <summary> Linux cooked sockets.</summary>
         LinuxSLL = 113,
+
+        /// <summary>
+        /// Header for 802.11 plus a number of bits of link-layer information
+        /// including radio information, used by some recent BSD drivers as
+        /// well as the madwifi Atheros driver for Linux.
+        /// </summary>
+        Ieee80211_Radio = 127,
+
+        /// <summary>
+        /// Per Packet Information encapsulated packets.
+        /// DLT_ requested by Gianluca Varenni <gianluca.varenni@cacetech.com>.
+        /// See http://www.cacetech.com/documents/PPI%20Header%20format%201.0.7.pdf
+        /// </summary>
+        PerPacketInformation = 192,
     }
 }

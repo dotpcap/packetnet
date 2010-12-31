@@ -37,9 +37,9 @@ namespace PacketDotNet
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
-#pragma warning disable 0169
+#pragma warning disable 0169, 0649
         private static readonly ILogInactive log;
-#pragma warning restore 0169
+#pragma warning restore 0169, 0649
 #endif
 
         internal ByteArraySegment header;
@@ -334,6 +334,9 @@ namespace PacketDotNet
                 break;
             case LinkLayers.Ppp:
                 p = new PPPPacket(bas);
+                break;
+            case LinkLayers.Ieee80211:
+                p = new Ieee80211MacFrame(bas);
                 break;
             default:
                 throw new System.NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");

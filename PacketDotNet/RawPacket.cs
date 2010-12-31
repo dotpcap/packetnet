@@ -67,6 +67,12 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>Output this packet as a readable string</summary>
+        public override System.String ToString()
+        {
+            return ToString(StringOutputType.Normal);
+        }
+
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public string ToString(StringOutputType outputFormat)
         {

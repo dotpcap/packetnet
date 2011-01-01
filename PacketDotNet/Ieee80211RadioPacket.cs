@@ -199,9 +199,6 @@ namespace PacketDotNet
                 var offset = header.Offset +
                              Ieee80211RadioFields.PresentPosition +
                              (bitmasks.Length) * Marshal.SizeOf(typeof(UInt32));
-                Console.WriteLine("offset {0}", offset);
-                Console.WriteLine("Length - offset: {0}", Length - offset);
-                Console.WriteLine("Length: {0}", Length);
                 var br = new BinaryReader(new MemoryStream(header.Bytes,
                                                            offset,
                                                            (int)(Length - offset)));
@@ -220,7 +217,6 @@ namespace PacketDotNet
                     {
                         if (ba[x] == true)
                         {
-                            Console.WriteLine("bitIndex {0}", bitIndex);
                             retval.Add(RadioTapField.Parse(bitIndex, br));
                         }
                         bitIndex++;

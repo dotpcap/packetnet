@@ -338,6 +338,9 @@ namespace PacketDotNet
             case LinkLayers.Ieee80211:
                 p = new Ieee80211MacFrame(bas);
                 break;
+            case LinkLayers.Ieee80211_Radio:
+                p = new Ieee80211RadioPacket(bas);
+                break;
             default:
                 throw new System.NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");
             }

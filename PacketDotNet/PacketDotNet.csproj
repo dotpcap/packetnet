@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -49,6 +49,15 @@
     <Compile Include="DataLinkPacket.cs" />
     <Compile Include="EthernetPacket.cs" />
     <Compile Include="EthernetPacketType.cs" />
+    <Compile Include="Ieee80211FrameControlField.cs" />
+    <Compile Include="Ieee80211MacFields.cs" />
+    <Compile Include="Ieee80211MacFrame.cs" />
+    <Compile Include="Ieee80211RadioPacket.cs" />
+    <Compile Include="Ieee80211RadioFields.cs" />
+    <Compile Include="Ieee80211RadioTapChannelFlags.cs" />
+    <Compile Include="Ieee80211RadioTapFields.cs" />
+    <Compile Include="Ieee80211RadioTapFlags.cs" />
+    <Compile Include="Ieee80211RadioTapType.cs" />
     <Compile Include="IpPacket.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="SessionPacket.cs" />
@@ -148,13 +157,7 @@
     <Compile Include="Tcp\UserTimeout.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="Utils\" />
-    <Folder Include="MiscUtil\" />
-    <Folder Include="MiscUtil\IO\" />
-    <Folder Include="LLDP\" />
-    <Folder Include="Tcp\" />
-  </ItemGroup>
+  <ItemGroup />
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>

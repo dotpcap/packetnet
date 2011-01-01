@@ -143,7 +143,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
-                buffer.AppendFormat("{0}[Ieee80211RadioPacket: Version={2}, Length={3}, Present[0]={4}]{1}",
+                buffer.AppendFormat("{0}[Ieee80211RadioPacket: Version={2}, Length={3}, Present[0]=0x{4:x}]{1}",
                     color,
                     colorEscape,
                     Version,

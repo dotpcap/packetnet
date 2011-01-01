@@ -324,6 +324,8 @@ namespace PacketDotNet
             Packet p;
             var bas = new ByteArraySegment(PacketData);
 
+            log.DebugFormat("LinkLayer {0}", LinkLayer);
+
             switch(LinkLayer)
             {
             case LinkLayers.Ethernet:

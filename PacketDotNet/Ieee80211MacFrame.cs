@@ -76,6 +76,9 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Frame control field
+        /// </summary>
         public Ieee80211FrameControlField FrameControl
         {
             get;
@@ -135,8 +138,14 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Interfaces for all inner frames
+        /// </summary>
         public interface InnerFramePacket
         {
+            /// <summary>
+            /// Length of the frame
+            /// </summary>
             int FrameSize { get; }
         }
 
@@ -146,6 +155,9 @@ namespace PacketDotNet
         /// </summary>
         public class RTSFrame : Packet, InnerFramePacket
         {
+            /// <summary>
+            /// ReceiverAddress
+            /// </summary>
             public PhysicalAddress ReceiverAddress
             {
                 get
@@ -159,6 +171,9 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// TransmitterAddress
+            /// </summary>
             public PhysicalAddress TransmitterAddress
             {
                 get
@@ -172,6 +187,9 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Length of the frame
+            /// </summary>
             public int FrameSize
             {
                 get
@@ -182,6 +200,15 @@ namespace PacketDotNet
 
             private Ieee80211MacFrame parent;
 
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="parent">
+            /// A <see cref="Ieee80211MacFrame"/>
+            /// </param>
+            /// <param name="bas">
+            /// A <see cref="ByteArraySegment"/>
+            /// </param>
             public RTSFrame(Ieee80211MacFrame parent, ByteArraySegment bas)
             {
                 this.parent = parent;
@@ -189,6 +216,12 @@ namespace PacketDotNet
                 header.Length = FrameSize;
             }
 
+            /// <summary>
+            /// ToString() override
+            /// </summary>
+            /// <returns>
+            /// A <see cref="System.String"/>
+            /// </returns>
             public override string ToString()
             {
                 return string.Format("[RTSFrame RA {0}, TA {1}]",
@@ -197,8 +230,14 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Format of a CTS or an ACK frame
+        /// </summary>
         public class CTSOrACKFrame : Packet, InnerFramePacket
         {
+            /// <summary>
+            /// Receiver address
+            /// </summary>
             public PhysicalAddress ReceiverAddress
             {
                 get
@@ -212,6 +251,9 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Length of the frame
+            /// </summary>
             public int FrameSize
             {
                 get
@@ -222,6 +264,15 @@ namespace PacketDotNet
 
             private Ieee80211MacFrame parent;
 
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="parent">
+            /// A <see cref="Ieee80211MacFrame"/>
+            /// </param>
+            /// <param name="bas">
+            /// A <see cref="ByteArraySegment"/>
+            /// </param>
             public CTSOrACKFrame(Ieee80211MacFrame parent, ByteArraySegment bas)
             {
                 this.parent = parent;
@@ -229,6 +280,12 @@ namespace PacketDotNet
                 header.Length = FrameSize;
             }
 
+            /// <summary>
+            /// ToString() override
+            /// </summary>
+            /// <returns>
+            /// A <see cref="System.String"/>
+            /// </returns>
             public override string ToString()
             {
                 return string.Format("[CTSOrACKFrame RA {0}]",
@@ -245,6 +302,12 @@ namespace PacketDotNet
             set;
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
+        /// </param>
         public Ieee80211MacFrame(ByteArraySegment bas)
         {
             log.Debug("");
@@ -282,6 +345,12 @@ namespace PacketDotNet
             payloadPacketOrData.TheByteArraySegment.Length -= Ieee80211MacFields.FrameCheckSequenceLength;
         }
 
+        /// <summary>
+        /// ToString() override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/>
+        /// </returns>
         public override string ToString()
         {
             return string.Format("FrameControl {0}, InnerFrame {1}, FrameCheckSequence {2}",

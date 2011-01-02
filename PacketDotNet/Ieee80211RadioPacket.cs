@@ -185,6 +185,9 @@ namespace PacketDotNet
             return buffer.ToString();
         }
 
+        /// <summary>
+        /// Array of radio tap fields
+        /// </summary>
         public List<RadioTapField> RadioTapFields
         {
             get

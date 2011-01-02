@@ -114,7 +114,7 @@ namespace PacketDotNet
 
         /// <summary>
         /// Per Packet Information encapsulated packets.
-        /// DLT_ requested by Gianluca Varenni <gianluca.varenni@cacetech.com>.
+        /// DLT_ requested by Gianluca Varenni &lt;gianluca.varenni@cacetech.com&gt;.
         /// See http://www.cacetech.com/documents/PPI%20Header%20format%201.0.7.pdf
         /// </summary>
         PerPacketInformation = 192,

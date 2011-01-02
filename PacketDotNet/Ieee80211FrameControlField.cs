@@ -40,36 +40,153 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Types of frames
+        /// </summary>
         public enum FrameTypes
         {
+            /// <summary>
+            /// Association request
+            /// </summary>
             ManagementAssociationRequest = 0x00,
+
+            /// <summary>
+            /// Association response
+            /// </summary>
             ManagementAssociationResponse = 0x01,
+
+            /// <summary>
+            /// Reassociation request
+            /// </summary>
             ManagementReassociationRequest = 0x02,
+
+            /// <summary>
+            /// Reassociation response
+            /// </summary>
             ManagementReassociationResponse = 0x03,
+
+            /// <summary>
+            /// Probe request
+            /// </summary>
             ManagementProbeRequest = 0x04,
+
+            /// <summary>
+            /// Probe response
+            /// </summary>
             ManagementProbeResponse = 0x5,
+
+            /// <summary>
+            /// Reserved 0
+            /// </summary>
             ManagementReserved0 = 0x6,
+
+            /// <summary>
+            /// Reserved 1
+            /// </summary>
             ManagementReserved1 = 0x7,
+
+            /// <summary>
+            /// Becon
+            /// </summary>
             ManagementBecon = 0x8,
+
+            /// <summary>
+            /// ATIM
+            /// </summary>
             ManagementATIM = 0x9,
+
+            /// <summary>
+            /// Disassociation
+            /// </summary>
             ManagementDisassociation = 0xA,
+
+            /// <summary>
+            /// Authentication
+            /// </summary>
             ManagementAuthentication = 0xB,
+
+            /// <summary>
+            /// Deauthentication
+            /// </summary>
             ManagementDeauthentication = 0xC,
+
+            /// <summary>
+            /// Reserved 2
+            /// </summary>
             ManagementReserved2 = 0xD,
+
+            /// <summary>
+            /// Reserved 3
+            /// </summary>
             ManagementReserved3 = 0xE,
+
+            /// <summary>
+            /// PS poll
+            /// </summary>
             ControlPSPoll = 0x1A,
+
+            /// <summary>
+            /// RTS
+            /// </summary>
             ControlRTS = 0x1B,
+
+            /// <summary>
+            /// CTS
+            /// </summary>
             ControlCTS = 0x1C,
+
+            /// <summary>
+            /// ACK
+            /// </summary>
             ControlACK = 0x1D,
+
+            /// <summary>
+            /// CF-End
+            /// </summary>
             ControlCFEnd = 0x1E,
+            /// <summary>
+            /// CF-End CF-Ack
+            /// </summary>
             ControlCFEndCFACK = 0x1F,
+
+            /// <summary>
+            /// Data
+            /// </summary>
             Data = 0x20,
+
+            /// <summary>
+            /// CF-ACK
+            /// </summary>
             DataCFACK = 0x21,
+
+            /// <summary>
+            /// CF-Poll
+            /// </summary>
             DataCFPoll = 0x22,
+
+            /// <summary>
+            /// CF-Ack CF-Poll
+            /// </summary>
             DataCFAckCFPoll = 0x23,
+
+            /// <summary>
+            /// Null function no data
+            /// </summary>
             DataNullFunctionNoData = 0x24,
+
+            /// <summary>
+            /// CF-Ack No data
+            /// </summary>
             DataCFAckNoData = 0x25,
+
+            /// <summary>
+            /// CF-Poll no data
+            /// </summary>
             DataCFPollNoData = 0x26,
+
+            /// <summary>
+            /// CF-Ack CF-Poll no data
+            /// </summary>
             DataCFAckCFPollNoData = 0x27
         };
 
@@ -85,6 +202,9 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Is set to 1 when the frame is sent to Distribution System (DS)
+        /// </summary>
         public bool ToDS
         {
             get
@@ -93,6 +213,9 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Is set to 1 when the frame is received from the Distribution System (DS)
+        /// </summary>
         public bool FromDS
         {
             get
@@ -101,6 +224,10 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// More Fragment is set to 1 when there are more fragments belonging to the same
+        /// frame following the current fragment
+        /// </summary>
         public bool MoreFragments
         {
             get
@@ -109,6 +236,10 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Indicates that this fragment is a retransmission of a previously transmitted fragment.
+        /// (For receiver to recognize duplicate transmissions of frames)
+        /// </summary>
         public bool Retry
         {
             get
@@ -117,6 +248,9 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        ///  Indicates the power management mode that the station will be in after the transmission of the frame
+        /// </summary>
         public bool PowerManagement
         {
             get
@@ -125,6 +259,9 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Indicates that there are more frames buffered for this station
+        /// </summary>
         public bool MoreData
         {
             get
@@ -133,6 +270,9 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Indicates that the frame body is encrypted according to the WEP (wired equivalent privacy) algorithm
+        /// </summary>
         public bool Wep
         {
             get
@@ -155,6 +295,12 @@ namespace PacketDotNet
 
         private UInt16 Field;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="field">
+        /// A <see cref="UInt16"/>
+        /// </param>
         public Ieee80211FrameControlField(UInt16 field)
         {
             this.Field = field;

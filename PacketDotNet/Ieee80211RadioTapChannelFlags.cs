@@ -22,6 +22,9 @@ using System;
 
 namespace PacketDotNet
 {
+    /// <summary>
+    /// Channel flags
+    /// </summary>
     [Flags]
     public enum Ieee80211RadioTapChannelFlags
     {

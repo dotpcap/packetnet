@@ -21,7 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Net.NetworkInformation;
 using NUnit.Framework;
-using SharpPcap;
+using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
 
@@ -166,9 +166,9 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
             dev.Open();
 
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             int packetIndex = 0;
-            while((rawPacket = dev.GetNextRawPacket()) != null)
+            while((rawPacket = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket((LinkLayers)rawPacket.LinkLayerType,
                                               new PosixTimeval(rawPacket.Timeval.Seconds, rawPacket.Timeval.MicroSeconds),
@@ -238,10 +238,10 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
             dev.Open();
 
-            SharpPcap.Packets.Packet p;
+            RawPacket p;
             p = dev.GetNextPacket();
 
-            var e = new EthernetPacket(new ByteArraySegment(p.Bytes));
+            var e = new EthernetPacket(new ByteArraySegment(p.Data));
             Console.WriteLine("ethernet.ToString() {0}", e.ToString());
 
             Assert.AreEqual(PhysicalAddress.Parse("00-13-10-03-71-47"), e.SourceHwAddress);
@@ -258,10 +258,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var eth = (EthernetPacket)p;
@@ -276,10 +276,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var eth = (EthernetPacket)p;

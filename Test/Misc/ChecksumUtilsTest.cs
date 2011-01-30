@@ -20,7 +20,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
-using SharpPcap.Util;
 
 namespace Test.Misc
 {
@@ -36,7 +35,7 @@ namespace Test.Misc
                 bytes[i] = 0x7f;
             }
 
-            var result = SharpPcap.ChecksumUtils.OnesSum(bytes);
+            var result = PacketDotNet.Utils.ChecksumUtils.OnesSum(bytes);
             Console.WriteLine("result: {0}", result);
         }
     }

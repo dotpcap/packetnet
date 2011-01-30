@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
-using SharpPcap;
+using SharpPcap.LibPcap;
 using PacketDotNet;
 
 namespace Test.PacketType
@@ -67,13 +67,11 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/LinuxCookedCapture.pcap");
             dev.Open();
 
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             int packetIndex = 0;
-            while((rawPacket = dev.GetNextRawPacket()) != null)
+            while((rawPacket = dev.GetNextPacket()) != null)
             {
-                Packet p = Packet.ParsePacket((LinkLayers)rawPacket.LinkLayerType,
-                                              new PosixTimeval(rawPacket.Timeval.Seconds, rawPacket.Timeval.MicroSeconds),
-                                              rawPacket.Data);
+                Packet p = Packet.ParsePacket(rawPacket);
                 switch(packetIndex)
                 {
                 case 0:
@@ -102,12 +100,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/LinuxCookedCapture.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            Packet p = Packet.ParsePacket((LinkLayers)rawPacket.LinkLayerType,
-                              new PosixTimeval(rawPacket.Timeval.Seconds, rawPacket.Timeval.MicroSeconds),
-                              rawPacket.Data);
+            rawPacket = dev.GetNextPacket();
+            Packet p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var l = (LinuxSLLPacket)p;
@@ -122,12 +118,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/LinuxCookedCapture.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            Packet p = Packet.ParsePacket((LinkLayers)rawPacket.LinkLayerType,
-                              new PosixTimeval(rawPacket.Timeval.Seconds, rawPacket.Timeval.MicroSeconds),
-                              rawPacket.Data);
+            rawPacket = dev.GetNextPacket();
+            Packet p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var l = (LinuxSLLPacket)p;

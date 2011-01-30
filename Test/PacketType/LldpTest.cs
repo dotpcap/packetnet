@@ -21,7 +21,7 @@ using System;
 using System.Net;
 using System.Net.NetworkInformation;
 using NUnit.Framework;
-using SharpPcap;
+using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.LLDP;
 using PacketDotNet.Utils;
@@ -171,10 +171,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/lldp.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var l = LLDPPacket.GetEncapsulated(p);
@@ -269,10 +269,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/lldp.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var l = LLDPPacket.GetEncapsulated(p);
@@ -287,10 +287,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/lldp.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var l = LLDPPacket.GetEncapsulated(p);

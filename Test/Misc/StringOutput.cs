@@ -104,7 +104,7 @@ namespace Test.Misc
 
         private static FileAndPacketIndexes currentFAPI;
 
-        private static SharpPcap.OfflinePcapDevice offlinePcapDevice;
+        private static SharpPcap.LibPcap.OfflinePcapDevice offlinePcapDevice;
 
         private static int totalPacketsReturned;
         private static int expectedTotalPackets;
@@ -159,7 +159,7 @@ namespace Test.Misc
                     {
                         log.DebugFormat("Opening {0}", currentFAPI.Filename);
 
-                        offlinePcapDevice = new SharpPcap.OfflinePcapDevice(currentFAPI.Filename);
+                        offlinePcapDevice = new SharpPcap.LibPcap.OfflinePcapDevice(currentFAPI.Filename);
                         offlinePcapDevice.Open();
 
                         fileAndPacketIndex++;
@@ -182,10 +182,10 @@ namespace Test.Misc
                 log.Debug("retrieving packet");
 
                 // read the next packet
-                var packet = offlinePcapDevice.GetNextRawPacket();
+                var packet = offlinePcapDevice.GetNextPacket();
                 Assert.IsNotNull(packet, "Expected a valid packet but it was null");
 
-                p = SharpPcapRawPacketToPacket.RawPacketToPacket(packet);
+                p = Packet.ParsePacket(packet);
 
                 currentPacketDescription = currentFAPI.PacketDescription[currentPacketIndex];
 

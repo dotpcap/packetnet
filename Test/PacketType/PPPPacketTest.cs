@@ -22,7 +22,7 @@ using System;
 using NUnit.Framework;
 using PacketDotNet;
 using PacketDotNet.Utils;
-using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -36,10 +36,10 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/PPPoEPPP.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
-            dev.GetNextRawPacket();
-            var rawPacket = dev.GetNextRawPacket();
+            dev.GetNextPacket();
+            var rawPacket = dev.GetNextPacket();
             dev.Close();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var ppp = PPPPacket.GetEncapsulated(p);
@@ -55,10 +55,10 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/PPPoEPPP.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
-            dev.GetNextRawPacket();
-            var rawPacket = dev.GetNextRawPacket();
+            dev.GetNextPacket();
+            var rawPacket = dev.GetNextPacket();
             dev.Close();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var ppp = PPPPacket.GetEncapsulated(p);

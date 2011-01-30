@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
-using SharpPcap;
+using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
 
@@ -46,9 +46,9 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/tcp_with_extra_bytes.pcap");
             dev.Open();
 
-            SharpPcap.Packets.RawPacket rawPacket;
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            RawPacket rawPacket;
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Assert.IsNotNull(p);
 
@@ -71,9 +71,9 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
 
-            SharpPcap.Packets.RawPacket rawPacket;
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            RawPacket rawPacket;
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Assert.IsNotNull(p);
 
@@ -109,9 +109,9 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
 
-            SharpPcap.Packets.RawPacket rawPacket;
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            RawPacket rawPacket;
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Assert.IsNotNull(p);
 
@@ -143,10 +143,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var tcp = TcpPacket.GetEncapsulated(p);
@@ -161,10 +161,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var tcp = TcpPacket.GetEncapsulated(p);

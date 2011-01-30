@@ -22,7 +22,7 @@ using System;
 using NUnit.Framework;
 using PacketDotNet;
 using PacketDotNet.Utils;
-using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -32,21 +32,21 @@ namespace Test.PacketType
         [Test]
         public void TestParsingPPPoePPPPacket()
         {
-            var dev = new SharpPcap.OfflinePcapDevice("../../CaptureFiles/PPPoEPPP.pcap");
+            var dev = new OfflinePcapDevice("../../CaptureFiles/PPPoEPPP.pcap");
             dev.Open();
 
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Packet packet;
 
             // first packet is a udp packet
-            rawPacket = dev.GetNextRawPacket();
-            packet = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            packet = Packet.ParsePacket(rawPacket);
             var udpPacket = UdpPacket.GetEncapsulated(packet);
             Assert.IsNotNull(udpPacket, "Expected a valid udp packet for the first packet");
 
             // second packet is the PPPoe Ptp packet
-            rawPacket = dev.GetNextRawPacket();
-            packet = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            packet = Packet.ParsePacket(rawPacket);
             var anotherUdpPacket = UdpPacket.GetEncapsulated(packet);
             Assert.IsNotNull(anotherUdpPacket, "Expected a valid udp packet for the second packet as well");
 
@@ -60,10 +60,10 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/PPPoEPPP.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
-            dev.GetNextRawPacket();
-            var rawPacket = dev.GetNextRawPacket();
+            dev.GetNextPacket();
+            var rawPacket = dev.GetNextPacket();
             dev.Close();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var pppoe = PPPoEPacket.GetEncapsulated(p);
@@ -79,10 +79,10 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/PPPoEPPP.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
-            dev.GetNextRawPacket();
-            var rawPacket = dev.GetNextRawPacket();
+            dev.GetNextPacket();
+            var rawPacket = dev.GetNextPacket();
             dev.Close();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var pppoe = PPPoEPacket.GetEncapsulated(p);

@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
-using SharpPcap;
+using SharpPcap.LibPcap;
 using PacketDotNet;
 
 namespace Test.PacketType
@@ -36,14 +36,11 @@ namespace Test.PacketType
         {
             var dev = new OfflinePcapDevice("../../CaptureFiles/ICMPv4.pcap");
             dev.Open();
-            var rawPacket = dev.GetNextRawPacket();
+            var rawPacket = dev.GetNextPacket();
             dev.Close();
 
             // Parse an icmp request
-            Packet p = Packet.ParsePacket((LinkLayers)rawPacket.LinkLayerType,
-                                          new PosixTimeval(rawPacket.Timeval.Seconds,
-                                                           rawPacket.Timeval.MicroSeconds),
-                                          rawPacket.Data);
+            Packet p = Packet.ParsePacket(rawPacket);
 
             Assert.IsNotNull(p);
 
@@ -67,10 +64,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/ICMPv4.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var icmp = ICMPv4Packet.GetEncapsulated(p);
@@ -85,10 +82,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/ICMPv4.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var icmp = ICMPv4Packet.GetEncapsulated(p);

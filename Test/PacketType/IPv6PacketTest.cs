@@ -22,7 +22,7 @@ using System;
 using System.Net.NetworkInformation;
 using NUnit.Framework;
 
-using SharpPcap;
+using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
 
@@ -63,11 +63,11 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
             dev.Open();
 
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             int packetIndex = 0;
-            while((rawPacket = dev.GetNextRawPacket()) != null)
+            while((rawPacket = dev.GetNextPacket()) != null)
             {
-                var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+                var p = Packet.ParsePacket(rawPacket);
                 Console.WriteLine("got packet");
                 switch(packetIndex)
                 {
@@ -108,10 +108,10 @@ namespace Test.PacketType
                                       0x3723};
 
             int packetIndex = 0;
-            SharpPcap.Packets.RawPacket rawPacket;
-            while ((rawPacket = dev.GetNextRawPacket()) != null)
+            RawPacket rawPacket;
+            while ((rawPacket = dev.GetNextPacket()) != null)
             {
-                var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+                var p = Packet.ParsePacket(rawPacket);
                 var t = TcpPacket.GetEncapsulated(p);
                 Assert.IsNotNull(t, "Expected t to not be null");
                 Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
@@ -161,10 +161,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/ipv6_http.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var ip = IPv6Packet.GetEncapsulated(p);
@@ -179,10 +179,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/ipv6_http.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var ip = IPv6Packet.GetEncapsulated(p);

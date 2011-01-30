@@ -16,7 +16,7 @@ namespace CapturingAndParsingPackets
             Console.WriteLine("PacketDotNet example using SharpPcap {0}", ver);
 
             // Retrieve the device list
-            var devices = LivePcapDeviceList.Instance;
+            var devices = CaptureDeviceList.Instance;
 
             // If no devices were found print an error
             if(devices.Count < 1)
@@ -33,7 +33,7 @@ namespace CapturingAndParsingPackets
             int i = 0;
 
             // Print out the devices
-            foreach(LivePcapDevice dev in devices)
+            foreach(var dev in devices)
             {
                 /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
@@ -51,7 +51,7 @@ namespace CapturingAndParsingPackets
             // use a PcapDevice.OnPacketArrival handler
             Console.CancelKeyPress += HandleCancelKeyPress;
 
-            LivePcapDevice device = devices[i];
+            var device = devices[i];
 
             // Open the device for capturing
             int readTimeoutMilliseconds = 1000;
@@ -76,7 +76,7 @@ namespace CapturingAndParsingPackets
 
                 // use PacketDotNet to parse this packet and print out
                 // its high level information
-                Packet p = Packet.ParsePacket(rawPacket);;
+                Packet p = Packet.ParsePacket(rawPacket);
 
                 Console.WriteLine(p.ToString());
             }
@@ -84,7 +84,7 @@ namespace CapturingAndParsingPackets
             Console.WriteLine("-- Capture stopped");
 
             // Print out the device statistics
-            Console.WriteLine(device.Statistics().ToString());
+            Console.WriteLine(device.Statistics.ToString());
 
             // Close the pcap device
             device.Close();

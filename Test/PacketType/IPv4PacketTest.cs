@@ -22,7 +22,7 @@ using System;
 using NUnit.Framework;
 using PacketDotNet;
 using PacketDotNet.Utils;
-using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -58,10 +58,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var ip = IPv4Packet.GetEncapsulated(p);
@@ -76,10 +76,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
-            SharpPcap.Packets.RawPacket rawPacket;
+            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextRawPacket();
-            var p = SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+            rawPacket = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawPacket);
 
             Console.WriteLine("Parsing");
             var ip = IPv4Packet.GetEncapsulated(p);
@@ -104,14 +104,14 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/ipv4_invalid_total_length.pcap");
             dev.Open();
 
-            var rawPacket = dev.GetNextRawPacket();
+            var rawPacket = dev.GetNextPacket();
 
             dev.Close();
 
             bool caughtExpectedException = false;
             try
             {
-                SharpPcapRawPacketToPacket.RawPacketToPacket(rawPacket);
+                Packet.ParsePacket(rawPacket);
             } catch(System.InvalidOperationException)
             {
                 caughtExpectedException = true;

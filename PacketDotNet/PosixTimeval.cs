@@ -276,6 +276,15 @@ namespace PacketDotNet
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Compare this to another
+        /// </summary>
+        /// <param name="that">
+        /// A <see cref="PosixTimeval"/>
+        /// </param>
+        /// <returns>
+        /// A <see cref="System.Int32"/>
+        /// </returns>
         public int CompareTo(PosixTimeval that)
         {
             if (this < that)

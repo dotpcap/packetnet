@@ -283,13 +283,16 @@ namespace PacketDotNet
                                                               ParentPacket);
                 break;
             case IPProtocolType.ICMP:
-                payloadPacketOrData.ThePacket = new ICMPv4Packet(payload);
+                payloadPacketOrData.ThePacket = new ICMPv4Packet(payload,
+                                                                 ParentPacket);
                 break;
             case IPProtocolType.ICMPV6:
-                payloadPacketOrData.ThePacket = new ICMPv6Packet(payload);
+                payloadPacketOrData.ThePacket = new ICMPv6Packet(payload,
+                                                                 ParentPacket);
                 break;
             case IPProtocolType.IGMP:
-                payloadPacketOrData.ThePacket = new IGMPv2Packet(payload);
+                payloadPacketOrData.ThePacket = new IGMPv2Packet(payload,
+                                                                 ParentPacket);
                 break;
             // NOTE: new payload parsing entries go here
             default:

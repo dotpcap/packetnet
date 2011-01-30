@@ -118,6 +118,21 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Constructor with parent
+        /// </summary>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
+        /// </param>
+        /// <param name="ParentPacket">
+        /// A <see cref="Packet"/>
+        /// </param>
+        public IGMPv2Packet(ByteArraySegment bas,
+                            Packet ParentPacket) : this(bas)
+        {
+            this.ParentPacket = ParentPacket;
+        }
+
+        /// <summary>
         /// Returns the encapsulated IGMPv2Packet of the Packet p or null if
         /// there is no encapsulated packet
         /// </summary>

@@ -110,6 +110,21 @@ namespace PacketDotNet
             header = new ByteArraySegment(bas);
         }
 
+        /// <summary>
+        /// Constructor with parent packet
+        /// </summary>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
+        /// </param>
+        /// <param name="ParentPacket">
+        /// A <see cref="Packet"/>
+        /// </param>        
+        public ICMPv6Packet(ByteArraySegment bas,
+                            Packet ParentPacket) : this(bas)
+        {
+            this.ParentPacket = ParentPacket;
+        }
+
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         override public System.String Color
         {

@@ -125,6 +125,40 @@ namespace PacketDotNet
             this.ParentPacket = ParentPacket;
         }
 
+        /// <summary>
+        /// Used to prevent a recursive stack overflow
+        /// when recalculating in UpdateCalculatedValues()
+        /// </summary>
+        private bool skipUpdating = false;
+
+        /// <summary>
+        /// Recalculate the checksum
+        /// </summary>
+        public override void UpdateCalculatedValues ()
+        {
+            if(skipUpdating)
+                return;
+
+            // prevent us from entering this routine twice
+            // by setting this flag, the act of retrieving the Bytes
+            // property will cause this routine to be called which will
+            // retrieve Bytes recursively and overflow the stack
+            skipUpdating = true;
+
+            // start with this packet with a zeroed out checksum field
+            Checksum = 0;
+            var originalBytes = Bytes;
+
+            var ipv6Parent = ParentPacket as IPv6Packet;
+            var bytesToChecksum = ipv6Parent.AttachPseudoIPHeader(originalBytes);
+
+            // calculate the one's complement sum of the tcp header
+            Checksum = (ushort)ChecksumUtils.OnesComplementSum(bytesToChecksum);
+
+            // clear the skip variable
+            skipUpdating = false;
+        }
+
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         override public System.String Color
         {

@@ -53,6 +53,34 @@ namespace Test.PacketType
             // Payload differs based on the icmp.Type field
         }
 
+        /// <summary>
+        /// Test that the checksum can be recalculated properly
+        /// </summary>
+        [Test]
+        public void Checksum()
+        {
+            var dev = new OfflinePcapDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
+            dev.Open();
+            var rawPacket = dev.GetNextPacket();
+            dev.Close();
+
+            Packet p = Packet.ParsePacket(rawPacket);
+
+            // save the checksum
+            var icmpv6 = ICMPv6Packet.GetEncapsulated(p);
+            Assert.IsNotNull(icmpv6);
+            var savedChecksum = icmpv6.Checksum;
+
+            // now zero the checksum out
+            icmpv6.Checksum = 0;
+
+            // and recalculate the checksum
+            icmpv6.UpdateCalculatedValues();
+
+            // compare the checksum values to ensure that they match
+            Assert.AreEqual(savedChecksum, icmpv6.Checksum);
+        }
+
         [Test]
         public void PrintString()
         {

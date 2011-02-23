@@ -197,11 +197,10 @@ namespace PacketDotNet
             header.Length = PPPoEFields.HeaderLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = ParseEncapsulatedBytes(header, Timeval);
+            payloadPacketOrData = ParseEncapsulatedBytes(header);
         }
 
-        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
-                                                                        PosixTimeval Timeval)
+        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header)
         {
             // slice off the payload
             var payload = Header.EncapsulatedBytes();

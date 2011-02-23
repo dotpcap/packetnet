@@ -48,7 +48,6 @@ namespace Test.Misc
 
             // and re-parse that packet
             var newPacket = Packet.ParsePacket(LinkLayers.Ethernet,
-                                               new PosixTimeval(),
                                                bytes);
 
             Console.WriteLine("re-parsed random packet: {0}", newPacket.ToString());

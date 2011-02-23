@@ -190,7 +190,7 @@ namespace PacketDotNet
             header.Length = EthernetFields.HeaderLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = ParseEncapsulatedBytes(header, Type, Timeval);
+            payloadPacketOrData = ParseEncapsulatedBytes(header, Type);
         }
 
         /// <summary>
@@ -203,15 +203,11 @@ namespace PacketDotNet
         /// <param name="Type">
         /// A <see cref="EthernetPacketType"/>
         /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
         /// <returns>
         /// A <see cref="PacketOrByteArraySegment"/>
         /// </returns>
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
-                                                                        EthernetPacketType Type,
-                                                                        PosixTimeval Timeval)
+                                                                        EthernetPacketType Type)
         {
             // slice off the payload
             var payload = Header.EncapsulatedBytes();

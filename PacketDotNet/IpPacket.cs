@@ -263,7 +263,6 @@ namespace PacketDotNet
         /// </returns>
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment payload,
                                                                         IPProtocolType ProtocolType,
-                                                                        PosixTimeval Timeval,
                                                                         Packet ParentPacket)
         {
             log.DebugFormat("payload: {0}, ParentPacket.GetType() {1}",

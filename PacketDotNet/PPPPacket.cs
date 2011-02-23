@@ -94,11 +94,10 @@ namespace PacketDotNet
             header.Length = PPPFields.HeaderLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = ParseEncapsulatedBytes(header, Timeval, Protocol);
+            payloadPacketOrData = ParseEncapsulatedBytes(header, Protocol);
         }
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
-                                                                        PosixTimeval Timeval,
                                                                         PPPProtocol Protocol)
         {
             // slice off the payload

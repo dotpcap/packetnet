@@ -48,17 +48,6 @@ namespace PacketDotNet
 
         internal Packet parentPacket;
 
-        internal PosixTimeval timeval;
-
-        /// <value>
-        /// PosixTimeval of this packet, can be the packet arrival time
-        /// or the packet creation time
-        /// </value>
-        public virtual PosixTimeval Timeval
-        {
-            get { return timeval; }
-        }
-
         // recursively finds the length of this packet and all of the packets
         // encapsulated by this packet
         internal int TotalPacketLength
@@ -273,7 +262,6 @@ namespace PacketDotNet
         /// </summary>
         public Packet()
         {
-            timeval = new PosixTimeval();
         }
 
         /// <summary>
@@ -298,7 +286,6 @@ namespace PacketDotNet
         public static Packet ParsePacket(RawPacket rawPacket)
         {
             return ParsePacket(rawPacket.LinkLayerType,
-                               rawPacket.Timeval,
                                rawPacket.Data);
         }
 
@@ -308,9 +295,6 @@ namespace PacketDotNet
         /// <param name="LinkLayer">
         /// A <see cref="LinkLayers"/>
         /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
         /// <param name="PacketData">
         /// A <see cref="System.Byte"/>
         /// </param>
@@ -318,7 +302,6 @@ namespace PacketDotNet
         /// A <see cref="Packet"/>
         /// </returns>
         public static Packet ParsePacket(LinkLayers LinkLayer,
-                                         PosixTimeval Timeval,
                                          byte[] PacketData)
         {
             Packet p;
@@ -347,7 +330,6 @@ namespace PacketDotNet
                 throw new System.NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");
             }
 
-            p.timeval = Timeval;
             return p;
         }
 

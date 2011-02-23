@@ -159,8 +159,7 @@ namespace PacketDotNet
 
             // parse the payload via an EthernetPacket method
             payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(header,
-                                                                        EthernetProtocolType,
-                                                                        Timeval);
+                                                                        EthernetProtocolType);
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />

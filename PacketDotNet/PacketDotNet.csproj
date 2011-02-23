@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -97,7 +97,6 @@
     <Compile Include="IpVersion.cs" />
     <Compile Include="LinkLayers.cs" />
     <Compile Include="Utils\HexPrinter.cs" />
-    <Compile Include="PosixTimeval.cs" />
     <Compile Include="ILogInactive.cs" />
     <Compile Include="Utils\RandomUtils.cs" />
     <Compile Include="PayloadType.cs" />

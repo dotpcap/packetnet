@@ -171,7 +171,6 @@ namespace Test.PacketType
             while((rawPacket = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket((LinkLayers)rawPacket.LinkLayerType,
-                                              new PosixTimeval(rawPacket.Timeval.Seconds, rawPacket.Timeval.MicroSeconds),
                                               rawPacket.Data);
                 switch(packetIndex)
                 {

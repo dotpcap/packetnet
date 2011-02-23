@@ -19,15 +19,6 @@ namespace PacketDotNet
             set;
         }
 
-        /// <value>
-        /// The unix timeval when the packet was created
-        /// </value>
-        public PosixTimeval Timeval
-        {
-            get;
-            set;
-        }
-
         /// <summary> Fetch data portion of the packet.</summary>
         public virtual byte[] Data
         {
@@ -48,11 +39,9 @@ namespace PacketDotNet
         /// A <see cref="System.Byte"/>
         /// </param>
         public RawPacket(LinkLayers LinkLayerType,
-                         PosixTimeval Timeval,
                          byte[] Data)
         {
             this.LinkLayerType = LinkLayerType;
-            this.Timeval = Timeval;
             this.Data = Data;
         }
 
@@ -89,11 +78,10 @@ namespace PacketDotNet
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
-                buffer.AppendFormat("[{0}RawPacket: LinkLayerType={2}, Timeval={3}]{1}",
+                buffer.AppendFormat("[{0}RawPacket: LinkLayerType={2}]{1}",
                     color,
                     colorEscape,
-                    LinkLayerType,
-                    Timeval);
+                    LinkLayerType);
             }
 
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
@@ -101,7 +89,6 @@ namespace PacketDotNet
                 // collect the properties and their value
                 Dictionary<string,string> properties = new Dictionary<string,string>();
                 properties.Add("link layer type", LinkLayerType.ToString() + " (0x" + LinkLayerType.ToString("x") + ")");
-                properties.Add("timeval", Timeval.ToString());
 
                 // calculate the padding needed to right-justify the property names
                 int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));

@@ -543,7 +543,6 @@ namespace PacketDotNet
             var payload = header.EncapsulatedBytes(PayloadLength);
             payloadPacketOrData = IpPacket.ParseEncapsulatedBytes(payload,
                                                                   NextHeader,
-                                                                  Timeval,
                                                                   this);
         }
 

@@ -32,9 +32,6 @@ namespace PacketDotNet
         /// <param name="LinkLayerType">
         /// A <see cref="LinkLayers"/>
         /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
         /// <param name="Data">
         /// A <see cref="System.Byte"/>
         /// </param>

@@ -252,9 +252,6 @@ namespace PacketDotNet
         /// <param name="ProtocolType">
         /// A <see cref="IPProtocolType"/>
         /// </param>
-        /// <param name="Timeval">
-        /// A <see cref="PosixTimeval"/>
-        /// </param>
         /// <param name="ParentPacket">
         /// A <see cref="Packet"/>
         /// </param>

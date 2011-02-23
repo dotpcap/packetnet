@@ -265,31 +265,6 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Turns an array of bytes into an EthernetPacket
-        /// </summary>
-        /// <param name="data">The packets caught</param>
-        /// <returns>An ethernet packet which has references to the higher protocols</returns>
-        public static Packet Parse(byte[] data)
-        {
-            return new EthernetPacket(new ByteArraySegment(data));
-        }
-
-        /// <summary>
-        /// Parse a raw packet into its specific packets and payloads
-        /// </summary>
-        /// <param name="rawPacket">
-        /// A <see cref="RawPacket"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="Packet"/>
-        /// </returns>
-        public static Packet ParsePacket(RawPacket rawPacket)
-        {
-            return ParsePacket(rawPacket.LinkLayerType,
-                               rawPacket.Data);
-        }
-
-        /// <summary>
         /// Parse bytes into a packet
         /// </summary>
         /// <param name="LinkLayer">

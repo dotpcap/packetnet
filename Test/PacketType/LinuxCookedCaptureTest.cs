@@ -20,6 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
+using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 
@@ -67,11 +68,11 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/LinuxCookedCapture.pcap");
             dev.Open();
 
-            RawPacket rawPacket;
+            RawCapture rawCapture;
             int packetIndex = 0;
-            while((rawPacket = dev.GetNextPacket()) != null)
+            while((rawCapture = dev.GetNextPacket()) != null)
             {
-                Packet p = Packet.ParsePacket(rawPacket);
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 switch(packetIndex)
                 {
                 case 0:
@@ -100,10 +101,9 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/LinuxCookedCapture.pcap");
             dev.Open();
-            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            Packet p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var l = (LinuxSLLPacket)p;
@@ -118,10 +118,9 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/LinuxCookedCapture.pcap");
             dev.Open();
-            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            Packet p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var l = (LinuxSLLPacket)p;

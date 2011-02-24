@@ -46,9 +46,8 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/tcp_with_extra_bytes.pcap");
             dev.Open();
 
-            RawPacket rawPacket;
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Assert.IsNotNull(p);
 
@@ -71,9 +70,8 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
 
-            RawPacket rawPacket;
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Assert.IsNotNull(p);
 
@@ -109,9 +107,8 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
 
-            RawPacket rawPacket;
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Assert.IsNotNull(p);
 
@@ -143,10 +140,9 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
-            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var tcp = TcpPacket.GetEncapsulated(p);
@@ -161,10 +157,9 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
-            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var tcp = TcpPacket.GetEncapsulated(p);

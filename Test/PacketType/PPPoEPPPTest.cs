@@ -22,6 +22,7 @@ using System;
 using NUnit.Framework;
 using PacketDotNet;
 using PacketDotNet.Utils;
+using SharpPcap;
 using SharpPcap.LibPcap;
 
 namespace Test.PacketType
@@ -35,18 +36,18 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/PPPoEPPP.pcap");
             dev.Open();
 
-            RawPacket rawPacket;
+            RawCapture rawCapture;
             Packet packet;
 
             // first packet is a udp packet
-            rawPacket = dev.GetNextPacket();
-            packet = Packet.ParsePacket(rawPacket);
+            rawCapture = dev.GetNextPacket();
+            packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
             var udpPacket = UdpPacket.GetEncapsulated(packet);
             Assert.IsNotNull(udpPacket, "Expected a valid udp packet for the first packet");
 
             // second packet is the PPPoe Ptp packet
-            rawPacket = dev.GetNextPacket();
-            packet = Packet.ParsePacket(rawPacket);
+            rawCapture = dev.GetNextPacket();
+            packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
             var anotherUdpPacket = UdpPacket.GetEncapsulated(packet);
             Assert.IsNotNull(anotherUdpPacket, "Expected a valid udp packet for the second packet as well");
 
@@ -61,9 +62,9 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             dev.GetNextPacket();
-            var rawPacket = dev.GetNextPacket();
+            var rawCapture = dev.GetNextPacket();
             dev.Close();
-            var p = Packet.ParsePacket(rawPacket);
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var pppoe = PPPoEPacket.GetEncapsulated(p);
@@ -80,9 +81,9 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             dev.GetNextPacket();
-            var rawPacket = dev.GetNextPacket();
+            var rawCapture = dev.GetNextPacket();
             dev.Close();
-            var p = Packet.ParsePacket(rawPacket);
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var pppoe = PPPoEPacket.GetEncapsulated(p);

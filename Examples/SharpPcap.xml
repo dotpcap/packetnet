@@ -374,7 +374,7 @@
             AirPcap specific capture thread
             </summary>
         </member>
-        <member name="M:SharpPcap.AirPcap.AirPcapDevice.MarshalPackets(System.IntPtr,System.IntPtr,System.Collections.Generic.List{PacketDotNet.RawPacket}@)">
+        <member name="M:SharpPcap.AirPcap.AirPcapDevice.MarshalPackets(System.IntPtr,System.IntPtr,System.Collections.Generic.List{SharpPcap.RawCapture}@)">
             <summary>
             Marshal a chunk of captured packets into a packet list
             </summary>
@@ -2099,6 +2099,15 @@
             Description
             </summary>
         </member>
+        <member name="P:SharpPcap.LibPcap.PcapDevice.IsOnPacketArrivalNull">
+            <summary>
+            Implemented because there isn't any way to perform
+            if(OnPacketArrival == null) isn't permitted outside of the containing class
+            this operation results in a CS0070 compile error
+            </summary>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
         <member name="P:SharpPcap.LibPcap.PcapDevice.Interface">
             <value>
             Low level pcap device values
@@ -2135,6 +2144,11 @@
             </summary>
             <returns>
             A <see cref="T:SharpPcap.LibPcap.PcapStatistics" /></returns>
+        </member>
+        <member name="P:SharpPcap.LibPcap.PcapDevice.MacAddress">
+            <summary>
+            Mac address of the physical device
+            </summary>
         </member>
         <member name="P:SharpPcap.LibPcap.PcapDevice.Filter">
             <summary>
@@ -2216,12 +2230,12 @@
             Closes this adapter
             </summary>
         </member>
-        <member name="M:SharpPcap.LibPcap.PcapDevice.SendPacketArrivalEvent(PacketDotNet.RawPacket)">
+        <member name="M:SharpPcap.LibPcap.PcapDevice.SendPacketArrivalEvent(SharpPcap.RawCapture)">
             <summary>
             Notify the OnPacketArrival delegates about a newly captured packet
             </summary>
             <param name="p">
-            A <see cref="T:PacketDotNet.RawPacket" /></param>
+            A <see cref="T:SharpPcap.RawCapture" /></param>
         </member>
         <member name="M:SharpPcap.LibPcap.PcapDevice.SendCaptureStoppedEvent(SharpPcap.CaptureStoppedEventStatus)">
             <summary>
@@ -2236,12 +2250,12 @@
             </summary>
             <returns>The next packet captured on this device</returns>
         </member>
-        <member name="M:SharpPcap.LibPcap.PcapDevice.GetNextPacket(PacketDotNet.RawPacket@)">
+        <member name="M:SharpPcap.LibPcap.PcapDevice.GetNextPacket(SharpPcap.RawCapture@)">
             <summary>
             Gets the next packet captured on this device
             </summary>
             <param name="p">
-            A <see cref="T:PacketDotNet.RawPacket" /></param>
+            A <see cref="T:SharpPcap.RawCapture" /></param>
             <returns>
             A <see cref="T:System.Int32" /> that contains the result code
             </returns>
@@ -2260,7 +2274,7 @@
             <param name="data">
             A <see cref="T:System.IntPtr" /></param>
             <returns>
-            A <see cref="T:PacketDotNet.RawPacket" /></returns>
+            A <see cref="T:SharpPcap.RawCapture" /></returns>
         </member>
         <member name="M:SharpPcap.LibPcap.PcapDevice.DumpOpen(System.String)">
             <summary>
@@ -2290,7 +2304,7 @@
             </summary>
             <param name="p">The packet to write</param>
         </member>
-        <member name="M:SharpPcap.LibPcap.PcapDevice.Dump(PacketDotNet.RawPacket)">
+        <member name="M:SharpPcap.LibPcap.PcapDevice.Dump(SharpPcap.RawCapture)">
             <summary>
             Writes a packet to the pcap dump file associated with this device.
             </summary>
@@ -2592,12 +2606,12 @@
             Capture event arguments
             </summary>
         </member>
-        <member name="M:SharpPcap.CaptureEventArgs.#ctor(PacketDotNet.RawPacket,SharpPcap.ICaptureDevice)">
+        <member name="M:SharpPcap.CaptureEventArgs.#ctor(SharpPcap.RawCapture,SharpPcap.ICaptureDevice)">
             <summary>
             Constructor
             </summary>
             <param name="packet">
-            A <see cref="T:PacketDotNet.RawPacket" /></param>
+            A <see cref="T:SharpPcap.RawCapture" /></param>
             <param name="device">
             A <see cref="T:SharpPcap.ICaptureDevice" /></param>
         </member>
@@ -2868,7 +2882,7 @@
             <param name="packet">The packet bytes to add</param>
             <returns>True if success, else false</returns>
         </member>
-        <member name="M:SharpPcap.WinPcap.SendQueue.Add(PacketDotNet.RawPacket)">
+        <member name="M:SharpPcap.WinPcap.SendQueue.Add(SharpPcap.RawCapture)">
             <summary>
             Add a packet to this send queue.
             </summary>
@@ -2923,12 +2937,12 @@
             NOTE: WinPcap only
             </summary>
         </member>
-        <member name="M:SharpPcap.WinPcap.StatisticsModeEventArgs.#ctor(PacketDotNet.RawPacket,SharpPcap.LibPcap.PcapDevice)">
+        <member name="M:SharpPcap.WinPcap.StatisticsModeEventArgs.#ctor(SharpPcap.RawCapture,SharpPcap.LibPcap.PcapDevice)">
             <summary>
             Constructor for a statistics mode event
             </summary>
             <param name="packet">
-            A <see cref="T:PacketDotNet.RawPacket" /></param>
+            A <see cref="T:SharpPcap.RawCapture" /></param>
             <param name="device">
             A <see cref="T:SharpPcap.LibPcap.PcapDevice" /></param>
         </member>
@@ -3038,6 +3052,11 @@
             Retrieves pcap statistics
             </summary>
         </member>
+        <member name="P:SharpPcap.ICaptureDevice.MacAddress">
+            <summary>
+            Mac address of the physical device
+            </summary>
+        </member>
         <member name="P:SharpPcap.ICaptureDevice.DumpOpened">
             <summary>
             Gets a value indicating whether a dump file is already associated with this device
@@ -3059,7 +3078,7 @@
             Return the pcap link layer value of an adapter.
             </summary>
         </member>
-        <member name="M:SharpPcap.ICaptureDevice.Dump(PacketDotNet.RawPacket)">
+        <member name="M:SharpPcap.ICaptureDevice.Dump(SharpPcap.RawCapture)">
             <summary>
             Writes a packet to the pcap dump file associated with this device.
             </summary>
@@ -3191,6 +3210,15 @@
             WinPcap extension
             </value>
         </member>
+        <member name="M:SharpPcap.WinPcap.WinPcapDevice.StartCapture">
+            <summary>
+            Starts the capturing process via a background thread
+            OnPacketArrival() will be called for each captured packet
+            NOTE: Winpcap devices can capture packets or statistics updates
+            so only if both a packet handler AND a statistics handler
+            are defined will an exception be thrown
+            </summary>
+        </member>
         <member name="M:SharpPcap.WinPcap.WinPcapDevice.Open">
             <summary>
             Open the device
@@ -3219,12 +3247,12 @@
             Close the device
             </summary>
         </member>
-        <member name="M:SharpPcap.WinPcap.WinPcapDevice.SendPacketArrivalEvent(PacketDotNet.RawPacket)">
+        <member name="M:SharpPcap.WinPcap.WinPcapDevice.SendPacketArrivalEvent(SharpPcap.RawCapture)">
             <summary>
             Notify the OnPacketArrival delegates about a newly captured packet
             </summary>
             <param name="p">
-            A <see cref="T:PacketDotNet.RawPacket" /></param>
+            A <see cref="T:SharpPcap.RawCapture" /></param>
         </member>
         <member name="M:SharpPcap.WinPcap.WinPcapDevice.SendQueue(SharpPcap.WinPcap.SendQueue,SharpPcap.WinPcap.SendQueueTransmitModes)">
             <summary>
@@ -3561,6 +3589,166 @@
             <summary>
             Refresh the device list
             </summary>
+        </member>
+        <member name="T:SharpPcap.RawCapture">
+            <summary>
+            Represents a raw captured packet
+            </summary>
+        </member>
+        <member name="M:SharpPcap.RawCapture.#ctor(PacketDotNet.LinkLayers,SharpPcap.PosixTimeval,System.Byte[])">
+            <summary>
+            Constructor
+            </summary>
+            <param name="LinkLayerType">
+            A <see cref="T:PacketDotNet.LinkLayers" /></param>
+            <param name="Timeval">
+            A <see cref="T:SharpPcap.PosixTimeval" /></param>
+            <param name="Data">
+            A <see cref="T:System.Byte" /></param>
+        </member>
+        <member name="P:SharpPcap.RawCapture.LinkLayerType">
+            <value>
+            Link layer from which this packet was captured
+            </value>
+        </member>
+        <member name="P:SharpPcap.RawCapture.Timeval">
+            <value>
+            The unix timeval when the packet was created
+            </value>
+        </member>
+        <member name="P:SharpPcap.RawCapture.Data">
+            <summary> Fetch data portion of the packet.</summary>
+        </member>
+        <member name="M:SharpPcap.RawCapture.ToString">
+            <summary>Output this packet as a readable string</summary>
+        </member>
+        <member name="T:SharpPcap.PosixTimeval">
+            <summary> POSIX.4 timeval</summary>
+        </member>
+        <member name="M:SharpPcap.PosixTimeval.#ctor(System.UInt64,System.UInt64)">
+            <summary>
+            Constructor with Seconds and MicroSeconds fields
+            </summary>
+            <param name="Seconds">
+            A <see cref="T:System.UInt64" /></param>
+            <param name="MicroSeconds">
+            A <see cref="T:System.UInt64" /></param>
+        </member>
+        <member name="M:SharpPcap.PosixTimeval.#ctor">
+            <summary>
+            Construct a PosixTimeval using the current UTC time
+            </summary>
+        </member>
+        <member name="P:SharpPcap.PosixTimeval.Seconds">
+            <value>
+            Number of seconds in the timeval
+            </value>
+        </member>
+        <member name="P:SharpPcap.PosixTimeval.MicroSeconds">
+            <value>
+            Number of microseconds in the timeval
+            </value>
+        </member>
+        <member name="P:SharpPcap.PosixTimeval.Date">
+            <summary> The timeval as a DateTime in Utc </summary>
+        </member>
+        <member name="M:SharpPcap.PosixTimeval.Equals(System.Object)">
+            <summary>
+            Equals override
+            </summary>
+            <param name="obj">
+            A <see cref="T:System.Object" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:SharpPcap.PosixTimeval.GetHashCode">
+            <summary>
+            GetHashCode override
+            </summary>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
+        <member name="M:SharpPcap.PosixTimeval.ToString">
+            <summary>
+            Convert the timeval to a string like 'SECONDS.MICROSECONDSs'
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /></returns>
+        </member>
+        <member name="M:SharpPcap.PosixTimeval.CompareTo(SharpPcap.PosixTimeval)">
+            <summary>
+            Compare this to another
+            </summary>
+            <param name="that">
+            A <see cref="T:SharpPcap.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
+        <member name="M:SharpPcap.PosixTimeval.op_LessThan(SharpPcap.PosixTimeval,SharpPcap.PosixTimeval)">
+            <summary>
+            Operator &lt; overload
+            </summary>
+            <param name="a">
+            A <see cref="T:SharpPcap.PosixTimeval" /></param>
+            <param name="b">
+            A <see cref="T:SharpPcap.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:SharpPcap.PosixTimeval.op_GreaterThan(SharpPcap.PosixTimeval,SharpPcap.PosixTimeval)">
+            <summary>
+            Operator &gt; overload
+            </summary>
+            <param name="a">
+            A <see cref="T:SharpPcap.PosixTimeval" /></param>
+            <param name="b">
+            A <see cref="T:SharpPcap.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:SharpPcap.PosixTimeval.op_LessThanOrEqual(SharpPcap.PosixTimeval,SharpPcap.PosixTimeval)">
+            <summary>
+            Operator &lt;=
+            </summary>
+            <param name="a">
+            A <see cref="T:SharpPcap.PosixTimeval" /></param>
+            <param name="b">
+            A <see cref="T:SharpPcap.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:SharpPcap.PosixTimeval.op_GreaterThanOrEqual(SharpPcap.PosixTimeval,SharpPcap.PosixTimeval)">
+            <summary>
+            Operator &gt;=
+            </summary>
+            <param name="a">
+            A <see cref="T:SharpPcap.PosixTimeval" /></param>
+            <param name="b">
+            A <see cref="T:SharpPcap.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:SharpPcap.PosixTimeval.op_Equality(SharpPcap.PosixTimeval,SharpPcap.PosixTimeval)">
+            <summary>
+            Operator ==
+            </summary>
+            <param name="a">
+            A <see cref="T:SharpPcap.PosixTimeval" /></param>
+            <param name="b">
+            A <see cref="T:SharpPcap.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="M:SharpPcap.PosixTimeval.op_Inequality(SharpPcap.PosixTimeval,SharpPcap.PosixTimeval)">
+            <summary>
+            Operator !=
+            </summary>
+            <param name="a">
+            A <see cref="T:SharpPcap.PosixTimeval" /></param>
+            <param name="b">
+            A <see cref="T:SharpPcap.PosixTimeval" /></param>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
         </member>
         <member name="T:SharpPcap.PacketArrivalEventHandler">
             <summary>A delegate for Packet Arrival events</summary>

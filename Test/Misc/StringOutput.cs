@@ -185,7 +185,7 @@ namespace Test.Misc
                 var packet = offlinePcapDevice.GetNextPacket();
                 Assert.IsNotNull(packet, "Expected a valid packet but it was null");
 
-                p = Packet.ParsePacket(packet);
+                p = Packet.ParsePacket(packet.LinkLayerType, packet.Data);
 
                 currentPacketDescription = currentFAPI.PacketDescription[currentPacketIndex];
 

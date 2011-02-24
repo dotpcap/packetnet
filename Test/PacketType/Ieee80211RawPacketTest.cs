@@ -36,10 +36,10 @@ namespace Test.PacketType
         {
             var dev = new OfflinePcapDevice("../../CaptureFiles/80211_raw.pcap");
             dev.Open();
-            var rawPacket = dev.GetNextPacket();
+            var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            Packet p = Packet.ParsePacket(rawPacket);
+            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Assert.IsNotNull(p);
 

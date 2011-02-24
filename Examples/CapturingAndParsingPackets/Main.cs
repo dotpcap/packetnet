@@ -63,12 +63,12 @@ namespace CapturingAndParsingPackets
 
             while(stopCapturing == false)
             {
-                var rawPacket = device.GetNextPacket();
+                var rawCapture = device.GetNextPacket();
 
                 // null packets can be returned in the case where
                 // the GetNextRawPacket() timed out, we should just attempt
                 // to retrieve another packet by looping the while() again
-                if(rawPacket == null)
+                if(rawCapture == null)
                 {
                     // go back to the start of the while()
                     continue;
@@ -76,7 +76,7 @@ namespace CapturingAndParsingPackets
 
                 // use PacketDotNet to parse this packet and print out
                 // its high level information
-                Packet p = Packet.ParsePacket(rawPacket);
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
                 Console.WriteLine(p.ToString());
             }

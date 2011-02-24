@@ -22,6 +22,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Net.NetworkInformation;
 using NUnit.Framework;
+using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
@@ -56,12 +57,12 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/wol.pcap");
             dev.Open();
 
-            RawPacket rawPacket;
+            RawCapture rawCapture;
 
             int packetIndex = 0;
-            while((rawPacket = dev.GetNextPacket()) != null)
+            while((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(rawPacket);
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 Assert.IsNotNull(p);
 
                 var wol = PacketDotNet.WakeOnLanPacket.GetEncapsulated(p);
@@ -90,10 +91,9 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/wol.pcap");
             dev.Open();
-            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var wol = WakeOnLanPacket.GetEncapsulated(p);
@@ -108,10 +108,9 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/wol.pcap");
             dev.Open();
-            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var wol = WakeOnLanPacket.GetEncapsulated(p);

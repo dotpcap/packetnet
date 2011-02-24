@@ -21,7 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Net.NetworkInformation;
 using NUnit.Framework;
-
+using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
@@ -32,7 +32,7 @@ namespace Test.PacketType
     public class IPv6PacketTest
     {
         // icmpv6
-        public void VerifyPacket0(Packet p)
+        public void VerifyPacket0(Packet p, RawCapture rawCapture)
         {
             Assert.IsNotNull(p);
             Console.WriteLine(p.ToString());
@@ -52,8 +52,8 @@ namespace Test.PacketType
             Assert.AreEqual(255, ip.TimeToLive);
             Assert.AreEqual(0x3a, (byte)ip.NextHeader);
             Console.WriteLine("Failed: ip.ComputeIPChecksum() not implemented.");
-            Assert.AreEqual(1221145299, p.Timeval.Seconds);
-            Assert.AreEqual(453568.000, p.Timeval.MicroSeconds);
+            Assert.AreEqual(1221145299, rawCapture.Timeval.Seconds);
+            Assert.AreEqual(453568.000, rawCapture.Timeval.MicroSeconds);
         }
 
         // Test that we can load and parse an IPv6 packet
@@ -63,16 +63,16 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
             dev.Open();
 
-            RawPacket rawPacket;
+            RawCapture rawCapture;
             int packetIndex = 0;
-            while((rawPacket = dev.GetNextPacket()) != null)
+            while((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(rawPacket);
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 Console.WriteLine("got packet");
                 switch(packetIndex)
                 {
                 case 0:
-                    VerifyPacket0(p);
+                    VerifyPacket0(p, rawCapture);
                     break;
                 default:
                     Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
@@ -108,10 +108,10 @@ namespace Test.PacketType
                                       0x3723};
 
             int packetIndex = 0;
-            RawPacket rawPacket;
-            while ((rawPacket = dev.GetNextPacket()) != null)
+            RawCapture rawCapture;
+            while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(rawPacket);
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 var t = TcpPacket.GetEncapsulated(p);
                 Assert.IsNotNull(t, "Expected t to not be null");
                 Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
@@ -161,10 +161,9 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/ipv6_http.pcap");
             dev.Open();
-            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var ip = IPv6Packet.GetEncapsulated(p);
@@ -179,10 +178,9 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/ipv6_http.pcap");
             dev.Open();
-            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var ip = IPv6Packet.GetEncapsulated(p);

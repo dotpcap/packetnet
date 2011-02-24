@@ -20,6 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
+using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 
@@ -36,11 +37,11 @@ namespace Test.PacketType
         {
             var dev = new OfflinePcapDevice("../../CaptureFiles/ICMPv4.pcap");
             dev.Open();
-            var rawPacket = dev.GetNextPacket();
+            var rawCapture = dev.GetNextPacket();
             dev.Close();
 
             // Parse an icmp request
-            Packet p = Packet.ParsePacket(rawPacket);
+            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Assert.IsNotNull(p);
 
@@ -64,10 +65,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/ICMPv4.pcap");
             dev.Open();
-            RawPacket rawPacket;
+            RawCapture rawCapture;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var icmp = ICMPv4Packet.GetEncapsulated(p);
@@ -82,10 +83,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/ICMPv4.pcap");
             dev.Open();
-            RawPacket rawPacket;
+            RawCapture rawCapture;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var icmp = ICMPv4Packet.GetEncapsulated(p);

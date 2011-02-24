@@ -21,6 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Net.NetworkInformation;
 using NUnit.Framework;
+using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
@@ -31,7 +32,7 @@ namespace Test.PacketType
     public class EthernetPacketTest
     {
         // tcp
-        public void VerifyPacket0(Packet p)
+        public void VerifyPacket0(Packet p, RawCapture rawCapture)
         {
             Console.WriteLine(p.ToString());
 
@@ -46,8 +47,8 @@ namespace Test.PacketType
             Assert.AreEqual(IPProtocolType.TCP, ip.Protocol);
             Assert.AreEqual(254, ip.TimeToLive);
             Assert.AreEqual(0x0df8, ((IPv4Packet)ip).CalculateIPChecksum());
-            Assert.AreEqual(1176685346, p.Timeval.Seconds);
-            Assert.AreEqual(885259.000, p.Timeval.MicroSeconds);
+            Assert.AreEqual(1176685346, rawCapture.Timeval.Seconds);
+            Assert.AreEqual(885259.000, rawCapture.Timeval.MicroSeconds);
 
             TcpPacket tcp = (TcpPacket)ip.PayloadPacket;
             Assert.AreEqual(80, tcp.SourcePort);
@@ -61,7 +62,7 @@ namespace Test.PacketType
         }
 
         // tcp
-        public void VerifyPacket1(Packet p)
+        public void VerifyPacket1(Packet p, RawCapture rawCapture)
         {
             Console.WriteLine(p.ToString());
 
@@ -74,8 +75,8 @@ namespace Test.PacketType
             Assert.AreEqual(System.Net.IPAddress.Parse("86.42.196.13"), ip.DestinationAddress);
             Assert.AreEqual(64, ip.TimeToLive);
             Assert.AreEqual(0x2ff4, ((IPv4Packet)ip).CalculateIPChecksum());
-            Assert.AreEqual(1171483600, p.Timeval.Seconds);
-            Assert.AreEqual(125234.000, p.Timeval.MicroSeconds);
+            Assert.AreEqual(1171483600, rawCapture.Timeval.Seconds);
+            Assert.AreEqual(125234.000, rawCapture.Timeval.MicroSeconds);
 
             TcpPacket tcp = (TcpPacket)ip.PayloadPacket;
             Assert.AreEqual(56925, tcp.SourcePort);
@@ -89,7 +90,7 @@ namespace Test.PacketType
         }
 
         // udp
-        public void VerifyPacket2(Packet p)
+        public void VerifyPacket2(Packet p, RawCapture rawCapture)
         {
             Console.WriteLine(p.ToString());
             EthernetPacket e = (EthernetPacket)p;
@@ -103,8 +104,8 @@ namespace Test.PacketType
             Assert.AreEqual(IPProtocolType.UDP, ip.Protocol);
             Assert.AreEqual(112, ip.TimeToLive);
             Assert.AreEqual(0xe0a2, ((IPv4Packet)ip).CalculateIPChecksum());
-            Assert.AreEqual(1171483602, p.Timeval.Seconds);
-            Assert.AreEqual(578641.000, p.Timeval.MicroSeconds);
+            Assert.AreEqual(1171483602, rawCapture.Timeval.Seconds);
+            Assert.AreEqual(578641.000, rawCapture.Timeval.MicroSeconds);
 
             var udp = UdpPacket.GetEncapsulated(p);
             Assert.AreEqual(52886, udp.SourcePort);
@@ -114,7 +115,7 @@ namespace Test.PacketType
         }
 
         // dns
-        public void VerifyPacket3(Packet p)
+        public void VerifyPacket3(Packet p, RawCapture rawCapture)
         {
             Console.WriteLine(p.ToString());
             EthernetPacket e = (EthernetPacket)p;
@@ -135,7 +136,7 @@ namespace Test.PacketType
         }
 
         // arp
-        public void VerifyPacket4(Packet p)
+        public void VerifyPacket4(Packet p, RawCapture rawCapture)
         {
             Console.WriteLine(p.ToString());
             EthernetPacket e = (EthernetPacket)p;
@@ -144,7 +145,7 @@ namespace Test.PacketType
         }
 
         // icmp
-        public void VerifyPacket5(Packet p)
+        public void VerifyPacket5(Packet p, RawCapture rawCapture)
         {
             Console.WriteLine(p.ToString());
             EthernetPacket e = (EthernetPacket)p;
@@ -166,31 +167,31 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
             dev.Open();
 
-            RawPacket rawPacket;
+            RawCapture rawCapture;
             int packetIndex = 0;
-            while((rawPacket = dev.GetNextPacket()) != null)
+            while((rawCapture = dev.GetNextPacket()) != null)
             {
-                Packet p = Packet.ParsePacket((LinkLayers)rawPacket.LinkLayerType,
-                                              rawPacket.Data);
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType,
+                                              rawCapture.Data);
                 switch(packetIndex)
                 {
                 case 0:
-                    VerifyPacket0(p);
+                    VerifyPacket0(p, rawCapture);
                     break;
                 case 1:
-                    VerifyPacket1(p);
+                    VerifyPacket1(p, rawCapture);
                     break;
                 case 2:
-                    VerifyPacket2(p);
+                    VerifyPacket2(p, rawCapture);
                     break;
                 case 3:
-                    VerifyPacket3(p);
+                    VerifyPacket3(p, rawCapture);
                     break;
                 case 4:
-                    VerifyPacket4(p);
+                    VerifyPacket4(p, rawCapture);
                     break;
                 case 5:
-                    VerifyPacket5(p);
+                    VerifyPacket5(p, rawCapture);
                     break;
                 default:
                     Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
@@ -237,7 +238,7 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
             dev.Open();
 
-            RawPacket p;
+            RawCapture p;
             p = dev.GetNextPacket();
 
             var e = new EthernetPacket(new ByteArraySegment(p.Data));
@@ -257,10 +258,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
             dev.Open();
-            RawPacket rawPacket;
+            RawCapture rawCapture;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var eth = (EthernetPacket)p;
@@ -275,10 +276,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
             dev.Open();
-            RawPacket rawPacket;
+            RawCapture rawCapture;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var eth = (EthernetPacket)p;

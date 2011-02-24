@@ -22,6 +22,7 @@ using System;
 using System.Net.NetworkInformation;
 using System.Collections.Generic;
 using NUnit.Framework;
+using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
@@ -38,7 +39,7 @@ namespace Test.PacketType
         [Test]
         public void UDPData()
         {
-            RawPacket rawPacket;
+            RawCapture rawCapture;
             UdpPacket u;
             Packet p;
 
@@ -46,9 +47,9 @@ namespace Test.PacketType
             dev.Open();
 
             // check the first packet
-            rawPacket = dev.GetNextPacket();
+            rawCapture = dev.GetNextPacket();
 
-            p = Packet.ParsePacket(rawPacket);
+            p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
             Assert.IsNotNull(p);
 
             u = UdpPacket.GetEncapsulated(p);
@@ -57,8 +58,8 @@ namespace Test.PacketType
                             u.PayloadData.Length, "UDPData.Length mismatch");
 
             // check the second packet
-            rawPacket = dev.GetNextPacket();
-            p = Packet.ParsePacket(rawPacket);
+            rawCapture = dev.GetNextPacket();
+            p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Assert.IsNotNull(p);
 
@@ -145,10 +146,10 @@ namespace Test.PacketType
                                       0x932c};
 
             int packetIndex = 0;
-            RawPacket rawPacket;
-            while ((rawPacket = dev.GetNextPacket()) != null)
+            RawCapture rawCapture;
+            while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(rawPacket);
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 var t = UdpPacket.GetEncapsulated(p);
                 Assert.IsNotNull(t, "Expected t to not be null");
                 Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
@@ -174,10 +175,10 @@ namespace Test.PacketType
             int[] expectedChecksum = {0x61fb};
 
             int packetIndex = 0;
-            RawPacket rawPacket;
-            while ((rawPacket = dev.GetNextPacket()) != null)
+            RawCapture rawCapture;
+            while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(rawPacket);
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 Console.WriteLine("Converted a raw packet to a Packet");
                 Console.WriteLine(p.ToString());
                 var u = UdpPacket.GetEncapsulated(p);
@@ -201,10 +202,9 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/udp.pcap");
             dev.Open();
-            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var udp = UdpPacket.GetEncapsulated(p);
@@ -219,10 +219,9 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/udp.pcap");
             dev.Open();
-            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var udp = UdpPacket.GetEncapsulated(p);

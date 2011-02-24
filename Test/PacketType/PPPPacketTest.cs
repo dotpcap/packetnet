@@ -22,6 +22,7 @@ using System;
 using NUnit.Framework;
 using PacketDotNet;
 using PacketDotNet.Utils;
+using SharpPcap;
 using SharpPcap.LibPcap;
 
 namespace Test.PacketType
@@ -37,9 +38,9 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             dev.GetNextPacket();
-            var rawPacket = dev.GetNextPacket();
+            var rawCapture = dev.GetNextPacket();
             dev.Close();
-            var p = Packet.ParsePacket(rawPacket);
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var ppp = PPPPacket.GetEncapsulated(p);
@@ -56,9 +57,9 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             dev.GetNextPacket();
-            var rawPacket = dev.GetNextPacket();
+            var rawCapture = dev.GetNextPacket();
             dev.Close();
-            var p = Packet.ParsePacket(rawPacket);
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var ppp = PPPPacket.GetEncapsulated(p);

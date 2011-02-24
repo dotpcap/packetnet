@@ -24,6 +24,7 @@ using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
+using SharpPcap;
 
 namespace Test.PacketType
 {
@@ -72,11 +73,11 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/arp_request_response.pcap");
             dev.Open();
 
-            RawPacket rawPacket;
+            RawCapture rawCapture;
             int packetIndex = 0;
-            while((rawPacket = dev.GetNextPacket()) != null)
+            while((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(rawPacket);
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
                 Console.WriteLine("got packet");
                 Console.WriteLine("{0}", p.ToString());
@@ -126,10 +127,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/arp_request_response.pcap");
             dev.Open();
-            RawPacket rawPacket;
+            RawCapture rawCapture;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var arp = ARPPacket.GetEncapsulated(p);
@@ -144,10 +145,10 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/arp_request_response.pcap");
             dev.Open();
-            RawPacket rawPacket;
+            RawCapture rawCapture;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var arp = ARPPacket.GetEncapsulated(p);

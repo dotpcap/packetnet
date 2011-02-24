@@ -22,6 +22,7 @@ using System;
 using NUnit.Framework;
 using PacketDotNet;
 using PacketDotNet.Utils;
+using SharpPcap;
 using SharpPcap.LibPcap;
 
 namespace Test.PacketType
@@ -58,10 +59,9 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
-            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var ip = IPv4Packet.GetEncapsulated(p);
@@ -76,10 +76,9 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
-            RawPacket rawPacket;
             Console.WriteLine("Reading packet data");
-            rawPacket = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawPacket);
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var ip = IPv4Packet.GetEncapsulated(p);
@@ -104,14 +103,14 @@ namespace Test.PacketType
             var dev = new OfflinePcapDevice("../../CaptureFiles/ipv4_invalid_total_length.pcap");
             dev.Open();
 
-            var rawPacket = dev.GetNextPacket();
+            var rawCapture = dev.GetNextPacket();
 
             dev.Close();
 
             bool caughtExpectedException = false;
             try
             {
-                Packet.ParsePacket(rawPacket);
+                Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
             } catch(System.InvalidOperationException)
             {
                 caughtExpectedException = true;

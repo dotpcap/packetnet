@@ -45,7 +45,7 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="SharpPcap, Version=3.5.0.0, Culture=neutral, PublicKeyToken=null">
+    <Reference Include="SharpPcap, Version=3.6.0.0, Culture=neutral, PublicKeyToken=null">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\SharpPcap\SharpPcap.dll</HintPath>
     </Reference>
@@ -64,7 +64,6 @@
     <Compile Include="Misc\ConstructingPackets.cs" />
     <Compile Include="Misc\ChecksumUtilsTest.cs" />
     <Compile Include="Misc\PacketTest.cs" />
-    <Compile Include="Misc\PosixTimevalTest.cs" />
     <Compile Include="Misc\StringOutput.cs" />
     <Compile Include="PacketType\ArpPacketTest.cs" />
     <Compile Include="PacketType\EthernetPacketTest.cs" />

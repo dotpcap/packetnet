@@ -482,7 +482,18 @@ namespace PacketDotNet
             while(offset < optionBytes.Length)
             {
                 type = (OptionTypes)optionBytes[offset + Option.KindFieldOffset];
-                length = optionBytes[offset + Option.LengthFieldOffset];
+
+                // some options have no length field, we cannot read
+                // the length field if it isn't present or we risk
+                // out-of-bounds issues
+                if((type == OptionTypes.EndOfOptionList) ||
+                   (type == OptionTypes.NoOperation))
+                {
+                    length = 1;
+                } else
+                {
+                    length = optionBytes[offset + Option.LengthFieldOffset];
+                }
 
                 switch(type)
                 {

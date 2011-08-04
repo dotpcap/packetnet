@@ -49,7 +49,13 @@ namespace PacketDotNet
         Unreachable_PrecedenceCutoffInEffect = 0x030F,
 
         SourceQuench = 0x0400,
-        AlternateHostAddress = 0x0500,
+
+        AlternateHostAddress = 0x0500, // preserved for backwards compatibility
+        Redirect_Network = 0x0500,
+        Redirect_Host = 0x0501,
+        Redirect_TypeOfServiceAndNetwork = 0x0502,
+        Redirect_TypeOfServiceAndHost = 0x0503,
+
         Unassigned3 = 0x0700,
         EchoRequest = 0x0800,
         RouterAdvertisement = 0x0900,

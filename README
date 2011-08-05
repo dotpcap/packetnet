@@ -22,7 +22,8 @@ The Debug build depends on log4net and has log4net calls in some of its classes 
 code paths.
 
 The Release build does NOT depend on log4net and, taking advantage of conditional
-method attributes, does not include any calls to log4net methods.
+method attributes, does not include any calls to log4net methods. This ensures that there
+is no performance impact on release builds.
 
 
 Performance benchmarks

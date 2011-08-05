@@ -2066,6 +2066,13 @@
             Number of packets that this adapter should capture
             </summary>
         </member>
+        <member name="F:SharpPcap.LibPcap.PcapDevice.isOpen">
+            <summary>
+            Cached open and linkType variables, avoids a unsafe pointer comparison
+            and a pinvoke call for each packet retrieved as MarshalRawPacket
+            retrieves the LinkType
+            </summary>
+        </member>
         <member name="E:SharpPcap.LibPcap.PcapDevice.OnPacketArrival">
             <summary>
             Fires whenever a new packet is processed, either when the packet arrives
@@ -2418,22 +2425,22 @@
             <param name="hardwareAddress">
             A <see cref="T:System.Net.NetworkInformation.PhysicalAddress" /></param>
         </member>
-        <member name="T:SharpPcap.LibPcap.Sockaddr.Type">
+        <member name="T:SharpPcap.LibPcap.Sockaddr.AddressTypes">
             <summary>
             Types of addresses a Sockaddr can represent
             </summary>
         </member>
-        <member name="F:SharpPcap.LibPcap.Sockaddr.Type.AF_INET_AF_INET6">
+        <member name="F:SharpPcap.LibPcap.Sockaddr.AddressTypes.AF_INET_AF_INET6">
             <summary>
             Address represents an ipv4 or ipv6 address
             </summary>
         </member>
-        <member name="F:SharpPcap.LibPcap.Sockaddr.Type.HARDWARE">
+        <member name="F:SharpPcap.LibPcap.Sockaddr.AddressTypes.HARDWARE">
             <summary>
             Address represents a physical hardware address eg. a ethernet mac address
             </summary>
         </member>
-        <member name="F:SharpPcap.LibPcap.Sockaddr.Type.UNKNOWN">
+        <member name="F:SharpPcap.LibPcap.Sockaddr.AddressTypes.UNKNOWN">
             <summary>
             Unknown address type
             </summary>
@@ -3448,6 +3455,16 @@
             <summary>
             Method to retrieve this classes singleton instance
             </summary>
+        </member>
+        <member name="M:SharpPcap.WinPcap.WinPcapDeviceList.New">
+            <summary>
+            Caution: Use the singlton instance unless you know why you need to call this.
+            One use is for multiple filters on the same physical device. To apply multiple
+            filters open the same physical device multiple times, one for each
+            filter by calling this routine and picking the same device out of each list.
+            </summary>
+            <returns>
+            A <see cref="T:SharpPcap.CaptureDeviceList" /></returns>
         </member>
         <!--FIXME: Invalid documentation markup was found for member M:SharpPcap.WinPcap.WinPcapDeviceList.Devices(System.Net.IPAddress,System.Int32,SharpPcap.WinPcap.RemoteAuthentication)-->
         <member name="M:SharpPcap.WinPcap.WinPcapDeviceList.GetDevices">

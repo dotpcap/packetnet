@@ -15,7 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
+ *  Copyright 2011 Chris Morgan <chmorgan@gmail.com>
  */
 using System;
 using System.Collections.Generic;
@@ -137,7 +137,7 @@ namespace PacketDotNet
         }
 
         /// <value>
-        /// Upper layer protocol address of the sender, typically an IPv4 or IPv6 address
+        /// Upper layer protocol address of the sender, arp is used for IPv4, IPv6 uses NDP
         /// </value>
         virtual public System.Net.IPAddress SenderProtocolAddress
         {
@@ -150,6 +150,10 @@ namespace PacketDotNet
 
             set
             {
+                // check that the address family is ipv4
+                if (value.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork)
+                    throw new System.InvalidOperationException("Family != IPv4, ARP is used for IPv4, NDP for IPv6");
+
                 byte[] address = value.GetAddressBytes();
                 Array.Copy(address, 0,
                            header.Bytes, header.Offset + ARPFields.SenderProtocolAddressPosition,
@@ -158,7 +162,7 @@ namespace PacketDotNet
         }
 
         /// <value>
-        /// Upper layer protocol address of the target, typically an IPv4 or IPv6 address
+        /// Upper layer protocol address of the target, arp is used for IPv4, IPv6 uses NDP
         /// </value>
         virtual public System.Net.IPAddress TargetProtocolAddress
         {
@@ -171,6 +175,10 @@ namespace PacketDotNet
 
             set
             {
+                // check that the address family is ipv4
+                if (value.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork)
+                    throw new System.InvalidOperationException("Family != IPv4, ARP is used for IPv4, NDP for IPv6");
+
                 byte[] address = value.GetAddressBytes();
                 Array.Copy(address, 0,
                            header.Bytes, header.Offset + ARPFields.TargetProtocolAddressPosition,

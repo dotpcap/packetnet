@@ -209,7 +209,11 @@ namespace PacketDotNet
             }
         }
 
-        private int AllFlags
+        /// <summary>
+        /// Flags, 9 bits
+        /// TODO: Handle the NS bit
+        /// </summary>
+        public byte AllFlags
         {
             get
             {
@@ -292,9 +296,9 @@ namespace PacketDotNet
         private void setFlag(bool on, int MASK)
         {
             if (on)
-                AllFlags = AllFlags | MASK;
+                AllFlags = (byte)(AllFlags | MASK);
             else
-                AllFlags = AllFlags & ~MASK;
+                AllFlags = (byte)(AllFlags & ~MASK);
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>

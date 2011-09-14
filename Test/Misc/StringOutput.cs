@@ -104,7 +104,7 @@ namespace Test.Misc
 
         private static FileAndPacketIndexes currentFAPI;
 
-        private static SharpPcap.LibPcap.OfflinePcapDevice offlinePcapDevice;
+        private static SharpPcap.LibPcap.CaptureFileReaderDevice captureFileReader;
 
         private static int totalPacketsReturned;
         private static int expectedTotalPackets;
@@ -129,10 +129,10 @@ namespace Test.Misc
                 log.Debug("opening a new file up");
 
                 // close the open device if there was one
-                if(offlinePcapDevice != null)
+                if(captureFileReader != null)
                 {
-                    offlinePcapDevice.Close();
-                    offlinePcapDevice = null;
+                    captureFileReader.Close();
+                    captureFileReader = null;
                 }
 
                 // do we have any more files to process?
@@ -159,8 +159,8 @@ namespace Test.Misc
                     {
                         log.DebugFormat("Opening {0}", currentFAPI.Filename);
 
-                        offlinePcapDevice = new SharpPcap.LibPcap.OfflinePcapDevice(currentFAPI.Filename);
-                        offlinePcapDevice.Open();
+                        captureFileReader = new SharpPcap.LibPcap.CaptureFileReaderDevice(currentFAPI.Filename);
+                        captureFileReader.Open();
 
                         fileAndPacketIndex++;
                     } catch(System.Exception e)
@@ -182,7 +182,7 @@ namespace Test.Misc
                 log.Debug("retrieving packet");
 
                 // read the next packet
-                var packet = offlinePcapDevice.GetNextPacket();
+                var packet = captureFileReader.GetNextPacket();
                 Assert.IsNotNull(packet, "Expected a valid packet but it was null");
 
                 p = Packet.ParsePacket(packet.LinkLayerType, packet.Data);
@@ -212,10 +212,10 @@ namespace Test.Misc
 
             totalPacketsReturned = 0;
 
-            if(offlinePcapDevice != null)
+            if(captureFileReader != null)
             {
-                offlinePcapDevice.Close();
-                offlinePcapDevice = null;
+                captureFileReader.Close();
+                captureFileReader = null;
             }
         }
 

@@ -70,7 +70,7 @@ namespace Test.PacketType
         [Test]
         public void ParsingArpPacketRequestResponse()
         {
-            var dev = new OfflinePcapDevice("../../CaptureFiles/arp_request_response.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/arp_request_response.pcap");
             dev.Open();
 
             RawCapture rawCapture;
@@ -125,7 +125,7 @@ namespace Test.PacketType
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new OfflinePcapDevice("../../CaptureFiles/arp_request_response.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/arp_request_response.pcap");
             dev.Open();
             RawCapture rawCapture;
             Console.WriteLine("Reading packet data");
@@ -143,7 +143,7 @@ namespace Test.PacketType
         public void PrintVerboseString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new OfflinePcapDevice("../../CaptureFiles/arp_request_response.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/arp_request_response.pcap");
             dev.Open();
             RawCapture rawCapture;
             Console.WriteLine("Reading packet data");

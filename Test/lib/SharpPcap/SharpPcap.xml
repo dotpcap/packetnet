@@ -1618,18 +1618,6 @@
             Refresh the device list
             </summary>
         </member>
-        <member name="T:SharpPcap.OfflineCaptureDevice">
-            <summary>
-            Capture device that reads from a pcap format file
-            </summary>
-        </member>
-        <member name="M:SharpPcap.OfflineCaptureDevice.#ctor(System.String)">
-            <summary>
-            Default constructor
-            </summary>
-            <param name="pcapFile">
-            A <see cref="T:System.String" /></param>
-        </member>
         <member name="T:SharpPcap.PcapException">
             <summary>
             General Pcap Exception.
@@ -1637,15 +1625,15 @@
         </member>
         <member name="T:SharpPcap.LibPcap.PcapHeader">
             <summary>
+            A wrapper for libpcap's pcap_pkthdr structure
+            </summary>
+        </member>
+        <member name="M:SharpPcap.LibPcap.PcapHeader.#ctor(System.IntPtr)">
+            <summary>
             A wrapper class for libpcap's pcap_pkthdr structure
             </summary>
         </member>
-        <member name="M:SharpPcap.LibPcap.PcapHeader.#ctor">
-            <summary>
-            Constructs a new PcapHeader
-            </summary>
-        </member>
-        <member name="M:SharpPcap.LibPcap.PcapHeader.#ctor(System.UInt64,System.UInt64,System.UInt32,System.UInt32)">
+        <member name="M:SharpPcap.LibPcap.PcapHeader.#ctor(System.UInt32,System.UInt32,System.UInt32,System.UInt32)">
             <summary>
             Constructs a new PcapHeader
             </summary>
@@ -1654,29 +1642,40 @@
             <param name="packetLength">The actual length of the packet</param>
             <param name="captureLength">The length of the capture</param>
         </member>
-        <member name="P:SharpPcap.LibPcap.PcapHeader.Seconds">
+        <member name="F:SharpPcap.LibPcap.PcapHeader.epochTicks">
+            <summary>
+            DateTime(1970, 1, 1).Ticks, saves cpu cycles in the Date property
+            </summary>
+        </member>
+        <member name="F:SharpPcap.LibPcap.PcapHeader.Seconds">
             <summary>
             The seconds value of the packet's timestamp
             </summary>
         </member>
-        <member name="P:SharpPcap.LibPcap.PcapHeader.MicroSeconds">
+        <member name="F:SharpPcap.LibPcap.PcapHeader.MicroSeconds">
             <summary>
             The microseconds value of the packet's timestamp
             </summary>
         </member>
-        <member name="P:SharpPcap.LibPcap.PcapHeader.PacketLength">
+        <member name="F:SharpPcap.LibPcap.PcapHeader.PacketLength">
             <summary>
-            The actual length of the packet
+            The length of the packet on the line
             </summary>
         </member>
-        <member name="P:SharpPcap.LibPcap.PcapHeader.CaptureLength">
+        <member name="F:SharpPcap.LibPcap.PcapHeader.CaptureLength">
             <summary>
-            The length of the capture
+            The the bytes actually captured. If the capture length
+            is small CaptureLength might be less than PacketLength
             </summary>
         </member>
         <member name="P:SharpPcap.LibPcap.PcapHeader.Date">
             <summary>
             Return the DateTime value of this pcap header
+            </summary>
+        </member>
+        <member name="M:SharpPcap.LibPcap.PcapHeader.FromPointer(System.IntPtr)">
+            <summary>
+            Get a PcapHeader structure from a pcap_pkthdr pointer.
             </summary>
         </member>
         <member name="M:SharpPcap.LibPcap.PcapHeader.MarshalToIntPtr">
@@ -1687,56 +1686,6 @@
             </summary>
             <returns>
             A <see cref="T:System.IntPtr" /></returns>
-        </member>
-        <member name="T:SharpPcap.LibPcap.OfflinePcapDevice">
-            <summary>
-            Capture packets from an offline pcap file
-            </summary>
-        </member>
-        <member name="M:SharpPcap.LibPcap.OfflinePcapDevice.#ctor(System.String)">
-            <summary>
-            Constructs a new offline device for reading
-            pcap files
-            </summary>
-            <param name="pcapFile">
-            </param>
-        </member>
-        <member name="F:SharpPcap.LibPcap.OfflinePcapDevice.PCAP_OFFLINE_DESCRIPTION">
-            <summary>
-            The description of this device
-            </summary>
-        </member>
-        <member name="P:SharpPcap.LibPcap.OfflinePcapDevice.Name">
-            <value>
-            The name of the capture file
-            </value>
-        </member>
-        <member name="P:SharpPcap.LibPcap.OfflinePcapDevice.Description">
-            <value>
-            Description of the device
-            </value>
-        </member>
-        <member name="P:SharpPcap.LibPcap.OfflinePcapDevice.FileSize">
-            <value>
-            Number of bytes in the capture file
-            </value>
-        </member>
-        <member name="P:SharpPcap.LibPcap.OfflinePcapDevice.FileName">
-            <summary>
-            The underlying pcap file name
-            </summary>
-        </member>
-        <member name="P:SharpPcap.LibPcap.OfflinePcapDevice.Statistics">
-            <summary>
-            Retrieves pcap statistics
-            </summary>
-            <returns>
-            A <see cref="T:SharpPcap.LibPcap.PcapStatistics" /></returns>
-        </member>
-        <member name="M:SharpPcap.LibPcap.OfflinePcapDevice.Open">
-            <summary>
-            Opens the device for capture
-            </summary>
         </member>
         <member name="T:SharpPcap.Pcap">
             <summary>
@@ -2010,6 +1959,15 @@
             <returns>
             A <see cref="T:System.Int32" /></returns>
         </member>
+        <member name="M:SharpPcap.LibPcap.LibPcapSafeNativeMethods.pcap_snapshot(System.IntPtr)">
+            <summary>
+            Returns the snapshot length
+            </summary>
+            <param name="adapter">
+            A <see cref="T:System.IntPtr" /></param>
+            <returns>
+            A <see cref="T:System.Int32" /></returns>
+        </member>
         <member name="M:SharpPcap.LibPcap.LibPcapSafeNativeMethods.pcap_fileno(System.IntPtr)">
             <summary>
             Returns the file descriptor number from which captured packets are read,
@@ -2049,11 +2007,6 @@
         <member name="F:SharpPcap.LibPcap.PcapDevice.m_pcapIf">
             <summary>
             Low level interface object that contains device specific information
-            </summary>
-        </member>
-        <member name="F:SharpPcap.LibPcap.PcapDevice.m_pcapDumpHandle">
-            <summary>
-            Handle to an open dump file, not equal to IntPtr.Zero if a dump file is open
             </summary>
         </member>
         <member name="F:SharpPcap.LibPcap.PcapDevice.m_pcapAdapterHandle">
@@ -2123,11 +2076,6 @@
         <member name="P:SharpPcap.LibPcap.PcapDevice.Opened">
             <summary>
             Return a value indicating if this adapter is opened
-            </summary>
-        </member>
-        <member name="P:SharpPcap.LibPcap.PcapDevice.DumpOpened">
-            <summary>
-            Gets a value indicating wether pcap dump file is already associated with this device
             </summary>
         </member>
         <member name="P:SharpPcap.LibPcap.PcapDevice.PcapHandle">
@@ -2267,6 +2215,14 @@
             A <see cref="T:System.Int32" /> that contains the result code
             </returns>
         </member>
+        <member name="M:SharpPcap.LibPcap.PcapDevice.GetNextPacketPointers(System.IntPtr@,System.IntPtr@)">
+            <summary>
+            Gets pointers to the next PCAP header and packet data.
+            Data is only valid until next call to GetNextPacketNative.
+            Advanced use only. Intended to allow unmanaged code to avoid the overhead of
+            marshalling PcapHeader and packet contents to allocated memory.
+            </summary>
+        </member>
         <member name="M:SharpPcap.LibPcap.PcapDevice.PacketHandler(System.IntPtr,System.IntPtr,System.IntPtr)">
             <summary>
             Pcap_loop callback method.
@@ -2282,40 +2238,6 @@
             A <see cref="T:System.IntPtr" /></param>
             <returns>
             A <see cref="T:SharpPcap.RawCapture" /></returns>
-        </member>
-        <member name="M:SharpPcap.LibPcap.PcapDevice.DumpOpen(System.String)">
-            <summary>
-            Opens a file for packet writings
-            </summary>
-            <param name="fileName">
-            </param>
-        </member>
-        <member name="M:SharpPcap.LibPcap.PcapDevice.DumpClose">
-            <summary>
-            Closes the opened dump file
-            </summary>
-        </member>
-        <member name="M:SharpPcap.LibPcap.PcapDevice.DumpFlush">
-            <summary>
-            Flushes all write buffers of the opened dump file
-            </summary>
-        </member>
-        <member name="M:SharpPcap.LibPcap.PcapDevice.Dump(System.Byte[],SharpPcap.LibPcap.PcapHeader)">
-            <summary>
-            Writes a packet to the pcap dump file associated with this device.
-            </summary>
-        </member>
-        <member name="M:SharpPcap.LibPcap.PcapDevice.Dump(System.Byte[])">
-            <summary>
-            Writes a packet to the pcap dump file associated with this device.
-            </summary>
-            <param name="p">The packet to write</param>
-        </member>
-        <member name="M:SharpPcap.LibPcap.PcapDevice.Dump(SharpPcap.RawCapture)">
-            <summary>
-            Writes a packet to the pcap dump file associated with this device.
-            </summary>
-            <param name="p">The packet to write</param>
         </member>
         <member name="M:SharpPcap.LibPcap.PcapDevice.SetFilter(System.String)">
             <summary>
@@ -2577,18 +2499,6 @@
             <param name="msg">
             A <see cref="T:System.String" /></param>
         </member>
-        <member name="T:SharpPcap.NotSupportedOnOfflineDeviceException">
-            <summary>
-            Thrown when a method not supported on an offline device is called
-            </summary>
-        </member>
-        <member name="M:SharpPcap.NotSupportedOnOfflineDeviceException.#ctor(System.String)">
-            <summary>
-            string constructor
-            </summary>
-            <param name="msg">
-            A <see cref="T:System.String" /></param>
-        </member>
         <member name="T:SharpPcap.DeviceMode">
             <summary>
             The mode used when opening a device
@@ -2637,33 +2547,11 @@
             Resolves MAC addresses from IP addresses using the Address Resolution Protocol (ARP)
             </summary>
         </member>
-        <member name="M:SharpPcap.ARP.#ctor">
+        <member name="M:SharpPcap.ARP.#ctor(SharpPcap.LibPcap.LibPcapLiveDevice)">
             <summary>
             Constructs a new ARP Resolver
             </summary>
-        </member>
-        <member name="M:SharpPcap.ARP.#ctor(System.String)">
-            <summary>
-            Constructs a new ARP Resolver
-            </summary>
-            <param name="deviceName">The name of the network device on which this resolver sends its ARP packets</param>
-        </member>
-        <member name="P:SharpPcap.ARP.LocalMAC">
-            <summary>
-            The source MAC address to be used for ARP requests.
-            If null, the local device MAC address is used
-            </summary>
-        </member>
-        <member name="P:SharpPcap.ARP.LocalIP">
-            <summary>
-            The source IP address to be used for ARP requests.
-            If null, the local device IP address is used
-            </summary>
-        </member>
-        <member name="P:SharpPcap.ARP.DeviceName">
-            <summary>
-            The default device name on which to send ARP requests
-            </summary>
+            <param name="device">The network device on which this resolver sends its ARP packets</param>
         </member>
         <member name="P:SharpPcap.ARP.Timeout">
             <summary>
@@ -2678,22 +2566,13 @@
             <param name="destIP">The IP address to resolve</param>
             <returns>The MAC address that matches to the given IP address</returns>
         </member>
-        <member name="M:SharpPcap.ARP.Resolve(System.Net.IPAddress,System.String,System.Net.IPAddress)">
-            <summary>
-            Resolves the MAC address of the specified IP address.
-            </summary>
-            <param name="destIP">The IP address to resolve</param>
-            <param name="deviceName">The local network device name on which to send the ARP request</param>
-            <param name="srcIP">The local IP address from which to send the ARP request</param>
-            <returns>The MAC address that matches to the given IP address or
-            null if there was a timeout</returns>
-        </member>
-        <member name="M:SharpPcap.ARP.Resolve(System.Net.IPAddress,System.String)">
+        <member name="M:SharpPcap.ARP.Resolve(System.Net.IPAddress,System.Net.IPAddress,System.Net.NetworkInformation.PhysicalAddress)">
             <summary>
             Resolves the MAC address of the specified IP address
             </summary>
             <param name="destIP">The IP address to resolve</param>
-            <param name="deviceName">The local network device name on which to send the ARP request</param>
+            <param name="localIP">The local IP address from which to send the ARP request, if null the local address will be discovered</param>
+            <param name="localMAC">The localMAC address to use, if null the local mac will be discovered</param>
             <returns>The MAC address that matches to the given IP address or
             null if there was a timeout</returns>
         </member>
@@ -3064,11 +2943,6 @@
             Mac address of the physical device
             </summary>
         </member>
-        <member name="P:SharpPcap.ICaptureDevice.DumpOpened">
-            <summary>
-            Gets a value indicating whether a dump file is already associated with this device
-            </summary>
-        </member>
         <member name="P:SharpPcap.ICaptureDevice.Started">
             <summary>
             Return a value indicating if the capturing process of this adapter is started
@@ -3083,29 +2957,6 @@
         <member name="P:SharpPcap.ICaptureDevice.LinkType">
             <summary>
             Return the pcap link layer value of an adapter.
-            </summary>
-        </member>
-        <member name="M:SharpPcap.ICaptureDevice.Dump(SharpPcap.RawCapture)">
-            <summary>
-            Writes a packet to the pcap dump file associated with this device.
-            </summary>
-            <param name="p">The packet to write</param>
-        </member>
-        <member name="M:SharpPcap.ICaptureDevice.DumpOpen(System.String)">
-            <summary>
-            Opens a file for packet writings
-            </summary>
-            <param name="fileName">
-            </param>
-        </member>
-        <member name="M:SharpPcap.ICaptureDevice.DumpClose">
-            <summary>
-            Closes the opened dump file
-            </summary>
-        </member>
-        <member name="M:SharpPcap.ICaptureDevice.DumpFlush">
-            <summary>
-            Flushes all write buffers of the opened dump file
             </summary>
         </member>
         <member name="M:SharpPcap.ICaptureDevice.Open">
@@ -3155,6 +3006,14 @@
             </summary>
             <returns>
             </returns>
+        </member>
+        <member name="M:SharpPcap.ICaptureDevice.GetNextPacketPointers(System.IntPtr@,System.IntPtr@)">
+            <summary>
+            Gets pointers to the next PCAP header and packet data.
+            Data is only valid until next call to GetNextPacketNative.
+            Advanced use only. Intended to allow unmanaged code to avoid the overhead of
+            marshalling PcapHeader and packet contents to allocated memory.
+            </summary>
         </member>
         <member name="M:SharpPcap.ICaptureDevice.SendPacket(PacketDotNet.Packet)">
             <summary>
@@ -3623,6 +3482,11 @@
             <param name="Data">
             A <see cref="T:System.Byte" /></param>
         </member>
+        <member name="F:SharpPcap.RawCapture.Data">
+            <summary> Fetch data portion of the packet.</summary>
+            Data as a class field vs. a virtual property improves performance
+            significantly. ~2.5% when parsing the packet with Packet.Net and
+            ~20% when reading each byte of the packet</member>
         <member name="P:SharpPcap.RawCapture.LinkLayerType">
             <value>
             Link layer from which this packet was captured
@@ -3632,9 +3496,6 @@
             <value>
             The unix timeval when the packet was created
             </value>
-        </member>
-        <member name="P:SharpPcap.RawCapture.Data">
-            <summary> Fetch data portion of the packet.</summary>
         </member>
         <member name="M:SharpPcap.RawCapture.ToString">
             <summary>Output this packet as a readable string</summary>
@@ -3766,6 +3627,172 @@
             A <see cref="T:SharpPcap.PosixTimeval" /></param>
             <returns>
             A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="T:SharpPcap.LibPcap.CaptureFileReaderDevice">
+            <summary>
+            Read a pcap capture file
+            </summary>
+        </member>
+        <member name="M:SharpPcap.LibPcap.CaptureFileReaderDevice.#ctor(System.String)">
+            <summary>
+            </summary>
+            <param name="captureFilename">
+            A <see cref="T:System.String" /></param>
+        </member>
+        <member name="P:SharpPcap.LibPcap.CaptureFileReaderDevice.Name">
+            <value>
+            The name of the capture file
+            </value>
+        </member>
+        <member name="P:SharpPcap.LibPcap.CaptureFileReaderDevice.Description">
+            <value>
+            Description of the device
+            </value>
+        </member>
+        <member name="P:SharpPcap.LibPcap.CaptureFileReaderDevice.FileSize">
+            <value>
+            Number of bytes in the capture file
+            </value>
+        </member>
+        <member name="P:SharpPcap.LibPcap.CaptureFileReaderDevice.FileName">
+            <summary>
+            The underlying pcap file name
+            </summary>
+        </member>
+        <member name="P:SharpPcap.LibPcap.CaptureFileReaderDevice.Statistics">
+            <summary>
+            Retrieves pcap statistics
+            </summary>
+            <returns>
+            A <see cref="T:SharpPcap.LibPcap.PcapStatistics" /></returns>
+        </member>
+        <member name="M:SharpPcap.LibPcap.CaptureFileReaderDevice.Open">
+            <summary>
+            Open the device
+            </summary>
+        </member>
+        <member name="T:SharpPcap.LibPcap.CaptureFileWriterDevice">
+            <summary>
+            Create or write to a pcap capture file
+            NOTE: Appending to a capture file is not currently supported
+            </summary>
+        </member>
+        <member name="M:SharpPcap.LibPcap.CaptureFileWriterDevice.#ctor(System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="captureFilename">
+            A <see cref="T:System.String" /></param>
+        </member>
+        <member name="M:SharpPcap.LibPcap.CaptureFileWriterDevice.#ctor(System.String,System.IO.FileMode)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="captureFilename">
+            A <see cref="T:System.String" /></param>
+            <param name="mode">
+            A <see cref="T:System.IO.FileMode" /></param>
+        </member>
+        <member name="M:SharpPcap.LibPcap.CaptureFileWriterDevice.#ctor(SharpPcap.LibPcap.LibPcapLiveDevice,System.String)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="device">
+            A <see cref="T:SharpPcap.LibPcap.LibPcapLiveDevice" /></param>
+            <param name="captureFilename">
+            A <see cref="T:System.String" /></param>
+        </member>
+        <member name="M:SharpPcap.LibPcap.CaptureFileWriterDevice.#ctor(SharpPcap.LibPcap.LibPcapLiveDevice,System.String,System.IO.FileMode)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="device">
+            A <see cref="T:SharpPcap.LibPcap.LibPcapLiveDevice" /></param>
+            <param name="captureFilename">
+            A <see cref="T:System.String" /></param>
+            <param name="mode">
+            A <see cref="T:System.IO.FileMode" /></param>
+        </member>
+        <member name="M:SharpPcap.LibPcap.CaptureFileWriterDevice.#ctor(PacketDotNet.LinkLayers,System.Nullable{System.Int32},System.String,System.IO.FileMode)">
+            <summary>
+            Constructor
+            </summary>
+            <param name="linkLayerType">
+            A <see cref="T:PacketDotNet.LinkLayers" /></param>
+            <param name="snapshotLength">
+            A <see cref="!:System.Nullable&lt;System.Int32&gt;" /></param>
+            <param name="captureFilename">
+            A <see cref="T:System.String" /></param>
+            <param name="mode">
+            A <see cref="T:System.IO.FileMode" /></param>
+        </member>
+        <member name="F:SharpPcap.LibPcap.CaptureFileWriterDevice.m_pcapDumpHandle">
+            <summary>
+            Handle to an open dump file, not equal to IntPtr.Zero if a dump file is open
+            </summary>
+        </member>
+        <member name="P:SharpPcap.LibPcap.CaptureFileWriterDevice.DumpOpened">
+            <summary>
+            Whether dump file is open or not
+            </summary>
+            <returns>
+            A <see cref="T:System.Boolean" /></returns>
+        </member>
+        <member name="P:SharpPcap.LibPcap.CaptureFileWriterDevice.Name">
+            <value>
+            The name of the capture file
+            </value>
+        </member>
+        <member name="P:SharpPcap.LibPcap.CaptureFileWriterDevice.Description">
+            <value>
+            Description of the device
+            </value>
+        </member>
+        <member name="P:SharpPcap.LibPcap.CaptureFileWriterDevice.Statistics">
+            <summary>
+            Retrieves pcap statistics
+            </summary>
+            <returns>
+            A <see cref="T:SharpPcap.LibPcap.PcapStatistics" /></returns>
+        </member>
+        <member name="M:SharpPcap.LibPcap.CaptureFileWriterDevice.Close">
+            <summary>
+            Close the capture file
+            </summary>
+        </member>
+        <member name="M:SharpPcap.LibPcap.CaptureFileWriterDevice.Open">
+            <summary>
+            Open the device
+            </summary>
+        </member>
+        <member name="M:SharpPcap.LibPcap.CaptureFileWriterDevice.Write(System.Byte[],SharpPcap.LibPcap.PcapHeader)">
+            <summary>
+            Writes a packet to the pcap dump file associated with this device.
+            </summary>
+        </member>
+        <member name="M:SharpPcap.LibPcap.CaptureFileWriterDevice.Write(System.Byte[])">
+            <summary>
+            Writes a packet to the pcap dump file associated with this device.
+            </summary>
+            <param name="p">The packet to write</param>
+        </member>
+        <member name="M:SharpPcap.LibPcap.CaptureFileWriterDevice.Write(SharpPcap.RawCapture)">
+            <summary>
+            Writes a packet to the pcap dump file associated with this device.
+            </summary>
+            <param name="p">The packet to write</param>
+        </member>
+        <member name="T:SharpPcap.NotSupportedOnCaptureFileException">
+            <summary>
+            Thrown when a method not supported on a capture file
+            </summary>
+        </member>
+        <member name="M:SharpPcap.NotSupportedOnCaptureFileException.#ctor(System.String)">
+            <summary>
+            string constructor
+            </summary>
+            <param name="msg">
+            A <see cref="T:System.String" /></param>
         </member>
         <member name="T:SharpPcap.PacketArrivalEventHandler">
             <summary>A delegate for Packet Arrival events</summary>

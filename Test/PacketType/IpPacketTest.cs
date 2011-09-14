@@ -34,7 +34,7 @@ namespace Test.PacketType
         [Test]
         public void IpPacketFields()
         {
-            var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();

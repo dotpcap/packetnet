@@ -43,7 +43,7 @@ namespace Test.PacketType
             UdpPacket u;
             Packet p;
 
-            var dev = new OfflinePcapDevice("../../CaptureFiles/udp_dns_request_response.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/udp_dns_request_response.pcap");
             dev.Open();
 
             // check the first packet
@@ -130,7 +130,7 @@ namespace Test.PacketType
         [Test]
         public void UDPChecksum()
         {
-            var dev = new OfflinePcapDevice("../../CaptureFiles/udp.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/udp.pcap");
             dev.Open();
 
             // checksums from wireshark of the capture file
@@ -168,7 +168,7 @@ namespace Test.PacketType
         [Test]
         public void UdpPacketInsideOfEthernetPacketWithTrailer()
         {
-            var dev = new OfflinePcapDevice("../../CaptureFiles/udpPacketWithEthernetTrailers.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/udpPacketWithEthernetTrailers.pcap");
             dev.Open();
 
             // checksums from wireshark of the capture file
@@ -200,7 +200,7 @@ namespace Test.PacketType
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new OfflinePcapDevice("../../CaptureFiles/udp.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/udp.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
@@ -217,7 +217,7 @@ namespace Test.PacketType
         public void PrintVerboseString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new OfflinePcapDevice("../../CaptureFiles/udp.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/udp.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();

@@ -34,7 +34,7 @@ namespace Test.PacketType
         [Test]
         public void Parsing()
         {
-            var dev = new OfflinePcapDevice("../../CaptureFiles/IGMP dataset.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/IGMP dataset.pcap");
             dev.Open();
 
             RawCapture rawCapture;
@@ -76,7 +76,7 @@ namespace Test.PacketType
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new OfflinePcapDevice("../../CaptureFiles/IGMP dataset.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/IGMP dataset.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
@@ -93,7 +93,7 @@ namespace Test.PacketType
         public void PrintVerboseString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new OfflinePcapDevice("../../CaptureFiles/IGMP dataset.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/IGMP dataset.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();

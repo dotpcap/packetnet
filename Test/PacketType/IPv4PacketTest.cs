@@ -57,7 +57,7 @@ namespace Test.PacketType
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
@@ -74,7 +74,7 @@ namespace Test.PacketType
         public void PrintVerboseString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
@@ -100,7 +100,7 @@ namespace Test.PacketType
         [Test]
         public void IPv4InvalidTotalLength()
         {
-            var dev = new OfflinePcapDevice("../../CaptureFiles/ipv4_invalid_total_length.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv4_invalid_total_length.pcap");
             dev.Open();
 
             var rawCapture = dev.GetNextPacket();

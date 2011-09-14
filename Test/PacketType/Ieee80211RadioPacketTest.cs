@@ -34,7 +34,7 @@ namespace Test.PacketType
         [Test]
         public void ReadingPacketsFromFile()
         {
-            var dev = new OfflinePcapDevice("../../CaptureFiles/80211_plus_radiotap_header.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_plus_radiotap_header.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();

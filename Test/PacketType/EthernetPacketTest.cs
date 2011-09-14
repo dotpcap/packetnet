@@ -164,7 +164,7 @@ namespace Test.PacketType
         [Test]
         public void TestParsingKnownPackets()
         {
-            var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/test_stream.pcap");
             dev.Open();
 
             RawCapture rawCapture;
@@ -235,7 +235,7 @@ namespace Test.PacketType
         [Test]
         public void ParsingPacket()
         {
-            var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/test_stream.pcap");
             dev.Open();
 
             RawCapture p;
@@ -256,7 +256,7 @@ namespace Test.PacketType
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/test_stream.pcap");
             dev.Open();
             RawCapture rawCapture;
             Console.WriteLine("Reading packet data");
@@ -274,7 +274,7 @@ namespace Test.PacketType
         public void PrintVerboseString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new OfflinePcapDevice("../../CaptureFiles/test_stream.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/test_stream.pcap");
             dev.Open();
             RawCapture rawCapture;
             Console.WriteLine("Reading packet data");

@@ -43,7 +43,7 @@ namespace Test.PacketType
         [Test]
         public void ByteLengthInternalLengthMismatch()
         {
-            var dev = new OfflinePcapDevice("../../CaptureFiles/tcp_with_extra_bytes.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp_with_extra_bytes.pcap");
             dev.Open();
 
             var rawCapture = dev.GetNextPacket();
@@ -67,7 +67,7 @@ namespace Test.PacketType
         [Test]
         public virtual void Checksum()
         {
-            var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
 
             var rawCapture = dev.GetNextPacket();
@@ -104,7 +104,7 @@ namespace Test.PacketType
         [Test]
         public void TCPOptions()
         {
-            var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
 
             var rawCapture = dev.GetNextPacket();
@@ -138,7 +138,7 @@ namespace Test.PacketType
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
@@ -155,7 +155,7 @@ namespace Test.PacketType
         public void PrintVerboseString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new OfflinePcapDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();

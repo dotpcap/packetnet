@@ -45,10 +45,6 @@ namespace CapturingAndParsingPackets
             i = int.Parse( Console.ReadLine() );
 
             // Register a cancle handler that lets us break out of our capture loop
-            // since we currently need to synchronously receive packets in order to get
-            // raw packets. Future versions of SharpPcap are likely to
-            // return ONLY raw packets at which time we can simplify this code and
-            // use a PcapDevice.OnPacketArrival handler
             Console.CancelKeyPress += HandleCancelKeyPress;
 
             var device = devices[i];

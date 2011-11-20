@@ -34,17 +34,23 @@ namespace PacketDotNet
         public readonly static int FrameControlLength = 2;
         public readonly static int DurationIDLength = 2;
         public readonly static int AddressLength = EthernetFields.MacAddressLength;
-        public readonly static int SequenceControlLength = 4;
+        public readonly static int SequenceControlLength = 2;
         public readonly static int FrameCheckSequenceLength = 4;
 
         public readonly static int FrameControlPosition = 0;
         public readonly static int DurationIDPosition;
+        /// <summary>
+        /// Not all MAC Frames contain a sequence control field. The value of this field is only meaningful when they do.
+        /// </summary>
+        public readonly static int SequenceControlPosition;
         public readonly static int Address1Position;
 
         static Ieee80211MacFields()
         {
             DurationIDPosition = FrameControlPosition + FrameControlLength;
             Address1Position = DurationIDPosition + DurationIDLength;
+            SequenceControlPosition = Ieee80211MacFields.Address1Position + (Ieee80211MacFields.AddressLength * 3);
         }
     }
+
 }

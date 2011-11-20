@@ -296,7 +296,7 @@ namespace PacketDotNet
                 p = new PPPPacket(bas);
                 break;
             case LinkLayers.Ieee80211:
-                p = new Ieee80211MacFrame(bas);
+                p = Ieee80211MacFrame.ParsePacket(bas);
                 break;
             case LinkLayers.Ieee80211_Radio:
                 p = new Ieee80211RadioPacket(bas);

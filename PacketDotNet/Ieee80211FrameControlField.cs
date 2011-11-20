@@ -36,7 +36,7 @@ namespace PacketDotNet
         {
             get
             {
-                return (byte)(Field >> 14);
+                return (byte)(Field & 0x0300);
             }
         }
 
@@ -86,9 +86,9 @@ namespace PacketDotNet
             ManagementReserved1 = 0x7,
 
             /// <summary>
-            /// Becon
+            /// Beacon
             /// </summary>
-            ManagementBecon = 0x8,
+            ManagementBeacon = 0x8,
 
             /// <summary>
             /// ATIM
@@ -113,12 +113,22 @@ namespace PacketDotNet
             /// <summary>
             /// Reserved 2
             /// </summary>
-            ManagementReserved2 = 0xD,
+            ManagementAction = 0xD,
 
             /// <summary>
             /// Reserved 3
             /// </summary>
             ManagementReserved3 = 0xE,
+
+            /// <summary>
+            /// Blck Acknowledgment Request (QOS)
+            /// </summary>
+            ControlBlockAcknowledgmentRequest = 0x18,
+
+            /// <summary>
+            /// Blck Acknowledgment (QOS)
+            /// </summary>
+            ControlBlockAcknowledgment = 0x19,
 
             /// <summary>
             /// PS poll
@@ -187,18 +197,36 @@ namespace PacketDotNet
             /// <summary>
             /// CF-Ack CF-Poll no data
             /// </summary>
-            DataCFAckCFPollNoData = 0x27
+            DataCFAckCFPollNoData = 0x27,
+
+            QosData = 0x28,
+
+            QosDataAndCFAck = 0x29,
+
+            QosDataAndCFPoll = 0x2A,
+
+            QosDataAndCFAckAndCFPoll = 0x2B,
+
+            QosNullData = 0x2C,
+
+            QosCFAck = 0x2D,
+
+            QosCFPoll = 0x2E,
+
+            QosCFAckAndCFPoll = 0x2F
         };
 
         /// <summary>
         /// Helps to identify the type of WLAN frame, control data and management are
         /// the various frame types defined in IEEE 802.11
         /// </summary>
-        public FrameTypes Types
+        public FrameTypes Type
         {
             get
             {
-                return (FrameTypes)((Field >> 8) & 0x3F);
+                int typeAndSubtype = (Field >> 8); //get rid of the flags
+                int type = (((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4));
+                return (FrameTypes)type;
             }
         }
 
@@ -209,7 +237,7 @@ namespace PacketDotNet
         {
             get
             {
-                return (((Field >> 7) & 0x1) == 1) ? true : false;
+                return ((Field & 0x1) == 1) ? true : false;
             }
         }
 
@@ -220,7 +248,7 @@ namespace PacketDotNet
         {
             get
             {
-                return (((Field >> 6) & 0x1) == 1) ? true : false;
+                return (((Field >> 1) & 0x1) == 1) ? true : false;
             }
         }
 
@@ -232,7 +260,7 @@ namespace PacketDotNet
         {
             get
             {
-                return (((Field >> 5) & 0x1) == 1) ? true : false;
+                return (((Field >> 2) & 0x1) == 1) ? true : false;
             }
         }
 
@@ -244,7 +272,7 @@ namespace PacketDotNet
         {
             get
             {
-                return (((Field >> 4) & 0x1) == 1) ? true : false;
+                return (((Field >> 3) & 0x1) == 1) ? true : false;
             }
         }
 
@@ -255,7 +283,7 @@ namespace PacketDotNet
         {
             get
             {
-                return (((Field >> 3) & 0x1) == 1) ? true : false;
+                return (((Field >> 4) & 0x1) == 1) ? true : false;
             }
         }
 
@@ -266,7 +294,7 @@ namespace PacketDotNet
         {
             get
             {
-                return (((Field >> 2) & 0x1) == 1) ? true : false;
+                return (((Field >> 5) & 0x1) == 1) ? true : false;
             }
         }
 
@@ -277,7 +305,7 @@ namespace PacketDotNet
         {
             get
             {
-                return (((Field >> 1) & 0x1) == 1) ? true : false;
+                return (((Field >> 6) & 0x1) == 1) ? true : false;
             }
         }
 
@@ -289,7 +317,7 @@ namespace PacketDotNet
         {
             get
             {
-                return ((Field & 0x1) == 1) ? true : false;
+                return (((Field >> 0x7) & 0x1)== 1) ? true : false;
             }
         }
 

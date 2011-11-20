@@ -51,9 +51,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PacketType\Ieee80211ActionFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211BlockAcknowledgmentFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211AssociationResponseFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211AssociationRequestFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211AuthenticationFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211BlockAcknowledgmentRequestFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211DeauthenticationFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211BeaconFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211ContentionFreeEndFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211DataDataFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211DisassociationFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211FrameControlFieldTest.cs" />
+    <Compile Include="PacketType\Ieee80211NullDataFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211PerPacketInformationTest.cs" />
+    <Compile Include="PacketType\Ieee80211QosDataFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211QosNullDataFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211RadioPacketTest.cs" />
     <Compile Include="PacketType\Ieee80211RawPacketTest.cs" />
+    <Compile Include="PacketType\Ieee80211ProbeRequestTest.cs" />
+    <Compile Include="PacketType\Ieee80211ProbeResponseTest.cs" />
     <Compile Include="Rate.cs" />
     <Compile Include="ByteSetupMethods.cs" />
     <Compile Include="NUnitSetupClass.cs" />

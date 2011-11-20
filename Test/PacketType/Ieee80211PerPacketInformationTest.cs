@@ -32,6 +32,7 @@ namespace Test.PacketType
         /// Test that parsing an ip packet yields the proper field values
         /// </summary>
         [Test]
+        [Ignore("Ignored because the 802.11 per packet link type does not appear to be supported")]
         public void ReadingPacketsFromFile()
         {
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_per_packet_information.pcap");

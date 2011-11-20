@@ -31,7 +31,7 @@ namespace PacketDotNet
     ///
     /// See http://www.ucertify.com/article/ieee-802-11-frame-format.html
     /// </summary>
-    public class Ieee80211MacFrame : Packet
+    public abstract class Ieee80211MacFrame : Packet
     {
 #if DEBUG
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -86,14 +86,43 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Duration bytes are the third and fourth bytes of the frame
+        /// </summary>
+        public UInt16 DurationBytes
+        {
+            get
+            {
+                return EndianBitConverter.Little.ToUInt16(header.Bytes,
+                                                      header.Offset + Ieee80211MacFields.DurationIDPosition);
+            }
+
+            set
+            {
+                EndianBitConverter.Little.CopyBytes(value,
+                                                 header.Bytes,
+                                                 header.Offset + Ieee80211MacFields.DurationIDPosition);
+            }
+        }
+
+        public Ieee80211DurationField Duration
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="addressIndex">Zero based address to look up</param>
         /// <param name="address"></param>
-        private void SetAddress(int addressIndex, PhysicalAddress address)
+        protected void SetAddress(int addressIndex, PhysicalAddress address)
         {
             var offset = GetOffsetForAddress(addressIndex);
+            SetAddressByOffset(offset, address);
+        }
 
+        protected void SetAddressByOffset(int offset, PhysicalAddress address)
+        {
             // using the offset, set the address
             byte[] hwAddress = address.GetAddressBytes();
             if (hwAddress.Length != Ieee80211MacFields.AddressLength)
@@ -107,10 +136,14 @@ namespace PacketDotNet
                        hwAddress.Length);
         }
 
-        private PhysicalAddress GetAddress(int addressIndex)
+        protected PhysicalAddress GetAddress(int addressIndex)
         {
             var offset = GetOffsetForAddress(addressIndex);
+            return GetAddressByOffset(offset);            
+        }
 
+        protected PhysicalAddress GetAddressByOffset(int offset)
+        {
             byte[] hwAddress = new byte[Ieee80211MacFields.AddressLength];
             Array.Copy(header.Bytes, offset,
                        hwAddress, 0, hwAddress.Length);
@@ -124,239 +157,169 @@ namespace PacketDotNet
         {
             get
             {
-                var offsetToEndOfData = payloadPacketOrData.TheByteArraySegment.Offset + payloadPacketOrData.TheByteArraySegment.Length;
                 return EndianBitConverter.Big.ToUInt32(header.Bytes,
-                                                       offsetToEndOfData);
+                                                       (header.Offset + TotalPacketLength));
             }
 
             set
             {
-                var offsetToEndOfData = payloadPacketOrData.TheByteArraySegment.Offset + payloadPacketOrData.TheByteArraySegment.Length;
                 EndianBitConverter.Big.CopyBytes(value,
                                                  header.Bytes,
-                                                 offsetToEndOfData);
+                                                 (header.Offset + TotalPacketLength));
             }
         }
 
         /// <summary>
-        /// Interfaces for all inner frames
+        /// Length of the frame header.
+        /// 
+        /// This does not include the FCS, it represents on the header bytes that would
+        /// would preceed any payload.
         /// </summary>
-        public interface InnerFramePacket
+        public abstract int FrameSize { get; }
+
+
+        public static Ieee80211MacFrame ParsePacket(ByteArraySegment bas)
         {
-            /// <summary>
-            /// Length of the frame
-            /// </summary>
-            int FrameSize { get; }
-        }
+            //this is a bit ugly as we will end up parsing the framecontrol field twice, once here and once
+            //inside the packet constructor. Could create the framecontrol and pass it to the packet but I think that is equally ugly
+            Ieee80211FrameControlField frameControl = new Ieee80211FrameControlField(
+                EndianBitConverter.Big.ToUInt16(bas.Bytes, bas.Offset));
 
-        /// <summary>
-        /// RTS Frame has a ReceiverAddress[6], TransmitterAddress[6] and a FrameCheckSequence[4],
-        /// these fields follow the common FrameControl[2] and DurationId[2] fields
-        /// </summary>
-        public class RTSFrame : Packet, InnerFramePacket
-        {
-            /// <summary>
-            /// ReceiverAddress
-            /// </summary>
-            public PhysicalAddress ReceiverAddress
+            Ieee80211MacFrame macFrame = null;
+
+            switch (frameControl.Type)
             {
-                get
-                {
-                    return parent.GetAddress(0);
-                }
-
-                set
-                {
-                    parent.SetAddress(0, value);
-                }
+                case Ieee80211FrameControlField.FrameTypes.ManagementAssociationRequest:
+                    {
+                        macFrame = new Ieee80211AssociationRequestFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ManagementAssociationResponse:
+                    {
+                        macFrame = new Ieee80211AssociationResponseFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ManagementReassociationRequest:
+                    {
+                        macFrame = new Ieee80211ReassociationRequestFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ManagementReassociationResponse:
+                    {
+                        macFrame = new Ieee80211AssociationResponseFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ManagementProbeRequest:
+                    {
+                        macFrame = new Ieee80211ProbeRequestFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ManagementProbeResponse:
+                    {
+                        macFrame = new Ieee80211ProbeResponseFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ManagementReserved0:
+                    break; //TODO
+                case Ieee80211FrameControlField.FrameTypes.ManagementReserved1:
+                    break; //TODO
+                case Ieee80211FrameControlField.FrameTypes.ManagementBeacon:
+                    {
+                        macFrame = new Ieee80211BeaconFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ManagementATIM:
+                    break; //TODO
+                case Ieee80211FrameControlField.FrameTypes.ManagementDisassociation:
+                    {
+                        macFrame = new Ieee80211DisassociationFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ManagementAuthentication:
+                    {
+                        macFrame = new Ieee80211AuthenticationFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ManagementDeauthentication:
+                    {
+                        macFrame = new Ieee80211DeauthenticationFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ManagementAction:
+                    {
+                        macFrame = new Ieee80211ActionFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ManagementReserved3:
+                    break; //TODO
+                case Ieee80211FrameControlField.FrameTypes.ControlBlockAcknowledgmentRequest:
+                    {
+                        macFrame = new Ieee80211BlockAcknowledgmentRequestFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ControlBlockAcknowledgment:
+                    {
+                        macFrame = new Ieee80211BlockAcknowledgmentFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ControlPSPoll:
+                    break; //TODO
+                case Ieee80211FrameControlField.FrameTypes.ControlRTS:
+                    {
+                        macFrame = new Ieee80211RtsFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ControlCTS:
+                case Ieee80211FrameControlField.FrameTypes.ControlACK:
+                    {
+                        macFrame = new Ieee80211CtsOrAckFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ControlCFEnd:
+                    {
+                        macFrame = new Ieee80211ContentionFreeEndFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.ControlCFEndCFACK:
+                    break; //TODO
+                case Ieee80211FrameControlField.FrameTypes.Data:
+                case Ieee80211FrameControlField.FrameTypes.DataCFACK:
+                case Ieee80211FrameControlField.FrameTypes.DataCFPoll:
+                case Ieee80211FrameControlField.FrameTypes.DataCFAckCFPoll:
+                    {
+                        macFrame = new Ieee80211DataDataFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.DataNullFunctionNoData:
+                case Ieee80211FrameControlField.FrameTypes.DataCFAckNoData:
+                case Ieee80211FrameControlField.FrameTypes.DataCFPollNoData:
+                case Ieee80211FrameControlField.FrameTypes.DataCFAckCFPollNoData:
+                    {
+                        macFrame = new Ieee80211NullDataFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.QosData:
+                case Ieee80211FrameControlField.FrameTypes.QosDataAndCFAck:
+                case Ieee80211FrameControlField.FrameTypes.QosDataAndCFPoll:
+                case Ieee80211FrameControlField.FrameTypes.QosDataAndCFAckAndCFPoll:
+                    {
+                        macFrame = new Ieee80211QosDataFrame(bas);
+                        break;
+                    }
+                case Ieee80211FrameControlField.FrameTypes.QosNullData:
+                case Ieee80211FrameControlField.FrameTypes.QosCFAck:
+                case Ieee80211FrameControlField.FrameTypes.QosCFPoll:
+                case Ieee80211FrameControlField.FrameTypes.QosCFAckAndCFPoll:
+                    {
+                        macFrame = new Ieee80211QosNullDataFrame(bas);
+                        break;
+                    }
+                default:
+                    //this is an unsupported (and unknown) packet type
+                    break;
             }
 
-            /// <summary>
-            /// TransmitterAddress
-            /// </summary>
-            public PhysicalAddress TransmitterAddress
-            {
-                get
-                {
-                    return parent.GetAddress(1);
-                }
-
-                set
-                {
-                    parent.SetAddress(1, value);
-                }
-            }
-
-            /// <summary>
-            /// Length of the frame
-            /// </summary>
-            public int FrameSize
-            {
-                get
-                {
-                    return Ieee80211MacFields.AddressLength * 2;
-                }
-            }
-
-            private Ieee80211MacFrame parent;
-
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="parent">
-            /// A <see cref="Ieee80211MacFrame"/>
-            /// </param>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public RTSFrame(Ieee80211MacFrame parent, ByteArraySegment bas)
-            {
-                this.parent = parent;
-                header = new ByteArraySegment(bas);
-                header.Length = FrameSize;
-            }
-
-            /// <summary>
-            /// ToString() override
-            /// </summary>
-            /// <returns>
-            /// A <see cref="System.String"/>
-            /// </returns>
-            public override string ToString()
-            {
-                return string.Format("[RTSFrame RA {0}, TA {1}]",
-                                     ReceiverAddress.ToString(),
-                                     TransmitterAddress.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Format of a CTS or an ACK frame
-        /// </summary>
-        public class CTSOrACKFrame : Packet, InnerFramePacket
-        {
-            /// <summary>
-            /// Receiver address
-            /// </summary>
-            public PhysicalAddress ReceiverAddress
-            {
-                get
-                {
-                    return parent.GetAddress(0);
-                }
-
-                set
-                {
-                    parent.SetAddress(0, value);
-                }
-            }
-
-            /// <summary>
-            /// Length of the frame
-            /// </summary>
-            public int FrameSize
-            {
-                get
-                {
-                    return Ieee80211MacFields.AddressLength;
-                }
-            }
-
-            private Ieee80211MacFrame parent;
-
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="parent">
-            /// A <see cref="Ieee80211MacFrame"/>
-            /// </param>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public CTSOrACKFrame(Ieee80211MacFrame parent, ByteArraySegment bas)
-            {
-                this.parent = parent;
-                header = new ByteArraySegment(bas);
-                header.Length = FrameSize;
-            }
-
-            /// <summary>
-            /// ToString() override
-            /// </summary>
-            /// <returns>
-            /// A <see cref="System.String"/>
-            /// </returns>
-            public override string ToString()
-            {
-                return string.Format("[CTSOrACKFrame RA {0}]",
-                                     ReceiverAddress.ToString());
-            }
-        }
-
-        /// <summary>
-        /// One of RTS, CTS etc frames
-        /// </summary>
-        public InnerFramePacket InnerFrame
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
-        /// </param>
-        public Ieee80211MacFrame(ByteArraySegment bas)
-        {
-            log.Debug("");
-
-            // slice off the header portion as our header
-            header = new ByteArraySegment(bas);
-            const int defaultLength = 4;
-            header.Length = defaultLength;
-
-            FrameControl = new Ieee80211FrameControlField(FrameControlBytes);
-
-            // determine what kind of frame this is based on the type
-            if (FrameControl.Types == Ieee80211FrameControlField.FrameTypes.ControlRTS)
-            {
-                InnerFrame = new RTSFrame(this, bas);
-            }
-            else if (FrameControl.Types == Ieee80211FrameControlField.FrameTypes.ControlCTS)
-            {
-                InnerFrame = new CTSOrACKFrame(this, bas);
-            }
-            else if (FrameControl.Types == Ieee80211FrameControlField.FrameTypes.ControlACK)
-            {
-                InnerFrame = new CTSOrACKFrame(this, bas);
-            }
-            else
-            {
-                throw new System.NotImplementedException("FrameControl.Types of " + FrameControl.Types + " not handled");
-            }
-
-            header.Length = InnerFrame.FrameSize;
-
-            // store the payload, less the frame check sequence at the end
-            payloadPacketOrData = new PacketOrByteArraySegment();
-            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
-            payloadPacketOrData.TheByteArraySegment.Length -= Ieee80211MacFields.FrameCheckSequenceLength;
-        }
-
-        /// <summary>
-        /// ToString() override
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/>
-        /// </returns>
-        public override string ToString()
-        {
-            return string.Format("FrameControl {0}, InnerFrame {1}, FrameCheckSequence {2}",
-                                 FrameControl.ToString(),
-                                 InnerFrame.ToString(),
-                                 FrameCheckSequence);
+            return macFrame;
         }
     }
 }

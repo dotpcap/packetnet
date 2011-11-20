@@ -124,7 +124,7 @@ namespace PacketDotNet
             header.Length = Length;
 
             // parse the encapsulated bytes
-//            payloadPacketOrData = ParseEncapsulatedBytes(header, Type, Timeval);
+            payloadPacketOrData = ParseEncapsulatedBytes(header.EncapsulatedBytes());
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
@@ -228,6 +228,26 @@ namespace PacketDotNet
 
                 return retval;
             }
+        }
+
+
+        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment payload)
+        {
+            var payloadPacketOrData = new PacketOrByteArraySegment();
+
+            //I think 802.11 MAC frames are the only thing that could be contained inside
+            //a radio packet so we don't need to bother with a switch
+            Ieee80211MacFrame frame = Ieee80211MacFrame.ParsePacket(payload);
+            if (frame == null)
+            {
+                payloadPacketOrData.TheByteArraySegment = payload;
+            }
+            else
+            {
+                payloadPacketOrData.ThePacket = frame;
+            }
+
+            return payloadPacketOrData;
         }
     }
 }

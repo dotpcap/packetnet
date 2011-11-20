@@ -7,8 +7,7 @@ namespace PacketDotNet
 {
     public class Ieee80211SequenceControlField
     {
-        private UInt16 Field;
-
+        public UInt16 Field { get; set; }
 
         public short SequenceNumber
         {
@@ -38,6 +37,11 @@ namespace PacketDotNet
             }
         }
 
+
+        public Ieee80211SequenceControlField()
+        {
+
+        }
 
         /// <summary>
         /// Constructor

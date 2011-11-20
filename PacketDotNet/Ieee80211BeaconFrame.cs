@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
+using System.Net.NetworkInformation;
 
 namespace PacketDotNet
 {
@@ -115,7 +116,7 @@ namespace PacketDotNet
                     Ieee80211MacFields.SequenceControlLength +
                     Ieee80211BeaconFields.TimestampLength +
                     Ieee80211BeaconFields.BeaconIntervalLength +
-                    Ieee80211BeaconFields.CapabilityInformationLength + 
+                    Ieee80211BeaconFields.CapabilityInformationLength +
                     InformationElements.Length);
             }
         }
@@ -125,7 +126,7 @@ namespace PacketDotNet
         /// 
         /// Most (but not all) beacons frames will contain an Information element that contains the SSID.
         /// </summary>
-        public Ieee80211InformationElementSection InformationElements { get; set; }
+        public Ieee80211InformationElementSection InformationElements { get; private set; }
 
         /// <summary>
         /// Constructor
@@ -152,6 +153,35 @@ namespace PacketDotNet
             //cant set length until after we have handled the information elements
             //as they vary in length
             header.Length = FrameSize;
+        }
+
+        public Ieee80211BeaconFrame(Ieee80211FrameControlField frameControl,
+            Ieee80211DurationField duration,
+            PhysicalAddress source,
+            PhysicalAddress destination,
+            PhysicalAddress bssId,
+            Ieee80211SequenceControlField sequenceControl,
+            UInt64 timestamp,
+            UInt16 beaconInterval,
+            Ieee80211CapabilityInformationField capabilityInfo,
+            List<Ieee80211InformationElement> infoElements)
+        {
+            //need to handle information elements first as they dictate the length of the frame
+            Ieee80211InformationElementSection infoElementSection = new Ieee80211InformationElementSection(infoElements);
+            header = new ByteArraySegment(new Byte[Ieee80211BeaconFields.InformationElement1Position + infoElementSection.Length]);
+
+            FrameControlBytes = frameControl.Field;
+            DurationBytes = duration.Field;
+            SequenceControlBytes = sequenceControl.Field;
+            SourceAddress = source;
+            DestinationAddress = destination;
+            BssId = bssId;
+            Timestamp = timestamp;
+            BeaconInterval = beaconInterval;
+            CapabilityInformationBytes = capabilityInfo.Field;
+
+            Byte[] infoElementBuffer = infoElementSection.Bytes;
+            Array.Copy(infoElementBuffer, 0, header.Bytes, Ieee80211BeaconFields.InformationElement1Position, infoElementSection.Length);
         }
 
         /// <summary>

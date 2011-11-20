@@ -59,6 +59,13 @@ namespace PacketDotNet
             header.Length = FrameSize;
         }
 
+        public Ieee80211ProbeRequestFrame()
+        {
+            int length = TcpFields.HeaderLength;
+            var headerBytes = new byte[length];
+            header = new ByteArraySegment(headerBytes, 0, length);
+        }
+
         /// <summary>
         /// ToString() override
         /// </summary>

@@ -321,7 +321,13 @@ namespace PacketDotNet
             }
         }
 
-        private UInt16 Field;
+        public UInt16 Field { get; set; }
+
+
+        public Ieee80211FrameControlField()
+        {
+
+        }
 
         /// <summary>
         /// Constructor
@@ -333,5 +339,6 @@ namespace PacketDotNet
         {
             this.Field = field;
         }
+
     }
 }

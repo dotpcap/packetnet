@@ -38,10 +38,57 @@ namespace PacketDotNet
             VendorSpecific = 0xDD
         }
 
-        public ElementId Id { get; set; }
+        public Ieee80211InformationElement(ElementId id, Byte[] value)
+        {
+            if (value.Length > 0xFF)
+            {
+                throw new ArgumentException("Value is too long. Maximum allowed length is 256 bytes.");
+            }
 
-        public Byte Length { get; set; }
+            Id = id;
+            Value = value;
+        }
 
-        public Byte[] Value { get; set; }
+        public ElementId Id { get; private set; }
+
+        public int Length
+        {
+            get
+            {
+                return Value.Length;
+            }
+        }
+
+        public Byte[] Value { get; private set; }
+
+        public Byte[] Bytes
+        {
+            get
+            {
+                Byte[] bytes = new Byte[2 + Length];
+                bytes[0] = (byte)Id;
+                bytes[1] = (byte)Length;
+                Array.Copy(Value, 0, bytes, 2, Length);
+                return bytes;
+            }
+        }
+
+        // override object.Equals
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Ieee80211InformationElement ie = obj as Ieee80211InformationElement;
+            return ((Id == ie.Id) && (Value.SequenceEqual(ie.Value)));
+        }
+
+        // override object.GetHashCode
+        public override int GetHashCode()
+        {
+            return Id.GetHashCode() ^ Value.GetHashCode();
+        }
     }
 }

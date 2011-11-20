@@ -11,7 +11,11 @@ namespace PacketDotNet
         /// This is the raw Duration field
         /// 
         /// </summary>
-        public  UInt16 Field;
+        public UInt16 Field { get; set; }
+
+        public Ieee80211DurationField()
+        {
+        }
 
         /// <summary>
         /// Constructor

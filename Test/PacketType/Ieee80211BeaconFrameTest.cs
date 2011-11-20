@@ -6,6 +6,7 @@ using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
+using System.Net.NetworkInformation;
 
 namespace Test.PacketType
 {
@@ -53,5 +54,36 @@ namespace Test.PacketType
 
             Console.WriteLine(p.ToString());
         }
+
+        //[Test]
+        //public void TestConstructWithValues()
+        //{
+        //    Ieee80211BeaconFrame frame = CreateTestFrame();
+        //}
+
+        //private Ieee80211BeaconFrame CreateTestFrame()
+        //{
+        //    Ieee80211FrameControlField frameControl = new Ieee80211FrameControlField();
+        //    Ieee80211DurationField duration = new Ieee80211DurationField();
+        //    PhysicalAddress source = new PhysicalAddress(new Byte[] { });
+        //    PhysicalAddress destination = new PhysicalAddress(new Byte[] { });
+        //    PhysicalAddress bssid = new PhysicalAddress(new Byte[] { });
+        //    Ieee80211SequenceControlField sequenceControl = new Ieee80211SequenceControlField();
+        //    ulong timestamp = 123;
+        //    ushort beaconInterval = 123;
+        //    Ieee80211CapabilityInformationField capabilityInfo = new Ieee80211CapabilityInformationField();
+        //    List<Ieee80211InformationElement> infoElements = new List<Ieee80211InformationElement>();
+
+        //    return beaconFrame = new Ieee80211BeaconFrame(frameControl,
+        //        duration,
+        //        source,
+        //        destination,
+        //        bssid,
+        //        sequenceControl,
+        //        timestamp,
+        //        beaconInterval,
+        //        capabilityInfo,
+        //        infoElements);
+        //}
     }
 }

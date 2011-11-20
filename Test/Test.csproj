@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Ieee80211InformationElementSectionTest.cs" />
     <Compile Include="PacketType\Ieee80211ActionFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211BlockAcknowledgmentFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211AssociationResponseFrameTest.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="PacketType\Ieee80211DataDataFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211DisassociationFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211FrameControlFieldTest.cs" />
+    <Compile Include="PacketType\Ieee80211InformationElementTest.cs" />
     <Compile Include="PacketType\Ieee80211NullDataFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211PerPacketInformationTest.cs" />
     <Compile Include="PacketType\Ieee80211QosDataFrameTest.cs" />

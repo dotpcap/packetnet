@@ -13,31 +13,63 @@ namespace PacketDotNet
 
         public Ieee80211InformationElementSection(ByteArraySegment infoElementBuffer)
         {
-            //store the length so we can get it latter without have to calculate it
-            Length = infoElementBuffer.Length;
-
             InformationElements = new List<Ieee80211InformationElement>();
             //go through the buffer extracting out information element
             int idIndex = 0;
             while (idIndex < infoElementBuffer.Length)
             {
-                Ieee80211InformationElement infoElement = new Ieee80211InformationElement();
-                infoElement.Id = (Ieee80211InformationElement.ElementId)infoElementBuffer.Bytes[infoElementBuffer.Offset + idIndex];
-                infoElement.Length = infoElementBuffer.Bytes[infoElementBuffer.Offset + idIndex + ElementIdLength];
+                
+                Ieee80211InformationElement.ElementId id = (Ieee80211InformationElement.ElementId)infoElementBuffer.Bytes[infoElementBuffer.Offset + idIndex];
+                Byte length = infoElementBuffer.Bytes[infoElementBuffer.Offset + idIndex + ElementIdLength];
 
-                infoElement.Value = new byte[infoElement.Length];
+                Byte[] value = new Byte[length];
                 Array.Copy(infoElementBuffer.Bytes,
                     (infoElementBuffer.Offset + idIndex + ElementIdLength + ElementLengthLength),
-                    infoElement.Value, 0, infoElement.Length);
+                    value, 0, length);
 
+                Ieee80211InformationElement infoElement = new Ieee80211InformationElement(id, value);
                 InformationElements.Add(infoElement);
 
                 idIndex += (ElementIdLength + ElementLengthLength + infoElement.Length);
             }
         }
 
+        public Ieee80211InformationElementSection(List<Ieee80211InformationElement> infoElements)
+        {
+            InformationElements = new List<Ieee80211InformationElement>(infoElements);
+        }
+
         public List<Ieee80211InformationElement> InformationElements { get; set; }
 
-        public int Length { get; set; }
+        public int Length 
+        {
+            get
+            {
+                int length = 0;
+                foreach (Ieee80211InformationElement ie in InformationElements)
+                {
+                    length += (ie.Length + ElementIdLength + ElementLengthLength);
+                }
+                return length;
+            }
+        }
+
+        public Byte[] Bytes
+        {
+            get
+            {
+                Byte[] bytes = new Byte[Length];
+                int index = 0;
+                foreach (Ieee80211InformationElement ie in InformationElements)
+                {
+                    Byte[] ieBytes = ie.Bytes;
+                    Array.Copy(ieBytes, 0, bytes, index, ieBytes.Length);
+
+                    index += ieBytes.Length;
+                }
+
+                return bytes;
+            }
+        }
     }
 }

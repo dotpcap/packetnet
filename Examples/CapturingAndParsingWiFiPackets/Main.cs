@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SharpPcap;
 using PacketDotNet;
+using PacketDotNet.Ieee80211;
 using SharpPcap.AirPcap;
 
 namespace CapturingAndParsingWiFiPackets
@@ -82,14 +83,14 @@ namespace CapturingAndParsingWiFiPackets
                 // use PacketDotNet to parse this packet and print out
                 // its high level information
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                Ieee80211MacFrame macFrame = (Ieee80211MacFrame)p.PayloadPacket;
+                MacFrame macFrame = (MacFrame)p.PayloadPacket;
                 if ((macFrame != null) && 
-                    (macFrame.FrameControl.Type == Ieee80211FrameControlField.FrameTypes.ManagementBeacon))
+                    (macFrame.FrameControl.Type == FrameControlField.FrameTypes.ManagementBeacon))
                 {
-                    Ieee80211BeaconFrame beaconFrame = (Ieee80211BeaconFrame)macFrame;
+                    BeaconFrame beaconFrame = (BeaconFrame)macFrame;
                     foreach (var ie in beaconFrame.InformationElements.InformationElements)
                     {
-                        if (ie.Id == Ieee80211InformationElement.ElementId.ServiceSetIdentity)
+                        if (ie.Id == InformationElement.ElementId.ServiceSetIdentity)
                         {
                             Console.WriteLine("Network: {0}, Access Point Address: {1}", Encoding.UTF8.GetString(ie.Value), beaconFrame.SourceAddress);
                         }

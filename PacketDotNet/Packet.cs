@@ -296,10 +296,10 @@ namespace PacketDotNet
                 p = new PPPPacket(bas);
                 break;
             case LinkLayers.Ieee80211:
-                p = Ieee80211MacFrame.ParsePacket(bas);
+                p = Ieee80211.MacFrame.ParsePacket(bas);
                 break;
             case LinkLayers.Ieee80211_Radio:
-                p = new Ieee80211RadioPacket(bas);
+                p = new Ieee80211.RadioPacket(bas);
                 break;
             default:
                 throw new System.NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");

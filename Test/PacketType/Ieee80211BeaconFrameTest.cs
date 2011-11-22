@@ -55,35 +55,59 @@ namespace Test.PacketType
             Console.WriteLine(p.ToString());
         }
 
-        //[Test]
-        //public void TestConstructWithValues()
-        //{
-        //    Ieee80211BeaconFrame frame = CreateTestFrame();
-        //}
+        [Test]
+        public void TestConstructWithValues()
+        {
+            //create a frame with some of the fields set to arbitrary values
+            Ieee80211FrameControlField frameControl = new Ieee80211FrameControlField();
+            frameControl.Type = Ieee80211FrameControlField.FrameTypes.ManagementBeacon;
+            frameControl.ToDS = true;
+            frameControl.Wep = true;
 
-        //private Ieee80211BeaconFrame CreateTestFrame()
-        //{
-        //    Ieee80211FrameControlField frameControl = new Ieee80211FrameControlField();
-        //    Ieee80211DurationField duration = new Ieee80211DurationField();
-        //    PhysicalAddress source = new PhysicalAddress(new Byte[] { });
-        //    PhysicalAddress destination = new PhysicalAddress(new Byte[] { });
-        //    PhysicalAddress bssid = new PhysicalAddress(new Byte[] { });
-        //    Ieee80211SequenceControlField sequenceControl = new Ieee80211SequenceControlField();
-        //    ulong timestamp = 123;
-        //    ushort beaconInterval = 123;
-        //    Ieee80211CapabilityInformationField capabilityInfo = new Ieee80211CapabilityInformationField();
-        //    List<Ieee80211InformationElement> infoElements = new List<Ieee80211InformationElement>();
+            Ieee80211DurationField duration = new Ieee80211DurationField(12345);
 
-        //    return beaconFrame = new Ieee80211BeaconFrame(frameControl,
-        //        duration,
-        //        source,
-        //        destination,
-        //        bssid,
-        //        sequenceControl,
-        //        timestamp,
-        //        beaconInterval,
-        //        capabilityInfo,
-        //        infoElements);
-        //}
+            Ieee80211SequenceControlField sequenceControl = new Ieee80211SequenceControlField();
+            sequenceControl.SequenceNumber = 3;
+
+            Ieee80211CapabilityInformationField capabilityInfo = new Ieee80211CapabilityInformationField();
+            //TODO: Cant set these properties yet
+            //capabilityInfo.IsIbss = true;
+            //capabilityInfo.Privacy = true;
+
+            List<Ieee80211InformationElement> infoElements = new List<Ieee80211InformationElement>();
+            infoElements.Add(new Ieee80211InformationElement(Ieee80211InformationElement.ElementId.ServiceSetIdentity, new Byte[]{0x68, 0x65, 0x6c, 0x6c, 0x6f}));
+
+            Ieee80211BeaconFrame frame = new Ieee80211BeaconFrame(frameControl,
+                 duration,
+                 PhysicalAddress.Parse("11-11-11-11-11-11"),
+                 PhysicalAddress.Parse("22-22-22-22-22-22"),
+                 PhysicalAddress.Parse("33-33-33-33-33-33"),
+                 sequenceControl,
+                 123456789,
+                 4444,
+                 capabilityInfo,
+                 infoElements);
+
+            //serialize the frame into a byte buffer
+            var bytes = frame.Bytes;
+            var bas = new ByteArraySegment(bytes);
+
+            //create a new frame that should be identical to the original
+            Ieee80211BeaconFrame recreatedFrame = new Ieee80211BeaconFrame(bas);
+
+            Assert.AreEqual(Ieee80211FrameControlField.FrameTypes.ManagementBeacon, recreatedFrame.FrameControl.Type);
+            Assert.AreEqual(PhysicalAddress.Parse("11-11-11-11-11-11"), recreatedFrame.SourceAddress);
+            Assert.AreEqual(PhysicalAddress.Parse("22-22-22-22-22-22"), recreatedFrame.DestinationAddress);
+            Assert.AreEqual(PhysicalAddress.Parse("33-33-33-33-33-33"), recreatedFrame.BssId);
+            Assert.IsTrue(recreatedFrame.FrameControl.ToDS);
+            Assert.IsTrue(recreatedFrame.FrameControl.Wep);
+            Assert.AreEqual(12345, recreatedFrame.Duration.Field);
+            Assert.AreEqual(3, recreatedFrame.SequenceControl.SequenceNumber);
+            Assert.AreEqual(123456789, recreatedFrame.Timestamp);
+            Assert.AreEqual(4444, recreatedFrame.BeaconInterval);
+            Assert.AreEqual(Ieee80211InformationElement.ElementId.ServiceSetIdentity, recreatedFrame.InformationElements.InformationElements[0].Id);
+            Assert.AreEqual(5, recreatedFrame.InformationElements.InformationElements[0].Value.Length);
+        }
+
     }
 }

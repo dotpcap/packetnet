@@ -36,7 +36,19 @@ namespace PacketDotNet
         {
             get
             {
-                return (byte)(Field & 0x0300);
+                return (byte)((Field >> 0x8) & 0x3);
+            }
+
+            set
+            {
+                if((value < 0) || (value > 3))
+                {
+                    throw new ArgumentException("Invalid protocol version value. Value must be in the range 0-3.");
+                }
+
+                //unset the two bits before setting them to the value
+                Field &= unchecked((UInt16)~(0x0300));
+                Field |= (UInt16)(value << 0x8);
             }
         }
 
@@ -228,6 +240,18 @@ namespace PacketDotNet
                 int type = (((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4));
                 return (FrameTypes)type;
             }
+
+            set
+            {
+                uint val = (uint)value;
+                uint typeAndSubtype = ((val & 0x0F) << 4) | ((val >> 4) << 2);
+                //shift it into the right position in the field
+                typeAndSubtype = typeAndSubtype << 0x8;
+                //Unset all the bits related to the type and subtype
+                Field &= 0x03FF;
+                //Set the type bits
+                Field |= (UInt16)typeAndSubtype;
+            }
         }
 
         /// <summary>
@@ -239,6 +263,18 @@ namespace PacketDotNet
             {
                 return ((Field & 0x1) == 1) ? true : false;
             }
+
+            set
+            {
+                if (value)
+                {
+                    Field |= 0x1;
+                }
+                else
+                {
+                    Field &= unchecked((UInt16)~(0x1));
+                }
+            }
         }
 
         /// <summary>
@@ -249,6 +285,18 @@ namespace PacketDotNet
             get
             {
                 return (((Field >> 1) & 0x1) == 1) ? true : false;
+            }
+
+            set
+            {
+                if (value)
+                {
+                    Field |= (1 << 0x1);
+                }
+                else
+                {
+                    Field &= unchecked((UInt16)~(1 << 0x1));
+                }
             }
         }
 
@@ -262,6 +310,18 @@ namespace PacketDotNet
             {
                 return (((Field >> 2) & 0x1) == 1) ? true : false;
             }
+
+            set
+            {
+                if (value)
+                {
+                    Field |= (1 << 0x2);
+                }
+                else
+                {
+                    Field &= unchecked((UInt16)~(1 << 0x2));
+                }
+            }
         }
 
         /// <summary>
@@ -274,6 +334,18 @@ namespace PacketDotNet
             {
                 return (((Field >> 3) & 0x1) == 1) ? true : false;
             }
+
+            set
+            {
+                if (value)
+                {
+                    Field |= (1 << 0x3);
+                }
+                else
+                {
+                    Field &= unchecked((UInt16)~(1 << 0x3));
+                }
+            }
         }
 
         /// <summary>
@@ -284,6 +356,18 @@ namespace PacketDotNet
             get
             {
                 return (((Field >> 4) & 0x1) == 1) ? true : false;
+            }
+
+            set
+            {
+                if (value)
+                {
+                    Field |= (1 << 0x4);
+                }
+                else
+                {
+                    Field &= unchecked((UInt16)~(1 << 0x4));
+                }
             }
         }
 
@@ -296,6 +380,18 @@ namespace PacketDotNet
             {
                 return (((Field >> 5) & 0x1) == 1) ? true : false;
             }
+
+            set
+            {
+                if (value)
+                {
+                    Field |= (1 << 0x5);
+                }
+                else
+                {
+                    Field &= unchecked((UInt16)~(1 << 0x5));
+                }
+            }
         }
 
         /// <summary>
@@ -306,6 +402,18 @@ namespace PacketDotNet
             get
             {
                 return (((Field >> 6) & 0x1) == 1) ? true : false;
+            }
+
+            set
+            {
+                if (value)
+                {
+                    Field |= (1 << 0x6);
+                }
+                else
+                {
+                    Field &= unchecked((UInt16)~(1 << 0x6));
+                }
             }
         }
 
@@ -318,6 +426,18 @@ namespace PacketDotNet
             get
             {
                 return (((Field >> 0x7) & 0x1)== 1) ? true : false;
+            }
+
+            set
+            {
+                if(value)
+                {
+                    Field |= (1 << 0x7);
+                }
+                else
+                {
+                    Field &= unchecked((UInt16) ~(1 << 0x7));
+                }
             }
         }
 

@@ -27,7 +27,11 @@ namespace Test.PacketType
             [Test]
             public void Test_Constructor_MultipleInfoElementByteArray()
             {
-                Byte[] ieBytes = new Byte[] { 0xD3, 0x5, 0x1, 0x2, 0x3, 0x4, 0x5, 0xDD, 0x4, 0xFF, 0xFE, 0xFD, 0xFC };
+                //create a dummy info element section for the test. The example here uses 
+                //two arbitrary field types (0xD3 & 0xDD). The important information for the test is the length
+                //field which is the second byte on each row (0x5 & 0x4). The actual values are meaningless.
+                Byte[] ieBytes = new Byte[] { 0xD3, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05,
+                                              0xDD, 0x04, 0xFF, 0xFE, 0xFD, 0xFC };
                 ByteArraySegment bas = new ByteArraySegment(ieBytes);
 
                 InformationElementSection ieSection = new InformationElementSection(bas);
@@ -119,6 +123,6 @@ namespace Test.PacketType
 
                 Assert.IsTrue(ieSection.Bytes.SequenceEqual(expectedBytes));
             }
-        } 
+        }
     }
 }

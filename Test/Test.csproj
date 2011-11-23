@@ -51,6 +51,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PacketType\Ieee80211\CapabilityInformationFieldTest.cs" />
     <Compile Include="PacketType\Ieee80211\InformationElementSectionTest.cs" />
     <Compile Include="PacketType\Ieee80211\ActionFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211\BlockAcknowledgmentFrameTest.cs" />

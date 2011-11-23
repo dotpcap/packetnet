@@ -19,7 +19,12 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return ((Field & 0x1) == 1) ? true : false;
+                    return GetBitFieldValue(0);
+                }
+
+                set
+                {
+                    SetBitFieldValue(0, value);
                 }
             }
 
@@ -32,7 +37,12 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (((Field >> 1) & 0x1) == 1) ? true : false;
+                    return GetBitFieldValue(1);
+                }
+
+                set
+                {
+                    SetBitFieldValue(1, value);
                 }
             }
 
@@ -40,7 +50,12 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (((Field >> 2) & 0x1) == 1) ? true : false;
+                    return GetBitFieldValue(2);
+                }
+
+                set
+                {
+                    SetBitFieldValue(2, value);
                 }
             }
 
@@ -49,7 +64,12 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (((Field >> 3) & 0x1) == 1) ? true : false;
+                    return GetBitFieldValue(3);
+                }
+
+                set
+                {
+                    SetBitFieldValue(3, value);
                 }
             }
 
@@ -57,7 +77,12 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (((Field >> 4) & 0x1) == 1) ? true : false;
+                    return GetBitFieldValue(4);
+                }
+
+                set
+                {
+                    SetBitFieldValue(4, value);
                 }
             }
 
@@ -65,7 +90,12 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (((Field >> 5) & 0x1) == 1) ? true : false;
+                    return GetBitFieldValue(5);
+                }
+
+                set
+                {
+                    SetBitFieldValue(5, value);
                 }
             }
 
@@ -73,7 +103,12 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (((Field >> 6) & 0x1) == 1) ? true : false;
+                    return GetBitFieldValue(6);
+                }
+
+                set
+                {
+                    SetBitFieldValue(6, value);
                 }
             }
 
@@ -81,7 +116,12 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (((Field >> 7) & 0x1) == 1) ? true : false;
+                    return GetBitFieldValue(7);
+                }
+
+                set
+                {
+                    SetBitFieldValue(7, value);
                 }
             }
 
@@ -89,7 +129,12 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (((Field >> 10) & 0x1) == 1) ? true : false;
+                    return GetBitFieldValue(10);
+                }
+
+                set
+                {
+                    SetBitFieldValue(10, value);
                 }
             }
 
@@ -97,7 +142,33 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (((Field >> 13) & 0x1) == 1) ? true : false;
+                    return GetBitFieldValue(13);
+                }
+
+                set
+                {
+                    SetBitFieldValue(13, value);
+                }
+            }
+
+            /// <summary>
+            /// Returns true if the bit is set false if not.
+            /// </summary>
+            /// <param name="index">0 indexed position of the bit</param>
+            private bool GetBitFieldValue(ushort index)
+            {
+                return (((Field >> index) & 0x1) == 1) ? true : false;
+            }
+
+            private void SetBitFieldValue(ushort index, bool value)
+            {
+                if (value)
+                {
+                    Field |= unchecked((UInt16)(1 << index));
+                }
+                else
+                {
+                    Field &= unchecked((UInt16)~(1 << index));
                 }
             }
 

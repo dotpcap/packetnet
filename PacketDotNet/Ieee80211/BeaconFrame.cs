@@ -157,30 +157,30 @@ namespace PacketDotNet
                 header.Length = FrameSize;
             }
 
-            public BeaconFrame(FrameControlField frameControl,
-                DurationField duration,
-                PhysicalAddress source,
-                PhysicalAddress destination,
-                PhysicalAddress bssId,
-                SequenceControlField sequenceControl,
-                UInt64 timestamp,
-                UInt16 beaconInterval,
-                CapabilityInformationField capabilityInfo,
-                List<InformationElement> infoElements)
+            public BeaconFrame(FrameControlField FrameControl,
+                DurationField Duration,
+                PhysicalAddress SourceAddress,
+                PhysicalAddress DestinationAddress,
+                PhysicalAddress BssId,
+                SequenceControlField SequenceControl,
+                UInt64 Timestamp,
+                UInt16 BeaconInterval,
+                CapabilityInformationField CapabilityInformation,
+                List<InformationElement> InformationElements)
             {
                 //need to handle information elements first as they dictate the length of the frame
-                InformationElementSection infoElementSection = new InformationElementSection(infoElements);
+                InformationElementSection infoElementSection = new InformationElementSection(InformationElements);
                 header = new ByteArraySegment(new Byte[BeaconFields.InformationElement1Position + infoElementSection.Length]);
 
-                FrameControlBytes = frameControl.Field;
-                DurationBytes = duration.Field;
-                SequenceControlBytes = sequenceControl.Field;
-                SourceAddress = source;
-                DestinationAddress = destination;
-                BssId = bssId;
-                Timestamp = timestamp;
-                BeaconInterval = beaconInterval;
-                CapabilityInformationBytes = capabilityInfo.Field;
+                FrameControlBytes = FrameControl.Field;
+                DurationBytes = Duration.Field;
+                SequenceControlBytes = SequenceControl.Field;
+                this.SourceAddress = SourceAddress;
+                this.DestinationAddress = DestinationAddress;
+                this.BssId = BssId;
+                this.Timestamp = Timestamp;
+                this.BeaconInterval = BeaconInterval;
+                CapabilityInformationBytes = CapabilityInformation.Field;
 
                 Byte[] infoElementBuffer = infoElementSection.Bytes;
                 Array.Copy(infoElementBuffer, 0, header.Bytes, BeaconFields.InformationElement1Position, infoElementSection.Length);

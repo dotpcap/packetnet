@@ -24,12 +24,12 @@ namespace PacketDotNet
                     InformationElement.ElementId id = (InformationElement.ElementId)infoElementBuffer.Bytes[infoElementBuffer.Offset + idIndex];
                     Byte length = infoElementBuffer.Bytes[infoElementBuffer.Offset + idIndex + ElementIdLength];
 
-                    Byte[] value = new Byte[length];
+                    var value = new Byte[length];
                     Array.Copy(infoElementBuffer.Bytes,
                         (infoElementBuffer.Offset + idIndex + ElementIdLength + ElementLengthLength),
                         value, 0, length);
 
-                    InformationElement infoElement = new InformationElement(id, value);
+                    var infoElement = new InformationElement(id, value);
                     InformationElements.Add(infoElement);
 
                     idIndex += (ElementIdLength + ElementLengthLength + infoElement.Length);
@@ -60,11 +60,11 @@ namespace PacketDotNet
             {
                 get
                 {
-                    Byte[] bytes = new Byte[Length];
+                    var bytes = new Byte[Length];
                     int index = 0;
-                    foreach (InformationElement ie in InformationElements)
+                    foreach (var ie in InformationElements)
                     {
-                        Byte[] ieBytes = ie.Bytes;
+                        var ieBytes = ie.Bytes;
                         Array.Copy(ieBytes, 0, bytes, index, ieBytes.Length);
 
                         index += ieBytes.Length;

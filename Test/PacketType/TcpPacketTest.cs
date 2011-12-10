@@ -101,6 +101,26 @@ namespace Test.PacketType
             Assert.AreEqual(s, System.Text.Encoding.Default.GetString(p.PayloadData));
         }
 
+        /// <summary>
+        /// Test that TSO works, see http://en.wikipedia.org/wiki/TCP_offload_engine
+        /// </summary>
+        [Test]
+        public void TcpSegmentOffload()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv4_tso_frame.pcap");
+            dev.Open();
+
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+            Assert.IsNotNull(p);
+
+            var t = TcpPacket.GetEncapsulated(p);
+            Assert.IsNotNull(t, "Expected t to not be null");
+
+            dev.Close();            
+        }
+
         [Test]
         public void TCPOptions()
         {

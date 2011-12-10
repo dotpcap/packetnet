@@ -92,31 +92,5 @@ namespace Test.PacketType
         {
             IPv4Packet.RandomPacket();
         }
-
-        /// <summary>
-        /// Test that an ipv4 packet with an invalid total length field
-        /// is caught when being parsed
-        /// </summary>
-        [Test]
-        public void IPv4InvalidTotalLength()
-        {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv4_invalid_total_length.pcap");
-            dev.Open();
-
-            var rawCapture = dev.GetNextPacket();
-
-            dev.Close();
-
-            bool caughtExpectedException = false;
-            try
-            {
-                Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-            } catch(System.InvalidOperationException)
-            {
-                caughtExpectedException = true;
-            }
-
-            Assert.IsTrue(caughtExpectedException);
-        }
     }
 }

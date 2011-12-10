@@ -524,6 +524,12 @@ namespace PacketDotNet
 
             header = new ByteArraySegment(bas);
 
+            // TOS? See http://en.wikipedia.org/wiki/TCP_offload_engine
+            if (TotalLength == 0)
+            {
+                TotalLength = header.Length;
+            }
+
             // Check that the TotalLength is valid, at least HeaderMinimumLength long
             if(TotalLength < HeaderMinimumLength)
             {

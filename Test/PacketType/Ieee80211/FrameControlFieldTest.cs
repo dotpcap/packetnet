@@ -11,7 +11,7 @@ namespace Test.PacketType
     namespace Ieee80211
     {
         [TestFixture]
-        class FrameControlFieldTest
+        public class FrameControlFieldTest
         {
             [Test]
             public void Test_Constructor_EncryptedDataFrame()

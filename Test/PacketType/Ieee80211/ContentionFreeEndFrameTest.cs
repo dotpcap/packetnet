@@ -13,7 +13,7 @@ namespace Test.PacketType
     namespace Ieee80211
     {
         [TestFixture]
-        class ContentionFreeEndFrameTest
+        public class ContentionFreeEndFrameTest
         {
             /// <summary>
             /// Test that parsing a contention free end frame yields the proper field values

@@ -13,7 +13,7 @@ namespace Test.PacketType
     namespace Ieee80211
     {
         [TestFixture]
-        class AuthenticationFrameTest
+        public class AuthenticationFrameTest
         {
             /// <summary>
             /// Test that parsing a authentication frame yields the proper field values

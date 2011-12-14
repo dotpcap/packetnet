@@ -13,7 +13,7 @@ namespace Test.PacketType
     namespace Ieee80211
     {
         [TestFixture]
-        class NullDataFrameTest
+        public class NullDataFrameTest
         {
             /// <summary>
             /// Test that parsing a null data frame yields the proper field values

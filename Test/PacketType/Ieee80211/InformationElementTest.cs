@@ -11,7 +11,7 @@ namespace Test.PacketType
     namespace Ieee80211
     {
         [TestFixture]
-        class InformationElementTest
+        public class InformationElementTest
         {
             [Test]
             public void Test_Constructor_ValidParameters()

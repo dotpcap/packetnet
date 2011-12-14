@@ -13,7 +13,7 @@ namespace Test.PacketType
     namespace Ieee80211
     {
         [TestFixture]
-        class ProbeResponseTest
+        public class ProbeResponseTest
         {
             /// <summary>
             /// Test that parsing a probe response frame yields the proper field values

@@ -16,7 +16,7 @@ namespace Test.PacketType
         
 
         [TestFixture]
-        class BeaconFrameTest
+        public class BeaconFrameTest
         {
             /// <summary>
             /// Test that parsing an ip packet yields the proper field values

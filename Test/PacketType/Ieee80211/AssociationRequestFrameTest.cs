@@ -13,7 +13,7 @@ namespace Test.PacketType
     namespace Ieee80211
     {
         [TestFixture]
-        class AssociationRequestFrameTest
+        public class AssociationRequestFrameTest
         {
             /// <summary>
             /// Test that parsing a association request frame yields the proper field values

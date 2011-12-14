@@ -13,7 +13,7 @@ namespace Test.PacketType
     namespace Ieee80211
     {
         [TestFixture]
-        class DisassociationFrameTest
+        public class DisassociationFrameTest
         {
             /// <summary>
             /// Test that parsing a disassociation frame yields the proper field values

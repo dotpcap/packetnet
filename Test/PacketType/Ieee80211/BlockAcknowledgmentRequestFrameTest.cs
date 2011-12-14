@@ -13,7 +13,7 @@ namespace Test.PacketType
     namespace Ieee80211
     {
         [TestFixture]
-        class BlockAcknowledgmentRequestFrameTest
+        public class BlockAcknowledgmentRequestFrameTest
         {
             /// <summary>
             /// Test that parsing a block acknowledgment request frame yields the proper field values

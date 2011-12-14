@@ -12,7 +12,7 @@ namespace Test.PacketType
     namespace Ieee80211
     {
         [TestFixture]
-        class InformationElementSectionTest
+        public class InformationElementSectionTest
         {
             [Test]
             public void Test_Constructor_EmptyByteArray()

@@ -13,7 +13,7 @@ namespace Test.PacketType
     namespace Ieee80211
     {
         [TestFixture]
-        class ActionFrameTest
+        public class ActionFrameTest
         {
             /// <summary>
             /// Test that parsing a add block ack response report frame yields the proper field values

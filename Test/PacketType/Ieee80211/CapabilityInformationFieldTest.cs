@@ -8,7 +8,7 @@ using PacketDotNet.Ieee80211;
 namespace Test.PacketType.Ieee80211
 {
     [TestFixture]
-    class CapabilityInformationFieldTest
+    public class CapabilityInformationFieldTest
     {
         
         

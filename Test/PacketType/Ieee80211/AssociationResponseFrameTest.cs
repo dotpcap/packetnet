@@ -58,7 +58,7 @@ namespace Test.PacketType
                 Assert.AreEqual(AuthenticationStatusCode.Success, frame.StatusCode);
                 Assert.AreEqual(2, frame.AssociationId);
                 Assert.AreEqual(0xC61ACCD6, frame.FrameCheckSequence);
-                Assert.AreEqual(3, frame.InformationElements.InformationElements.Count);
+                Assert.AreEqual(3, frame.InformationElements.Count);
                 Assert.AreEqual(57, frame.FrameSize);
             }
         } 

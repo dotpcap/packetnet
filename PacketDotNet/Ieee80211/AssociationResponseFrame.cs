@@ -100,7 +100,7 @@ namespace PacketDotNet
             /// <summary>
             /// The information elements included in the frame
             /// </summary>
-            public InformationElementSection InformationElements { get; set; }
+            public InformationElementList InformationElements { get; set; }
 
             public override int FrameSize
             {
@@ -139,7 +139,7 @@ namespace PacketDotNet
                     (bas.Offset + AssociationResponseFields.InformationElement1Position),
                     (bas.Length - AssociationResponseFields.InformationElement1Position - MacFields.FrameCheckSequenceLength));
 
-                InformationElements = new InformationElementSection(infoElementsSegment);
+                InformationElements = new InformationElementList(infoElementsSegment);
 
                 //cant set length until after we have handled the information elements
                 //as they vary in length

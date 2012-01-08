@@ -32,8 +32,7 @@ namespace PacketDotNet
                 }
             }
 
-
-            public InformationElementSection InformationElements { get; set; }
+            public InformationElementList InformationElements { get; set; }
 
             /// <summary>
             /// Constructor
@@ -54,7 +53,7 @@ namespace PacketDotNet
                     (bas.Offset + ProbeRequestFields.InformationElement1Position),
                     (bas.Length - ProbeRequestFields.InformationElement1Position - MacFields.FrameCheckSequenceLength));
 
-                InformationElements = new InformationElementSection(infoElementsSegment);
+                InformationElements = new InformationElementList(infoElementsSegment);
 
                 //cant set length until after we have handled the information elements
                 //as they vary in length

@@ -79,7 +79,7 @@ namespace Test.PacketType
                 //capabilityInfo.IsIbss = true;
                 //capabilityInfo.Privacy = true;
 
-                List<InformationElement> infoElements = new List<InformationElement>();
+                InformationElementList infoElements = new InformationElementList();
                 infoElements.Add(new InformationElement(InformationElement.ElementId.ServiceSetIdentity, new Byte[] { 0x68, 0x65, 0x6c, 0x6c, 0x6f }));
 
                 BeaconFrame frame = new BeaconFrame(frameControl,
@@ -110,8 +110,8 @@ namespace Test.PacketType
                 Assert.AreEqual(3, recreatedFrame.SequenceControl.SequenceNumber);
                 Assert.AreEqual(123456789, recreatedFrame.Timestamp);
                 Assert.AreEqual(4444, recreatedFrame.BeaconInterval);
-                Assert.AreEqual(InformationElement.ElementId.ServiceSetIdentity, recreatedFrame.InformationElements.InformationElements[0].Id);
-                Assert.AreEqual(5, recreatedFrame.InformationElements.InformationElements[0].Value.Length);
+                Assert.AreEqual(InformationElement.ElementId.ServiceSetIdentity, recreatedFrame.InformationElements[0].Id);
+                Assert.AreEqual(5, recreatedFrame.InformationElements[0].Value.Length);
             }
 
         } 

@@ -57,7 +57,7 @@ namespace Test.PacketType
                 Assert.IsFalse(frame.CapabilityInformation.DssOfdm);
                 Assert.AreEqual(0x05, frame.ListenInterval);
                 Assert.AreEqual(0xDE82C216, frame.FrameCheckSequence);
-                Assert.AreEqual(4, frame.InformationElements.InformationElements.Count);
+                Assert.AreEqual(4, frame.InformationElements.Count);
                 Assert.AreEqual(74, frame.FrameSize);
             }
         } 

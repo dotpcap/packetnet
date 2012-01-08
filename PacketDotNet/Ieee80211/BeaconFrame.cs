@@ -128,7 +128,7 @@ namespace PacketDotNet
             /// 
             /// Most (but not all) beacons frames will contain an Information element that contains the SSID.
             /// </summary>
-            public InformationElementSection InformationElements { get; private set; }
+            public InformationElementList InformationElements { get; private set; }
 
             /// <summary>
             /// Constructor
@@ -150,14 +150,14 @@ namespace PacketDotNet
                     (bas.Offset + BeaconFields.InformationElement1Position),
                     (bas.Length - BeaconFields.InformationElement1Position - MacFields.FrameCheckSequenceLength));
 
-                InformationElements = new InformationElementSection(infoElementsSegment);
+                InformationElements = new InformationElementList(infoElementsSegment);
 
                 //cant set length until after we have handled the information elements
                 //as they vary in length
                 header.Length = FrameSize;
             }
 
-            public BeaconFrame(FrameControlField FrameControl,
+            public BeaconFrame (FrameControlField FrameControl,
                 DurationField Duration,
                 PhysicalAddress SourceAddress,
                 PhysicalAddress DestinationAddress,
@@ -166,11 +166,11 @@ namespace PacketDotNet
                 UInt64 Timestamp,
                 UInt16 BeaconInterval,
                 CapabilityInformationField CapabilityInformation,
-                List<InformationElement> InformationElements)
+                InformationElementList InformationElements)
             {
                 //need to handle information elements first as they dictate the length of the frame
-                InformationElementSection infoElementSection = new InformationElementSection(InformationElements);
-                header = new ByteArraySegment(new Byte[BeaconFields.InformationElement1Position + infoElementSection.Length]);
+                this.InformationElements = new InformationElementList(InformationElements);
+                header = new ByteArraySegment(new Byte[BeaconFields.InformationElement1Position + this.InformationElements.Length]);
 
                 FrameControlBytes = FrameControl.Field;
                 DurationBytes = Duration.Field;
@@ -182,8 +182,8 @@ namespace PacketDotNet
                 this.BeaconInterval = BeaconInterval;
                 CapabilityInformationBytes = CapabilityInformation.Field;
 
-                Byte[] infoElementBuffer = infoElementSection.Bytes;
-                Array.Copy(infoElementBuffer, 0, header.Bytes, BeaconFields.InformationElement1Position, infoElementSection.Length);
+                Byte[] infoElementBuffer = this.InformationElements.Bytes;
+                Array.Copy(infoElementBuffer, 0, header.Bytes, BeaconFields.InformationElement1Position, this.InformationElements.Length);
             }
 
             /// <summary>

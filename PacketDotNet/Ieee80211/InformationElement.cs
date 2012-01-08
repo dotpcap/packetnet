@@ -2,13 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using PacketDotNet.Utils;
 
 namespace PacketDotNet
 {
     namespace Ieee80211
     {
         public class InformationElement
-        {
+        {     
+
+            public readonly static int ElementIdLength = 1;
+            public readonly static int ElementLengthLength = 1;
+            public readonly static int ElementIdPosition = 0;
+            public readonly static int ElementLengthPosition;
+            public readonly static int ElementValuePosition;
+
+            static InformationElement ()
+            {
+                ElementLengthPosition = ElementIdPosition + ElementIdLength;
+                ElementValuePosition = ElementLengthPosition + ElementLengthLength;
+            }
+
+            
             public enum ElementId
             {
                 ServiceSetIdentity = 0x00,
@@ -34,47 +49,103 @@ namespace PacketDotNet
                 Quiet = 0x28,
                 IbssDfs = 0x29,
                 ErpInformation = 0x2A,
+                HighThroughputCapabilities = 0x2d,
+                ErpInformation2 = 0x2F,
                 RobustSecurityNetwork = 0x30,
                 ExtendedSupportedRates = 0x32,
+                HighThroughputInformation = 0x3d,
                 WifiProtectedAccess = 0xD3,
                 VendorSpecific = 0xDD
             }
-
-            public InformationElement(ElementId id, Byte[] value)
+            
+            private ByteArraySegment bytes;
+            
+            public InformationElement (ByteArraySegment bas)
             {
-                if (value.Length > 0xFF)
-                {
-                    throw new ArgumentException("Value is too long. Maximum allowed length is 256 bytes.");
-                }
-
+                bytes = bas;
+            }
+            
+            public InformationElement (ElementId id, Byte[] value)
+            {
+                var ie = new Byte[ElementIdLength + ElementLengthLength + value.Length];
+                bytes = new ByteArraySegment (ie);
                 Id = id;
                 Value = value;
             }
-
-            public ElementId Id { get; private set; }
-
-            public int Length
-            {
+   
+            public ElementId Id
+            { 
                 get
                 {
-                    return Value.Length;
+                    return (ElementId)bytes.Bytes [bytes.Offset + ElementIdPosition];
+                }
+                set
+                {
+                    bytes.Bytes [bytes.Offset + ElementIdPosition] = (byte)value;
                 }
             }
 
-            public Byte[] Value { get; private set; }
+            public byte ValueLength
+            {
+                get
+                {
+                    return bytes.Bytes [bytes.Offset + ElementLengthPosition];
+                }
+                //no set Length method as we dont want to allow a mismatch between
+                //the length field and the actual length of the value
+            }
+            
+            public byte ElementLength
+            {
+                get
+                {
+                    return (byte)(ElementIdLength + ElementLengthLength + ValueLength);
+                }
+                //no set Length method as we dont want to allow a mismatch between
+                //the length field and the actual length of the value
+            }
 
+            public Byte[] Value
+            {
+                get
+                {
+                    var valueArray = new Byte[ValueLength];
+                    Array.Copy (bytes.Bytes,
+                        bytes.Offset + ElementValuePosition,
+                        valueArray, 0, ValueLength);
+                    return valueArray;
+                }
+                
+                set
+                {
+                    if (value.Length > byte.MaxValue)
+                    {
+                        throw new ArgumentException ("The provided value is too long. Maximum allowed length is 255 bytes.");
+                    }
+                    //Decide if the current ByteArraySegement is big enough to hold the new info element
+                    int newIeLength = ElementIdLength + ElementLengthLength + value.Length;
+                    if (bytes.Length < newIeLength)
+                    {
+                        var newIe = new Byte[newIeLength];
+                        newIe [ElementIdPosition] = bytes.Bytes [bytes.Offset + ElementIdPosition];
+                        bytes = new ByteArraySegment (newIe);
+                    }
+                    
+                    Array.Copy (value, 0, bytes.Bytes, bytes.Offset + ElementValuePosition, value.Length);
+                    bytes.Length = newIeLength;
+                    bytes.Bytes [bytes.Offset + ElementLengthPosition] = (byte)value.Length;
+                    
+                }
+            }
+            
             public Byte[] Bytes
             {
                 get
                 {
-                    Byte[] bytes = new Byte[2 + Length];
-                    bytes[0] = (byte)Id;
-                    bytes[1] = (byte)Length;
-                    Array.Copy(Value, 0, bytes, 2, Length);
-                    return bytes;
+                    return bytes.ActualBytes();
                 }
             }
-
+            
             // override object.Equals
             public override bool Equals(object obj)
             {
@@ -92,6 +163,7 @@ namespace PacketDotNet
             {
                 return Id.GetHashCode() ^ Value.GetHashCode();
             }
+            
         } 
     }
 }

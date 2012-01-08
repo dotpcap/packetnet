@@ -88,8 +88,8 @@ namespace Test.PacketType
                 Assert.AreEqual(0, frame.AuthenticationAlgorithmNumber);
                 Assert.AreEqual(2, frame.AuthenticationAlgorithmTransactionSequenceNumber);
                 Assert.AreEqual(AuthenticationStatusCode.Success, frame.StatusCode);
-                Assert.AreEqual(InformationElement.ElementId.VendorSpecific, frame.InformationElements.InformationElements[0].Id);
-                Assert.AreEqual(9, frame.InformationElements.InformationElements[0].Length);
+                Assert.AreEqual(InformationElement.ElementId.VendorSpecific, frame.InformationElements[0].Id);
+                Assert.AreEqual(9, frame.InformationElements[0].ValueLength);
 
                 Assert.AreEqual(0x5B12F62C, frame.FrameCheckSequence);
                 Assert.AreEqual(41, frame.FrameSize);

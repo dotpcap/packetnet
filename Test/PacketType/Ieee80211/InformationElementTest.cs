@@ -22,16 +22,17 @@ namespace Test.PacketType
 
                 Assert.AreEqual(InformationElement.ElementId.ChallengeText, infoElement.Id);
                 Assert.AreEqual(value, infoElement.Value);
-                Assert.AreEqual(5, infoElement.Length);
+                Assert.AreEqual(5, infoElement.ValueLength);
             }
 
             [Test]
-            [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Value is too long. Maximum allowed length is 256 bytes.")]
-            public void Test_Constructor_ValueTooLong()
+            [ExpectedException(typeof(ArgumentException), ExpectedMessage = "The provided value is too long. Maximum allowed length is 255 bytes.")]
+            public void Test_Constructor_ValueTooLong ()
             {
                 Byte[] value = new Byte[300];
-                InformationElement infoElement = new InformationElement(
+                InformationElement infoElement = new InformationElement (
                     InformationElement.ElementId.CfParameterSet, value);
+                
             }
 
             [Test]

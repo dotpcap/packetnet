@@ -18,34 +18,12 @@ namespace PacketDotNet
             /// <summary>
             /// ReceiverAddress
             /// </summary>
-            public PhysicalAddress ReceiverAddress
-            {
-                get
-                {
-                    return GetAddress(0);
-                }
-
-                set
-                {
-                    SetAddress(0, value);
-                }
-            }
+            public PhysicalAddress ReceiverAddress {get; set;}
 
             /// <summary>
             /// TransmitterAddress
             /// </summary>
-            public PhysicalAddress TransmitterAddress
-            {
-                get
-                {
-                    return GetAddress(1);
-                }
-
-                set
-                {
-                    SetAddress(1, value);
-                }
-            }
+            public PhysicalAddress TransmitterAddress {get; set;}
 
             /// <summary>
             /// Length of the frame
@@ -69,13 +47,15 @@ namespace PacketDotNet
             /// <param name="bas">
             /// A <see cref="ByteArraySegment"/>
             /// </param>
-            public RtsFrame(ByteArraySegment bas)
+            public RtsFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
                 header.Length = FrameSize;
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
+                FrameControl = new FrameControlField (FrameControlBytes);
+                Duration = new DurationField (DurationBytes);
+                ReceiverAddress = GetAddress (0);
+                TransmitterAddress = GetAddress(1);
             }
 
             /// <summary>

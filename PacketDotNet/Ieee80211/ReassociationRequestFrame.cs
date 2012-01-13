@@ -50,14 +50,11 @@ namespace PacketDotNet
                 }
             }
 
-            public CapabilityInformationField CapabilityInformation
-            {
-                get;
-                set;
-            }
+            public CapabilityInformationField CapabilityInformation {get; set;}
+   
+            public UInt16 ListenInterval {get; set;}
 
-
-            public UInt16 ListenInterval
+            public UInt16 ListenIntervalBytes
             {
                 get
                 {
@@ -76,7 +73,9 @@ namespace PacketDotNet
             /// <summary>
             /// DestinationAddress
             /// </summary>
-            public PhysicalAddress CurrentAccessPointAddress
+            public PhysicalAddress CurrentAccessPointAddress { get; set; }
+            
+            public PhysicalAddress CurrentAccessPointAddressBytes
             {
                 get
                 {
@@ -114,16 +113,18 @@ namespace PacketDotNet
             /// <param name="bas">
             /// A <see cref="ByteArraySegment"/>
             /// </param>
-            public ReassociationRequestFrame(ByteArraySegment bas)
+            public ReassociationRequestFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
-                SequenceControl = new SequenceControlField(SequenceControlBytes);
+                FrameControl = new FrameControlField (FrameControlBytes);
+                Duration = new DurationField (DurationBytes);
+                SequenceControl = new SequenceControlField (SequenceControlBytes);
 
-                CapabilityInformation = new CapabilityInformationField(CapabilityInformationBytes);
-
+                CapabilityInformation = new CapabilityInformationField (CapabilityInformationBytes);
+                ListenInterval = ListenIntervalBytes;
+                CurrentAccessPointAddress = CurrentAccessPointAddressBytes;
+                
                 //create a segment that just refers to the info element section
                 ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
                     (bas.Offset + ReassociationRequestFields.InformationElement1Position),

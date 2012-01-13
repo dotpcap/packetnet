@@ -106,11 +106,7 @@ namespace PacketDotNet
                 }
             }
 
-            public DurationField Duration
-            {
-                get;
-                set;
-            }
+            public DurationField Duration {get; set;}
 
             /// <summary>
             /// 
@@ -174,10 +170,11 @@ namespace PacketDotNet
             /// <summary>
             /// Length of the frame header.
             /// 
-            /// This does not include the FCS, it represents on the header bytes that would
+            /// This does not include the FCS, it represents only the header bytes that would
             /// would preceed any payload.
             /// </summary>
             public abstract int FrameSize { get; }
+            
 
 
             public static MacFrame ParsePacket(ByteArraySegment bas)

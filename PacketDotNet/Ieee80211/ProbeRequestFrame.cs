@@ -40,12 +40,15 @@ namespace PacketDotNet
             /// <param name="bas">
             /// A <see cref="ByteArraySegment"/>
             /// </param>
-            public ProbeRequestFrame(ByteArraySegment bas)
+            public ProbeRequestFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
+                FrameControl = new FrameControlField (FrameControlBytes);
+                Duration = new DurationField (DurationBytes);
+                DestinationAddress = GetAddress (0);
+                SourceAddress = GetAddress (1);
+                BssId = GetAddress (2);
                 SequenceControl = new SequenceControlField(SequenceControlBytes);
 
                 //create a segment that just refers to the info element section

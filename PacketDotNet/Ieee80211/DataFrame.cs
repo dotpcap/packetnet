@@ -15,173 +15,88 @@ namespace PacketDotNet
             /// <summary>
             /// SourceAddress
             /// </summary>
-            public PhysicalAddress SourceAddress
-            {
-                get
-                {
-                    if (!FrameControl.FromDS)
-                    {
-                        return GetAddress(1);
-                    }
-                    else if (!FrameControl.ToDS)
-                    {
-                        return GetAddress(2);
-                    }
-                    else
-                    {
-                        //WDS modes so we use the 4th address field
-                        return GetAddress(3);
-                    }
-                }
-
-                set
-                {
-                    if (!FrameControl.FromDS)
-                    {
-                        SetAddress(1, value);
-                    }
-                    else if (!FrameControl.ToDS)
-                    {
-                        SetAddress(2, value);
-                    }
-                    else
-                    {
-                        //WDS modes so we use the 4th address field
-                        SetAddress(3, value);
-                    }
-                }
-            }
+            public PhysicalAddress SourceAddress { get; set; }
 
             /// <summary>
             /// DestinationAddress
             /// </summary>
-            public PhysicalAddress DestinationAddress
-            {
-                get
-                {
-                    if (FrameControl.ToDS)
-                    {
-                        return GetAddress(2);
-                    }
-                    else
-                    {
-                        return GetAddress(0);
-                    }
-                }
-
-                set
-                {
-                    if (FrameControl.ToDS)
-                    {
-                        SetAddress(2, value);
-                    }
-                    else
-                    {
-                        SetAddress(0, value);
-                    }
-                }
-            }
+            public PhysicalAddress DestinationAddress { get; set; }
 
             /// <summary>
             /// ReceiverAddress
             /// </summary>
-            public PhysicalAddress ReceiverAddress
-            {
-                get
-                {
-                    if ((FrameControl.ToDS) && (FrameControl.FromDS))
-                    {
-                        return GetAddress(0);
-                    }
-                    else
-                    {
-                        //WDS mode (ToDS and FromDS) is the only time 
-                        //the receiver address is valid
-                        return null;
-                    }
-                }
-
-                set
-                {
-                    if ((FrameControl.ToDS) && (FrameControl.FromDS))
-                    {
-                        SetAddress(0, value);
-                    }
-                }
-            }
+            public PhysicalAddress ReceiverAddress { get; set; }
 
             /// <summary>
             /// TransmitterAddress
             /// </summary>
-            public PhysicalAddress TransmitterAddress
-            {
-                get
-                {
-                    if ((FrameControl.ToDS) && (FrameControl.FromDS))
-                    {
-                        return GetAddress(1);
-                    }
-                    else
-                    {
-                        //WDS mode (ToDS and FromDS) is the only time 
-                        //the transmitter address is valid
-                        return null;
-                    }
-                }
+            public PhysicalAddress TransmitterAddress { get; set; }
 
-                set
-                {
-                    if ((FrameControl.ToDS) && (FrameControl.FromDS))
-                    {
-                        SetAddress(1, value);
-                    }
-                }
-            }
 
             /// <summary>
             /// BssID
             /// </summary>
-            public PhysicalAddress BssId
-            {
-                get
-                {
-                    if ((!FrameControl.ToDS) && (!FrameControl.FromDS))
-                    {
-                        return GetAddress(2);
-                    }
-                    else if ((FrameControl.ToDS) && (!FrameControl.FromDS))
-                    {
-                        return GetAddress(0);
-                    }
-                    else if ((!FrameControl.ToDS) && (FrameControl.FromDS))
-                    {
-                        return GetAddress(1);
-                    }
-                    else
-                    {
-                        //both are true so we are in WDS mode again. BSSID is not valid in this mode
-                        return null;
-                    }
-                }
+            public PhysicalAddress BssId { get; set; }                
 
-                set
+            public void ReadAddresses ()
+            {   
+                if ((!FrameControl.ToDS) && (!FrameControl.FromDS))
                 {
-                    if ((!FrameControl.ToDS) && (!FrameControl.FromDS))
-                    {
-                        SetAddress(2, value);
-                    }
-                    else if ((FrameControl.ToDS) && (!FrameControl.FromDS))
-                    {
-                        SetAddress(0, value);
-                    }
-                    else if ((!FrameControl.ToDS) && (FrameControl.FromDS))
-                    {
-                        SetAddress(1, value);
-                    }
+                    DestinationAddress = GetAddress (0);
+                    SourceAddress = GetAddress (1);
+                    BssId = GetAddress (2);
+                }
+                else if ((FrameControl.ToDS) && (!FrameControl.FromDS))
+                {
+                    BssId = GetAddress (0);
+                    SourceAddress = GetAddress (1);
+                    DestinationAddress = GetAddress (2);
+                }
+                else if ((!FrameControl.ToDS) && (FrameControl.FromDS))
+                {
+                    DestinationAddress = GetAddress (0);
+                    BssId = GetAddress (1);
+                    SourceAddress = GetAddress (2);
+                }
+                else
+                {
+                    //both are true so we are in WDS mode again. BSSID is not valid in this mode
+                    ReceiverAddress = GetAddress (0);
+                    TransmitterAddress = GetAddress (1);
+                    DestinationAddress = GetAddress (2);
+                    SourceAddress = GetAddress (3);
                 }
             }
-
-
+            
+            public void WriteAddressBytes ()
+            {
+                if ((!FrameControl.ToDS) && (!FrameControl.FromDS))
+                {
+                    SetAddress (0, DestinationAddress);
+                    SetAddress (1, SourceAddress);
+                    SetAddress (2, BssId);
+                }
+                else if ((FrameControl.ToDS) && (!FrameControl.FromDS))
+                {
+                    SetAddress (0, BssId);
+                    SetAddress (1, SourceAddress);
+                    SetAddress (2, DestinationAddress);
+                }
+                else if ((!FrameControl.ToDS) && (FrameControl.FromDS))
+                {
+                    SetAddress (0, DestinationAddress);
+                    SetAddress (1, BssId);
+                    SetAddress (2, SourceAddress);
+                }
+                else
+                {
+                    SetAddress (0, ReceiverAddress);
+                    SetAddress (1, TransmitterAddress);
+                    SetAddress (2, DestinationAddress);
+                    SetAddress (3, SourceAddress);
+                }
+            }
+            
             /// <summary>
             /// Frame control bytes are the first two bytes of the frame
             /// </summary>
@@ -189,13 +104,13 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
+                    return EndianBitConverter.Little.ToUInt16 (header.Bytes,
                                                           (header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
                 }
 
                 set
                 {
-                    EndianBitConverter.Little.CopyBytes(value,
+                    EndianBitConverter.Little.CopyBytes (value,
                                                      header.Bytes,
                                                      (header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
                 }

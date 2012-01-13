@@ -14,34 +14,12 @@ namespace PacketDotNet
             /// <summary>
             /// Receiver address
             /// </summary>
-            public PhysicalAddress ReceiverAddress
-            {
-                get
-                {
-                    return GetAddress(0);
-                }
-
-                set
-                {
-                    SetAddress(0, value);
-                }
-            }
+            public PhysicalAddress ReceiverAddress {get; set;}
 
             /// <summary>
             /// BSS ID
             /// </summary>
-            public PhysicalAddress BssId
-            {
-                get
-                {
-                    return GetAddress(1);
-                }
-
-                set
-                {
-                    SetAddress(1, value);
-                }
-            }
+            public PhysicalAddress BssId {get; set;}
 
             /// <summary>
             /// Length of the frame
@@ -62,13 +40,15 @@ namespace PacketDotNet
             /// <param name="bas">
             /// A <see cref="ByteArraySegment"/>
             /// </param>
-            public ContentionFreeEndFrame(ByteArraySegment bas)
+            public ContentionFreeEndFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
                 header.Length = FrameSize;
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
+                FrameControl = new FrameControlField (FrameControlBytes);
+                Duration = new DurationField (DurationBytes);
+                ReceiverAddress = GetAddress (0);
+                BssId = GetAddress(1);
             }
 
             /// <summary>

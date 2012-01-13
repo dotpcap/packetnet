@@ -87,6 +87,13 @@ namespace Test.PacketType
                 Assert.AreEqual(218, frame.PayloadData.Length);
 
             }
+            
+            [Test]
+            public void Test_Constructor_UnecryptedDataFrameFromValues ()
+            {
+                
+            }
+            
         } 
     }
 }

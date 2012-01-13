@@ -24,14 +24,15 @@ namespace PacketDotNet
                 }
             }
 
-            public NullDataFrame(ByteArraySegment bas)
+            public NullDataFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
-                SequenceControl = new SequenceControlField(SequenceControlBytes);
-
+                FrameControl = new FrameControlField (FrameControlBytes);
+                Duration = new DurationField (DurationBytes);
+                SequenceControl = new SequenceControlField (SequenceControlBytes);
+                ReadAddresses ();
+                
                 header.Length = FrameSize;
             }
         } 

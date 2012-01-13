@@ -19,6 +19,7 @@ namespace PacketDotNet
         /// </summary>
         public class BeaconFrame : ManagementFrame
         {
+
             private class BeaconFields
             {
                 public readonly static int TimestampLength = 8;
@@ -29,8 +30,10 @@ namespace PacketDotNet
                 public readonly static int BeaconIntervalPosition;
                 public readonly static int CapabilityInformationPosition;
                 public readonly static int InformationElement1Position;
+                
+                
 
-                static BeaconFields()
+                static BeaconFields ()
                 {
                     TimestampPosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
                     BeaconIntervalPosition = TimestampPosition + TimestampLength;
@@ -38,13 +41,16 @@ namespace PacketDotNet
                     InformationElement1Position = CapabilityInformationPosition + CapabilityInformationLength;
                 }
             }
+            
 
             /// <summary>
             /// The number of microseconds the networks master timekeeper has been active.
             /// 
             /// Used for synchronisation between stations in an IBSS. When it reaches the maximum value the timestamp will wrap (not very likely).
             /// </summary>
-            public UInt64 Timestamp
+            public UInt64 Timestamp {get; set;}
+            
+            public UInt64 TimestampBytes
             {
                 get
                 {
@@ -64,7 +70,9 @@ namespace PacketDotNet
             /// 
             /// A time unit is 1,024 microseconds. This interval is usually set to 100 which equates to approximately 100 milliseconds or 0.1 seconds.
             /// </summary>
-            public UInt16 BeaconInterval
+            public UInt16 BeaconInterval {get; set;}
+            
+            public UInt16 BeaconIntervalBytes
             {
                 get
                 {
@@ -136,54 +144,84 @@ namespace PacketDotNet
             /// <param name="bas">
             /// A <see cref="ByteArraySegment"/>
             /// </param>
-            public BeaconFrame(ByteArraySegment bas)
+            public BeaconFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
-                SequenceControl = new SequenceControlField(SequenceControlBytes);
-                CapabilityInformation = new CapabilityInformationField(CapabilityInformationBytes);
+                FrameControl = new FrameControlField (FrameControlBytes);
+                Duration = new DurationField (DurationBytes);
+                DestinationAddress = GetAddress (0);
+                SourceAddress = GetAddress (1);
+                BssId = GetAddress (2);
+                SequenceControl = new SequenceControlField (SequenceControlBytes);
+                Timestamp = TimestampBytes;
+                BeaconInterval = BeaconIntervalBytes;
+                CapabilityInformation = new CapabilityInformationField (CapabilityInformationBytes);
 
                 //create a segment that just refers to the info element section
-                ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
+                ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
                     (bas.Offset + BeaconFields.InformationElement1Position),
                     (bas.Length - BeaconFields.InformationElement1Position - MacFields.FrameCheckSequenceLength));
 
-                InformationElements = new InformationElementList(infoElementsSegment);
-
+                InformationElements = new InformationElementList (infoElementsSegment);
+                
                 //cant set length until after we have handled the information elements
                 //as they vary in length
                 header.Length = FrameSize;
+                
             }
-
-            public BeaconFrame (FrameControlField FrameControl,
-                DurationField Duration,
-                PhysicalAddress SourceAddress,
-                PhysicalAddress DestinationAddress,
-                PhysicalAddress BssId,
-                SequenceControlField SequenceControl,
-                UInt64 Timestamp,
-                UInt16 BeaconInterval,
-                CapabilityInformationField CapabilityInformation,
+            
+            public BeaconFrame (PhysicalAddress SourceAddress,
+                PhysicalAddress BssId, 
                 InformationElementList InformationElements)
             {
-                //need to handle information elements first as they dictate the length of the frame
-                this.InformationElements = new InformationElementList(InformationElements);
-                header = new ByteArraySegment(new Byte[BeaconFields.InformationElement1Position + this.InformationElements.Length]);
-
-                FrameControlBytes = FrameControl.Field;
-                DurationBytes = Duration.Field;
-                SequenceControlBytes = SequenceControl.Field;
+                this.FrameControl = new FrameControlField ();
+                this.Duration = new DurationField ();
+                this.SequenceControl = new SequenceControlField ();
+                this.CapabilityInformation = new CapabilityInformationField ();
+                this.InformationElements = new InformationElementList (InformationElements);
+                
+                //we need to create a ByteArraySegment to big enough to back the beacon frame
+                var frameHeaderLength = FrameSize;
+                header = new ByteArraySegment (new Byte[frameHeaderLength + MacFields.FrameCheckSequenceLength]);
+                header.Length = frameHeaderLength;
+                
+                //now that we have created the field and the backing array we can safely set the values
+                this.FrameControl.Type = FrameControlField.FrameTypes.ManagementBeacon;
                 this.SourceAddress = SourceAddress;
-                this.DestinationAddress = DestinationAddress;
+                this.DestinationAddress = PhysicalAddress.Parse ("FF-FF-FF-FF-FF-FF");
                 this.BssId = BssId;
-                this.Timestamp = Timestamp;
-                this.BeaconInterval = BeaconInterval;
-                CapabilityInformationBytes = CapabilityInformation.Field;
-
-                Byte[] infoElementBuffer = this.InformationElements.Bytes;
-                Array.Copy(infoElementBuffer, 0, header.Bytes, BeaconFields.InformationElement1Position, this.InformationElements.Length);
+                this.BeaconInterval = 100;
+            }
+            
+            public override void UpdateCalculatedValues ()
+            {
+                this.FrameControlBytes = this.FrameControl.Field;
+                this.DurationBytes = this.Duration.Field;
+                SetAddress (0, DestinationAddress);
+                SetAddress (1, SourceAddress);
+                SetAddress (2, BssId);
+                this.SequenceControlBytes = this.SequenceControl.Field;
+                TimestampBytes = Timestamp;
+                BeaconIntervalBytes = BeaconInterval;
+                this.CapabilityInformationBytes = this.CapabilityInformation.Field;
+                
+                var updatedFrameLength = (FrameSize + MacFields.FrameCheckSequenceLength);
+                if (header.Length < updatedFrameLength)
+                {
+                    //the backing buffer isnt big enough to accommodate the info elements so we need to resize it
+                    ByteArraySegment newFrameArray = new ByteArraySegment (new Byte[updatedFrameLength]);
+                    Array.Copy (header.Bytes, header.Offset, newFrameArray.Bytes, 0, BeaconFields.InformationElement1Position);
+                    header = newFrameArray;
+                }
+                
+                //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
+                this.InformationElements.CopyTo (header, header.Offset + BeaconFields.InformationElement1Position);
+                
+                header.Length = FrameSize;
+                
+                //TODO: We should recalculate the FCS here
+                this.FrameCheckSequence = 0xFFFFFFFF;
             }
 
             /// <summary>

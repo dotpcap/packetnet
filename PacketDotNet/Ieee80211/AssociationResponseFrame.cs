@@ -65,7 +65,9 @@ namespace PacketDotNet
             /// <summary>
             /// Value indicating the success or failure of the association.
             /// </summary>
-            public AuthenticationStatusCode StatusCode
+            public AuthenticationStatusCode StatusCode {get; set;}
+            
+            public AuthenticationStatusCode StatusCodeBytes
             {
                 get
                 {
@@ -80,7 +82,9 @@ namespace PacketDotNet
             /// Although this is a 16bit field only 14 of the bits are used to represent the id. Therefore the available values
             /// for this field are inthe range 1-2,007.
             /// </summary>
-            public UInt16 AssociationId
+            public UInt16 AssociationId {get; set;}
+            
+            public UInt16 AssociationIdBytes
             {
                 get
                 {
@@ -124,16 +128,21 @@ namespace PacketDotNet
             /// <param name="bas">
             /// A <see cref="ByteArraySegment"/>
             /// </param>
-            public AssociationResponseFrame(ByteArraySegment bas)
+            public AssociationResponseFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
-                SequenceControl = new SequenceControlField(SequenceControlBytes);
+                FrameControl = new FrameControlField (FrameControlBytes);
+                Duration = new DurationField (DurationBytes);
+                DestinationAddress = GetAddress (0);
+                SourceAddress = GetAddress (1);
+                BssId = GetAddress (2);
+                SequenceControl = new SequenceControlField (SequenceControlBytes);
 
-                CapabilityInformation = new CapabilityInformationField(CapabilityInformationBytes);
-
+                CapabilityInformation = new CapabilityInformationField (CapabilityInformationBytes);
+                StatusCode = StatusCodeBytes;
+                AssociationId = AssociationIdBytes;
+                
                 //create a segment that just refers to the info element section
                 ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
                     (bas.Offset + AssociationResponseFields.InformationElement1Position),

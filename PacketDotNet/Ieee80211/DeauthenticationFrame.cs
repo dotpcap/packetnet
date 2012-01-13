@@ -23,7 +23,9 @@ namespace PacketDotNet
                 }
             }
 
-            public Ieee80211ReasonCode Reason
+            public Ieee80211ReasonCode Reason { get; set;}
+            
+            public Ieee80211ReasonCode ReasonBytes
             {
                 get
                 {
@@ -50,13 +52,17 @@ namespace PacketDotNet
             /// <param name="bas">
             /// A <see cref="ByteArraySegment"/>
             /// </param>
-            public DeauthenticationFrame(ByteArraySegment bas)
+            public DeauthenticationFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
-                SequenceControl = new SequenceControlField(SequenceControlBytes);
+                FrameControl = new FrameControlField (FrameControlBytes);
+                Duration = new DurationField (DurationBytes);
+                DestinationAddress = GetAddress (0);
+                SourceAddress = GetAddress (1);
+                BssId = GetAddress (2);
+                SequenceControl = new SequenceControlField (SequenceControlBytes);
+                Reason = ReasonBytes;
 
                 header.Length = FrameSize;
             }

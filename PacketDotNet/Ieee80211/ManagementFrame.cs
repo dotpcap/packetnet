@@ -18,50 +18,17 @@ namespace PacketDotNet
             /// <summary>
             /// DestinationAddress
             /// </summary>
-            public PhysicalAddress DestinationAddress
-            {
-                get
-                {
-                    return GetAddress(0);
-                }
-
-                set
-                {
-                    SetAddress(0, value);
-                }
-            }
+            public PhysicalAddress DestinationAddress {get; set;}
 
             /// <summary>
             /// SourceAddress
             /// </summary>
-            public PhysicalAddress SourceAddress
-            {
-                get
-                {
-                    return GetAddress(1);
-                }
-
-                set
-                {
-                    SetAddress(1, value);
-                }
-            }
+            public PhysicalAddress SourceAddress {get; set;}
 
             /// <summary>
             /// BssID
             /// </summary>
-            public PhysicalAddress BssId
-            {
-                get
-                {
-                    return GetAddress(2);
-                }
-
-                set
-                {
-                    SetAddress(2, value);
-                }
-            }
+            public PhysicalAddress BssId {get; set;}
 
 
             /// <summary>
@@ -86,11 +53,7 @@ namespace PacketDotNet
             /// <summary>
             /// Sequence control field
             /// </summary>
-            public SequenceControlField SequenceControl
-            {
-                get;
-                set;
-            }
+            public SequenceControlField SequenceControl {get; set;}
         } 
     }
 

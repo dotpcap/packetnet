@@ -56,8 +56,9 @@ namespace PacketDotNet
                 set;
             }
 
-
-            public UInt16 ListenInterval
+            public UInt16 ListenInterval {get; set;}
+            
+            public UInt16 ListenIntervalBytes
             {
                 get
                 {
@@ -97,16 +98,19 @@ namespace PacketDotNet
             /// <param name="bas">
             /// A <see cref="ByteArraySegment"/>
             /// </param>
-            public AssociationRequestFrame(ByteArraySegment bas)
+            public AssociationRequestFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
+                FrameControl = new FrameControlField (FrameControlBytes);
+                Duration = new DurationField (DurationBytes);
+                DestinationAddress = GetAddress (0);
+                SourceAddress = GetAddress (1);
+                BssId = GetAddress (2);
                 SequenceControl = new SequenceControlField(SequenceControlBytes);
 
                 CapabilityInformation = new CapabilityInformationField(CapabilityInformationBytes);
-
+                ListenInterval = ListenIntervalBytes;
                 //create a segment that just refers to the info element section
                 ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
                     (bas.Offset + AssociationRequestFields.InformationElement1Position),

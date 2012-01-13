@@ -30,34 +30,12 @@ namespace PacketDotNet
             /// <summary>
             /// Receiver address
             /// </summary>
-            public PhysicalAddress ReceiverAddress
-            {
-                get
-                {
-                    return GetAddress(0);
-                }
-
-                set
-                {
-                    SetAddress(0, value);
-                }
-            }
+            public PhysicalAddress ReceiverAddress {get; set;}
 
             /// <summary>
             /// Transmitter address
             /// </summary>
-            public PhysicalAddress TransmitterAddress
-            {
-                get
-                {
-                    return GetAddress(1);
-                }
-
-                set
-                {
-                    SetAddress(1, value);
-                }
-            }
+            public PhysicalAddress TransmitterAddress {get; set;}
 
             /// <summary>
             /// Block acknowledgment control bytes are the first two bytes of the frame
@@ -86,8 +64,11 @@ namespace PacketDotNet
                 get;
                 set;
             }
-
-            public UInt16 BlockAckStartingSequenceControl
+   
+            
+            public UInt16 BlockAckStartingSequenceControl {get; set;}
+                
+            public UInt16 BlockAckStartingSequenceControlBytes
             {
                 get
                 {
@@ -125,14 +106,17 @@ namespace PacketDotNet
             /// <param name="bas">
             /// A <see cref="ByteArraySegment"/>
             /// </param>
-            public BlockAcknowledgmentRequestFrame(ByteArraySegment bas)
+            public BlockAcknowledgmentRequestFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
-                BlockAcknowledgmentControl = new BlockAcknowledgmentControlField(BlockAckRequestControlBytes);
-
+                FrameControl = new FrameControlField (FrameControlBytes);
+                Duration = new DurationField (DurationBytes);
+                ReceiverAddress = GetAddress (0);
+                TransmitterAddress = GetAddress (1);
+                BlockAcknowledgmentControl = new BlockAcknowledgmentControlField (BlockAckRequestControlBytes);
+                BlockAckStartingSequenceControl = BlockAckStartingSequenceControlBytes;
+                
                 header.Length = FrameSize;
             }
 

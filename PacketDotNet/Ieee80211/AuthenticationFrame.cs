@@ -37,7 +37,9 @@ namespace PacketDotNet
             /// <summary>
             /// Number used for selection of authentication algorithm
             /// </summary>
-            public UInt16 AuthenticationAlgorithmNumber
+            public UInt16 AuthenticationAlgorithmNumber {get; set;}
+            
+            public UInt16 AuthenticationAlgorithmNumberBytes
             {
                 get
                 {
@@ -56,7 +58,9 @@ namespace PacketDotNet
             /// <summary>
             /// Sequence number to define the step of the authentication algorithm
             /// </summary>
-            public UInt16 AuthenticationAlgorithmTransactionSequenceNumber
+            public UInt16 AuthenticationAlgorithmTransactionSequenceNumber {get; set;}
+            
+            public UInt16 AuthenticationAlgorithmTransactionSequenceNumberBytes
             {
                 get
                 {
@@ -75,7 +79,9 @@ namespace PacketDotNet
             /// <summary>
             /// Indicates the success or failure of the authentication operation
             /// </summary>
-            public AuthenticationStatusCode StatusCode
+            public AuthenticationStatusCode StatusCode {get; set;}
+            
+            public AuthenticationStatusCode StatusCodeBytes
             {
                 get
                 {
@@ -112,14 +118,19 @@ namespace PacketDotNet
             /// <param name="bas">
             /// A <see cref="ByteArraySegment"/>
             /// </param>
-            public AuthenticationFrame(ByteArraySegment bas)
+            public AuthenticationFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
-                SequenceControl = new SequenceControlField(SequenceControlBytes);
-
+                FrameControl = new FrameControlField (FrameControlBytes);
+                DestinationAddress = GetAddress (0);
+                SourceAddress = GetAddress (1);
+                BssId = GetAddress (2);
+                Duration = new DurationField (DurationBytes);
+                SequenceControl = new SequenceControlField (SequenceControlBytes);
+                AuthenticationAlgorithmNumber = AuthenticationAlgorithmNumberBytes;
+                AuthenticationAlgorithmTransactionSequenceNumber = AuthenticationAlgorithmTransactionSequenceNumberBytes;
+                
                 //create a segment that just refers to the info element section
                 ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
                     (bas.Offset + AuthenticationFields.InformationElement1Position),

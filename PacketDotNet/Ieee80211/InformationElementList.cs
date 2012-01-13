@@ -74,6 +74,19 @@ namespace PacketDotNet
                 return (from ie in this where ie.Id == id select ie).FirstOrDefault ();
             }
             
+            public void CopyTo (ByteArraySegment destination, int offset)
+            {
+                int index = 0;
+                foreach (var ie in this)
+                {
+                    var ieBytes = ie.Bytes;
+                    Array.Copy (ieBytes, 0, destination.Bytes, offset + index, ieBytes.Length);
+
+                    index += ieBytes.Length;
+                }
+
+            }
+            
         }
     }
 }

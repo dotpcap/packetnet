@@ -31,7 +31,9 @@ namespace PacketDotNet
                 }
             }
 
-            public UInt64 Timestamp
+            public UInt64 Timestamp {get;set;}
+                
+            public UInt64 TimestampBytes
             {
                 get
                 {
@@ -46,7 +48,9 @@ namespace PacketDotNet
                 }
             }
 
-            public UInt16 BeaconInterval
+            public UInt16 BeaconInterval { get; set; }
+            
+            public UInt16 BeaconIntervalBytes
             {
                 get
                 {
@@ -80,11 +84,7 @@ namespace PacketDotNet
                 }
             }
 
-            public CapabilityInformationField CapabilityInformation
-            {
-                get;
-                set;
-            }
+            public CapabilityInformationField CapabilityInformation {get; set;}
 
 
             public InformationElementList InformationElements { get; set; }
@@ -110,13 +110,18 @@ namespace PacketDotNet
             /// <param name="bas">
             /// A <see cref="ByteArraySegment"/>
             /// </param>
-            public ProbeResponseFrame(ByteArraySegment bas)
+            public ProbeResponseFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
-                SequenceControl = new SequenceControlField(SequenceControlBytes);
+                FrameControl = new FrameControlField (FrameControlBytes);
+                Duration = new DurationField (DurationBytes);
+                DestinationAddress = GetAddress (0);
+                SourceAddress = GetAddress (1);
+                BssId = GetAddress (2);
+                SequenceControl = new SequenceControlField (SequenceControlBytes);
+                Timestamp = TimestampBytes;
+                BeaconInterval = BeaconIntervalBytes;
                 CapabilityInformation = new CapabilityInformationField(CapabilityInformationBytes);
 
                 //create a segment that just refers to the info element section

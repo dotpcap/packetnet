@@ -35,35 +35,13 @@ namespace PacketDotNet
             /// <summary>
             /// Receiver address
             /// </summary>
-            public PhysicalAddress ReceiverAddress
-            {
-                get
-                {
-                    return GetAddress(0);
-                }
-
-                set
-                {
-                    SetAddress(0, value);
-                }
-            }
+            public PhysicalAddress ReceiverAddress {get; set;}
 
             /// <summary>
             /// Transmitter address
             /// </summary>
-            public PhysicalAddress TransmitterAddress
-            {
-                get
-                {
-                    return GetAddress(1);
-                }
-
-                set
-                {
-                    SetAddress(1, value);
-                }
-            }
-
+            public PhysicalAddress TransmitterAddress { get; set; }
+            
             public UInt16 BlockAckRequestControlBytes
             {
                 get
@@ -89,24 +67,27 @@ namespace PacketDotNet
                 set;
             }
 
-
-            public UInt16 BlockAckStartingSequenceControl
+            public UInt16 BlockAckStartingSequenceControl {get; set;}
+            
+            public UInt16 BlockAckStartingSequenceControlBytes
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
+                    return EndianBitConverter.Little.ToUInt16 (header.Bytes,
                         header.Offset + BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
                 }
 
                 set
                 {
-                    EndianBitConverter.Little.CopyBytes(value,
+                    EndianBitConverter.Little.CopyBytes (value,
                         header.Bytes,
                         header.Offset + BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
                 }
             }
-
-            public Byte[] BlockAckBitmap
+   
+            public Byte[] BlockAckBitmap {get; set;}
+            
+            public Byte[] BlockAckBitmapBytes
             {
                 get
                 {
@@ -148,14 +129,17 @@ namespace PacketDotNet
             /// <param name="bas">
             /// A <see cref="ByteArraySegment"/>
             /// </param>
-            public BlockAcknowledgmentFrame(ByteArraySegment bas)
+            public BlockAcknowledgmentFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
-                BlockAcknowledgmentControl = new BlockAcknowledgmentControlField(BlockAckRequestControlBytes);
-
+                FrameControl = new FrameControlField (FrameControlBytes);
+                Duration = new DurationField (DurationBytes);
+                ReceiverAddress = GetAddress (0);
+                TransmitterAddress = GetAddress (1);
+                BlockAcknowledgmentControl = new BlockAcknowledgmentControlField (BlockAckRequestControlBytes);
+                BlockAckStartingSequenceControl = BlockAckStartingSequenceControlBytes;
+                BlockAckBitmap = BlockAckBitmapBytes;
                 header.Length = FrameSize;
             }
 

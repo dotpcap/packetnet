@@ -23,7 +23,9 @@ namespace PacketDotNet
                 }
             }
 
-            public UInt16 QosControl
+            public UInt16 QosControl {get; set;}
+            
+            public UInt16 QosControlBytes
             {
                 get
                 {
@@ -55,14 +57,16 @@ namespace PacketDotNet
             }
 
 
-            public QosNullDataFrame(ByteArraySegment bas)
+            public QosNullDataFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
-                SequenceControl = new SequenceControlField(SequenceControlBytes);
-
+                FrameControl = new FrameControlField (FrameControlBytes);
+                Duration = new DurationField (DurationBytes);
+                SequenceControl = new SequenceControlField (SequenceControlBytes);
+                QosControl = QosControlBytes;
+                ReadAddresses ();
+                
                 header.Length = FrameSize;
             }
 

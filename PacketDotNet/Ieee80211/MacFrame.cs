@@ -27,11 +27,7 @@ namespace PacketDotNet
     namespace Ieee80211
     {
         /// <summary>
-        /// Packet class has common fields, FrameControl and Duration and
-        /// a specific object class that is set based on the type of
-        /// the frame
-        ///
-        /// See http://www.ucertify.com/article/ieee-802-11-frame-format.html
+        /// Base class of all 802.11 frame types
         /// </summary>
         public abstract class MacFrame : Packet
         {

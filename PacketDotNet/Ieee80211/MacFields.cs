@@ -24,7 +24,6 @@ namespace PacketDotNet
     namespace Ieee80211
     {
         /// <summary>
-        /// See http://www.ucertify.com/article/ieee-802-11-frame-format.html
         ///
         /// NOTE: All positions are not defined here because the frame type changes
         /// whether some address fields are present or not, causing the sequence control

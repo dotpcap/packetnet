@@ -27,7 +27,9 @@ namespace PacketDotNet
     namespace Ieee80211
     {
         /// <summary>
-        /// See http://www.ucertify.com/article/ieee-802-11-frame-format.html
+        /// Every 802.11 frame has a control field that contains information about the frame including
+        /// the 802.11 protocol version, frame type, and various indicators, such as whether WEP is on,
+        /// power management is active.
         /// </summary>
         public class FrameControlField
         {

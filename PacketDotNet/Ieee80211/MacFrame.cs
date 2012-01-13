@@ -374,6 +374,22 @@ namespace PacketDotNet
 
                 return macFrame;
             }
+
+            /// <summary>
+            /// FCSs the valid.
+            /// </summary>
+            /// <returns>
+            /// The valid.
+            /// </returns>
+            public bool FCSValid
+            {
+                get
+                {
+                    // Cast to uint for proper comparison to FrameCheckSequence
+                    var check = (uint)Crc32.Compute(Bytes, 0, Bytes.Length - 4);
+                    return check == FrameCheckSequence;
+                }
+            }            
         } 
     }
 }

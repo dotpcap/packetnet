@@ -181,6 +181,7 @@
     <Compile Include="Tcp\MD5Signature.cs" />
     <Compile Include="Tcp\UserTimeout.cs" />
     <Compile Include="Ieee80211\InformationElementList.cs" />
+    <Compile Include="Utils\Crc32.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

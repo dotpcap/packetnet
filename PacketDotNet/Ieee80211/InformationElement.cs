@@ -8,6 +8,12 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// Information element, a variable-length component of management frames
+        /// </summary>
+        /// <exception cref='ArgumentException'>
+        /// Is thrown when an argument passed to a method is invalid.
+        /// </exception>
         public class InformationElement
         {     
 
@@ -23,15 +29,42 @@ namespace PacketDotNet
                 ElementValuePosition = ElementLengthPosition + ElementLengthLength;
             }
 
-            
+            /// <summary>
+            /// Types of information elements
+            /// </summary>
             public enum ElementId
             {
+                /// <summary>
+                /// Assign an identifier to the service set
+                /// </summary>
                 ServiceSetIdentity = 0x00,
+
+                /// <summary>
+                /// Specifies the data rates supported by the network
+                /// </summary>
                 SupportedRates = 0x01,
+
+                /// <summary>
+                /// Provides the parameters necessary to join a frequency-hopping 802.11 network
+                /// </summary>
                 FhParamterSet = 0x02,
+
+                /// <summary>
+                /// Direct-sequence 802.11 networks have one parameter, the channel number of the network
+                /// </summary>
                 DsParameterSet = 0x03,
+
+                /// <summary>
+                /// Contention-free parameter. Transmitted in Becons by access points that support
+                /// contention-free operation.
+                /// </summary>
                 CfParameterSet = 0x04,
+
+                /// <summary>
+                /// Indicates which stations have buffered traffic waiting to be picked up
+                /// </summary>
                 TrafficIndicationMap = 0x05,
+
                 IbssParameterSet = 0x06,
                 Country = 0x07,
                 HoppingParametersPattern = 0x08,
@@ -59,13 +92,25 @@ namespace PacketDotNet
             }
             
             private ByteArraySegment bytes;
-            
+
             public InformationElement (ByteArraySegment bas)
             {
                 bytes = bas;
             }
-            
-            public InformationElement (ElementId id, Byte[] value)
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.InformationElement"/> class.
+            /// </summary>
+            /// <param name='id'>
+            /// Identifier.
+            /// </param>
+            /// <param name='value'>
+            /// Value.
+            /// </param>
+            /// <exception cref='ArgumentException'>
+            /// Is thrown when an argument passed to a method is invalid.
+            /// </exception>
+            public InformationElement(ElementId id, Byte[] value)
             {
                 var ie = new Byte[ElementIdLength + ElementLengthLength + value.Length];
                 bytes = new ByteArraySegment (ie);
@@ -73,6 +118,12 @@ namespace PacketDotNet
                 Value = value;
             }
    
+            /// <summary>
+            /// Gets or sets the identifier.
+            /// </summary>
+            /// <value>
+            /// The identifier.
+            /// </value>
             public ElementId Id
             { 
                 get
@@ -85,7 +136,13 @@ namespace PacketDotNet
                 }
             }
 
-            public byte ValueLength
+            /// <summary>
+            /// Gets the length.
+            /// </summary>
+            /// <value>
+            /// The length.
+            /// </value>
+            public int ValueLength
             {
                 get
                 {
@@ -138,6 +195,12 @@ namespace PacketDotNet
                 }
             }
             
+            /// <summary>
+            /// Gets the bytes.
+            /// </summary>
+            /// <value>
+            /// The bytes.
+            /// </value>
             public Byte[] Bytes
             {
                 get
@@ -145,8 +208,17 @@ namespace PacketDotNet
                     return bytes.ActualBytes();
                 }
             }
-            
-            // override object.Equals
+
+            /// <summary>
+            /// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="PacketDotNet.Ieee80211.InformationElement"/>.
+            /// </summary>
+            /// <param name='obj'>
+            /// The <see cref="System.Object"/> to compare with the current <see cref="PacketDotNet.Ieee80211.InformationElement"/>.
+            /// </param>
+            /// <returns>
+            /// <c>true</c> if the specified <see cref="System.Object"/> is equal to the current
+            /// <see cref="PacketDotNet.Ieee80211.InformationElement"/>; otherwise, <c>false</c>.
+            /// </returns>
             public override bool Equals(object obj)
             {
                 if (obj == null || GetType() != obj.GetType())
@@ -158,7 +230,13 @@ namespace PacketDotNet
                 return ((Id == ie.Id) && (Value.SequenceEqual(ie.Value)));
             }
 
-            // override object.GetHashCode
+            /// <summary>
+            /// Serves as a hash function for a <see cref="PacketDotNet.Ieee80211.InformationElement"/> object.
+            /// </summary>
+            /// <returns>
+            /// A hash code for this instance that is suitable for use in hashing algorithms and data structures such as
+            /// a hash table.
+            /// </returns>
             public override int GetHashCode()
             {
                 return Id.GetHashCode() ^ Value.GetHashCode();

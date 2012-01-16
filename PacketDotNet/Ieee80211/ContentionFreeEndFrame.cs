@@ -26,6 +26,9 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// Contention free end frame.
+        /// </summary>
         public class ContentionFreeEndFrame : MacFrame
         {
             /// <summary>

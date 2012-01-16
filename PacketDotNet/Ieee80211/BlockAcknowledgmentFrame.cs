@@ -29,6 +29,7 @@ namespace PacketDotNet
     {
         /// <summary>
         /// Format of the 802.11 block acknowledgment frame.
+        /// http://en.wikipedia.org/wiki/Block_acknowledgement
         /// </summary>
         public class BlockAcknowledgmentFrame : MacFrame
         {
@@ -58,7 +59,13 @@ namespace PacketDotNet
             /// Transmitter address
             /// </summary>
             public PhysicalAddress TransmitterAddress { get; set; }
-            
+
+            /// <summary>
+            /// Gets or sets the block ack request control bytes.
+            /// </summary>
+            /// <value>
+            /// The block ack request control bytes.
+            /// </value>
             public UInt16 BlockAckRequestControlBytes
             {
                 get
@@ -86,6 +93,12 @@ namespace PacketDotNet
 
             public UInt16 BlockAckStartingSequenceControl {get; set;}
             
+            /// <summary>
+            /// Gets or sets the block ack starting sequence control.
+            /// </summary>
+            /// <value>
+            /// The block ack starting sequence control.
+            /// </value>
             public UInt16 BlockAckStartingSequenceControlBytes
             {
                 get

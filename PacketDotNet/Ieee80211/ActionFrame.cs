@@ -80,6 +80,12 @@ namespace PacketDotNet
         /// </summary>
         public class ActionFrame : ManagementFrame
         {
+            /// <summary>
+            /// Gets the size of the frame in bytes
+            /// </summary>
+            /// <value>
+            /// The size of the frame.
+            /// </value>
             public override int FrameSize
             {
                 get

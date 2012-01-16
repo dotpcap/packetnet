@@ -123,6 +123,12 @@ namespace PacketDotNet
             /// </summary>
             public InformationElementList InformationElements { get; set; }
 
+            /// <summary>
+            /// Gets the size of the frame.
+            /// </summary>
+            /// <value>
+            /// The size of the frame.
+            /// </value>
             public override int FrameSize
             {
                 get

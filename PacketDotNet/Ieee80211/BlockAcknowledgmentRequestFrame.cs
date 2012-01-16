@@ -27,6 +27,9 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// Block acknowledgment request frame.
+        /// </summary>
         public class BlockAcknowledgmentRequestFrame : MacFrame
         {
             private class BlockAcknowledgmentRequestField
@@ -81,10 +84,15 @@ namespace PacketDotNet
                 get;
                 set;
             }
-   
             
             public UInt16 BlockAckStartingSequenceControl {get; set;}
                 
+            /// <summary>
+            /// Gets or sets the block ack starting sequence control.
+            /// </summary>
+            /// <value>
+            /// The block ack starting sequence control.
+            /// </value>
             public UInt16 BlockAckStartingSequenceControlBytes
             {
                 get

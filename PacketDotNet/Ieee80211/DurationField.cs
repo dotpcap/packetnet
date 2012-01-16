@@ -24,6 +24,9 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// Duration field.
+        /// </summary>
         public class DurationField
         {
             /// <summary>
@@ -32,6 +35,9 @@ namespace PacketDotNet
             /// </summary>
             public UInt16 Field { get; set; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DurationField"/> class.
+            /// </summary>
             public DurationField()
             {
             }

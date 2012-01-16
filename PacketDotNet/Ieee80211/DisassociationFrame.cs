@@ -26,6 +26,9 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// Disassociation frame.
+        /// </summary>
         public class DisassociationFrame : ManagementFrame
         {
             private class DisassociationFields
@@ -42,6 +45,12 @@ namespace PacketDotNet
 
             public Ieee80211ReasonCode Reason {get; set;}
                 
+            /// <summary>
+            /// Gets the reason.
+            /// </summary>
+            /// <value>
+            /// The reason.
+            /// </value>
             public Ieee80211ReasonCode ReasonBytes
             {
                 get
@@ -51,6 +60,12 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Gets the size of the frame.
+            /// </summary>
+            /// <value>
+            /// The size of the frame.
+            /// </value>
             public override int FrameSize
             {
                 get

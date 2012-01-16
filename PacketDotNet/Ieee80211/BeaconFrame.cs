@@ -132,7 +132,12 @@ namespace PacketDotNet
                 set;
             }
 
-
+            /// <summary>
+            /// Gets the size of the frame.
+            /// </summary>
+            /// <value>
+            /// The size of the frame.
+            /// </value>
             public override int FrameSize
             {
                 get
@@ -189,7 +194,7 @@ namespace PacketDotNet
                 //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
                 FrameCheckSequence = FrameCheckSequenceBytes;
             }
-            
+
             public BeaconFrame (PhysicalAddress SourceAddress,
                 PhysicalAddress BssId, 
                 InformationElementList InformationElements)

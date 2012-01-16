@@ -27,6 +27,12 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// Reassociation request frame.
+        ///
+        /// Sent when a wireless client is going from one access point to another
+        /// http://en.wikipedia.org/wiki/IEEE_802.11#Frames
+        /// </summary>
         public class ReassociationRequestFrame : ManagementFrame
         {
             private class ReassociationRequestFields
@@ -67,10 +73,22 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Gets or sets the capability information, the type of network the mobile station wants to join
+            /// </summary>
+            /// <value>
+            /// The capability information.
+            /// </value>
             public CapabilityInformationField CapabilityInformation {get; set;}
    
             public UInt16 ListenInterval {get; set;}
 
+            /// <summary>
+            /// Gets or sets the listen interval, the length of buffered frame retention
+            /// </summary>
+            /// <value>
+            /// The listen interval.
+            /// </value>
             public UInt16 ListenIntervalBytes
             {
                 get
@@ -105,9 +123,20 @@ namespace PacketDotNet
                 }
             }
 
-
+            /// <summary>
+            /// Gets or sets the information elements.
+            /// </summary>
+            /// <value>
+            /// The information elements.
+            /// </value>
             public InformationElementList InformationElements { get; set; }
 
+            /// <summary>
+            /// Gets the size of the frame.
+            /// </summary>
+            /// <value>
+            /// The size of the frame.
+            /// </value>
             public override int FrameSize
             {
                 get

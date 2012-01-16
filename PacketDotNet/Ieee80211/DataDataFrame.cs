@@ -25,8 +25,17 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// Data data frame.
+        /// </summary>
         public class DataDataFrame : DataFrame
         {
+            /// <summary>
+            /// Gets the size of the frame.
+            /// </summary>
+            /// <value>
+            /// The size of the frame.
+            /// </value>
             public override int FrameSize
             {
                 get
@@ -41,6 +50,12 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DataDataFrame"/> class.
+            /// </summary>
+            /// <param name='bas'>
+            /// Bas.
+            /// </param>
             public DataDataFrame (ByteArraySegment bas)
             {
                 header = new ByteArraySegment (bas);

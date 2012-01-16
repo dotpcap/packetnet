@@ -24,6 +24,9 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// Block acknowledgment control field.
+        /// </summary>
         public class BlockAcknowledgmentControlField
         {
             /// <summary>
@@ -90,6 +93,12 @@ namespace PacketDotNet
 
             private UInt16 Field;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentControlField"/> class.
+            /// </summary>
+            /// <param name='field'>
+            /// Field.
+            /// </param>
             public BlockAcknowledgmentControlField(UInt16 field)
             {
                 Field = field;

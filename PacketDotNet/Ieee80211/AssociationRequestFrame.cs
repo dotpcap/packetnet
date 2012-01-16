@@ -67,12 +67,24 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Gets or sets the capability information.
+            /// </summary>
+            /// <value>
+            /// The capability information.
+            /// </value>
             public CapabilityInformationField CapabilityInformation
             {
                 get;
                 set;
             }
 
+            /// <summary>
+            /// Gets or sets the listen interval.
+            /// </summary>
+            /// <value>
+            /// The listen interval.
+            /// </value>
             public UInt16 ListenInterval {get; set;}
             
             public UInt16 ListenIntervalBytes
@@ -91,9 +103,14 @@ namespace PacketDotNet
                 }
             }
 
-
             public InformationElementList InformationElements { get; set; }
 
+            /// <summary>
+            /// Gets the size of the frame.
+            /// </summary>
+            /// <value>
+            /// The size of the frame.
+            /// </value>
             public override int FrameSize
             {
                 get

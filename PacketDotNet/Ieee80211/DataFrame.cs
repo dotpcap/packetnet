@@ -27,6 +27,9 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// Data frame.
+        /// </summary>
         public abstract class DataFrame : MacFrame
         {
             /// <summary>

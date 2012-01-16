@@ -215,20 +215,44 @@ namespace PacketDotNet
                 /// </summary>
                 DataCFAckCFPollNoData = 0x27,
 
+                /// <summary>
+                /// Constant qos data.
+                /// </summary>
                 QosData = 0x28,
 
+                /// <summary>
+                /// Constant qos data and CF ack.
+                /// </summary>
                 QosDataAndCFAck = 0x29,
 
+                /// <summary>
+                /// Constant qos data and CF poll.
+                /// </summary>
                 QosDataAndCFPoll = 0x2A,
 
+                /// <summary>
+                /// Constant qos data and CF ack and CF poll.
+                /// </summary>
                 QosDataAndCFAckAndCFPoll = 0x2B,
 
+                /// <summary>
+                /// Constant qos null data.
+                /// </summary>
                 QosNullData = 0x2C,
 
+                /// <summary>
+                /// Constant qos CF ack.
+                /// </summary>
                 QosCFAck = 0x2D,
 
+                /// <summary>
+                /// Constant qos CF poll.
+                /// </summary>
                 QosCFPoll = 0x2E,
 
+                /// <summary>
+                /// Constant qos CF ack and CF poll.
+                /// </summary>
                 QosCFAckAndCFPoll = 0x2F
             };
 
@@ -445,9 +469,17 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Gets or sets the field.
+            /// </summary>
+            /// <value>
+            /// The field.
+            /// </value>
             public UInt16 Field { get; set; }
 
-
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FrameControlField"/> class.
+            /// </summary>
             public FrameControlField()
             {
 

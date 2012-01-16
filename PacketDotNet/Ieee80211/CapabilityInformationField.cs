@@ -24,6 +24,9 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// Capability information field.
+        /// </summary>
         public class CapabilityInformationField
         {
 
@@ -63,6 +66,13 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Gets or sets a value indicating whether this
+            /// <see cref="PacketDotNet.Ieee80211.CapabilityInformationField"/> cf pollable.
+            /// </summary>
+            /// <value>
+            /// <c>true</c> if cf pollable; otherwise, <c>false</c>.
+            /// </value>
             public bool CfPollable
             {
                 get
@@ -76,7 +86,13 @@ namespace PacketDotNet
                 }
             }
 
-
+            /// <summary>
+            /// Gets or sets a value indicating whether this
+            /// <see cref="PacketDotNet.Ieee80211.CapabilityInformationField"/> cf poll request.
+            /// </summary>
+            /// <value>
+            /// <c>true</c> if cf poll request; otherwise, <c>false</c>.
+            /// </value>
             public bool CfPollRequest
             {
                 get
@@ -90,6 +106,13 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Gets or sets a value indicating whether this
+            /// <see cref="PacketDotNet.Ieee80211.CapabilityInformationField"/> is privacy.
+            /// </summary>
+            /// <value>
+            /// <c>true</c> if privacy; otherwise, <c>false</c>.
+            /// </value>
             public bool Privacy
             {
                 get
@@ -103,6 +126,13 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Gets or sets a value indicating whether this
+            /// <see cref="PacketDotNet.Ieee80211.CapabilityInformationField"/> short preamble.
+            /// </summary>
+            /// <value>
+            /// <c>true</c> if short preamble; otherwise, <c>false</c>.
+            /// </value>
             public bool ShortPreamble
             {
                 get
@@ -116,6 +146,13 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Gets or sets a value indicating whether this
+            /// <see cref="PacketDotNet.Ieee80211.CapabilityInformationField"/> is pbcc.
+            /// </summary>
+            /// <value>
+            /// <c>true</c> if pbcc; otherwise, <c>false</c>.
+            /// </value>
             public bool Pbcc
             {
                 get
@@ -129,6 +166,13 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Gets or sets a value indicating whether this
+            /// <see cref="PacketDotNet.Ieee80211.CapabilityInformationField"/> channel agility.
+            /// </summary>
+            /// <value>
+            /// <c>true</c> if channel agility; otherwise, <c>false</c>.
+            /// </value>
             public bool ChannelAgility
             {
                 get
@@ -142,6 +186,13 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Gets or sets a value indicating whether this
+            /// <see cref="PacketDotNet.Ieee80211.CapabilityInformationField"/> short time slot.
+            /// </summary>
+            /// <value>
+            /// <c>true</c> if short time slot; otherwise, <c>false</c>.
+            /// </value>
             public bool ShortTimeSlot
             {
                 get
@@ -155,6 +206,13 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Gets or sets a value indicating whether this
+            /// <see cref="PacketDotNet.Ieee80211.CapabilityInformationField"/> dss ofdm.
+            /// </summary>
+            /// <value>
+            /// <c>true</c> if dss ofdm; otherwise, <c>false</c>.
+            /// </value>
             public bool DssOfdm
             {
                 get
@@ -189,8 +247,17 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Gets or sets the field.
+            /// </summary>
+            /// <value>
+            /// The field.
+            /// </value>
             public UInt16 Field { get; set; }
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.CapabilityInformationField"/> class.
+            /// </summary>
             public CapabilityInformationField()
             {
 

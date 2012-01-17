@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PacketDotNet.Utils;
+using System.Net.NetworkInformation;
 
 namespace PacketDotNet
 {
@@ -87,14 +88,47 @@ namespace PacketDotNet
                 Duration = new DurationField (DurationBytes);
                 DestinationAddress = GetAddress (0);
                 SourceAddress = GetAddress (1);
-                BssId = GetAddress(2);
-                SequenceControl = new SequenceControlField(SequenceControlBytes);
+                BssId = GetAddress (2);
+                SequenceControl = new SequenceControlField (SequenceControlBytes);
 
                 header.Length = FrameSize;
                 int payloadLength = header.BytesLength - (header.Offset + header.Length) - MacFields.FrameCheckSequenceLength;
-                payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes(payloadLength);
+                payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (payloadLength);
+                
+                //Must do this after setting header.Length and handling payload as they are used in calculating the posistion of the FCS
+                FrameCheckSequence = FrameCheckSequenceBytes;
             }
-
+            
+            public ActionFrame (PhysicalAddress SourceAddress,
+                                PhysicalAddress DestinationAddress,
+                                PhysicalAddress BssId)
+            {
+                this.FrameControl = new FrameControlField ();
+                this.Duration = new DurationField ();
+                this.DestinationAddress = DestinationAddress;
+                this.SourceAddress = SourceAddress;
+                this.BssId = BssId;
+                this.SequenceControl = new SequenceControlField ();
+                
+                this.FrameControl.Type = FrameControlField.FrameTypes.ManagementAction;
+            }
+   
+            public override void UpdateCalculatedValues ()
+            {
+                if ((header == null) || (header.Length < FrameSize))
+                {
+                    header = new ByteArraySegment (new Byte[FrameSize]);
+                }
+                
+                this.FrameControlBytes = this.FrameControl.Field;
+                this.DurationBytes = this.Duration.Field;
+                SetAddress (0, DestinationAddress);
+                SetAddress (1, SourceAddress);
+                SetAddress (2, BssId);
+                this.SequenceControlBytes = this.SequenceControl.Field;
+                
+            }
+            
             /// <summary>
             /// ToString() override
             /// </summary>

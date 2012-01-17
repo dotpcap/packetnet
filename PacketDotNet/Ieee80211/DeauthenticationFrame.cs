@@ -65,6 +65,9 @@ namespace PacketDotNet
                 Reason = ReasonBytes;
 
                 header.Length = FrameSize;
+                
+                //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
+                FrameCheckSequence = FrameCheckSequenceBytes;
             }
 
             /// <summary>

@@ -55,8 +55,6 @@ namespace Test.PacketType
 
                 Assert.AreEqual (0x2BADAF43, beaconFrame.FrameCheckSequence);
                 Assert.AreEqual (262, beaconFrame.FrameSize);
-
-                Console.WriteLine (p.ToString ());
             }
 
             [Test]
@@ -100,7 +98,7 @@ namespace Test.PacketType
                 Assert.AreEqual (ssidInfoElement, recreatedFrame.InformationElements [0]);
                 
                 //TODO: This isnt the real FCS. I dont know how to calculate this yet
-                Assert.AreEqual (0xFFFFFFFF, recreatedFrame.FrameCheckSequence);
+                Assert.AreEqual (0x01020304, recreatedFrame.FrameCheckSequence);
             }
 
         } 

@@ -21,6 +21,7 @@ using System;
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
+using System.IO;
 
 namespace PacketDotNet
 {
@@ -40,7 +41,57 @@ namespace PacketDotNet
         private static readonly ILogInactive log;
 #pragma warning restore 0169, 0649
 #endif
+   
+            public override ByteArraySegment BytesHighPerformance
+            {
+                get
+                {
+                    // ensure calculated values are properly updated
+                    RecursivelyUpdateCalculatedValues ();
 
+                    // as well as checking that we share the same buffer as sub packets
+                    // we also need to make sure that there is room the FCS after the sub packet
+                    if (SharesMemoryWithSubPackets &&
+                        ((header.Offset + TotalPacketLength + MacFields.FrameCheckSequenceLength) >= header.BytesLength))
+                    {
+                        // The high performance path that is often taken because it is called on
+                        // packets that have not had their header, or any of their sub packets, resized
+                        var newByteArraySegment = new ByteArraySegment (header.Bytes,
+                                                                   header.Offset,
+                                                                   header.BytesLength - header.Offset);
+                        log.DebugFormat ("SharesMemoryWithSubPackets, returning byte array {0}",
+                                    newByteArraySegment.ToString ());
+                        
+                        UpdateFrameCheckSequence ();
+                        FrameCheckSequenceBytes = FrameCheckSequence;
+                        return newByteArraySegment;
+                    }
+                    else // need to rebuild things from scratch
+                    {
+                        log.Debug ("rebuilding the byte array");
+
+                        var ms = new MemoryStream ();
+
+                        // TODO: not sure if this is a performance gain or if
+                        //       the compiler is smart enough to not call the get accessor for Header
+                        //       twice, once when retrieving the header and again when retrieving the Length
+                        var theHeader = Header;
+                        ms.Write (theHeader, 0, theHeader.Length);
+
+                        payloadPacketOrData.AppendToMemoryStream (ms);
+                        
+                        //Add the FCS to the end of the buffer after the payload
+                        UpdateFrameCheckSequence ();
+                        var fcsArray = EndianBitConverter.Big.GetBytes (FrameCheckSequence);
+                        ms.Write (fcsArray, 0, 4);
+                        
+                        var newBytes = ms.ToArray ();
+
+                        return new ByteArraySegment (newBytes, 0, newBytes.Length);
+                    }
+                }
+            }
+            
             private int GetOffsetForAddress(int addressIndex)
             {
                 int offset = header.Offset;
@@ -147,20 +198,27 @@ namespace PacketDotNet
             /// <summary>
             /// Frame check sequence, the last thing in the 802.11 mac packet
             /// </summary>
-            public UInt32 FrameCheckSequence
+            public UInt32 FrameCheckSequence { get; set; }
+            
+            public UInt32 FrameCheckSequenceBytes
             {
                 get
                 {
-                    return EndianBitConverter.Big.ToUInt32(header.Bytes,
+                    return EndianBitConverter.Big.ToUInt32 (header.Bytes,
                                                            (header.Offset + TotalPacketLength));
                 }
 
                 set
                 {
-                    EndianBitConverter.Big.CopyBytes(value,
+                    EndianBitConverter.Big.CopyBytes (value,
                                                      header.Bytes,
                                                      (header.Offset + TotalPacketLength));
                 }
+            }
+            
+            private void UpdateFrameCheckSequence ()
+            {
+                
             }
 
             /// <summary>

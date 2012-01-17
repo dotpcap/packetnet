@@ -169,6 +169,8 @@ namespace PacketDotNet
                 //as they vary in length
                 header.Length = FrameSize;
                 
+                //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
+                FrameCheckSequence = FrameCheckSequenceBytes;
             }
             
             public BeaconFrame (PhysicalAddress SourceAddress,
@@ -196,32 +198,26 @@ namespace PacketDotNet
             
             public override void UpdateCalculatedValues ()
             {
+                if (header.Length < FrameSize)
+                {
+                    //the backing buffer isnt big enough to accommodate the info elements so we need to resize it
+                    header = new ByteArraySegment (new Byte[FrameSize]);
+                }
+                
                 this.FrameControlBytes = this.FrameControl.Field;
                 this.DurationBytes = this.Duration.Field;
                 SetAddress (0, DestinationAddress);
                 SetAddress (1, SourceAddress);
                 SetAddress (2, BssId);
                 this.SequenceControlBytes = this.SequenceControl.Field;
-                TimestampBytes = Timestamp;
-                BeaconIntervalBytes = BeaconInterval;
+                this.TimestampBytes = Timestamp;
+                this.BeaconIntervalBytes = BeaconInterval;
                 this.CapabilityInformationBytes = this.CapabilityInformation.Field;
-                
-                var updatedFrameLength = (FrameSize + MacFields.FrameCheckSequenceLength);
-                if (header.Length < updatedFrameLength)
-                {
-                    //the backing buffer isnt big enough to accommodate the info elements so we need to resize it
-                    ByteArraySegment newFrameArray = new ByteArraySegment (new Byte[updatedFrameLength]);
-                    Array.Copy (header.Bytes, header.Offset, newFrameArray.Bytes, 0, BeaconFields.InformationElement1Position);
-                    header = newFrameArray;
-                }
                 
                 //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
                 this.InformationElements.CopyTo (header, header.Offset + BeaconFields.InformationElement1Position);
                 
                 header.Length = FrameSize;
-                
-                //TODO: We should recalculate the FCS here
-                this.FrameCheckSequence = 0xFFFFFFFF;
             }
 
             /// <summary>

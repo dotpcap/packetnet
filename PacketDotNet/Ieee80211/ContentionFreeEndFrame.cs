@@ -43,12 +43,16 @@ namespace PacketDotNet
             public ContentionFreeEndFrame (ByteArraySegment bas)
             {
                 header = new ByteArraySegment (bas);
-                header.Length = FrameSize;
 
                 FrameControl = new FrameControlField (FrameControlBytes);
                 Duration = new DurationField (DurationBytes);
                 ReceiverAddress = GetAddress (0);
-                BssId = GetAddress(1);
+                BssId = GetAddress (1);
+                
+                header.Length = FrameSize;
+                
+                //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
+                FrameCheckSequence = FrameCheckSequenceBytes;
             }
 
             /// <summary>

@@ -37,8 +37,20 @@ namespace PacketDotNet
             /// BssID
             /// </summary>
             public PhysicalAddress BssId { get; set; }                
-
-            public void ReadAddresses ()
+            
+           
+            protected void AssignDefaultAddresses ()
+            {
+                PhysicalAddress zeroAddress = PhysicalAddress.Parse ("000000000000");
+                
+                SourceAddress = zeroAddress;
+                DestinationAddress = zeroAddress;
+                TransmitterAddress = zeroAddress;
+                ReceiverAddress = zeroAddress;
+                BssId = zeroAddress;
+            }
+            
+            protected void ReadAddresses ()
             {   
                 if ((!FrameControl.ToDS) && (!FrameControl.FromDS))
                 {
@@ -68,7 +80,7 @@ namespace PacketDotNet
                 }
             }
             
-            public void WriteAddressBytes ()
+            protected void WriteAddressBytes ()
             {
                 if ((!FrameControl.ToDS) && (!FrameControl.FromDS))
                 {

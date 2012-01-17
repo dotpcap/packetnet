@@ -144,15 +144,18 @@ namespace PacketDotNet
                 AssociationId = AssociationIdBytes;
                 
                 //create a segment that just refers to the info element section
-                ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
+                ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
                     (bas.Offset + AssociationResponseFields.InformationElement1Position),
                     (bas.Length - AssociationResponseFields.InformationElement1Position - MacFields.FrameCheckSequenceLength));
 
-                InformationElements = new InformationElementList(infoElementsSegment);
+                InformationElements = new InformationElementList (infoElementsSegment);
 
                 //cant set length until after we have handled the information elements
                 //as they vary in length
                 header.Length = FrameSize;
+                
+                //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
+                FrameCheckSequence = FrameCheckSequenceBytes;
             }
 
             /// <summary>

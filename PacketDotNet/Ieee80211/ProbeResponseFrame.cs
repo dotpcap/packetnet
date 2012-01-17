@@ -122,18 +122,21 @@ namespace PacketDotNet
                 SequenceControl = new SequenceControlField (SequenceControlBytes);
                 Timestamp = TimestampBytes;
                 BeaconInterval = BeaconIntervalBytes;
-                CapabilityInformation = new CapabilityInformationField(CapabilityInformationBytes);
+                CapabilityInformation = new CapabilityInformationField (CapabilityInformationBytes);
 
                 //create a segment that just refers to the info element section
-                ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
+                ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
                     (bas.Offset + ProbeResponseFields.InformationElement1Position),
                     (bas.Length - ProbeResponseFields.InformationElement1Position - MacFields.FrameCheckSequenceLength));
 
-                InformationElements = new InformationElementList(infoElementsSegment);
+                InformationElements = new InformationElementList (infoElementsSegment);
 
                 //cant set length until after we have handled the information elements
                 //as they vary in length
                 header.Length = FrameSize;
+                
+                //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
+                FrameCheckSequence = FrameCheckSequenceBytes;
             }
 
             /// <summary>

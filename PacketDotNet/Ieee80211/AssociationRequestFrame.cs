@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
+using System.Net.NetworkInformation;
 
 namespace PacketDotNet
 {
@@ -159,7 +160,46 @@ namespace PacketDotNet
                 //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
                 FrameCheckSequence = FrameCheckSequenceBytes;
             }
-
+            
+            
+            public AssociationRequestFrame (PhysicalAddress SourceAddress,
+                                            PhysicalAddress DestinationAddress,
+                                            PhysicalAddress BssId,
+                                            InformationElementList InformationElements)
+            {
+                this.FrameControl = new FrameControlField ();
+                this.Duration = new DurationField ();
+                this.DestinationAddress = DestinationAddress;
+                this.SourceAddress = SourceAddress;
+                this.BssId = BssId;
+                this.SequenceControl = new SequenceControlField ();
+                this.CapabilityInformation = new CapabilityInformationField ();
+                this.InformationElements = new InformationElementList (InformationElements);
+                
+                this.FrameControl.Type = FrameControlField.FrameTypes.ManagementAssociationRequest;
+            }
+            
+            public override void UpdateCalculatedValues ()
+            {
+                if ((header == null) || (header.Length < FrameSize))
+                {
+                    header = new ByteArraySegment (new Byte[FrameSize]);
+                }
+                
+                this.FrameControlBytes = this.FrameControl.Field;
+                this.DurationBytes = this.Duration.Field;
+                SetAddress (0, DestinationAddress);
+                SetAddress (1, SourceAddress);
+                SetAddress (2, BssId);
+                this.SequenceControlBytes = this.SequenceControl.Field;
+                this.CapabilityInformationBytes = this.CapabilityInformation.Field;
+                
+                //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
+                this.InformationElements.CopyTo (header, header.Offset + AssociationRequestFields.InformationElement1Position);
+                
+                header.Length = FrameSize;
+            }
+            
             /// <summary>
             /// ToString() override
             /// </summary>

@@ -52,7 +52,7 @@ namespace PacketDotNet
                     // as well as checking that we share the same buffer as sub packets
                     // we also need to make sure that there is room the FCS after the sub packet
                     if (SharesMemoryWithSubPackets &&
-                        ((header.Offset + TotalPacketLength + MacFields.FrameCheckSequenceLength) >= header.BytesLength))
+                        ((header.Offset + TotalPacketLength + MacFields.FrameCheckSequenceLength) <= header.BytesLength))
                     {
                         // The high performance path that is often taken because it is called on
                         // packets that have not had their header, or any of their sub packets, resized

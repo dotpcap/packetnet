@@ -122,6 +122,9 @@ namespace Test.PacketType
                 Assert.AreEqual (0x77, recreatedFrame.SequenceControl.SequenceNumber);
                 Assert.AreEqual (0x1, recreatedFrame.SequenceControl.FragmentNumber);
                 
+                Assert.IsTrue (recreatedFrame.CapabilityInformation.Privacy);
+                Assert.IsTrue (recreatedFrame.CapabilityInformation.ChannelAgility);
+                
                 Assert.AreEqual ("111111111111", recreatedFrame.SourceAddress.ToString ().ToUpper ());
                 Assert.AreEqual ("222222222222", recreatedFrame.DestinationAddress.ToString ().ToUpper ());
                 Assert.AreEqual ("333333333333", recreatedFrame.BssId.ToString ().ToUpper ());

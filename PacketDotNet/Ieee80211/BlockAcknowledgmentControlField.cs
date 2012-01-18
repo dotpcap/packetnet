@@ -53,6 +53,18 @@ namespace PacketDotNet
                 {
                     return (AcknowledgementPolicy)(Field & 0x1);
                 }
+                
+                set
+                {
+                    if (value == AcknowledgementPolicy.Immediate)
+                    {
+                        Field |= 0x1;
+                    }
+                    else
+                    {
+                        Field &= unchecked((UInt16)~(0x1));
+                    }
+                }
             }
 
             /// <summary>
@@ -63,6 +75,18 @@ namespace PacketDotNet
                 get
                 {
                     return (((Field >> 1) & 0x1) == 1) ? true : false;
+                }
+                
+                set
+                {
+                    if (value)
+                    {
+                        Field |= (1 << 0x1);
+                    }
+                    else
+                    {
+                        Field &= unchecked((UInt16)~(1 << 0x1));
+                    }
                 }
             }
 
@@ -77,6 +101,18 @@ namespace PacketDotNet
                 {
                     return (((Field >> 2) & 0x1) == 1) ? true : false;
                 }
+                
+                set
+                {
+                    if (value)
+                    {
+                        Field |= (1 << 0x2);
+                    }
+                    else
+                    {
+                        Field &= unchecked((UInt16)~(1 << 0x2));
+                    }
+                }
             }
 
             /// <summary>
@@ -88,10 +124,24 @@ namespace PacketDotNet
                 {
                     return (byte)(Field >> 12);
                 }
+                
+                set
+                {
+                    Field &= 0x0FFF;
+                    Field |= (UInt16)(value << 12);
+                }
             }
 
 
             private UInt16 Field;
+            
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentControlField"/> class.
+            /// </summary>
+            public BlockAcknowledgmentControlField ()
+            {
+             
+            }
 
             /// <summary>
             /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentControlField"/> class.

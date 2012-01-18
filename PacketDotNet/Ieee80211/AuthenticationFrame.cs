@@ -14,13 +14,13 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
+using System.Net.NetworkInformation;
 
 namespace PacketDotNet
 {
@@ -36,13 +36,12 @@ namespace PacketDotNet
                 public readonly static int AuthAlgorithmNumLength = 2;
                 public readonly static int AuthAlgorithmTransactionSequenceNumLength = 2;
                 public readonly static int StatusCodeLength = 2;
-
                 public readonly static int AuthAlgorithmNumPosition;
                 public readonly static int AuthAlgorithmTransactionSequenceNumPosition;
                 public readonly static int StatusCodePosition;
                 public readonly static int InformationElement1Position;
 
-                static AuthenticationFields()
+                static AuthenticationFields ()
                 {
                     AuthAlgorithmNumPosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
                     AuthAlgorithmTransactionSequenceNumPosition = AuthAlgorithmNumPosition + AuthAlgorithmNumLength;
@@ -54,19 +53,19 @@ namespace PacketDotNet
             /// <summary>
             /// Number used for selection of authentication algorithm
             /// </summary>
-            public UInt16 AuthenticationAlgorithmNumber {get; set;}
+            public UInt16 AuthenticationAlgorithmNumber { get; set; }
             
             public UInt16 AuthenticationAlgorithmNumberBytes
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
+                    return EndianBitConverter.Little.ToUInt16 (header.Bytes,
                         header.Offset + AuthenticationFields.AuthAlgorithmNumPosition);
                 }
 
                 set
                 {
-                    EndianBitConverter.Little.CopyBytes(value,
+                    EndianBitConverter.Little.CopyBytes (value,
                                                      header.Bytes,
                                                      header.Offset + AuthenticationFields.AuthAlgorithmNumPosition);
                 }
@@ -75,19 +74,19 @@ namespace PacketDotNet
             /// <summary>
             /// Sequence number to define the step of the authentication algorithm
             /// </summary>
-            public UInt16 AuthenticationAlgorithmTransactionSequenceNumber {get; set;}
+            public UInt16 AuthenticationAlgorithmTransactionSequenceNumber { get; set; }
             
             public UInt16 AuthenticationAlgorithmTransactionSequenceNumberBytes
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
+                    return EndianBitConverter.Little.ToUInt16 (header.Bytes,
                         header.Offset + AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition);
                 }
 
                 set
                 {
-                    EndianBitConverter.Little.CopyBytes(value,
+                    EndianBitConverter.Little.CopyBytes (value,
                                                      header.Bytes,
                                                      header.Offset + AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition);
                 }
@@ -96,13 +95,20 @@ namespace PacketDotNet
             /// <summary>
             /// Indicates the success or failure of the authentication operation
             /// </summary>
-            public AuthenticationStatusCode StatusCode {get; set;}
+            public AuthenticationStatusCode StatusCode { get; set; }
             
             public AuthenticationStatusCode StatusCodeBytes
             {
                 get
                 {
-                    return (AuthenticationStatusCode)EndianBitConverter.Little.ToUInt16(header.Bytes,
+                    return (AuthenticationStatusCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
+                        header.Offset + AuthenticationFields.StatusCodePosition);
+                }
+                
+                set
+                {
+                    EndianBitConverter.Little.CopyBytes ((UInt16)value,
+                        header.Bytes,
                         header.Offset + AuthenticationFields.StatusCodePosition);
                 }
             }
@@ -145,10 +151,10 @@ namespace PacketDotNet
                 header = new ByteArraySegment (bas);
 
                 FrameControl = new FrameControlField (FrameControlBytes);
+                Duration = new DurationField (DurationBytes);
                 DestinationAddress = GetAddress (0);
                 SourceAddress = GetAddress (1);
                 BssId = GetAddress (2);
-                Duration = new DurationField (DurationBytes);
                 SequenceControl = new SequenceControlField (SequenceControlBytes);
                 AuthenticationAlgorithmNumber = AuthenticationAlgorithmNumberBytes;
                 AuthenticationAlgorithmTransactionSequenceNumber = AuthenticationAlgorithmTransactionSequenceNumberBytes;
@@ -167,6 +173,44 @@ namespace PacketDotNet
                 //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
                 FrameCheckSequence = FrameCheckSequenceBytes;
             }
+            
+            public AuthenticationFrame (PhysicalAddress SourceAddress,
+                                        PhysicalAddress DestinationAddress,
+                                        PhysicalAddress BssId,
+                                        InformationElementList InformationElements)
+            {
+                this.FrameControl = new FrameControlField ();
+                this.Duration = new DurationField ();
+                this.DestinationAddress = DestinationAddress;
+                this.SourceAddress = SourceAddress;
+                this.BssId = BssId;
+                this.SequenceControl = new SequenceControlField ();
+                this.InformationElements = new InformationElementList (InformationElements);
+                
+                this.FrameControl.Type = FrameControlField.FrameTypes.ManagementAuthentication;
+            }
+            
+            public override void UpdateCalculatedValues ()
+            {
+                if ((header == null) || (header.Length < FrameSize))
+                {
+                    header = new ByteArraySegment (new Byte[FrameSize]);
+                }
+                
+                this.FrameControlBytes = this.FrameControl.Field;
+                this.DurationBytes = this.Duration.Field;
+                SetAddress (0, DestinationAddress);
+                SetAddress (1, SourceAddress);
+                SetAddress (2, BssId);
+                this.SequenceControlBytes = this.SequenceControl.Field;
+                this.AuthenticationAlgorithmNumberBytes = this.AuthenticationAlgorithmNumber;
+                this.AuthenticationAlgorithmTransactionSequenceNumberBytes = this.AuthenticationAlgorithmTransactionSequenceNumber;
+                this.StatusCodeBytes = this.StatusCode;
+                //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
+                this.InformationElements.CopyTo (header, header.Offset + AuthenticationFields.InformationElement1Position);
+                
+                header.Length = FrameSize;
+            }
 
             /// <summary>
             /// ToString() override
@@ -174,14 +218,14 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override string ToString ()
             {
-                return string.Format("FrameControl {0}, FrameCheckSequence {1}, [AuthenticationFrame RA {2} TA {3} BSSID {4}]",
-                                     FrameControl.ToString(),
+                return string.Format ("FrameControl {0}, FrameCheckSequence {1}, [AuthenticationFrame RA {2} TA {3} BSSID {4}]",
+                                     FrameControl.ToString (),
                                      FrameCheckSequence,
-                                     DestinationAddress.ToString(),
-                                     SourceAddress.ToString(),
-                                     BssId.ToString());
+                                     DestinationAddress.ToString (),
+                                     SourceAddress.ToString (),
+                                     BssId.ToString ());
             }
 
         } 

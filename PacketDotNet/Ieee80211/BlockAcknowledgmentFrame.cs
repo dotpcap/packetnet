@@ -115,19 +115,53 @@ namespace PacketDotNet
                 }
             }
    
-            public Byte[] BlockAckBitmap {get; set;}
+            private byte[] blockAckBitmap;
+            public Byte[] BlockAckBitmap
+            {
+                get
+                {
+                    return blockAckBitmap;
+                }
+                
+                set
+                {
+                    if (value.Length == 8)
+                    {
+                        BlockAcknowledgmentControl.CompressedBitmap = true;
+                    }
+                    else if (value.Length == 64)
+                    {
+                        BlockAcknowledgmentControl.CompressedBitmap = false;
+                    }
+                    else
+                    {
+                        throw new ArgumentException ("Invalid BlockAckBitmap size. Must be either 8 or 64 bytes long.");
+                    }
+                    
+                    blockAckBitmap = value;
+                }
+            }
             
             public Byte[] BlockAckBitmapBytes
             {
                 get
                 {
-                    Byte[] bitmap = new Byte[GetBitmapLength()];
-                    Array.Copy(header.Bytes,
+                    Byte[] bitmap = new Byte[GetBitmapLength ()];
+                    Array.Copy (header.Bytes,
                         (BlockAcknowledgmentField.BlockAckBitmapPosition),
                         bitmap,
                         0,
-                        GetBitmapLength());
+                        GetBitmapLength ());
                     return bitmap;
+                }
+                
+                set
+                {
+                    Array.Copy (BlockAckBitmap,
+                                0,
+                                header.Bytes,
+                                BlockAcknowledgmentField.BlockAckBitmapPosition,
+                                GetBitmapLength());
                 }
             }
 
@@ -174,6 +208,39 @@ namespace PacketDotNet
                 
                 //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
                 FrameCheckSequence = FrameCheckSequenceBytes;
+            }
+            
+            public BlockAcknowledgmentFrame (PhysicalAddress TransmitterAddress,
+                                             PhysicalAddress ReceiverAddress,
+                                             Byte[] BlockAckBitmap)
+            {
+                this.FrameControl = new FrameControlField ();
+                this.Duration = new DurationField ();
+                this.ReceiverAddress = ReceiverAddress;
+                this.TransmitterAddress = TransmitterAddress;
+                this.BlockAcknowledgmentControl = new BlockAcknowledgmentControlField ();
+                this.BlockAckBitmap = BlockAckBitmap;
+
+                this.FrameControl.Type = FrameControlField.FrameTypes.ControlBlockAcknowledgment;
+            }
+            
+            public override void UpdateCalculatedValues ()
+            {
+                if ((header == null) || (header.Length < FrameSize))
+                {
+                    header = new ByteArraySegment (new Byte[FrameSize]);
+                }
+                
+                this.FrameControlBytes = this.FrameControl.Field;
+                this.DurationBytes = this.Duration.Field;
+                SetAddress (0, ReceiverAddress);
+                SetAddress (1, TransmitterAddress);
+                
+                this.BlockAckRequestControlBytes = this.BlockAcknowledgmentControl.Field;
+                this.BlockAckStartingSequenceControlBytes = this.BlockAckStartingSequenceControl;
+                BlockAckBitmapBytes = BlockAckBitmap;
+                
+                header.Length = FrameSize;
             }
 
             /// <summary>

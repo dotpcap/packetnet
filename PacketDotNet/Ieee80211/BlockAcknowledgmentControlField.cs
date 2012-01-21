@@ -133,7 +133,7 @@ namespace PacketDotNet
             }
 
 
-            private UInt16 Field;
+            public UInt16 Field {get; set;}
             
             /// <summary>
             /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentControlField"/> class.

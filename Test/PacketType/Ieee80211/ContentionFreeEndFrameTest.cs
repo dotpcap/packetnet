@@ -24,6 +24,7 @@ using PacketDotNet.Utils;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
+using System.Net.NetworkInformation;
 
 namespace Test.PacketType
 {
@@ -36,32 +37,65 @@ namespace Test.PacketType
             /// Test that parsing a contention free end frame yields the proper field values
             /// </summary>
             [Test]
-            public void Test_Constructor()
+            public void Test_Constructor ()
             {
-                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_contention_free_end_frame.pcap");
-                dev.Open();
-                var rawCapture = dev.GetNextPacket();
-                dev.Close();
+                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_contention_free_end_frame.pcap");
+                dev.Open ();
+                var rawCapture = dev.GetNextPacket ();
+                dev.Close ();
 
-                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
                 ContentionFreeEndFrame frame = (ContentionFreeEndFrame)p.PayloadPacket;
 
-                Assert.AreEqual(0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual(FrameControlField.FrameTypes.ControlCFEnd, frame.FrameControl.Type);
-                Assert.IsFalse(frame.FrameControl.ToDS);
-                Assert.IsFalse(frame.FrameControl.FromDS);
-                Assert.IsFalse(frame.FrameControl.MoreFragments);
-                Assert.IsFalse(frame.FrameControl.Retry);
-                Assert.IsFalse(frame.FrameControl.PowerManagement);
-                Assert.IsFalse(frame.FrameControl.MoreData);
-                Assert.IsFalse(frame.FrameControl.Wep);
-                Assert.IsTrue(frame.FrameControl.Order);
-                Assert.AreEqual(0, frame.Duration.Field); //this need expanding on in the future
-                Assert.AreEqual("FFFFFFFFFFFF", frame.ReceiverAddress.ToString().ToUpper());
-                Assert.AreEqual("001B2FDCFC12", frame.BssId.ToString().ToUpper());
+                Assert.AreEqual (0, frame.FrameControl.ProtocolVersion);
+                Assert.AreEqual (FrameControlField.FrameTypes.ControlCFEnd, frame.FrameControl.Type);
+                Assert.IsFalse (frame.FrameControl.ToDS);
+                Assert.IsFalse (frame.FrameControl.FromDS);
+                Assert.IsFalse (frame.FrameControl.MoreFragments);
+                Assert.IsFalse (frame.FrameControl.Retry);
+                Assert.IsFalse (frame.FrameControl.PowerManagement);
+                Assert.IsFalse (frame.FrameControl.MoreData);
+                Assert.IsFalse (frame.FrameControl.Wep);
+                Assert.IsTrue (frame.FrameControl.Order);
+                Assert.AreEqual (0, frame.Duration.Field); //this need expanding on in the future
+                Assert.AreEqual ("FFFFFFFFFFFF", frame.ReceiverAddress.ToString ().ToUpper ());
+                Assert.AreEqual ("001B2FDCFC12", frame.BssId.ToString ().ToUpper ());
 
-                Assert.AreEqual(0x0AE8A403, frame.FrameCheckSequence);
-                Assert.AreEqual(16, frame.FrameSize);
+                Assert.AreEqual (0x0AE8A403, frame.FrameCheckSequence);
+                Assert.AreEqual (16, frame.FrameSize);
+            }
+            
+            [Test]
+            public void Test_Constructor_ConstructWithValues ()
+            {
+                ContentionFreeEndFrame frame = new ContentionFreeEndFrame (PhysicalAddress.Parse ("111111111111"),
+                                                                           PhysicalAddress.Parse ("222222222222"));
+                
+                frame.FrameControl.ToDS = false;
+                frame.FrameControl.FromDS = true;
+                frame.FrameControl.MoreFragments = true;
+                
+                frame.Duration.Field = 0x1234;
+                
+                frame.FrameCheckSequence = 0x01020304;
+                
+                var bytes = frame.Bytes;
+                var bas = new ByteArraySegment (bytes);
+
+                //create a new frame that should be identical to the original
+                ContentionFreeEndFrame recreatedFrame = new ContentionFreeEndFrame (bas);
+                
+                Assert.AreEqual (FrameControlField.FrameTypes.ControlCFEnd, recreatedFrame.FrameControl.Type);
+                Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
+                Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
+                Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);
+                Assert.AreEqual (0x1234, recreatedFrame.Duration.Field);
+                
+                Assert.AreEqual ("111111111111", recreatedFrame.ReceiverAddress.ToString ().ToUpper ());
+                Assert.AreEqual ("222222222222", recreatedFrame.BssId.ToString ().ToUpper ());
+                
+                Assert.AreEqual (0x01020304, recreatedFrame.FrameCheckSequence);
+                
             }
         } 
     }

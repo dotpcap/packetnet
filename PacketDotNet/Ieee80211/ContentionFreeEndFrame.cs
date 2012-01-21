@@ -74,7 +74,33 @@ namespace PacketDotNet
                 //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
                 FrameCheckSequence = FrameCheckSequenceBytes;
             }
-
+   
+            public ContentionFreeEndFrame (PhysicalAddress ReceiverAddress,
+                                           PhysicalAddress BssId)
+            {
+                this.FrameControl = new FrameControlField ();
+                this.Duration = new DurationField ();
+                this.ReceiverAddress = ReceiverAddress;
+                this.BssId = BssId;
+                
+                this.FrameControl.Type = PacketDotNet.Ieee80211.FrameControlField.FrameTypes.ControlCFEnd;
+            }
+            
+            public override void UpdateCalculatedValues ()
+            {
+                if ((header == null) || (header.Length < FrameSize))
+                {
+                    header = new ByteArraySegment (new Byte[FrameSize]);
+                }
+                
+                this.FrameControlBytes = this.FrameControl.Field;
+                this.DurationBytes = this.Duration.Field;
+                SetAddress (0, ReceiverAddress);
+                SetAddress (1, BssId);
+               
+                header.Length = FrameSize;
+            }
+            
             /// <summary>
             /// ToString() override
             /// </summary>

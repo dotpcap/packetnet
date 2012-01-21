@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
+using System.Net.NetworkInformation;
 
 namespace PacketDotNet
 {
@@ -55,7 +56,14 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (Ieee80211ReasonCode)EndianBitConverter.Little.ToUInt16(header.Bytes,
+                    return (Ieee80211ReasonCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
+                        header.Offset + DeauthenticationFields.ReasonCodePosition);
+                }
+                
+                set
+                {
+                    EndianBitConverter.Little.CopyBytes ((UInt16)value,
+                        header.Bytes,
                         header.Offset + DeauthenticationFields.ReasonCodePosition);
                 }
             }
@@ -100,6 +108,38 @@ namespace PacketDotNet
                 
                 //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
                 FrameCheckSequence = FrameCheckSequenceBytes;
+            }
+            
+            public DeauthenticationFrame (PhysicalAddress SourceAddress,
+                                          PhysicalAddress DestinationAddress,
+                                          PhysicalAddress BssId)
+            {
+                this.FrameControl = new FrameControlField ();
+                this.Duration = new DurationField ();
+                this.DestinationAddress = DestinationAddress;
+                this.SourceAddress = SourceAddress;
+                this.BssId = BssId;
+                this.SequenceControl = new SequenceControlField ();
+                
+                this.FrameControl.Type = FrameControlField.FrameTypes.ManagementDeauthentication;
+            }
+            
+            public override void UpdateCalculatedValues ()
+            {
+                if ((header == null) || (header.Length < FrameSize))
+                {
+                    header = new ByteArraySegment (new Byte[FrameSize]);
+                }
+                
+                this.FrameControlBytes = this.FrameControl.Field;
+                this.DurationBytes = this.Duration.Field;
+                SetAddress (0, DestinationAddress);
+                SetAddress (1, SourceAddress);
+                SetAddress (2, BssId);
+                this.SequenceControlBytes = this.SequenceControl.Field;
+                this.ReasonBytes = this.Reason;
+                
+                header.Length = FrameSize;
             }
 
             /// <summary>

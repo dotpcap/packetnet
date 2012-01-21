@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PacketDotNet.Utils;
+using System.Net.NetworkInformation;
 
 namespace PacketDotNet
 {
@@ -83,13 +84,43 @@ namespace PacketDotNet
                 FrameCheckSequence = FrameCheckSequenceBytes;
             }
 
-            public ProbeRequestFrame()
+            public ProbeRequestFrame (PhysicalAddress SourceAddress,
+                                      PhysicalAddress DestinationAddress,
+                                      PhysicalAddress BssId,
+                                      InformationElementList InformationElements)
             {
-                int length = TcpFields.HeaderLength;
-                var headerBytes = new byte[length];
-                header = new ByteArraySegment(headerBytes, 0, length);
+                this.FrameControl = new FrameControlField ();
+                this.Duration = new DurationField ();
+                this.DestinationAddress = DestinationAddress;
+                this.SourceAddress = SourceAddress;
+                this.BssId = BssId;
+                this.SequenceControl = new SequenceControlField ();
+                this.InformationElements = new InformationElementList (InformationElements);
+                
+                this.FrameControl.Type = PacketDotNet.Ieee80211.FrameControlField.FrameTypes.ManagementProbeRequest;
             }
-
+            
+            
+            public override void UpdateCalculatedValues ()
+            {
+                if ((header == null) || (header.Length < FrameSize))
+                {
+                    header = new ByteArraySegment (new Byte[FrameSize]);
+                }
+                
+                this.FrameControlBytes = this.FrameControl.Field;
+                this.DurationBytes = this.Duration.Field;
+                SetAddress (0, DestinationAddress);
+                SetAddress (1, SourceAddress);
+                SetAddress (2, BssId);
+                this.SequenceControlBytes = this.SequenceControl.Field;
+                
+                //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
+                this.InformationElements.CopyTo (header, header.Offset + ProbeRequestFields.InformationElement1Position);
+                
+                header.Length = FrameSize;
+            }
+   
             /// <summary>
             /// ToString() override
             /// </summary>

@@ -24,6 +24,7 @@ using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
 using PacketDotNet.Ieee80211;
+using System.Net.NetworkInformation;
 
 namespace Test.PacketType
 {
@@ -65,8 +66,56 @@ namespace Test.PacketType
 
                 Assert.AreEqual (0xD83CB03D, frame.FrameCheckSequence);
                 Assert.AreEqual (45, frame.FrameSize);
+            }
+            
+            [Test]
+            public void Test_Constructor_ConstructWithValues ()
+            {
+                InformationElement ssidInfoElement = new InformationElement (InformationElement.ElementId.ServiceSetIdentity, 
+                                                                           new Byte[] { 0x68, 0x65, 0x6c, 0x6c, 0x6f });
+                InformationElement vendorElement = new InformationElement (InformationElement.ElementId.VendorSpecific,
+                                                                           new Byte[] {0x01, 0x02, 0x03, 0x04, 0x05});
                 
-               
+                
+                ProbeRequestFrame frame = new ProbeRequestFrame (PhysicalAddress.Parse ("111111111111"),
+                                                                 PhysicalAddress.Parse ("222222222222"),
+                                                                 PhysicalAddress.Parse ("333333333333"),
+                                                                new InformationElementList (){ssidInfoElement, vendorElement});
+                
+                frame.FrameControl.ToDS = false;
+                frame.FrameControl.FromDS = true;
+                frame.FrameControl.MoreFragments = true;
+                
+                frame.Duration.Field = 0x1234;
+                
+                frame.SequenceControl.SequenceNumber = 0x77;
+                frame.SequenceControl.FragmentNumber = 0x1;
+                
+                frame.FrameCheckSequence = 0x01020304;
+                
+                //serialize the frame into a byte buffer
+                var bytes = frame.Bytes;
+                var bas = new ByteArraySegment (bytes);
+    
+                //create a new frame that should be identical to the original
+                ProbeRequestFrame recreatedFrame = new ProbeRequestFrame (bas);
+                
+                Assert.AreEqual (FrameControlField.FrameTypes.ManagementProbeRequest, recreatedFrame.FrameControl.Type);
+                Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
+                Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
+                Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);
+                
+                Assert.AreEqual (0x77, recreatedFrame.SequenceControl.SequenceNumber);
+                Assert.AreEqual (0x1, recreatedFrame.SequenceControl.FragmentNumber);
+                
+                Assert.AreEqual ("111111111111", recreatedFrame.SourceAddress.ToString ().ToUpper ());
+                Assert.AreEqual ("222222222222", recreatedFrame.DestinationAddress.ToString ().ToUpper ());
+                Assert.AreEqual ("333333333333", recreatedFrame.BssId.ToString ().ToUpper ());
+                
+                Assert.AreEqual (ssidInfoElement, recreatedFrame.InformationElements [0]);
+                Assert.AreEqual (vendorElement, recreatedFrame.InformationElements [1]);
+                
+                Assert.AreEqual (0x01020304, recreatedFrame.FrameCheckSequence);
             }
 
         } 

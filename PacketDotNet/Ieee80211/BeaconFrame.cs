@@ -196,8 +196,8 @@ namespace PacketDotNet
             }
 
             public BeaconFrame (PhysicalAddress SourceAddress,
-                PhysicalAddress BssId, 
-                InformationElementList InformationElements)
+                                PhysicalAddress BssId, 
+                                InformationElementList InformationElements)
             {
                 this.FrameControl = new FrameControlField ();
                 this.Duration = new DurationField ();

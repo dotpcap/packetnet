@@ -24,6 +24,7 @@ using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
 using PacketDotNet.Ieee80211;
+using System.Net.NetworkInformation;
 
 namespace Test.PacketType
 {
@@ -65,6 +66,54 @@ namespace Test.PacketType
                 Assert.AreEqual(0x00, frame.QosControl);
                 Assert.AreEqual(0xDBF2B119, frame.FrameCheckSequence);
                 Assert.AreEqual(26, frame.FrameSize);
+            }
+            
+            
+            [Test]
+            public void Test_Constructor_ConstructWithValues ()
+            {
+                QosNullDataFrame frame = new QosNullDataFrame ();
+                
+                frame.FrameControl.ToDS = false;
+                frame.FrameControl.FromDS = true;
+                frame.FrameControl.MoreFragments = true;
+                
+                frame.SequenceControl.SequenceNumber = 0x89;
+                frame.SequenceControl.FragmentNumber = 0x1;
+                
+                frame.Duration.Field = 0x1234;
+                
+                frame.QosControl = 0x9876;
+                
+                frame.DestinationAddress = PhysicalAddress.Parse ("111111111111");
+                frame.SourceAddress = PhysicalAddress.Parse ("222222222222");
+                frame.BssId = PhysicalAddress.Parse ("333333333333");
+                
+                frame.PayloadData = new byte[]{0x01, 0x02, 0x03, 0x04, 0x05};
+                frame.FrameCheckSequence = 0x01020304;
+                
+                //serialize the frame into a byte buffer
+                var bytes = frame.Bytes;
+                var bas = new ByteArraySegment (bytes);
+                
+                //create a new frame that should be identical to the original
+                QosNullDataFrame recreatedFrame = new QosNullDataFrame (bas);
+                
+                Assert.AreEqual (FrameControlField.FrameTypes.QosNullData, recreatedFrame.FrameControl.Type);
+                Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
+                Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
+                Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);
+                
+                Assert.AreEqual (0x89, recreatedFrame.SequenceControl.SequenceNumber);
+                Assert.AreEqual (0x1, recreatedFrame.SequenceControl.FragmentNumber);
+                
+                Assert.AreEqual (0x9876, recreatedFrame.QosControl);
+                
+                Assert.AreEqual ("111111111111", recreatedFrame.DestinationAddress.ToString ().ToUpper ());
+                Assert.AreEqual ("222222222222", recreatedFrame.SourceAddress.ToString ().ToUpper ());
+                Assert.AreEqual ("333333333333", recreatedFrame.BssId.ToString ().ToUpper ());
+                
+                Assert.AreEqual (0x01020304, recreatedFrame.FrameCheckSequence);
             }
         } 
     }

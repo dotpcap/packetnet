@@ -89,7 +89,32 @@ namespace PacketDotNet
                 //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
                 FrameCheckSequence = FrameCheckSequenceBytes;
             }
-
+            
+            public QosNullDataFrame ()
+            {
+                this.FrameControl = new FrameControlField ();
+                this.Duration = new DurationField ();
+                this.SequenceControl = new SequenceControlField ();
+                
+                AssignDefaultAddresses ();
+                
+                FrameControl.Type = FrameControlField.FrameTypes.QosNullData;
+            }
+            
+            public override void UpdateCalculatedValues ()
+            {
+                if ((header == null) || (header.Length < FrameSize))
+                {
+                    header = new ByteArraySegment (new Byte[FrameSize]);
+                }
+                
+                this.FrameControlBytes = this.FrameControl.Field;
+                this.DurationBytes = this.Duration.Field;
+                this.SequenceControlBytes = this.SequenceControl.Field;
+                this.QosControlBytes = this.QosControl;
+                WriteAddressBytes ();
+            }
+            
             /// <summary>
             /// ToString() override
             /// </summary>

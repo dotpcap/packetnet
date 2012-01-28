@@ -20,6 +20,8 @@ using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
 using NUnit.Framework;
+using SharpPcap;
+using PacketDotNet.Utils;
 
 namespace Test.PacketType
 {
@@ -36,22 +38,41 @@ namespace Test.PacketType
             /// Test that the MacFrame.FCSValid property is working correctly
             /// </summary>
             [Test]
-            public void FCSTest()
+            public void FCSTest ()
             {
-                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_association_request_frame.pcap");
-                dev.Open();
-                var rawCapture = dev.GetNextPacket();
-                dev.Close();
+                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_association_request_frame.pcap");
+                dev.Open ();
+                var rawCapture = dev.GetNextPacket ();
+                dev.Close ();
 
                 // check that the fcs can be calculated correctly
-                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
                 AssociationRequestFrame frame = (AssociationRequestFrame)p.PayloadPacket;
-                Assert.AreEqual(0xde82c216, frame.FrameCheckSequence, "FCS mismatch");
-                Assert.IsTrue(frame.FCSValid);
+                Assert.AreEqual (0xde82c216, frame.FrameCheckSequence, "FCS mismatch");
+                Assert.IsTrue (frame.FCSValid);
 
                 // adjust the fcs of the packet and check that the FCSValid property returns false
                 frame.FrameCheckSequence = 0x1;
-                Assert.IsFalse(frame.FCSValid);                
+                Assert.IsFalse (frame.FCSValid);                
+            }
+            
+            [Test]
+            public void Test_NoFCS ()
+            {
+                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_beacon_no_fcs.pcap");
+                
+                dev.Open ();
+                
+
+                RawCapture rawCapture;
+                while ((rawCapture = dev.GetNextPacket ()) != null)
+                {
+                    Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
+                    Assert.IsNotNull (p.PayloadPacket);
+                }
+
+                // check that the fcs can be calculated correctly
+                dev.Close ();
             }
         }
     }

@@ -83,7 +83,7 @@ namespace Test.PacketType
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                ContentionFreeEndFrame recreatedFrame = new ContentionFreeEndFrame (bas);
+                ContentionFreeEndFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as ContentionFreeEndFrame;
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.ControlCFEnd, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);

@@ -205,9 +205,6 @@ namespace PacketDotNet
                 BlockAckStartingSequenceControl = BlockAckStartingSequenceControlBytes;
                 BlockAckBitmap = BlockAckBitmapBytes;
                 header.Length = FrameSize;
-                
-                //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
-                FrameCheckSequence = FrameCheckSequenceBytes;
             }
             
             public BlockAcknowledgmentFrame (PhysicalAddress TransmitterAddress,

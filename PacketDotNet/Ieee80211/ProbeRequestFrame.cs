@@ -72,16 +72,13 @@ namespace PacketDotNet
                 //create a segment that just refers to the info element section
                 ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
                     (bas.Offset + ProbeRequestFields.InformationElement1Position),
-                    (bas.Length - ProbeRequestFields.InformationElement1Position - MacFields.FrameCheckSequenceLength));
+                    (bas.Length - ProbeRequestFields.InformationElement1Position));
 
                 InformationElements = new InformationElementList (infoElementsSegment);
                 
                 //cant set length until after we have handled the information elements
                 //as they vary in length
                 header.Length = FrameSize;
-                
-                //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
-                FrameCheckSequence = FrameCheckSequenceBytes;
             }
 
             public ProbeRequestFrame (PhysicalAddress SourceAddress,

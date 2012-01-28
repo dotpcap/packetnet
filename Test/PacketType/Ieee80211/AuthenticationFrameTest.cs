@@ -147,7 +147,7 @@ namespace Test.PacketType
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                AuthenticationFrame recreatedFrame = new AuthenticationFrame (bas);
+                AuthenticationFrame recreatedFrame = MacFrame.ParsePacketWithFcs(bas) as AuthenticationFrame;
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.ManagementAuthentication, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);

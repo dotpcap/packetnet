@@ -174,7 +174,7 @@ namespace PacketDotNet
                 //create a segment that just refers to the info element section
                 ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
                     (bas.Offset + ReassociationRequestFields.InformationElement1Position),
-                    (bas.Length - ReassociationRequestFields.InformationElement1Position - MacFields.FrameCheckSequenceLength));
+                    (bas.Length - ReassociationRequestFields.InformationElement1Position));
 
                 InformationElements = new InformationElementList(infoElementsSegment);
 

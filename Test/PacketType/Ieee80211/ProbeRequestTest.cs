@@ -98,7 +98,7 @@ namespace Test.PacketType
                 var bas = new ByteArraySegment (bytes);
     
                 //create a new frame that should be identical to the original
-                ProbeRequestFrame recreatedFrame = new ProbeRequestFrame (bas);
+                ProbeRequestFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as ProbeRequestFrame;
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.ManagementProbeRequest, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);

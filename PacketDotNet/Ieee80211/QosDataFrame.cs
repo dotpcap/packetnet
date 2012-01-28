@@ -85,11 +85,8 @@ namespace PacketDotNet
                 ReadAddresses ();
                 
                 header.Length = FrameSize;
-                int payloadLength = header.BytesLength - (header.Offset + header.Length) - MacFields.FrameCheckSequenceLength;
+                int payloadLength = header.BytesLength - (header.Offset + header.Length);
                 payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (payloadLength);
-                
-                //Must do this after setting header.Length and handling payload as they are used in calculating the posistion of the FCS
-                FrameCheckSequence = FrameCheckSequenceBytes;
             }
             
             public QosDataFrame ()

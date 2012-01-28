@@ -70,9 +70,6 @@ namespace PacketDotNet
                 BssId = GetAddress (1);
                 
                 header.Length = FrameSize;
-                
-                //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
-                FrameCheckSequence = FrameCheckSequenceBytes;
             }
    
             public ContentionFreeEndFrame (PhysicalAddress ReceiverAddress,

@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Text;
+using System.Linq;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
 
@@ -114,19 +115,28 @@ namespace PacketDotNet
                 }
             }
 
-            internal RadioPacket(ByteArraySegment bas)
+            internal RadioPacket (ByteArraySegment bas)
             {
-                log.Debug("");
+                log.Debug ("");
 
                 // slice off the header portion
-                header = new ByteArraySegment(bas);
+                header = new ByteArraySegment (bas);
                 header.Length = RadioFields.DefaultHeaderLength;
 
                 // update the header size based on the headers packet length
                 header.Length = Length;
-
-                // parse the encapsulated bytes
-                payloadPacketOrData = ParseEncapsulatedBytes(header.EncapsulatedBytes());
+    
+                //Before we attempt to parse the payload we need to work out if 
+                //the FCS was valid and if it will be present at the end of the frame
+                FlagsRadioTapField flagsField = null;
+                if ((Present.Length != 0) && ((Present [0] & 0x2) != 0))
+                {
+                    flagsField = (from field in RadioTapFields 
+                                  where field.FieldType == RadioTapType.IEEE80211_RADIOTAP_FLAGS
+                                  select field).FirstOrDefault () as FlagsRadioTapField;
+                }
+                    
+		        payloadPacketOrData = ParseEncapsulatedBytes(header.EncapsulatedBytes(), flagsField);
             }
 
             /// <summary cref="Packet.ToString(StringOutputType)" />
@@ -196,15 +206,15 @@ namespace PacketDotNet
                 {
                     var bitmasks = Present;
 
-                    var retval = new List<RadioTapField>();
+                    var retval = new List<RadioTapField> ();
 
                     int bitIndex = 0;
 
                     // create a binary reader that points to the memory immediately after the bitmasks
                     var offset = header.Offset +
                                  RadioFields.PresentPosition +
-                                 (bitmasks.Length) * Marshal.SizeOf(typeof(UInt32));
-                    var br = new BinaryReader(new MemoryStream(header.Bytes,
+                                 (bitmasks.Length) * Marshal.SizeOf (typeof(UInt32));
+                    var br = new BinaryReader (new MemoryStream (header.Bytes,
                                                                offset,
                                                                (int)(Length - offset)));
 
@@ -213,16 +223,20 @@ namespace PacketDotNet
                     foreach (var bmask in bitmasks)
                     {
                         int[] bmaskArray = new int[1];
-                        bmaskArray[0] = (int)bmask;
-                        var ba = new BitArray(bmaskArray);
+                        bmaskArray [0] = (int)bmask;
+                        var ba = new BitArray (bmaskArray);
 
                         // look at all of the bits, note we don't want to consider the
                         // highest bit since that indicates another bitfield that follows
                         for (int x = 0; x < 31; x++)
                         {
-                            if (ba[x] == true)
+                            if (ba [x] == true)
                             {
-                                retval.Add(RadioTapField.Parse(bitIndex, br));
+                                var field = RadioTapField.Parse (bitIndex, br);
+                                if (field != null)
+                                {
+                                    retval.Add (field);
+                                }
                             }
                             bitIndex++;
                         }
@@ -233,13 +247,44 @@ namespace PacketDotNet
             }
 
 
-            internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment payload)
+            internal static PacketOrByteArraySegment ParseEncapsulatedBytes (ByteArraySegment payload, FlagsRadioTapField flagsField)
             {
-                var payloadPacketOrData = new PacketOrByteArraySegment();
-
-                //I think 802.11 MAC frames are the only thing that could be contained inside
-                //a radio packet so we don't need to bother with a switch
-                MacFrame frame = MacFrame.ParsePacket(payload);
+                var payloadPacketOrData = new PacketOrByteArraySegment ();
+                MacFrame frame = null;
+                
+                if (flagsField != null)
+                {
+                    bool fcsValid = !((flagsField.Flags & RadioTapFlags.FailedFcsCheck) == RadioTapFlags.FailedFcsCheck);
+                    bool fcsPresent = ((flagsField.Flags & RadioTapFlags.FcsIncludedInFrame) == RadioTapFlags.FcsIncludedInFrame);
+                    
+                    if (fcsValid)
+                    {
+                        if (fcsPresent)
+                        {
+                            frame = MacFrame.ParsePacketWithFcs (payload);
+                        }
+                        else
+                        {
+                            frame = MacFrame.ParsePacket (payload);
+                        }
+                    }
+                }
+                else
+                {
+                    int fcsPosition = payload.Offset + payload.Length - MacFields.FrameCheckSequenceLength;
+                    
+                    UInt32 potentialFcs = EndianBitConverter.Big.ToUInt32 (payload.Bytes, fcsPosition);
+                    if (MacFrame.PerformFcsCheck (payload.Bytes,
+                                                  payload.Offset,
+                                                  payload.Length - MacFields.FrameCheckSequenceLength,
+                                                  potentialFcs))
+                    {
+                        //We will assume that if it passes the FCS check the last four bytes are the FCS.
+                        //It is very unlikely that we would get a false positive
+                        frame = MacFrame.ParsePacketWithFcs (payload);
+                    }
+                }
+                
                 if (frame == null)
                 {
                     payloadPacketOrData.TheByteArraySegment = payload;
@@ -248,7 +293,7 @@ namespace PacketDotNet
                 {
                     payloadPacketOrData.ThePacket = frame;
                 }
-
+                
                 return payloadPacketOrData;
             }
         } 

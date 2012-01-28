@@ -99,7 +99,7 @@ namespace Test.PacketType
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                BlockAcknowledgmentFrame recreatedFrame = new BlockAcknowledgmentFrame (bas);
+                BlockAcknowledgmentFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as BlockAcknowledgmentFrame;
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.ControlBlockAcknowledgment, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);

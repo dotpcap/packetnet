@@ -92,7 +92,7 @@ namespace Test.PacketType
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                DeauthenticationFrame recreatedFrame = new DeauthenticationFrame (bas);
+                DeauthenticationFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as DeauthenticationFrame;
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.ManagementDeauthentication, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);

@@ -69,6 +69,8 @@ namespace Test.PacketType
                 Assert.AreEqual (100, beaconFrame.BeaconInterval);
                 Assert.IsTrue (beaconFrame.CapabilityInformation.IsEss);
                 Assert.IsFalse (beaconFrame.CapabilityInformation.IsIbss);
+                
+                Assert.AreEqual (15, beaconFrame.InformationElements.Count);
 
                 Assert.AreEqual (0x2BADAF43, beaconFrame.FrameCheckSequence);
                 Assert.AreEqual (262, beaconFrame.FrameSize);
@@ -100,7 +102,7 @@ namespace Test.PacketType
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                BeaconFrame recreatedFrame = new BeaconFrame (bas);
+                BeaconFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as BeaconFrame;
 
                 Assert.AreEqual (FrameControlField.FrameTypes.ManagementBeacon, recreatedFrame.FrameControl.Type);
                 Assert.AreEqual (PhysicalAddress.Parse ("11-11-11-11-11-11"), recreatedFrame.SourceAddress);

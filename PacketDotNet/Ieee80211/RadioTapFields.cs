@@ -699,7 +699,8 @@ namespace PacketDotNet
                     case RadioTapType.IEEE80211_RADIOTAP_FCS:
                         return new FcsRadioTapField(br);
                     default:
-                        throw new System.NotImplementedException("Unknown bitIndex of " + bitIndex);
+                        //the RadioTap fields are extendable so there may be some we dont know about
+                        return null;
                 }
             }
         }; 

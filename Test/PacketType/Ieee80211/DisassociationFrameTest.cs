@@ -92,7 +92,7 @@ namespace Test.PacketType
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                DisassociationFrame recreatedFrame = new DisassociationFrame (bas);
+                DisassociationFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as DisassociationFrame;
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.ManagementDisassociation, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);

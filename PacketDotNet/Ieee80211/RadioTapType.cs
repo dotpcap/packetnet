@@ -169,6 +169,7 @@ namespace PacketDotNet
             ///      FCS from frame in network byte order.
             /// </summary>
             IEEE80211_RADIOTAP_FCS = 14,
+            
 
             /// <summary>
             /// Indicates that the flags bitmaps have been extended

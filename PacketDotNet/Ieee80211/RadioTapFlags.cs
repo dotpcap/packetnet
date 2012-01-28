@@ -49,7 +49,15 @@ namespace PacketDotNet
             /// <summary>
             /// frame includes FCS
             /// </summary>
-            FcsIncludedInFrame = 0x10
+            FcsIncludedInFrame = 0x10,
+            /// <summary>
+            /// frame includes padding to the 32 bit boundary between the 802.11 header and the payload
+            /// </summary>
+            PostFramePadding = 0x20,
+            /// <summary>
+            ///fFrame failed the fcs check
+            /// </summary>
+            FailedFcsCheck = 0x40
         }; 
     }
 }

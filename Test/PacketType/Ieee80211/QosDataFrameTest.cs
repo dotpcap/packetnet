@@ -98,7 +98,7 @@ namespace Test.PacketType
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                QosDataFrame recreatedFrame = new QosDataFrame (bas);
+                QosDataFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as QosDataFrame;
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.QosData, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);

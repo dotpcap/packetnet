@@ -47,8 +47,6 @@ namespace PacketDotNet
                 public readonly static int BeaconIntervalPosition;
                 public readonly static int CapabilityInformationPosition;
                 public readonly static int InformationElement1Position;
-                
-                
 
                 static BeaconFields ()
                 {
@@ -183,16 +181,13 @@ namespace PacketDotNet
                 //create a segment that just refers to the info element section
                 ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
                     (bas.Offset + BeaconFields.InformationElement1Position),
-                    (bas.Length - BeaconFields.InformationElement1Position - MacFields.FrameCheckSequenceLength));
+                    (bas.Length - BeaconFields.InformationElement1Position ));
 
                 InformationElements = new InformationElementList (infoElementsSegment);
                 
                 //cant set length until after we have handled the information elements
                 //as they vary in length
                 header.Length = FrameSize;
-                
-                //Must do this after setting header.Length as that is used in calculating the posistion of the FCS
-                FrameCheckSequence = FrameCheckSequenceBytes;
             }
 
             public BeaconFrame (PhysicalAddress SourceAddress,
@@ -204,13 +199,6 @@ namespace PacketDotNet
                 this.SequenceControl = new SequenceControlField ();
                 this.CapabilityInformation = new CapabilityInformationField ();
                 this.InformationElements = new InformationElementList (InformationElements);
-                
-                //we need to create a ByteArraySegment to big enough to back the beacon frame
-                var frameHeaderLength = FrameSize;
-                header = new ByteArraySegment (new Byte[frameHeaderLength + MacFields.FrameCheckSequenceLength]);
-                header.Length = frameHeaderLength;
-                
-                //now that we have created the field and the backing array we can safely set the values
                 this.FrameControl.Type = FrameControlField.FrameTypes.ManagementBeacon;
                 this.SourceAddress = SourceAddress;
                 this.DestinationAddress = PhysicalAddress.Parse ("FF-FF-FF-FF-FF-FF");
@@ -220,7 +208,7 @@ namespace PacketDotNet
             
             public override void UpdateCalculatedValues ()
             {
-                if (header.Length < FrameSize)
+                if ((header == null) || (header.Length < FrameSize))
                 {
                     //the backing buffer isnt big enough to accommodate the info elements so we need to resize it
                     header = new ByteArraySegment (new Byte[FrameSize]);

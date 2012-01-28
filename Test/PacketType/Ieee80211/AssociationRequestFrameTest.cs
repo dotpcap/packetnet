@@ -112,7 +112,7 @@ namespace Test.PacketType
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                AssociationRequestFrame recreatedFrame = new AssociationRequestFrame (bas);
+                AssociationRequestFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as AssociationRequestFrame;
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.ManagementAssociationRequest, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);

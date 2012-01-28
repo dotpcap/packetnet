@@ -132,7 +132,7 @@ namespace Test.PacketType
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                DataDataFrame recreatedFrame = new DataDataFrame (bas);
+                DataDataFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as DataDataFrame;
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.Data, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);

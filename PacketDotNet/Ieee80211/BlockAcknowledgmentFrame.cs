@@ -66,7 +66,7 @@ namespace PacketDotNet
             /// <value>
             /// The block ack request control bytes.
             /// </value>
-            public UInt16 BlockAckRequestControlBytes
+            private UInt16 BlockAckRequestControlBytes
             {
                 get
                 {
@@ -99,7 +99,7 @@ namespace PacketDotNet
             /// <value>
             /// The block ack starting sequence control.
             /// </value>
-            public UInt16 BlockAckStartingSequenceControlBytes
+            private UInt16 BlockAckStartingSequenceControlBytes
             {
                 get
                 {
@@ -142,7 +142,7 @@ namespace PacketDotNet
                 }
             }
             
-            public Byte[] BlockAckBitmapBytes
+            private Byte[] BlockAckBitmapBytes
             {
                 get
                 {

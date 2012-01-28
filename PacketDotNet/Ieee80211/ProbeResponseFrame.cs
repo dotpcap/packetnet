@@ -51,7 +51,7 @@ namespace PacketDotNet
 
             public UInt64 Timestamp {get;set;}
                 
-            public UInt64 TimestampBytes
+            private UInt64 TimestampBytes
             {
                 get
                 {
@@ -68,7 +68,7 @@ namespace PacketDotNet
 
             public UInt16 BeaconInterval { get; set; }
             
-            public UInt16 BeaconIntervalBytes
+            private UInt16 BeaconIntervalBytes
             {
                 get
                 {
@@ -86,7 +86,7 @@ namespace PacketDotNet
             /// <summary>
             /// Frame control bytes are the first two bytes of the frame
             /// </summary>
-            public UInt16 CapabilityInformationBytes
+            private UInt16 CapabilityInformationBytes
             {
                 get
                 {

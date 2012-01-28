@@ -109,7 +109,7 @@ namespace PacketDotNet
             /// <summary>
             /// Frame control bytes are the first two bytes of the frame
             /// </summary>
-            public UInt16 FrameControlBytes
+            protected UInt16 FrameControlBytes
             {
                 get
                 {
@@ -137,7 +137,7 @@ namespace PacketDotNet
             /// <summary>
             /// Duration bytes are the third and fourth bytes of the frame
             /// </summary>
-            public UInt16 DurationBytes
+            protected UInt16 DurationBytes
             {
                 get
                 {
@@ -200,7 +200,7 @@ namespace PacketDotNet
             /// </summary>
             public UInt32 FrameCheckSequence { get; set; }
             
-            public UInt32 FrameCheckSequenceBytes
+            protected UInt32 FrameCheckSequenceBytes
             {
                 get
                 {

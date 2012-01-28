@@ -42,7 +42,7 @@ namespace PacketDotNet
 
             public UInt16 QosControl { get; set; }
 
-            public UInt16 QosControlBytes
+            private UInt16 QosControlBytes
             {
                 get
                 {

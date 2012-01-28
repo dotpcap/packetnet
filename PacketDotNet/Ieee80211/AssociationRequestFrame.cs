@@ -52,7 +52,7 @@ namespace PacketDotNet
             /// <summary>
             /// Frame control bytes are the first two bytes of the frame
             /// </summary>
-            public UInt16 CapabilityInformationBytes
+            private UInt16 CapabilityInformationBytes
             {
                 get
                 {
@@ -88,7 +88,7 @@ namespace PacketDotNet
             /// </value>
             public UInt16 ListenInterval {get; set;}
             
-            public UInt16 ListenIntervalBytes
+            private UInt16 ListenIntervalBytes
             {
                 get
                 {

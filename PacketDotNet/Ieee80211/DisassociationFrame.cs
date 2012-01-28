@@ -52,7 +52,7 @@ namespace PacketDotNet
             /// <value>
             /// The reason.
             /// </value>
-            public Ieee80211ReasonCode ReasonBytes
+            private Ieee80211ReasonCode ReasonBytes
             {
                 get
                 {

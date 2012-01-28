@@ -55,7 +55,7 @@ namespace PacketDotNet
             /// <summary>
             /// The raw capability information bytes
             /// </summary>
-            public UInt16 CapabilityInformationBytes
+            private UInt16 CapabilityInformationBytes
             {
                 get
                 {
@@ -85,7 +85,7 @@ namespace PacketDotNet
             /// </summary>
             public AuthenticationStatusCode StatusCode {get; set;}
             
-            public AuthenticationStatusCode StatusCodeBytes
+            private AuthenticationStatusCode StatusCodeBytes
             {
                 get
                 {
@@ -109,7 +109,7 @@ namespace PacketDotNet
             /// </summary>
             public UInt16 AssociationId {get; set;}
             
-            public UInt16 AssociationIdBytes
+            private UInt16 AssociationIdBytes
             {
                 get
                 {

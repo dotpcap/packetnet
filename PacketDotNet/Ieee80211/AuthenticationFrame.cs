@@ -55,7 +55,7 @@ namespace PacketDotNet
             /// </summary>
             public UInt16 AuthenticationAlgorithmNumber { get; set; }
             
-            public UInt16 AuthenticationAlgorithmNumberBytes
+            private UInt16 AuthenticationAlgorithmNumberBytes
             {
                 get
                 {
@@ -76,7 +76,7 @@ namespace PacketDotNet
             /// </summary>
             public UInt16 AuthenticationAlgorithmTransactionSequenceNumber { get; set; }
             
-            public UInt16 AuthenticationAlgorithmTransactionSequenceNumberBytes
+            private UInt16 AuthenticationAlgorithmTransactionSequenceNumberBytes
             {
                 get
                 {
@@ -97,7 +97,7 @@ namespace PacketDotNet
             /// </summary>
             public AuthenticationStatusCode StatusCode { get; set; }
             
-            public AuthenticationStatusCode StatusCodeBytes
+            private AuthenticationStatusCode StatusCodeBytes
             {
                 get
                 {

@@ -60,7 +60,7 @@ namespace PacketDotNet
             /// <summary>
             /// Block acknowledgment control bytes are the first two bytes of the frame
             /// </summary>
-            public UInt16 BlockAckRequestControlBytes
+            private UInt16 BlockAckRequestControlBytes
             {
                 get
                 {
@@ -93,7 +93,7 @@ namespace PacketDotNet
             /// <value>
             /// The block ack starting sequence control.
             /// </value>
-            public UInt16 BlockAckStartingSequenceControlBytes
+            private UInt16 BlockAckStartingSequenceControlBytes
             {
                 get
                 {

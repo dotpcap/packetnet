@@ -51,7 +51,7 @@ namespace PacketDotNet
             /// <summary>
             /// Frame control bytes are the first two bytes of the frame
             /// </summary>
-            public UInt16 SequenceControlBytes
+            protected UInt16 SequenceControlBytes
             {
                 get
                 {

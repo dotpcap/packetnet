@@ -108,14 +108,16 @@ namespace Test.PacketType
                 frame.CapabilityInformation.IsEss = true;
                 frame.CapabilityInformation.ChannelAgility = true;
                 
-                frame.FrameCheckSequence = 0x01020304;
+                frame.UpdateFrameCheckSequence ();
+                UInt32 fcs = frame.FrameCheckSequence;
                 
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
                 var bas = new ByteArraySegment (bytes);
     
                 //create a new frame that should be identical to the original
-                ProbeResponseFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as ProbeResponseFrame;
+                ProbeResponseFrame recreatedFrame = MacFrame.ParsePacket (bas) as ProbeResponseFrame;
+                recreatedFrame.UpdateFrameCheckSequence();
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.ManagementProbeResponse, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
@@ -135,7 +137,7 @@ namespace Test.PacketType
                 Assert.AreEqual (ssidInfoElement, recreatedFrame.InformationElements [0]);
                 Assert.AreEqual (vendorElement, recreatedFrame.InformationElements [1]);
                 
-                Assert.AreEqual (0x01020304, recreatedFrame.FrameCheckSequence);
+                Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
             }
         } 
     }

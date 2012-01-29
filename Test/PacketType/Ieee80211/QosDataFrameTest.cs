@@ -91,14 +91,17 @@ namespace Test.PacketType
                 frame.BssId = PhysicalAddress.Parse ("333333333333");
                 
                 frame.PayloadData = new byte[]{0x01, 0x02, 0x03, 0x04, 0x05};
-                frame.FrameCheckSequence = 0x01020304;
+                
+                frame.UpdateFrameCheckSequence ();
+                UInt32 fcs = frame.FrameCheckSequence;
                 
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                QosDataFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as QosDataFrame;
+                QosDataFrame recreatedFrame = MacFrame.ParsePacket (bas) as QosDataFrame;
+                recreatedFrame.UpdateFrameCheckSequence();
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.QosData, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
@@ -115,7 +118,7 @@ namespace Test.PacketType
                 
                 CollectionAssert.AreEqual (new byte[]{0x01, 0x02, 0x03, 0x04, 0x05}, recreatedFrame.PayloadData);
                 
-                Assert.AreEqual (0x01020304, recreatedFrame.FrameCheckSequence);
+                Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
             }
         } 
     }

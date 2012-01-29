@@ -86,13 +86,16 @@ namespace Test.PacketType
                 frame.SequenceControl.FragmentNumber = 0x1;
                
                 frame.Reason = Ieee80211ReasonCode.LEAVING_TO_ROAM;
-                frame.FrameCheckSequence = 0x01020304;
+                
+                frame.UpdateFrameCheckSequence ();
+                UInt32 fcs = frame.FrameCheckSequence;
                 
                 var bytes = frame.Bytes;
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                DeauthenticationFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as DeauthenticationFrame;
+                DeauthenticationFrame recreatedFrame = MacFrame.ParsePacket (bas) as DeauthenticationFrame;
+                recreatedFrame.UpdateFrameCheckSequence();
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.ManagementDeauthentication, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
@@ -103,13 +106,13 @@ namespace Test.PacketType
                 Assert.AreEqual (0x77, recreatedFrame.SequenceControl.SequenceNumber);
                 Assert.AreEqual (0x1, recreatedFrame.SequenceControl.FragmentNumber);
                 
-                Assert.AreEqual(Ieee80211ReasonCode.LEAVING_TO_ROAM, recreatedFrame.Reason);
+                Assert.AreEqual (Ieee80211ReasonCode.LEAVING_TO_ROAM, recreatedFrame.Reason);
                 
                 Assert.AreEqual ("111111111111", recreatedFrame.SourceAddress.ToString ().ToUpper ());
                 Assert.AreEqual ("222222222222", recreatedFrame.DestinationAddress.ToString ().ToUpper ());
                 Assert.AreEqual ("333333333333", recreatedFrame.BssId.ToString ().ToUpper ());
                 
-                Assert.AreEqual (0x01020304, recreatedFrame.FrameCheckSequence);
+                Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
                 
             }
         } 

@@ -140,14 +140,16 @@ namespace Test.PacketType
                 frame.AuthenticationAlgorithmTransactionSequenceNumber = 0x5555;
                 frame.StatusCode = AuthenticationStatusCode.Success;
                 
-                frame.FrameCheckSequence = 0x01020304;
+                frame.UpdateFrameCheckSequence ();
+                UInt32 fcs = frame.FrameCheckSequence;
                 
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                AuthenticationFrame recreatedFrame = MacFrame.ParsePacketWithFcs(bas) as AuthenticationFrame;
+                AuthenticationFrame recreatedFrame = MacFrame.ParsePacket (bas) as AuthenticationFrame;
+                recreatedFrame.UpdateFrameCheckSequence();
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.ManagementAuthentication, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
@@ -157,15 +159,15 @@ namespace Test.PacketType
                 Assert.AreEqual (0x77, recreatedFrame.SequenceControl.SequenceNumber);
                 Assert.AreEqual (0x1, recreatedFrame.SequenceControl.FragmentNumber);
                 
-                Assert.AreEqual(0x4444, recreatedFrame.AuthenticationAlgorithmNumber);
-                Assert.AreEqual(0x5555, recreatedFrame.AuthenticationAlgorithmTransactionSequenceNumber);
+                Assert.AreEqual (0x4444, recreatedFrame.AuthenticationAlgorithmNumber);
+                Assert.AreEqual (0x5555, recreatedFrame.AuthenticationAlgorithmTransactionSequenceNumber);
                 Assert.AreEqual (AuthenticationStatusCode.Success, recreatedFrame.StatusCode);
                 
                 Assert.AreEqual ("111111111111", recreatedFrame.SourceAddress.ToString ().ToUpper ());
                 Assert.AreEqual ("222222222222", recreatedFrame.DestinationAddress.ToString ().ToUpper ());
                 Assert.AreEqual ("333333333333", recreatedFrame.BssId.ToString ().ToUpper ());
                 
-                Assert.AreEqual (0x01020304, recreatedFrame.FrameCheckSequence);
+                Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
             }
         } 
     }

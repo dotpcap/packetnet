@@ -95,14 +95,17 @@ namespace Test.PacketType
                 frame.BeaconInterval = 4444;
                 frame.CapabilityInformation.IsIbss = true;
                 frame.CapabilityInformation.Privacy = true;
-                frame.FrameCheckSequence = 0x01020304;
+                frame.UpdateFrameCheckSequence ();
+                UInt32 fcs = frame.FrameCheckSequence;
+                
                 
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                BeaconFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as BeaconFrame;
+                BeaconFrame recreatedFrame = MacFrame.ParsePacket (bas) as BeaconFrame;
+                recreatedFrame.UpdateFrameCheckSequence();
 
                 Assert.AreEqual (FrameControlField.FrameTypes.ManagementBeacon, recreatedFrame.FrameControl.Type);
                 Assert.AreEqual (PhysicalAddress.Parse ("11-11-11-11-11-11"), recreatedFrame.SourceAddress);
@@ -116,8 +119,7 @@ namespace Test.PacketType
                 Assert.AreEqual (4444, recreatedFrame.BeaconInterval);
                 Assert.AreEqual (ssidInfoElement, recreatedFrame.InformationElements [0]);
                 
-                //TODO: This isnt the real FCS. I dont know how to calculate this yet
-                Assert.AreEqual (0x01020304, recreatedFrame.FrameCheckSequence);
+                Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
             }
 
         } 

@@ -77,13 +77,15 @@ namespace Test.PacketType
                 
                 frame.Duration.Field = 0x1234;
                 
-                frame.FrameCheckSequence = 0x01020304;
+                frame.UpdateFrameCheckSequence ();
+                UInt32 fcs = frame.FrameCheckSequence;
                 
                 var bytes = frame.Bytes;
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                ContentionFreeEndFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as ContentionFreeEndFrame;
+                ContentionFreeEndFrame recreatedFrame = MacFrame.ParsePacket (bas) as ContentionFreeEndFrame;
+                recreatedFrame.UpdateFrameCheckSequence();
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.ControlCFEnd, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
@@ -94,7 +96,7 @@ namespace Test.PacketType
                 Assert.AreEqual ("111111111111", recreatedFrame.ReceiverAddress.ToString ().ToUpper ());
                 Assert.AreEqual ("222222222222", recreatedFrame.BssId.ToString ().ToUpper ());
                 
-                Assert.AreEqual (0x01020304, recreatedFrame.FrameCheckSequence);
+                Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
                 
             }
         } 

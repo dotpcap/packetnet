@@ -86,13 +86,16 @@ namespace Test.PacketType
                 frame.SequenceControl.FragmentNumber = 0x1;
                
                 frame.Reason = Ieee80211ReasonCode.LEAVING_TO_ROAM;
-                frame.FrameCheckSequence = 0x01020304;
+                
+                frame.UpdateFrameCheckSequence ();
+                UInt32 fcs = frame.FrameCheckSequence;
                 
                 var bytes = frame.Bytes;
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                DisassociationFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as DisassociationFrame;
+                DisassociationFrame recreatedFrame = MacFrame.ParsePacket (bas) as DisassociationFrame;
+                recreatedFrame.UpdateFrameCheckSequence();
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.ManagementDisassociation, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
@@ -109,7 +112,7 @@ namespace Test.PacketType
                 Assert.AreEqual ("222222222222", recreatedFrame.DestinationAddress.ToString ().ToUpper ());
                 Assert.AreEqual ("333333333333", recreatedFrame.BssId.ToString ().ToUpper ());
                 
-                Assert.AreEqual (0x01020304, recreatedFrame.FrameCheckSequence);
+                Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
             }
         } 
     }

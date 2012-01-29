@@ -92,14 +92,16 @@ namespace Test.PacketType
                 
                 frame.BlockAckStartingSequenceControl = 0x5678;
                 
-                frame.FrameCheckSequence = 0x01020304;
+                frame.UpdateFrameCheckSequence ();
+                UInt32 fcs = frame.FrameCheckSequence;
                 
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
                 var bas = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                BlockAcknowledgmentFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as BlockAcknowledgmentFrame;
+                BlockAcknowledgmentFrame recreatedFrame = MacFrame.ParsePacket (bas) as BlockAcknowledgmentFrame;
+                recreatedFrame.UpdateFrameCheckSequence();
                 
                 Assert.AreEqual (FrameControlField.FrameTypes.ControlBlockAcknowledgment, recreatedFrame.FrameControl.Type);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
@@ -118,7 +120,7 @@ namespace Test.PacketType
                 
                 CollectionAssert.AreEqual (BlockAckBitmap, recreatedFrame.BlockAckBitmap);
                 
-                Assert.AreEqual (0x01020304, recreatedFrame.FrameCheckSequence);
+                Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
             }
                 
         } 

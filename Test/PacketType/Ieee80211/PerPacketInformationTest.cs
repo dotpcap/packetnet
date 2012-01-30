@@ -22,6 +22,7 @@ using System;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
+using PacketDotNet.Ieee80211;
 
 namespace Test.PacketType
 {
@@ -34,19 +35,35 @@ namespace Test.PacketType
             /// Test that parsing an ip packet yields the proper field values
             /// </summary>
             [Test]
-            [Ignore("Ignored because the 802.11 per packet link type does not appear to be supported")]
-            public void ReadingPacketsFromFile()
+            public void ReadingPacketsFromFile ()
             {
-                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_per_packet_information.pcap");
-                dev.Open();
-                var rawCapture = dev.GetNextPacket();
-                dev.Close();
+                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_per_packet_information.pcap");
+                dev.Open ();
+                var rawCapture = dev.GetNextPacket ();
+                dev.Close ();
 
-                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
 
-                Assert.IsNotNull(p);
-
-                Console.WriteLine(p.ToString());
+                Assert.IsNotNull (p);
+                Assert.AreEqual (0, p.Version);
+                Assert.AreEqual (32, p.Length);
+                Assert.AreEqual (1, p.PpiFields.Count);
+                
+                PpiCommon commonField = p.PpiFields [0] as PpiCommon;
+                
+                Assert.AreEqual (PpiFieldType.IEEE80211_PPI_COMMON, commonField.FieldType);
+                Assert.AreEqual (0, commonField.TSFTimer);
+                Assert.IsTrue ((commonField.Flags & PpiCommon.CommonFlags.FcsIncludedInFrame) == PpiCommon.CommonFlags.FcsIncludedInFrame);
+                Assert.AreEqual (2, commonField.Rate);
+                Assert.AreEqual (2437, commonField.ChannelFrequency);
+                Assert.AreEqual (0x00A0, commonField.ChannelFlags);
+                Assert.AreEqual (0, commonField.FhssHopset);
+                Assert.AreEqual (0, commonField.FhssPattern);
+                Assert.AreEqual (-84, commonField.AntennaSignalPower);
+                Assert.AreEqual (-100, commonField.AntennaSignalNoise);
+                
+                MacFrame macFrame = p.PayloadPacket as MacFrame;
+                Assert.AreEqual(FrameControlField.FrameTypes.ControlCTS, macFrame.FrameControl.Type);
             }
         } 
     }

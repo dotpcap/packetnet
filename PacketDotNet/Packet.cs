@@ -276,33 +276,36 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="Packet"/>
         /// </returns>
-        public static Packet ParsePacket(LinkLayers LinkLayer,
+        public static Packet ParsePacket (LinkLayers LinkLayer,
                                          byte[] PacketData)
         {
             Packet p;
-            var bas = new ByteArraySegment(PacketData);
+            var bas = new ByteArraySegment (PacketData);
 
-            log.DebugFormat("LinkLayer {0}", LinkLayer);
+            log.DebugFormat ("LinkLayer {0}", LinkLayer);
 
-            switch(LinkLayer)
+            switch (LinkLayer)
             {
             case LinkLayers.Ethernet:
-                p = new EthernetPacket(bas);
+                p = new EthernetPacket (bas);
                 break;
             case LinkLayers.LinuxSLL:
-                p = new LinuxSLLPacket(bas);
+                p = new LinuxSLLPacket (bas);
                 break;
             case LinkLayers.Ppp:
-                p = new PPPPacket(bas);
+                p = new PPPPacket (bas);
                 break;
             case LinkLayers.Ieee80211:
-                p = Ieee80211.MacFrame.ParsePacketWithFcs(bas);
+                p = Ieee80211.MacFrame.ParsePacketWithFcs (bas);
                 break;
             case LinkLayers.Ieee80211_Radio:
-                p = new Ieee80211.RadioPacket(bas);
+                p = new Ieee80211.RadioPacket (bas);
+                break;
+            case LinkLayers.PerPacketInformation:
+                p = new Ieee80211.PpiPacket (bas);
                 break;
             default:
-                throw new System.NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");
+                throw new System.NotImplementedException ("LinkLayer of " + LinkLayer + " is not implemented");
             }
 
             return p;

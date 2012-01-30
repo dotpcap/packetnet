@@ -182,6 +182,10 @@
     <Compile Include="Tcp\UserTimeout.cs" />
     <Compile Include="Ieee80211\InformationElementList.cs" />
     <Compile Include="Utils\Crc32.cs" />
+    <Compile Include="Ieee80211\PpiFieldType.cs" />
+    <Compile Include="Ieee80211\PpiFields.cs" />
+    <Compile Include="Ieee80211\PpiHeaderFields.cs" />
+    <Compile Include="Ieee80211\PpiPacket.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

@@ -207,6 +207,18 @@ namespace PacketDotNet
                 header.Length = FrameSize;
             }
             
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentFrame"/> class.
+            /// </summary>
+            /// <param name='TransmitterAddress'>
+            /// Transmitter address.
+            /// </param>
+            /// <param name='ReceiverAddress'>
+            /// Receiver address.
+            /// </param>
+            /// <param name='BlockAckBitmap'>
+            /// The Block ack bitmap signalling the receive status of the MSDUs.
+            /// </param>
             public BlockAcknowledgmentFrame (PhysicalAddress TransmitterAddress,
                                              PhysicalAddress ReceiverAddress,
                                              Byte[] BlockAckBitmap)
@@ -221,6 +233,9 @@ namespace PacketDotNet
                 this.FrameControl.Type = FrameControlField.FrameTypes.ControlBlockAcknowledgment;
             }
             
+            /// <summary>
+            /// Writes the current packet properties to the backing ByteArraySegment.
+            /// </summary>
             public override void UpdateCalculatedValues ()
             {
                 if ((header == null) || (header.Length < FrameSize))

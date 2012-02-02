@@ -85,6 +85,13 @@ namespace PacketDotNet
                 set;
             }
             
+            /// <summary>
+            /// Gets or sets the sequence number of the first MSDU for which this 
+            /// block acknowledgement request frame is sent
+            /// </summary>
+            /// <value>
+            /// The block ack starting sequence control field value
+            /// </value>
             public UInt16 BlockAckStartingSequenceControl {get; set;}
                 
             /// <summary>
@@ -145,6 +152,15 @@ namespace PacketDotNet
                 header.Length = FrameSize;
             }
             
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentRequestFrame"/> class.
+            /// </summary>
+            /// <param name='TransmitterAddress'>
+            /// Transmitter address.
+            /// </param>
+            /// <param name='ReceiverAddress'>
+            /// Receiver address.
+            /// </param>
             public BlockAcknowledgmentRequestFrame (PhysicalAddress TransmitterAddress,
                                                     PhysicalAddress ReceiverAddress)
             {
@@ -157,6 +173,9 @@ namespace PacketDotNet
                 this.FrameControl.Type = FrameControlField.FrameTypes.ControlBlockAcknowledgmentRequest;
             }
             
+            /// <summary>
+            /// Writes the current packet properties to the backing ByteArraySegment.
+            /// </summary>
             public override void UpdateCalculatedValues ()
             {
                 if ((header == null) || (header.Length < FrameSize))

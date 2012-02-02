@@ -186,6 +186,21 @@ namespace PacketDotNet
                 header.Length = FrameSize;
             }
             
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.AssociationResponseFrame"/> class.
+            /// </summary>
+            /// <param name='SourceAddress'>
+            /// Source address.
+            /// </param>
+            /// <param name='DestinationAddress'>
+            /// Destination address.
+            /// </param>
+            /// <param name='BssId'>
+            /// Bss identifier (MAC Address of Access Point).
+            /// </param>
+            /// <param name='InformationElements'>
+            /// Information elements.
+            /// </param>
             public AssociationResponseFrame (PhysicalAddress SourceAddress,
                                             PhysicalAddress DestinationAddress,
                                             PhysicalAddress BssId,
@@ -204,7 +219,9 @@ namespace PacketDotNet
                 this.FrameControl.Type = FrameControlField.FrameTypes.ManagementAssociationResponse;
             }
             
-            
+            /// <summary>
+            /// Writes the current packet properties to the backing ByteArraySegment.
+            /// </summary>
             public override void UpdateCalculatedValues ()
             {
                 if ((header == null) || (header.Length < FrameSize))

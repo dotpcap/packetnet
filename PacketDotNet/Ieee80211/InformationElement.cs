@@ -36,11 +36,25 @@ namespace PacketDotNet
         /// </exception>
         public class InformationElement
         {     
-
+            /// <summary>
+            /// The length in bytes of the Information Element id field.
+            /// </summary>
             public readonly static int ElementIdLength = 1;
+            /// <summary>
+            /// The length in bytes of the Information Element length field.
+            /// </summary>
             public readonly static int ElementLengthLength = 1;
+            /// <summary>
+            /// The index of the id field in an Information Element.
+            /// </summary>
             public readonly static int ElementIdPosition = 0;
+            /// <summary>
+            /// The index of the length field in an Information Element.
+            /// </summary>
             public readonly static int ElementLengthPosition;
+            /// <summary>
+            /// The index of the first byte of the value field in an Information Element.
+            /// </summary>
             public readonly static int ElementValuePosition;
 
             static InformationElement ()
@@ -84,35 +98,109 @@ namespace PacketDotNet
                 /// Indicates which stations have buffered traffic waiting to be picked up
                 /// </summary>
                 TrafficIndicationMap = 0x05,
-
+                /// <summary>
+                /// Indicates the number of time units (TUs) between ATIM frames in an IBSS.
+                /// </summary>
                 IbssParameterSet = 0x06,
+                /// <summary>
+                /// Specifies regulatory constraints stations must adhere to based on the country the network is operating in.
+                /// </summary>
                 Country = 0x07,
+                /// <summary>
+                /// Specifies the hopping pattern of timeslots used in frequency hopping physical layers.
+                /// </summary>
                 HoppingParametersPattern = 0x08,
+                /// <summary>
+                /// Specifies the hopping pattern table used in frequency hopping physical layers.
+                /// </summary>
                 HoppingPatternTable = 0x09,
+                /// <summary>
+                /// Specifies the Ids of the information elements being requested in a <see cref="PacketDotNet.Ieee80211.ProbeRequestFrame"/>.
+                /// </summary>
                 Request = 0x0A,
+                /// <summary>
+                /// Specifies the encrypted challenge text that stations must decrypt as part of the authentication process.
+                /// </summary>
                 ChallengeText = 0x10,
+                /// <summary>
+                /// Specifies the difference between the regulatory maximum transmit power and any local constraint.
+                /// </summary>
                 PowerContstraint = 0x20,
+                /// <summary>
+                /// Specifies the minimum and maximum transmit power a station is capable of.
+                /// </summary>
                 PowerCapability = 0x21,
+                /// <summary>
+                /// Used to request radio link management information. This type of information element never has an associated value.
+                /// </summary>
                 TransmitPowerControlRequest = 0x22,
+                /// <summary>
+                /// Radio link managment report used by stations to tune their transmission power.
+                /// </summary>
                 TransmitPowerControlReport = 0x23,
+                /// <summary>
+                /// Specifies local constraints on the channels in use.
+                /// </summary>
                 SupportedChannels = 0x24,
+                /// <summary>
+                /// Announces an impending change of channel for the network.
+                /// </summary>
                 ChannelSwitchAnnouncement = 0x25,
+                /// <summary>
+                /// Requests a report on the state of the radio channel.
+                /// </summary>
                 MeasurementRequest = 0x26,
+                /// <summary>
+                /// A report of on the status of the radio channel.
+                /// </summary>
                 MeasurementReport = 0x27,
+                /// <summary>
+                /// Specifies the scheduling of temporary quiet periods on the channel.
+                /// </summary>
                 Quiet = 0x28,
+                /// <summary>
+                /// Specifies the details the Dynamic Frequency Selection (DFS) algorithm in use in the IBSS.
+                /// </summary>
                 IbssDfs = 0x29,
+                /// <summary>
+                /// Indicates whether or not the Extended Rate PHY is in use on the network at that time.
+                /// </summary>
                 ErpInformation = 0x2A,
+                /// <summary>
+                /// Specifies a stations high throughput capabilities.
+                /// </summary>
                 HighThroughputCapabilities = 0x2d,
                 ErpInformation2 = 0x2F,
+                /// <summary>
+                /// Specifies details of the Robust Security Network encryption in use on the network.
+                /// </summary>
                 RobustSecurityNetwork = 0x30,
+                /// <summary>
+                /// Specifies more data rates supported by the network. This is identical to the Supported Rates element but it allows for a longer value.
+                /// </summary>
                 ExtendedSupportedRates = 0x32,
+                /// <summary>
+                /// Specified how high throughput capable stations will be operated in the network.
+                /// </summary>
                 HighThroughputInformation = 0x3d,
+                /// <summary>
+                /// Specifies details of the WiFi Protected Access encryption in use on the network.
+                /// </summary>
                 WifiProtectedAccess = 0xD3,
+                /// <summary>
+                /// Non standard information element implemented by the hardware vendor.
+                /// </summary>
                 VendorSpecific = 0xDD
             }
             
             private ByteArraySegment bytes;
-
+   
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.InformationElement"/> class.
+            /// </summary>
+            /// <param name='bas'>
+            /// The bytes of the information element. The Offset property should point to the first byte of the element, the Id byte
+            /// </param>
             public InformationElement (ByteArraySegment bas)
             {
                 bytes = bas;
@@ -172,6 +260,12 @@ namespace PacketDotNet
                 //the length field and the actual length of the value
             }
             
+            /// <summary>
+            /// Gets the length of the element including the Id and Length field
+            /// </summary>
+            /// <value>
+            /// The length of the element.
+            /// </value>
             public byte ElementLength
             {
                 get
@@ -181,7 +275,17 @@ namespace PacketDotNet
                 //no set Length method as we dont want to allow a mismatch between
                 //the length field and the actual length of the value
             }
-
+   
+            /// <summary>
+            /// Gets or sets the value of the element
+            /// </summary>
+            /// <value>
+            /// The value.
+            /// </value>
+            /// <exception cref='ArgumentException'>
+            /// Is thrown when the value is too large. Values are limited to a maximum size 255 bytes due the single
+            /// byte length field.
+            /// </exception>
             public Byte[] Value
             {
                 get

@@ -58,9 +58,6 @@ namespace PacketDotNet
             /// <summary>
             /// Constructor
             /// </summary>
-            /// <param name="parent">
-            /// A <see cref="MacFrame"/>
-            /// </param>
             /// <param name="bas">
             /// A <see cref="ByteArraySegment"/>
             /// </param>

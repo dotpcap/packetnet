@@ -58,7 +58,9 @@ namespace PacketDotNet
             /// </summary>
             public PhysicalAddress BssId { get; set; }                
             
-           
+            /// <summary>
+            /// Assigns the default MAC address of 00-00-00-00-00-00 to all address fields.
+            /// </summary>
             protected void AssignDefaultAddresses ()
             {
                 PhysicalAddress zeroAddress = PhysicalAddress.Parse ("000000000000");
@@ -70,6 +72,13 @@ namespace PacketDotNet
                 BssId = zeroAddress;
             }
             
+            /// <summary>
+            /// Reads the addresses from the backing ByteArraySegment into the the address properties.
+            /// </summary>
+            /// <remarks>
+            /// The <see cref="PacketDotNet.Ieee80211.FrameControlField"/> ToDS and FromDS properties dictate
+            /// which of the 4 possible address fields is read into which address property.
+            /// </remarks>
             protected void ReadAddresses ()
             {   
                 if ((!FrameControl.ToDS) && (!FrameControl.FromDS))
@@ -100,6 +109,13 @@ namespace PacketDotNet
                 }
             }
             
+            /// <summary>
+            /// Writes the address properties into the backing <see cref="PacketDotNet.Utils.ByteArraySegment"/>.
+            /// </summary>
+            /// <remarks>
+            /// The address position into which a particular address property is written is determined by the 
+            /// value of <see cref="PacketDotNet.Ieee80211.FrameControlField"/> ToDS and FromDS properties.
+            /// </remarks>
             protected void WriteAddressBytes ()
             {
                 if ((!FrameControl.ToDS) && (!FrameControl.FromDS))

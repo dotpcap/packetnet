@@ -189,7 +189,19 @@ namespace PacketDotNet
                 //as they vary in length
                 header.Length = FrameSize;
             }
-
+   
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BeaconFrame"/> class.
+            /// </summary>
+            /// <param name='SourceAddress'>
+            /// Source address.
+            /// </param>
+            /// <param name='BssId'>
+            /// Bss identifier (MAC Address of the Access Point).
+            /// </param>
+            /// <param name='InformationElements'>
+            /// Information elements.
+            /// </param>
             public BeaconFrame (PhysicalAddress SourceAddress,
                                 PhysicalAddress BssId, 
                                 InformationElementList InformationElements)
@@ -206,6 +218,9 @@ namespace PacketDotNet
                 this.BeaconInterval = 100;
             }
             
+            /// <summary>
+            /// Writes the current packet properties to the backing ByteArraySegment.
+            /// </summary>
             public override void UpdateCalculatedValues ()
             {
                 if ((header == null) || (header.Length < FrameSize))

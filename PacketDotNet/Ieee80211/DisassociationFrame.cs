@@ -43,15 +43,15 @@ namespace PacketDotNet
                     ReasonCodePosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
                 }
             }
-
-            public Ieee80211ReasonCode Reason {get; set;}
-                
+   
             /// <summary>
-            /// Gets the reason.
+            /// Gets or sets the reason for disassociation.
             /// </summary>
             /// <value>
             /// The reason.
             /// </value>
+            public Ieee80211ReasonCode Reason {get; set;}
+                
             private Ieee80211ReasonCode ReasonBytes
             {
                 get
@@ -107,6 +107,18 @@ namespace PacketDotNet
                 header.Length = FrameSize;
             }
             
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DisassociationFrame"/> class.
+            /// </summary>
+            /// <param name='SourceAddress'>
+            /// Source address.
+            /// </param>
+            /// <param name='DestinationAddress'>
+            /// Destination address.
+            /// </param>
+            /// <param name='BssId'>
+            /// Bss identifier (MAC Address of the Access Point).
+            /// </param>
             public DisassociationFrame (PhysicalAddress SourceAddress,
                                         PhysicalAddress DestinationAddress,
                                         PhysicalAddress BssId)
@@ -121,6 +133,9 @@ namespace PacketDotNet
                 this.FrameControl.Type = FrameControlField.FrameTypes.ManagementDisassociation;
             }
             
+            /// <summary>
+            /// Writes the current packet properties to the backing ByteArraySegment.
+            /// </summary>
             public override void UpdateCalculatedValues ()
             {
                 if ((header == null) || (header.Length < FrameSize))

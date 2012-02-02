@@ -103,7 +103,13 @@ namespace PacketDotNet
                         header.Offset + AssociationRequestFields.ListenIntervalPosition);
                 }
             }
-
+   
+            /// <summary>
+            /// Gets or sets the information elements.
+            /// </summary>
+            /// <value>
+            /// The information elements.
+            /// </value>
             public InformationElementList InformationElements { get; set; }
 
             /// <summary>
@@ -158,7 +164,21 @@ namespace PacketDotNet
                 header.Length = FrameSize;
             }
             
-            
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.AssociationRequestFrame"/> class.
+            /// </summary>
+            /// <param name='SourceAddress'>
+            /// Source address.
+            /// </param>
+            /// <param name='DestinationAddress'>
+            /// Destination address.
+            /// </param>
+            /// <param name='BssId'>
+            /// Bss identifier (MAC Address of Access Point).
+            /// </param>
+            /// <param name='InformationElements'>
+            /// Information elements.
+            /// </param>
             public AssociationRequestFrame (PhysicalAddress SourceAddress,
                                             PhysicalAddress DestinationAddress,
                                             PhysicalAddress BssId,
@@ -176,6 +196,9 @@ namespace PacketDotNet
                 this.FrameControl.Type = FrameControlField.FrameTypes.ManagementAssociationRequest;
             }
             
+            /// <summary>
+            /// Writes the current packet properties to the backing ByteArraySegment.
+            /// </summary>
             public override void UpdateCalculatedValues ()
             {
                 if ((header == null) || (header.Length < FrameSize))

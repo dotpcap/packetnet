@@ -103,12 +103,21 @@ namespace PacketDotNet
                                                      header.Offset + MacFields.DurationIDPosition);
                 }
             }
-
+   
+            /// <summary>
+            /// Gets or sets the duration value. The value represents the number of microseconds
+            /// the the wireless medium is expected to remain busy.
+            /// </summary>
+            /// <value>
+            /// The duration field value
+            /// </value>
             public DurationField Duration {get; set;}
 
             /// <summary>
-            /// 
+            /// Writes the address into the specified address position.
             /// </summary>
+            /// <remarks>The number of valid address positions in a MAC frame is determined by
+            /// the type of frame. There are between 1 and 4 address fields in MAC frames</remarks>
             /// <param name="addressIndex">Zero based address to look up</param>
             /// <param name="address"></param>
             protected void SetAddress(int addressIndex, PhysicalAddress address)
@@ -116,7 +125,18 @@ namespace PacketDotNet
                 var offset = GetOffsetForAddress(addressIndex);
                 SetAddressByOffset(offset, address);
             }
-
+   
+            
+            /// <summary>
+            /// Writes the provided address into the backing <see cref="PacketDotNet.Utils.ByteArraySegment"/>
+            /// starting at the provided offset.
+            /// </summary>
+            /// <param name='offset'>
+            /// The position where the address should start to be copied
+            /// </param>
+            /// <param name='address'>
+            /// Address.
+            /// </param>
             protected void SetAddressByOffset(int offset, PhysicalAddress address)
             {
                 // using the offset, set the address
@@ -131,7 +151,16 @@ namespace PacketDotNet
                 Array.Copy(hwAddress, 0, header.Bytes, offset,
                            hwAddress.Length);
             }
-
+   
+            /// <summary>
+            /// Gets the address.
+            /// </summary>
+            /// <returns>
+            /// The address.
+            /// </returns>
+            /// <param name='addressIndex'>
+            /// Address index.
+            /// </param>
             protected PhysicalAddress GetAddress(int addressIndex)
             {
                 var offset = GetOffsetForAddress(addressIndex);

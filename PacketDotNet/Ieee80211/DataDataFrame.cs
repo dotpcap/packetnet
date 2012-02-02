@@ -70,6 +70,9 @@ namespace PacketDotNet
                 payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (payloadLength);
             }
             
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DataDataFrame"/> class.
+            /// </summary>
             public DataDataFrame ()
             {
                 this.FrameControl = new FrameControlField ();
@@ -80,6 +83,9 @@ namespace PacketDotNet
                 FrameControl.Type = FrameControlField.FrameTypes.Data;
             }
             
+            /// <summary>
+            /// Writes the current packet properties to the backing ByteArraySegment.
+            /// </summary>
             public override void UpdateCalculatedValues ()
             {
                 if ((header == null) || (header.Length < FrameSize))

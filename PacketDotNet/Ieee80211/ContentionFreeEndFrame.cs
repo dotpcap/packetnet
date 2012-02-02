@@ -72,6 +72,15 @@ namespace PacketDotNet
                 header.Length = FrameSize;
             }
    
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ContentionFreeEndFrame"/> class.
+            /// </summary>
+            /// <param name='ReceiverAddress'>
+            /// Receiver address.
+            /// </param>
+            /// <param name='BssId'>
+            /// Bss identifier (MAC Address of the Access Point).
+            /// </param>
             public ContentionFreeEndFrame (PhysicalAddress ReceiverAddress,
                                            PhysicalAddress BssId)
             {
@@ -83,6 +92,9 @@ namespace PacketDotNet
                 this.FrameControl.Type = PacketDotNet.Ieee80211.FrameControlField.FrameTypes.ControlCFEnd;
             }
             
+            /// <summary>
+            /// Writes the current packet properties to the backing ByteArraySegment.
+            /// </summary>
             public override void UpdateCalculatedValues ()
             {
                 if ((header == null) || (header.Length < FrameSize))

@@ -172,7 +172,7 @@ namespace PacketDotNet
             /// A <see cref="Packet"/>
             /// </param>
             /// <returns>
-            /// A <see cref="Ieee80211MacFrame"/>
+            /// A <see cref="MacFrame"/>
             /// </returns>
             public static MacFrame GetEncapsulated (Packet p)
             {

@@ -50,13 +50,13 @@ namespace PacketDotNet
             /// <value>
             /// The reason.
             /// </value>
-            public Ieee80211ReasonCode Reason { get; set;}
+            public ReasonCode Reason { get; set;}
             
-            private Ieee80211ReasonCode ReasonBytes
+            private ReasonCode ReasonBytes
             {
                 get
                 {
-                    return (Ieee80211ReasonCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
+                    return (ReasonCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
                         header.Offset + DeauthenticationFields.ReasonCodePosition);
                 }
                 

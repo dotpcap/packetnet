@@ -63,7 +63,7 @@ namespace Test.PacketType
                 Assert.AreEqual ("0024B2F8D706", frame.BssId.ToString ().ToUpper ());
                 Assert.AreEqual (0, frame.SequenceControl.FragmentNumber);
                 Assert.AreEqual (1311, frame.SequenceControl.SequenceNumber);
-                Assert.AreEqual (Ieee80211ReasonCode.LEAVING_TO_ROAM, frame.Reason);
+                Assert.AreEqual (ReasonCode.LeavingToRoam, frame.Reason);
 
                 Assert.AreEqual (0xB17572A4, frame.FrameCheckSequence);
                 Assert.AreEqual (26, frame.FrameSize);
@@ -85,7 +85,7 @@ namespace Test.PacketType
                 frame.SequenceControl.SequenceNumber = 0x77;
                 frame.SequenceControl.FragmentNumber = 0x1;
                
-                frame.Reason = Ieee80211ReasonCode.LEAVING_TO_ROAM;
+                frame.Reason = ReasonCode.LeavingToRoam;
                 
                 frame.UpdateFrameCheckSequence ();
                 UInt32 fcs = frame.FrameCheckSequence;
@@ -106,7 +106,7 @@ namespace Test.PacketType
                 Assert.AreEqual (0x77, recreatedFrame.SequenceControl.SequenceNumber);
                 Assert.AreEqual (0x1, recreatedFrame.SequenceControl.FragmentNumber);
                 
-                Assert.AreEqual (Ieee80211ReasonCode.LEAVING_TO_ROAM, recreatedFrame.Reason);
+                Assert.AreEqual (ReasonCode.LeavingToRoam, recreatedFrame.Reason);
                 
                 Assert.AreEqual ("111111111111", recreatedFrame.SourceAddress.ToString ().ToUpper ());
                 Assert.AreEqual ("222222222222", recreatedFrame.DestinationAddress.ToString ().ToUpper ());

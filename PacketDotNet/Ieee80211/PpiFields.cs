@@ -97,10 +97,10 @@ namespace PacketDotNet
             [Flags]
             public enum CommonFlags
             {
-                FcsIncludedInFrame = 0x0,
-                TimerSynchFunctionInUse = 0x1,
-                FailedFcsCheck = 0x2,
-                PhysicalError = 0x3
+                FcsIncludedInFrame = 0x1,
+                TimerSynchFunctionInUse = 0x2,
+                FailedFcsCheck = 0x4,
+                PhysicalError = 0x8
             }
             
         #region Properties

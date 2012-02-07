@@ -90,15 +90,15 @@ namespace PacketDotNet
                 get;
                 set;
             }
-
-            public UInt16 BlockAckStartingSequenceControl {get; set;}
-            
+   
             /// <summary>
             /// Gets or sets the block ack starting sequence control.
             /// </summary>
             /// <value>
             /// The block ack starting sequence control.
             /// </value>
+            public UInt16 BlockAckStartingSequenceControl {get; set;}
+            
             private UInt16 BlockAckStartingSequenceControlBytes
             {
                 get
@@ -116,6 +116,16 @@ namespace PacketDotNet
             }
    
             private byte[] blockAckBitmap;
+            /// <summary>
+            /// Gets or sets the block ack bitmap used to indicate the receive status of the MPDUs.
+            /// </summary>
+            /// <value>
+            /// The block ack bitmap.
+            /// </value>
+            /// <exception cref='ArgumentException'>
+            /// Is thrown when the bitmap is of an incorrect lenght. The bitmap must be either 8 or 64 btyes longs depending on whether or not
+            /// it is compressed.
+            /// </exception>
             public Byte[] BlockAckBitmap
             {
                 get

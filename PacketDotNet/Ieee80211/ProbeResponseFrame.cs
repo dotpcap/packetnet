@@ -27,6 +27,11 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// Probe response frames are sent by Access Points in response to probe requests by stations.
+        /// An access point may respond to a probe request if it hosts a network with parameters compatible with those
+        /// requested by the station.
+        /// </summary>
         public class ProbeResponseFrame : ManagementFrame
         {
             private class ProbeResponseFields
@@ -48,7 +53,14 @@ namespace PacketDotNet
                     InformationElement1Position = CapabilityInformationPosition + CapabilityInformationLength;
                 }
             }
-
+   
+            /// <summary>
+            /// Gets or sets the timestamp. The timestamp is used by a station to ensure that it
+            /// is using the most up to date parameters for the network.
+            /// </summary>
+            /// <value>
+            /// The timestamp.
+            /// </value>
             public UInt64 Timestamp {get;set;}
                 
             private UInt64 TimestampBytes
@@ -66,6 +78,12 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Gets or sets the beacon interval. This is the minimum time between beacon frames from the access point.
+            /// </summary>
+            /// <value>
+            /// The beacon interval.
+            /// </value>
             public UInt16 BeaconInterval { get; set; }
             
             private UInt16 BeaconIntervalBytes
@@ -101,12 +119,26 @@ namespace PacketDotNet
                                                      header.Offset + ProbeResponseFields.CapabilityInformationPosition);
                 }
             }
-
+   
+            /// <summary>
+            /// Get or set the capability information field that defines the capabilities of the network.
+            /// </summary>
             public CapabilityInformationField CapabilityInformation {get; set;}
 
-
+            /// <summary>
+            /// Gets or sets the information elements included in the frame.
+            /// </summary>
+            /// <value>
+            /// The information elements.
+            /// </value>
             public InformationElementList InformationElements { get; set; }
 
+            /// <summary>
+            /// Length of the frame header.
+            /// 
+            /// This does not include the FCS, it represents only the header bytes that would
+            /// would preceed any payload.
+            /// </summary>
             public override int FrameSize
             {
                 get
@@ -154,6 +186,21 @@ namespace PacketDotNet
                 header.Length = FrameSize;
             }
             
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ProbeResponseFrame"/> class.
+            /// </summary>
+            /// <param name='SourceAddress'>
+            /// Source address.
+            /// </param>
+            /// <param name='DestinationAddress'>
+            /// Destination address.
+            /// </param>
+            /// <param name='BssId'>
+            /// Bss identifier (Mac address of the access point).
+            /// </param>
+            /// <param name='InformationElements'>
+            /// Information elements.
+            /// </param>
             public ProbeResponseFrame (PhysicalAddress SourceAddress,
                                        PhysicalAddress DestinationAddress,
                                        PhysicalAddress BssId,
@@ -171,6 +218,9 @@ namespace PacketDotNet
                 this.FrameControl.Type = PacketDotNet.Ieee80211.FrameControlField.FrameTypes.ManagementProbeResponse;
             }
             
+            /// <summary>
+            /// Writes the current packet properties to the backing ByteArraySegment.
+            /// </summary>
             public override void UpdateCalculatedValues ()
             {
                 if ((header == null) || (header.Length < FrameSize))

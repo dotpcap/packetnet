@@ -26,6 +26,10 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// Qos data frames are like regualr data frames except they contain a quality of service 
+        /// field as deinfed in the 802.11e standard.
+        /// </summary>
         public class QosDataFrame : DataFrame
         {
             private class QosDataField
@@ -39,7 +43,13 @@ namespace PacketDotNet
                     QosControlPosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
                 }
             }
-
+   
+            /// <summary>
+            /// Gets or sets the qos control field.
+            /// </summary>
+            /// <value>
+            /// The qos control field.
+            /// </value>
             public UInt16 QosControl { get; set; }
 
             private UInt16 QosControlBytes
@@ -58,6 +68,12 @@ namespace PacketDotNet
                 }
             }
 
+            /// <summary>
+            /// Length of the frame header.
+            /// 
+            /// This does not include the FCS, it represents only the header bytes that would
+            /// would preceed any payload.
+            /// </summary>
             public override int FrameSize
             {
                 get
@@ -74,6 +90,12 @@ namespace PacketDotNet
             }
 
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.QosDataFrame"/> class.
+            /// </summary>
+            /// <param name='bas'>
+            /// A <see cref="ByteArraySegment"/>
+            /// </param>
             public QosDataFrame (ByteArraySegment bas)
             {
                 header = new ByteArraySegment (bas);
@@ -89,6 +111,9 @@ namespace PacketDotNet
                 payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (payloadLength);
             }
             
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.QosDataFrame"/> class.
+            /// </summary>
             public QosDataFrame ()
             {
                 this.FrameControl = new FrameControlField ();
@@ -99,6 +124,9 @@ namespace PacketDotNet
                 FrameControl.Type = FrameControlField.FrameTypes.QosData;
             }
             
+            /// <summary>
+            /// Writes the current packet properties to the backing ByteArraySegment.
+            /// </summary>
             public override void UpdateCalculatedValues ()
             {
                 if ((header == null) || (header.Length < FrameSize))

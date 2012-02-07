@@ -153,7 +153,7 @@ namespace PacketDotNet
             }
    
             /// <summary>
-            /// Gets the address.
+            /// Gets the address. There can be up to four addresses in a MacFrame depending on its type.
             /// </summary>
             /// <returns>
             /// The address.
@@ -166,7 +166,16 @@ namespace PacketDotNet
                 var offset = GetOffsetForAddress(addressIndex);
                 return GetAddressByOffset(offset);
             }
-
+   
+            /// <summary>
+            /// Gets an address by offset.
+            /// </summary>
+            /// <returns>
+            /// The address as the specified index.
+            /// </returns>
+            /// <param name='offset'>
+            /// The offset into the packet buffer at which to start parsing the address.
+            /// </param>
             protected PhysicalAddress GetAddressByOffset(int offset)
             {
                 byte[] hwAddress = new byte[MacFields.AddressLength];
@@ -180,6 +189,10 @@ namespace PacketDotNet
             /// </summary>
             public UInt32 FrameCheckSequence { get; set; }
             
+            /// <summary>
+            /// Recalculates and updates the frame check sequence.
+            /// </summary>
+            /// <remarks>After calling this method the FCS will be valud regardless of what the packet contains.</remarks>
             public void UpdateFrameCheckSequence ()
             {
                 FrameCheckSequence = (uint)Crc32.Compute (Bytes, 0, Bytes.Length - 4);
@@ -193,6 +206,17 @@ namespace PacketDotNet
             /// </summary>
             public abstract int FrameSize { get; }
             
+            /// <summary>
+            /// Parses the <see cref="PacketDotNet.Utils.ByteArraySegment"/> into a MacFrame.
+            /// </summary>
+            /// <returns>
+            /// The parsed MacFrame or null if it could not be parsed.
+            /// </returns>
+            /// <param name='bas'>
+            /// The bytes of the packet. bas.Offset should point to the first byte in the mac frame.
+            /// </param>
+            /// <remarks>If the provided bytes dont contain the FCS then call <see cref="MacFrame.ParsePacket"/> instead. The presence of the 
+            /// FCS is usually determined by configuration of the device used to capture the packets.</remarks>
             public static MacFrame ParsePacketWithFcs (ByteArraySegment bas)
             {
                 //remove the FCS from the buffer that we will pass to the packet parsers
@@ -213,6 +237,17 @@ namespace PacketDotNet
                 return frame;
             }
             
+            /// <summary>
+            /// Parses the <see cref="PacketDotNet.Utils.ByteArraySegment"/> into a MacFrame.
+            /// </summary>
+            /// <returns>
+            /// The parsed MacFrame or null if it could not be parsed.
+            /// </returns>
+            /// <param name='bas'>
+            /// The bytes of the packet. bas.Offset should point to the first byte in the mac frame.
+            /// </param>
+            /// <remarks>If the provided bytes contain the FCS then call <see cref="MacFrame.ParsePacketWithFcs"/> instead. The presence of the 
+            /// FCS is usually determined by configuration of the device used to capture the packets.</remarks>
             public static MacFrame ParsePacket (ByteArraySegment bas)
             {
                 //this is a bit ugly as we will end up parsing the framecontrol field twice, once here and once
@@ -357,6 +392,27 @@ namespace PacketDotNet
                 return macFrame;
             }
             
+            /// <summary>
+            /// Calculates the FCS value for the provided bytes and compates it to the FCS value passed to the method.
+            /// </summary>
+            /// <returns>
+            /// true if the FCS for the provided bytes matches the FCS passed in, false if not.
+            /// </returns>
+            /// <param name='data'>
+            /// The byte array for which the FCS will be calculated.
+            /// </param>
+            /// <param name='offset'>
+            /// The offset into data of the first byte to be covered by the FCS.
+            /// </param>
+            /// <param name='length'>
+            /// The number of bytes to calculate the FCS for.
+            /// </param>
+            /// <param name='fcs'>
+            /// The FCS to compare to the one calculated for the provided data.
+            /// </param>
+            /// <remarks>This method can be used to check the validity of a packet before attempting to parse it with either 
+            /// <see cref="MacFrame.ParsePacket"/> or <see cref="MacFrame.ParsePacketWithFcs"/>. Attempting to parse a corrupted buffer
+            /// using these methods could cause unexpected exceptions.</remarks>
             public static bool PerformFcsCheck (Byte[] data, int offset, int length, UInt32 fcs)
             {
                 // Cast to uint for proper comparison to FrameCheckSequence

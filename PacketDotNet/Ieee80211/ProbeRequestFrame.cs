@@ -26,6 +26,9 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// Probe request frames are used by stations to scan the area for existing networks.
+        /// </summary>
         public class ProbeRequestFrame : ManagementFrame
         {
             private class ProbeRequestFields
@@ -37,7 +40,13 @@ namespace PacketDotNet
                     InformationElement1Position = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
                 }
             }
-
+   
+            /// <summary>
+            /// Length of the frame header.
+            /// 
+            /// This does not include the FCS, it represents only the header bytes that would
+            /// would preceed any payload.
+            /// </summary>
             public override int FrameSize
             {
                 get
@@ -49,7 +58,15 @@ namespace PacketDotNet
                         InformationElements.Length);
                 }
             }
-
+   
+            /// <summary>
+            /// Gets or sets the information elements included in the frame.
+            /// </summary>
+            /// <value>
+            /// The information elements.
+            /// </value>
+            /// <remarks>Probe request frames normally contain information elements for <see cref="InformationElement.ElementId.ServiceSetIdentity"/>, 
+            /// <see cref="InformationElement.ElementId.SupportedRates"/> and <see cref="InformationElement.ElementId.ExtendedSupportedRates"/> in that order.</remarks>
             public InformationElementList InformationElements { get; set; }
 
             /// <summary>
@@ -80,7 +97,22 @@ namespace PacketDotNet
                 //as they vary in length
                 header.Length = FrameSize;
             }
-
+   
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ProbeRequestFrame"/> class.
+            /// </summary>
+            /// <param name='SourceAddress'>
+            /// Source address.
+            /// </param>
+            /// <param name='DestinationAddress'>
+            /// Destination address.
+            /// </param>
+            /// <param name='BssId'>
+            /// Bss identifier (Mac Address of the Access Point).
+            /// </param>
+            /// <param name='InformationElements'>
+            /// Information elements.
+            /// </param>
             public ProbeRequestFrame (PhysicalAddress SourceAddress,
                                       PhysicalAddress DestinationAddress,
                                       PhysicalAddress BssId,
@@ -97,7 +129,9 @@ namespace PacketDotNet
                 this.FrameControl.Type = PacketDotNet.Ieee80211.FrameControlField.FrameTypes.ManagementProbeRequest;
             }
             
-            
+            /// <summary>
+            /// Writes the current packet properties to the backing ByteArraySegment.
+            /// </summary>
             public override void UpdateCalculatedValues ()
             {
                 if ((header == null) || (header.Length < FrameSize))

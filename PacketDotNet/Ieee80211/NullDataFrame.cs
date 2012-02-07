@@ -25,8 +25,18 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// Null data frames are like normal data frames except they carry no payload. They are primarily used for control purposes
+        /// such as power management or telling an Access Point to buffer packets while a station scans other channels.
+        /// </summary>
         public class NullDataFrame : DataFrame
         {
+            /// <summary>
+            /// Length of the frame header.
+            /// 
+            /// This does not include the FCS, it represents only the header bytes that would
+            /// would preceed any payload.
+            /// </summary>
             public override int FrameSize
             {
                 get
@@ -40,7 +50,13 @@ namespace PacketDotNet
                         MacFields.SequenceControlLength);
                 }
             }
-
+   
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.NullDataFrame"/> class.
+            /// </summary>
+            /// <param name='bas'>
+            /// A <see cref="ByteArraySegment"/>
+            /// </param>
             public NullDataFrame (ByteArraySegment bas)
             {
                 header = new ByteArraySegment (bas);
@@ -53,6 +69,9 @@ namespace PacketDotNet
                 header.Length = FrameSize;
             }
             
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.NullDataFrame"/> class.
+            /// </summary>
             public NullDataFrame ()
             {
                 this.FrameControl = new FrameControlField ();
@@ -63,6 +82,9 @@ namespace PacketDotNet
                 FrameControl.Type = FrameControlField.FrameTypes.DataNullFunctionNoData;
             }
             
+            /// <summary>
+            /// Writes the current packet properties to the backing ByteArraySegment.
+            /// </summary>
             public override void UpdateCalculatedValues ()
             {
                 if ((header == null) || (header.Length < FrameSize))

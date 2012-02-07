@@ -81,6 +81,13 @@ namespace PacketDotNet
             /// </value>
             public CapabilityInformationField CapabilityInformation {get; set;}
    
+            /// <summary>
+            /// Gets or sets the listen interval. This is the number of beacon interval time periods that the access
+            /// point must retain buffered packets for.
+            /// </summary>
+            /// <value>
+            /// The listen interval.
+            /// </value>
             public UInt16 ListenInterval {get; set;}
 
             /// <summary>

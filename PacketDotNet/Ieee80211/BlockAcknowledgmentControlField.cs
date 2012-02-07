@@ -132,7 +132,12 @@ namespace PacketDotNet
                 }
             }
 
-
+            /// <summary>
+            /// Gets or sets the field. This provides direct access to the bytes that back all the other properties in the field.
+            /// </summary>
+            /// <value>
+            /// The field.
+            /// </value>
             public UInt16 Field {get; set;}
             
             /// <summary>

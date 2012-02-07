@@ -143,7 +143,7 @@ namespace PacketDotNet
                 // update the header size based on the headers packet length
                 header.Length = Length;
     
-                PpiCommon commonField = FindPpiField (PpiFieldType.IEEE80211_PPI_COMMON) as PpiCommon;
+                PpiCommon commonField = FindPpiField (PpiFieldType.PpiCommon) as PpiCommon;
                 
                 // parse the encapsulated bytes
                 payloadPacketOrData = ParseEncapsulatedBytes (header, commonField);

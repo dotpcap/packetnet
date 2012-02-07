@@ -36,7 +36,7 @@ namespace PacketDotNet
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType
             {
-                get { return PpiFieldType.IEEE80211_PPI_802_3; }
+                get { return PpiFieldType.Ppi802_3; }
             }
 
         #endregion Properties
@@ -57,7 +57,7 @@ namespace PacketDotNet
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType
             {
-                get { return PpiFieldType.IEEE80211_PPI_AGGREGATION;}
+                get { return PpiFieldType.PpiAggregation;}
             }
 
         #endregion Properties
@@ -78,7 +78,7 @@ namespace PacketDotNet
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType
             {
-                get { return PpiFieldType.IEEE80211_PPI_CAPTURE_INFO;}
+                get { return PpiFieldType.PpiCaptureInfo;}
             }
 
         #endregion Properties
@@ -120,7 +120,7 @@ namespace PacketDotNet
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType
             {
-                get { return PpiFieldType.IEEE80211_PPI_COMMON;}
+                get { return PpiFieldType.PpiCommon;}
             }
 
             public CommonFlags Flags
@@ -238,25 +238,25 @@ namespace PacketDotNet
                 var type = (PpiFieldType)fieldType;
                 switch (type)
                 {
-                case PpiFieldType.IEEE80211_PPI_RESERVED_0:
+                case PpiFieldType.PpiReserved0:
                     return new PpiReserved (br);
-                case PpiFieldType.IEEE80211_PPI_RESERVED_1:
+                case PpiFieldType.PpiReserved1:
                     return new PpiReserved (br);
-                case PpiFieldType.IEEE80211_PPI_COMMON:
+                case PpiFieldType.PpiCommon:
                     return new PpiCommon (br);
-                case PpiFieldType.IEEE80211_PPI_MAC_EXTENSIONS:
+                case PpiFieldType.PpiMacExtensions:
                     return new PpiMacExtensions (br);
-                case PpiFieldType.IEEE80211_PPI_MAC_PHY:
+                case PpiFieldType.PpiMacPhy:
                     return new PpiMacPhy (br);
-                case PpiFieldType.IEEE80211_PPI_SPECTRUM:
+                case PpiFieldType.PpiSpectrum:
                     return new PpiSpectrum (br);
-                case PpiFieldType.IEEE80211_PPI_PROCESS_INFO:
+                case PpiFieldType.PpiProcessInfo:
                     return new PpiProcessInfo (br);
-                case PpiFieldType.IEEE80211_PPI_CAPTURE_INFO:
+                case PpiFieldType.PpiCaptureInfo:
                     return new PpiCaptureInfo (br);
-                case PpiFieldType.IEEE80211_PPI_AGGREGATION:
+                case PpiFieldType.PpiAggregation:
                     return new PpiAggregation (br);
-                case PpiFieldType.IEEE80211_PPI_802_3:
+                case PpiFieldType.Ppi802_3:
                     return new Ppi802_3 (br);
                 default:
                     return new PpiReserved (br);
@@ -273,7 +273,7 @@ namespace PacketDotNet
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType
             {
-                get { return PpiFieldType.IEEE80211_PPI_MAC_EXTENSIONS;}
+                get { return PpiFieldType.PpiMacExtensions;}
             }
 
         #endregion Properties
@@ -294,7 +294,7 @@ namespace PacketDotNet
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType
             {
-                get { return PpiFieldType.IEEE80211_PPI_MAC_PHY;}
+                get { return PpiFieldType.PpiMacPhy;}
             }
 
         #endregion Properties
@@ -315,7 +315,7 @@ namespace PacketDotNet
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType
             {
-                get { return PpiFieldType.IEEE80211_PPI_PROCESS_INFO;}
+                get { return PpiFieldType.PpiProcessInfo;}
             }
 
         #endregion Properties
@@ -336,7 +336,7 @@ namespace PacketDotNet
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType
             {
-                get { return PpiFieldType.IEEE80211_PPI_RESERVED_0;}
+                get { return PpiFieldType.PpiReserved0;}
             }
 
         #endregion Properties
@@ -357,7 +357,7 @@ namespace PacketDotNet
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType
             {
-                get { return PpiFieldType.IEEE80211_PPI_SPECTRUM;}
+                get { return PpiFieldType.PpiSpectrum;}
             }
 
         #endregion Properties

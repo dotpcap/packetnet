@@ -37,59 +37,59 @@ namespace PacketDotNet
         public enum PpiFieldType : int
         {
             /// <summary>
-            /// IEEE80211_PPI_RESERVED_0
+            /// PpiReserved0
             /// </summary>
-            IEEE80211_PPI_RESERVED_0 = 0,
+            PpiReserved0 = 0,
 
             /// <summary>
-            /// IEEE80211_PPI_RESERVED_1
+            /// PpiReserved1
             /// </summary>
-            IEEE80211_PPI_RESERVED_1 = 1,
+            PpiReserved1 = 1,
 
             /// <summary>
-            /// IEEE80211_PPI_COMMON
+            /// PpiCommon
             /// </summary>
-            IEEE80211_PPI_COMMON = 2,
+            PpiCommon = 2,
 
             ///<summary>
-            /// IEEE80211_PPI_MAC_EXTENSIONS
+            /// PpiMacExtensions
             ///</summary>
-            IEEE80211_PPI_MAC_EXTENSIONS = 3,
+            PpiMacExtensions = 3,
 
             /// <summary>
-            /// IIEEE80211_PPI_MAC_PHY
+            /// PpiMacPhy
             /// </summary>
-            IEEE80211_PPI_MAC_PHY = 4,
+            PpiMacPhy = 4,
 
             /// <summary>
-            /// IEEE80211_PPI_SPECTRUM
+            /// PpiSpectrum
             /// </summary>
-            IEEE80211_PPI_SPECTRUM = 5,
+            PpiSpectrum = 5,
 
             /// <summary>
-            /// IEEE80211_PPI_PROCESS_INFO
+            /// PpiProcessInfo
             /// </summary>
-            IEEE80211_PPI_PROCESS_INFO = 6,
+            PpiProcessInfo = 6,
 
             /// <summary>
-            /// IEEE80211_CAPTURE_INFO
+            /// PpiCaptureInfo
             /// </summary>
-            IEEE80211_PPI_CAPTURE_INFO = 7,
+            PpiCaptureInfo = 7,
 
             /// <summary>
-            /// IEEE80211_AGGREGATION
+            /// PpiAggregation
             /// </summary>
-            IEEE80211_PPI_AGGREGATION = 8,
+            PpiAggregation = 8,
 
             /// <summary>
-            /// IEEE80211_802_3
+            /// Ppi802_3
             /// </summary>
-            IEEE80211_PPI_802_3 = 9,
+            Ppi802_3 = 9,
 
             /// <summary>
-            /// IEEE80211_RESERVED_ALL
+            /// PpiReservedAll
             /// </summary>
-            IEEE80211_PPI_RESERVED_ALL = 10,
+            PpiReservedAll = 10,
         }
 
     #endregion Enumerations

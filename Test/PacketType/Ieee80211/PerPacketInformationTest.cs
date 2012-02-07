@@ -51,7 +51,7 @@ namespace Test.PacketType
                 
                 PpiCommon commonField = p.PpiFields [0] as PpiCommon;
                 
-                Assert.AreEqual (PpiFieldType.IEEE80211_PPI_COMMON, commonField.FieldType);
+                Assert.AreEqual (PpiFieldType.PpiCommon, commonField.FieldType);
                 Assert.AreEqual (0, commonField.TSFTimer);
                 Assert.IsTrue ((commonField.Flags & PpiCommon.CommonFlags.FcsIncludedInFrame) == PpiCommon.CommonFlags.FcsIncludedInFrame);
                 Assert.AreEqual (2, commonField.Rate);

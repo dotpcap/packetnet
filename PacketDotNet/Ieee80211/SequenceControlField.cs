@@ -26,10 +26,26 @@ namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        /// <summary>
+        /// The Sequence control field occurs in management and data frames and is used to 
+        /// relate together fragmented payloads carried in multiple 802.11 frames.
+        /// </summary>
         public class SequenceControlField
         {
+            /// <summary>
+            /// Gets or sets the field that backs all the other properties in the class.
+            /// </summary>
+            /// <value>
+            /// The field.
+            /// </value>
             public UInt16 Field { get; set; }
-
+   
+            /// <summary>
+            /// Gets or sets the sequence number.
+            /// </summary>
+            /// <value>
+            /// The sequence number.
+            /// </value>
             public short SequenceNumber
             {
                 get
@@ -43,7 +59,13 @@ namespace PacketDotNet
                     Field |= (UInt16)(value << 4);
                 }
             }
-
+   
+            /// <summary>
+            /// Gets or sets the fragment number.
+            /// </summary>
+            /// <value>
+            /// The fragment number.
+            /// </value>
             public byte FragmentNumber
             {
                 get
@@ -58,7 +80,9 @@ namespace PacketDotNet
                 }
             }
 
-
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.SequenceControlField"/> class.
+            /// </summary>
             public SequenceControlField()
             {
 

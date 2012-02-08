@@ -99,6 +99,7 @@
     <Compile Include="PacketType\Ieee80211\InformationElementListTest.cs" />
     <Compile Include="PacketType\Ieee80211\MacFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211\BlockAcknowledgmentControlFieldTest.cs" />
+    <Compile Include="PacketType\Ieee80211\ReassociationRequestFrameTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

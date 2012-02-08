@@ -175,6 +175,9 @@ namespace PacketDotNet
 
                 FrameControl = new FrameControlField (FrameControlBytes);
                 Duration = new DurationField (DurationBytes);
+                DestinationAddress = GetAddress (0);
+                SourceAddress = GetAddress (1);
+                BssId = GetAddress (2);
                 SequenceControl = new SequenceControlField (SequenceControlBytes);
 
                 CapabilityInformation = new CapabilityInformationField (CapabilityInformationBytes);
@@ -192,7 +195,48 @@ namespace PacketDotNet
                 //as they vary in length
                 header.Length = FrameSize;
             }
-
+   
+            public ReassociationRequestFrame (PhysicalAddress SourceAddress,
+                                              PhysicalAddress DestinationAddress,
+                                              PhysicalAddress BssId,
+                                              InformationElementList InformationElements)
+            {
+                this.FrameControl = new FrameControlField ();
+                this.Duration = new DurationField ();
+                this.DestinationAddress = DestinationAddress;
+                this.SourceAddress = SourceAddress;
+                this.BssId = BssId;
+                this.SequenceControl = new SequenceControlField ();
+                this.CapabilityInformation = new CapabilityInformationField ();
+                this.InformationElements = new InformationElementList (InformationElements);
+                
+                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementReassociationRequest;
+            }
+     
+            /// <summary>
+            /// Writes the current packet properties to the backing ByteArraySegment.
+            /// </summary>
+            public override void UpdateCalculatedValues ()
+            {
+                if ((header == null) || (header.Length < FrameSize))
+                {
+                    header = new ByteArraySegment (new Byte[FrameSize]);
+                }
+                
+                this.FrameControlBytes = this.FrameControl.Field;
+                this.DurationBytes = this.Duration.Field;
+                SetAddress (0, DestinationAddress);
+                SetAddress (1, SourceAddress);
+                SetAddress (2, BssId);
+                this.SequenceControlBytes = this.SequenceControl.Field;
+                this.CapabilityInformationBytes = this.CapabilityInformation.Field;
+                
+                //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
+                this.InformationElements.CopyTo (header, header.Offset + ReassociationRequestFields.InformationElement1Position);
+                
+                header.Length = FrameSize;
+            }
+            
             /// <summary>
             /// ToString() override
             /// </summary>

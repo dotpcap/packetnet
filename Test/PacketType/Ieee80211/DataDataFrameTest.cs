@@ -51,7 +51,7 @@ namespace Test.PacketType
                 DataDataFrame frame = (DataDataFrame)p.PayloadPacket;
 
                 Assert.AreEqual(0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual(FrameControlField.FrameTypes.Data, frame.FrameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frame.FrameControl.SubType);
                 Assert.IsTrue(frame.FrameControl.ToDS);
                 Assert.IsFalse(frame.FrameControl.FromDS);
                 Assert.IsFalse(frame.FrameControl.MoreFragments);
@@ -87,7 +87,7 @@ namespace Test.PacketType
                 DataDataFrame frame = (DataDataFrame)p.PayloadPacket;
 
                 Assert.AreEqual(0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual(FrameControlField.FrameTypes.Data, frame.FrameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frame.FrameControl.SubType);
                 Assert.IsFalse(frame.FrameControl.ToDS);
                 Assert.IsTrue(frame.FrameControl.FromDS);
                 Assert.IsFalse(frame.FrameControl.MoreFragments);
@@ -140,7 +140,7 @@ namespace Test.PacketType
                 DataDataFrame recreatedFrame = MacFrame.ParsePacket (bas) as DataDataFrame;
                 recreatedFrame.UpdateFrameCheckSequence();
                 
-                Assert.AreEqual (FrameControlField.FrameTypes.Data, recreatedFrame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.Data, recreatedFrame.FrameControl.SubType);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);

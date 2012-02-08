@@ -53,7 +53,7 @@ namespace Test.PacketType
                 BeaconFrame beaconFrame = (BeaconFrame)p.PayloadPacket;
 
                 Assert.AreEqual (0, beaconFrame.FrameControl.ProtocolVersion);
-                Assert.AreEqual (FrameControlField.FrameTypes.ManagementBeacon, beaconFrame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementBeacon, beaconFrame.FrameControl.SubType);
                 Assert.IsFalse (beaconFrame.FrameControl.ToDS);
                 Assert.IsFalse (beaconFrame.FrameControl.FromDS);
                 Assert.IsFalse (beaconFrame.FrameControl.MoreFragments);
@@ -110,7 +110,7 @@ namespace Test.PacketType
                 BeaconFrame recreatedFrame = MacFrame.ParsePacket (bas) as BeaconFrame;
                 recreatedFrame.UpdateFrameCheckSequence();
 
-                Assert.AreEqual (FrameControlField.FrameTypes.ManagementBeacon, recreatedFrame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementBeacon, recreatedFrame.FrameControl.SubType);
                 Assert.AreEqual (PhysicalAddress.Parse ("11-11-11-11-11-11"), recreatedFrame.SourceAddress);
                 Assert.AreEqual (PhysicalAddress.Parse ("FF-FF-FF-FF-FF-FF"), recreatedFrame.DestinationAddress);
                 Assert.AreEqual (PhysicalAddress.Parse ("22-22-22-22-22-22"), recreatedFrame.BssId);

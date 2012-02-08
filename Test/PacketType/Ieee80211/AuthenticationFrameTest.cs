@@ -51,7 +51,7 @@ namespace Test.PacketType
                 AuthenticationFrame frame = (AuthenticationFrame)p.PayloadPacket;
 
                 Assert.AreEqual(0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual(FrameControlField.FrameTypes.ManagementAuthentication, frame.FrameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementAuthentication, frame.FrameControl.SubType);
                 Assert.IsFalse(frame.FrameControl.ToDS);
                 Assert.IsFalse(frame.FrameControl.FromDS);
                 Assert.IsFalse(frame.FrameControl.MoreFragments);
@@ -90,7 +90,7 @@ namespace Test.PacketType
                 AuthenticationFrame frame = (AuthenticationFrame)p.PayloadPacket;
 
                 Assert.AreEqual (0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual (FrameControlField.FrameTypes.ManagementAuthentication, frame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementAuthentication, frame.FrameControl.SubType);
                 Assert.IsFalse (frame.FrameControl.ToDS);
                 Assert.IsFalse (frame.FrameControl.FromDS);
                 Assert.IsFalse (frame.FrameControl.MoreFragments);
@@ -154,7 +154,7 @@ namespace Test.PacketType
                 AuthenticationFrame recreatedFrame = MacFrame.ParsePacket (bas) as AuthenticationFrame;
                 recreatedFrame.UpdateFrameCheckSequence();
                 
-                Assert.AreEqual (FrameControlField.FrameTypes.ManagementAuthentication, recreatedFrame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementAuthentication, recreatedFrame.FrameControl.SubType);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);

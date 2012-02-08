@@ -129,7 +129,7 @@ namespace PacketDotNet
                 this.SequenceControl = new SequenceControlField ();
                 this.InformationElements = new InformationElementList (InformationElements);
                 
-                this.FrameControl.Type = PacketDotNet.Ieee80211.FrameControlField.FrameTypes.ManagementProbeRequest;
+                this.FrameControl.SubType = PacketDotNet.Ieee80211.FrameControlField.FrameSubTypes.ManagementProbeRequest;
             }
             
             /// <summary>

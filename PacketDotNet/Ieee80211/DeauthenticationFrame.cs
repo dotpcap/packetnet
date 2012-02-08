@@ -133,7 +133,7 @@ namespace PacketDotNet
                 this.BssId = BssId;
                 this.SequenceControl = new SequenceControlField ();
                 
-                this.FrameControl.Type = FrameControlField.FrameTypes.ManagementDeauthentication;
+                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementDeauthentication;
             }
             
             /// <summary>

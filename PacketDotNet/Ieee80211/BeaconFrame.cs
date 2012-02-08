@@ -214,7 +214,7 @@ namespace PacketDotNet
                 this.SequenceControl = new SequenceControlField ();
                 this.CapabilityInformation = new CapabilityInformationField ();
                 this.InformationElements = new InformationElementList (InformationElements);
-                this.FrameControl.Type = FrameControlField.FrameTypes.ManagementBeacon;
+                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementBeacon;
                 this.SourceAddress = SourceAddress;
                 this.DestinationAddress = PhysicalAddress.Parse ("FF-FF-FF-FF-FF-FF");
                 this.BssId = BssId;

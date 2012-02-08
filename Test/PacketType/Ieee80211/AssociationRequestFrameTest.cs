@@ -51,7 +51,7 @@ namespace Test.PacketType
                 AssociationRequestFrame frame = (AssociationRequestFrame)p.PayloadPacket;
 
                 Assert.AreEqual (0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual (FrameControlField.FrameTypes.ManagementAssociationRequest, frame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementAssociationRequest, frame.FrameControl.SubType);
                 Assert.IsFalse (frame.FrameControl.ToDS);
                 Assert.IsFalse (frame.FrameControl.FromDS);
                 Assert.IsFalse (frame.FrameControl.MoreFragments);
@@ -119,7 +119,7 @@ namespace Test.PacketType
                 AssociationRequestFrame recreatedFrame = MacFrame.ParsePacket(bas) as AssociationRequestFrame;
                 recreatedFrame.UpdateFrameCheckSequence ();
                 
-                Assert.AreEqual (FrameControlField.FrameTypes.ManagementAssociationRequest, recreatedFrame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementAssociationRequest, recreatedFrame.FrameControl.SubType);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);

@@ -146,7 +146,7 @@ namespace PacketDotNet
                 this.BssId = BssId;
                 this.SequenceControl = new SequenceControlField ();
                 
-                this.FrameControl.Type = FrameControlField.FrameTypes.ManagementAction;
+                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementAction;
             }
    
             /// <summary>

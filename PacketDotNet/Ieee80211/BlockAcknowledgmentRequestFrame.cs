@@ -173,7 +173,7 @@ namespace PacketDotNet
                 this.TransmitterAddress = TransmitterAddress;
                 this.BlockAcknowledgmentControl = new BlockAcknowledgmentControlField ();
                 
-                this.FrameControl.Type = FrameControlField.FrameTypes.ControlBlockAcknowledgmentRequest;
+                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ControlBlockAcknowledgmentRequest;
             }
             
             /// <summary>

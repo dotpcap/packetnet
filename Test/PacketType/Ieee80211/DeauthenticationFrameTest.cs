@@ -51,7 +51,7 @@ namespace Test.PacketType
                 DeauthenticationFrame frame = (DeauthenticationFrame)p.PayloadPacket;
 
                 Assert.AreEqual (0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual (FrameControlField.FrameTypes.ManagementDeauthentication, frame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementDeauthentication, frame.FrameControl.SubType);
                 Assert.IsFalse (frame.FrameControl.ToDS);
                 Assert.IsFalse (frame.FrameControl.FromDS);
                 Assert.IsFalse (frame.FrameControl.MoreFragments);
@@ -100,7 +100,7 @@ namespace Test.PacketType
                 DeauthenticationFrame recreatedFrame = MacFrame.ParsePacket (bas) as DeauthenticationFrame;
                 recreatedFrame.UpdateFrameCheckSequence();
                 
-                Assert.AreEqual (FrameControlField.FrameTypes.ManagementDeauthentication, recreatedFrame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementDeauthentication, recreatedFrame.FrameControl.SubType);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);

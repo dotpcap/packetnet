@@ -51,7 +51,7 @@ namespace Test.PacketType
                 ProbeResponseFrame frame = (ProbeResponseFrame)p.PayloadPacket;
 
                 Assert.AreEqual (0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual (FrameControlField.FrameTypes.ManagementProbeResponse, frame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementProbeResponse, frame.FrameControl.SubType);
                 Assert.IsFalse (frame.FrameControl.ToDS);
                 Assert.IsFalse (frame.FrameControl.FromDS);
                 Assert.IsFalse (frame.FrameControl.MoreFragments);
@@ -122,7 +122,7 @@ namespace Test.PacketType
                 ProbeResponseFrame recreatedFrame = MacFrame.ParsePacket (bas) as ProbeResponseFrame;
                 recreatedFrame.UpdateFrameCheckSequence();
                 
-                Assert.AreEqual (FrameControlField.FrameTypes.ManagementProbeResponse, recreatedFrame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementProbeResponse, recreatedFrame.FrameControl.SubType);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);

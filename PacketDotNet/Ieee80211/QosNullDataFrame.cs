@@ -121,7 +121,7 @@ namespace PacketDotNet
                 
                 AssignDefaultAddresses ();
                 
-                FrameControl.Type = FrameControlField.FrameTypes.QosNullData;
+                FrameControl.SubType = FrameControlField.FrameSubTypes.QosNullData;
             }
             
             /// <summary>

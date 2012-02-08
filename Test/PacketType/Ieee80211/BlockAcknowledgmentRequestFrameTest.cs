@@ -51,7 +51,7 @@ namespace Test.PacketType
                 BlockAcknowledgmentRequestFrame frame = (BlockAcknowledgmentRequestFrame)p.PayloadPacket;
 
                 Assert.AreEqual (0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual (FrameControlField.FrameTypes.ControlBlockAcknowledgmentRequest, frame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ControlBlockAcknowledgmentRequest, frame.FrameControl.SubType);
                 Assert.IsFalse (frame.FrameControl.ToDS);
                 Assert.IsFalse (frame.FrameControl.FromDS);
                 Assert.IsFalse (frame.FrameControl.MoreFragments);
@@ -103,7 +103,7 @@ namespace Test.PacketType
                 BlockAcknowledgmentRequestFrame recreatedFrame = MacFrame.ParsePacket (bas) as BlockAcknowledgmentRequestFrame;
                 recreatedFrame.UpdateFrameCheckSequence();
                 
-                Assert.AreEqual (FrameControlField.FrameTypes.ControlBlockAcknowledgmentRequest, recreatedFrame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ControlBlockAcknowledgmentRequest, recreatedFrame.FrameControl.SubType);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);

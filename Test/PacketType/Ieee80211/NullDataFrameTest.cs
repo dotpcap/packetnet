@@ -51,7 +51,7 @@ namespace Test.PacketType
                 NullDataFrame frame = (NullDataFrame)p.PayloadPacket;
 
                 Assert.AreEqual (0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual (FrameControlField.FrameTypes.DataNullFunctionNoData, frame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.DataNullFunctionNoData, frame.FrameControl.SubType);
                 Assert.IsTrue (frame.FrameControl.ToDS);
                 Assert.IsFalse (frame.FrameControl.FromDS);
                 Assert.IsFalse (frame.FrameControl.MoreFragments);
@@ -102,7 +102,7 @@ namespace Test.PacketType
                 NullDataFrame recreatedFrame = MacFrame.ParsePacket (bas) as NullDataFrame;
                 recreatedFrame.UpdateFrameCheckSequence();
                 
-                Assert.AreEqual (FrameControlField.FrameTypes.DataNullFunctionNoData, recreatedFrame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.DataNullFunctionNoData, recreatedFrame.FrameControl.SubType);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);

@@ -196,7 +196,7 @@ namespace PacketDotNet
                 this.CapabilityInformation = new CapabilityInformationField ();
                 this.InformationElements = new InformationElementList (InformationElements);
                 
-                this.FrameControl.Type = FrameControlField.FrameTypes.ManagementAssociationRequest;
+                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementAssociationRequest;
             }
             
             /// <summary>

@@ -82,7 +82,7 @@ namespace PacketDotNet
                 this.SequenceControl = new SequenceControlField ();
                 AssignDefaultAddresses ();
                 
-                FrameControl.Type = FrameControlField.FrameTypes.DataNullFunctionNoData;
+                FrameControl.SubType = FrameControlField.FrameSubTypes.DataNullFunctionNoData;
             }
             
             /// <summary>

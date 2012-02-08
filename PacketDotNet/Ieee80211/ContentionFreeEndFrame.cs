@@ -92,7 +92,7 @@ namespace PacketDotNet
                 this.ReceiverAddress = ReceiverAddress;
                 this.BssId = BssId;
                 
-                this.FrameControl.Type = PacketDotNet.Ieee80211.FrameControlField.FrameTypes.ControlCFEnd;
+                this.FrameControl.SubType = PacketDotNet.Ieee80211.FrameControlField.FrameSubTypes.ControlCFEnd;
             }
             
             /// <summary>

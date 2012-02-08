@@ -85,7 +85,7 @@ namespace CapturingAndParsingWiFiPackets
                 Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
                 MacFrame macFrame = (MacFrame)p.PayloadPacket;
                 if ((macFrame != null) && 
-                    (macFrame.FrameControl.Type == FrameControlField.FrameTypes.ManagementBeacon))
+                    (macFrame.FrameControl.SubType == FrameControlField.FrameSubTypes.ManagementBeacon))
                 {
                     BeaconFrame beaconFrame = (BeaconFrame)macFrame;
                     var ie = beaconFrame.InformationElements.FindFirstById(InformationElement.ElementId.ServiceSetIdentity);

@@ -257,129 +257,129 @@ namespace PacketDotNet
 
                 MacFrame macFrame = null;
 
-                switch (frameControl.Type)
+                switch (frameControl.SubType)
                 {
-                case FrameControlField.FrameTypes.ManagementAssociationRequest:
+                case FrameControlField.FrameSubTypes.ManagementAssociationRequest:
                     {
                         macFrame = new AssociationRequestFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ManagementAssociationResponse:
+                case FrameControlField.FrameSubTypes.ManagementAssociationResponse:
                     {
                         macFrame = new AssociationResponseFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ManagementReassociationRequest:
+                case FrameControlField.FrameSubTypes.ManagementReassociationRequest:
                     {
                         macFrame = new ReassociationRequestFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ManagementReassociationResponse:
+                case FrameControlField.FrameSubTypes.ManagementReassociationResponse:
                     {
                         macFrame = new AssociationResponseFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ManagementProbeRequest:
+                case FrameControlField.FrameSubTypes.ManagementProbeRequest:
                     {
                         macFrame = new ProbeRequestFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ManagementProbeResponse:
+                case FrameControlField.FrameSubTypes.ManagementProbeResponse:
                     {
                         macFrame = new ProbeResponseFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ManagementReserved0:
+                case FrameControlField.FrameSubTypes.ManagementReserved0:
                     break; //TODO
-                case FrameControlField.FrameTypes.ManagementReserved1:
+                case FrameControlField.FrameSubTypes.ManagementReserved1:
                     break; //TODO
-                case FrameControlField.FrameTypes.ManagementBeacon:
+                case FrameControlField.FrameSubTypes.ManagementBeacon:
                     {
                         macFrame = new BeaconFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ManagementATIM:
+                case FrameControlField.FrameSubTypes.ManagementATIM:
                     break; //TODO
-                case FrameControlField.FrameTypes.ManagementDisassociation:
+                case FrameControlField.FrameSubTypes.ManagementDisassociation:
                     {
                         macFrame = new DisassociationFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ManagementAuthentication:
+                case FrameControlField.FrameSubTypes.ManagementAuthentication:
                     {
                         macFrame = new AuthenticationFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ManagementDeauthentication:
+                case FrameControlField.FrameSubTypes.ManagementDeauthentication:
                     {
                         macFrame = new DeauthenticationFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ManagementAction:
+                case FrameControlField.FrameSubTypes.ManagementAction:
                     {
                         macFrame = new ActionFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ManagementReserved3:
+                case FrameControlField.FrameSubTypes.ManagementReserved3:
                     break; //TODO
-                case FrameControlField.FrameTypes.ControlBlockAcknowledgmentRequest:
+                case FrameControlField.FrameSubTypes.ControlBlockAcknowledgmentRequest:
                     {
                         macFrame = new BlockAcknowledgmentRequestFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ControlBlockAcknowledgment:
+                case FrameControlField.FrameSubTypes.ControlBlockAcknowledgment:
                     {
                         macFrame = new BlockAcknowledgmentFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ControlPSPoll:
+                case FrameControlField.FrameSubTypes.ControlPSPoll:
                     break; //TODO
-                case FrameControlField.FrameTypes.ControlRTS:
+                case FrameControlField.FrameSubTypes.ControlRTS:
                     {
                         macFrame = new RtsFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ControlCTS:
-                case FrameControlField.FrameTypes.ControlACK:
+                case FrameControlField.FrameSubTypes.ControlCTS:
+                case FrameControlField.FrameSubTypes.ControlACK:
                     {
                         macFrame = new CtsOrAckFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ControlCFEnd:
+                case FrameControlField.FrameSubTypes.ControlCFEnd:
                     {
                         macFrame = new ContentionFreeEndFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.ControlCFEndCFACK:
+                case FrameControlField.FrameSubTypes.ControlCFEndCFACK:
                     break; //TODO
-                case FrameControlField.FrameTypes.Data:
-                case FrameControlField.FrameTypes.DataCFACK:
-                case FrameControlField.FrameTypes.DataCFPoll:
-                case FrameControlField.FrameTypes.DataCFAckCFPoll:
+                case FrameControlField.FrameSubTypes.Data:
+                case FrameControlField.FrameSubTypes.DataCFACK:
+                case FrameControlField.FrameSubTypes.DataCFPoll:
+                case FrameControlField.FrameSubTypes.DataCFAckCFPoll:
                     {
                         macFrame = new DataDataFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.DataNullFunctionNoData:
-                case FrameControlField.FrameTypes.DataCFAckNoData:
-                case FrameControlField.FrameTypes.DataCFPollNoData:
-                case FrameControlField.FrameTypes.DataCFAckCFPollNoData:
+                case FrameControlField.FrameSubTypes.DataNullFunctionNoData:
+                case FrameControlField.FrameSubTypes.DataCFAckNoData:
+                case FrameControlField.FrameSubTypes.DataCFPollNoData:
+                case FrameControlField.FrameSubTypes.DataCFAckCFPollNoData:
                     {
                         macFrame = new NullDataFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.QosData:
-                case FrameControlField.FrameTypes.QosDataAndCFAck:
-                case FrameControlField.FrameTypes.QosDataAndCFPoll:
-                case FrameControlField.FrameTypes.QosDataAndCFAckAndCFPoll:
+                case FrameControlField.FrameSubTypes.QosData:
+                case FrameControlField.FrameSubTypes.QosDataAndCFAck:
+                case FrameControlField.FrameSubTypes.QosDataAndCFPoll:
+                case FrameControlField.FrameSubTypes.QosDataAndCFAckAndCFPoll:
                     {
                         macFrame = new QosDataFrame (bas);
                         break;
                     }
-                case FrameControlField.FrameTypes.QosNullData:
-                case FrameControlField.FrameTypes.QosCFAck:
-                case FrameControlField.FrameTypes.QosCFPoll:
-                case FrameControlField.FrameTypes.QosCFAckAndCFPoll:
+                case FrameControlField.FrameSubTypes.QosNullData:
+                case FrameControlField.FrameSubTypes.QosCFAck:
+                case FrameControlField.FrameSubTypes.QosCFPoll:
+                case FrameControlField.FrameSubTypes.QosCFAckAndCFPoll:
                     {
                         macFrame = new QosNullDataFrame (bas);
                         break;

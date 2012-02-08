@@ -51,7 +51,7 @@ namespace Test.PacketType
                 QosNullDataFrame frame = (QosNullDataFrame)p.PayloadPacket;
 
                 Assert.AreEqual(0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual(FrameControlField.FrameTypes.QosNullData, frame.FrameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.QosNullData, frame.FrameControl.SubType);
                 Assert.IsFalse(frame.FrameControl.ToDS);
                 Assert.IsTrue(frame.FrameControl.FromDS);
                 Assert.IsFalse(frame.FrameControl.MoreFragments);
@@ -105,7 +105,7 @@ namespace Test.PacketType
                 QosNullDataFrame recreatedFrame = MacFrame.ParsePacket (bas) as QosNullDataFrame;
                 recreatedFrame.UpdateFrameCheckSequence();
                 
-                Assert.AreEqual (FrameControlField.FrameTypes.QosNullData, recreatedFrame.FrameControl.Type);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.QosNullData, recreatedFrame.FrameControl.SubType);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);

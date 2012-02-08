@@ -218,7 +218,7 @@ namespace PacketDotNet
                 this.CapabilityInformation = new CapabilityInformationField ();
                 this.InformationElements = new InformationElementList (InformationElements);
                 
-                this.FrameControl.Type = PacketDotNet.Ieee80211.FrameControlField.FrameTypes.ManagementProbeResponse;
+                this.FrameControl.SubType = PacketDotNet.Ieee80211.FrameControlField.FrameSubTypes.ManagementProbeResponse;
             }
             
             /// <summary>

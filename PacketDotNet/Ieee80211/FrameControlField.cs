@@ -55,11 +55,30 @@ namespace PacketDotNet
                     Field |= (UInt16)(value << 0x8);
                 }
             }
-
+   
             /// <summary>
-            /// Types of frames
+            /// Specifies the main frame type: Control, Management or Data.
             /// </summary>
             public enum FrameTypes
+            {
+                /// <summary>
+                /// Management frame.
+                /// </summary>
+                Management = 0,
+                /// <summary>
+                /// Control frame.
+                /// </summary>
+                Control = 1,
+                /// <summary>
+                /// Data frame.
+                /// </summary>
+                Data = 2
+            }
+            
+            /// <summary>
+            /// Sepcifies the frame types down to the sub type level.
+            /// </summary>
+            public enum FrameSubTypes
             {
                 /// <summary>
                 /// Association request
@@ -257,16 +276,32 @@ namespace PacketDotNet
             };
 
             /// <summary>
-            /// Helps to identify the type of WLAN frame, control data and management are
-            /// the various frame types defined in IEEE 802.11
+            /// Gets the type of the frame.
             /// </summary>
+            /// <value>
+            /// The type.
+            /// </value>
             public FrameTypes Type
             {
                 get
                 {
                     int typeAndSubtype = (Field >> 8); //get rid of the flags
-                    int type = (((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4));
+                    int type = ((typeAndSubtype & 0xC) >> 2);
                     return (FrameTypes)type;
+                }
+            }
+            
+            /// <summary>
+            /// Helps to identify the type of WLAN frame, control data and management are
+            /// the various frame types defined in IEEE 802.11
+            /// </summary>
+            public FrameSubTypes SubType
+            {
+                get
+                {
+                    int typeAndSubtype = (Field >> 8); //get rid of the flags
+                    int type = (((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4));
+                    return (FrameSubTypes)type;
                 }
 
                 set

@@ -219,7 +219,7 @@ namespace PacketDotNet
 
                 this.InformationElements = new InformationElementList (InformationElements);
                 
-                this.FrameControl.Type = FrameControlField.FrameTypes.ManagementAssociationResponse;
+                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementAssociationResponse;
             }
             
             /// <summary>

@@ -40,6 +40,7 @@ namespace Test.PacketType
 
                 Assert.AreEqual(0x0, frameControl.ProtocolVersion);
                 Assert.AreEqual(FrameControlField.FrameTypes.Data, frameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
                 Assert.IsTrue(frameControl.FromDS);
                 Assert.IsTrue(frameControl.Wep);
 
@@ -57,7 +58,8 @@ namespace Test.PacketType
                 FrameControlField frameControl = new FrameControlField(0x8000);
 
                 Assert.AreEqual(0x0, frameControl.ProtocolVersion);
-                Assert.AreEqual(FrameControlField.FrameTypes.ManagementBeacon, frameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameTypes.Management, frameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementBeacon, frameControl.SubType);
                 Assert.IsFalse(frameControl.FromDS);
                 Assert.IsFalse(frameControl.Wep);
                 Assert.IsFalse(frameControl.ToDS);
@@ -74,7 +76,8 @@ namespace Test.PacketType
                 FrameControlField frameControl = new FrameControlField(0xC400);
 
                 Assert.AreEqual(0x0, frameControl.ProtocolVersion);
-                Assert.AreEqual(FrameControlField.FrameTypes.ControlCTS, frameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameTypes.Control, frameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlCTS, frameControl.SubType);
                 Assert.IsFalse(frameControl.FromDS);
                 Assert.IsFalse(frameControl.Wep);
                 Assert.IsFalse(frameControl.ToDS);
@@ -91,7 +94,8 @@ namespace Test.PacketType
                 FrameControlField frameControl = new FrameControlField(0xD410);
 
                 Assert.AreEqual(0x0, frameControl.ProtocolVersion);
-                Assert.AreEqual(FrameControlField.FrameTypes.ControlACK, frameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameTypes.Control, frameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlACK, frameControl.SubType);
                 Assert.IsFalse(frameControl.FromDS);
                 Assert.IsFalse(frameControl.Wep);
                 Assert.IsFalse(frameControl.ToDS);
@@ -108,7 +112,8 @@ namespace Test.PacketType
                 FrameControlField frameControl = new FrameControlField(0xA01B);
 
                 Assert.AreEqual(0x0, frameControl.ProtocolVersion);
-                Assert.AreEqual(FrameControlField.FrameTypes.ManagementDisassociation, frameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameTypes.Management, frameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementDisassociation, frameControl.SubType);
                 Assert.IsTrue(frameControl.FromDS);
                 Assert.IsTrue(frameControl.ToDS);
                 Assert.IsFalse(frameControl.MoreFragments);
@@ -126,6 +131,7 @@ namespace Test.PacketType
 
                 Assert.AreEqual(0x0, frameControl.ProtocolVersion);
                 Assert.AreEqual(FrameControlField.FrameTypes.Data, frameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
 
                 Assert.IsTrue(frameControl.ToDS);
                 Assert.IsFalse(frameControl.FromDS);
@@ -142,14 +148,14 @@ namespace Test.PacketType
             {
                 FrameControlField frameControl = new FrameControlField();
 
-                frameControl.Type = FrameControlField.FrameTypes.Data;
-                Assert.AreEqual(FrameControlField.FrameTypes.Data, frameControl.Type);
+                frameControl.SubType = FrameControlField.FrameSubTypes.Data;
+                Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
 
-                frameControl.Type = FrameControlField.FrameTypes.ManagementAuthentication;
-                Assert.AreEqual(FrameControlField.FrameTypes.ManagementAuthentication, frameControl.Type);
+                frameControl.SubType = FrameControlField.FrameSubTypes.ManagementAuthentication;
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementAuthentication, frameControl.SubType);
 
-                frameControl.Type = FrameControlField.FrameTypes.ControlACK;
-                Assert.AreEqual(FrameControlField.FrameTypes.ControlACK, frameControl.Type);
+                frameControl.SubType = FrameControlField.FrameSubTypes.ControlACK;
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlACK, frameControl.SubType);
             }
 
             [Test]

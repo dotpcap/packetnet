@@ -243,7 +243,7 @@ namespace PacketDotNet
                 this.BlockAcknowledgmentControl = new BlockAcknowledgmentControlField ();
                 this.BlockAckBitmap = BlockAckBitmap;
 
-                this.FrameControl.Type = FrameControlField.FrameTypes.ControlBlockAcknowledgment;
+                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ControlBlockAcknowledgment;
             }
             
             /// <summary>

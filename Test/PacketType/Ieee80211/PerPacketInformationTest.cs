@@ -63,7 +63,7 @@ namespace Test.PacketType
                 Assert.AreEqual (-100, commonField.AntennaSignalNoise);
                 
                 MacFrame macFrame = p.PayloadPacket as MacFrame;
-                Assert.AreEqual(FrameControlField.FrameTypes.ControlCTS, macFrame.FrameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlCTS, macFrame.FrameControl.SubType);
             }
         } 
     }

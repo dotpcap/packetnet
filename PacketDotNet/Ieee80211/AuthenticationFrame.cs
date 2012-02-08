@@ -203,7 +203,7 @@ namespace PacketDotNet
                 this.SequenceControl = new SequenceControlField ();
                 this.InformationElements = new InformationElementList (InformationElements);
                 
-                this.FrameControl.Type = FrameControlField.FrameTypes.ManagementAuthentication;
+                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementAuthentication;
             }
             
             /// <summary>

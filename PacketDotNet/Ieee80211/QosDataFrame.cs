@@ -123,7 +123,7 @@ namespace PacketDotNet
                 this.SequenceControl = new SequenceControlField ();
                 AssignDefaultAddresses ();
                 
-                FrameControl.Type = FrameControlField.FrameTypes.QosData;
+                FrameControl.SubType = FrameControlField.FrameSubTypes.QosData;
             }
             
             /// <summary>

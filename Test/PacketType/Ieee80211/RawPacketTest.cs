@@ -48,6 +48,34 @@ namespace Test.PacketType
 
                 Console.WriteLine(p.ToString());
             }
+            
+            [Test]
+            public void ReadingRawPacketWithFcs ()
+            {
+                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_raw_with_fcs.pcap");
+                dev.Open ();
+                var rawCapture = dev.GetNextPacket ();
+                dev.Close ();
+
+                Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
+
+                Assert.IsNotNull (p);
+              
+            }
+            
+            [Test]
+            public void ReadingRawPacketWithoutFcs ()
+            {
+                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_raw_without_fcs.pcap");
+                dev.Open ();
+                var rawCapture = dev.GetNextPacket ();
+                dev.Close ();
+
+                Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
+
+                Assert.IsNotNull (p);
+              
+            }
         } 
     }
 }

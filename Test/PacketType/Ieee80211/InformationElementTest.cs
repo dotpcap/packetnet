@@ -25,6 +25,7 @@ using System.Text;
 using NUnit.Framework;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
+using PacketDotNet.Utils;
 
 namespace Test.PacketType
 {
@@ -54,7 +55,46 @@ namespace Test.PacketType
                     InformationElement.ElementId.CfParameterSet, value);
                 
             }
-
+   
+            [Test]
+            public void Test_Constructor_BufferTooShort ()
+            {
+                //This IE will have and length of 5 but only three bytes of data
+                Byte[] value = new Byte[] { 0x0, 0x5, 0x1, 0x2, 0x3 };
+                ByteArraySegment bas = new ByteArraySegment (value);
+                
+                InformationElement infoElement = new InformationElement (bas);
+                
+                Assert.AreEqual (3, infoElement.ValueLength);
+                Assert.AreEqual (3, infoElement.Value.Length);
+            }
+            
+            [Test]
+            public void Test_Constructor_BufferLongerThanElement ()
+            {
+                //This IE will have and length of 2 but there are three bytes of data available,
+                //the last one should be ignored
+                Byte[] value = new Byte[] { 0x0, 0x2, 0x1, 0x2, 0x3 };
+                ByteArraySegment bas = new ByteArraySegment (value);
+                
+                InformationElement infoElement = new InformationElement (bas);
+                
+                Assert.AreEqual (2, infoElement.ValueLength);
+                Assert.AreEqual (2, infoElement.Value.Length);
+            }
+            
+            [Test]
+            public void Test_Constructor_BufferCorrectSize ()
+            {
+                Byte[] value = new Byte[] { 0x0, 0x2, 0x1, 0x2,};
+                ByteArraySegment bas = new ByteArraySegment (value);
+                
+                InformationElement infoElement = new InformationElement (bas);
+                
+                Assert.AreEqual (2, infoElement.ValueLength);
+                Assert.AreEqual (2, infoElement.Value.Length);
+            }
+            
             [Test]
             public void Test_Bytes()
             {

@@ -254,7 +254,8 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return bytes.Bytes [bytes.Offset + ElementLengthPosition];
+                    return Math.Min((bytes.Length - ElementValuePosition),
+                                    bytes.Bytes [bytes.Offset + ElementLengthPosition]);
                 }
                 //no set Length method as we dont want to allow a mismatch between
                 //the length field and the actual length of the value

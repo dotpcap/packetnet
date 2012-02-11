@@ -65,6 +65,32 @@ namespace Test.PacketType
                 MacFrame macFrame = p.PayloadPacket as MacFrame;
                 Assert.AreEqual(FrameControlField.FrameSubTypes.ControlCTS, macFrame.FrameControl.SubType);
             }
+            
+            [Test]
+            public void ReadPacketWithInvalidFcs ()
+            {
+                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_ppi_fcs_present_and_invalid.pcap");
+                dev.Open ();
+                var rawCapture = dev.GetNextPacket ();
+                dev.Close ();
+                
+                PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+                Assert.IsNull (p.PayloadPacket);
+                Assert.IsNotNull (p.PayloadData);
+            }
+            
+            [Test]
+            public void ReadPacketWithValidFcs ()
+            {
+                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_ppi_fcs_present_and_valid.pcap");
+                dev.Open ();
+                var rawCapture = dev.GetNextPacket ();
+                dev.Close ();
+                
+                PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+                Assert.IsNotNull (p.PayloadPacket);
+                Assert.IsNull (p.PayloadData);
+            }
         } 
     }
 }

@@ -98,7 +98,31 @@ namespace Test.PacketType
                 Assert.AreEqual (4, ieList [1].ValueLength);
                 Assert.IsTrue (ieList [1].Value.SequenceEqual (new Byte[] { 0xFF, 0xFE, 0xFD, 0xFC }));
             }
+   
+            [Test]
+            public void Test_Constructor_BufferTooShort ()
+            {
+                //The following buffer contains two information elements both with a length of 5
+                //but the buffer is too short to contain the complete value for the second IE
+                Byte[] ieBytes = new Byte[] { 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05,
+                                              0x00, 0x05, 0x01, 0x02, 0x03 };
+                ByteArraySegment bas = new ByteArraySegment (ieBytes);
 
+                InformationElementList ieList = new InformationElementList (bas);
+                Assert.AreEqual (2, ieList.Count);
+
+                Assert.AreEqual (InformationElement.ElementId.ServiceSetIdentity, ieList [0].Id);
+                Assert.AreEqual (5, ieList [0].ValueLength);
+                Assert.AreEqual (5, ieList [0].Value.Length);
+                Assert.AreEqual (7, ieList [0].ElementLength);
+
+                Assert.AreEqual (InformationElement.ElementId.ServiceSetIdentity, ieList [1].Id);
+                Assert.AreEqual (3, ieList [1].ValueLength);
+                Assert.AreEqual (3, ieList [1].Value.Length);
+                Assert.AreEqual (5, ieList [1].ElementLength);
+                Assert.AreEqual (12, ieList.Length);
+            }
+            
             [Test]
             public void Test_Constructor_EmptyList ()
             {             

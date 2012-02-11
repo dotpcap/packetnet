@@ -69,9 +69,11 @@ namespace PacketDotNet
                 int index = 0;
                 while (index < bas.Length)
                 {
-                    Byte valueLength = bas.Bytes [bas.Offset + index + InformationElement.ElementLengthPosition];
+                    var ieStartPosition = bas.Offset + index;
+                    Byte valueLength = bas.Bytes [ieStartPosition + InformationElement.ElementLengthPosition];
                     var ieLength = InformationElement.ElementIdLength + InformationElement.ElementLengthLength + valueLength;
-                    this.Add (new InformationElement (new ByteArraySegment (bas.Bytes, bas.Offset + index, ieLength)));
+                    var availableLength = Math.Min(ieLength, bas.Length - index);
+                    this.Add (new InformationElement (new ByteArraySegment (bas.Bytes, ieStartPosition, availableLength)));
 
                     index += ieLength;
                 }

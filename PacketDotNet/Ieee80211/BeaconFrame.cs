@@ -72,7 +72,14 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt64(header.Bytes, header.Offset + BeaconFields.TimestampPosition);
+					if(header.Length >= (BeaconFields.TimestampPosition + BeaconFields.TimestampLength))
+					{
+						return EndianBitConverter.Little.ToUInt64(header.Bytes, header.Offset + BeaconFields.TimestampPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
@@ -94,7 +101,14 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes, header.Offset + BeaconFields.BeaconIntervalPosition);
+					if(header.Length >= (BeaconFields.BeaconIntervalPosition + BeaconFields.BeaconIntervalLength))
+					{
+						return EndianBitConverter.Little.ToUInt16(header.Bytes, header.Offset + BeaconFields.BeaconIntervalPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
@@ -112,8 +126,15 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                          header.Offset + BeaconFields.CapabilityInformationPosition);
+					if(header.Length >= (BeaconFields.CapabilityInformationPosition + BeaconFields.CapabilityInformationLength))
+					{
+						return EndianBitConverter.Little.ToUInt16(header.Bytes,
+						                                          header.Offset + BeaconFields.CapabilityInformationPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
@@ -181,12 +202,19 @@ namespace PacketDotNet
                 BeaconInterval = BeaconIntervalBytes;
                 CapabilityInformation = new CapabilityInformationField (CapabilityInformationBytes);
 
-                //create a segment that just refers to the info element section
-                ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
-                    (bas.Offset + BeaconFields.InformationElement1Position),
-                    (bas.Length - BeaconFields.InformationElement1Position ));
-
-                InformationElements = new InformationElementList (infoElementsSegment);
+				if(bas.Length > BeaconFields.InformationElement1Position)
+				{
+					//create a segment that just refers to the info element section
+					ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
+					                                                             (bas.Offset + BeaconFields.InformationElement1Position),
+					                                                             (bas.Length - BeaconFields.InformationElement1Position ));
+					
+					InformationElements = new InformationElementList (infoElementsSegment);
+				}
+				else
+				{
+					InformationElements = new InformationElementList ();
+				}
                 
                 //cant set length until after we have handled the information elements
                 //as they vary in length
@@ -226,7 +254,8 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length < FrameSize))
+				
+                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
                 {
                     //the backing buffer isnt big enough to accommodate the info elements so we need to resize it
                     header = new ByteArraySegment (new Byte[FrameSize]);

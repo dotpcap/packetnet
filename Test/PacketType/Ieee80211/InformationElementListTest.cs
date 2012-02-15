@@ -100,7 +100,7 @@ namespace Test.PacketType
             }
    
             [Test]
-            public void Test_Constructor_BufferTooShort ()
+            public void Test_Constructor_BufferTooShortForCompleteValue ()
             {
                 //The following buffer contains two information elements both with a length of 5
                 //but the buffer is too short to contain the complete value for the second IE
@@ -121,6 +121,28 @@ namespace Test.PacketType
                 Assert.AreEqual (3, ieList [1].Value.Length);
                 Assert.AreEqual (5, ieList [1].ElementLength);
                 Assert.AreEqual (12, ieList.Length);
+            }
+			
+			[Test]
+            public void Test_Constructor_BufferTooShortForLengthHeader ()
+            {
+                //This buffer contains only enough for the id field (i.e. not length or value)
+                Byte[] ieBytes = new Byte[] { 0x00 };
+                ByteArraySegment bas = new ByteArraySegment (ieBytes);
+
+                InformationElementList ieList = new InformationElementList (bas);
+                Assert.AreEqual (0, ieList.Count);
+            }
+			
+			[Test]
+            public void Test_Constructor_BufferTooShortForValue ()
+            {
+                //This buffer contains only enough for the id field (i.e. not length or value)
+				Byte[] ieBytes = new Byte[] { 0x00, 0x01 };
+                ByteArraySegment bas = new ByteArraySegment (ieBytes);
+
+                InformationElementList ieList = new InformationElementList (bas);
+                Assert.AreEqual (1, ieList.Count);
             }
             
             [Test]

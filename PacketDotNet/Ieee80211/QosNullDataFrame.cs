@@ -58,8 +58,15 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                          header.Offset + QosNullDataField.QosControlPosition);
+					if(header.Length >= (QosNullDataField.QosControlPosition + QosNullDataField.QosControlLength))
+					{
+						return EndianBitConverter.Little.ToUInt16(header.Bytes,
+						                                          header.Offset + QosNullDataField.QosControlPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
@@ -129,7 +136,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length < FrameSize))
+                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
                 {
                     header = new ByteArraySegment (new Byte[FrameSize]);
                 }

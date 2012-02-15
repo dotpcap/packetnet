@@ -64,8 +64,15 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                          header.Offset);
+                    if(header.Length >= (MacFields.FrameControlPosition + MacFields.FrameControlLength))
+                    {
+                        return EndianBitConverter.Big.ToUInt16 (header.Bytes,
+                                                                header.Offset);
+                    }
+                    else
+                    {
+                       return 0;
+                    }
                 }
 
                 set
@@ -92,8 +99,15 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                          header.Offset + MacFields.DurationIDPosition);
+                    if(header.Length >= (MacFields.DurationIDPosition + MacFields.DurationIDLength))
+                    {
+                        return EndianBitConverter.Little.ToUInt16(header.Bytes,
+                                                                  header.Offset + MacFields.DurationIDPosition);
+                    }
+                    else
+                    {
+                        return 0;
+                    }
                 }
 
                 set
@@ -139,8 +153,18 @@ namespace PacketDotNet
             /// </param>
             protected void SetAddressByOffset(int offset, PhysicalAddress address)
             {
-                // using the offset, set the address
-                byte[] hwAddress = address.GetAddressBytes();
+				byte[] hwAddress = null;
+				//We will replace no address with a MAC of all zer
+				if(address == PhysicalAddress.None)
+				{
+					hwAddress = new byte[]{0, 0, 0, 0, 0, 0};
+				}
+				else
+				{
+					hwAddress = address.GetAddressBytes();
+				}
+				
+				// using the offset, set the address
                 if (hwAddress.Length != MacFields.AddressLength)
                 {
                     throw new System.InvalidOperationException("address length " + hwAddress.Length
@@ -178,10 +202,17 @@ namespace PacketDotNet
             /// </param>
             protected PhysicalAddress GetAddressByOffset(int offset)
             {
-                byte[] hwAddress = new byte[MacFields.AddressLength];
-                Array.Copy(header.Bytes, offset,
-                           hwAddress, 0, hwAddress.Length);
-                return new PhysicalAddress(hwAddress);
+				if((header.Offset + header.Length) >= (offset + MacFields.AddressLength))
+				{
+        	        byte[] hwAddress = new byte[MacFields.AddressLength];
+            	    Array.Copy(header.Bytes, offset,
+                	           hwAddress, 0, hwAddress.Length);
+                	return new PhysicalAddress(hwAddress);
+				}
+				else
+				{
+					return PhysicalAddress.None;
+				}
             }
 
             /// <summary>
@@ -206,6 +237,17 @@ namespace PacketDotNet
             /// </summary>
             public abstract int FrameSize { get; }
             
+			protected int PayloadLength
+			{
+				get
+				{
+					int payloadLength = header.BytesLength - (header.Offset + FrameSize);
+					var x = (payloadLength > 0) ? payloadLength : 0;
+					Console.WriteLine("Payload: " + x.ToString());
+					return (payloadLength > 0) ? payloadLength : 0;
+				}
+			}
+			
             /// <summary>
             /// Parses the <see cref="PacketDotNet.Utils.ByteArraySegment"/> into a MacFrame.
             /// </summary>

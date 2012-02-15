@@ -90,7 +90,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length < FrameSize))
+                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
                 {
                     header = new ByteArraySegment (new Byte[FrameSize]);
                 }

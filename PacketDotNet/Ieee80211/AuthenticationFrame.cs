@@ -63,8 +63,16 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16 (header.Bytes,
-                        header.Offset + AuthenticationFields.AuthAlgorithmNumPosition);
+					if(header.Length >= 
+					   (AuthenticationFields.AuthAlgorithmNumPosition + AuthenticationFields.AuthAlgorithmNumLength))
+					{
+						return EndianBitConverter.Little.ToUInt16 (header.Bytes,
+						                                           header.Offset + AuthenticationFields.AuthAlgorithmNumPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
@@ -84,8 +92,16 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16 (header.Bytes,
-                        header.Offset + AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition);
+					if(header.Length >= 
+					   (AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition + AuthenticationFields.AuthAlgorithmTransactionSequenceNumLength))
+					{
+						return EndianBitConverter.Little.ToUInt16 (header.Bytes,
+						                                           header.Offset + AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
@@ -105,8 +121,17 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (AuthenticationStatusCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
-                        header.Offset + AuthenticationFields.StatusCodePosition);
+					if(header.Length >= (AuthenticationFields.StatusCodePosition + AuthenticationFields.StatusCodeLength))
+					{
+						return (AuthenticationStatusCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
+						                                                                     header.Offset + AuthenticationFields.StatusCodePosition);
+					}
+					else
+					{
+						//This seems the most sensible value to return when it is not possible
+						//to extract a meaningful value
+						return AuthenticationStatusCode.UnspecifiedFailure;
+					}
                 }
                 
                 set
@@ -163,12 +188,20 @@ namespace PacketDotNet
                 AuthenticationAlgorithmNumber = AuthenticationAlgorithmNumberBytes;
                 AuthenticationAlgorithmTransactionSequenceNumber = AuthenticationAlgorithmTransactionSequenceNumberBytes;
                 
-                //create a segment that just refers to the info element section
-                ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
-                    (bas.Offset + AuthenticationFields.InformationElement1Position),
-                    (bas.Length - AuthenticationFields.InformationElement1Position));
-
-                InformationElements = new InformationElementList (infoElementsSegment);
+				if(bas.Length > AuthenticationFields.InformationElement1Position)
+				{
+                	//create a segment that just refers to the info element section
+                	ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
+                   		(bas.Offset + AuthenticationFields.InformationElement1Position),
+                    	(bas.Length - AuthenticationFields.InformationElement1Position));
+					
+					InformationElements = new InformationElementList (infoElementsSegment);
+				}
+				else
+				{
+					InformationElements = new InformationElementList();
+				}
+				
 
                 //cant set length until after we have handled the information elements
                 //as they vary in length
@@ -211,7 +244,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length < FrameSize))
+                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
                 {
                     header = new ByteArraySegment (new Byte[FrameSize]);
                 }

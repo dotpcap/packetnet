@@ -67,12 +67,13 @@ namespace PacketDotNet
             public RtsFrame (ByteArraySegment bas)
             {
                 header = new ByteArraySegment (bas);
-                header.Length = FrameSize;
 
                 FrameControl = new FrameControlField (FrameControlBytes);
                 Duration = new DurationField (DurationBytes);
                 ReceiverAddress = GetAddress (0);
                 TransmitterAddress = GetAddress(1);
+				
+				header.Length = FrameSize;
             }
 
             /// <summary>

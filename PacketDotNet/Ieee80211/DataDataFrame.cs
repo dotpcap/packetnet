@@ -68,9 +68,11 @@ namespace PacketDotNet
                 SequenceControl = new SequenceControlField (SequenceControlBytes);
                 ReadAddresses (); //must do this after reading FrameControl
 
-                header.Length = FrameSize;
-                int payloadLength = header.BytesLength - (header.Offset + header.Length);
-                payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (payloadLength);
+                header.Length = FrameSize; 
+				if(PayloadLength > 0)
+				{
+					payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (PayloadLength);
+				}
             }
             
             /// <summary>
@@ -91,7 +93,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length < FrameSize))
+                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
                 {
                     header = new ByteArraySegment (new Byte[FrameSize]);
                 }

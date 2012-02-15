@@ -35,7 +35,7 @@ namespace PacketDotNet
         /// </summary>
         public class BlockAcknowledgmentRequestFrame : MacFrame
         {
-            private class BlockAcknowledgmentRequestField
+            private class BlockAckRequestField
             {
                 public readonly static int BlockAckRequestControlLength = 2;
                 public readonly static int BlockAckStartingSequenceControlLength = 2;
@@ -43,7 +43,7 @@ namespace PacketDotNet
                 public readonly static int BlockAckRequestControlPosition;
                 public readonly static int BlockAckStartingSequenceControlPosition;
 
-                static BlockAcknowledgmentRequestField()
+                static BlockAckRequestField()
                 {
                     BlockAckRequestControlPosition = MacFields.DurationIDPosition + MacFields.DurationIDLength + (2 * MacFields.AddressLength);
                     BlockAckStartingSequenceControlPosition = BlockAckRequestControlPosition + BlockAckRequestControlLength;
@@ -67,15 +67,24 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                          header.Offset + BlockAcknowledgmentRequestField.BlockAckRequestControlPosition);
+					if(header.Length >= 
+					   (BlockAckRequestField.BlockAckRequestControlPosition + 
+					    BlockAckRequestField.BlockAckRequestControlLength))
+					{
+						return EndianBitConverter.Little.ToUInt16(header.Bytes,
+						                                          header.Offset + BlockAckRequestField.BlockAckRequestControlPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
                 {
                     EndianBitConverter.Little.CopyBytes(value,
                                                      header.Bytes,
-                                                     header.Offset + BlockAcknowledgmentRequestField.BlockAckRequestControlPosition);
+                                                     header.Offset + BlockAckRequestField.BlockAckRequestControlPosition);
                 }
             }
 
@@ -107,15 +116,24 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                        header.Offset + BlockAcknowledgmentRequestField.BlockAckStartingSequenceControlPosition);
+					if(header.Length >= 
+					   (BlockAckRequestField.BlockAckStartingSequenceControlPosition + 
+					    BlockAckRequestField.BlockAckStartingSequenceControlLength))
+					{
+						return EndianBitConverter.Little.ToUInt16(header.Bytes,
+						                                          header.Offset + BlockAckRequestField.BlockAckStartingSequenceControlPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
                 {
                     EndianBitConverter.Little.CopyBytes(value,
                         header.Bytes,
-                        header.Offset + BlockAcknowledgmentRequestField.BlockAckStartingSequenceControlPosition);
+                        header.Offset + BlockAckRequestField.BlockAckStartingSequenceControlPosition);
                 }
             }
 
@@ -130,8 +148,8 @@ namespace PacketDotNet
                     return (MacFields.FrameControlLength +
                         MacFields.DurationIDLength +
                         (MacFields.AddressLength * 2) +
-                        BlockAcknowledgmentRequestField.BlockAckRequestControlLength +
-                        BlockAcknowledgmentRequestField.BlockAckStartingSequenceControlLength);
+                        BlockAckRequestField.BlockAckRequestControlLength +
+                        BlockAckRequestField.BlockAckStartingSequenceControlLength);
                 }
             }
 
@@ -181,7 +199,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length < FrameSize))
+                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
                 {
                     header = new ByteArraySegment (new Byte[FrameSize]);
                 }

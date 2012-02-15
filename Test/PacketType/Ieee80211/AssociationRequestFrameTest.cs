@@ -136,6 +136,15 @@ namespace Test.PacketType
                 
                 Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
             }
+			
+			[Test]
+			public void Test_ConstructorWithCorruptBuffer ()
+			{
+				//buffer is way too short for frame. We are just checking it doesn't throw
+				byte[] corruptBuffer = new byte[]{0x01};
+				AssociationRequestFrame frame = new AssociationRequestFrame(new ByteArraySegment(corruptBuffer));
+				Assert.IsFalse(frame.FCSValid);
+			}
         } 
     }
 }

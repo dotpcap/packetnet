@@ -58,8 +58,15 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                          (header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+					if(header.Length >= (MacFields.SequenceControlPosition + MacFields.SequenceControlLength))
+					{
+						return EndianBitConverter.Little.ToUInt16(header.Bytes,
+						                                          (header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set

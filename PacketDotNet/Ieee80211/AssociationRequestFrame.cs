@@ -59,8 +59,16 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                        header.Offset + AssociationRequestFields.CapabilityInformationPosition);
+					if(header.Length >= 
+					   (AssociationRequestFields.CapabilityInformationPosition + AssociationRequestFields.CapabilityInformationLength))
+					{
+						return EndianBitConverter.Little.ToUInt16(header.Bytes,
+						                                          header.Offset + AssociationRequestFields.CapabilityInformationPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
@@ -95,8 +103,15 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                        header.Offset + AssociationRequestFields.ListenIntervalPosition);
+					if(header.Length >= (AssociationRequestFields.ListenIntervalPosition + AssociationRequestFields.ListenIntervalLength))
+					{
+						return EndianBitConverter.Little.ToUInt16(header.Bytes,
+						                                          header.Offset + AssociationRequestFields.ListenIntervalPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
@@ -155,12 +170,20 @@ namespace PacketDotNet
 
                 CapabilityInformation = new CapabilityInformationField (CapabilityInformationBytes);
                 ListenInterval = ListenIntervalBytes;
-                //create a segment that just refers to the info element section
-                ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
-                    (bas.Offset + AssociationRequestFields.InformationElement1Position),
-                    (bas.Length - AssociationRequestFields.InformationElement1Position));
-
-                InformationElements = new InformationElementList (infoElementsSegment);
+				
+				if(bas.Length > AssociationRequestFields.InformationElement1Position)
+				{
+                	//create a segment that just refers to the info element section
+                	ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
+                    	(bas.Offset + AssociationRequestFields.InformationElement1Position),
+                    	(bas.Length - AssociationRequestFields.InformationElement1Position));
+				
+					InformationElements = new InformationElementList (infoElementsSegment);
+				}
+				else
+				{
+					InformationElements = new InformationElementList();
+				}
 
                 //cant set length until after we have handled the information elements
                 //as they vary in length
@@ -204,7 +227,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length < FrameSize))
+                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
                 {
                     header = new ByteArraySegment (new Byte[FrameSize]);
                 }

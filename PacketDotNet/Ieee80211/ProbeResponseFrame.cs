@@ -70,7 +70,14 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt64(header.Bytes, header.Offset + ProbeResponseFields.TimestampPosition);
+					if(header.Length >= (ProbeResponseFields.TimestampPosition + ProbeResponseFields.TimestampLength))
+					{
+						return EndianBitConverter.Little.ToUInt64(header.Bytes, header.Offset + ProbeResponseFields.TimestampPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
@@ -93,7 +100,14 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes, header.Offset + ProbeResponseFields.BeaconIntervalPosition);
+					if(header.Length >= (ProbeResponseFields.BeaconIntervalPosition + ProbeResponseFields.BeaconIntervalLength))
+					{
+						return EndianBitConverter.Little.ToUInt16(header.Bytes, header.Offset + ProbeResponseFields.BeaconIntervalPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
@@ -111,8 +125,16 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                          header.Offset + ProbeResponseFields.CapabilityInformationPosition);
+					if(header.Length >= 
+					   (ProbeResponseFields.CapabilityInformationPosition + ProbeResponseFields.CapabilityInformationLength))
+					{
+						return EndianBitConverter.Little.ToUInt16(header.Bytes,
+						                                          header.Offset + ProbeResponseFields.CapabilityInformationPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
@@ -176,14 +198,20 @@ namespace PacketDotNet
                 Timestamp = TimestampBytes;
                 BeaconInterval = BeaconIntervalBytes;
                 CapabilityInformation = new CapabilityInformationField (CapabilityInformationBytes);
+				
+				if(bas.Length > ProbeResponseFields.InformationElement1Position)
+				{
+                	//create a segment that just refers to the info element section
+                	ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
+                    	(bas.Offset + ProbeResponseFields.InformationElement1Position),
+                    	(bas.Length - ProbeResponseFields.InformationElement1Position));
 
-                //create a segment that just refers to the info element section
-                ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
-                    (bas.Offset + ProbeResponseFields.InformationElement1Position),
-                    (bas.Length - ProbeResponseFields.InformationElement1Position));
-
-                InformationElements = new InformationElementList (infoElementsSegment);
-
+                	InformationElements = new InformationElementList (infoElementsSegment);
+				}
+				else
+				{
+					InformationElements = new InformationElementList();
+				}
                 //cant set length until after we have handled the information elements
                 //as they vary in length
                 header.Length = FrameSize;
@@ -226,7 +254,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length < FrameSize))
+                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
                 {
                     header = new ByteArraySegment (new Byte[FrameSize]);
                 }

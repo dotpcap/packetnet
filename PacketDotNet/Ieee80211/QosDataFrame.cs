@@ -58,8 +58,15 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                          header.Offset + QosDataField.QosControlPosition);
+					if(header.Length >= (QosDataField.QosControlPosition + QosDataField.QosControlLength))
+					{
+						return EndianBitConverter.Little.ToUInt16(header.Bytes,
+						                                          header.Offset + QosDataField.QosControlPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
@@ -109,8 +116,10 @@ namespace PacketDotNet
                 ReadAddresses ();
                 
                 header.Length = FrameSize;
-                int payloadLength = header.BytesLength - (header.Offset + header.Length);
-                payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (payloadLength);
+                if(PayloadLength > 0)
+				{
+					payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (PayloadLength);
+				}
             }
             
             /// <summary>
@@ -131,7 +140,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length < FrameSize))
+                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
                 {
                     header = new ByteArraySegment (new Byte[FrameSize]);
                 }

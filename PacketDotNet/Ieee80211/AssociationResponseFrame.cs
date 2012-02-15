@@ -62,8 +62,16 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                          header.Offset + AssociationResponseFields.CapabilityInformationPosition);
+					if(header.Length >= 
+					   (AssociationResponseFields.CapabilityInformationPosition + AssociationResponseFields.CapabilityInformationLength))
+					{
+						return EndianBitConverter.Little.ToUInt16(header.Bytes,
+						                                          header.Offset + AssociationResponseFields.CapabilityInformationPosition);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
@@ -92,8 +100,17 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (AuthenticationStatusCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
-                        header.Offset + AssociationResponseFields.StatusCodePosition);
+					if(header.Length >= (AssociationResponseFields.StatusCodePosition + AssociationResponseFields.StatusCodeLength))
+					{
+						return (AuthenticationStatusCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
+						                                                                     header.Offset + AssociationResponseFields.StatusCodePosition);
+					}
+					else
+					{
+						//This seems the most sensible value to return when it is not possible
+						//to extract a meaningful value
+						return AuthenticationStatusCode.UnspecifiedFailure;
+					}
                 }
                 
                 set
@@ -116,8 +133,15 @@ namespace PacketDotNet
             {
                 get
                 {
-                    UInt16 associationID = EndianBitConverter.Little.ToUInt16(header.Bytes, header.Offset + AssociationResponseFields.AssociationIdPosition);
-                    return (UInt16)(associationID & 0xCF);
+					if(header.Length >= AssociationResponseFields.AssociationIdPosition + AssociationResponseFields.AssociationIdLength)
+					{
+						UInt16 associationID = EndianBitConverter.Little.ToUInt16(header.Bytes, header.Offset + AssociationResponseFields.AssociationIdPosition);
+						return (UInt16)(associationID & 0xCF);
+					}
+					else
+					{
+						return 0;
+					}
                 }
 
                 set
@@ -177,13 +201,19 @@ namespace PacketDotNet
                 StatusCode = StatusCodeBytes;
                 AssociationId = AssociationIdBytes;
                 
-                //create a segment that just refers to the info element section
-                ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
-                    (bas.Offset + AssociationResponseFields.InformationElement1Position),
-                    (bas.Length - AssociationResponseFields.InformationElement1Position));
+				if(bas.Length > AssociationResponseFields.InformationElement1Position)
+				{
+                	//create a segment that just refers to the info element section
+                	ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
+                    	(bas.Offset + AssociationResponseFields.InformationElement1Position),
+                    	(bas.Length - AssociationResponseFields.InformationElement1Position));
 
-                InformationElements = new InformationElementList (infoElementsSegment);
-
+                	InformationElements = new InformationElementList (infoElementsSegment);
+				}
+				else
+				{
+					InformationElements = new InformationElementList();
+				}
                 //cant set length until after we have handled the information elements
                 //as they vary in length
                 header.Length = FrameSize;
@@ -227,7 +257,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length < FrameSize))
+                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
                 {
                     header = new ByteArraySegment (new Byte[FrameSize]);
                 }

@@ -59,8 +59,15 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (ReasonCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
-                        header.Offset + DisassociationFields.ReasonCodePosition);
+					if(header.Length >= (DisassociationFields.ReasonCodePosition + DisassociationFields.ReasonCodeLength))
+					{
+						return (ReasonCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
+						                                                       header.Offset + DisassociationFields.ReasonCodePosition);
+					}
+					else
+					{
+						return ReasonCode.Unspecified;
+					}
                 }
                 
                 set
@@ -141,7 +148,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length < FrameSize))
+                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
                 {
                     header = new ByteArraySegment (new Byte[FrameSize]);
                 }

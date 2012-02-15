@@ -61,11 +61,12 @@ namespace PacketDotNet
             public CtsOrAckFrame (ByteArraySegment bas)
             {
                 header = new ByteArraySegment (bas);
-                header.Length = FrameSize;
 
                 FrameControl = new FrameControlField (FrameControlBytes);
                 Duration = new DurationField (DurationBytes);
                 ReceiverAddress = GetAddress(0);
+				
+				header.Length = FrameSize;
             }
 
             /// <summary>

@@ -67,7 +67,7 @@ namespace PacketDotNet
             public InformationElementList (ByteArraySegment bas)
             {
                 int index = 0;
-                while (index < bas.Length)
+                while ((index + InformationElement.ElementLengthPosition) < bas.Length)
                 {
                     var ieStartPosition = bas.Offset + index;
                     Byte valueLength = bas.Bytes [ieStartPosition + InformationElement.ElementLengthPosition];

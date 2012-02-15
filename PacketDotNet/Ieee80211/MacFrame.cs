@@ -242,8 +242,6 @@ namespace PacketDotNet
 				get
 				{
 					int payloadLength = header.BytesLength - (header.Offset + FrameSize);
-					var x = (payloadLength > 0) ? payloadLength : 0;
-					Console.WriteLine("Payload: " + x.ToString());
 					return (payloadLength > 0) ? payloadLength : 0;
 				}
 			}

@@ -36,6 +36,50 @@ namespace Test.PacketType
         [TestFixture]
         public class ReassociationRequestFrameTest
         {
+			
+			[Test]
+            public void Test_Constructor ()
+            {
+                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_reassociation_request_frame.pcap");
+                dev.Open ();
+                var rawCapture = dev.GetNextPacket ();
+                dev.Close ();
+
+                Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
+                ReassociationRequestFrame frame = (ReassociationRequestFrame)p.PayloadPacket;
+
+                Assert.AreEqual (0, frame.FrameControl.ProtocolVersion);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementReassociationRequest, frame.FrameControl.SubType);
+                Assert.IsFalse (frame.FrameControl.ToDS);
+                Assert.IsFalse (frame.FrameControl.FromDS);
+                Assert.IsFalse (frame.FrameControl.MoreFragments);
+                Assert.IsFalse (frame.FrameControl.Retry);
+                Assert.IsFalse (frame.FrameControl.PowerManagement);
+                Assert.IsFalse (frame.FrameControl.MoreData);
+                Assert.IsFalse (frame.FrameControl.Wep);
+                Assert.IsFalse (frame.FrameControl.Order);
+                Assert.AreEqual (314, frame.Duration.Field); //this need expanding on in the future
+                Assert.AreEqual ("0026F23E46C1", frame.DestinationAddress.ToString ().ToUpper ());
+                Assert.AreEqual ("7CC5376C970A", frame.SourceAddress.ToString ().ToUpper ());
+                Assert.AreEqual ("0026F23E46C1", frame.BssId.ToString ().ToUpper ());
+                Assert.AreEqual (0, frame.SequenceControl.FragmentNumber);
+                Assert.AreEqual (2729, frame.SequenceControl.SequenceNumber);
+                Assert.IsTrue (frame.CapabilityInformation.IsEss);
+                Assert.IsFalse (frame.CapabilityInformation.IsIbss);
+                Assert.IsFalse (frame.CapabilityInformation.CfPollable);
+                Assert.IsFalse (frame.CapabilityInformation.CfPollRequest);
+                Assert.IsTrue (frame.CapabilityInformation.Privacy);
+                Assert.IsTrue (frame.CapabilityInformation.ShortPreamble);
+                Assert.IsFalse (frame.CapabilityInformation.Pbcc);
+                Assert.IsFalse (frame.CapabilityInformation.ChannelAgility);
+                Assert.IsTrue (frame.CapabilityInformation.ShortTimeSlot);
+                Assert.IsFalse (frame.CapabilityInformation.DssOfdm);
+                Assert.AreEqual (0x0a, frame.ListenInterval);
+                Assert.AreEqual (0xFCBB7306, frame.FrameCheckSequence);
+                Assert.AreEqual (4, frame.InformationElements.Count);
+                Assert.AreEqual (74, frame.FrameSize);
+            }	
+				
             [Test]
             public void Test_Constructor_ConstructWithValues ()
             {

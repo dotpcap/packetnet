@@ -61,7 +61,6 @@
     <Compile Include="Ieee80211\BeaconFrame.cs" />
     <Compile Include="Ieee80211\CapabilityInformationField.cs" />
     <Compile Include="Ieee80211\ContentionFreeEndFrame.cs" />
-    <Compile Include="Ieee80211\CtsOrAckFrame.cs" />
     <Compile Include="Ieee80211\DataDataFrame.cs" />
     <Compile Include="Ieee80211\DataFrame.cs" />
     <Compile Include="Ieee80211\DisassociationFrame.cs" />
@@ -186,6 +185,8 @@
     <Compile Include="Ieee80211\PpiFields.cs" />
     <Compile Include="Ieee80211\PpiHeaderFields.cs" />
     <Compile Include="Ieee80211\PpiPacket.cs" />
+    <Compile Include="Ieee80211\AckFrame.cs" />
+    <Compile Include="Ieee80211\CtsFrame.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

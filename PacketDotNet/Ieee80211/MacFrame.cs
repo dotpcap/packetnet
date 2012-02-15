@@ -382,9 +382,13 @@ namespace PacketDotNet
                         break;
                     }
                 case FrameControlField.FrameSubTypes.ControlCTS:
+					{
+                        macFrame = new CtsFrame (bas);
+                        break;
+                    }
                 case FrameControlField.FrameSubTypes.ControlACK:
                     {
-                        macFrame = new CtsOrAckFrame (bas);
+                        macFrame = new AckFrame (bas);
                         break;
                     }
                 case FrameControlField.FrameSubTypes.ControlCFEnd:

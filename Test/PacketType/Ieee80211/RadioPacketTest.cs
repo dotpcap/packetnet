@@ -22,6 +22,7 @@ using System;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
+using PacketDotNet.Ieee80211;
 
 namespace Test.PacketType
 {
@@ -47,6 +48,21 @@ namespace Test.PacketType
 
                 Console.WriteLine(p.ToString());
             }
+			
+			[Test]
+			public void ReadPacketWithNoFcs()
+			{
+				var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_radio_without_fcs.pcap");
+                dev.Open ();
+                var rawCapture = dev.GetNextPacket ();
+                dev.Close ();
+                
+                RadioPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
+                Assert.IsNotNull (p.PayloadPacket);
+				MacFrame macFrame = p.PayloadPacket as MacFrame;
+				Assert.IsFalse(macFrame.FCSValid);
+			}
+
         } 
     }
 }

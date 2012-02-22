@@ -254,35 +254,20 @@ namespace PacketDotNet
                 
                 if (flagsField != null)
                 {
-                    bool fcsValid = !((flagsField.Flags & RadioTapFlags.FailedFcsCheck) == RadioTapFlags.FailedFcsCheck);
                     bool fcsPresent = ((flagsField.Flags & RadioTapFlags.FcsIncludedInFrame) == RadioTapFlags.FcsIncludedInFrame);
                     
-                    if (fcsValid)
+                    if (fcsPresent)
                     {
-                        if (fcsPresent)
-                        {
-                            frame = MacFrame.ParsePacketWithFcs (payload);
-                        }
-                        else
-                        {
-                            frame = MacFrame.ParsePacket (payload);
-                        }
+                        frame = MacFrame.ParsePacketWithFcs (payload);
+                    }
+                    else
+                    {
+                        frame = MacFrame.ParsePacket (payload);
                     }
                 }
                 else
                 {
-                    int fcsPosition = payload.Offset + payload.Length - MacFields.FrameCheckSequenceLength;
-                    
-                    UInt32 potentialFcs = EndianBitConverter.Big.ToUInt32 (payload.Bytes, fcsPosition);
-                    if (MacFrame.PerformFcsCheck (payload.Bytes,
-                                                  payload.Offset,
-                                                  payload.Length - MacFields.FrameCheckSequenceLength,
-                                                  potentialFcs))
-                    {
-                        //We will assume that if it passes the FCS check the last four bytes are the FCS.
-                        //It is very unlikely that we would get a false positive
-                        frame = MacFrame.ParsePacketWithFcs (payload);
-                    }
+                    frame = MacFrame.ParsePacket (payload);
                 }
                 
                 if (frame == null)

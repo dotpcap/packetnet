@@ -75,8 +75,11 @@ namespace Test.PacketType
                 dev.Close ();
                 
                 PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+				
+				//The packet is corrupted in such a way that the type field has been changed
+				//to a reserved/unused type. Therefore we don't expect there to be a packet
                 Assert.IsNull (p.PayloadPacket);
-                Assert.IsNotNull (p.PayloadData);
+                Assert.IsNotNull(p.PayloadData);
             }
             
             [Test]
@@ -89,8 +92,23 @@ namespace Test.PacketType
                 
                 PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
                 Assert.IsNotNull (p.PayloadPacket);
-                Assert.IsNull (p.PayloadData);
+                MacFrame macFrame = p.PayloadPacket as MacFrame;
+                Assert.IsTrue(macFrame.FCSValid);
             }
+			
+			[Test]
+			public void ReadPacketWithNoFcs()
+			{
+				var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_ppi_without_fcs.pcap");
+                dev.Open ();
+                var rawCapture = dev.GetNextPacket ();
+                dev.Close ();
+                
+                PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+                Assert.IsNotNull (p.PayloadPacket);
+                MacFrame macFrame = p.PayloadPacket as MacFrame;
+                Assert.IsFalse(macFrame.FCSValid);
+			}
         } 
     }
 }

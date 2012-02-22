@@ -266,35 +266,20 @@ namespace PacketDotNet
                 
                 if (commonField != null)
                 {
-                    bool fcsValid = !((commonField.Flags & PpiCommon.CommonFlags.FailedFcsCheck) == PpiCommon.CommonFlags.FailedFcsCheck);
                     bool fcsPresent = ((commonField.Flags & PpiCommon.CommonFlags.FcsIncludedInFrame) == PpiCommon.CommonFlags.FcsIncludedInFrame);
                     
-                    if (fcsValid)
+                    if (fcsPresent)
                     {
-                        if (fcsPresent)
-                        {
-                            frame = MacFrame.ParsePacketWithFcs (payload);
-                        }
-                        else
-                        {
-                            frame = MacFrame.ParsePacket (payload);
-                        }
+                        frame = MacFrame.ParsePacketWithFcs (payload);
+                    }
+                    else
+                    {
+                        frame = MacFrame.ParsePacket (payload);
                     }
                 }
                 else
                 {
-                    int fcsPosition = payload.Offset + payload.Length - MacFields.FrameCheckSequenceLength;
-                    
-                    UInt32 potentialFcs = EndianBitConverter.Big.ToUInt32 (payload.Bytes, fcsPosition);
-                    if (MacFrame.PerformFcsCheck (payload.Bytes,
-                                                  payload.Offset,
-                                                  payload.Length - MacFields.FrameCheckSequenceLength,
-                                                  potentialFcs))
-                    {
-                        //We will assume that if it passes the FCS check the last four bytes are the FCS.
-                        //It is very unlikely that we would get a false positive
-                        frame = MacFrame.ParsePacketWithFcs (payload);
-                    }
+                    frame = MacFrame.ParsePacket (payload);
                 }
                 
                 // always create a MacFrame.  The MacFrame constructor will determine which type of

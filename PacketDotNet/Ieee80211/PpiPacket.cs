@@ -93,28 +93,6 @@ namespace PacketDotNet
             }
 
             /// <summary>
-            /// returns a Ieee80211FrameControlField.FrameTypes
-            /// The type of 802.11 Mac packet that this PpiPacket packet encapsulates
-            /// </summary>
-            public virtual FrameControlField.FrameTypes Type
-            {
-                get
-                {
-                    UInt16 val = (UInt16)EndianBitConverter.Little.ToUInt16 (header.Bytes,
-                                                                    header.Offset + MacFields.FrameControlPosition);
-                    val = (UInt16)(((val >> 4) & 0xf) | (((val >> 2) & 0x3) << 4));
-                    return (FrameControlField.FrameTypes)val;
-                }
-                set
-                {
-                    Int16 val = (Int16)value;
-                    EndianBitConverter.Little.CopyBytes (val,
-                                                 header.Bytes,
-                                                 header.Offset + MacFields.FrameControlPosition);
-                }
-            }
-
-            /// <summary>
             /// Version 0. Only increases for drastic changes, introduction of compatible
             /// new fields does not count.
             /// </summary>

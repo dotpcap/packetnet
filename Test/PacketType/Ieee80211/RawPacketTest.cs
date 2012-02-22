@@ -30,25 +30,6 @@ namespace Test.PacketType
         [TestFixture]
         public class RawPacketTest
         {
-            /// <summary>
-            /// Test that parsing an ip packet yields the proper field values
-            /// </summary>
-            [Test]
-            [Ignore("Ignored because the packet in this capture appears to be corrupt")]
-            public void ReadingPacketsFromFile()
-            {
-                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_raw.pcap");
-                dev.Open();
-                var rawCapture = dev.GetNextPacket();
-                dev.Close();
-
-                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-                Assert.IsNotNull(p);
-
-                Console.WriteLine(p.ToString());
-            }
-            
             [Test]
             public void ReadingRawPacketWithFcs ()
             {

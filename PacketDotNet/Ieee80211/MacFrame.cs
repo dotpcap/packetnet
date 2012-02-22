@@ -259,6 +259,12 @@ namespace PacketDotNet
             /// FCS is usually determined by configuration of the device used to capture the packets.</remarks>
             public static MacFrame ParsePacketWithFcs (ByteArraySegment bas)
             {
+                if (bas.Length < (MacFields.FrameControlLength + MacFields.FrameCheckSequenceLength))
+                {
+                    //There isn't enough data for there to be an FCS and a packet
+                    return null;
+                }
+
                 //remove the FCS from the buffer that we will pass to the packet parsers
                 ByteArraySegment basWithoutFcs = new ByteArraySegment (bas.Bytes,
                                                                        bas.Offset,
@@ -290,6 +296,11 @@ namespace PacketDotNet
             /// FCS is usually determined by configuration of the device used to capture the packets.</remarks>
             public static MacFrame ParsePacket (ByteArraySegment bas)
             {
+                if (bas.Length < MacFields.FrameControlLength)
+                {
+                    //there isn't enough data to even try and work out what type of packet it is
+                    return null;
+                }
                 //this is a bit ugly as we will end up parsing the framecontrol field twice, once here and once
                 //inside the packet constructor. Could create the framecontrol and pass it to the packet but I think that is equally ugly
                 FrameControlField frameControl = new FrameControlField (

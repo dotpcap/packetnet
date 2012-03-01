@@ -566,18 +566,13 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary>
-        /// Fcs field
-        /// </summary>
-        public class FcsRadioTapField : RadioTapField
+
+        public class RxFlagsRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_FCS; } }
+            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_RX_FLAGS; } }
 
-            /// <summary>
-            /// Frame check sequence
-            /// </summary>
-            public UInt32 FrameCheckSequence { get; set; }
+            public bool PlcpCrcCheckFailed {get; set;}
 
             /// <summary>
             /// Constructor
@@ -585,9 +580,11 @@ namespace PacketDotNet
             /// <param name="br">
             /// A <see cref="BinaryReader"/>
             /// </param>
-            public FcsRadioTapField(BinaryReader br)
+            public RxFlagsRadioTapField(BinaryReader br)
             {
-                FrameCheckSequence = (UInt32)System.Net.IPAddress.HostToNetworkOrder(br.ReadInt32());
+                UInt16 flags = br.ReadUInt16();
+                Console.WriteLine("RxFlagsRadioTapField {0}", flags);
+                PlcpCrcCheckFailed = ((flags & 0x2) == 0x2);
             }
 
             /// <summary>
@@ -598,9 +595,10 @@ namespace PacketDotNet
             /// </returns>
             public override string ToString()
             {
-                return string.Format("FrameCheckSequence {0}", FrameCheckSequence);
+                return string.Format("PlcpCrcCheckFailed {0}", PlcpCrcCheckFailed);
             }
         }
+        
 
         /// <summary>
         /// Transmit power expressed as unitless distance from max
@@ -770,8 +768,8 @@ namespace PacketDotNet
                         return new DbmTxPowerRadioTapField(br);
                     case RadioTapType.IEEE80211_RADIOTAP_TSFT:
                         return new TsftRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_FCS:
-                        return new FcsRadioTapField(br);
+                    case RadioTapType.IEEE80211_RADIOTAP_RX_FLAGS:
+                        return new RxFlagsRadioTapField(br);
                     default:
                         //the RadioTap fields are extendable so there may be some we dont know about
                         return null;

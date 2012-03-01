@@ -162,14 +162,12 @@ namespace PacketDotNet
             /// </summary>
             IEEE80211_RADIOTAP_DB_ANTNOISE = 13,
 
-
             /// <summary>
-            /// IEEE80211_RADIOTAP_FCS              u_int32_t       data
-            ///
-            ///      FCS from frame in network byte order.
+            /// IEEE80211_RADIOTAP_RX_FLAGS       u_int16_t         bitmap
+            /// 
+            ///     Properties of received frames.
             /// </summary>
-            IEEE80211_RADIOTAP_FCS = 14,
-            
+            IEEE80211_RADIOTAP_RX_FLAGS = 14,
 
             /// <summary>
             /// Indicates that the flags bitmaps have been extended

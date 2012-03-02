@@ -153,7 +153,7 @@ namespace PacketDotNet
             get { return payloadPacketOrData.ThePacket; }
             set
             {
-                if (payloadPacketOrData.ThePacket == value)
+                if (this == value)
                     throw new InvalidOperationException("A packet cannot have itself as its payload.");
 
                 payloadPacketOrData.ThePacket = value;

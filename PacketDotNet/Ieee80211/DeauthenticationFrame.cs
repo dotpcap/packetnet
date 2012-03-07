@@ -164,21 +164,6 @@ namespace PacketDotNet
                 header.Length = FrameSize;
             }
 
-            /// <summary>
-            /// ToString() override
-            /// </summary>
-            /// <returns>
-            /// A <see cref="System.String"/>
-            /// </returns>
-            public override string ToString()
-            {
-                return string.Format("FrameControl {0}, FrameCheckSequence {1}, [DeauthenticationFrame DA {2} SA {3} BSSID {4}]",
-                                     FrameControl.ToString(),
-                                     FrameCheckSequence,
-                                     DestinationAddress.ToString(),
-                                     SourceAddress.ToString(),
-                                     BssId.ToString());
-            }
         } 
     }
 }

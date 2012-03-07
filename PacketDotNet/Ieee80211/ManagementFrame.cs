@@ -81,6 +81,14 @@ namespace PacketDotNet
             /// Sequence control field
             /// </summary>
             public SequenceControlField SequenceControl {get; set;}
+            
+            protected override String GetAddressString()
+            {
+                return String.Format("SA {0} DA {1} BSSID {2}",
+                                     SourceAddress, 
+                                     DestinationAddress, 
+                                     BssId);
+            }
         } 
     }
 

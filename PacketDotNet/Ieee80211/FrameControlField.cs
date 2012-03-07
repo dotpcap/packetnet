@@ -530,7 +530,45 @@ namespace PacketDotNet
             {
                 this.Field = field;
             }
-
+   
+            
+            public override string ToString ()
+            {
+                var flags = new List<String>();
+                
+                flags.Add(SubType.ToString());
+                
+                if (ToDS)
+                {
+                    flags.Add("ToDS");
+                }
+                if (FromDS)
+                {
+                    flags.Add("FromDS");
+                }
+                if (Retry)
+                {
+                    flags.Add("Retry");
+                }
+                if (PowerManagement)
+                {
+                    flags.Add("PowerManagement");
+                }
+                if (MoreData)
+                {
+                    flags.Add("MoreData");
+                }
+                if (Wep)
+                {
+                    flags.Add("Wep");
+                }
+                if (Order)
+                {
+                    flags.Add("Order");
+                }
+              
+                return String.Join(" ", flags.ToArray());
+            }
         } 
     }
 }

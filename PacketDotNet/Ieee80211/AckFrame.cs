@@ -99,18 +99,9 @@ namespace PacketDotNet
                 SetAddress (0, ReceiverAddress);
             }
 			
-            /// <summary>
-            /// ToString() override
-            /// </summary>
-            /// <returns>
-            /// A <see cref="System.String"/>
-            /// </returns>
-            public override string ToString()
+            protected override String GetAddressString()
             {
-                return string.Format("FrameControl {0}, FrameCheckSequence {1}, [ACKFrame RA {2}]",
-                                     FrameControl.ToString(),
-                                     FrameCheckSequence,
-                                     ReceiverAddress.ToString());
+                return String.Format("RA {0}", ReceiverAddress);
             }
         } 
     }

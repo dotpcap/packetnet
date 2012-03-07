@@ -113,19 +113,10 @@ namespace PacketDotNet
                 header.Length = FrameSize;
             }
             
-            /// <summary>
-            /// ToString() override
-            /// </summary>
-            /// <returns>
-            /// A <see cref="System.String"/>
-            /// </returns>
-            public override string ToString()
+            
+            protected override String GetAddressString()
             {
-                return string.Format("FrameControl {0}, FrameCheckSequence {1}, [CF-End RA {2} BSSID {3}]",
-                                     FrameControl.ToString(),
-                                     FrameCheckSequence,
-                                     ReceiverAddress.ToString(),
-                                     BssId.ToString());
+                return String.Format("RA {0} BSSID {1}", ReceiverAddress, BssId);
             }
         } 
     }

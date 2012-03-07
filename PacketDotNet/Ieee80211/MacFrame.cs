@@ -487,7 +487,23 @@ namespace PacketDotNet
                 {
                     return PerformFcsCheck(Bytes, 0, Bytes.Length, FrameCheckSequence);
                 }
-            }            
+            }
+            
+            /// <summary>
+            /// ToString() override
+            /// </summary>
+            /// <returns>
+            /// A <see cref="System.String"/>
+            /// </returns>
+            public override String ToString()
+            {
+                return string.Format ("802.11 MacFrame: [{0}], {1} FCS {2}",
+                                      FrameControl.ToString(),
+                                      GetAddressString(),
+                                      FrameCheckSequence);
+            }
+            
+            protected abstract String GetAddressString();
         } 
     }
 }

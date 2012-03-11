@@ -277,6 +277,7 @@ namespace PacketDotNet
                 MacFrame frame = ParsePacket (basWithoutFcs);
                 if (frame != null)
                 {
+                    frame.AppendFcs = true;
                     frame.FrameCheckSequence = fcs;
                 }
                 
@@ -485,9 +486,76 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return PerformFcsCheck(Bytes, 0, Bytes.Length, FrameCheckSequence);
+                    var packetBytes = Bytes;
+                    var packetLength = (AppendFcs) ? packetBytes.Length - MacFields.FrameCheckSequenceLength : packetBytes.Length;
+                    return PerformFcsCheck(packetBytes, 0, packetLength, FrameCheckSequence);
                 }
             }
+            
+            public bool AppendFcs { get; set; }
+            
+            
+            public override ByteArraySegment BytesHighPerformance
+            {
+                get
+                {
+                    log.Debug("");
+    
+                    // ensure calculated values are properly updated
+                    RecursivelyUpdateCalculatedValues();
+    
+                    // if we share memory with all of our sub packets we can take a
+                    // higher performance path to retrieve the bytes
+                    var totalPacketLength = TotalPacketLength;
+                    if(SharesMemoryWithSubPackets &&
+                       ((!AppendFcs) || (header.Bytes.Length >= (header.Offset + totalPacketLength + MacFields.FrameCheckSequenceLength))))
+                    {
+                        var packetLength = totalPacketLength;
+                        if(AppendFcs)
+                        {
+                            packetLength += MacFields.FrameCheckSequenceLength;
+                            //We need to update the FCS field because this couldn't be done during 
+                            //RecursivelyUpdateCalculatedValues because we didn't know where it would be
+                            EndianBitConverter.Big.CopyBytes(FrameCheckSequence,
+                                                                header.Bytes,
+                                                                header.Offset + totalPacketLength);
+                        }
+                        
+                        // The high performance path that is often taken because it is called on
+                        // packets that have not had their header, or any of their sub packets, resized
+                        var newByteArraySegment = new ByteArraySegment(header.Bytes,
+                                                                       header.Offset,
+                                                                       packetLength);
+                        log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}",
+                                        newByteArraySegment.ToString());
+                        return newByteArraySegment;
+                    } else // need to rebuild things from scratch
+                    {
+                        log.Debug("rebuilding the byte array");
+    
+                        var ms = new MemoryStream();
+    
+                        // TODO: not sure if this is a performance gain or if
+                        //       the compiler is smart enough to not call the get accessor for Header
+                        //       twice, once when retrieving the header and again when retrieving the Length
+                        var theHeader = Header;
+                        ms.Write(theHeader, 0, theHeader.Length);
+    
+                        payloadPacketOrData.AppendToMemoryStream(ms);
+                        
+                        if(AppendFcs)
+                        {     
+                            var fcsBuffer = EndianBitConverter.Big.GetBytes(FrameCheckSequence);
+                            ms.Write(fcsBuffer, 0, fcsBuffer.Length);
+                        }
+    
+                        var newBytes = ms.ToArray();
+    
+                        return new ByteArraySegment(newBytes, 0, newBytes.Length);
+                    }
+                }
+            }
+            
             
             /// <summary>
             /// ToString() override

@@ -43,10 +43,10 @@ namespace Test.PacketType
                 dev.Close();
 
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
                 Assert.IsNotNull(p);
-
-                Console.WriteLine(p.ToString());
+                MacFrame macFrame = p.PayloadPacket as MacFrame;
+                Assert.IsNotNull(macFrame);
+                Assert.IsTrue(macFrame.AppendFcs);
             }
 			
 			[Test]
@@ -59,8 +59,9 @@ namespace Test.PacketType
                 
                 RadioPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
                 Assert.IsNotNull (p.PayloadPacket);
-				MacFrame macFrame = p.PayloadPacket as MacFrame;
-				Assert.IsFalse(macFrame.FCSValid);
+                MacFrame macFrame = p.PayloadPacket as MacFrame;
+                Assert.IsFalse(macFrame.AppendFcs);
+                Assert.IsFalse(macFrame.FCSValid);
 			}
 
         } 

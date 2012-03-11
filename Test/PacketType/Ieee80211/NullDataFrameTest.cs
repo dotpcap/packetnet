@@ -91,6 +91,7 @@ namespace Test.PacketType
                 
                 frame.PayloadData = new byte[]{0x01, 0x02, 0x03, 0x04, 0x05};
                 
+                frame.AppendFcs = true;
                 frame.UpdateFrameCheckSequence ();
                 UInt32 fcs = frame.FrameCheckSequence;
                 
@@ -99,8 +100,7 @@ namespace Test.PacketType
                 var bas = new ByteArraySegment (bytes);
                 
                 //create a new frame that should be identical to the original
-                NullDataFrame recreatedFrame = MacFrame.ParsePacket (bas) as NullDataFrame;
-                recreatedFrame.UpdateFrameCheckSequence();
+                NullDataFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as NullDataFrame;
                 
                 Assert.AreEqual (FrameControlField.FrameSubTypes.DataNullFunctionNoData, recreatedFrame.FrameControl.SubType);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);

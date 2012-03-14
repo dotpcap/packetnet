@@ -21,6 +21,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.IO;
+using PacketDotNet.Utils;
+using MiscUtil.Conversion;
 
 namespace PacketDotNet
 {
@@ -33,6 +35,8 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_CHANNEL; } }
+            
+            public override ushort Length { get { return 4; } }
 
             /// <summary>
             /// Frequency in MHz
@@ -168,6 +172,12 @@ namespace PacketDotNet
                         return 0;
                 };
             }
+            
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                EndianBitConverter.Little.CopyBytes(FrequencyMHz, dest, offset);
+                EndianBitConverter.Little.CopyBytes((UInt16)Flags, dest, offset + 2);
+            }
 
             /// <summary>
             /// Constructor
@@ -180,6 +190,18 @@ namespace PacketDotNet
                 FrequencyMHz = br.ReadUInt16();
                 Channel = ChannelFromFrequencyMHz(FrequencyMHz);
                 Flags = (RadioTapChannelFlags)br.ReadUInt16();
+            }
+            
+            public ChannelRadioTapField()
+            {
+             
+            }
+            
+            public ChannelRadioTapField(UInt16 FrequencyMhz, RadioTapChannelFlags Flags)
+            {
+                this.FrequencyMHz = FrequencyMHz;
+                this.Channel = ChannelFromFrequencyMHz(FrequencyMHz);
+                this.Flags = Flags;
             }
 
             /// <summary>
@@ -202,7 +224,9 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_FHSS; } }
-
+   
+            public override ushort Length { get { return 2; } }
+            
             /// <summary>
             /// Hop set
             /// </summary>
@@ -212,6 +236,12 @@ namespace PacketDotNet
             /// Hop pattern
             /// </summary>
             public byte Pattern { get; set; }
+            
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                dest[offset] = ChannelHoppingSet;
+                dest[offset + 1] = Pattern;
+            }
 
             /// <summary>
             /// Constructor
@@ -226,7 +256,18 @@ namespace PacketDotNet
                 ChannelHoppingSet = (byte)(u16 & 0xff);
                 Pattern = (byte)((u16 >> 8) & 0xff);
             }
-
+   
+            public FhssRadioTapField()
+            {
+             
+            }
+            
+            public FhssRadioTapField(byte ChannelHoppingSet, byte Pattern)
+            {
+                this.ChannelHoppingSet = ChannelHoppingSet;
+                this.Pattern = Pattern;
+            }
+            
             /// <summary>
             /// ToString() override
             /// </summary>
@@ -247,11 +288,18 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_FLAGS; } }
-
+   
+            public override ushort Length { get { return 1; } }
+            
             /// <summary>
             /// Flags set
             /// </summary>
             public RadioTapFlags Flags;
+            
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                dest[offset] = (byte) Flags;
+            }
 
             /// <summary>
             /// Constructor
@@ -264,7 +312,17 @@ namespace PacketDotNet
                 var u8 = br.ReadByte();
                 Flags = (RadioTapFlags)u8;
             }
-
+   
+            public FlagsRadioTapField()
+            {
+             
+            }
+            
+            public FlagsRadioTapField(RadioTapFlags Flags)
+            {
+                this.Flags = Flags;
+            }
+            
             /// <summary>
             /// ToString() override
             /// </summary>
@@ -284,11 +342,18 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_RATE; } }
-
+   
+            public override ushort Length { get { return 1; } }
+            
             /// <summary>
             /// Rate in Mbps
             /// </summary>
             public double RateMbps { get; set; }
+            
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                dest[offset] = (byte) (RateMbps / 0.5);
+            }
 
             /// <summary>
             /// Constructor
@@ -300,6 +365,16 @@ namespace PacketDotNet
             {
                 var u8 = br.ReadByte();
                 RateMbps = (0.5 * (u8 & 0x7f));
+            }
+            
+            public RateRadioTapField ()
+            {
+             
+            }
+            
+            public RateRadioTapField(double RateMbps)
+            {
+                this.RateMbps = RateMbps;             
             }
 
             /// <summary>
@@ -321,11 +396,18 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_DB_ANTSIGNAL; } }
-
+   
+            public override ushort Length { get { return 1; } }
+            
             /// <summary>
             /// Signal strength in dB
             /// </summary>
             public byte SignalStrengthdB { get; set; }
+            
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                dest[offset] = SignalStrengthdB;
+            }
 
             /// <summary>
             /// Constructor
@@ -336,6 +418,16 @@ namespace PacketDotNet
             public DbAntennaSignalRadioTapField(BinaryReader br)
             {
                 SignalStrengthdB = br.ReadByte();
+            }
+            
+            public DbAntennaSignalRadioTapField()
+            {
+             
+            }
+            
+            public DbAntennaSignalRadioTapField (byte SignalStrengthdB)
+            {
+                this.SignalStrengthdB = SignalStrengthdB;
             }
 
             /// <summary>
@@ -357,11 +449,18 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_DB_ANTNOISE; } }
-
+   
+            public override ushort Length { get { return 1; } }
+            
             /// <summary>
             /// Antenna noise in dB
             /// </summary>
             public byte AntennaNoisedB { get; set; }
+            
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                dest[offset] = AntennaNoisedB;
+            }
 
             /// <summary>
             /// Constructor
@@ -372,6 +471,16 @@ namespace PacketDotNet
             public DbAntennaNoiseRadioTapField(BinaryReader br)
             {
                 AntennaNoisedB = br.ReadByte();
+            }
+            
+            public DbAntennaNoiseRadioTapField()
+            {
+             
+            }
+            
+            public DbAntennaNoiseRadioTapField(byte AntennaNoisedB)
+            {
+                this.AntennaNoisedB = AntennaNoisedB;
             }
 
             /// <summary>
@@ -393,11 +502,18 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_ANTENNA; } }
-
+   
+            public override ushort Length { get { return 1; } }
+            
             /// <summary>
             /// Antenna number
             /// </summary>
             public byte Antenna { get; set; }
+            
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                dest[offset] = Antenna;
+            }
 
             /// <summary>
             /// Constructor
@@ -409,7 +525,17 @@ namespace PacketDotNet
             {
                 Antenna = br.ReadByte();
             }
-
+   
+            public AntennaRadioTapField()
+            {
+             
+            }
+            
+            public AntennaRadioTapField (byte Antenna)
+            {
+                this.Antenna = Antenna;
+            }
+            
             /// <summary>
             /// ToString() override
             /// </summary>
@@ -429,11 +555,18 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_DBM_ANTSIGNAL; } }
-
+   
+            public override ushort Length { get { return 1; } }
+            
             /// <summary>
             /// Antenna signal in dBm
             /// </summary>
             public sbyte AntennaSignalDbm { get; set; }
+            
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                dest[offset] = (byte)AntennaSignalDbm;
+            }
 
             /// <summary>
             /// Constructor
@@ -444,6 +577,16 @@ namespace PacketDotNet
             public DbmAntennaSignalRadioTapField(BinaryReader br)
             {
                 AntennaSignalDbm = br.ReadSByte();
+            }
+            
+            public DbmAntennaSignalRadioTapField()
+            {
+             
+            }
+            
+            public DbmAntennaSignalRadioTapField (sbyte AntennaSignalDbm)
+            {
+                this.AntennaSignalDbm = AntennaSignalDbm;
             }
 
             /// <summary>
@@ -465,11 +608,18 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_DBM_ANTNOISE; } }
-
+   
+            public override ushort Length { get { return 1; } }
+            
             /// <summary>
             /// Antenna noise in dBm
             /// </summary>
             public sbyte AntennaNoisedBm { get; set; }
+            
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                dest[offset] = (byte)AntennaNoisedBm;
+            }
 
             /// <summary>
             /// Constructor
@@ -481,7 +631,17 @@ namespace PacketDotNet
             {
                 AntennaNoisedBm = br.ReadSByte();
             }
-
+            
+            public DbmAntennaNoiseRadioTapField()
+            {
+             
+            }
+   
+            public DbmAntennaNoiseRadioTapField (sbyte AntennaNoisedBm)
+            {
+                this.AntennaNoisedBm = AntennaNoisedBm;
+            }
+            
             /// <summary>
             /// ToString() override
             /// </summary>
@@ -501,12 +661,19 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_LOCK_QUALITY; } }
-
+   
+            public override ushort Length { get { return 2; } }
+            
             /// <summary>
             /// Signal quality
             /// </summary>
             public UInt16 SignalQuality { get; set; }
-
+   
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                EndianBitConverter.Little.CopyBytes(SignalQuality, dest, offset);
+            }
+            
             /// <summary>
             /// Constructor
             /// </summary>
@@ -516,6 +683,16 @@ namespace PacketDotNet
             public LockQualityRadioTapField(BinaryReader br)
             {
                 SignalQuality = br.ReadUInt16();
+            }
+            
+            public LockQualityRadioTapField()
+            {
+             
+            }
+            
+            public LockQualityRadioTapField(UInt16 SignalQuality)
+            {
+                this.SignalQuality = SignalQuality;
             }
 
             /// <summary>
@@ -537,11 +714,18 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_TSFT; } }
-
+   
+            public override ushort Length { get { return 8; } }
+            
             /// <summary>
             /// Timestamp in microseconds
             /// </summary>
             public UInt64 TimestampUsec { get; set; }
+            
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                EndianBitConverter.Little.CopyBytes(TimestampUsec, dest, offset);
+            }
 
             /// <summary>
             /// Constructor
@@ -552,6 +736,16 @@ namespace PacketDotNet
             public TsftRadioTapField(BinaryReader br)
             {
                 TimestampUsec = br.ReadUInt64();
+            }
+            
+            public TsftRadioTapField()
+            {
+             
+            }
+            
+            public TsftRadioTapField(UInt64 TimestampUsec)
+            {
+                this.TimestampUsec = TimestampUsec;
             }
 
             /// <summary>
@@ -571,8 +765,16 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_RX_FLAGS; } }
-
+            
+            public override ushort Length { get { return 2; } }
+            
             public bool PlcpCrcCheckFailed {get; set;}
+            
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                UInt16 flags = (UInt16)((PlcpCrcCheckFailed) ? 0x2 : 0x0);
+                EndianBitConverter.Little.CopyBytes(flags, dest, offset);
+            }
 
             /// <summary>
             /// Constructor
@@ -585,6 +787,16 @@ namespace PacketDotNet
                 UInt16 flags = br.ReadUInt16();
                 Console.WriteLine("RxFlagsRadioTapField {0}", flags);
                 PlcpCrcCheckFailed = ((flags & 0x2) == 0x2);
+            }
+            
+            public RxFlagsRadioTapField()
+            {
+             
+            }
+            
+            public RxFlagsRadioTapField(bool PlcpCrcCheckFailed)
+            {
+                this.PlcpCrcCheckFailed = PlcpCrcCheckFailed;
             }
 
             /// <summary>
@@ -609,12 +821,20 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_DB_TX_ATTENUATION; } }
-
+   
+            public override ushort Length { get { return 2; } }
+            
             /// <summary>
             /// Transmit power
             /// </summary>
             public int TxPower { get; set; }
-
+   
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                UInt16 absValue = (UInt16) Math.Abs(TxPower);
+                EndianBitConverter.Little.CopyBytes(absValue, dest, offset);
+            }
+            
             /// <summary>
             /// Constructor
             /// </summary>
@@ -624,6 +844,16 @@ namespace PacketDotNet
             public TxAttenuationRadioTapField(BinaryReader br)
             {
                 TxPower = -(int)br.ReadUInt16();
+            }
+            
+            public TxAttenuationRadioTapField()
+            {
+             
+            }
+            
+            public TxAttenuationRadioTapField (int TxPower)
+            {
+                this.TxPower = TxPower;
             }
 
             /// <summary>
@@ -647,12 +877,20 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_DB_TX_ATTENUATION; } }
-
+   
+            public override ushort Length { get { return 2; } }
+            
             /// <summary>
             /// Transmit power 
             /// </summary>
             public int TxPowerdB { get; set; }
-
+   
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                UInt16 absValue = (UInt16) Math.Abs(TxPowerdB);
+                EndianBitConverter.Little.CopyBytes(absValue, dest, offset);
+            }
+            
             /// <summary>
             /// Constructor
             /// </summary>
@@ -661,7 +899,17 @@ namespace PacketDotNet
             /// </param>
             public DbTxAttenuationRadioTapField(BinaryReader br)
             {
-                TxPowerdB = -(int)br.ReadByte();
+                TxPowerdB = -(int)br.ReadUInt16();
+            }
+            
+            public DbTxAttenuationRadioTapField()
+            {
+             
+            }
+            
+            public DbTxAttenuationRadioTapField(int TxPowerdB)
+            {
+                this.TxPowerdB = TxPowerdB;
             }
 
             /// <summary>
@@ -685,12 +933,19 @@ namespace PacketDotNet
         {
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_DBM_TX_POWER; } }
-
+            
+            public override ushort Length { get { return 1; } }
+            
             /// <summary>
             /// Tx power in dBm
             /// </summary>
             public sbyte TxPowerdBm { get; set; }
-
+   
+            public override void CopyTo(byte[] dest, int offset)
+            {
+                dest[offset] = (byte)TxPowerdBm;
+            }
+            
             /// <summary>
             /// Constructor
             /// </summary>
@@ -700,6 +955,16 @@ namespace PacketDotNet
             public DbmTxPowerRadioTapField(BinaryReader br)
             {
                 TxPowerdBm = br.ReadSByte();
+            }
+            
+            public DbmTxPowerRadioTapField()
+            {
+             
+            }
+            
+            public DbmTxPowerRadioTapField(sbyte TxPowerdBm)
+            {
+                this.TxPowerdBm = TxPowerdBm;
             }
 
             /// <summary>
@@ -775,6 +1040,10 @@ namespace PacketDotNet
                         return null;
                 }
             }
+            
+            public abstract ushort Length {get;}
+            
+            public abstract void CopyTo(byte[] dest, int offset);
         }; 
     }
 }

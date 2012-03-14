@@ -30,6 +30,7 @@ namespace PacketDotNet
         [Flags]
         public enum RadioTapFlags
         {
+            None = 0x0,
             /// <summary>
             /// sent/received during cfp
             /// </summary>

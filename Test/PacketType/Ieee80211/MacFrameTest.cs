@@ -126,6 +126,7 @@ namespace Test.PacketType
                 //Force it to recalculate the FCS and include it when serialised
                 dataFrame.UpdateFrameCheckSequence();
                 dataFrame.AppendFcs = true;
+                Assert.IsTrue(dataFrame.FCSValid);
                 
                 var expectedLength = dataFrame.FrameSize + dataFrame.PayloadData.Length + 4;
                 

@@ -226,7 +226,9 @@ namespace PacketDotNet
             /// <remarks>After calling this method the FCS will be valud regardless of what the packet contains.</remarks>
             public void UpdateFrameCheckSequence ()
             {
-                FrameCheckSequence = (uint)Crc32.Compute (Bytes, 0, Bytes.Length - 4);
+                var bytes = Bytes;
+                var length = (AppendFcs) ? bytes.Length - 4 : bytes.Length;
+                FrameCheckSequence = (uint) Crc32.Compute(Bytes, 0, length);
             }
 
             /// <summary>

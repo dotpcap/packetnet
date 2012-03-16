@@ -56,6 +56,7 @@ namespace PacketDotNet
                 set
                 {
                     //Use the & mask to make sure we only overwrite the sequence number part of the field
+                    Field &= 0xF;
                     Field |= (UInt16)(value << 4);
                 }
             }
@@ -75,7 +76,7 @@ namespace PacketDotNet
 
                 set
                 {
-                    //move the fragment number back into the correct position
+                    Field &= unchecked((ushort)~0xF);
                     Field |= (UInt16)(value & 0x0F);
                 }
             }

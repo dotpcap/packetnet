@@ -103,6 +103,7 @@
     <Compile Include="PacketType\Ieee80211\AckFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211\CtsFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211\RadioTapFieldsTest.cs" />
+    <Compile Include="PacketType\Ieee80211\SequenceControlFieldTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

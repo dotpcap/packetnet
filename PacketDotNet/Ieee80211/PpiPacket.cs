@@ -58,9 +58,17 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (UInt16) (PpiHeaderFields.PpiPacketHeaderLength + 
-                        (PpiFields.Count * PpiHeaderFields.FieldHeaderLength) +
-                        PpiFields.Sum( field => field.Length ));
+                    var length = PpiHeaderFields.PpiPacketHeaderLength;
+
+                    foreach (var field in PpiFields )
+                    {
+                        length += PpiHeaderFields.FieldHeaderLength + field.Length;
+                        if((Flags & HeaderFlags.Alignment32Bit) == HeaderFlags.Alignment32Bit)
+                        {
+                            length += GetDistanceTo32BitAlignment(field.Length);
+                        }
+                    }
+                    return (UInt16)length;
                 }
             }
             
@@ -308,6 +316,10 @@ namespace PacketDotNet
    
             public override void UpdateCalculatedValues()
             {
+                //If aligned is true then fields must all start on 32bit boundaries so we might need
+                //to read some extra padding from the end of the header fields.
+                bool aligned = ((Flags & HeaderFlags.Alignment32Bit) == HeaderFlags.Alignment32Bit);
+                
                 var totalFieldLength = Length;
              
                 if ((header == null) || (totalFieldLength > header.Length))
@@ -331,6 +343,11 @@ namespace PacketDotNet
                     writer.Write((ushort) field.FieldType);
                     writer.Write((ushort) field.Length);
                     writer.Write(field.Bytes);
+                    var paddingBytesRequired = GetDistanceTo32BitAlignment(field.Length);
+                    if(aligned && (paddingBytesRequired > 0))
+                    {
+                        writer.Write(new byte[paddingBytesRequired]);
+                    }
                 }
             }
             
@@ -343,6 +360,9 @@ namespace PacketDotNet
             /// </summary>
             private List<PpiField> ReadPpiFields()
             {
+                //If aligned is true then fields must all start on 32bit boundaries so we might need
+                //to read some extra padding from the end of the header fields.
+                bool aligned = ((Flags & HeaderFlags.Alignment32Bit) == HeaderFlags.Alignment32Bit);
                 
                 var retList = new List<PpiField> ();
 
@@ -360,6 +380,12 @@ namespace PacketDotNet
                     //add the length plus 4 for the type and length fields
                     length +=  fieldLength + 4; 
                     retList.Add (PpiField.Parse (type, br, fieldLength));
+                    var paddingByteCount = GetDistanceTo32BitAlignment(fieldLength);
+                    if(aligned && (paddingByteCount > 0))
+                    {
+                        br.ReadBytes(paddingByteCount);
+                        length += paddingByteCount;
+                    }
                 }
 
                 return retList;
@@ -413,7 +439,12 @@ namespace PacketDotNet
                 
                 return payloadPacketOrData;
             }
-
+   
+            private int GetDistanceTo32BitAlignment(int length)
+            {
+                return ((length % 4) == 0) ? 0 : 4 - (length % 4);
+            }
+            
         #endregion Private Methods
         }
     }

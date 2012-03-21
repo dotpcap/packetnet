@@ -154,25 +154,75 @@ namespace Test.PacketType
                 
                 PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, packet.Bytes) as PpiPacket;
                 
-                PpiCommon recreatedCommonField = packet[0] as PpiCommon;
+                PpiCommon recreatedCommonField = recreatedPacket[0] as PpiCommon;
                 Assert.IsNotNull(recreatedCommonField);
                 Assert.AreEqual(2142, recreatedCommonField.ChannelFrequency);
                 Assert.AreEqual(50, recreatedCommonField.AntennaSignalPower);
                 Assert.AreEqual(25, recreatedCommonField.AntennaSignalNoise);
                 
-                PpiProcessInfo recreatedProcessField = packet[1] as PpiProcessInfo;
+                PpiProcessInfo recreatedProcessField = recreatedPacket[1] as PpiProcessInfo;
                 Assert.IsNotNull(recreatedProcessField);
                 Assert.AreEqual(0x1111, recreatedProcessField.UserId);
                 Assert.AreEqual("Hester the tester", recreatedProcessField.UserName);
                 Assert.AreEqual(0x2222, recreatedProcessField.GroupId);
                 Assert.AreEqual("Test Group", recreatedProcessField.GroupName);
                 
-                PpiAggregation recreatedAggregationField = packet[2] as PpiAggregation;
+                PpiAggregation recreatedAggregationField = recreatedPacket[2] as PpiAggregation;
                 
                 Assert.IsNotNull(recreatedAggregationField);
                 Assert.AreEqual(0x3333, recreatedAggregationField.InterfaceId);
                 
             }
+            
+            [Test]
+            public void ConstructPacketWithMultipleAlignedFields()
+            {
+                PpiPacket packet = new PpiPacket();
+                packet.Flags |= PpiPacket.HeaderFlags.Alignment32Bit;
+                
+                PpiCommon commonField = new PpiCommon();
+                commonField.ChannelFrequency = 2142;
+                commonField.AntennaSignalPower = 50;
+                commonField.AntennaSignalNoise = 25;
+                packet.Add(commonField);
+                
+                Assert.AreEqual(32, packet.Length);
+                
+                PpiProcessInfo processInfoField = new PpiProcessInfo();
+                processInfoField.UserId = 0x1111;
+                processInfoField.UserName = "Hester the tester";
+                processInfoField.GroupId = 0x2222;
+                processInfoField.GroupName = "Test Group";
+                packet.Add(processInfoField);
+                
+                Assert.AreEqual(84, packet.Length);
+                
+                PpiAggregation aggregationField = new PpiAggregation(0x3333);
+                packet.Add(aggregationField);
+                
+                Assert.AreEqual(92, packet.Length);
+                
+                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, packet.Bytes) as PpiPacket;
+                
+                PpiCommon recreatedCommonField = recreatedPacket[0] as PpiCommon;
+                Assert.IsNotNull(recreatedCommonField);
+                Assert.AreEqual(2142, recreatedCommonField.ChannelFrequency);
+                Assert.AreEqual(50, recreatedCommonField.AntennaSignalPower);
+                Assert.AreEqual(25, recreatedCommonField.AntennaSignalNoise);
+                
+                PpiProcessInfo recreatedProcessField = recreatedPacket[1] as PpiProcessInfo;
+                Assert.IsNotNull(recreatedProcessField);
+                Assert.AreEqual(0x1111, recreatedProcessField.UserId);
+                Assert.AreEqual("Hester the tester", recreatedProcessField.UserName);
+                Assert.AreEqual(0x2222, recreatedProcessField.GroupId);
+                Assert.AreEqual("Test Group", recreatedProcessField.GroupName);
+                
+                PpiAggregation recreatedAggregationField = recreatedPacket[2] as PpiAggregation;
+                
+                Assert.IsNotNull(recreatedAggregationField);
+                Assert.AreEqual(0x3333, recreatedAggregationField.InterfaceId);
+            }
+            
             
             [Test]
             public void ContainsField()

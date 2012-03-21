@@ -31,23 +31,40 @@ using System.Text;
 using MiscUtil.Conversion;
 
 using PacketDotNet.Utils;
+using System.Linq;
 
 namespace PacketDotNet
 {
     namespace Ieee80211
     {
-        
         /// <summary>
         /// .Net analog of a PpiHeader.h from airpcap
         /// </summary>
-        public class PpiPacket : InternetLinkLayerPacket
+        public class PpiPacket : InternetLinkLayerPacket, IEnumerable
         {
+            [Flags]
+            public enum HeaderFlags : byte
+            {
+                Alignment32Bit = 1
+            }
+
+            
         #region Properties
 
             /// <summary>
             /// Length of the whole header in bytes
             /// </summary>
             public UInt16 Length
+            {
+                get
+                {
+                    return (UInt16) (PpiHeaderFields.PpiPacketHeaderLength + 
+                        (PpiFields.Count * PpiHeaderFields.FieldHeaderLength) +
+                        PpiFields.Sum( field => field.Length ));
+                }
+            }
+            
+            private UInt16 LengthBytes
             {
                 get
                 {
@@ -63,51 +80,71 @@ namespace PacketDotNet
                 }
             }
 
-            /// <summary>
-            /// Array of PPI fields
-            /// </summary>
-            public List<PpiField> PpiFields
-            {
-                get
-                {
-                    var retList = new List<PpiField> ();
-
-                    // create a binary reader that points to the memory immediately after the dtl
-                    var offset = header.Offset + PpiHeaderFields.FirstFieldPosition;
-                    var br = new BinaryReader (new MemoryStream (header.Bytes,
-                                                           offset,
-                                                           (int)(Length - offset)));
-                    int type = 0;
-                    int length = PpiHeaderFields.FirstFieldPosition;
-                    do
-                    {
-                        type = br.ReadUInt16 ();
-                        //add the length plus 4 for the type and length fields
-                        length += br.ReadUInt16 () + 4; 
-                        retList.Add (PpiField.Parse (type, br));
-                    }
-                    while (length < Length );
-
-                    return retList;
-                }
-            }
+            
 
             /// <summary>
             /// Version 0. Only increases for drastic changes, introduction of compatible
             /// new fields does not count.
             /// </summary>
-            public byte Version
+            public byte Version { get; set; }
+            
+            private byte VersionBytes
             {
                 get
                 {
                     return header.Bytes [header.Offset + PpiHeaderFields.VersionPosition];
                 }
 
-                internal set
+                set
                 {
                     header.Bytes [header.Offset + PpiHeaderFields.VersionPosition] = value;
                 }
             }
+            
+            public HeaderFlags Flags { get; set; }
+            
+            public HeaderFlags FlagsBytes
+            {
+                get
+                {
+                    return (HeaderFlags)header.Bytes[header.Offset + PpiHeaderFields.FlagsPosition];
+                }
+                
+                set
+                {
+                    header.Bytes[header.Offset + PpiHeaderFields.FlagsPosition] = (byte) value;
+                }
+            }
+            
+            public LinkLayers LinkType { get; set; }
+            
+            public LinkLayers LinkTypeBytes
+            {
+                get
+                {
+                    return (LinkLayers) EndianBitConverter.Little.ToUInt32(header.Bytes,
+                                                                           header.Offset + PpiHeaderFields.DataLinkTypePosition);
+                }
+                
+                set
+                {
+                    EndianBitConverter.Little.CopyBytes((uint)LinkType,
+                                                     header.Bytes,
+                                                     header.Offset + PpiHeaderFields.DataLinkTypePosition);
+                }
+            }
+            
+            public int Count { get { return PpiFields.Count; } } 
+            
+            public PpiField this[int index]
+            {
+                get
+                {
+                    return PpiFields[index];
+                }
+            }
+            
+            private List<PpiField> PpiFields { get; set; }
 
         #endregion Properties
 
@@ -118,20 +155,57 @@ namespace PacketDotNet
                 // slice off the header portion
                 header = new ByteArraySegment (bas);
                 
+                Version = VersionBytes;
+                Flags = FlagsBytes;
+                
                 // update the header size based on the headers packet length
-                header.Length = Length;
+                header.Length = LengthBytes;
+                LinkType = LinkTypeBytes;
+                PpiFields = ReadPpiFields();
     
-                PpiCommon commonField = FindPpiField (PpiFieldType.PpiCommon) as PpiCommon;
+                PpiCommon commonField = FindFirstByType(PpiFieldType.PpiCommon) as PpiCommon;
                 
                 // parse the encapsulated bytes
                 payloadPacketOrData = ParseEncapsulatedBytes (header, commonField);
+            }
+            
+            public PpiPacket ()
+            {
+                PpiFields = new List<PpiField>();
+                Version = 0;
+                LinkType = LinkLayers.Ieee80211;
             }
 
         #endregion Constructors
 
         #region Public Methods
-
-            public PpiField FindPpiField (PpiFieldType type)
+   
+            public void Add(PpiField field)
+            {
+                PpiFields.Add(field);
+            }
+            
+            public void Remove(PpiField field)
+            {
+                PpiFields.Remove(field);
+            }
+            
+            public void RemoveAll(PpiFieldType type)
+            {
+                PpiFields.RemoveAll( field => type == field.FieldType);
+            }
+            
+            public bool Contains(PpiField field)
+            {
+                return PpiFields.Contains(field);
+            }
+            
+            public bool Contains(PpiFieldType type)
+            {
+                return (PpiFields.Find(field => field.FieldType == type) != null);
+            }
+            
+            public PpiField FindFirstByType (PpiFieldType type)
             {
                 var ppiFields = this.PpiFields;
                 foreach (var r in ppiFields)
@@ -141,6 +215,14 @@ namespace PacketDotNet
                 }
                 return null;
             }
+            
+            
+            public PpiField[] FindByType(PpiFieldType type)
+            {
+                return PpiFields.FindAll(p => (p.FieldType == type)).ToArray();
+            }
+            
+            
 
             /// <summary>
             /// Returns the Ieee80211MacFrame inside of the Packet p or null if
@@ -218,10 +300,70 @@ namespace PacketDotNet
 
                 return buffer.ToString ();
             }
-
+            
+            public IEnumerator GetEnumerator()
+            {
+                return PpiFields.GetEnumerator();
+            }
+   
+            public override void UpdateCalculatedValues()
+            {
+                var totalFieldLength = Length;
+             
+                if ((header == null) || (totalFieldLength > header.Length))
+                {
+                    header = new ByteArraySegment (new Byte[totalFieldLength]);
+                }
+                
+                header.Length = totalFieldLength;
+                
+                VersionBytes = Version;
+                FlagsBytes = Flags;
+                LengthBytes = (ushort)totalFieldLength;
+                LinkTypeBytes = LinkType;
+                
+                MemoryStream ms = new MemoryStream(header.Bytes,
+                                                   header.Offset + PpiHeaderFields.FirstFieldPosition,
+                                                   totalFieldLength - PpiHeaderFields.FirstFieldPosition);
+                BinaryWriter writer = new BinaryWriter(ms);
+                foreach (var field in PpiFields)
+                {
+                    writer.Write((ushort) field.FieldType);
+                    writer.Write((ushort) field.Length);
+                    writer.Write(field.Bytes);
+                }
+            }
+            
         #endregion Public Methods
 
         #region Private Methods
+            
+            /// <summary>
+            /// Array of PPI fields
+            /// </summary>
+            private List<PpiField> ReadPpiFields()
+            {
+                
+                var retList = new List<PpiField> ();
+
+                // create a binary reader that points to the memory immediately after the dtl
+                var offset = header.Offset + PpiHeaderFields.FirstFieldPosition;
+                var br = new BinaryReader (new MemoryStream (header.Bytes,
+                                                       offset,
+                                                       (int)(header.Length - offset)));
+                int type = 0;
+                int length = PpiHeaderFields.FirstFieldPosition;
+                while(length < header.Length)
+                {
+                    type = br.ReadUInt16 ();
+                    var fieldLength = br.ReadUInt16 ();
+                    //add the length plus 4 for the type and length fields
+                    length +=  fieldLength + 4; 
+                    retList.Add (PpiField.Parse (type, br, fieldLength));
+                }
+
+                return retList;
+            }
 
             /// <summary>
             /// Used by the Ieee80211PpiPacket constructor. 
@@ -259,10 +401,6 @@ namespace PacketDotNet
                 {
                     frame = MacFrame.ParsePacket (payload);
                 }
-                
-                // always create a MacFrame.  The MacFrame constructor will determine which type of
-                // packet to build based upon the FrameControl bits.
-                payloadPacketOrData.ThePacket = MacFrame.ParsePacketWithFcs (payload);
                 
                 if (frame == null)
                 {

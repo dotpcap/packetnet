@@ -23,6 +23,7 @@ using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
+using SharpPcap;
 
 namespace Test.PacketType
 {
@@ -47,16 +48,16 @@ namespace Test.PacketType
                 Assert.IsNotNull (p);
                 Assert.AreEqual (0, p.Version);
                 Assert.AreEqual (32, p.Length);
-                Assert.AreEqual (1, p.PpiFields.Count);
+                Assert.AreEqual (1, p.Count);
                 
-                PpiCommon commonField = p.PpiFields [0] as PpiCommon;
+                PpiCommon commonField = p.FindFirstByType(PpiFieldType.PpiCommon) as PpiCommon;
                 
                 Assert.AreEqual (PpiFieldType.PpiCommon, commonField.FieldType);
                 Assert.AreEqual (0, commonField.TSFTimer);
                 Assert.IsTrue ((commonField.Flags & PpiCommon.CommonFlags.FcsIncludedInFrame) == PpiCommon.CommonFlags.FcsIncludedInFrame);
                 Assert.AreEqual (2, commonField.Rate);
                 Assert.AreEqual (2437, commonField.ChannelFrequency);
-                Assert.AreEqual (0x00A0, commonField.ChannelFlags);
+                Assert.AreEqual (0x00A0, (int) commonField.ChannelFlags);
                 Assert.AreEqual (0, commonField.FhssHopset);
                 Assert.AreEqual (0, commonField.FhssPattern);
                 Assert.AreEqual (-84, commonField.AntennaSignalPower);
@@ -112,6 +113,149 @@ namespace Test.PacketType
                 Assert.IsFalse(macFrame.FCSValid);
                 Assert.IsFalse(macFrame.AppendFcs);
 			}
+            
+            [Test]
+            public void ConstructPacketWithNoFields()
+            {
+                PpiPacket packet = new PpiPacket();
+                
+                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, packet.Bytes) as PpiPacket;
+                
+                Assert.AreEqual(0, recreatedPacket.Version);
+                Assert.IsFalse((recreatedPacket.Flags & PpiPacket.HeaderFlags.Alignment32Bit) == PpiPacket.HeaderFlags.Alignment32Bit);
+            }
+            
+            [Test]
+            public void ConstructPacketWithMultipleFields()
+            {
+                PpiPacket packet = new PpiPacket();
+                
+                PpiCommon commonField = new PpiCommon();
+                commonField.ChannelFrequency = 2142;
+                commonField.AntennaSignalPower = 50;
+                commonField.AntennaSignalNoise = 25;
+                packet.Add(commonField);
+                
+                Assert.AreEqual(32, packet.Length);
+                
+                PpiProcessInfo processInfoField = new PpiProcessInfo();
+                processInfoField.UserId = 0x1111;
+                processInfoField.UserName = "Hester the tester";
+                processInfoField.GroupId = 0x2222;
+                processInfoField.GroupName = "Test Group";
+                packet.Add(processInfoField);
+                
+                Assert.AreEqual(82, packet.Length);
+                
+                PpiAggregation aggregationField = new PpiAggregation(0x3333);
+                packet.Add(aggregationField);
+                
+                Assert.AreEqual(90, packet.Length);
+                
+                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, packet.Bytes) as PpiPacket;
+                
+                PpiCommon recreatedCommonField = packet[0] as PpiCommon;
+                Assert.IsNotNull(recreatedCommonField);
+                Assert.AreEqual(2142, recreatedCommonField.ChannelFrequency);
+                Assert.AreEqual(50, recreatedCommonField.AntennaSignalPower);
+                Assert.AreEqual(25, recreatedCommonField.AntennaSignalNoise);
+                
+                PpiProcessInfo recreatedProcessField = packet[1] as PpiProcessInfo;
+                Assert.IsNotNull(recreatedProcessField);
+                Assert.AreEqual(0x1111, recreatedProcessField.UserId);
+                Assert.AreEqual("Hester the tester", recreatedProcessField.UserName);
+                Assert.AreEqual(0x2222, recreatedProcessField.GroupId);
+                Assert.AreEqual("Test Group", recreatedProcessField.GroupName);
+                
+                PpiAggregation recreatedAggregationField = packet[2] as PpiAggregation;
+                
+                Assert.IsNotNull(recreatedAggregationField);
+                Assert.AreEqual(0x3333, recreatedAggregationField.InterfaceId);
+                
+            }
+            
+            [Test]
+            public void ContainsField()
+            {
+                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_ppi_multiplefields.pcap");
+                dev.Open ();
+                var rawCapture = dev.GetNextPacket ();
+                dev.Close ();
+                
+                PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+                Assert.IsTrue(p.Contains(PpiFieldType.PpiCommon));
+                Assert.IsTrue(p.Contains(PpiFieldType.PpiMacPhy));
+                Assert.IsFalse(p.Contains(PpiFieldType.PpiProcessInfo));
+            }
+            
+            [Test]
+            public void RemoveField()
+            {
+                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_ppi_multiplefields.pcap");
+                dev.Open ();
+                var rawCapture = dev.GetNextPacket ();
+                dev.Close ();
+                
+                PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+                var expectedLength = p.Length - p[1].Length - PpiHeaderFields.FieldHeaderLength;
+                p.Remove(p[1]);
+                
+                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, p.Bytes) as PpiPacket;
+                Assert.AreEqual(expectedLength, recreatedPacket.Length);
+                Assert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiCommon));
+                Assert.IsFalse(recreatedPacket.Contains(PpiFieldType.PpiMacPhy));
+                
+                MacFrame macFrame = recreatedPacket.PayloadPacket as MacFrame;
+                Assert.IsNotNull(macFrame);
+                Assert.IsTrue(macFrame.FCSValid);
+            }
+            
+            [Test]
+            public void RemoveFieldByType()
+            {
+                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_ppi_multiplefields.pcap");
+                dev.Open ();
+                var rawCapture = dev.GetNextPacket ();
+                dev.Close ();
+                
+                PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+                p.RemoveAll(PpiFieldType.PpiMacPhy);
+                
+                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, p.Bytes) as PpiPacket;
+                
+                Assert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiCommon));
+                Assert.IsFalse(recreatedPacket.Contains(PpiFieldType.PpiMacPhy));
+                
+                MacFrame macFrame = recreatedPacket.PayloadPacket as MacFrame;
+                Assert.IsNotNull(macFrame);
+                Assert.IsTrue(macFrame.FCSValid);
+            }
+            
+            [Test]
+            public void AddUnknownField()
+            {
+                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_ppi_multiplefields.pcap");
+                dev.Open ();
+                var rawCapture = dev.GetNextPacket ();
+                dev.Close ();
+                
+                PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+                
+                PpiUnknown unknownField = new PpiUnknown(99, new byte[]{0xAA, 0xBB, 0xCC, 0xDD});
+                p.Add(unknownField);
+
+                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, p.Bytes) as PpiPacket;
+                
+                Assert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiCommon));
+                Assert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiMacPhy));
+                Assert.IsTrue(recreatedPacket.Contains((PpiFieldType)99));
+                PpiUnknown recreatedUnknownField = recreatedPacket.FindFirstByType((PpiFieldType)99) as PpiUnknown;
+                Assert.AreEqual(new byte[]{0xAA, 0xBB, 0xCC, 0xDD}, recreatedUnknownField.UnknownBytes);
+                
+                MacFrame macFrame = recreatedPacket.PayloadPacket as MacFrame;
+                Assert.IsNotNull(macFrame);
+                Assert.IsTrue(macFrame.FCSValid);
+            }
         } 
     }
 }

@@ -28,7 +28,7 @@ namespace PacketDotNet
         /// Channel flags
         /// </summary>
         [Flags]
-        public enum RadioTapChannelFlags
+        public enum RadioTapChannelFlags : ushort
         {
             /// <summary>Turbo channel</summary>
             IEEE80211_CHAN_TURBO = 0x0010,

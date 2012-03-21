@@ -64,6 +64,10 @@ namespace PacketDotNet
             /// <summary>Position of the version field</summary>
             public static readonly int VersionPosition = 0;
 
+            public static readonly int PpiPacketHeaderLength;
+            
+            public static readonly int FieldHeaderLength = 4;
+            
         #endregion Fields
 
         #region Constructors
@@ -74,6 +78,7 @@ namespace PacketDotNet
                 LengthPosition = FlagsPosition + FlagsLength;
                 DataLinkTypePosition = LengthPosition + LengthLength;
                 FirstFieldPosition = DataLinkTypePosition + DataLinkTypeLength;
+                PpiPacketHeaderLength = FirstFieldPosition;
             }
 
         #endregion Constructors

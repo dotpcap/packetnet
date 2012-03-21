@@ -34,7 +34,7 @@ namespace PacketDotNet
         public class ChannelRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_CHANNEL; } }
+            public override RadioTapType FieldType { get { return RadioTapType.Channel; } }
             
             public override ushort Length { get { return 4; } }
 
@@ -223,7 +223,7 @@ namespace PacketDotNet
         public class FhssRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_FHSS; } }
+            public override RadioTapType FieldType { get { return RadioTapType.Fhss; } }
    
             public override ushort Length { get { return 2; } }
             
@@ -287,7 +287,7 @@ namespace PacketDotNet
         public class FlagsRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_FLAGS; } }
+            public override RadioTapType FieldType { get { return RadioTapType.Flags; } }
    
             public override ushort Length { get { return 1; } }
             
@@ -341,7 +341,7 @@ namespace PacketDotNet
         public class RateRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_RATE; } }
+            public override RadioTapType FieldType { get { return RadioTapType.Rate; } }
    
             public override ushort Length { get { return 1; } }
             
@@ -395,7 +395,7 @@ namespace PacketDotNet
         public class DbAntennaSignalRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_DB_ANTSIGNAL; } }
+            public override RadioTapType FieldType { get { return RadioTapType.DbAntennaSignal; } }
    
             public override ushort Length { get { return 1; } }
             
@@ -448,7 +448,7 @@ namespace PacketDotNet
         public class DbAntennaNoiseRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_DB_ANTNOISE; } }
+            public override RadioTapType FieldType { get { return RadioTapType.DbAntennaNoise; } }
    
             public override ushort Length { get { return 1; } }
             
@@ -501,7 +501,7 @@ namespace PacketDotNet
         public class AntennaRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_ANTENNA; } }
+            public override RadioTapType FieldType { get { return RadioTapType.Antenna; } }
    
             public override ushort Length { get { return 1; } }
             
@@ -554,7 +554,7 @@ namespace PacketDotNet
         public class DbmAntennaSignalRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_DBM_ANTSIGNAL; } }
+            public override RadioTapType FieldType { get { return RadioTapType.DbmAntennaSignal; } }
    
             public override ushort Length { get { return 1; } }
             
@@ -607,7 +607,7 @@ namespace PacketDotNet
         public class DbmAntennaNoiseRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_DBM_ANTNOISE; } }
+            public override RadioTapType FieldType { get { return RadioTapType.DbmAntennaNoise; } }
    
             public override ushort Length { get { return 1; } }
             
@@ -660,7 +660,7 @@ namespace PacketDotNet
         public class LockQualityRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_LOCK_QUALITY; } }
+            public override RadioTapType FieldType { get { return RadioTapType.LockQuality; } }
    
             public override ushort Length { get { return 2; } }
             
@@ -713,7 +713,7 @@ namespace PacketDotNet
         public class TsftRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_TSFT; } }
+            public override RadioTapType FieldType { get { return RadioTapType.Tsft; } }
    
             public override ushort Length { get { return 8; } }
             
@@ -764,7 +764,7 @@ namespace PacketDotNet
         public class RxFlagsRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_RX_FLAGS; } }
+            public override RadioTapType FieldType { get { return RadioTapType.RxFlags; } }
             
             public override ushort Length { get { return 2; } }
             
@@ -820,7 +820,7 @@ namespace PacketDotNet
         public class TxAttenuationRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_DB_TX_ATTENUATION; } }
+            public override RadioTapType FieldType { get { return RadioTapType.TxAttenuation; } }
    
             public override ushort Length { get { return 2; } }
             
@@ -876,7 +876,7 @@ namespace PacketDotNet
         public class DbTxAttenuationRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_DB_TX_ATTENUATION; } }
+            public override RadioTapType FieldType { get { return RadioTapType.DbTxAttenuation; } }
    
             public override ushort Length { get { return 2; } }
             
@@ -932,7 +932,7 @@ namespace PacketDotNet
         public class DbmTxPowerRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.IEEE80211_RADIOTAP_DBM_TX_POWER; } }
+            public override RadioTapType FieldType { get { return RadioTapType.DbmTxPower; } }
             
             public override ushort Length { get { return 1; } }
             
@@ -1005,35 +1005,35 @@ namespace PacketDotNet
                 var Type = (RadioTapType)bitIndex;
                 switch (Type)
                 {
-                    case RadioTapType.IEEE80211_RADIOTAP_FLAGS:
+                    case RadioTapType.Flags:
                         return new FlagsRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_RATE:
+                    case RadioTapType.Rate:
                         return new RateRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_DB_ANTSIGNAL:
+                    case RadioTapType.DbAntennaSignal:
                         return new DbAntennaSignalRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_DB_ANTNOISE:
+                    case RadioTapType.DbAntennaNoise:
                         return new DbAntennaNoiseRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_ANTENNA:
+                    case RadioTapType.Antenna:
                         return new AntennaRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_DBM_ANTSIGNAL:
+                    case RadioTapType.DbmAntennaSignal:
                         return new DbmAntennaSignalRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_DBM_ANTNOISE:
+                    case RadioTapType.DbmAntennaNoise:
                         return new DbmAntennaNoiseRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_CHANNEL:
+                    case RadioTapType.Channel:
                         return new ChannelRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_FHSS:
+                    case RadioTapType.Fhss:
                         return new FhssRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_LOCK_QUALITY:
+                    case RadioTapType.LockQuality:
                         return new LockQualityRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_TX_ATTENUATION:
+                    case RadioTapType.TxAttenuation:
                         return new TxAttenuationRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_DB_TX_ATTENUATION:
+                    case RadioTapType.DbTxAttenuation:
                         return new DbTxAttenuationRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_DBM_TX_POWER:
+                    case RadioTapType.DbmTxPower:
                         return new DbmTxPowerRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_TSFT:
+                    case RadioTapType.Tsft:
                         return new TsftRadioTapField(br);
-                    case RadioTapType.IEEE80211_RADIOTAP_RX_FLAGS:
+                    case RadioTapType.RxFlags:
                         return new RxFlagsRadioTapField(br);
                     default:
                         //the RadioTap fields are extendable so there may be some we dont know about

@@ -142,7 +142,7 @@ namespace PacketDotNet
     
                 //Before we attempt to parse the payload we need to work out if 
                 //the FCS was valid and if it will be present at the end of the frame
-                FlagsRadioTapField flagsField = this[RadioTapType.IEEE80211_RADIOTAP_FLAGS] as FlagsRadioTapField;
+                FlagsRadioTapField flagsField = this[RadioTapType.Flags] as FlagsRadioTapField;
 		        payloadPacketOrData = ParseEncapsulatedBytes(header.EncapsulatedBytes(), flagsField);
             }
 

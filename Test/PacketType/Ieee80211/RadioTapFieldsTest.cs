@@ -11,7 +11,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_ChannelRadioTapField ()
         {
-            ChannelRadioTapField field = new ChannelRadioTapField(2142, RadioTapChannelFlags.IEEE80211_CHAN_2GHZ | RadioTapChannelFlags.IEEE80211_CHAN_OFDM);
+            ChannelRadioTapField field = new ChannelRadioTapField(2142, RadioTapChannelFlags.Channel2Ghz | RadioTapChannelFlags.Ofdm);
             
             var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);

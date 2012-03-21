@@ -49,7 +49,7 @@ namespace Test.PacketType
                 field.Flags = PpiCommon.CommonFlags.FcsIncludedInFrame | PpiCommon.CommonFlags.TimerSynchFunctionInUse;
                 field.Rate = 2;
                 field.ChannelFrequency = 2142;
-                field.ChannelFlags = RadioTapChannelFlags.IEEE80211_CHAN_2GHZ | RadioTapChannelFlags.IEEE80211_CHAN_PASSIVE;
+                field.ChannelFlags = RadioTapChannelFlags.Channel2Ghz | RadioTapChannelFlags.Passive;
                 field.FhssHopset = 0xAB;
                 field.FhssPattern = 0xCD;
                 field.AntennaSignalPower = -50;
@@ -62,7 +62,7 @@ namespace Test.PacketType
                 Assert.AreEqual(PpiCommon.CommonFlags.FcsIncludedInFrame | PpiCommon.CommonFlags.TimerSynchFunctionInUse, recreatedField.Flags);
                 Assert.AreEqual(2, recreatedField.Rate);
                 Assert.AreEqual(2142, recreatedField.ChannelFrequency);
-                Assert.AreEqual(RadioTapChannelFlags.IEEE80211_CHAN_2GHZ | RadioTapChannelFlags.IEEE80211_CHAN_PASSIVE, recreatedField.ChannelFlags);
+                Assert.AreEqual(RadioTapChannelFlags.Channel2Ghz | RadioTapChannelFlags.Passive, recreatedField.ChannelFlags);
                 Assert.AreEqual(0xAB, recreatedField.FhssHopset);
                 Assert.AreEqual(0xCD, recreatedField.FhssPattern);
                 Assert.AreEqual(-50, recreatedField.AntennaSignalPower);
@@ -104,7 +104,7 @@ namespace Test.PacketType
                 field.RssiAntenna2Ext = 0xA;
                 field.RssiAntenna3Ext = 0xB;
                 field.ExtensionChannelFrequency = 2142;
-                field.ChannelFlags = RadioTapChannelFlags.IEEE80211_CHAN_5GHZ | RadioTapChannelFlags.IEEE80211_CHAN_PASSIVE;
+                field.ChannelFlags = RadioTapChannelFlags.Channel5Ghz | RadioTapChannelFlags.Passive;
                 field.DBmAntenna0SignalPower = 0xC;
                 field.DBmAntenna0SignalNoise = 0xD;
                 field.DBmAntenna1SignalPower = 0xE;
@@ -135,7 +135,7 @@ namespace Test.PacketType
                 Assert.AreEqual(0xA, recreatedField.RssiAntenna2Ext);
                 Assert.AreEqual(0xB, recreatedField.RssiAntenna3Ext);
                 Assert.AreEqual(2142, recreatedField.ExtensionChannelFrequency);
-                Assert.AreEqual(RadioTapChannelFlags.IEEE80211_CHAN_5GHZ | RadioTapChannelFlags.IEEE80211_CHAN_PASSIVE, recreatedField.ChannelFlags);
+                Assert.AreEqual(RadioTapChannelFlags.Channel5Ghz | RadioTapChannelFlags.Passive, recreatedField.ChannelFlags);
                 Assert.AreEqual(0xC, recreatedField.DBmAntenna0SignalPower);
                 Assert.AreEqual(0xD, recreatedField.DBmAntenna0SignalNoise);
                 Assert.AreEqual(0xE, recreatedField.DBmAntenna1SignalPower);

@@ -43,7 +43,7 @@ namespace PacketDotNet
             ///     MPDU arrived at the MAC. For received frames, only.
             ///
             /// </summary>
-            IEEE80211_RADIOTAP_TSFT = 0,
+            Tsft = 0,
 
             /// <summary>
             /// IEEE80211_RADIOTAP_FLAGS             u_int8_t        bitmap
@@ -51,21 +51,21 @@ namespace PacketDotNet
             ///     Properties of transmitted and received frames. See flags
             ///     defined below.
             /// </summary>
-            IEEE80211_RADIOTAP_FLAGS = 1,
+            Flags = 1,
 
             /// <summary>
             /// IEEE80211_RADIOTAP_RATE              u_int8_t        500kb/s
             ///
             ///     Tx/Rx data rate
             /// </summary>
-            IEEE80211_RADIOTAP_RATE = 2,
+            Rate = 2,
 
             ///<summary>
             /// IEEE80211_RADIOTAP_CHANNEL           2 x u_int16_t   MHz, bitmap
             ///
             ///     Tx/Rx frequency in MHz, followed by flags (see below).
             ///</summary>
-            IEEE80211_RADIOTAP_CHANNEL = 3,
+            Channel = 3,
 
             /// <summary>
             /// IEEE80211_RADIOTAP_FHSS              u_int16_t       see below
@@ -73,7 +73,7 @@ namespace PacketDotNet
             ///     For frequency-hopping radios, the hop set (first byte)
             ///     and pattern (second byte).
             /// </summary>
-            IEEE80211_RADIOTAP_FHSS = 4,
+            Fhss = 4,
 
             /// <summary>
             /// IEEE80211_RADIOTAP_DBM_ANTSIGNAL     int8_t          decibels from
@@ -82,7 +82,7 @@ namespace PacketDotNet
             ///     RF signal power at the antenna, decibel difference from
             ///     one milliwatt.
             /// </summary>
-            IEEE80211_RADIOTAP_DBM_ANTSIGNAL = 5,
+            DbmAntennaSignal = 5,
 
             /// <summary>
             /// IEEE80211_RADIOTAP_DBM_ANTNOISE      int8_t          decibels from
@@ -91,7 +91,7 @@ namespace PacketDotNet
             ///     RF noise power at the antenna, decibel difference from one
             ///     milliwatt.
             /// </summary>
-            IEEE80211_RADIOTAP_DBM_ANTNOISE = 6,
+            DbmAntennaNoise = 6,
 
 
             /// <summary>
@@ -102,7 +102,7 @@ namespace PacketDotNet
             ///     Quality" in datasheets.  (Is there a standard way to measure
             ///     this?)
             /// </summary>
-            IEEE80211_RADIOTAP_LOCK_QUALITY = 7,
+            LockQuality = 7,
 
 
             /// <summary>
@@ -112,7 +112,7 @@ namespace PacketDotNet
             ///     power set at factory calibration.  0 is max power.
             ///     Monotonically nondecreasing with lower power levels.
             /// </summary>
-            IEEE80211_RADIOTAP_TX_ATTENUATION = 8,
+            TxAttenuation = 8,
 
 
             /// <summary>
@@ -122,7 +122,7 @@ namespace PacketDotNet
             ///     set at factory calibration.  0 is max power.  Monotonically
             ///     nondecreasing with lower power levels.
             /// </summary>
-            IEEE80211_RADIOTAP_DB_TX_ATTENUATION = 9,
+            DbTxAttenuation = 9,
 
 
             /// <summary>
@@ -133,7 +133,7 @@ namespace PacketDotNet
             ///     reference). This is the absolute power level measured at
             ///     the antenna port.
             /// </summary>
-            IEEE80211_RADIOTAP_DBM_TX_POWER = 10,
+            DbmTxPower = 10,
 
 
             /// <summary>
@@ -142,7 +142,7 @@ namespace PacketDotNet
             ///     Unitless indication of the Rx/Tx antenna for this packet.
             ///     The first antenna is antenna 0.
             /// </summary>
-            IEEE80211_RADIOTAP_ANTENNA = 11,
+            Antenna = 11,
 
 
             /// <summary>
@@ -151,7 +151,7 @@ namespace PacketDotNet
             ///     RF signal power at the antenna, decibel difference from an
             ///     arbitrary, fixed reference.
             /// </summary>
-            IEEE80211_RADIOTAP_DB_ANTSIGNAL = 12,
+            DbAntennaSignal = 12,
 
 
             /// <summary>
@@ -160,19 +160,19 @@ namespace PacketDotNet
             ///     RF noise power at the antenna, decibel difference from an
             ///     arbitrary, fixed reference point.
             /// </summary>
-            IEEE80211_RADIOTAP_DB_ANTNOISE = 13,
+            DbAntennaNoise = 13,
 
             /// <summary>
             /// IEEE80211_RADIOTAP_RX_FLAGS       u_int16_t         bitmap
             /// 
             ///     Properties of received frames.
             /// </summary>
-            IEEE80211_RADIOTAP_RX_FLAGS = 14,
+            RxFlags = 14,
 
             /// <summary>
             /// Indicates that the flags bitmaps have been extended
             /// </summary>
-            IEEE80211_RADIOTAP_EXT = 31,
+            Extended = 31,
         }; 
     }
 }

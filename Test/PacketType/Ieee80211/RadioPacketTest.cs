@@ -46,14 +46,14 @@ namespace Test.PacketType
 
                 RadioPacket p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
                 Assert.IsNotNull(p);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_FLAGS]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_RATE]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_CHANNEL]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_DBM_ANTSIGNAL]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_DBM_ANTNOISE]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_LOCK_QUALITY]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_ANTENNA]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_DB_ANTSIGNAL]);
+                Assert.IsNotNull(p[RadioTapType.Flags]);
+                Assert.IsNotNull(p[RadioTapType.Rate]);
+                Assert.IsNotNull(p[RadioTapType.Channel]);
+                Assert.IsNotNull(p[RadioTapType.DbmAntennaSignal]);
+                Assert.IsNotNull(p[RadioTapType.DbmAntennaNoise]);
+                Assert.IsNotNull(p[RadioTapType.LockQuality]);
+                Assert.IsNotNull(p[RadioTapType.Antenna]);
+                Assert.IsNotNull(p[RadioTapType.DbAntennaSignal]);
                 MacFrame macFrame = p.PayloadPacket as MacFrame;
                 Assert.IsNotNull(macFrame);
                 Assert.IsTrue(macFrame.AppendFcs);
@@ -70,37 +70,37 @@ namespace Test.PacketType
                 RadioPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
                 Assert.IsNotNull (p.PayloadPacket);
 
-                TsftRadioTapField tsftField = p[RadioTapType.IEEE80211_RADIOTAP_TSFT] as TsftRadioTapField;
+                TsftRadioTapField tsftField = p[RadioTapType.Tsft] as TsftRadioTapField;
                 Assert.IsNotNull(tsftField);
                 Assert.AreEqual(38724775, tsftField.TimestampUsec);
                 
-                FlagsRadioTapField flagsField = p[RadioTapType.IEEE80211_RADIOTAP_FLAGS] as FlagsRadioTapField;
+                FlagsRadioTapField flagsField = p[RadioTapType.Flags] as FlagsRadioTapField;
                 Assert.IsNotNull(flagsField);
                 Assert.AreEqual(RadioTapFlags.None, flagsField.Flags);
                 
-                RateRadioTapField rateField = p[RadioTapType.IEEE80211_RADIOTAP_RATE] as RateRadioTapField;
+                RateRadioTapField rateField = p[RadioTapType.Rate] as RateRadioTapField;
                 Assert.IsNotNull(rateField);
                 Assert.AreEqual(1, rateField.RateMbps);
                     
-                ChannelRadioTapField channelField = p[RadioTapType.IEEE80211_RADIOTAP_CHANNEL] as ChannelRadioTapField;
+                ChannelRadioTapField channelField = p[RadioTapType.Channel] as ChannelRadioTapField;
                 Assert.IsNotNull(channelField);
                 Assert.AreEqual(2462, channelField.FrequencyMHz);
                 Assert.AreEqual(11, channelField.Channel);
-                Assert.AreEqual(RadioTapChannelFlags.IEEE80211_CHAN_2GHZ | RadioTapChannelFlags.IEEE80211_CHAN_CCK, channelField.Flags);
+                Assert.AreEqual(RadioTapChannelFlags.Channel2Ghz | RadioTapChannelFlags.Cck, channelField.Flags);
                 
-                DbmAntennaSignalRadioTapField dbmSignalField = p[RadioTapType.IEEE80211_RADIOTAP_DBM_ANTSIGNAL] as DbmAntennaSignalRadioTapField;
+                DbmAntennaSignalRadioTapField dbmSignalField = p[RadioTapType.DbmAntennaSignal] as DbmAntennaSignalRadioTapField;
                 Assert.IsNotNull(dbmSignalField);
                 Assert.AreEqual(-61, dbmSignalField.AntennaSignalDbm);
                 
-                DbmAntennaNoiseRadioTapField dbmNoiseField = p[RadioTapType.IEEE80211_RADIOTAP_DBM_ANTNOISE] as DbmAntennaNoiseRadioTapField;
+                DbmAntennaNoiseRadioTapField dbmNoiseField = p[RadioTapType.DbmAntennaNoise] as DbmAntennaNoiseRadioTapField;
                 Assert.IsNotNull(dbmNoiseField);
                 Assert.AreEqual(-84, dbmNoiseField.AntennaNoisedBm);
                 
-                AntennaRadioTapField antennaField = p[RadioTapType.IEEE80211_RADIOTAP_ANTENNA] as AntennaRadioTapField;
+                AntennaRadioTapField antennaField = p[RadioTapType.Antenna] as AntennaRadioTapField;
                 Assert.IsNotNull(antennaField);
                 Assert.AreEqual(0, antennaField.Antenna);
                 
-                DbAntennaSignalRadioTapField dbSignalField = p[RadioTapType.IEEE80211_RADIOTAP_DB_ANTSIGNAL] as DbAntennaSignalRadioTapField;
+                DbAntennaSignalRadioTapField dbSignalField = p[RadioTapType.DbAntennaSignal] as DbAntennaSignalRadioTapField;
                 Assert.IsNotNull(dbSignalField);
                 Assert.AreEqual(23, dbSignalField.SignalStrengthdB);
                 
@@ -149,9 +149,9 @@ namespace Test.PacketType
                 
                 RadioPacket recreatedFrame = Packet.ParsePacket(LinkLayers.Ieee80211_Radio, frameBytes) as RadioPacket;
                 
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_FLAGS]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_DB_ANTSIGNAL]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_DB_ANTNOISE]);
+                Assert.IsNotNull(p[RadioTapType.Flags]);
+                Assert.IsNotNull(p[RadioTapType.DbAntennaSignal]);
+                Assert.IsNotNull(p[RadioTapType.DbAntennaNoise]);
                 Assert.AreEqual(new byte[]{0xFF}, recreatedFrame.PayloadData);
             }
             
@@ -166,33 +166,33 @@ namespace Test.PacketType
 
                 RadioPacket p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
                 Assert.IsNotNull(p);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_FLAGS]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_RATE]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_CHANNEL]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_DBM_ANTSIGNAL]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_DBM_ANTNOISE]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_LOCK_QUALITY]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_ANTENNA]);
-                Assert.IsNotNull(p[RadioTapType.IEEE80211_RADIOTAP_DB_ANTSIGNAL]);
+                Assert.IsNotNull(p[RadioTapType.Flags]);
+                Assert.IsNotNull(p[RadioTapType.Rate]);
+                Assert.IsNotNull(p[RadioTapType.Channel]);
+                Assert.IsNotNull(p[RadioTapType.DbmAntennaSignal]);
+                Assert.IsNotNull(p[RadioTapType.DbmAntennaNoise]);
+                Assert.IsNotNull(p[RadioTapType.LockQuality]);
+                Assert.IsNotNull(p[RadioTapType.Antenna]);
+                Assert.IsNotNull(p[RadioTapType.DbAntennaSignal]);
                 MacFrame macFrame = p.PayloadPacket as MacFrame;
                 Assert.IsNotNull(macFrame);
                 Assert.IsTrue(macFrame.AppendFcs);
                 Assert.IsTrue(macFrame.FCSValid);
                 
                 //Now remove a couple of radio tap fields and check that it is still valid
-                p.Remove(RadioTapType.IEEE80211_RADIOTAP_RATE);
-                p.Remove(RadioTapType.IEEE80211_RADIOTAP_ANTENNA);
+                p.Remove(RadioTapType.Rate);
+                p.Remove(RadioTapType.Antenna);
                 
                 RadioPacket recreatedFrame = Packet.ParsePacket(rawCapture.LinkLayerType, p.Bytes) as RadioPacket;
                 Assert.IsNotNull(recreatedFrame);
-                Assert.IsNotNull(recreatedFrame[RadioTapType.IEEE80211_RADIOTAP_FLAGS]);
-                Assert.IsNull(recreatedFrame[RadioTapType.IEEE80211_RADIOTAP_RATE]);
-                Assert.IsNotNull(recreatedFrame[RadioTapType.IEEE80211_RADIOTAP_CHANNEL]);
-                Assert.IsNotNull(recreatedFrame[RadioTapType.IEEE80211_RADIOTAP_DBM_ANTSIGNAL]);
-                Assert.IsNotNull(recreatedFrame[RadioTapType.IEEE80211_RADIOTAP_DBM_ANTNOISE]);
-                Assert.IsNotNull(recreatedFrame[RadioTapType.IEEE80211_RADIOTAP_LOCK_QUALITY]);
-                Assert.IsNull(recreatedFrame[RadioTapType.IEEE80211_RADIOTAP_ANTENNA]);
-                Assert.IsNotNull(recreatedFrame[RadioTapType.IEEE80211_RADIOTAP_DB_ANTSIGNAL]);
+                Assert.IsNotNull(recreatedFrame[RadioTapType.Flags]);
+                Assert.IsNull(recreatedFrame[RadioTapType.Rate]);
+                Assert.IsNotNull(recreatedFrame[RadioTapType.Channel]);
+                Assert.IsNotNull(recreatedFrame[RadioTapType.DbmAntennaSignal]);
+                Assert.IsNotNull(recreatedFrame[RadioTapType.DbmAntennaNoise]);
+                Assert.IsNotNull(recreatedFrame[RadioTapType.LockQuality]);
+                Assert.IsNull(recreatedFrame[RadioTapType.Antenna]);
+                Assert.IsNotNull(recreatedFrame[RadioTapType.DbAntennaSignal]);
                 MacFrame recreatedMacFrame = p.PayloadPacket as MacFrame;
                 Assert.IsNotNull(recreatedMacFrame);
                 Assert.IsTrue(recreatedMacFrame.AppendFcs);
@@ -241,8 +241,8 @@ namespace Test.PacketType
 
                 RadioPacket p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
                 Assert.IsNotNull(p);
-                Assert.IsTrue(p.Contains(RadioTapType.IEEE80211_RADIOTAP_FLAGS));
-                Assert.IsFalse(p.Contains(RadioTapType.IEEE80211_RADIOTAP_FHSS));
+                Assert.IsTrue(p.Contains(RadioTapType.Flags));
+                Assert.IsFalse(p.Contains(RadioTapType.Fhss));
             }
         } 
     }

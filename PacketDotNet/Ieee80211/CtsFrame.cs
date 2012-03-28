@@ -99,6 +99,13 @@ namespace PacketDotNet
                 SetAddress (0, ReceiverAddress);
             }
             
+            /// <summary>
+            /// Returns a string with a description of the addresses used in the packet.
+            /// This is used as a compoent of the string returned by ToString().
+            /// </summary>
+            /// <returns>
+            /// The address string.
+            /// </returns>
             protected override String GetAddressString()
             {
                 return String.Format("RA {0}", ReceiverAddress);

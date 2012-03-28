@@ -76,7 +76,7 @@ namespace Test.PacketType
                 
                 FlagsRadioTapField flagsField = p[RadioTapType.Flags] as FlagsRadioTapField;
                 Assert.IsNotNull(flagsField);
-                Assert.AreEqual(RadioTapFlags.None, flagsField.Flags);
+                Assert.AreEqual(0, (int)flagsField.Flags);
                 
                 RateRadioTapField rateField = p[RadioTapType.Rate] as RateRadioTapField;
                 Assert.IsNotNull(rateField);

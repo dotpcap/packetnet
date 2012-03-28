@@ -42,9 +42,15 @@ namespace PacketDotNet
         /// </summary>
         public class PpiPacket : InternetLinkLayerPacket, IEnumerable
         {
+            /// <summary>
+            /// PPI packet header flags.
+            /// </summary>
             [Flags]
             public enum HeaderFlags : byte
             {
+                /// <summary>
+                /// Indicates whether or not the PPI fields are aligned to a 32 bit boundary.
+                /// </summary>
                 Alignment32Bit = 1
             }
 
@@ -109,9 +115,15 @@ namespace PacketDotNet
                 }
             }
             
+            /// <summary>
+            /// Gets or sets the PPI header flags.
+            /// </summary>
+            /// <value>
+            /// The PPI header flags.
+            /// </value>
             public HeaderFlags Flags { get; set; }
             
-            public HeaderFlags FlagsBytes
+            private HeaderFlags FlagsBytes
             {
                 get
                 {
@@ -124,9 +136,16 @@ namespace PacketDotNet
                 }
             }
             
+            /// <summary>
+            /// Gets or sets the type of the link type specified in the PPI packet. This should
+            /// be the link type of the encapsulated packet.
+            /// </summary>
+            /// <value>
+            /// The link type.
+            /// </value>
             public LinkLayers LinkType { get; set; }
             
-            public LinkLayers LinkTypeBytes
+            private LinkLayers LinkTypeBytes
             {
                 get
                 {
@@ -142,8 +161,19 @@ namespace PacketDotNet
                 }
             }
             
+            /// <summary>
+            /// Returns the number of PPI fields in the PPI packet.
+            /// </summary>
+            /// <value>
+            /// The number of fields.
+            /// </value>
             public int Count { get { return PpiFields.Count; } } 
-            
+            /// <summary>
+            /// Gets the <see cref="PacketDotNet.Ieee80211.PpiPacket"/> at the specified index.
+            /// </summary>
+            /// <param name='index'>
+            /// Index.
+            /// </param>
             public PpiField this[int index]
             {
                 get
@@ -157,7 +187,12 @@ namespace PacketDotNet
         #endregion Properties
 
         #region Constructors
-
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiPacket"/> class.
+            /// </summary>
+            /// <param name='bas'>
+            /// A <see cref="ByteArraySegment"/>
+            /// </param>
             public PpiPacket (ByteArraySegment bas)
             {
                 // slice off the header portion
@@ -177,6 +212,9 @@ namespace PacketDotNet
                 payloadPacketOrData = ParseEncapsulatedBytes (header, commonField);
             }
             
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiPacket"/> class.
+            /// </summary>
             public PpiPacket ()
             {
                 PpiFields = new List<PpiField>();
@@ -187,32 +225,70 @@ namespace PacketDotNet
         #endregion Constructors
 
         #region Public Methods
-   
+            /// <summary>
+            /// Add the specified field to the packet.
+            /// </summary>
+            /// <param name='field'>
+            /// the field.
+            /// </param>
             public void Add(PpiField field)
             {
                 PpiFields.Add(field);
             }
             
+            /// <summary>
+            /// Removes the specified field from the packet.
+            /// </summary>
+            /// <param name='field'>
+            /// the field.
+            /// </param>
             public void Remove(PpiField field)
             {
                 PpiFields.Remove(field);
             }
             
+            /// <summary>
+            /// Removes all fields of the specified type.
+            /// </summary>
+            /// <param name='type'>
+            /// the field type to be removed.
+            /// </param>
             public void RemoveAll(PpiFieldType type)
             {
                 PpiFields.RemoveAll( field => type == field.FieldType);
             }
             
+            /// <summary>
+            /// Checks whether the specified field is in the packet.
+            /// </summary>
+            /// <param name='field'>
+            /// <c>true</c> if the field is in the packet, <c>false</c> if not.
+            /// </param>
             public bool Contains(PpiField field)
             {
                 return PpiFields.Contains(field);
             }
             
+            /// <summary>
+            /// Checks whether there is field of the specified type in the packet.
+            /// </summary>
+            /// <param name='type'>
+            /// <c>true</c> if there is a field of the specified type in the packet, <c>false</c> if not.
+            /// </param>
             public bool Contains(PpiFieldType type)
             {
                 return (PpiFields.Find(field => field.FieldType == type) != null);
             }
             
+            /// <summary>
+            /// Finds the first field in the packet of the specified type.
+            /// </summary>
+            /// <returns>
+            /// The first field in the packet of the specified type, or <c>null</c> if there is no field of the specified type.
+            /// </returns>
+            /// <param name='type'>
+            /// The type of packet to find.
+            /// </param>
             public PpiField FindFirstByType (PpiFieldType type)
             {
                 var ppiFields = this.PpiFields;
@@ -224,7 +300,15 @@ namespace PacketDotNet
                 return null;
             }
             
-            
+            /// <summary>
+            /// Finds the fields in the packet of the specified type.
+            /// </summary>
+            /// <returns>
+            /// The fields of the specified type, or an empty array of there are no fields of that type.
+            /// </returns>
+            /// <param name='type'>
+            /// The type of packet to find.
+            /// </param>
             public PpiField[] FindByType(PpiFieldType type)
             {
                 return PpiFields.FindAll(p => (p.FieldType == type)).ToArray();
@@ -309,11 +393,21 @@ namespace PacketDotNet
                 return buffer.ToString ();
             }
             
+            /// <summary>
+            /// Gets the enumerator of PPI fields.
+            /// </summary>
+            /// <returns>
+            /// The field enumerator.
+            /// </returns>
             public IEnumerator GetEnumerator()
             {
                 return PpiFields.GetEnumerator();
             }
    
+            /// <summary>
+            /// Called to ensure that field values are updated before
+            /// the packet bytes are retrieved
+            /// </summary>
             public override void UpdateCalculatedValues()
             {
                 //If aligned is true then fields must all start on 32bit boundaries so we might need

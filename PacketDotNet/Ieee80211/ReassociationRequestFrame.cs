@@ -218,6 +218,21 @@ namespace PacketDotNet
                 header.Length = FrameSize;
             }
    
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ReassociationRequestFrame"/> class.
+            /// </summary>
+            /// <param name='SourceAddress'>
+            /// Source address.
+            /// </param>
+            /// <param name='DestinationAddress'>
+            /// Destination address.
+            /// </param>
+            /// <param name='BssId'>
+            /// BssId.
+            /// </param>
+            /// <param name='InformationElements'>
+            /// Information elements.
+            /// </param>
             public ReassociationRequestFrame (PhysicalAddress SourceAddress,
                                               PhysicalAddress DestinationAddress,
                                               PhysicalAddress BssId,

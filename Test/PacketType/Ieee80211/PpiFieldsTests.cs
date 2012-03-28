@@ -73,15 +73,15 @@ namespace Test.PacketType
             public void Test_PpiMacExtensions_Construction()
             {
                 PpiMacExtensions field = new PpiMacExtensions();
-                field.Flags = PpiMacExtensions.ExtensionFlags.DuplicateRx | PpiMacExtensions.ExtensionFlags.HtIndicator;
-                field.AMpdu = 0x12345678;
+                field.Flags = PpiMacExtensionFlags.DuplicateRx | PpiMacExtensionFlags.HtIndicator;
+                field.AMpduId = 0x12345678;
                 field.DelimiterCount = 0xA;
                 
                 var ms = new MemoryStream(field.Bytes);
                 PpiMacExtensions recreatedField = new PpiMacExtensions(new BinaryReader(ms));
                 
-                Assert.AreEqual(PpiMacExtensions.ExtensionFlags.DuplicateRx | PpiMacExtensions.ExtensionFlags.HtIndicator, recreatedField.Flags);
-                Assert.AreEqual(0x12345678, field.AMpdu);
+                Assert.AreEqual(PpiMacExtensionFlags.DuplicateRx | PpiMacExtensionFlags.HtIndicator, recreatedField.Flags);
+                Assert.AreEqual(0x12345678, field.AMpduId);
                 Assert.AreEqual(0xA, field.DelimiterCount);
             }
             
@@ -90,7 +90,7 @@ namespace Test.PacketType
             {
                 PpiMacPhy field = new PpiMacPhy();
                 
-                field.AMpdu = 0x12345678;
+                field.AMpduId = 0x12345678;
                 field.DelimiterCount = 0xAB;
                 field.ModulationCodingScheme = 0x1;
                 field.SpatialStreamCount = 0x2;
@@ -104,7 +104,7 @@ namespace Test.PacketType
                 field.RssiAntenna2Ext = 0xA;
                 field.RssiAntenna3Ext = 0xB;
                 field.ExtensionChannelFrequency = 2142;
-                field.ChannelFlags = RadioTapChannelFlags.Channel5Ghz | RadioTapChannelFlags.Passive;
+                field.ExtensionChannelFlags = RadioTapChannelFlags.Channel5Ghz | RadioTapChannelFlags.Passive;
                 field.DBmAntenna0SignalPower = 0xC;
                 field.DBmAntenna0SignalNoise = 0xD;
                 field.DBmAntenna1SignalPower = 0xE;
@@ -121,7 +121,7 @@ namespace Test.PacketType
                 var ms = new MemoryStream(field.Bytes);
                 PpiMacPhy recreatedField = new PpiMacPhy(new BinaryReader(ms));
                 
-                Assert.AreEqual(0x12345678, recreatedField.AMpdu);
+                Assert.AreEqual(0x12345678, recreatedField.AMpduId);
                 Assert.AreEqual(0xAB, recreatedField.DelimiterCount);
                 Assert.AreEqual(0x1, recreatedField.ModulationCodingScheme);
                 Assert.AreEqual(0x2, recreatedField.SpatialStreamCount);
@@ -135,7 +135,7 @@ namespace Test.PacketType
                 Assert.AreEqual(0xA, recreatedField.RssiAntenna2Ext);
                 Assert.AreEqual(0xB, recreatedField.RssiAntenna3Ext);
                 Assert.AreEqual(2142, recreatedField.ExtensionChannelFrequency);
-                Assert.AreEqual(RadioTapChannelFlags.Channel5Ghz | RadioTapChannelFlags.Passive, recreatedField.ChannelFlags);
+                Assert.AreEqual(RadioTapChannelFlags.Channel5Ghz | RadioTapChannelFlags.Passive, recreatedField.ExtensionChannelFlags);
                 Assert.AreEqual(0xC, recreatedField.DBmAntenna0SignalPower);
                 Assert.AreEqual(0xD, recreatedField.DBmAntenna0SignalNoise);
                 Assert.AreEqual(0xE, recreatedField.DBmAntenna1SignalPower);

@@ -63,9 +63,11 @@ namespace PacketDotNet
 
             /// <summary>Position of the version field</summary>
             public static readonly int VersionPosition = 0;
-
+            
+            /// <summary>The total length of the ppi packet header</summary>
             public static readonly int PpiPacketHeaderLength;
             
+            /// <summary>The length of the PPI field header</summary>
             public static readonly int FieldHeaderLength = 4;
             
         #endregion Fields

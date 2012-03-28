@@ -531,7 +531,12 @@ namespace PacketDotNet
                 this.Field = field;
             }
    
-            
+            /// <summary>
+            /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.Ieee80211.FrameControlField"/>.
+            /// </summary>
+            /// <returns>
+            /// A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.Ieee80211.FrameControlField"/>.
+            /// </returns>
             public override string ToString ()
             {
                 var flags = new List<String>();

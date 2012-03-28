@@ -239,6 +239,12 @@ namespace PacketDotNet
             /// </summary>
             public abstract int FrameSize { get; }
             
+            /// <summary>
+            /// Gets the length of the payload.
+            /// </summary>
+            /// <value>
+            /// The length of the payload.
+            /// </value>
 			protected int PayloadLength
 			{
 				get
@@ -494,9 +500,21 @@ namespace PacketDotNet
                 }
             }
             
+            /// <summary>
+            /// Gets or sets a value indicating whether this <see cref="PacketDotNet.Ieee80211.MacFrame"/> should include an FCS at the end
+            /// of the array returned by Bytes.
+            /// </summary>
+            /// <value>
+            /// <c>true</c> if append FCS should be appended; otherwise, <c>false</c>.
+            /// </value>
             public bool AppendFcs { get; set; }
             
             
+            /// <value>
+            /// The option to return a ByteArraySegment means that this method
+            /// is higher performance as the data can start at an offset other than
+            /// the first byte.
+            /// </value>
             public override ByteArraySegment BytesHighPerformance
             {
                 get
@@ -573,6 +591,13 @@ namespace PacketDotNet
                                       FrameCheckSequence);
             }
             
+            /// <summary>
+            /// Returns a string with a description of the addresses used in the packet.
+            /// This is used as a compoent of the string returned by ToString().
+            /// </summary>
+            /// <returns>
+            /// The address string.
+            /// </returns>
             protected abstract String GetAddressString();
         } 
     }

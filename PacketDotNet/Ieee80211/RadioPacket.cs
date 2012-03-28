@@ -118,6 +118,9 @@ namespace PacketDotNet
                 return bitmaskFields.ToArray();
             }
    
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.RadioPacket"/> class.
+            /// </summary>
             public RadioPacket()
             {
                 Present = new UInt32[1];
@@ -204,6 +207,12 @@ namespace PacketDotNet
                 return buffer.ToString();
             }
    
+            /// <summary>
+            /// Add the specified field to the packet.
+            /// </summary>
+            /// <param name='field'>
+            /// Field to be added
+            /// </param>
             public void Add(RadioTapField field)
             {
                 RadioTapFields[field.FieldType] = field;
@@ -224,6 +233,12 @@ namespace PacketDotNet
                 Present[presenceField] |= (UInt32)(1 << presenceBit);
             }
             
+            /// <summary>
+            /// Removes a field of the specified type if one is present in the packet.
+            /// </summary>
+            /// <param name='fieldType'>
+            /// Field type.
+            /// </param>
             public void Remove(RadioTapType fieldType)
             {
                 RadioTapField field;
@@ -237,11 +252,25 @@ namespace PacketDotNet
                 }
             }
             
+            /// <summary>
+            /// Checks for the presence of a field of the specified type in the packet.
+            /// </summary>
+            /// <param name='fieldType'>
+            /// The field type to check for.
+            /// </param>
+            /// <returns><c>true</c> if the packet contains a field of the specified type; otherwise, <c>false</c>.</returns>
             public bool Contains(RadioTapType fieldType)
             {
                 return RadioTapFields.ContainsKey(fieldType);
             }
             
+            /// <summary>
+            /// Gets the <see cref="PacketDotNet.Ieee80211.RadioTapField"/> with the specified type, or null if the
+            /// field is not in the packet.
+            /// </summary>
+            /// <param name='type'>
+            /// Radio Tap field type
+            /// </param>
             public RadioTapField this[RadioTapType type]
             {
                 get
@@ -321,7 +350,10 @@ namespace PacketDotNet
                 return retval;
             }
    
-            
+            /// <summary>
+            /// Called to ensure that field values are updated before
+            /// the packet bytes are retrieved
+            /// </summary>
             public override void UpdateCalculatedValues()
             {
                 if ((header == null) || (header.Length < Length))

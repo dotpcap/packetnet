@@ -118,9 +118,10 @@ namespace PacketDotNet
                 SequenceControl = new SequenceControlField (SequenceControlBytes);
 
                 header.Length = FrameSize; 
-				if(PayloadLength > 0)
+                var availablePayloadLength = GetAvailablePayloadLength();
+				if(availablePayloadLength > 0)
 				{
-					payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (PayloadLength);
+					payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (availablePayloadLength);
 				}
             }
             

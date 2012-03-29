@@ -240,18 +240,19 @@ namespace PacketDotNet
             public abstract int FrameSize { get; }
             
             /// <summary>
-            /// Gets the length of the payload.
+            /// Returns the number of bytes of payload data currently available in
+            /// the buffer.
             /// </summary>
+            /// <remarks>This method is used to work out how much space there is for the payload in the
+            /// underlying ByteArraySegment. To find out the length of
+            /// actual payload assigned to the packet use PayloadData.Length.</remarks>
             /// <value>
-            /// The length of the payload.
+            /// The number of bytes of space available after the header for payload data.
             /// </value>
-			protected int PayloadLength
+			protected int GetAvailablePayloadLength()
 			{
-				get
-				{
-					int payloadLength = header.BytesLength - (header.Offset + FrameSize);
-					return (payloadLength > 0) ? payloadLength : 0;
-				}
+				int payloadLength = header.BytesLength - (header.Offset + FrameSize);
+				return (payloadLength > 0) ? payloadLength : 0;
 			}
 			
             /// <summary>

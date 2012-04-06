@@ -165,7 +165,8 @@ namespace Test.Misc
                         fileAndPacketIndex++;
                     } catch(System.Exception e)
                     {
-                        log.Debug("caught exception",e);
+                        log.Error("caught exception",e);
+                        throw;
                     }
                 }
             }

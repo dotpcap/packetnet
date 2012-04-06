@@ -35,25 +35,41 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="nunit.framework, Version=2.4.7.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=a5715cc6d5c3540b">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\PacketDotNet\Libraries\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="SharpPcap, Version=3.6.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="nunit.framework">
+      <HintPath>lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\PacketDotNet\Libraries\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpPcap">
       <HintPath>lib\SharpPcap\SharpPcap.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PacketType\Ieee80211PerPacketInformationTest.cs" />
-    <Compile Include="PacketType\Ieee80211RadioPacketTest.cs" />
-    <Compile Include="PacketType\Ieee80211RawPacketTest.cs" />
+    <Compile Include="PacketType\Ieee80211\CapabilityInformationFieldTest.cs" />
+    <Compile Include="PacketType\Ieee80211\ActionFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\BlockAcknowledgmentFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\AssociationResponseFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\AssociationRequestFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\AuthenticationFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\BlockAcknowledgmentRequestFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\DeauthenticationFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\BeaconFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\ContentionFreeEndFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\DataDataFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\DisassociationFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\FrameControlFieldTest.cs" />
+    <Compile Include="PacketType\Ieee80211\InformationElementTest.cs" />
+    <Compile Include="PacketType\Ieee80211\NullDataFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\PerPacketInformationTest.cs" />
+    <Compile Include="PacketType\Ieee80211\QosDataFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\QosNullDataFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\RadioPacketTest.cs" />
+    <Compile Include="PacketType\Ieee80211\RawPacketTest.cs" />
+    <Compile Include="PacketType\Ieee80211\ProbeRequestTest.cs" />
+    <Compile Include="PacketType\Ieee80211\ProbeResponseTest.cs" />
     <Compile Include="Rate.cs" />
     <Compile Include="ByteSetupMethods.cs" />
     <Compile Include="NUnitSetupClass.cs" />
@@ -80,6 +96,15 @@
     <Compile Include="PacketType\WakeOnLanTest.cs" />
     <Compile Include="PacketType\IGMPv2PacketTest.cs" />
     <Compile Include="PacketType\PPPPacketTest.cs" />
+    <Compile Include="PacketType\Ieee80211\InformationElementListTest.cs" />
+    <Compile Include="PacketType\Ieee80211\MacFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\BlockAcknowledgmentControlFieldTest.cs" />
+    <Compile Include="PacketType\Ieee80211\ReassociationRequestFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\AckFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\CtsFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\RadioTapFieldsTest.cs" />
+    <Compile Include="PacketType\Ieee80211\SequenceControlFieldTest.cs" />
+    <Compile Include="PacketType\Ieee80211\PpiFieldsTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

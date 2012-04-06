@@ -37,27 +37,53 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=a5715cc6d5c3540b" Condition=" '$(Configuration)' == 'DEBUG' ">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="System.Core" />
+    <Reference Include="log4net" Condition=" '$(Configuration)' == 'DEBUG' ">
       <HintPath>Libraries\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="ApplicationPacket.cs" />
+    <Compile Include="Ieee80211\ActionFrame.cs" />
+    <Compile Include="Ieee80211\ReassociationRequestFrame.cs" />
+    <Compile Include="Ieee80211\BlockAcknowledgmentControlField.cs" />
+    <Compile Include="Ieee80211\BlockAcknowledgmentFrame.cs" />
+    <Compile Include="Ieee80211\AssociationResponseFrame.cs" />
+    <Compile Include="Ieee80211\AssociationRequestFrame.cs" />
+    <Compile Include="Ieee80211\AuthenticationFrame.cs" />
+    <Compile Include="Ieee80211\AuthenticationStatusCode.cs" />
+    <Compile Include="Ieee80211\BlockAcknowledgmentRequestFrame.cs" />
+    <Compile Include="Ieee80211\DeauthenticationFrame.cs" />
     <Compile Include="DataLinkPacket.cs" />
     <Compile Include="EthernetPacket.cs" />
     <Compile Include="EthernetPacketType.cs" />
-    <Compile Include="Ieee80211FrameControlField.cs" />
-    <Compile Include="Ieee80211MacFields.cs" />
-    <Compile Include="Ieee80211MacFrame.cs" />
-    <Compile Include="Ieee80211RadioPacket.cs" />
-    <Compile Include="Ieee80211RadioFields.cs" />
-    <Compile Include="Ieee80211RadioTapChannelFlags.cs" />
-    <Compile Include="Ieee80211RadioTapFields.cs" />
-    <Compile Include="Ieee80211RadioTapFlags.cs" />
-    <Compile Include="Ieee80211RadioTapType.cs" />
+    <Compile Include="Ieee80211\BeaconFrame.cs" />
+    <Compile Include="Ieee80211\CapabilityInformationField.cs" />
+    <Compile Include="Ieee80211\ContentionFreeEndFrame.cs" />
+    <Compile Include="Ieee80211\DataDataFrame.cs" />
+    <Compile Include="Ieee80211\DataFrame.cs" />
+    <Compile Include="Ieee80211\DisassociationFrame.cs" />
+    <Compile Include="Ieee80211\DurationField.cs" />
+    <Compile Include="Ieee80211\FrameControlField.cs" />
+    <Compile Include="Ieee80211\InformationElement.cs" />
+    <Compile Include="Ieee80211\MacFields.cs" />
+    <Compile Include="Ieee80211\MacFrame.cs" />
+    <Compile Include="Ieee80211\ManagementFrame.cs" />
+    <Compile Include="Ieee80211\NullDataFrame.cs" />
+    <Compile Include="Ieee80211\ProbeRequestFrame.cs" />
+    <Compile Include="Ieee80211\ProbeResponseFrame.cs" />
+    <Compile Include="Ieee80211\QosDataFrame.cs" />
+    <Compile Include="Ieee80211\QosNullDataFrame.cs" />
+    <Compile Include="Ieee80211\RadioPacket.cs" />
+    <Compile Include="Ieee80211\RadioFields.cs" />
+    <Compile Include="Ieee80211\RadioTapChannelFlags.cs" />
+    <Compile Include="Ieee80211\RadioTapFields.cs" />
+    <Compile Include="Ieee80211\RadioTapFlags.cs" />
+    <Compile Include="Ieee80211\RadioTapType.cs" />
+    <Compile Include="Ieee80211\ReasonCodes.cs" />
+    <Compile Include="Ieee80211\RtsFrame.cs" />
+    <Compile Include="Ieee80211\SequenceControlField.cs" />
     <Compile Include="IpPacket.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="SessionPacket.cs" />
@@ -153,6 +179,14 @@
     <Compile Include="Tcp\AlternateChecksumData.cs" />
     <Compile Include="Tcp\MD5Signature.cs" />
     <Compile Include="Tcp\UserTimeout.cs" />
+    <Compile Include="Ieee80211\InformationElementList.cs" />
+    <Compile Include="Utils\Crc32.cs" />
+    <Compile Include="Ieee80211\PpiFieldType.cs" />
+    <Compile Include="Ieee80211\PpiFields.cs" />
+    <Compile Include="Ieee80211\PpiHeaderFields.cs" />
+    <Compile Include="Ieee80211\PpiPacket.cs" />
+    <Compile Include="Ieee80211\AckFrame.cs" />
+    <Compile Include="Ieee80211\CtsFrame.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

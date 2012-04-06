@@ -1,5 +1,7 @@
 *.pidb
 *.userprefs
 *.suo
+*.DS_Store
 bin
 obj/
+test-results/

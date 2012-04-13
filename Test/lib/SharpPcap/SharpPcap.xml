@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>/home/cmorgan/sharppcap_git/SharpPcap/bin/Debug/SharpPcap</name>
+        <name>/home/cmorgan/hdd/sharppcap_git/SharpPcap/bin/Debug/SharpPcap</name>
     </assembly>
     <members>
         <member name="T:SharpPcap.AirPcap.AirPcapAdapterBus">
@@ -198,6 +198,11 @@
             Adapter channel
             </summary>
         </member>
+        <member name="P:SharpPcap.AirPcap.AirPcapDevice.Frequency">
+            <summary>
+            Adapter frequency
+            </summary>
+        </member>
         <member name="P:SharpPcap.AirPcap.AirPcapDevice.ChannelInfo">
             <summary>
             Channel information
@@ -324,7 +329,7 @@
             Opens an Airpcap device with optional WinPcap.OpenFlags
             </summary>
             <param name="flags">
-            A <see cref="T:SharpPcap.WinPcap.OpenFlags" /></param>
+            A <see cref="!:WinPcap.OpenFlags" /></param>
             <param name="read_timeout">
             A <see cref="T:System.Int32" /></param>
         </member>
@@ -2499,6 +2504,14 @@
             <param name="msg">
             A <see cref="T:System.String" /></param>
         </member>
+        <member name="T:SharpPcap.PacketArrivalEventHandler">
+            <summary>A delegate for Packet Arrival events</summary>
+        </member>
+        <member name="T:SharpPcap.CaptureStoppedEventHandler">
+            <summary>
+            A delegate for notifying of a capture stopped event
+            </summary>
+        </member>
         <member name="T:SharpPcap.DeviceMode">
             <summary>
             The mode used when opening a device
@@ -2835,6 +2848,12 @@
         <member name="P:SharpPcap.WinPcap.StatisticsModeEventArgs.Statistics">
             <summary>
             Statistics data for this event
+            </summary>
+        </member>
+        <member name="T:SharpPcap.WinPcap.StatisticsModeEventHandler">
+            <summary>
+            A delegate for delivering network statistics when using winpcap in
+            statistics mode
             </summary>
         </member>
         <member name="T:SharpPcap.WinPcap.StatisticsModePacket">
@@ -3793,20 +3812,6 @@
             </summary>
             <param name="msg">
             A <see cref="T:System.String" /></param>
-        </member>
-        <member name="T:SharpPcap.PacketArrivalEventHandler">
-            <summary>A delegate for Packet Arrival events</summary>
-        </member>
-        <member name="T:SharpPcap.CaptureStoppedEventHandler">
-            <summary>
-            A delegate for notifying of a capture stopped event
-            </summary>
-        </member>
-        <member name="T:SharpPcap.WinPcap.StatisticsModeEventHandler">
-            <summary>
-            A delegate for delivering network statistics when using winpcap in
-            statistics mode
-            </summary>
         </member>
     </members>
 </doc>

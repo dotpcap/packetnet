@@ -42,6 +42,7 @@ namespace PacketDotNet
         EchoRequest = 128,
         EchoReply = 129,
         RouterSolicitation = 133,
+        NeighborSolicitation = 135,
         PrivateExperimentation3 = 200,
         PrivateExperimentation4 = 201,
         ReservedForExpansion2 = 255

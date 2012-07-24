@@ -28,9 +28,16 @@ namespace PacketDotNet
     /// Encapsulates and ensures that we have either a Packet OR
     /// a ByteArraySegment but not both
     /// </summary>
-    internal class PacketOrByteArraySegment
+    public class PacketOrByteArraySegment
     {
         private ByteArraySegment theByteArraySegment;
+
+        /// <summary>
+        /// Gets or sets the byte array segment.
+        /// </summary>
+        /// <value>
+        /// The byte array segment.
+        /// </value>
         public ByteArraySegment TheByteArraySegment
         {
             get
@@ -46,6 +53,13 @@ namespace PacketDotNet
         }
 
         private Packet thePacket;
+
+        /// <summary>
+        /// Gets or sets the packet.
+        /// </summary>
+        /// <value>
+        /// The packet.
+        /// </value>
         public Packet ThePacket
         {
             get

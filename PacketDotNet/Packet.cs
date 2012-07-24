@@ -42,15 +42,30 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        internal ByteArraySegment header;
+        /// <summary>
+        /// Used internally when building new packet dissectors
+        /// </summary>
+        protected ByteArraySegment header;
 
-        internal PacketOrByteArraySegment payloadPacketOrData = new PacketOrByteArraySegment();
+        /// <summary>
+        /// Used internally when building new packet dissectors
+        /// </summary>
+        protected PacketOrByteArraySegment payloadPacketOrData = new PacketOrByteArraySegment();
 
-        internal Packet parentPacket;
+        /// <summary>
+        /// The parent packet. Accessible via the 'ParentPacket' property
+        /// </summary>
+        private Packet parentPacket;
 
-        // recursively finds the length of this packet and all of the packets
-        // encapsulated by this packet
-        internal int TotalPacketLength
+        /// <summary>
+        /// Gets the total length of the packet.
+        /// Recursively finds the length of this packet and all of the packets
+        /// encapsulated by this packet
+        /// </summary>
+        /// <value>
+        /// The total length of the packet.
+        /// </value>
+        protected int TotalPacketLength
         {
             get
             {
@@ -79,7 +94,7 @@ namespace PacketDotNet
         /// are the same instance and the offsets indicate that the bytes
         /// are contiguous
         /// </value>
-        internal bool SharesMemoryWithSubPackets
+        protected bool SharesMemoryWithSubPackets
         {
             get
             {

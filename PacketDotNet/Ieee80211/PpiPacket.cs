@@ -330,7 +330,7 @@ namespace PacketDotNet
             {
                 if (p is PpiPacket)
                 {
-                    var payload = p.payloadPacketOrData.ThePacket;
+                    var payload = p.PayloadPacket;
                     return (MacFrame)payload;
                 }
                 return null;

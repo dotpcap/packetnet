@@ -187,7 +187,7 @@ namespace PacketDotNet
             get
             {
                 // IPv6 has no checksum so only the TCP checksum needs evaluation
-                if (parentPacket.GetType() == typeof(IPv6Packet))
+                if (ParentPacket.GetType() == typeof(IPv6Packet))
                     return ValidTCPChecksum;
                 // For IPv4 both the IP layer and the TCP layer contain checksums
                 else

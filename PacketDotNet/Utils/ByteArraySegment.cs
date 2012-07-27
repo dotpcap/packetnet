@@ -50,11 +50,14 @@ namespace PacketDotNet.Utils
 
         /// <value>
         /// Number of bytes beyond the offset into Bytes
+        ///
+        /// Take care when setting this parameter as many things are based on
+        /// the value of this property being correct
         /// </value>
         public int Length
         {
             get { return length; }
-            internal set
+            set
             {
                 // check for invalid values
                 if(value < 0)

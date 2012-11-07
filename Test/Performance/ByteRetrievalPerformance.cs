@@ -31,7 +31,7 @@ namespace Test.Performance
     /// of having to build a contiguous byte[] from non-continguous packets
     /// </summary>
     [TestFixture]
-    public class ByteRetrievalPerformancs
+    public class ByteRetrievalPerformance
     {
         private EthernetPacket BuildNonContiguousEthernetPacket()
         {

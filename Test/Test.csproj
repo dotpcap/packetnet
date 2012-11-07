@@ -76,7 +76,6 @@
     <Compile Include="LoggingConfiguration.cs" />
     <Compile Include="Performance\BitConversionPerformance.cs" />
     <Compile Include="Performance\ByteCopyPerformance.cs" />
-    <Compile Include="Performance\ByteRetrievalPerformancs.cs" />
     <Compile Include="Misc\ConstructingPackets.cs" />
     <Compile Include="Misc\ChecksumUtilsTest.cs" />
     <Compile Include="Misc\PacketTest.cs" />
@@ -105,6 +104,7 @@
     <Compile Include="PacketType\Ieee80211\RadioTapFieldsTest.cs" />
     <Compile Include="PacketType\Ieee80211\SequenceControlFieldTest.cs" />
     <Compile Include="PacketType\Ieee80211\PpiFieldsTests.cs" />
+    <Compile Include="Performance\ByteRetrievalPerformance.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

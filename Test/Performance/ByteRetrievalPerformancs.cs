@@ -25,6 +25,11 @@ using PacketDotNet;
 
 namespace Test.Performance
 {
+    /// <summary>
+    /// Compares retrieving a byte[] from a packet that is built from contiguous memory
+    /// vs. one that is built from several byte[]. This evaluates the performance cost
+    /// of having to build a contiguous byte[] from non-continguous packets
+    /// </summary>
     [TestFixture]
     public class ByteRetrievalPerformancs
     {

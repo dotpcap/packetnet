@@ -456,6 +456,32 @@ namespace PacketDotNet
             return buffer.ToString();
         }
 
+        /// <summary>
+        /// Extract a packet of a specific type or null if a packet of the given type isn't found
+        /// NOTE: a 'dynamic' return type is possible here but costs ~7.8% in performance
+        /// </summary>
+        /// <param name='type'>
+        /// Type.
+        /// </param>
+        public Packet Extract(System.Type type)
+        {
+            var p = this;
+
+            // search for a packet type that matches the given one
+            do
+            {
+                if(type.IsAssignableFrom(p.GetType ()))
+                {
+                    return p;
+                }
+
+                // move to the PayloadPacket
+                p = p.PayloadPacket;
+            } while(p != null);
+
+            return null;
+        }
+
         /// <value>
         /// Color used when generating the text description of a packet
         /// </value>

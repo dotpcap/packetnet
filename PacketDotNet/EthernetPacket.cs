@@ -254,6 +254,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="EthernetPacket"/>
         /// </returns>
+        [Obsolete("Use Packet.Extract() instead")]
         public static EthernetPacket GetEncapsulated(Packet p)
         {
             log.Debug("");

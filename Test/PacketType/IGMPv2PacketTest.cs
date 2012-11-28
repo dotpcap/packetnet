@@ -45,7 +45,7 @@ namespace Test.PacketType
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 Assert.IsNotNull(p);
 
-                var igmp = IGMPv2Packet.GetEncapsulated(p);
+                var igmp = (IGMPv2Packet)p.Extract (typeof(IGMPv2Packet));
                 Assert.IsNotNull(p);
 
                 if(packetIndex == 0)
@@ -83,7 +83,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var igmpV2 = IGMPv2Packet.GetEncapsulated(p);
+            var igmpV2 = (IGMPv2Packet)p.Extract (typeof(IGMPv2Packet));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(igmpV2.ToString());
@@ -100,7 +100,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var igmpV2 = IGMPv2Packet.GetEncapsulated(p);
+            var igmpV2 = (IGMPv2Packet)p.Extract (typeof(IGMPv2Packet));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(igmpV2.ToString(StringOutputType.Verbose));

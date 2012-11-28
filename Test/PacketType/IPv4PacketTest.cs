@@ -64,7 +64,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var ip = IPv4Packet.GetEncapsulated(p);
+            var ip = (IPv4Packet)p.Extract(typeof(IPv4Packet));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ip.ToString());
@@ -81,7 +81,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var ip = IPv4Packet.GetEncapsulated(p);
+            var ip = (IPv4Packet)p.Extract(typeof(IPv4Packet));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ip.ToString(StringOutputType.Verbose));

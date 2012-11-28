@@ -309,6 +309,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="UdpPacket"/>
         /// </returns>
+        [Obsolete("Use Packet.Extract() instead")]
         public static UdpPacket GetEncapsulated(Packet p)
         {
             if(p is InternetLinkLayerPacket)

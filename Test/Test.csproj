@@ -8,7 +8,6 @@
     <ProjectGuid>{D1FEC3AA-A58B-4E14-AC50-5008E97D1BBC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>Test</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <RootNamespace>Test</RootNamespace>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -37,14 +36,14 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="nunit.framework">
-      <HintPath>lib\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="log4net">
       <HintPath>..\PacketDotNet\Libraries\log4net.dll</HintPath>
     </Reference>
     <Reference Include="SharpPcap">
       <HintPath>lib\SharpPcap\SharpPcap.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>lib\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -105,6 +104,7 @@
     <Compile Include="PacketType\Ieee80211\SequenceControlFieldTest.cs" />
     <Compile Include="PacketType\Ieee80211\PpiFieldsTests.cs" />
     <Compile Include="Performance\ByteRetrievalPerformance.cs" />
+    <Compile Include="Performance\GetSubPacketPerformance.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

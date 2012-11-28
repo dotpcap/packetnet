@@ -44,7 +44,7 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var icmp = ICMPv6Packet.GetEncapsulated(p);
+            var icmp = (ICMPv6Packet)p.Extract(typeof(ICMPv6Packet));
             Console.WriteLine(icmp.GetType());
 
             Assert.AreEqual(ICMPv6Types.RouterSolicitation, icmp.Type);
@@ -68,7 +68,7 @@ namespace Test.PacketType
             Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             // save the checksum
-            var icmpv6 = ICMPv6Packet.GetEncapsulated(p);
+            var icmpv6 = (ICMPv6Packet)p.Extract(typeof(ICMPv6Packet));
             Assert.IsNotNull(icmpv6);
             var savedChecksum = icmpv6.Checksum;
 
@@ -94,7 +94,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var icmpV6 = ICMPv6Packet.GetEncapsulated(p);
+            var icmpV6 = (ICMPv6Packet)p.Extract (typeof(ICMPv6Packet));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(icmpV6.ToString());
@@ -112,7 +112,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var icmpV6 = ICMPv6Packet.GetEncapsulated(p);
+            var icmpV6 = (ICMPv6Packet)p.Extract (typeof(ICMPv6Packet));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(icmpV6.ToString(StringOutputType.Verbose));

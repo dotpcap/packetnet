@@ -309,6 +309,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="IpPacket"/>
         /// </returns>
+        [Obsolete("Use Packet.Extract() instead")]
         public static IpPacket GetEncapsulated(Packet p)
         {
             log.Debug("");

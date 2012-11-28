@@ -188,6 +188,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="PPPPacket"/>
         /// </returns>
+        [Obsolete("Use Packet.Extract() instead")]
         public static PPPPacket GetEncapsulated(Packet p)
         {
             if(p is EthernetPacket)

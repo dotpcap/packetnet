@@ -34,7 +34,7 @@ namespace Test.PacketType
         // arp request
         private void VerifyPacket0(Packet p)
         {
-            var arpPacket = ARPPacket.GetEncapsulated(p);
+            var arpPacket = (ARPPacket)p.Extract(typeof(ARPPacket));
             Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             IPAddress senderIp = IPAddress.Parse("192.168.1.202");
@@ -52,7 +52,7 @@ namespace Test.PacketType
         // arp response
         private void VerifyPacket1(Packet p)
         {
-            var arpPacket = ARPPacket.GetEncapsulated(p);
+            var arpPacket = (ARPPacket)p.Extract (typeof(ARPPacket));
             Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             IPAddress senderIp = IPAddress.Parse("192.168.1.214");
@@ -133,7 +133,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var arp = ARPPacket.GetEncapsulated(p);
+            var arp = (ARPPacket)p.Extract(typeof(ARPPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(arp.ToString());
@@ -151,7 +151,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var arp = ARPPacket.GetEncapsulated(p);
+            var arp = (ARPPacket)p.Extract (typeof(ARPPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(arp.ToString(StringOutputType.Verbose));

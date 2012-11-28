@@ -52,7 +52,7 @@ namespace Test.PacketType
             Assert.IsNotNull(p);
 
             Console.WriteLine(p.GetType());
-            var t = TcpPacket.GetEncapsulated(p);
+            var t = (TcpPacket)p.Extract(typeof(TcpPacket));
             Assert.IsNotNull(t, "Expected t not to be null");
 
             // even though the packet has 6 bytes of extra data, the ip packet shows a size of
@@ -77,7 +77,7 @@ namespace Test.PacketType
 
             Console.WriteLine(p.GetType());
 
-            var t = TcpPacket.GetEncapsulated(p);
+            var t = (TcpPacket)p.Extract (typeof(TcpPacket));
             Assert.IsNotNull(t, "Expected t to not be null");
             Console.WriteLine("Checksum: " + t.Checksum.ToString("X"));
             Assert.IsTrue(t.ValidChecksum, "ValidChecksum indicates invalid checksum");
@@ -115,7 +115,7 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var t = TcpPacket.GetEncapsulated(p);
+            var t = (TcpPacket)p.Extract (typeof(TcpPacket));
             Assert.IsNotNull(t, "Expected t to not be null");
 
             dev.Close();            
@@ -132,7 +132,7 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var t = TcpPacket.GetEncapsulated(p);
+            var t = (TcpPacket)p.Extract (typeof(TcpPacket));
             Assert.IsNotNull(t, "Expected t to not be null");
 
             // verify that the options byte match what we expect
@@ -165,7 +165,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var tcp = TcpPacket.GetEncapsulated(p);
+            var tcp = (TcpPacket)p.Extract (typeof(TcpPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(tcp.ToString());
@@ -182,7 +182,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var tcp = TcpPacket.GetEncapsulated(p);
+            var tcp = (TcpPacket)p.Extract (typeof(TcpPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(tcp.ToString(StringOutputType.Verbose));

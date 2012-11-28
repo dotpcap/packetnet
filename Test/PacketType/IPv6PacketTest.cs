@@ -41,7 +41,7 @@ namespace Test.PacketType
             Assert.AreEqual(PhysicalAddress.Parse("00-A0-CC-D9-41-75"), e.SourceHwAddress);
             Assert.AreEqual(PhysicalAddress.Parse("33-33-00-00-00-02"), e.DestinationHwAddress);
 
-            var ip = IpPacket.GetEncapsulated(p);
+            var ip = (IpPacket)p.Extract (typeof(IpPacket));
             Console.WriteLine("ip {0}", ip.ToString());
             Assert.AreEqual(System.Net.IPAddress.Parse("fe80::2a0:ccff:fed9:4175"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("ff02::2"), ip.DestinationAddress);
@@ -112,7 +112,7 @@ namespace Test.PacketType
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var t = TcpPacket.GetEncapsulated(p);
+                var t = (TcpPacket)p.Extract(typeof(TcpPacket));
                 Assert.IsNotNull(t, "Expected t to not be null");
                 Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
 
@@ -166,7 +166,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var ip = IPv6Packet.GetEncapsulated(p);
+            var ip = (IPv6Packet)p.Extract(typeof(IPv6Packet));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ip.ToString());
@@ -183,7 +183,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var ip = IPv6Packet.GetEncapsulated(p);
+            var ip = (IPv6Packet)p.Extract(typeof(IPv6Packet));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ip.ToString(StringOutputType.Verbose));

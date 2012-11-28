@@ -43,7 +43,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var ppp = PPPPacket.GetEncapsulated(p);
+            var ppp = (PPPPacket)p.Extract (typeof(PPPPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ppp.ToString());
@@ -62,7 +62,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var ppp = PPPPacket.GetEncapsulated(p);
+            var ppp = (PPPPacket)p.Extract (typeof(PPPPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ppp.ToString(StringOutputType.Verbose));

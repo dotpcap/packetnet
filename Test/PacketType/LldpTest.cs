@@ -176,7 +176,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var l = LLDPPacket.GetEncapsulated(p);
+            var l = (LLDPPacket)p.Extract(typeof(LLDPPacket));
 
             int count = 1;
             Console.WriteLine(l.TlvCollection.Count.ToString());
@@ -273,7 +273,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var l = LLDPPacket.GetEncapsulated(p);
+            var l = (LLDPPacket)p.Extract(typeof(LLDPPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(l.ToString());
@@ -290,7 +290,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var l = LLDPPacket.GetEncapsulated(p);
+            var l = (LLDPPacket)p.Extract(typeof(LLDPPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(l.ToString(StringOutputType.Verbose));

@@ -298,6 +298,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="ARPPacket"/>
         /// </returns>
+        [Obsolete("Use Packet.Extract() instead")]
         public static PPPoEPacket GetEncapsulated(Packet p)
         {
             if(p is EthernetPacket)

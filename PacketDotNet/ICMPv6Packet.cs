@@ -230,6 +230,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="ICMPv6Packet"/>
         /// </returns>
+        [Obsolete("Use Packet.Extract() instead")]
         public static ICMPv6Packet GetEncapsulated(Packet p)
         {
             log.Debug("");

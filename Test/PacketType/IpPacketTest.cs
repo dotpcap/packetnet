@@ -43,7 +43,7 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var ip = IpPacket.GetEncapsulated(p);
+            var ip = (IpPacket)p.Extract(typeof(IpPacket));
             Console.WriteLine(ip.GetType());
 
             Assert.AreEqual(20, ip.Header.Length, "Header.Length doesn't match expected length");

@@ -142,6 +142,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="IGMPv2Packet"/>
         /// </returns>
+        [Obsolete("Use Packet.Extract() instead")]
         public static IGMPv2Packet GetEncapsulated(Packet p)
         {
             if(p is InternetLinkLayerPacket)

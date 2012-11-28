@@ -142,34 +142,35 @@ namespace PacketDotNet
         /// <returns>
         /// A Wake-On-LAN packet
         /// </returns>
+        [Obsolete("Use Packet.Extract() instead")]
         public static WakeOnLanPacket GetEncapsulated(Packet p)
         {
-            if(p is EthernetPacket)
+            // see if this is an ethernet packet 
+            var ethernetPacket = (EthernetPacket)p.Extract(typeof(EthernetPacket));
+            if(ethernetPacket != null)
             {
                 var payload = EthernetPacket.GetInnerPayload((InternetLinkLayerPacket)p);
                 if(((EthernetPacket)p).Type == EthernetPacketType.WakeOnLan)
                 {
-                    var payloadBas = new ByteArraySegment(p.PayloadData);
+                    var payloadBas = new ByteArraySegment(payload.PayloadData);
                     if(WakeOnLanPacket.IsValid(payloadBas))
-                        return new WakeOnLanPacket(payloadBas);
-                }
-
-                if(payload != null && payload is IpPacket)
-                {
-                    var innerPayload = payload.PayloadPacket;
-
-                    if((innerPayload != null)
-                       && (innerPayload.PayloadData != null)
-                       && (innerPayload is UdpPacket))
                     {
-                        var innerPayloadBas = new ByteArraySegment(innerPayload.PayloadData);
-                        if(WakeOnLanPacket.IsValid(innerPayloadBas))
-                        {
-                            return new WakeOnLanPacket(innerPayloadBas);
-                        }
+                        return new WakeOnLanPacket(payloadBas);
                     }
                 }
             }
+
+            // otherwise see if we have a udp packet (might have been sent to port 7 or 9)
+            var udpPacket = (UdpPacket)p.Extract(typeof(UdpPacket));
+            if(udpPacket != null)
+            {
+                var innerPayloadBas = new ByteArraySegment(udpPacket.PayloadData);
+                if(WakeOnLanPacket.IsValid(innerPayloadBas))
+                {
+                    return new WakeOnLanPacket(innerPayloadBas);
+                }
+            }
+
             return null;
         }
 

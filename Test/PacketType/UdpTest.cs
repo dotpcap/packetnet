@@ -52,7 +52,7 @@ namespace Test.PacketType
             p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
             Assert.IsNotNull(p);
 
-            u = UdpPacket.GetEncapsulated(p);
+            u = (UdpPacket)p.Extract(typeof(UdpPacket));
             Assert.IsNotNull(u, "Expected a non-null UdpPacket");
             Assert.AreEqual(41 - u.Header.Length,
                             u.PayloadData.Length, "UDPData.Length mismatch");
@@ -63,7 +63,7 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            u = UdpPacket.GetEncapsulated(p);
+            u = (UdpPacket)p.Extract(typeof(UdpPacket));
             Assert.IsNotNull(u, "Expected u to be a UdpPacket");
             Assert.AreEqual(356 - u.Header.Length,
                             u.PayloadData.Length, "UDPData.Length mismatch");
@@ -150,7 +150,7 @@ namespace Test.PacketType
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var t = UdpPacket.GetEncapsulated(p);
+                var t = (UdpPacket)p.Extract (typeof(UdpPacket));
                 Assert.IsNotNull(t, "Expected t to not be null");
                 Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
 
@@ -181,7 +181,7 @@ namespace Test.PacketType
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 Console.WriteLine("Converted a raw packet to a Packet");
                 Console.WriteLine(p.ToString());
-                var u = UdpPacket.GetEncapsulated(p);
+                var u = (UdpPacket)p.Extract (typeof(UdpPacket));
                 Assert.IsNotNull(u, "Expected u to not be null");
                 Assert.IsTrue(u.ValidChecksum, "u.ValidChecksum isn't true");
 
@@ -207,7 +207,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var udp = UdpPacket.GetEncapsulated(p);
+            var udp = (UdpPacket)p.Extract (typeof(UdpPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(udp.ToString());
@@ -224,7 +224,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var udp = UdpPacket.GetEncapsulated(p);
+            var udp = (UdpPacket)p.Extract (typeof(UdpPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(udp.ToString(StringOutputType.Verbose));

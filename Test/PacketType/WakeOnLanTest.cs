@@ -65,7 +65,7 @@ namespace Test.PacketType
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 Assert.IsNotNull(p);
 
-                var wol = PacketDotNet.WakeOnLanPacket.GetEncapsulated(p);
+                var wol = (WakeOnLanPacket)p.Extract(typeof(WakeOnLanPacket));
                 Assert.IsNotNull(p);
 
                 if(packetIndex == 0)
@@ -96,7 +96,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var wol = WakeOnLanPacket.GetEncapsulated(p);
+            var wol = (WakeOnLanPacket)p.Extract(typeof(WakeOnLanPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(wol.ToString());
@@ -113,7 +113,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var wol = WakeOnLanPacket.GetEncapsulated(p);
+            var wol = (WakeOnLanPacket)p.Extract (typeof(WakeOnLanPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(wol.ToString(StringOutputType.Verbose));

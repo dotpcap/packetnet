@@ -45,7 +45,7 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var icmp = ICMPv4Packet.GetEncapsulated(p);
+            var icmp = (ICMPv4Packet)p.Extract (typeof(ICMPv4Packet));
             Console.WriteLine(icmp.GetType());
 
             Assert.AreEqual(ICMPv4TypeCodes.EchoRequest, icmp.TypeCode);
@@ -71,7 +71,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var icmp = ICMPv4Packet.GetEncapsulated(p);
+            var icmp = (ICMPv4Packet)p.Extract(typeof(ICMPv4Packet));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(icmp.ToString());
@@ -89,7 +89,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var icmp = ICMPv4Packet.GetEncapsulated(p);
+            var icmp = (ICMPv4Packet)p.Extract (typeof(ICMPv4Packet));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(icmp.ToString(StringOutputType.Verbose));

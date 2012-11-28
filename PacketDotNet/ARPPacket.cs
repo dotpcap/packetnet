@@ -393,6 +393,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="ARPPacket"/>
         /// </returns>
+        [Obsolete("Use Packet.Extract() instead")]
         public static ARPPacket GetEncapsulated(Packet p)
         {
             if(p is InternetLinkLayerPacket)

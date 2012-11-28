@@ -42,13 +42,13 @@ namespace Test.PacketType
             // first packet is a udp packet
             rawCapture = dev.GetNextPacket();
             packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-            var udpPacket = UdpPacket.GetEncapsulated(packet);
+            var udpPacket = (UdpPacket)packet.Extract(typeof(UdpPacket));
             Assert.IsNotNull(udpPacket, "Expected a valid udp packet for the first packet");
 
             // second packet is the PPPoe Ptp packet
             rawCapture = dev.GetNextPacket();
             packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-            var anotherUdpPacket = UdpPacket.GetEncapsulated(packet);
+            var anotherUdpPacket = (UdpPacket)packet.Extract(typeof(UdpPacket));
             Assert.IsNotNull(anotherUdpPacket, "Expected a valid udp packet for the second packet as well");
 
             dev.Close();
@@ -67,7 +67,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var pppoe = PPPoEPacket.GetEncapsulated(p);
+            var pppoe = (PPPoEPacket)p.Extract(typeof(PPPoEPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(pppoe.ToString());
@@ -86,7 +86,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var pppoe = PPPoEPacket.GetEncapsulated(p);
+            var pppoe = (PPPoEPacket)p.Extract(typeof(PPPoEPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(pppoe.ToString(StringOutputType.Verbose));

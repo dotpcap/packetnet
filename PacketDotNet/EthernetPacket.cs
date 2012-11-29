@@ -233,6 +233,9 @@ namespace PacketDotNet
             case EthernetPacketType.PointToPointProtocolOverEthernetSessionStage:
                 payloadPacketOrData.ThePacket = new PPPoEPacket(payload);
                 break;
+            case EthernetPacketType.WakeOnLan:
+                payloadPacketOrData.ThePacket = new WakeOnLanPacket(payload);
+                break;
             default: // consider the sub-packet to be a byte array
                 payloadPacketOrData.TheByteArraySegment = payload;
                 break;

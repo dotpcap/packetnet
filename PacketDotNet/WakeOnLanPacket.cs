@@ -145,29 +145,26 @@ namespace PacketDotNet
         [Obsolete("Use Packet.Extract() instead")]
         public static WakeOnLanPacket GetEncapsulated(Packet p)
         {
-            // see if this is an ethernet packet 
+            // see if we have an ethernet packet that contains a wol packet
             var ethernetPacket = (EthernetPacket)p.Extract(typeof(EthernetPacket));
             if(ethernetPacket != null)
             {
-                var payload = EthernetPacket.GetInnerPayload((InternetLinkLayerPacket)p);
-                if(((EthernetPacket)p).Type == EthernetPacketType.WakeOnLan)
+                if(ethernetPacket.Type == EthernetPacketType.WakeOnLan)
                 {
-                    var payloadBas = new ByteArraySegment(payload.PayloadData);
-                    if(WakeOnLanPacket.IsValid(payloadBas))
-                    {
-                        return new WakeOnLanPacket(payloadBas);
-                    }
+                    return (WakeOnLanPacket)ethernetPacket.PayloadPacket;
                 }
             }
 
-            // otherwise see if we have a udp packet (might have been sent to port 7 or 9)
+            // otherwise see if we have a udp packet (might have been sent to port 7 or 9) that
+            // contains a wol packet
             var udpPacket = (UdpPacket)p.Extract(typeof(UdpPacket));
             if(udpPacket != null)
             {
-                var innerPayloadBas = new ByteArraySegment(udpPacket.PayloadData);
-                if(WakeOnLanPacket.IsValid(innerPayloadBas))
+                // if the destination port is 7 or 9 then this is already parsed as a
+                // WakeOnLan packet so just return it
+                if((udpPacket.DestinationPort == 7) || (udpPacket.DestinationPort == 9))
                 {
-                    return new WakeOnLanPacket(innerPayloadBas);
+                    return (WakeOnLanPacket)udpPacket.PayloadPacket;
                 }
             }
 

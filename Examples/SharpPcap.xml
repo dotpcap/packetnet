@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <doc>
     <assembly>
-        <name>/home/cmorgan/hdd/sharppcap_git/SharpPcap/bin/Debug/SharpPcap</name>
+        <name>/home/cmorgan/hdd/sharppcap_git/SharpPcap/bin/Release/SharpPcap</name>
     </assembly>
     <members>
         <member name="T:SharpPcap.AirPcap.AirPcapAdapterBus">

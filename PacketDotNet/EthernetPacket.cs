@@ -236,6 +236,9 @@ namespace PacketDotNet
             case EthernetPacketType.WakeOnLan:
                 payloadPacketOrData.ThePacket = new WakeOnLanPacket(payload);
                 break;
+            case EthernetPacketType.VLanTaggedFrame:
+                payloadPacketOrData.ThePacket = new Ieee8021QPacket(payload);
+                break;
             default: // consider the sub-packet to be a byte array
                 payloadPacketOrData.TheByteArraySegment = payload;
                 break;

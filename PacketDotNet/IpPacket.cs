@@ -268,6 +268,19 @@ namespace PacketDotNet
 
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
+            // if we are an ipv4 packet with a non-zero FragementOffset we shouldn't attempt
+            // to decode the content, it is a continuation of a previous packet so it won't
+            // have the proper headers for its type, that was in the first packet fragment
+            var ipv4Packet = ParentPacket.Extract(typeof(IPv4Packet)) as IPv4Packet;
+            if (ipv4Packet != null)
+            {
+                if (ipv4Packet.FragmentOffset > 0)
+                {
+                    payloadPacketOrData.TheByteArraySegment = payload;
+                    return payloadPacketOrData;
+                }
+            }
+
             switch(ProtocolType)
             {
             case IPProtocolType.TCP:

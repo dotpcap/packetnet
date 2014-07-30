@@ -18,11 +18,13 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+using System;
 namespace PacketDotNet.LLDP
 {
     /// <summary>
     /// An End Of LLDPDU TLV
     /// </summary>
+    [Serializable]
     public class EndOfLLDPDU : TLV
     {
         #region Constructors

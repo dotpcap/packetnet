@@ -25,6 +25,8 @@ using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Test.PacketType
 {
@@ -293,5 +295,53 @@ namespace Test.PacketType
         {
             EthernetPacket.RandomPacket();
         }
+
+        [Test]
+        public void BinarySerialization()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+            bool foundEthernet = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var ethernetPacket = new EthernetPacket(new ByteArraySegment(rawCapture.Data));
+                if (ethernetPacket == null)
+                {
+                    continue;
+                }
+                foundEthernet = true;
+
+                var memoryStream = new MemoryStream();
+                BinaryFormatter serializer = new BinaryFormatter();
+                serializer.Serialize(memoryStream, ethernetPacket);
+
+                memoryStream.Seek (0, SeekOrigin.Begin);
+                BinaryFormatter deserializer = new BinaryFormatter();
+                EthernetPacket fromFile = (EthernetPacket)deserializer.Deserialize(memoryStream);
+
+                Assert.AreEqual(ethernetPacket.Bytes, fromFile.Bytes);
+                Assert.AreEqual(ethernetPacket.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
+                Assert.AreEqual(ethernetPacket.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
+                Assert.AreEqual(ethernetPacket.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
+                Assert.AreEqual(ethernetPacket.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
+                Assert.AreEqual(ethernetPacket.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(ethernetPacket.Color, fromFile.Color);
+                Assert.AreEqual(ethernetPacket.DestinationHwAddress, fromFile.DestinationHwAddress);
+                Assert.AreEqual(ethernetPacket.Header, fromFile.Header);
+                Assert.AreEqual(ethernetPacket.ParentPacket, fromFile.ParentPacket);
+                Assert.AreEqual(ethernetPacket.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(ethernetPacket.SourceHwAddress, fromFile.SourceHwAddress);
+                Assert.AreEqual(ethernetPacket.Type, fromFile.Type);
+
+            }
+
+            dev.Close();
+            Assert.IsTrue(foundEthernet, "Capture file contained no Ethernet packets");
+
+
+        }
+
     }
 }

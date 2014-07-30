@@ -25,6 +25,8 @@ using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Test.PacketType
 {
@@ -194,5 +196,65 @@ namespace Test.PacketType
         {
             IPv6Packet.RandomPacket();
         }
+
+        [Test]
+        public void BinarySerialization()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+            bool foundipv6 = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var ipv6 = (IPv6Packet)p.Extract(typeof(IPv6Packet));
+                if (ipv6 == null)
+                {
+                    continue;
+                }
+                foundipv6 = true;
+
+                var memoryStream = new MemoryStream();
+                BinaryFormatter serializer = new BinaryFormatter();
+                serializer.Serialize(memoryStream, ipv6);
+
+                memoryStream.Seek (0, SeekOrigin.Begin);
+                BinaryFormatter deserializer = new BinaryFormatter();
+                IPv6Packet fromFile = (IPv6Packet)deserializer.Deserialize(memoryStream);
+
+                Assert.AreEqual(ipv6.Bytes, fromFile.Bytes);
+                Assert.AreEqual(ipv6.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
+                Assert.AreEqual(ipv6.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
+                Assert.AreEqual(ipv6.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
+                Assert.AreEqual(ipv6.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
+                Assert.AreEqual(ipv6.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(ipv6.Color, fromFile.Color);
+                Assert.AreEqual(ipv6.Header, fromFile.Header);
+                Assert.AreEqual(ipv6.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(ipv6.DestinationAddress, fromFile.DestinationAddress);
+                Assert.AreEqual(ipv6.HeaderLength, fromFile.HeaderLength);
+                Assert.AreEqual(ipv6.HopLimit, fromFile.HopLimit);
+                Assert.AreEqual(ipv6.NextHeader, fromFile.NextHeader);
+                Assert.AreEqual(ipv6.PayloadLength, fromFile.PayloadLength);
+                Assert.AreEqual(ipv6.Protocol, fromFile.Protocol);
+                Assert.AreEqual(ipv6.SourceAddress, fromFile.SourceAddress);
+                Assert.AreEqual(ipv6.TimeToLive, fromFile.TimeToLive);
+                Assert.AreEqual(ipv6.TotalLength, fromFile.TotalLength);
+                Assert.AreEqual(ipv6.Version, fromFile.Version);
+                Assert.AreEqual(ipv6.FlowLabel, fromFile.FlowLabel);
+                Assert.AreEqual(ipv6.TrafficClass, fromFile.TrafficClass);
+
+                //Method Invocations to make sure that a deserialized packet does not cause 
+                //additional errors.
+
+                ipv6.PrintHex();
+                ipv6.UpdateCalculatedValues();
+            }
+
+            dev.Close();
+            Assert.IsTrue(foundipv6, "Capture file contained no ipv6 packets");
+        }
+
     }
 }

@@ -27,6 +27,7 @@ namespace PacketDotNet.LLDP
     /// <summary>
     /// A Port Description TLV
     /// </summary>
+    [Serializable]
     public class PortDescription : StringTLV
     {
 #if DEBUG

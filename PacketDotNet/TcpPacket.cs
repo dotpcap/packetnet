@@ -31,6 +31,7 @@ namespace PacketDotNet
     /// TcpPacket
     /// See: http://en.wikipedia.org/wiki/Transmission_Control_Protocol
     /// </summary>
+    [Serializable]
     public class TcpPacket : TransportPacket
     {
 #if DEBUG

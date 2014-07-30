@@ -27,6 +27,7 @@ namespace PacketDotNet.LLDP
     /// <summary>
     /// A Time to Live TLV
     /// </summary>
+    [Serializable]
     public class TimeToLive : TLV
     {
 #if DEBUG

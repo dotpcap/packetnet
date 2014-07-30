@@ -27,6 +27,7 @@ namespace PacketDotNet.LLDP
     /// <summary>
     /// A Type-Length-Value object
     /// </summary>
+    [Serializable]
     public class TLV
     {
 #if DEBUG

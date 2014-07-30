@@ -23,6 +23,8 @@ using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Test.PacketType
 {
@@ -117,6 +119,59 @@ namespace Test.PacketType
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(icmpV6.ToString(StringOutputType.Verbose));
         }
+        [Test]
+        public void BinarySerialization()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+            bool foundicmpv6 = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var icmpv6 = (ICMPv6Packet)p.Extract(typeof(ICMPv6Packet));
+                if (icmpv6 == null)
+                {
+                    continue;
+                }
+                foundicmpv6 = true;
+
+                Stream outFile = File.Create("icmpv6.dat");
+                BinaryFormatter serializer = new BinaryFormatter();
+                serializer.Serialize(outFile, icmpv6);
+                outFile.Close();
+
+                Stream inFile = File.OpenRead("icmpv6.dat");
+                BinaryFormatter deserializer = new BinaryFormatter();
+                ICMPv6Packet fromFile = (ICMPv6Packet)deserializer.Deserialize(inFile);
+                inFile.Close();
+
+
+                Assert.AreEqual(icmpv6.Bytes, fromFile.Bytes);
+                Assert.AreEqual(icmpv6.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
+                Assert.AreEqual(icmpv6.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
+                Assert.AreEqual(icmpv6.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
+                Assert.AreEqual(icmpv6.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
+                Assert.AreEqual(icmpv6.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(icmpv6.Checksum, fromFile.Checksum);
+                Assert.AreEqual(icmpv6.Color, fromFile.Color);
+                Assert.AreEqual(icmpv6.Header, fromFile.Header);
+                Assert.AreEqual(icmpv6.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(icmpv6.Code, fromFile.Code);
+                Assert.AreEqual(icmpv6.Type, fromFile.Type);
+
+
+
+            }
+
+            dev.Close();
+            Assert.IsTrue(foundicmpv6, "Capture file contained no icmpv6 packets");
+
+
+        }
+    
     }
 }
 

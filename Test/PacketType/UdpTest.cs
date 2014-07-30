@@ -26,6 +26,8 @@ using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Test.PacketType
 {
@@ -228,6 +230,62 @@ namespace Test.PacketType
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(udp.ToString(StringOutputType.Verbose));
+        }
+
+        [Test]
+        public void BinarySerialization()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/udp_dns_request_response.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+            bool foundudpPacket = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var p = PacketDotNet.Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+                var udpPacket = (UdpPacket)p.Extract(typeof(UdpPacket));
+                if (udpPacket == null)
+                {
+                    continue;
+                }
+                foundudpPacket = true;
+
+                var memoryStream = new MemoryStream();
+                BinaryFormatter serializer = new BinaryFormatter();
+                serializer.Serialize(memoryStream, udpPacket);
+
+                memoryStream.Seek (0, SeekOrigin.Begin);
+                BinaryFormatter deserializer = new BinaryFormatter();
+                UdpPacket fromFile = (UdpPacket)deserializer.Deserialize(memoryStream);
+
+                Assert.AreEqual(udpPacket.Bytes, fromFile.Bytes);
+                Assert.AreEqual(udpPacket.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
+                Assert.AreEqual(udpPacket.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
+                Assert.AreEqual(udpPacket.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
+                Assert.AreEqual(udpPacket.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
+                Assert.AreEqual(udpPacket.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(udpPacket.Color, fromFile.Color);
+                Assert.AreEqual(udpPacket.Header, fromFile.Header);
+                Assert.AreEqual(udpPacket.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(udpPacket.DestinationPort, fromFile.DestinationPort);
+                Assert.AreEqual(udpPacket.Length, fromFile.Length);
+                Assert.AreEqual(udpPacket.SourcePort, fromFile.SourcePort);
+                Assert.AreEqual(udpPacket.ValidChecksum, fromFile.ValidChecksum);
+                Assert.AreEqual(udpPacket.ValidUDPChecksum, fromFile.ValidUDPChecksum);
+
+                //Method Invocations to make sure that a deserialized packet does not cause 
+                //additional errors.
+
+                udpPacket.CalculateUDPChecksum();
+                udpPacket.IsValidChecksum(TransportPacket.TransportChecksumOption.None);
+                udpPacket.PrintHex();
+                udpPacket.UpdateCalculatedValues();
+                udpPacket.UpdateUDPChecksum();
+            }
+
+            dev.Close();
+            Assert.IsTrue(foundudpPacket, "Capture file contained no udpPacket packets");
         }
     }
 }

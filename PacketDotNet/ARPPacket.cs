@@ -29,6 +29,7 @@ namespace PacketDotNet
     /// <summary>
     /// An ARP protocol packet.
     /// </summary>
+    [Serializable]
     public class ARPPacket : InternetLinkLayerPacket
     {
 #if DEBUG

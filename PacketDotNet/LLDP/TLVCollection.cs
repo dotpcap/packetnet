@@ -31,6 +31,7 @@ namespace PacketDotNet
     /// - Preventing an EndOfLLDPDU tlv from being added out of place
     /// - Checking and throwing exceptions if one-per-LLDP packet TLVs are added multiple times
     /// </summary>
+    [Serializable]
     public class TLVCollection : Collection<TLV>
     {
 #if DEBUG

@@ -29,6 +29,7 @@ namespace PacketDotNet.LLDP
     ///
     /// [TLVTypeLength - 2 bytes][System Capabilities - 2 bytes][Enabled Capabilities - 2 bytes]
     /// </summary>
+    [Serializable]
     public class SystemCapabilities : TLV
     {
         private const int SystemCapabilitiesLength = 2;

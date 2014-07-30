@@ -28,6 +28,7 @@ namespace PacketDotNet
     /// Encapsulates and ensures that we have either a Packet OR
     /// a ByteArraySegment but not both
     /// </summary>
+    [Serializable]
     public class PacketOrByteArraySegment
     {
         private ByteArraySegment theByteArraySegment;

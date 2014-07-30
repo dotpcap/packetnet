@@ -28,6 +28,7 @@ namespace PacketDotNet.LLDP
     /// Tlv type and length are 2 bytes
     /// See http://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol#Frame_structure
     /// </summary>
+    [Serializable]
     public class TLVTypeLength
     {
 #if DEBUG

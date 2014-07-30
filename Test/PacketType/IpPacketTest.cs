@@ -22,6 +22,9 @@ using System;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
+using SharpPcap;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Test.PacketType
 {
@@ -94,5 +97,62 @@ namespace Test.PacketType
             Assert.AreEqual(5060, udpPacket.DestinationPort, "We should have extracted the correct destination port");
             Assert.AreEqual(5060, udpPacket.SourcePort, "We should have extracted the correct source port");
         }
+        [Test]
+        public void BinarySerialization()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+            bool foundip = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var ip = (IpPacket)p.Extract(typeof(IpPacket));
+                if (ip == null)
+                {
+                    continue;
+                }
+                foundip = true;
+
+                var memoryStream = new MemoryStream();
+                BinaryFormatter serializer = new BinaryFormatter();
+                serializer.Serialize(memoryStream, ip);
+
+                memoryStream.Seek (0, SeekOrigin.Begin);
+                BinaryFormatter deserializer = new BinaryFormatter();
+                IpPacket fromFile = (IpPacket)deserializer.Deserialize(memoryStream);
+
+                Assert.AreEqual(ip.Bytes, fromFile.Bytes);
+                Assert.AreEqual(ip.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
+                Assert.AreEqual(ip.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
+                Assert.AreEqual(ip.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
+                Assert.AreEqual(ip.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
+                Assert.AreEqual(ip.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(ip.Color, fromFile.Color);
+                Assert.AreEqual(ip.Header, fromFile.Header);
+                Assert.AreEqual(ip.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(ip.DestinationAddress, fromFile.DestinationAddress);
+                Assert.AreEqual(ip.HeaderLength, fromFile.HeaderLength);
+                Assert.AreEqual(ip.HopLimit, fromFile.HopLimit);
+                Assert.AreEqual(ip.NextHeader, fromFile.NextHeader);
+                Assert.AreEqual(ip.PayloadLength, fromFile.PayloadLength);
+                Assert.AreEqual(ip.Protocol, fromFile.Protocol);
+                Assert.AreEqual(ip.SourceAddress, fromFile.SourceAddress);
+                Assert.AreEqual(ip.TimeToLive, fromFile.TimeToLive);
+                Assert.AreEqual(ip.TotalLength, fromFile.TotalLength);
+                Assert.AreEqual(ip.Version, fromFile.Version);
+
+                //Method Invocations to make sure that a deserialized packet does not cause 
+                //additional errors.
+
+                ip.PrintHex();
+                ip.UpdateCalculatedValues();
+            }
+
+            dev.Close();
+            Assert.IsTrue(foundip, "Capture file contained no ip packets");
+        }
+    
     }
 }

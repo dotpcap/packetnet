@@ -28,6 +28,7 @@ namespace PacketDotNet.LLDP
     /// <summary>
     /// A Chassis ID TLV
     /// </summary>
+    [Serializable]
     public class ChassisID : TLV
     {
 #if DEBUG

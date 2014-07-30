@@ -19,6 +19,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
 using PacketDotNet;
 using PacketDotNet.Utils;
@@ -66,6 +68,55 @@ namespace Test.PacketType
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ppp.ToString(StringOutputType.Verbose));
+        }
+
+        [Test]
+        public void BinarySerialization()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/PPPoEPPP.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+            bool foundPPP = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var ppp = (PPPPacket)p.Extract(typeof(PPPPacket));
+
+                if (ppp == null)
+                {
+                    continue;
+                }
+                foundPPP = true;
+
+                var memoryStream = new MemoryStream();
+                BinaryFormatter serializer = new BinaryFormatter();
+                serializer.Serialize(memoryStream, ppp);
+
+                memoryStream.Seek (0, SeekOrigin.Begin);
+                BinaryFormatter deserializer = new BinaryFormatter();
+                PPPPacket fromFile = (PPPPacket)deserializer.Deserialize(memoryStream);
+
+                Assert.AreEqual(ppp.Bytes, fromFile.Bytes);
+                Assert.AreEqual(ppp.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
+                Assert.AreEqual(ppp.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
+                Assert.AreEqual(ppp.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
+                Assert.AreEqual(ppp.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
+                Assert.AreEqual(ppp.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(ppp.Color, fromFile.Color);
+                Assert.AreEqual(ppp.Header, fromFile.Header);
+                Assert.AreEqual(ppp.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(ppp.Protocol, fromFile.Protocol);
+
+                //Method Invocations to make sure that a deserialized packet does not cause 
+                //additional errors.
+
+                ppp.UpdateCalculatedValues();
+            }
+
+            dev.Close();
+
+            Assert.IsTrue(foundPPP, "Capture file contained no PPP packets");
         }
     }
 }

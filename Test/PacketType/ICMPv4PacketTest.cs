@@ -23,6 +23,8 @@ using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Test.PacketType
 {
@@ -94,6 +96,52 @@ namespace Test.PacketType
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(icmp.ToString(StringOutputType.Verbose));
         }
+        [Test]
+        public void BinarySerialization()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ICMPv4.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+            bool foundicmp = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var icmp = (ICMPv4Packet)p.Extract(typeof(ICMPv4Packet));
+                if (icmp == null)
+                {
+                    continue;
+                }
+                foundicmp = true;
+
+                var memoryStream = new MemoryStream();
+                BinaryFormatter serializer = new BinaryFormatter();
+                serializer.Serialize(memoryStream, icmp);
+
+                memoryStream.Seek (0, SeekOrigin.Begin);
+                BinaryFormatter deserializer = new BinaryFormatter();
+                ICMPv4Packet fromFile = (ICMPv4Packet)deserializer.Deserialize(memoryStream);
+
+                Assert.AreEqual(icmp.Bytes, fromFile.Bytes);
+                Assert.AreEqual(icmp.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
+                Assert.AreEqual(icmp.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
+                Assert.AreEqual(icmp.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
+                Assert.AreEqual(icmp.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
+                Assert.AreEqual(icmp.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(icmp.Checksum, fromFile.Checksum);
+                Assert.AreEqual(icmp.Color, fromFile.Color);
+                Assert.AreEqual(icmp.Data, fromFile.Data);
+                Assert.AreEqual(icmp.Header, fromFile.Header);
+                Assert.AreEqual(icmp.ID, fromFile.ID);
+                Assert.AreEqual(icmp.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(icmp.Sequence, fromFile.Sequence);
+                Assert.AreEqual(icmp.TypeCode, fromFile.TypeCode);
+            }
+
+            dev.Close();
+            Assert.IsTrue(foundicmp, "Capture file contained no icmp packets");
+        }
+    
     }
 }
 

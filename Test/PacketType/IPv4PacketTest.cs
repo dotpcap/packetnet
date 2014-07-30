@@ -19,6 +19,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
 using PacketDotNet;
 using PacketDotNet.Utils;
@@ -92,5 +94,71 @@ namespace Test.PacketType
         {
             IPv4Packet.RandomPacket();
         }
+        [Test]
+        public void BinarySerialization()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+            bool foundipv4 = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var ipv4 = (IPv4Packet)p.Extract(typeof(IPv4Packet));
+                if (ipv4 == null)
+                {
+                    continue;
+                }
+                foundipv4 = true;
+
+                var memoryStream = new MemoryStream();
+                BinaryFormatter serializer = new BinaryFormatter();
+                serializer.Serialize(memoryStream, ipv4);
+
+                memoryStream.Seek (0, SeekOrigin.Begin);
+                BinaryFormatter deserializer = new BinaryFormatter();
+                IPv4Packet fromFile = (IPv4Packet)deserializer.Deserialize(memoryStream);
+
+                Assert.AreEqual(ipv4.Bytes, fromFile.Bytes);
+                Assert.AreEqual(ipv4.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
+                Assert.AreEqual(ipv4.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
+                Assert.AreEqual(ipv4.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
+                Assert.AreEqual(ipv4.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
+                Assert.AreEqual(ipv4.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(ipv4.Color, fromFile.Color);
+                Assert.AreEqual(ipv4.Header, fromFile.Header);
+                Assert.AreEqual(ipv4.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(ipv4.DestinationAddress, fromFile.DestinationAddress);
+                Assert.AreEqual(ipv4.HeaderLength, fromFile.HeaderLength);
+                Assert.AreEqual(ipv4.HopLimit, fromFile.HopLimit);
+                Assert.AreEqual(ipv4.NextHeader, fromFile.NextHeader);
+                Assert.AreEqual(ipv4.PayloadLength, fromFile.PayloadLength);
+                Assert.AreEqual(ipv4.Protocol, fromFile.Protocol);
+                Assert.AreEqual(ipv4.SourceAddress, fromFile.SourceAddress);
+                Assert.AreEqual(ipv4.TimeToLive, fromFile.TimeToLive);
+                Assert.AreEqual(ipv4.TotalLength, fromFile.TotalLength);
+                Assert.AreEqual(ipv4.Version, fromFile.Version);
+                Assert.AreEqual(ipv4.DifferentiatedServices, fromFile.DifferentiatedServices);
+                Assert.AreEqual(ipv4.FragmentFlags, fromFile.FragmentFlags);
+                Assert.AreEqual(ipv4.FragmentOffset, fromFile.FragmentOffset);
+                Assert.AreEqual(ipv4.Id, fromFile.Id);
+                Assert.AreEqual(ipv4.TypeOfService, fromFile.TypeOfService);
+                Assert.AreEqual(ipv4.ValidChecksum, fromFile.ValidChecksum);
+                Assert.AreEqual(ipv4.ValidIPChecksum, fromFile.ValidIPChecksum);
+
+                //Method Invocations to make sure that a deserialized packet does not cause 
+                //additional errors.
+
+                ipv4.CalculateIPChecksum();
+                ipv4.PrintHex();
+                ipv4.UpdateCalculatedValues();
+                ipv4.UpdateIPChecksum();
+            }
+
+            dev.Close();
+            Assert.IsTrue(foundipv4, "Capture file contained no ipv4 packets");
+        }
+    
     }
 }

@@ -25,6 +25,8 @@ using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
 using SharpPcap;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Test.PacketType
 {
@@ -155,6 +157,66 @@ namespace Test.PacketType
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(arp.ToString(StringOutputType.Verbose));
+        }
+
+        [Test]
+        public void BinarySerialization()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/arp_request_response.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+            bool foundARP = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var p = PacketDotNet.Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+                var arpPacket = (ARPPacket)p.Extract(typeof(ARPPacket));
+                if (arpPacket == null)
+                {
+                    continue;
+                }
+                foundARP = true;
+
+                var memoryStream = new MemoryStream();
+                BinaryFormatter serializer = new BinaryFormatter();
+                serializer.Serialize(memoryStream, arpPacket);
+
+                memoryStream.Seek (0, SeekOrigin.Begin);
+                BinaryFormatter deserializer = new BinaryFormatter();
+                ARPPacket fromFile = (ARPPacket)deserializer.Deserialize(memoryStream);
+
+                CollectionAssert.AreEqual(arpPacket.Bytes, fromFile.Bytes);
+                Assert.AreEqual(arpPacket.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
+                Assert.AreEqual(arpPacket.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
+                Assert.AreEqual(arpPacket.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
+                Assert.AreEqual(arpPacket.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
+                Assert.AreEqual(arpPacket.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(arpPacket.Color, fromFile.Color);
+                Assert.AreEqual(arpPacket.HardwareAddressLength, fromFile.HardwareAddressLength);
+                Assert.AreEqual(arpPacket.HardwareAddressType, fromFile.HardwareAddressType);
+                CollectionAssert.AreEqual(arpPacket.Header, fromFile.Header);
+                Assert.AreEqual(arpPacket.Operation, fromFile.Operation);
+                Assert.AreEqual(arpPacket.ParentPacket, fromFile.ParentPacket);
+                CollectionAssert.AreEqual(arpPacket.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(arpPacket.PayloadPacket, fromFile.PayloadPacket);
+                Assert.AreEqual(arpPacket.ProtocolAddressLength, fromFile.ProtocolAddressLength);
+                Assert.AreEqual(arpPacket.ProtocolAddressType, fromFile.ProtocolAddressType);
+                Assert.AreEqual(arpPacket.SenderHardwareAddress, fromFile.SenderHardwareAddress);
+                Assert.AreEqual(arpPacket.SenderProtocolAddress, fromFile.SenderProtocolAddress);
+                Assert.AreEqual(arpPacket.TargetHardwareAddress, fromFile.TargetHardwareAddress);
+                Assert.AreEqual(arpPacket.TargetProtocolAddress, fromFile.TargetProtocolAddress);
+
+                //Method Invocations to make sure that a deserialized packet does not cause 
+                //additional errors.
+
+                arpPacket.PrintHex();
+                arpPacket.UpdateCalculatedValues();
+            }
+
+            dev.Close();
+
+            Assert.IsTrue(foundARP, "Capture file contained no ARP packets");
         }
     }
 }

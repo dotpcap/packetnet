@@ -26,6 +26,7 @@ namespace PacketDotNet.LLDP
     /// <summary>
     /// A System Name TLV
     /// </summary>
+    [Serializable]
     public class SystemName : StringTLV
     {
         #region Constructors

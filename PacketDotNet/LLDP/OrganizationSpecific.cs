@@ -29,6 +29,7 @@ namespace PacketDotNet.LLDP
     /// [TLV Type Length : 2][Organizationally Unique Identifier OUI : 3]
     /// [Organizationally Defined Subtype : 1][Organizationally Defined Information String : 0 - 507]
     /// </summary>
+    [Serializable]
     public class OrganizationSpecific : TLV
     {
 #if DEBUG

@@ -25,6 +25,9 @@ using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.LLDP;
 using PacketDotNet.Utils;
+using SharpPcap;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Test.PacketType
 {
@@ -294,6 +297,63 @@ namespace Test.PacketType
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(l.ToString(StringOutputType.Verbose));
+        }
+
+        [Test]
+        public void BinarySerialization()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/lldp.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+            bool foundlldp = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var lldp = (LLDPPacket)p.Extract(typeof(LLDPPacket));
+                if (lldp == null)
+                {
+                    continue;
+                }
+                foundlldp = true;
+
+                var memoryStream = new MemoryStream();
+                BinaryFormatter serializer = new BinaryFormatter();
+                serializer.Serialize(memoryStream, lldp);
+
+                memoryStream.Seek (0, SeekOrigin.Begin);
+                BinaryFormatter deserializer = new BinaryFormatter();
+                LLDPPacket fromFile = (LLDPPacket)deserializer.Deserialize(memoryStream);
+
+                Assert.AreEqual(lldp.Bytes, fromFile.Bytes);
+                Assert.AreEqual(lldp.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
+                Assert.AreEqual(lldp.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
+                Assert.AreEqual(lldp.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
+                Assert.AreEqual(lldp.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
+                Assert.AreEqual(lldp.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(lldp.Color, fromFile.Color);
+                Assert.AreEqual(lldp.Header, fromFile.Header);
+                Assert.AreEqual(lldp.PayloadData, fromFile.PayloadData);
+
+                for (int i = 0; i < lldp.TlvCollection.Count; i++)
+                {
+                    Assert.AreEqual(lldp.TlvCollection[i].Bytes, fromFile.TlvCollection[i].Bytes);
+                    Assert.AreEqual(lldp.TlvCollection[i].Length, fromFile.TlvCollection[i].Length);
+                    Assert.AreEqual(lldp.TlvCollection[i].TotalLength, fromFile.TlvCollection[i].TotalLength);
+                    Assert.AreEqual(lldp.TlvCollection[i].Type, fromFile.TlvCollection[i].Type);
+
+                }
+
+                //Method Invocations to make sure that a deserialized packet does not cause 
+                //additional errors.
+
+                lldp.ParseByteArrayIntoTlvs(new byte[] { 0, 0 }, 0);
+                lldp.PrintHex();
+                lldp.UpdateCalculatedValues();
+            }
+
+            dev.Close();
+            Assert.IsTrue(foundlldp, "Capture file contained no lldp packets");
         }
     }
 }

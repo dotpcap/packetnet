@@ -36,6 +36,7 @@ namespace PacketDotNet
     /// http://tools.ietf.org/html/rfc2460
     /// http://en.wikipedia.org/wiki/IPv6
     /// </summary>
+    [Serializable]
     public class IPv6Packet : IpPacket
     {
 #if DEBUG

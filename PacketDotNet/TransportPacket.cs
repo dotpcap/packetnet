@@ -23,6 +23,7 @@ namespace PacketDotNet
     /// <summary>
     /// Transport layer packet
     /// </summary>
+    [Serializable]
     public abstract class TransportPacket : Packet
     {
 #if DEBUG

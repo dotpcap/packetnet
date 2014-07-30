@@ -26,6 +26,7 @@ namespace PacketDotNet.LLDP
     /// <summary>
     /// Base class for several TLV types that all contain strings
     /// </summary>
+    [Serializable]
     public class StringTLV : TLV
     {
         #region Constructors

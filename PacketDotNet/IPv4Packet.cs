@@ -30,6 +30,7 @@ namespace PacketDotNet
     /// IPv4 packet
     /// See http://en.wikipedia.org/wiki/IPv4 for into
     /// </summary>
+    [Serializable]
     public class IPv4Packet : IpPacket
     {
 #if DEBUG

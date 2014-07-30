@@ -23,6 +23,7 @@ namespace PacketDotNet.Utils
     /// Used to ensure high performance by allowing memory copies to
     /// be avoided
     /// </summary>
+    [Serializable]
     public class ByteArraySegment
     {
 #if DEBUG

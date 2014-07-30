@@ -32,6 +32,7 @@ namespace PacketDotNet.LLDP
     /// [Interface Subtype : 1][Interface number : 4][OID length : 1][OID : 0-128]
     ///
     /// </summary>
+    [Serializable]
     public class ManagementAddress : TLV
     {
 #if DEBUG

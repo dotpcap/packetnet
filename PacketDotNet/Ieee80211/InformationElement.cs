@@ -170,6 +170,9 @@ namespace PacketDotNet
                 /// Specifies a stations high throughput capabilities.
                 /// </summary>
                 HighThroughputCapabilities = 0x2d,
+                /// <summary>
+                /// The erp information2.
+                /// </summary>
                 ErpInformation2 = 0x2F,
                 /// <summary>
                 /// Specifies details of the Robust Security Network encryption in use on the network.

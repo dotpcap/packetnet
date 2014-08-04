@@ -42,7 +42,7 @@ namespace PacketDotNet.Tcp
         /// Creates a SACK (Selective Ack) Option
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="System.Byte[]"/>
+        /// A <see cref="T:System.Byte[]"/>
         /// </param>
         /// <param name="offset">
         /// A <see cref="System.Int32"/>

@@ -78,7 +78,7 @@ namespace PacketDotNet.Utils
         /// Constructor
         /// </summary>
         /// <param name="Bytes">
-        /// A <see cref="System.Byte[]"/>
+        /// A <see cref="T:System.Byte[]"/>
         /// </param>
         public ByteArraySegment(byte[] Bytes) :
             this(Bytes, 0, Bytes.Length)
@@ -105,7 +105,7 @@ namespace PacketDotNet.Utils
         /// Constructor
         /// </summary>
         /// <param name="Bytes">
-        /// A <see cref="System.Byte[]"/>
+        /// A <see cref="T:System.Byte[]"/>
         /// </param>
         /// <param name="Offset">
         /// A <see cref="System.Int32"/>

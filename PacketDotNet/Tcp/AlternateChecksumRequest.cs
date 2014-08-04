@@ -35,7 +35,7 @@ namespace PacketDotNet.Tcp
         ///  Used to negotiate an alternative checksum algorithm in a connection
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="System.Byte[]"/>
+        /// A <see cref="T:System.Byte[]"/>
         /// </param>
         /// <param name="offset">
         /// A <see cref="System.Int32"/>

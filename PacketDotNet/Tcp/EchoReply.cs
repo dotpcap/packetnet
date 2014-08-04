@@ -38,7 +38,7 @@ namespace PacketDotNet.Tcp
         /// Creates an Echo Reply Option
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="System.Byte[]"/>
+        /// A <see cref="T:System.Byte[]"/>
         /// </param>
         /// <param name="offset">
         /// A <see cref="System.Int32"/>

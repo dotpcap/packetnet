@@ -197,7 +197,7 @@ namespace PacketDotNet
         ///
         /// </summary>
         /// <param name="Bytes">
-        /// A <see cref="System.Byte[]"/>
+        /// A <see cref="T:System.Byte[]"/>
         /// </param>
         /// <param name="offset">
         /// A <see cref="System.Int32"/>

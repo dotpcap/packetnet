@@ -466,10 +466,10 @@ namespace PacketDotNet
         /// Parses options, pointed to by optionBytes into an array of Options
         /// </summary>
         /// <param name="optionBytes">
-        /// A <see cref="System.Byte[]"/>
+        /// A <see cref="T:System.Byte[]"/>
         /// </param>
         /// <returns>
-        /// A <see cref="List<Option>"/>
+        /// A <see cref="List&lt;Option&gt;"/>
         /// </returns>
         private List<Option> ParseOptions(byte[] optionBytes)
         {

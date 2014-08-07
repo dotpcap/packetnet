@@ -68,8 +68,8 @@ namespace PacketDotNet
             /// <value>
             /// The information elements.
             /// </value>
-            /// <remarks>Probe request frames normally contain information elements for <see cref="InformationElement.ElementId.ServiceSetIdentity"/>, 
-            /// <see cref="InformationElement.ElementId.SupportedRates"/> and <see cref="InformationElement.ElementId.ExtendedSupportedRates"/> in that order.</remarks>
+            /// <remarks>Probe request frames normally contain information elements for <see cref="F:InformationElement.ElementId.ServiceSetIdentity"/>, 
+            /// <see cref="F:InformationElement.ElementId.SupportedRates"/> and <see cref="F:InformationElement.ElementId.ExtendedSupportedRates"/> in that order.</remarks>
             public InformationElementList InformationElements { get; set; }
 
             /// <summary>

@@ -51,7 +51,7 @@ namespace Test.PacketType
             public void Test_Constructor_ValueTooLong ()
             {
                 Byte[] value = new Byte[300];
-                InformationElement infoElement = new InformationElement (
+                new InformationElement (
                     InformationElement.ElementId.CfParameterSet, value);
                 
             }

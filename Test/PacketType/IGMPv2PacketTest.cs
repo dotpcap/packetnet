@@ -144,7 +144,7 @@ namespace Test.PacketType
                 Assert.AreEqual(igmp.Header, fromFile.Header);
                 Assert.AreEqual(igmp.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(igmp.Type, fromFile.Type);
-                Assert.AreEqual(igmp.GroupAddress.Address, fromFile.GroupAddress.Address);
+                Assert.AreEqual(igmp.GroupAddress.GetAddressBytes(), fromFile.GroupAddress.GetAddressBytes());
                 Assert.AreEqual(igmp.GroupAddress.AddressFamily, fromFile.GroupAddress.AddressFamily);
                 Assert.AreEqual(igmp.GroupAddress.IsIPv6LinkLocal, fromFile.GroupAddress.IsIPv6LinkLocal);
                 Assert.AreEqual(igmp.GroupAddress.IsIPv6Multicast, fromFile.GroupAddress.IsIPv6Multicast);

@@ -28,7 +28,7 @@ namespace PacketDotNet
     namespace Ieee80211
     {
         /// <summary>
-        /// A <see cref="System.Collections.Generic.List"/> of 
+        /// A <see cref="T:System.Collections.Generic.List"/> of 
         /// <see cref="PacketDotNet.Ieee80211.InformationElement">InformationElements</see>.
         /// </summary>
         /// <remarks>

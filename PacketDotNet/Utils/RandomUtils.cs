@@ -60,7 +60,7 @@ namespace PacketDotNet.Utils
         /// Get the length of the longest string in a list of strings
         /// </summary>
         /// <param name="stringsList">
-        /// A <see cref="List<System.String>"/>
+        /// A <see cref="T:List{System.String}"/>
         /// </param>
         /// <returns>
         /// A <see cref="System.Int32"/>

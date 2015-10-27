@@ -291,8 +291,10 @@ namespace PacketDotNet.LLDP
         {
             get
             {
-                return UTF8Encoding.UTF8.GetString(tlvData.Bytes, ObjectIdentifierOffset,
+                if (ObjIdLength > 0)
+                    return UTF8Encoding.UTF8.GetString(tlvData.Bytes, ObjectIdentifierOffset,
                                             ObjIdLength);
+                else return "0";
             }
 
             set

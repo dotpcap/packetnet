@@ -257,7 +257,7 @@ namespace PacketDotNet.LLDP
             if ( SubTypeValue.GetType() == typeof(byte[]) )
             {
                 return string.Format("[PortID: SubType={0}, SubTypeValue={1}]", SubType,
-                   Encoding.GetEncoding("utf-8").GetString((byte[])SubTypeValue).TrimEnd('\0'));
+                   Encoding.GetEncoding("utf-8").GetString((byte[])SubTypeValue));
             }
             else
             {

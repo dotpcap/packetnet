@@ -187,7 +187,7 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A human readable string
         /// </returns>
-                public override string ToString()
+        public override string ToString()
         {
             return string.Format("[OrganizationSpecific: OrganizationUniqueID={0}, OrganizationDefinedSubType={1}, OrganizationDefinedInfoString={2}]",
                     OUIToString(OrganizationUniqueID),

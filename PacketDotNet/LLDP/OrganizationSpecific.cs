@@ -194,8 +194,7 @@ namespace PacketDotNet.LLDP
 
         private string OUIToString(byte[] OUIBytes)
         {
-            string hexString;
-            hexString = BitConverter.ToString(OUIBytes);
+            string hexString = BitConverter.ToString(OUIBytes);
             string ouiStringFromList = OUIDefinitions.getEntry(hexString).OuiString;
 
             return string.Format("{0} ({1})", ouiStringFromList, hexString); 
@@ -275,18 +274,14 @@ namespace PacketDotNet.LLDP
 
         public static OUIEntry getEntry(string pattern)
         {
-            OUIEntry retVal = OUIArray[0];
-            for (int i = 1; i < OUIArray.Count ; i++)
-            {
-                if (OUIArray[i].Hexcode == pattern)
-                    retVal = OUIArray[i];
-            }
+            OUIEntry defaultOUIEntry = new OUIEntry("", "UNKNOWN");
+            OUIEntry retVal = OUIArray.Where(i => i.Hexcode == pattern).DefaultIfEmpty(defaultOUIEntry).FirstOrDefault();
+            
             return retVal;
         }
 
         static readonly IList<OUIEntry> OUIArray = new ReadOnlyCollection<OUIEntry>
             (new[] {
-                new OUIEntry("",                    "UNDEFINED"),
                 new OUIEntry(OUI_ENCAP_ETHER,       "encapsulated Ethernet"),
                 new OUIEntry(OUI_XEROX,             "Xerox"),
                 new OUIEntry(OUI_CISCO,             "Cisco"),

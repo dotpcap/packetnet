@@ -357,11 +357,11 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Generate a random EthernetPacket
+        /// Generate a random SNAPPacket
         /// TODO: could improve this routine to set a random payload as well
         /// </summary>
         /// <returns>
-        /// A <see cref="EthernetPacket"/>
+        /// A <see cref="SNAPPacket"/>
         /// </returns>
         public static SNAPPacket RandomPacket()
         {

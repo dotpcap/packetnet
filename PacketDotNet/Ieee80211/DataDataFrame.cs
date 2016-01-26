@@ -68,14 +68,6 @@ namespace PacketDotNet
                 SequenceControl = new SequenceControlField (SequenceControlBytes);
                 ReadAddresses (); //must do this after reading FrameControl
 
-                //header.Length = FrameSize; 
-                //var availablePayloadLength = GetAvailablePayloadLength();
-                //if(availablePayloadLength > 0)
-                //{
-                //    payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (availablePayloadLength);
-                //}
-
-
                 header.Length = FrameSize;
                 var availablePayloadLength = GetAvailablePayloadLength();
                 if (availablePayloadLength > SNAPFields.HeaderLength)

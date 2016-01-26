@@ -123,6 +123,17 @@ namespace MiscUtil.Conversion
         }
 
         /// <summary>
+        /// Returns a byte converted at a specified position in a byte array.
+        /// </summary>
+        /// <param name="value">An array of bytes.</param>
+        /// <param name="startIndex">The starting position within value.</param>
+        /// <returns>A character formed by two bytes beginning at startIndex.</returns>
+        public char ToByte(byte[] value, int startIndex)
+        {
+            return unchecked((char)(CheckedFromBytes(value, startIndex, 1)));
+        }
+
+        /// <summary>
         /// Returns a double-precision floating point number converted from eight bytes
         /// at a specified position in a byte array.
         /// </summary>

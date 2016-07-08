@@ -5,7 +5,7 @@ network packets such as ethernet, ip, tcp, udp etc.
 
 Author: Chris Morgan <chmorgan@gmail.com>
 
-http://packetnet.sourceforge.net
+https://github.com/chmorgan/packetnet
 
 Code is found in the PacketDotNet namespace.
 

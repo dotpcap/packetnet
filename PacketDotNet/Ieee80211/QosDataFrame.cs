@@ -114,13 +114,17 @@ namespace PacketDotNet
                 SequenceControl = new SequenceControlField (SequenceControlBytes);
                 QosControl = QosControlBytes;
                 ReadAddresses ();
-                
+
                 header.Length = FrameSize;
                 var availablePayloadLength = GetAvailablePayloadLength();
-                if(availablePayloadLength > 0)
-				{
-					payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (availablePayloadLength);
-				}
+                if (availablePayloadLength > SNAPFields.HeaderLength)
+                {
+                    payloadPacketOrData.ThePacket = new SNAPPacket(header.EncapsulatedBytes(availablePayloadLength));
+                }
+                else
+                {
+                    payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes(availablePayloadLength);
+                }
             }
             
             /// <summary>

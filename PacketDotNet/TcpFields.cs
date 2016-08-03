@@ -29,14 +29,18 @@ namespace PacketDotNet
     {
 #pragma warning disable 1591
         // flag bitmasks
-        public readonly static int TCP_CWR_MASK = 0x0080;
-        public readonly static int TCP_ECN_MASK = 0x0040;
-        public readonly static int TCP_URG_MASK = 0x0020;
-        public readonly static int TCP_ACK_MASK = 0x0010;
-        public readonly static int TCP_PSH_MASK = 0x0008;
-        public readonly static int TCP_RST_MASK = 0x0004;
-        public readonly static int TCP_SYN_MASK = 0x0002;
-        public readonly static int TCP_FIN_MASK = 0x0001;
+        public readonly static int TCP_FLAGC_MASK = 0x0800;
+        public readonly static int TCP_FLAGB_MASK = 0x0400;
+        public readonly static int TCP_FLAGA_MASK = 0x0200;
+        public readonly static int TCP_NS_MASK    = 0x0100;
+        public readonly static int TCP_CWR_MASK   = 0x0080;
+        public readonly static int TCP_ECN_MASK   = 0x0040;
+        public readonly static int TCP_URG_MASK   = 0x0020;
+        public readonly static int TCP_ACK_MASK   = 0x0010;
+        public readonly static int TCP_PSH_MASK   = 0x0008;
+        public readonly static int TCP_RST_MASK   = 0x0004;
+        public readonly static int TCP_SYN_MASK   = 0x0002;
+        public readonly static int TCP_FIN_MASK   = 0x0001;
 #pragma warning restore 1591
 
         /// <summary> Length of a TCP port in bytes.</summary>
@@ -49,7 +53,7 @@ namespace PacketDotNet
         /// <summary> Length of the data offset and flags field in bytes.</summary>
         public readonly static int DataOffsetLength = 1;
         /// <summary> The length of the flags field </summary>
-        public readonly static int FlagsLength = 1;
+        public readonly static int FlagsLength = 2;
         /// <summary> Length of the window size field in bytes.</summary>
         public readonly static int WindowSizeLength = 2;
         /// <summary> Length of the checksum field in bytes.</summary>
@@ -85,7 +89,7 @@ namespace PacketDotNet
             SequenceNumberPosition = DestinationPortPosition + PortLength;
             AckNumberPosition = SequenceNumberPosition + SequenceNumberLength;
             DataOffsetPosition = AckNumberPosition + AckNumberLength;
-            FlagsPosition = DataOffsetPosition + DataOffsetLength;
+            FlagsPosition = DataOffsetPosition;// + DataOffsetLength;
             WindowSizePosition = FlagsPosition + FlagsLength;
             ChecksumPosition = WindowSizePosition + WindowSizeLength;
             UrgentPointerPosition = ChecksumPosition + ChecksumLength;

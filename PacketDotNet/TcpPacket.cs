@@ -211,19 +211,25 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Flags, 9 bits
-        /// TODO: Handle the NS bit
+        /// Flags, 9 bits 
+        /// + 3 reserved bits (FLAGA, FLAGB, FLAGC)
         /// </summary>
-        public byte AllFlags
+        public ushort AllFlags
         {
             get
             {
-                return header.Bytes[header.Offset + TcpFields.FlagsPosition];
+                return (ushort)
+                    (EndianBitConverter.Big.ToUInt16(
+                        header.Bytes, header.Offset + TcpFields.FlagsPosition)
+                    & 0x0fff);
             }
 
             set
             {
-                header.Bytes[header.Offset + TcpFields.FlagsPosition] = (byte)value;
+                EndianBitConverter.Big.CopyBytes(
+                    (ushort)((value & 0x0fff) | DataOffset << 12),
+                    header.Bytes,
+                    header.Offset + TcpFields.FlagsPosition);
             }
         }
 
@@ -294,12 +300,36 @@ namespace PacketDotNet
             set { setFlag(value, TcpFields.TCP_CWR_MASK); }
         }
 
+        virtual public bool NS
+        {
+            get { return (AllFlags & TcpFields.TCP_NS_MASK) != 0; }
+            set { setFlag(value, TcpFields.TCP_NS_MASK); }
+        }
+
+        virtual public bool FlagA
+        {
+            get { return (AllFlags & TcpFields.TCP_FLAGA_MASK) != 0; }
+            set { setFlag(value, TcpFields.TCP_FLAGA_MASK); }
+        }
+
+        virtual public bool FlagB
+        {
+            get { return (AllFlags & TcpFields.TCP_FLAGB_MASK) != 0; }
+            set { setFlag(value, TcpFields.TCP_FLAGB_MASK); }
+        }
+
+        virtual public bool FlagC
+        {
+            get { return (AllFlags & TcpFields.TCP_FLAGC_MASK) != 0; }
+            set { setFlag(value, TcpFields.TCP_FLAGC_MASK); }
+        }
+
         private void setFlag(bool on, int MASK)
         {
             if (on)
-                AllFlags = (byte)(AllFlags | MASK);
+                AllFlags = (ushort)(AllFlags | MASK);
             else
-                AllFlags = (byte)(AllFlags & ~MASK);
+                AllFlags = (ushort)(AllFlags & ~MASK);
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
@@ -622,15 +652,19 @@ namespace PacketDotNet
                 // TODO: Implement a HeaderLength property for TCPPacket
                 //properties.Add("header length", HeaderLength.ToString());
                 properties.Add("flags", "(0x" + AllFlags.ToString("x") + ")");
-                string flags = Convert.ToString(AllFlags, 2).PadLeft(8, '0');
-                properties.Add("", flags[0] + "... .... = [" + flags[0] + "] congestion window reduced");
-                properties.Add(" ", "." + flags[1] + ".. .... = [" + flags[1] + "] ECN - echo");
-                properties.Add("  ", ".." + flags[2] + ". .... = [" + flags[2] + "] urgent");
-                properties.Add("   ", "..." + flags[3] + " .... = [" + flags[3] + "] acknowledgement");
-                properties.Add("    ", ".... " + flags[4] + "... = [" + flags[4] + "] push");
-                properties.Add("     ", ".... ." + flags[5] + ".. = [" + flags[5] + "] reset");
-                properties.Add("      ", ".... .."+ flags[6] + ". = [" + flags[6] + "] syn");
-                properties.Add("       ", ".... ..." + flags[7] + " = [" + flags[7] + "] fin");
+                string flags = Convert.ToString(AllFlags, 2).PadLeft(12, '0');
+                properties.Add("", flags[0] + "... .... .... = [" + flags[0] + "] flagc - reserved");
+                properties.Add(" ", "." + flags[1] + ".. .... .... = [" + flags[1] + "] flagb - reserved");
+                properties.Add("  ", ".." + flags[2] + ". .... .... = [" + flags[2] + "] flaga - reserved");
+                properties.Add("   ", "..." + flags[3] + " .... .... = [" + flags[3] + "] ECN - nonce sum");
+                properties.Add("    ", ".... " + flags[4] + "... .... = [" + flags[4] + "] congestion window reduced");
+                properties.Add("     ", ".... ." + flags[5] + ".. .... = [" + flags[5] + "] ECN - echo");
+                properties.Add("      ", ".... .." + flags[6] + ". .... = [" + flags[6] + "] urgent");
+                properties.Add("       ", ".... ..." + flags[7] + " .... = [" + flags[7] + "] acknowledgement");
+                properties.Add("        ", ".... .... " + flags[8] + "... = [" + flags[8] + "] push");
+                properties.Add("         ", ".... .... ." + flags[9] + ".. = [" + flags[9] + "] reset");
+                properties.Add("          ", ".... .... .." + flags[10] + ". = [" + flags[10] + "] syn");
+                properties.Add("           ", ".... .... ..." + flags[11] + " = [" + flags[11] + "] fin");
                 properties.Add("window size", WindowSize.ToString());
                 properties.Add("checksum", "0x" + Checksum.ToString() + " [" + (ValidChecksum ? "valid" : "invalid") + "]");
                 properties.Add("options", "0x" + BitConverter.ToString(Options).Replace("-", "").PadLeft(12, '0'));

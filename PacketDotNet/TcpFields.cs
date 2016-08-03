@@ -89,7 +89,7 @@ namespace PacketDotNet
             SequenceNumberPosition = DestinationPortPosition + PortLength;
             AckNumberPosition = SequenceNumberPosition + SequenceNumberLength;
             DataOffsetPosition = AckNumberPosition + AckNumberLength;
-            FlagsPosition = DataOffsetPosition;// + DataOffsetLength;
+            FlagsPosition = DataOffsetPosition;
             WindowSizePosition = FlagsPosition + FlagsLength;
             ChecksumPosition = WindowSizePosition + WindowSizeLength;
             UrgentPointerPosition = ChecksumPosition + ChecksumLength;

@@ -714,7 +714,7 @@ namespace PacketDotNet
             Array.Copy(header.Bytes, bytes, header.Length);
             for (int i = 0; i < lsrs.Count; i++)
             {
-                Array.Copy(lsrs[i].Bytes, 0, bytes, offset, LinkStateRequest.Length); //20 bytes per header
+                Array.Copy(lsrs[i].Bytes, 0, bytes, offset, LinkStateRequest.Length);
                 offset += LinkStateRequest.Length;
             }
 
@@ -988,7 +988,7 @@ namespace PacketDotNet
             Array.Copy(header.Bytes, bytes, header.Length);
             for (int i = 0; i < lsas.Count; i++)
             {
-                Array.Copy(lsas[i].Bytes, 0, bytes, offset, 20); //20 bytes per header
+                Array.Copy(lsas[i].Bytes, 0, bytes, offset, OSPFv2Fields.LSAHeaderLength); 
                 offset += 20;
             }
 

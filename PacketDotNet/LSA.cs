@@ -50,7 +50,7 @@ namespace PacketDotNet
         {
             get
             {
-                byte[] b = new byte[4];
+                byte[] b = new byte[TOSMetricLength];
                 EndianBitConverter.Big.CopyBytes(Metric, b, 0);
                 b[0] = TOS;
                 return b;
@@ -174,6 +174,9 @@ namespace PacketDotNet
     public class LSA
     {
         internal ByteArraySegment header;
+
+        public const int IPv4BytesCount = 4;
+        public const int NetworkMaskLength = 4;
 
         /// <summary>
         /// Default constructor
@@ -506,7 +509,7 @@ namespace PacketDotNet
 
                 for (int i = 0; i < this.TOSNumber; i++)
                 {
-                    var metric = EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + RouterLinkFields.AdditionalMetricsPosition + i * 4);
+                    var metric = EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + RouterLinkFields.AdditionalMetricsPosition + i * TOSMetric.TOSMetricLength);
                     TOSMetric m = new TOSMetric();
                     m.TOS = (byte)((metric & 0xFF000000) >> 3);
                     m.Metric = metric & 0x00FFFFFF;
@@ -713,14 +716,14 @@ namespace PacketDotNet
         /// </summary>
         public NetworkLSA(List<IPAddress> routers)
         {
-            int length = NetworkLSAFields.AttachedRouterPosition + routers.Count * 4; //4 bytes per ip
+            int length = NetworkLSAFields.AttachedRouterPosition + routers.Count * IPv4BytesCount;
             int offset = NetworkLSAFields.AttachedRouterPosition;
 
             byte[] b = new byte[length];
             foreach (IPAddress ip in routers)
             {
-                Array.Copy(ip.GetAddressBytes(), 0, b, offset, 4);
-                offset += 4;
+                Array.Copy(ip.GetAddressBytes(), 0, b, offset, IPv4BytesCount);
+                offset += IPv4BytesCount;
             }
 
             this.header = new ByteArraySegment(b);
@@ -779,18 +782,18 @@ namespace PacketDotNet
             get
             {
                 List<IPAddress> ret = new List<IPAddress>();
-                int routerCount = this.Length - 4 - OSPFv2Fields.LSAHeaderLength;
-                if (routerCount % 4 != 0)
+                int routerCount = this.Length - NetworkMaskLength - OSPFv2Fields.LSAHeaderLength;
+                if (routerCount % IPv4BytesCount != 0)
                 {
                     throw new Exception("Mallformed NetworkLSA - routerCount should be aligned to 4");
                 }
 
-                routerCount /= 4;
+                routerCount /= IPv4BytesCount;
 
                 for (int i = 0; i < routerCount; i++)
                 {
-                    byte[] adr = new byte[4];
-                    Array.Copy(header.Bytes, header.Offset + NetworkLSAFields.AttachedRouterPosition + i * 4, adr, 0, 4);
+                    byte[] adr = new byte[IPv4BytesCount];
+                    Array.Copy(header.Bytes, header.Offset + NetworkLSAFields.AttachedRouterPosition + i * IPv4BytesCount, adr, 0, IPv4BytesCount);
                     IPAddress ip = new IPAddress(adr);
                     ret.Add(ip);
                 }
@@ -909,16 +912,16 @@ namespace PacketDotNet
             {
                 List<TOSMetric> ret = new List<TOSMetric>();
 
-                if ((this.Length - SummaryLSAFields.TOSMetricPosition) % 4 != 0)
+                if ((this.Length - SummaryLSAFields.TOSMetricPosition) % TOSMetric.TOSMetricLength != 0)
                 {
                     throw new Exception("Malformed summary LSA - bad TOSMetrics size");
                 }
 
-                int tosCnt = (this.Length - SummaryLSAFields.TOSMetricPosition) / 4;
+                int tosCnt = (this.Length - SummaryLSAFields.TOSMetricPosition) / TOSMetric.TOSMetricLength;
 
                 for (int i = 0; i < tosCnt; i++)
                 {
-                    var metric = EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + SummaryLSAFields.TOSMetricPosition + i * 4);
+                    var metric = EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + SummaryLSAFields.TOSMetricPosition + i * TOSMetric.TOSMetricLength);
                     TOSMetric m = new TOSMetric();
                     m.TOS = (byte)((metric & 0xFF000000) >> 24);
                     m.Metric = metric & 0x00FFFFFF;
@@ -1073,6 +1076,8 @@ namespace PacketDotNet
     {
         public static readonly LSAType lsaType = LSAType.ASExternal;
 
+        const int ASExternalLinkLength = 12;
+
         /// <summary>
         /// Default constructor
         /// </summary>
@@ -1149,7 +1154,7 @@ namespace PacketDotNet
         {
             get
             {
-                int linkCnt = (this.Length - 4 - 20) / 12;
+                int linkCnt = (this.Length - NetworkMaskLength - OSPFv2Fields.LSAHeaderLength) / ASExternalLinkLength;
                 List<ASExternalLink> ret = new List<ASExternalLink>(linkCnt);
                 for(int i = 0; i < linkCnt; i++)
                 {

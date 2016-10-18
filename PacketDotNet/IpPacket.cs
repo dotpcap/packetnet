@@ -78,6 +78,9 @@ namespace PacketDotNet
                 } else if(value is IGMPv2Packet)
                 {
                     NextHeader = IPProtocolType.IGMP;
+                } else if (value is OSPFPacket)
+                {
+                    NextHeader = IPProtocolType.OSPF;
                 } else // NOTE: new checks go here
                 {
                     NextHeader = IPProtocolType.NONE;
@@ -303,6 +306,10 @@ namespace PacketDotNet
             case IPProtocolType.IGMP:
                 payloadPacketOrData.ThePacket = new IGMPv2Packet(payload,
                                                                  ParentPacket);
+                break;
+            case IPProtocolType.OSPF:
+                payloadPacketOrData.ThePacket = OSPFPacket.ConstructOSPFPacket(payload.Bytes,
+                                                                               payload.Offset);
                 break;
             // NOTE: new payload parsing entries go here
             default:

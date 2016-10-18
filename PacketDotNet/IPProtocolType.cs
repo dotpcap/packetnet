@@ -55,6 +55,8 @@ namespace PacketDotNet
         NONE = 59,
         /// <summary> IPv6 destination options. </summary>
         DSTOPTS = 60,
+        /// <summary> OSPF v2/v3 </summary>
+        OSPF = 89,
         /// <summary> Multicast Transport Protocol. </summary>
         MTP = 92,
         /// <summary> Encapsulation Header. </summary>

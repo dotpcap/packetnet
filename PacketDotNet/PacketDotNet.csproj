@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -85,6 +85,14 @@
     <Compile Include="Ieee80211\RtsFrame.cs" />
     <Compile Include="Ieee80211\SequenceControlField.cs" />
     <Compile Include="IpPacket.cs" />
+    <Compile Include="LSA.cs" />
+    <Compile Include="LSAFields.cs" />
+    <Compile Include="LSAType.cs" />
+    <Compile Include="OSPFPacket.cs" />
+    <Compile Include="OSPFPacketType.cs" />
+    <Compile Include="OSPFv2Fields.cs" />
+    <Compile Include="OSPFv2Packet.cs" />
+    <Compile Include="OSPFVersion.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="SessionPacket.cs" />
     <Compile Include="TcpPacket.cs" />

@@ -320,6 +320,9 @@ namespace PacketDotNet
             case LinkLayers.PerPacketInformation:
                 p = new Ieee80211.PpiPacket(bas);
                 break;
+            case LinkLayers.Raw:
+                p = new RawIPPacket(bas);
+                break;
             default:
                 throw new System.NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");
             }

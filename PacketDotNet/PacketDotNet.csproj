@@ -94,6 +94,8 @@
     <Compile Include="OSPFv2Packet.cs" />
     <Compile Include="OSPFVersion.cs" />
     <Compile Include="Packet.cs" />
+    <Compile Include="RawIPPacket.cs" />
+    <Compile Include="RawIPPacketProtocol.cs" />
     <Compile Include="SessionPacket.cs" />
     <Compile Include="TcpPacket.cs" />
     <Compile Include="UdpPacket.cs" />

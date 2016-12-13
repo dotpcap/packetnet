@@ -48,16 +48,19 @@ namespace PacketDotNet
 
             Protocol = (RawIPPacketProtocol)(bas.Bytes[0] >> 4);
 
+            header = new ByteArraySegment(bas);
+            header.Length = 0;
+
             // parse the encapsulated bytes
             payloadPacketOrData = new PacketOrByteArraySegment();
 
             switch (Protocol)
             {
             case RawIPPacketProtocol.IPv4:
-                payloadPacketOrData.ThePacket = new IPv4Packet(bas.EncapsulatedBytes());
+                payloadPacketOrData.ThePacket = new IPv4Packet(header.EncapsulatedBytes());
                 break;
             case RawIPPacketProtocol.IPv6:
-                payloadPacketOrData.ThePacket = new IPv6Packet(bas.EncapsulatedBytes());
+                payloadPacketOrData.ThePacket = new IPv6Packet(header.EncapsulatedBytes());
                 break;
             default:
                 throw new System.NotImplementedException("Protocol of " + Protocol + " is not implemented");

@@ -46,7 +46,14 @@ namespace PacketDotNet
         public RawIPPacket(ByteArraySegment bas)
         {
 
-            Protocol = (RawIPPacketProtocol)(bas.Bytes[0] >> 4);
+            // Pcap raw link layer format does not have any header
+            // you need to identify whether you have ipv4 or ipv6
+            // directly by checking the IP version number.
+            // If the first nibble is 0x04, then you have IP v4
+            // If the first nibble is 0x06, then you have IP v6
+            // The RawIPPacketProtocol enum has been defined to match this.
+            var firstNibble = bas.Bytes[0] >> 4;
+            Protocol = (RawIPPacketProtocol)firstNibble;
 
             header = new ByteArraySegment(bas);
             header.Length = 0;

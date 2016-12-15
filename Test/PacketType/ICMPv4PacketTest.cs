@@ -34,10 +34,11 @@ namespace Test.PacketType
         /// <summary>
         /// Test that we can parse a icmp v4 request and reply
         /// </summary>
-        [Test]
-        public void ICMPv4Parsing ()
+        [TestCase("../../CaptureFiles/ICMPv4.pcap", LinkLayers.Ethernet)]
+        [TestCase("../../CaptureFiles/ICMPv4_raw_linklayer.pcap", LinkLayers.Raw)]
+        public void ICMPv4Parsing(string pcapPath, LinkLayers linkLayer)
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ICMPv4.pcap");
+            var dev = new CaptureFileReaderDevice(pcapPath);
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -46,6 +47,7 @@ namespace Test.PacketType
             Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Assert.IsNotNull(p);
+            Assert.AreEqual(linkLayer, rawCapture.LinkLayerType);
 
             var icmp = (ICMPv4Packet)p.Extract (typeof(ICMPv4Packet));
             Console.WriteLine(icmp.GetType());

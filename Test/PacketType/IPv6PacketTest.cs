@@ -34,14 +34,19 @@ namespace Test.PacketType
     public class IPv6PacketTest
     {
         // icmpv6
-        public void VerifyPacket0(Packet p, RawCapture rawCapture)
+        public void VerifyPacket0(Packet p, RawCapture rawCapture, LinkLayers linkLayer)
         {
             Assert.IsNotNull(p);
             Console.WriteLine(p.ToString());
 
-            EthernetPacket e = (EthernetPacket)p;
-            Assert.AreEqual(PhysicalAddress.Parse("00-A0-CC-D9-41-75"), e.SourceHwAddress);
-            Assert.AreEqual(PhysicalAddress.Parse("33-33-00-00-00-02"), e.DestinationHwAddress);
+            Assert.AreEqual(linkLayer, rawCapture.LinkLayerType);
+
+            if (linkLayer == LinkLayers.Ethernet)
+            {
+                EthernetPacket e = (EthernetPacket)p;
+                Assert.AreEqual(PhysicalAddress.Parse("00-A0-CC-D9-41-75"), e.SourceHwAddress);
+                Assert.AreEqual(PhysicalAddress.Parse("33-33-00-00-00-02"), e.DestinationHwAddress);
+            }
 
             var ip = (IpPacket)p.Extract (typeof(IpPacket));
             Console.WriteLine("ip {0}", ip.ToString());
@@ -59,10 +64,12 @@ namespace Test.PacketType
         }
 
         // Test that we can load and parse an IPv6 packet
-        [Test]
-        public void IPv6PacketTestParsing()
+        // for multiple LinkLayerType types
+        [TestCase("../../CaptureFiles/ipv6_icmpv6_packet.pcap", LinkLayers.Ethernet)]
+        [TestCase("../../CaptureFiles/ipv6_icmpv6_packet_raw_linklayer.pcap", LinkLayers.Raw)]
+        public void IPv6PacketTestParsing(string pcapPath, LinkLayers linkLayer)
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
+            var dev = new CaptureFileReaderDevice(pcapPath);
             dev.Open();
 
             RawCapture rawCapture;
@@ -74,7 +81,7 @@ namespace Test.PacketType
                 switch(packetIndex)
                 {
                 case 0:
-                    VerifyPacket0(p, rawCapture);
+                    VerifyPacket0(p, rawCapture, linkLayer);
                     break;
                 default:
                     Assert.Fail("didn't expect to get to packetIndex " + packetIndex);

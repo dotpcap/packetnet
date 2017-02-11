@@ -37,7 +37,7 @@ outputFile=$destinationDirectory/PacketDotNet_${toVersion}_ReleaseNotes.txt
 
 echo "Packet.Net ChangeLog" > $outputFile
 echo "v$fromVersion -> v$toVersion" >> $outputFile
-echo "http://packetnet.sourceforge.net" >> $outputFile
+echo "https://github.com/chmorgan/packetnet" >> $outputFile
 echo "Chris Morgan <chmorgan@gmail.com>" >> $outputFile
 echo "" >> $outputFile
 

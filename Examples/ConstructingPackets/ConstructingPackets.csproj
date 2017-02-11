@@ -3,12 +3,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7CA1E07C-DB49-40B6-820A-5A8F1370127B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AssemblyName>ConstructingPackets</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <RootNamespace>ConstructingPackets</RootNamespace>
     <FileUpgradeFlags>
     </FileUpgradeFlags>

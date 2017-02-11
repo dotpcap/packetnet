@@ -46,6 +46,10 @@ namespace PacketDotNet
         /// </summary>
         public uint Metric;
 
+        /// <summary>
+        /// Gets the bytes that make up this packet.
+        /// </summary>
+        /// <value>Packet bytes</value>
         public byte[] Bytes
         {
             get
@@ -83,10 +87,10 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs a packet from bytes and offset abd length
         /// </summary>
-        /// <param name="Bytes">
+        /// <param name="packet">
         /// A <see cref="System.Byte"/>
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// A <see cref="System.Int32"/>
         /// </param>
         /// <param name="length">
@@ -186,10 +190,10 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs a packet from bytes and offset and length
         /// </summary>
-        /// <param name="Bytes">
+        /// <param name="packet">
         /// A <see cref="System.Byte"/>
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// A <see cref="System.Int32"/>
         /// </param>
         /// <param name="length">
@@ -390,10 +394,10 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs a packet from bytes and offset and length
         /// </summary>
-        /// <param name="Bytes">
+        /// <param name="packet">
         /// A <see cref="System.Byte"/>
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// A <see cref="System.Int32"/>
         /// </param>
         /// <param name="length">
@@ -572,10 +576,10 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs a packet from bytes and offset and length
         /// </summary>
-        /// <param name="Bytes">
+        /// <param name="packet">
         /// A <see cref="System.Byte"/>
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// A <see cref="System.Int32"/>
         /// </param>
         /// <param name="length">
@@ -596,7 +600,7 @@ namespace PacketDotNet
             get
             {
                 byte flags = (byte)((header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] >> 2) & 1);
-                return (header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] >> 2) & 1;
+                return flags;
             }
             set
             {
@@ -611,8 +615,8 @@ namespace PacketDotNet
         {
             get
             {
-                byte flags = (byte)((header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] >> 2) & 1);
-                return (header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] >> 1) & 1;
+                byte flags = (byte)((header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] >> 1) & 1);
+                return flags;
             }
             set
             {
@@ -627,8 +631,8 @@ namespace PacketDotNet
         {
             get
             {
-                byte flags = (byte)((header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] >> 2) & 1);
-                return header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] & 1;
+                byte flags = (byte)(header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] & 1);
+                return flags;
             }
             set
             {
@@ -728,10 +732,10 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs a packet from bytes and offset and length
         /// </summary>
-        /// <param name="Bytes">
+        /// <param name="packet">
         /// A <see cref="System.Byte"/>
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// A <see cref="System.Int32"/>
         /// </param>
         /// <param name="length">
@@ -841,10 +845,10 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs a packet from bytes and offset and length
         /// </summary>
-        /// <param name="Bytes">
+        /// <param name="packet">
         /// A <see cref="System.Byte"/>
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// A <see cref="System.Int32"/>
         /// </param>
         /// <param name="length">
@@ -944,10 +948,10 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs a packet from bytes and offset and length
         /// </summary>
-        /// <param name="Bytes">
+        /// <param name="packet">
         /// A <see cref="System.Byte"/>
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// A <see cref="System.Int32"/>
         /// </param>
         /// <param name="length">
@@ -1104,10 +1108,10 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs a packet from bytes and offset and length
         /// </summary>
-        /// <param name="Bytes">
+        /// <param name="packet">
         /// A <see cref="System.Byte"/>
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// A <see cref="System.Int32"/>
         /// </param>
         /// <param name="length">

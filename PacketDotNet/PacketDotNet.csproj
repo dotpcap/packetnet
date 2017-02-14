@@ -198,6 +198,9 @@
     <Compile Include="Ieee8021QPacket.cs" />
     <Compile Include="Ieee8021QFields.cs" />
     <Compile Include="IeeeP8021PPriorities.cs" />
+    <Compile Include="NullPacket.cs" />
+    <Compile Include="NullFields.cs" />
+    <Compile Include="NullPacketType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

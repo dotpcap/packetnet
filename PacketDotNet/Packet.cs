@@ -308,6 +308,9 @@ namespace PacketDotNet
             case LinkLayers.LinuxSLL:
                 p = new LinuxSLLPacket(bas);
                 break;
+            case LinkLayers.Null:
+                p = new NullPacket(bas);
+                break;
             case LinkLayers.Ppp:
                 p = new PPPPacket(bas);
                 break;

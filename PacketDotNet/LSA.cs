@@ -155,6 +155,10 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Gets the bytes.
+        /// </summary>
+        /// <value>The bytes.</value>
         public virtual byte[] Bytes
         {
             get
@@ -175,7 +179,14 @@ namespace PacketDotNet
     {
         internal ByteArraySegment header;
 
+        /// <summary>
+        /// The I pv4 bytes count.
+        /// </summary>
         public const int IPv4BytesCount = 4;
+
+        /// <summary>
+        /// The length of the network mask.
+        /// </summary>
         public const int NetworkMaskLength = 4;
 
         /// <summary>
@@ -339,6 +350,10 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.LSA"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.LSA"/>.</returns>
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
@@ -346,6 +361,10 @@ namespace PacketDotNet
             return builder.ToString();
         }
 
+        /// <summary>
+        /// Gets the bytes.
+        /// </summary>
+        /// <value>The bytes.</value>
         public virtual byte[] Bytes
         {
             get
@@ -361,6 +380,9 @@ namespace PacketDotNet
     /// </summary>
     public class RouterLink
     {
+        /// <summary>
+        /// The length of the router link.
+        /// </summary>
         public static readonly int RouterLinkLength = 12;
         internal ByteArraySegment header;
 
@@ -533,6 +555,9 @@ namespace PacketDotNet
     /// </summary>
     public class RouterLSA : LSA
     {
+        /// <summary>
+        /// The type of the lsa.
+        /// </summary>
         public static readonly LSAType lsaType = LSAType.Router;
 
         /// <summary>
@@ -679,6 +704,10 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.RouterLSA"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.RouterLSA"/>.</returns>
         public override string ToString()
         {
             StringBuilder ret = new StringBuilder();
@@ -696,6 +725,9 @@ namespace PacketDotNet
     /// </summary>
     public class NetworkLSA : LSA
     {
+        /// <summary>
+        /// The type of the lsa.
+        /// </summary>
         public static readonly LSAType lsaType = LSAType.Network;
 
         /// <summary>
@@ -809,6 +841,9 @@ namespace PacketDotNet
     /// </summary>
     public class SummaryLSA : LSA
     {
+        /// <summary>
+        /// The type of the lsa.
+        /// </summary>
         public static readonly LSAType lsaType = LSAType.Summary;
 
         /// <summary>
@@ -933,6 +968,9 @@ namespace PacketDotNet
     /// </summary>
     public class ASExternalLink
     {
+        /// <summary>
+        /// The length.
+        /// </summary>
         public static readonly int Length = 12;
         internal ByteArraySegment header;
 
@@ -1070,6 +1108,9 @@ namespace PacketDotNet
     /// </summary>
     public class ASExternalLSA : LSA
     {
+        /// <summary>
+        /// The type of the lsa.
+        /// </summary>
         public static readonly LSAType lsaType = LSAType.ASExternal;
 
         const int ASExternalLinkLength = 12;

@@ -219,28 +219,6 @@ namespace PacketDotNet
         {
             return ToString();
         }
-
-        /// <summary>
-        /// Tries to get an OSPF packet from an unparsed packet
-        /// </summary>
-        /// <param name="p">The packet to be parsed</param>
-        /// <returns>An OSPF packet, if any, null otherwise</returns>
-        public static OSPFv2Packet GetEncapsulated(Packet p)
-        {
-            if (p is InternetLinkLayerPacket)
-            {
-                var payload = InternetLinkLayerPacket.GetInnerPayload((InternetLinkLayerPacket)p);
-                if (payload is IpPacket)
-                {
-                    var payload2 = payload.PayloadPacket;
-                    if (payload2 is OSPFv2Packet)
-                    {
-                        return (OSPFv2Packet)payload2;
-                    }
-                }
-            }
-            return null;
-        }
     }
 
     /// <summary>

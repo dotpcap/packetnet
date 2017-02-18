@@ -383,30 +383,5 @@ namespace PacketDotNet
 
             return buffer.ToString();
         }
-
-        /// <summary>
-        /// Returns the encapsulated ARPPacket of the Packet p or null if
-        /// there is no encapsulated packet
-        /// </summary>
-        /// <param name="p">
-        /// A <see cref="Packet"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="ARPPacket"/>
-        /// </returns>
-        [Obsolete("Use Packet.Extract() instead")]
-        public static ARPPacket GetEncapsulated(Packet p)
-        {
-            if(p is InternetLinkLayerPacket)
-            {
-                var payload = InternetLinkLayerPacket.GetInnerPayload((InternetLinkLayerPacket)p);
-                if(payload is ARPPacket)
-                {
-                    return (ARPPacket)payload;
-                }
-            }
-
-            return null;
-        }
     }
 }

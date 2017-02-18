@@ -44,7 +44,7 @@ namespace Test.PacketType
 
             while ((raw = dev.GetNextPacket()) != null)
             {
-                OSPFv2Packet p = OSPFv2Packet.GetEncapsulated(Packet.ParsePacket(raw.LinkLayerType, raw.Data));
+                OSPFv2Packet p = (OSPFv2Packet)Packet.ParsePacket(raw.LinkLayerType, raw.Data).Extract (typeof(OSPFv2Packet));
 
                 switch (packetIndex)
                 {
@@ -587,7 +587,7 @@ namespace Test.PacketType
             dev.Open();
             while ((raw = dev.GetNextPacket()) != null && i < 4)
             {
-                testSubjects[i] = (OSPFv2HelloPacket)OSPFv2Packet.GetEncapsulated(Packet.ParsePacket(raw.LinkLayerType, raw.Data));
+                testSubjects[i] = (OSPFv2HelloPacket)Packet.ParsePacket(raw.LinkLayerType, raw.Data).Extract(typeof(OSPFv2HelloPacket));
                 i++;
             }
             dev.Close();

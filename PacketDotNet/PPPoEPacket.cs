@@ -289,30 +289,6 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns the encapsulated PPPoE of the Packet p or null if
-        /// there is no encapsulated packet
-        /// </summary>
-        /// <param name="p">
-        /// A <see cref="Packet"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="ARPPacket"/>
-        /// </returns>
-        [Obsolete("Use Packet.Extract() instead")]
-        public static PPPoEPacket GetEncapsulated(Packet p)
-        {
-            if(p is EthernetPacket)
-            {
-                if(p.PayloadPacket is PPPoEPacket)
-                {
-                    return (PPPoEPacket)p.PayloadPacket;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Generate a random PPPoEPacket
         /// </summary>
         /// <returns>

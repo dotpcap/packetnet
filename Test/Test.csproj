@@ -104,7 +104,6 @@
     <Compile Include="PacketType\Ieee80211\SequenceControlFieldTest.cs" />
     <Compile Include="PacketType\Ieee80211\PpiFieldsTests.cs" />
     <Compile Include="Performance\ByteRetrievalPerformance.cs" />
-    <Compile Include="Performance\GetSubPacketPerformance.cs" />
     <Compile Include="PacketType\Vlan802_1QTest.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

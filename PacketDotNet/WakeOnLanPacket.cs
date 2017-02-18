@@ -136,42 +136,6 @@ namespace PacketDotNet
         #region Methods
 
         /// <summary>
-        /// Returns the embedded Wake-On-LAN packet
-        ///  or null if there is none
-        /// </summary>
-        /// <returns>
-        /// A Wake-On-LAN packet
-        /// </returns>
-        [Obsolete("Use Packet.Extract() instead")]
-        public static WakeOnLanPacket GetEncapsulated(Packet p)
-        {
-            // see if we have an ethernet packet that contains a wol packet
-            var ethernetPacket = (EthernetPacket)p.Extract(typeof(EthernetPacket));
-            if(ethernetPacket != null)
-            {
-                if(ethernetPacket.Type == EthernetPacketType.WakeOnLan)
-                {
-                    return (WakeOnLanPacket)ethernetPacket.PayloadPacket;
-                }
-            }
-
-            // otherwise see if we have a udp packet (might have been sent to port 7 or 9) that
-            // contains a wol packet
-            var udpPacket = (UdpPacket)p.Extract(typeof(UdpPacket));
-            if(udpPacket != null)
-            {
-                // if the destination port is 7 or 9 then this is already parsed as a
-                // WakeOnLan packet so just return it
-                if((udpPacket.DestinationPort == 7) || (udpPacket.DestinationPort == 9))
-                {
-                    return (WakeOnLanPacket)udpPacket.PayloadPacket;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Generate a random WakeOnLanPacket
         /// </summary>
         /// <returns>

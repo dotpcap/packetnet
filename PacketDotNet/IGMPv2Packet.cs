@@ -132,36 +132,6 @@ namespace PacketDotNet
             this.ParentPacket = ParentPacket;
         }
 
-        /// <summary>
-        /// Returns the encapsulated IGMPv2Packet of the Packet p or null if
-        /// there is no encapsulated packet
-        /// </summary>
-        /// <param name="p">
-        /// A <see cref="Packet"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="IGMPv2Packet"/>
-        /// </returns>
-        [Obsolete("Use Packet.Extract() instead")]
-        public static IGMPv2Packet GetEncapsulated(Packet p)
-        {
-            if(p is InternetLinkLayerPacket)
-            {
-                var payload = InternetLinkLayerPacket.GetInnerPayload((InternetLinkLayerPacket)p);
-                if(payload is IpPacket)
-                {
-                    var innerPayload = payload.PayloadPacket;
-                    if(innerPayload is IGMPv2Packet)
-                    {
-                        return (IGMPv2Packet)innerPayload;
-                    }
-                }
-            }
-
-            return null;
-
-        }
-
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {

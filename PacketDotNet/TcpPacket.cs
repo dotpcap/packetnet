@@ -670,29 +670,6 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns the TcpPacket embedded in Packet p or null if
-        /// there is no embedded TcpPacket
-        /// </summary>
-        [Obsolete("Use Packet.Extract() instead")]
-        public static TcpPacket GetEncapsulated(Packet p)
-        {
-            if(p is InternetLinkLayerPacket)
-            {
-                var payload = InternetLinkLayerPacket.GetInnerPayload((InternetLinkLayerPacket)p);
-                if(payload is IpPacket)
-                {
-                    var innerPayload = payload.PayloadPacket;
-                    if(innerPayload is TcpPacket)
-                    {
-                        return (TcpPacket)innerPayload;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Create a randomized tcp packet with the given ip version
         /// </summary>
         /// <returns>

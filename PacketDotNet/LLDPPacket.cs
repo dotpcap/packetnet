@@ -238,33 +238,6 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns the LLDP inside of the Packet p or null if
-        /// there is no encapsulated packet
-        /// </summary>
-        /// <param name="p">
-        /// A <see cref="Packet"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="IpPacket"/>
-        /// </returns>
-        [Obsolete("Use Packet.Extract() instead")]
-        public static LLDPPacket GetEncapsulated(Packet p)
-        {
-            log.Debug("");
-
-            if(p is InternetLinkLayerPacket)
-            {
-                var payload = InternetLinkLayerPacket.GetInnerPayload((InternetLinkLayerPacket)p);
-                if(payload is LLDPPacket)
-                {
-                    return (LLDPPacket)payload;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Create a randomized LLDP packet with some basic TLVs
         /// </summary>
         /// <returns>

@@ -313,29 +313,6 @@ namespace PacketDotNet
             {
                 return PpiFields.FindAll(p => (p.FieldType == type)).ToArray();
             }
-            
-            
-
-            /// <summary>
-            /// Returns the Ieee80211MacFrame inside of the Packet p or null if
-            /// there is no encapsulated packet
-            /// </summary>
-            /// <param name="p">
-            /// A <see cref="Packet"/>
-            /// </param>
-            /// <returns>
-            /// A <see cref="MacFrame"/>
-            /// </returns>
-            [Obsolete("Use Packet.Extract() instead")]
-            public static MacFrame GetEncapsulated (Packet p)
-            {
-                if (p is PpiPacket)
-                {
-                    var payload = p.PayloadPacket;
-                    return (MacFrame)payload;
-                }
-                return null;
-            }
 
             /// <summary cref="Packet.ToString(StringOutputType)" />
             public override string ToString (StringOutputType outputFormat)

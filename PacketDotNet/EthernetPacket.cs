@@ -248,29 +248,6 @@ namespace PacketDotNet
             return payloadPacketOrData;
         }
 
-        /// <summary>
-        /// Returns the EthernetPacket inside of the Packet p or null if
-        /// there is no encapsulated packet
-        /// </summary>
-        /// <param name="p">
-        /// A <see cref="Packet"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="EthernetPacket"/>
-        /// </returns>
-        [Obsolete("Use Packet.Extract() instead")]
-        public static EthernetPacket GetEncapsulated(Packet p)
-        {
-            log.Debug("");
-
-            if(p is EthernetPacket)
-            {
-                return (EthernetPacket)p;
-            }
-
-            return null;
-        }
-
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override System.String Color
         {

@@ -235,36 +235,5 @@ namespace PacketDotNet
 
             return buffer.ToString();
         }
-
-        /// <summary>
-        /// Returns the ICMPv4Packet inside of Packet p or null if
-        /// there is no encapsulated ICMPv4Packet
-        /// </summary>
-        /// <param name="p">
-        /// A <see cref="Packet"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="ICMPv4Packet"/>
-        /// </returns>
-        [Obsolete("Use Packet.Extract() instead")]
-        public static ICMPv4Packet GetEncapsulated(Packet p)
-        {
-            log.Debug("");
-
-            if(p is InternetLinkLayerPacket)
-            {
-                var payload = InternetLinkLayerPacket.GetInnerPayload((InternetLinkLayerPacket)p);
-                if(payload is IpPacket)
-                {
-                    var payload2 = payload.PayloadPacket;
-                    if(payload2 is ICMPv4Packet)
-                    {
-                        return (ICMPv4Packet)payload2;
-                    }
-                }
-            }
-
-            return null;
-        }
     }
 }

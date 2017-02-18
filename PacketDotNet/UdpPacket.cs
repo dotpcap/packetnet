@@ -301,35 +301,6 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns the UdpPacket inside of the Packet p or null if
-        /// there is no encapsulated packet
-        /// </summary>
-        /// <param name="p">
-        /// A <see cref="Packet"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="UdpPacket"/>
-        /// </returns>
-        [Obsolete("Use Packet.Extract() instead")]
-        public static UdpPacket GetEncapsulated(Packet p)
-        {
-            if(p is InternetLinkLayerPacket)
-            {
-                var payload = InternetLinkLayerPacket.GetInnerPayload((InternetLinkLayerPacket)p);
-                if(payload is IpPacket)
-                {
-                    var innerPayload = payload.PayloadPacket;
-                    if(innerPayload is UdpPacket)
-                    {
-                        return (UdpPacket)innerPayload;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Generate a random packet
         /// </summary>
         /// <returns>

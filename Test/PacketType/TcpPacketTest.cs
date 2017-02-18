@@ -236,6 +236,7 @@ namespace Test.PacketType
                 Assert.AreEqual(tcpPacket.AcknowledgmentNumber, fromFile.AcknowledgmentNumber);
                 Assert.AreEqual(tcpPacket.AllFlags, fromFile.AllFlags);
                 Assert.AreEqual(tcpPacket.Checksum, fromFile.Checksum);
+                Assert.AreEqual(tcpPacket.NS, fromFile.NS);
                 Assert.AreEqual(tcpPacket.CWR, fromFile.CWR);
                 Assert.AreEqual(tcpPacket.DataOffset, fromFile.DataOffset);
                 Assert.AreEqual(tcpPacket.DestinationPort, fromFile.DestinationPort);

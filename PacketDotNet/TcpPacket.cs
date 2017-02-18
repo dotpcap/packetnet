@@ -119,25 +119,39 @@ namespace PacketDotNet
             }
         }
 
+        private ushort DataOffsetAndFlags
+        {
+            get
+            {
+                return EndianBitConverter.Big.ToUInt16(header.Bytes,
+                    header.Offset + TcpFields.DataOffsetAndFlagsPosition);
+            }
+
+            set
+            {
+                EndianBitConverter.Big.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + TcpFields.DataOffsetAndFlagsPosition);
+            }
+        }
+
         /// <summary> The size of the tcp header in 32bit words </summary>
         virtual public int DataOffset
         {
             get
             {
-                var theByte = header.Bytes[header.Offset + TcpFields.DataOffsetPosition];
-                return (theByte >> 4) & 0xF;
+                var dataOffset = (byte)((DataOffsetAndFlags >> 12) & 0xF);
+                return dataOffset;
             }
 
             set
             {
-                // read the original value
-                var theByte = header.Bytes[header.Offset + TcpFields.DataOffsetPosition];
+                var dataOffset = DataOffsetAndFlags;
 
-                // mask in the data offset value
-                theByte = (byte)((theByte & 0x0F) | ((value << 4) & 0xF0));
+                dataOffset = (ushort)((dataOffset & 0x0FFF) | ((value << 12) & 0xF000));
 
                 // write the value back
-                header.Bytes[header.Offset + TcpFields.DataOffsetPosition] = theByte;
+                DataOffsetAndFlags = dataOffset;
             }
         }
 
@@ -212,18 +226,21 @@ namespace PacketDotNet
 
         /// <summary>
         /// Flags, 9 bits
-        /// TODO: Handle the NS bit
         /// </summary>
-        public byte AllFlags
+        public ushort AllFlags
         {
             get
             {
-                return header.Bytes[header.Offset + TcpFields.FlagsPosition];
+                var flags = (DataOffsetAndFlags & 0x1FF);
+                return (ushort)flags;
             }
 
             set
             {
-                header.Bytes[header.Offset + TcpFields.FlagsPosition] = (byte)value;
+                var flags = DataOffsetAndFlags;
+
+                flags = (ushort)((flags & 0xFE00) | (value & 0x1FF));
+                DataOffsetAndFlags = flags;
             }
         }
 
@@ -294,12 +311,21 @@ namespace PacketDotNet
             set { setFlag(value, TcpFields.TCP_CWR_MASK); }
         }
 
+        /// <value>
+        /// NS flag
+        /// </value>
+        virtual public bool NS
+        {
+            get { return (AllFlags & TcpFields.TCP_NS_MASK) != 0; }
+            set { setFlag(value, TcpFields.TCP_NS_MASK); }
+        }
+
         private void setFlag(bool on, int MASK)
         {
             if (on)
-                AllFlags = (byte)(AllFlags | MASK);
+                AllFlags = (ushort)(AllFlags | MASK);
             else
-                AllFlags = (byte)(AllFlags & ~MASK);
+                AllFlags = (ushort)(AllFlags & ~MASK);
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>

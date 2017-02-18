@@ -29,6 +29,7 @@ namespace PacketDotNet
     {
 #pragma warning disable 1591
         // flag bitmasks
+        public readonly static int TCP_NS_MASK = 0x0100;
         public readonly static int TCP_CWR_MASK = 0x0080;
         public readonly static int TCP_ECN_MASK = 0x0040;
         public readonly static int TCP_URG_MASK = 0x0020;
@@ -47,9 +48,7 @@ namespace PacketDotNet
         /// <summary> Length of the acknowledgment number in bytes.</summary>
         public readonly static int AckNumberLength = 4;
         /// <summary> Length of the data offset and flags field in bytes.</summary>
-        public readonly static int DataOffsetLength = 1;
-        /// <summary> The length of the flags field </summary>
-        public readonly static int FlagsLength = 1;
+        public readonly static int DataOffsetAndFlagsLength = 2;
         /// <summary> Length of the window size field in bytes.</summary>
         public readonly static int WindowSizeLength = 2;
         /// <summary> Length of the checksum field in bytes.</summary>
@@ -66,9 +65,7 @@ namespace PacketDotNet
         /// <summary> Position of the acknowledgment number field.</summary>
         public readonly static int AckNumberPosition;
         /// <summary> Position of the data offset </summary>
-        public readonly static int DataOffsetPosition;
-        /// <summary> Position of the flags field </summary>
-        public readonly static int FlagsPosition;
+        public readonly static int DataOffsetAndFlagsPosition;
         /// <summary> Position of the window size field.</summary>
         public readonly static int WindowSizePosition;
         /// <summary> Position of the checksum field.</summary>
@@ -84,9 +81,8 @@ namespace PacketDotNet
             DestinationPortPosition = PortLength;
             SequenceNumberPosition = DestinationPortPosition + PortLength;
             AckNumberPosition = SequenceNumberPosition + SequenceNumberLength;
-            DataOffsetPosition = AckNumberPosition + AckNumberLength;
-            FlagsPosition = DataOffsetPosition + DataOffsetLength;
-            WindowSizePosition = FlagsPosition + FlagsLength;
+            DataOffsetAndFlagsPosition = AckNumberPosition + AckNumberLength;
+            WindowSizePosition = DataOffsetAndFlagsPosition + DataOffsetAndFlagsLength;
             ChecksumPosition = WindowSizePosition + WindowSizeLength;
             UrgentPointerPosition = ChecksumPosition + ChecksumLength;
             HeaderLength = UrgentPointerPosition + UrgentPointerLength;

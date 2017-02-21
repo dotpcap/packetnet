@@ -27,10 +27,12 @@ namespace PacketDotNet
     /// </summary>
     public enum LSAType : byte
     {
+#pragma warning disable 1591
         Router = 0x01,
         Network = 0x02,
         Summary = 0x03,
         SummaryASBR = 0x04,
         ASExternal = 0x05
+#pragma warning restore 1591
     }
 }

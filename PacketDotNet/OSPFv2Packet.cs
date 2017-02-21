@@ -27,6 +27,9 @@ using MiscUtil.Conversion;
 
 namespace PacketDotNet
 {
+    /// <summary>
+    /// OSPFv2 packet.
+    /// </summary>
     [Serializable]
     public abstract class  OSPFv2Packet : OSPFPacket
     {
@@ -206,6 +209,10 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2Packet"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2Packet"/>.</returns>
         public override string ToString()
         {
             StringBuilder packet = new StringBuilder();
@@ -215,6 +222,15 @@ namespace PacketDotNet
             return packet.ToString();
         }
 
+        /// <summary cref="Packet.ToString()">
+        /// Output the packet information in the specified format
+        ///  Normal - outputs the packet info to a single line
+        ///  Colored - outputs the packet info to a single line with coloring
+        ///  Verbose - outputs detailed info about the packet
+        ///  VerboseColored - outputs detailed info about the packet with coloring
+        /// </summary>
+        /// <returns>The string.</returns>
+        /// <param name="outputFormat">Output format.</param>
         public override string ToString(StringOutputType outputFormat)
         {
             return ToString();
@@ -458,6 +474,10 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2HelloPacket"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2HelloPacket"/>.</returns>
         public override string ToString()
         {
             StringBuilder packet = new StringBuilder();
@@ -468,6 +488,15 @@ namespace PacketDotNet
             return packet.ToString();
         }
 
+        /// <summary cref="Packet.ToString()">
+        /// Output the packet information in the specified format
+        ///  Normal - outputs the packet info to a single line
+        ///  Colored - outputs the packet info to a single line with coloring
+        ///  Verbose - outputs detailed info about the packet
+        ///  VerboseColored - outputs detailed info about the packet with coloring
+        /// </summary>
+        /// <returns>The string.</returns>
+        /// <param name="outputFormat">Output format.</param>
         public override string ToString(StringOutputType outputFormat)
         {
             return ToString();
@@ -641,6 +670,10 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2DDPacket"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2DDPacket"/>.</returns>
         public override string ToString()
         {
             StringBuilder packet = new StringBuilder();
@@ -651,6 +684,15 @@ namespace PacketDotNet
             return packet.ToString();
         }
 
+        /// <summary cref="Packet.ToString()">
+        /// Output the packet information in the specified format
+        ///  Normal - outputs the packet info to a single line
+        ///  Colored - outputs the packet info to a single line with coloring
+        ///  Verbose - outputs detailed info about the packet
+        ///  VerboseColored - outputs detailed info about the packet with coloring
+        /// </summary>
+        /// <returns>The string.</returns>
+        /// <param name="outputFormat">Output format.</param>
         public override string ToString(StringOutputType outputFormat)
         {
             return ToString();
@@ -755,6 +797,10 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2LSRequestPacket"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2LSRequestPacket"/>.</returns>
         public override string ToString()
         {
             StringBuilder packet = new StringBuilder();
@@ -764,6 +810,15 @@ namespace PacketDotNet
             return packet.ToString();
         }
 
+        /// <summary cref="Packet.ToString()">
+        /// Output the packet information in the specified format
+        ///  Normal - outputs the packet info to a single line
+        ///  Colored - outputs the packet info to a single line with coloring
+        ///  Verbose - outputs detailed info about the packet
+        ///  VerboseColored - outputs detailed info about the packet with coloring
+        /// </summary>
+        /// <returns>The string.</returns>
+        /// <param name="outputFormat">Output format.</param>
         public override string ToString(StringOutputType outputFormat)
         {
             return ToString();
@@ -902,6 +957,10 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2LSUpdatePacket"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2LSUpdatePacket"/>.</returns>
         public override string ToString()
         {
             StringBuilder packet = new StringBuilder();
@@ -911,6 +970,15 @@ namespace PacketDotNet
             return packet.ToString();
         }
 
+        /// <summary cref="Packet.ToString()">
+        /// Output the packet information in the specified format
+        ///  Normal - outputs the packet info to a single line
+        ///  Colored - outputs the packet info to a single line with coloring
+        ///  Verbose - outputs detailed info about the packet
+        ///  VerboseColored - outputs detailed info about the packet with coloring
+        /// </summary>
+        /// <returns>The string.</returns>
+        /// <param name="outputFormat">Output format.</param>
         public override string ToString(StringOutputType outputFormat)
         {
             return ToString();
@@ -1018,6 +1086,10 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2LSAPacket"/>.
+        /// </summary>
+        /// <returns>A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2LSAPacket"/>.</returns>
         public override string ToString()
         {
             StringBuilder packet = new StringBuilder();
@@ -1026,6 +1098,15 @@ namespace PacketDotNet
             return packet.ToString();
         }
 
+        /// <summary cref="Packet.ToString()">
+        /// Output the packet information in the specified format
+        ///  Normal - outputs the packet info to a single line
+        ///  Colored - outputs the packet info to a single line with coloring
+        ///  Verbose - outputs detailed info about the packet
+        ///  VerboseColored - outputs detailed info about the packet with coloring
+        /// </summary>
+        /// <returns>The string.</returns>
+        /// <param name="outputFormat">Output format.</param>
         public override string ToString(StringOutputType outputFormat)
         {
             return ToString();

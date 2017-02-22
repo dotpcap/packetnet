@@ -36,6 +36,7 @@ namespace ConstructingPackets
 
             // and print out the packet to see that it looks just like we wanted it to
             Console.WriteLine(ethernetPacket.ToString());
+            Console.ReadKey(true);
         }
     }
 }

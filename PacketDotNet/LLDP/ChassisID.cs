@@ -364,7 +364,15 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public override string ToString ()
         {
-            return string.Format("[ChassisID: SubType={0}, SubTypeValue={1}]", SubType, SubTypeValue);
+            if (SubTypeValue.GetType() == typeof(byte[]))
+            {
+                return string.Format("[ChassisID: SubType={0}, SubTypeValue={1}]", SubType,
+                   Encoding.GetEncoding("utf-8").GetString((byte[])SubTypeValue));
+            }
+            else
+            {
+                return string.Format("[ChassisID: SubType={0}, SubTypeValue={1}]", SubType, SubTypeValue);
+            }
         }
 
         #endregion

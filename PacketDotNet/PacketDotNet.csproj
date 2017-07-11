@@ -6,7 +6,7 @@
     <ProjectGuid>{55ABBA4C-AAF9-4726-A592-0C92436CEC92}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>PacketDotNet</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <RootNamespace>PacketDotNet</RootNamespace>
     <FileUpgradeFlags>
     </FileUpgradeFlags>

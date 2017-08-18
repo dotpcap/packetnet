@@ -318,6 +318,8 @@ namespace PacketDotNet
 
                 MacFrame macFrame = null;
 
+                log.DebugFormat("SubType {0}", frameControl.SubType);
+
                 switch (frameControl.SubType)
                 {
                 case FrameControlField.FrameSubTypes.ManagementAssociationRequest:

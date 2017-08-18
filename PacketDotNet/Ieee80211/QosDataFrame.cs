@@ -34,6 +34,16 @@ namespace PacketDotNet
         /// </summary>
         public class QosDataFrame : DataFrame
         {
+#if DEBUG
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#else
+        // NOTE: No need to warn about lack of use, the compiler won't
+        //       put any calls to 'log' here but we need 'log' to exist to compile
+#pragma warning disable 0169, 0649
+        private static readonly ILogInactive log;
+#pragma warning restore 0169, 0649
+#endif
+
             private class QosDataField
             {
                 public readonly static int QosControlLength = 2;
@@ -107,6 +117,8 @@ namespace PacketDotNet
             /// </param>
             public QosDataFrame (ByteArraySegment bas)
             {
+                log.Debug("");
+
                 header = new ByteArraySegment (bas);
 
                 FrameControl = new FrameControlField (FrameControlBytes);

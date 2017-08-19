@@ -72,7 +72,27 @@ namespace Test.PacketType
 
                 Assert.AreEqual (0x34, frame.PayloadData.Length);
             }
-            
+
+            /// <summary>
+            /// Test that a QosData frame containing a tcp packet can be properly parsed
+            /// </summary>
+            [Test]
+            public void Test_QosDataFrameParsingWithIpV4Tcp()
+            {
+                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_qos_data_frame_ipv4_tcp.pcap");
+                dev.Open();
+                var rawCapture = dev.GetNextPacket();
+                dev.Close();
+
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
+
+                // test that we can access the lowest level tcp packet
+                var t = p.Extract(typeof(TcpPacket));
+                Assert.IsNotNull(t, "Expected t not to be null");
+
+                Console.WriteLine(p.ToString(StringOutputType.Verbose));
+            }
+
             [Test]
             public void Test_Constructor_ConstructWithValues ()
             {

@@ -131,7 +131,7 @@ namespace PacketDotNet
                 var availablePayloadLength = GetAvailablePayloadLength();
                 if(availablePayloadLength > 0)
 				{
-					payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (availablePayloadLength);
+			payloadPacketOrData.ThePacket = new LogicalLinkControl(header.EncapsulatedBytes());
 				}
             }
             

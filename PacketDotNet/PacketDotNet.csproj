@@ -201,6 +201,8 @@
     <Compile Include="NullPacket.cs" />
     <Compile Include="NullFields.cs" />
     <Compile Include="NullPacketType.cs" />
+    <Compile Include="Ieee80211\LogicalLinkControl.cs" />
+    <Compile Include="Ieee80211\LogicalLinkControlFields.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
@@ -208,7 +210,10 @@
     <MonoDevelop>
       <Properties>
         <Policies>
-          <TextStylePolicy FileWidth="120" inheritsSet="VisualStudio" inheritsScope="text/plain" />
+          <TextStylePolicy FileWidth="120" TabWidth="4" IndentWidth="4" RemoveTrailingWhitespace="True" NoTabsAfterNonTabs="False" EolMarker="Native" TabsToSpaces="True">
+            <inheritsSet />
+            <inheritsScope />
+          </TextStylePolicy>
         </Policies>
       </Properties>
     </MonoDevelop>

@@ -5,3 +5,4 @@
 bin
 obj/
 test-results/
+/.vs/PacketNet/v15/sqlite3

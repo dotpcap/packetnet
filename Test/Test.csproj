@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PacketType\DrdaPacketTest.cs" />
     <Compile Include="PacketType\Ieee80211\CapabilityInformationFieldTest.cs" />
     <Compile Include="PacketType\Ieee80211\ActionFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211\BlockAcknowledgmentFrameTest.cs" />
@@ -117,5 +118,7 @@
   <ItemGroup>
     <None Include="log4net.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
 </Project>

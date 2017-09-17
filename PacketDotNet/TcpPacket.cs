@@ -421,7 +421,27 @@ namespace PacketDotNet
                 // the length of the payload is the total payload length
                 // above, minus the length of the tcp header
                 payloadPacketOrData.TheByteArraySegment.Length = newTcpPayloadLength;
+                this.DecodePayload();
             }
+        }
+
+        /// <summary>
+        /// Decode Payload to Support Drda procotol
+        /// </summary>
+        /// <returns></returns>
+        public TcpPacket DecodePayload()
+        {
+            if (PayloadData == null)
+            {
+                return this;
+            }
+            //PayloadData[2] is Magic field and Magic field==0xd0 means this may be a Drda Packet
+            if (PayloadData.Length >= DrdaDDMFields.DDMHeadTotalLength && PayloadData[2] == 0xd0)
+            {
+                var drdaPacket = new DrdaPacket(payloadPacketOrData.TheByteArraySegment, this);
+                payloadPacketOrData.ThePacket = drdaPacket;
+            }
+            return this;
         }
 
         /// <summary>

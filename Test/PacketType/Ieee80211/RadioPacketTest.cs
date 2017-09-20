@@ -206,9 +206,10 @@ namespace Test.PacketType
                 BinaryWriter bs = new BinaryWriter(ms);
                 bs.Write((byte)0x0); //version
                 bs.Write((byte)0x0); //pad
-                bs.Write((ushort) 0x0010); //length
+                bs.Write((ushort) 0x0014); //length
                 bs.Write((uint) 0x80000002); //present 1 (wth flags field)
                 bs.Write((uint) 0x00010000); //present 2 (with unhandled field)
+                bs.Write((uint) 0x00000000); //natural aligned padding
                 bs.Write((ushort) 0x0010); //Flags field (FCS included flag set)
                 bs.Write((ushort) 0x1234); //a made up field that we want to keep even though we dont know what it is
                 
@@ -223,11 +224,11 @@ namespace Test.PacketType
                 var radioTap = ms.ToArray();
                 
                 RadioPacket p = Packet.ParsePacket(LinkLayers.Ieee80211_Radio, radioTap) as RadioPacket;
-                Assert.AreEqual(16, p.Length);
+                Assert.AreEqual(20, p.Length);
                 p.Add(new TsftRadioTapField(0x123456789));
                 RadioPacket finalFrame = Packet.ParsePacket(LinkLayers.Ieee80211_Radio, p.Bytes) as RadioPacket;
                 
-                Assert.AreEqual(24, finalFrame.Length);
+                Assert.AreEqual(28, finalFrame.Length);
                 Assert.AreEqual(0x1234, EndianBitConverter.Little.ToUInt16(finalFrame.Bytes, finalFrame.Length - 2));
             }
             

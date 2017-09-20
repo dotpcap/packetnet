@@ -106,7 +106,7 @@ namespace PacketDotNet
                                                                     header.Offset + RadioFields.PresentPosition);
                 bitmaskFields.Add(bitmask);
                 int bitmaskOffsetInBytes = 4;
-                while ((bitmask & (1 << 31)) == 1)
+                while ((bitmask & (1 << 31)) > 0)
                 {
                     // retrieve the next field
                     bitmask = EndianBitConverter.Little.ToUInt32(header.Bytes,
@@ -300,9 +300,9 @@ namespace PacketDotNet
                 var offset = header.Offset +
                              RadioFields.PresentPosition +
                              (bitmasks.Length) * Marshal.SizeOf (typeof(UInt32));
-                var br = new BinaryReader (new MemoryStream (header.Bytes,
+                var br = new NaturalAlignmentBinaryReader(new MemoryStream (header.Bytes,
                                                            offset,
-                                                           (int)(Length - offset)));
+                                                           (int)(Length - offset)), offset);
 
                 // now go through each of the bitmask fields looking at the least significant
                 // bit first to retrieve each field
@@ -315,8 +315,9 @@ namespace PacketDotNet
                     bool unhandledFieldFound = false;
 
                     // look at all of the bits, note we don't want to consider the
-                    // highest bit since that indicates another bitfield that follows
-                    for (int x = 0; x < 31; x++)
+                    // highest bit since that indicates another bitfield that follows.
+                    // 31bit is extended flag, ignore it
+                    for (int x = 0; x < 30; x++)
                     {
                         if (ba [x] == true)
                         {

@@ -58,7 +58,7 @@ namespace Test.PacketType
                 Assert.IsFalse(frame.FrameControl.Retry);
                 Assert.IsFalse(frame.FrameControl.PowerManagement);
                 Assert.IsFalse(frame.FrameControl.MoreData);
-                Assert.IsFalse(frame.FrameControl.Wep);
+                Assert.IsFalse(frame.FrameControl.Protected);
                 Assert.IsFalse(frame.FrameControl.Order);
                 Assert.AreEqual(314, frame.Duration.Field);
                 Assert.AreEqual("78ACC00A5E0E", frame.DestinationAddress.ToString().ToUpper());

@@ -460,7 +460,17 @@ namespace PacketDotNet
             /// <summary>
             /// Indicates that the frame body is encrypted according to the WEP (wired equivalent privacy) algorithm
             /// </summary>
+            [ObsoleteAttribute("This property is obsolete. Use Protected instead.", false)]
             public bool Wep
+            {
+                get { return Protected; }
+                set { Protected = value; }
+            }
+
+            /// <summary>
+            /// Indicates whether the frame body is encrypted with one of several encryption standards
+            /// </summary>
+            public bool Protected
             {
                 get
                 {
@@ -563,7 +573,7 @@ namespace PacketDotNet
                 {
                     flags.Add("MoreData");
                 }
-                if (Wep)
+                if (Protected)
                 {
                     flags.Add("Wep");
                 }

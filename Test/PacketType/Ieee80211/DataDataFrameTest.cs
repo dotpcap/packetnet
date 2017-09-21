@@ -58,7 +58,7 @@ namespace Test.PacketType
                 Assert.IsFalse(frame.FrameControl.Retry);
                 Assert.IsFalse(frame.FrameControl.PowerManagement);
                 Assert.IsFalse(frame.FrameControl.MoreData);
-                Assert.IsFalse(frame.FrameControl.Wep);
+                Assert.IsFalse(frame.FrameControl.Protected);
                 Assert.IsFalse(frame.FrameControl.Order);
                 Assert.AreEqual(44, frame.Duration.Field); //this need expanding on in the future
                 Assert.AreEqual("0024B2F8D706", frame.DestinationAddress.ToString().ToUpper());
@@ -94,7 +94,7 @@ namespace Test.PacketType
                 Assert.IsFalse(frame.FrameControl.Retry);
                 Assert.IsFalse(frame.FrameControl.PowerManagement);
                 Assert.IsFalse(frame.FrameControl.MoreData);
-                Assert.IsTrue(frame.FrameControl.Wep);
+                Assert.IsTrue(frame.FrameControl.Protected);
                 Assert.IsFalse(frame.FrameControl.Order);
                 Assert.AreEqual(0, frame.Duration.Field); //this need expanding on in the future
                 Assert.AreEqual("33330000000C", frame.DestinationAddress.ToString().ToUpper());

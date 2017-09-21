@@ -245,6 +245,27 @@ namespace Test.PacketType
                 Assert.IsTrue(p.Contains(RadioTapType.Flags));
                 Assert.IsFalse(p.Contains(RadioTapType.Fhss));
             }
+
+            [Test]
+            public void TestDoublePresentFlag()
+            {
+                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_double_present_flag_frame.pcap");
+                dev.Open();
+                var rawCapture = dev.GetNextPacket();
+                dev.Close();
+
+                RadioPacket p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
+                Assert.IsNotNull(p);
+                Assert.IsTrue(p.Contains(RadioTapType.Tsft));
+                Assert.IsTrue(p.Contains(RadioTapType.Flags));
+                Assert.IsTrue(p.Contains(RadioTapType.Channel));
+                Assert.IsTrue(p.Contains(RadioTapType.DbmAntennaSignal));
+
+                Assert.AreEqual(0x409610C4, (p[RadioTapType.Tsft] as TsftRadioTapField).TimestampUsec);
+                Assert.AreEqual(RadioTapFlags.FcsIncludedInFrame, (p[RadioTapType.Flags] as FlagsRadioTapField).Flags);
+                Assert.AreEqual(1, (p[RadioTapType.Channel] as ChannelRadioTapField).Channel);
+                Assert.AreEqual(-76, (p[RadioTapType.DbmAntennaSignal] as DbmAntennaSignalRadioTapField).AntennaSignalDbm);
+            }
         } 
     }
 }

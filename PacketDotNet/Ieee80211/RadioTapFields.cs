@@ -1007,7 +1007,7 @@ namespace PacketDotNet
             public RxFlagsRadioTapField(BinaryReader br)
             {
                 UInt16 flags = br.ReadUInt16();
-                Console.WriteLine("RxFlagsRadioTapField {0}", flags);
+                //Console.WriteLine("RxFlagsRadioTapField {0}", flags);
                 PlcpCrcCheckFailed = ((flags & 0x2) == 0x2);
             }
             

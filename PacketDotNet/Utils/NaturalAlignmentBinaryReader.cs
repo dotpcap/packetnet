@@ -129,6 +129,121 @@ namespace PacketDotNet.Utils
             m_CurrentOffset += Marshal.SizeOf(typeof(UInt64));
             return base.ReadUInt64();
         }
-    }
 
+        /// <summary>
+        /// Save current position in m_CurrentOffset and read
+        /// </summary>
+        public override byte ReadByte()
+        {
+            m_CurrentOffset += Marshal.SizeOf(typeof(byte));
+            return base.ReadByte();
+        }
+
+        /// <summary>
+        /// Save current position in m_CurrentOffset and read
+        /// </summary>
+        public override sbyte ReadSByte()
+        {
+            m_CurrentOffset += Marshal.SizeOf(typeof(sbyte));
+            return base.ReadSByte();
+        }
+
+        /// <summary>
+        /// Save current position in m_CurrentOffset and read
+        /// </summary>
+        public override byte[] ReadBytes(int count)
+        {
+            byte[] retval = base.ReadBytes(count);
+            m_CurrentOffset += retval.Length;
+            return retval;
+        }
+
+        /// <summary>
+        /// Call base method can break m_CurrentOffset calculation
+        /// </summary>
+        public override int PeekChar()
+        {
+            throw new NotImplementedException("Method not implemented");
+        }
+
+        /// <summary>
+        /// Call base method can break m_CurrentOffset calculation
+        /// </summary>
+        public override int Read()
+        {
+            throw new NotImplementedException("Method not implemented");
+        }
+
+        /// <summary>
+        /// Call base method can break m_CurrentOffset calculation
+        /// </summary>
+        public override int Read(byte[] buffer, int index, int count)
+        {
+            throw new NotImplementedException("Method not implemented");
+        }
+
+        /// <summary>
+        /// Call base method can break m_CurrentOffset calculation
+        /// </summary>
+        public override int Read(char[] buffer, int index, int count)
+        {
+            throw new NotImplementedException("Method not implemented");
+        }
+
+        /// <summary>
+        /// Call base method can break m_CurrentOffset calculation
+        /// </summary>
+        public override bool ReadBoolean()
+        {
+            throw new NotImplementedException("Method not implemented");
+        }
+
+        /// <summary>
+        /// Call base method can break m_CurrentOffset calculation
+        /// </summary>
+        public override char ReadChar()
+        {
+            throw new NotImplementedException("Method not implemented");
+        }
+
+        /// <summary>
+        /// Call base method can break m_CurrentOffset calculation
+        /// </summary>
+        public override char[] ReadChars(int count)
+        {
+            throw new NotImplementedException("Method not implemented");
+        }
+
+        /// <summary>
+        /// Call base method can break m_CurrentOffset calculation
+        /// </summary>
+        public override decimal ReadDecimal()
+        {
+            throw new NotImplementedException("Method not implemented");
+        }
+
+        /// <summary>
+        /// Call base method can break m_CurrentOffset calculation
+        /// </summary>
+        public override double ReadDouble()
+        {
+            throw new NotImplementedException("Method not implemented");
+        }
+
+        /// <summary>
+        /// Call base method can break m_CurrentOffset calculation
+        /// </summary>
+        public override float ReadSingle()
+        {
+            throw new NotImplementedException("Method not implemented");
+        }
+
+        /// <summary>
+        /// Call base method can break m_CurrentOffset calculation
+        /// </summary>
+        public override string ReadString()
+        {
+            throw new NotImplementedException("Method not implemented");
+        }
+    }
 }

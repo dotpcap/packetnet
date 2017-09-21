@@ -103,6 +103,7 @@ namespace Test.PacketType
                 frame.FrameControl.ToDS = false;
                 frame.FrameControl.FromDS = true;
                 frame.FrameControl.MoreFragments = true;
+                frame.FrameControl.Protected = true;
                 
                 frame.SequenceControl.SequenceNumber = 0x89;
                 frame.SequenceControl.FragmentNumber = 0x1;

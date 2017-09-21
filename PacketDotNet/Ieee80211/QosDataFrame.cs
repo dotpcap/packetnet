@@ -30,7 +30,7 @@ namespace PacketDotNet
     {
         /// <summary>
         /// Qos data frames are like regualr data frames except they contain a quality of service 
-        /// field as deinfed in the 802.11e standard.
+        /// field as defined in the 802.11e standard.
         /// </summary>
         public class QosDataFrame : DataFrame
         {

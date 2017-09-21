@@ -16,6 +16,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
+ * Copyright 2017 Chris Morgan <chmorgan@gmail.com>
  */
 using System;
 using System.Collections.Generic;
@@ -131,7 +132,16 @@ namespace PacketDotNet
                 var availablePayloadLength = GetAvailablePayloadLength();
                 if(availablePayloadLength > 0)
 				{
-			payloadPacketOrData.ThePacket = new LogicalLinkControl(header.EncapsulatedBytes());
+                    // if data is protected we have no visibility into it, otherwise it is a LLC packet and we
+                    // should parse it
+                    if (FrameControl.Protected)
+                    {
+                        payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes(availablePayloadLength);
+                    }
+                    else
+                    {
+                        payloadPacketOrData.ThePacket = new LogicalLinkControl(header.EncapsulatedBytes());
+                    }
 				}
             }
             

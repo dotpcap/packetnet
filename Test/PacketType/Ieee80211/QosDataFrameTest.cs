@@ -70,6 +70,8 @@ namespace Test.PacketType
                 Assert.AreEqual (0x87311A87, frame.FrameCheckSequence);
                 Assert.AreEqual (26, frame.FrameSize);
 
+                //TODO: This isn't correct, it should be 44 or 48 bytes, not 0x34 (52), clearly something
+                // isn't being properly accounted for in the QosDataFrame.
                 Assert.AreEqual (0x34, frame.PayloadData.Length);
             }
 

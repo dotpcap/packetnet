@@ -58,7 +58,7 @@ namespace Test.PacketType
                 Assert.IsFalse (frame.FrameControl.Retry);
                 Assert.IsFalse (frame.FrameControl.PowerManagement);
                 Assert.IsFalse (frame.FrameControl.MoreData);
-                Assert.IsTrue (frame.FrameControl.Wep);
+                Assert.IsTrue (frame.FrameControl.Protected);
                 Assert.IsFalse (frame.FrameControl.Order);
                 Assert.AreEqual (44, frame.Duration.Field);
                 Assert.AreEqual ("7CC5376D16E7", frame.DestinationAddress.ToString ().ToUpper ());
@@ -70,9 +70,31 @@ namespace Test.PacketType
                 Assert.AreEqual (0x87311A87, frame.FrameCheckSequence);
                 Assert.AreEqual (26, frame.FrameSize);
 
+                //TODO: This isn't correct, it should be 44 or 48 bytes, not 0x34 (52), clearly something
+                // isn't being properly accounted for in the QosDataFrame.
                 Assert.AreEqual (0x34, frame.PayloadData.Length);
             }
-            
+
+            /// <summary>
+            /// Test that a QosData frame containing a tcp packet can be properly parsed
+            /// </summary>
+            [Test]
+            public void Test_QosDataFrameParsingWithIpV4Tcp()
+            {
+                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_qos_data_frame_ipv4_tcp.pcap");
+                dev.Open();
+                var rawCapture = dev.GetNextPacket();
+                dev.Close();
+
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
+
+                // test that we can access the lowest level tcp packet
+                var t = p.Extract(typeof(TcpPacket));
+                Assert.IsNotNull(t, "Expected t not to be null");
+
+                Console.WriteLine(p.ToString(StringOutputType.Verbose));
+            }
+
             [Test]
             public void Test_Constructor_ConstructWithValues ()
             {
@@ -81,6 +103,7 @@ namespace Test.PacketType
                 frame.FrameControl.ToDS = false;
                 frame.FrameControl.FromDS = true;
                 frame.FrameControl.MoreFragments = true;
+                frame.FrameControl.Protected = true;
                 
                 frame.SequenceControl.SequenceNumber = 0x89;
                 frame.SequenceControl.FragmentNumber = 0x1;

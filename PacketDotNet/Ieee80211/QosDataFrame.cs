@@ -16,6 +16,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
+ * Copyright 2017 Chris Morgan <chmorgan@gmail.com>
  */
 using System;
 using System.Collections.Generic;
@@ -30,10 +31,20 @@ namespace PacketDotNet
     {
         /// <summary>
         /// Qos data frames are like regualr data frames except they contain a quality of service 
-        /// field as deinfed in the 802.11e standard.
+        /// field as defined in the 802.11e standard.
         /// </summary>
         public class QosDataFrame : DataFrame
         {
+#if DEBUG
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+#else
+        // NOTE: No need to warn about lack of use, the compiler won't
+        //       put any calls to 'log' here but we need 'log' to exist to compile
+#pragma warning disable 0169, 0649
+        private static readonly ILogInactive log;
+#pragma warning restore 0169, 0649
+#endif
+
             private class QosDataField
             {
                 public readonly static int QosControlLength = 2;
@@ -107,6 +118,8 @@ namespace PacketDotNet
             /// </param>
             public QosDataFrame (ByteArraySegment bas)
             {
+                log.Debug("");
+
                 header = new ByteArraySegment (bas);
 
                 FrameControl = new FrameControlField (FrameControlBytes);
@@ -119,7 +132,16 @@ namespace PacketDotNet
                 var availablePayloadLength = GetAvailablePayloadLength();
                 if(availablePayloadLength > 0)
 				{
-					payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (availablePayloadLength);
+                    // if data is protected we have no visibility into it, otherwise it is a LLC packet and we
+                    // should parse it
+                    if (FrameControl.Protected)
+                    {
+                        payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes(availablePayloadLength);
+                    }
+                    else
+                    {
+                        payloadPacketOrData.ThePacket = new LogicalLinkControl(header.EncapsulatedBytes());
+                    }
 				}
             }
             

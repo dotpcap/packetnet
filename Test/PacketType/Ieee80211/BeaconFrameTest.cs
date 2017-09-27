@@ -60,7 +60,7 @@ namespace Test.PacketType
                 Assert.IsFalse (beaconFrame.FrameControl.Retry);
                 Assert.IsFalse (beaconFrame.FrameControl.PowerManagement);
                 Assert.IsFalse (beaconFrame.FrameControl.MoreData);
-                Assert.IsFalse (beaconFrame.FrameControl.Wep);
+                Assert.IsFalse (beaconFrame.FrameControl.Protected);
                 Assert.IsFalse (beaconFrame.FrameControl.Order);
                 Assert.AreEqual (0, beaconFrame.Duration.Field); //this need expanding on in the future
                 Assert.AreEqual ("FFFFFFFFFFFF", beaconFrame.DestinationAddress.ToString ().ToUpper ());
@@ -91,7 +91,7 @@ namespace Test.PacketType
                     new InformationElementList (){ssidInfoElement});
 
                 frame.FrameControl.ToDS = true;
-                frame.FrameControl.Wep = true;
+                frame.FrameControl.Protected = true;
                 frame.Duration.Field = 12345;
                 frame.SequenceControl.SequenceNumber = 3;
                 frame.Timestamp = 123456789;
@@ -115,7 +115,7 @@ namespace Test.PacketType
                 Assert.AreEqual (PhysicalAddress.Parse ("FF-FF-FF-FF-FF-FF"), recreatedFrame.DestinationAddress);
                 Assert.AreEqual (PhysicalAddress.Parse ("22-22-22-22-22-22"), recreatedFrame.BssId);
                 Assert.IsTrue (recreatedFrame.FrameControl.ToDS);
-                Assert.IsTrue (recreatedFrame.FrameControl.Wep);
+                Assert.IsTrue (recreatedFrame.FrameControl.Protected);
                 Assert.AreEqual (12345, recreatedFrame.Duration.Field);
                 Assert.AreEqual (3, recreatedFrame.SequenceControl.SequenceNumber);
                 Assert.AreEqual (123456789, recreatedFrame.Timestamp);

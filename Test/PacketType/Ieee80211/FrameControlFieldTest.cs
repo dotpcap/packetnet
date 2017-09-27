@@ -42,7 +42,7 @@ namespace Test.PacketType
                 Assert.AreEqual(FrameControlField.FrameTypes.Data, frameControl.Type);
                 Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
                 Assert.IsTrue(frameControl.FromDS);
-                Assert.IsTrue(frameControl.Wep);
+                Assert.IsTrue(frameControl.Protected);
 
                 Assert.IsFalse(frameControl.ToDS);
                 Assert.IsFalse(frameControl.MoreFragments);
@@ -61,7 +61,7 @@ namespace Test.PacketType
                 Assert.AreEqual(FrameControlField.FrameTypes.Management, frameControl.Type);
                 Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementBeacon, frameControl.SubType);
                 Assert.IsFalse(frameControl.FromDS);
-                Assert.IsFalse(frameControl.Wep);
+                Assert.IsFalse(frameControl.Protected);
                 Assert.IsFalse(frameControl.ToDS);
                 Assert.IsFalse(frameControl.MoreFragments);
                 Assert.IsFalse(frameControl.Retry);
@@ -79,7 +79,7 @@ namespace Test.PacketType
                 Assert.AreEqual(FrameControlField.FrameTypes.Control, frameControl.Type);
                 Assert.AreEqual(FrameControlField.FrameSubTypes.ControlCTS, frameControl.SubType);
                 Assert.IsFalse(frameControl.FromDS);
-                Assert.IsFalse(frameControl.Wep);
+                Assert.IsFalse(frameControl.Protected);
                 Assert.IsFalse(frameControl.ToDS);
                 Assert.IsFalse(frameControl.MoreFragments);
                 Assert.IsFalse(frameControl.Retry);
@@ -97,7 +97,7 @@ namespace Test.PacketType
                 Assert.AreEqual(FrameControlField.FrameTypes.Control, frameControl.Type);
                 Assert.AreEqual(FrameControlField.FrameSubTypes.ControlACK, frameControl.SubType);
                 Assert.IsFalse(frameControl.FromDS);
-                Assert.IsFalse(frameControl.Wep);
+                Assert.IsFalse(frameControl.Protected);
                 Assert.IsFalse(frameControl.ToDS);
                 Assert.IsFalse(frameControl.MoreFragments);
                 Assert.IsFalse(frameControl.Retry);
@@ -118,7 +118,7 @@ namespace Test.PacketType
                 Assert.IsTrue(frameControl.ToDS);
                 Assert.IsFalse(frameControl.MoreFragments);
                 Assert.IsFalse(frameControl.MoreData);
-                Assert.IsFalse(frameControl.Wep);
+                Assert.IsFalse(frameControl.Protected);
                 Assert.IsTrue(frameControl.Retry);
                 Assert.IsTrue(frameControl.PowerManagement);
                 Assert.IsFalse(frameControl.Order);
@@ -139,7 +139,7 @@ namespace Test.PacketType
                 Assert.IsFalse(frameControl.Retry);
                 Assert.IsFalse(frameControl.PowerManagement);
                 Assert.IsFalse(frameControl.MoreData);
-                Assert.IsFalse(frameControl.Wep);
+                Assert.IsFalse(frameControl.Protected);
                 Assert.IsFalse(frameControl.Order);
             }
 
@@ -243,9 +243,9 @@ namespace Test.PacketType
             public void Test_SetWepProperty()
             {
                 FrameControlField frameControl = new FrameControlField();
-                frameControl.Wep = true;
+                frameControl.Protected = true;
 
-                Assert.IsTrue(frameControl.Wep);
+                Assert.IsTrue(frameControl.Protected);
             }
 
             [Test]

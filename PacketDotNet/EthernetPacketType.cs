@@ -103,6 +103,10 @@ namespace PacketDotNet
         /// </summary>
         ExtensibleAuthenticationProtocolOverLan = 0x888E,
         /// <summary>
+        /// PROFINET
+        /// </summary>
+        Profinet = 0x8892,
+        /// <summary>
         /// HyperSCSI (SCSI over Ethernet)
         /// </summary>
         HyperScsi = 0x889A,

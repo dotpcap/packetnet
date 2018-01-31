@@ -117,7 +117,9 @@ namespace PacketDotNet
                 payloadPacketOrData.ThePacket = new IPv6Packet(payload);
                 break;
             default:
-                throw new System.NotImplementedException("Protocol of " + Protocol + " is not implemented");
+                //Probably a control packet, lets just add it to the data
+                payloadPacketOrData.TheByteArraySegment = payload;
+                break;
             }
 
             return payloadPacketOrData;

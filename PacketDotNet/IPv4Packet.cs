@@ -553,6 +553,24 @@ namespace PacketDotNet
                                                                   this);
         }
 
+
+        /// <summary>
+        /// Constructor with parent
+        /// </summary>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
+        /// </param>
+        /// <param name="ParentPacket">
+        /// A <see cref="Packet"/>
+        /// </param>
+        public IPv4Packet(ByteArraySegment bas,
+                                Packet ParentPacket) : this(bas)
+        {
+            this.ParentPacket = ParentPacket;
+        }
+
+
+
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {

@@ -310,9 +310,25 @@ namespace PacketDotNet
             case IPProtocolType.OSPF:
                 payloadPacketOrData.ThePacket = OSPFPacket.ConstructOSPFPacket(payload.Bytes,
                                                                                payload.Offset);
+                break;                    
+            case IPProtocolType.IPIP:
+                payloadPacketOrData.ThePacket = new IPv4Packet(payload,
+                                                               ParentPacket);
                 break;
-            // NOTE: new payload parsing entries go here
-            default:
+            case IPProtocolType.IPV6:
+                payloadPacketOrData.ThePacket = new IPv6Packet(payload,
+                                                               ParentPacket);
+                break;
+
+                case IPProtocolType.GRE:
+                    payloadPacketOrData.ThePacket = new GREPacket(payload,
+                                                                   ParentPacket);
+                    break;
+
+
+
+                // NOTE: new payload parsing entries go here
+                default:
                 payloadPacketOrData.TheByteArraySegment = payload;
                 break;
             }

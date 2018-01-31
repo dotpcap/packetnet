@@ -214,6 +214,13 @@ namespace PacketDotNet
                 // store the payload bytes
                 payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
             }
+
+            const int l2TPport = 1701;
+            if (DestinationPort.Equals(l2TPport) && DestinationPort.Equals(l2TPport))
+            {
+                var payload = header.EncapsulatedBytes();
+                payloadPacketOrData.ThePacket = new L2TPPacket(payload, this);
+            }
         }
 
         /// <summary>

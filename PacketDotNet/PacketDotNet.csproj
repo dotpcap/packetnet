@@ -48,6 +48,8 @@
     <Compile Include="DrdaDDMPacket.cs" />
     <Compile Include="DrdaDDMParameter.cs" />
     <Compile Include="DrdaPacket.cs" />
+    <Compile Include="GREFields.cs" />
+    <Compile Include="GREPacket.cs" />
     <Compile Include="Ieee80211\ActionFrame.cs" />
     <Compile Include="Ieee80211\ReassociationRequestFrame.cs" />
     <Compile Include="Ieee80211\BlockAcknowledgmentControlField.cs" />
@@ -88,6 +90,8 @@
     <Compile Include="Ieee80211\RtsFrame.cs" />
     <Compile Include="Ieee80211\SequenceControlField.cs" />
     <Compile Include="IpPacket.cs" />
+    <Compile Include="L2TPFields.cs" />
+    <Compile Include="L2TPPacket.cs" />
     <Compile Include="LSA.cs" />
     <Compile Include="LSAFields.cs" />
     <Compile Include="LSAType.cs" />

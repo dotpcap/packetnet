@@ -34,6 +34,7 @@ namespace PacketDotNet
 
         /// <summary> IPv6 </summary>
         IPv6 = 0x57,
+
     }
 }
 

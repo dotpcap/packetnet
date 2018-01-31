@@ -20,7 +20,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using PacketDotNet.Utils;
 using System.Net.NetworkInformation;

@@ -352,6 +352,22 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Constructor with parent
+        /// </summary>
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment"/>
+        /// </param>
+        /// <param name="ParentPacket">
+        /// A <see cref="Packet"/>
+        /// </param>
+        public IPv6Packet(ByteArraySegment bas,
+                                Packet ParentPacket) : this(bas)
+        {
+            this.ParentPacket = ParentPacket;
+        }
+
+
+        /// <summary>
         /// Prepend to the given byte[] origHeader the portion of the IPv6 header used for
         /// generating an tcp checksum
         ///

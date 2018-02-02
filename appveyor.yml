@@ -1,0 +1,14 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+environment:
+  configuration: Release
+before_build:
+- cmd: >-
+    nuget restore
+
+    cinst WinPcap
+build:
+  publish_nuget: true
+  publish_nuget_symbols: true
+  include_nuget_references: true
+  verbosity: minimal

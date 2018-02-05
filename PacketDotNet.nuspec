@@ -10,4 +10,7 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>High performance .Net assembly for dissecting and constructing network packets such as ethernet, ip, tcp, udp etc.</description>
     </metadata>
+	<files>
+		<file src="lib\**" target="lib/{framework name}[{version}]" />
+	</files>
 </package>

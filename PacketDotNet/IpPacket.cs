@@ -319,16 +319,13 @@ namespace PacketDotNet
                 payloadPacketOrData.ThePacket = new IPv6Packet(payload,
                                                                ParentPacket);
                 break;
+            case IPProtocolType.GRE:
+                payloadPacketOrData.ThePacket = new GREPacket(payload,
+                                                                ParentPacket);
+                break;
 
-                case IPProtocolType.GRE:
-                    payloadPacketOrData.ThePacket = new GREPacket(payload,
-                                                                   ParentPacket);
-                    break;
-
-
-
-                // NOTE: new payload parsing entries go here
-                default:
+            // NOTE: new payload parsing entries go here
+            default:
                 payloadPacketOrData.TheByteArraySegment = payload;
                 break;
             }

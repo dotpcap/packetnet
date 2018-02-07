@@ -15,18 +15,13 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
+ *  Copyright 2018 Steven Haufe<haufes@hotmail.com>
  */
 
 using System;
-using System.Net.NetworkInformation;
 using NUnit.Framework;
-using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
-using PacketDotNet.Utils;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Test.PacketType
 {

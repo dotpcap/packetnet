@@ -15,11 +15,11 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
+ *  Copyright 2018 Steven Haufe<haufes@hotmail.com>
  */
 namespace PacketDotNet
 {
-    /// <summary> GRE protocol field encoding information. </summary>
+    /// <summary> L2TP protocol field encoding information. </summary>
     public class L2TPFields
     {
 

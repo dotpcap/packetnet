@@ -15,8 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
- *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
+ *  Copyright 2018 Steven Haufe<haufes@hotmail.com>
   */
 using System;
 using System.Collections.Generic;
@@ -27,7 +26,7 @@ using PacketDotNet.Utils;
 namespace PacketDotNet
 {
     /// <summary>
-    /// An IGMP packet.
+    /// An L2TP packet.
     /// </summary>
     [Serializable]
     public class L2TPPacket : Packet

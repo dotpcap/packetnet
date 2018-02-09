@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
 using PacketDotNet.Utils;
 
@@ -92,16 +93,16 @@ namespace PacketDotNet.LLDP
                     var offset = 0;
 
                     // copy header over
-                    Array.Copy(tlvData.Bytes, tlvData.Offset,
-                               newTLVBytes, 0,
-                               TLVTypeLength.TypeLengthLength);
+                    Array.Copy((Array) tlvData.Bytes, (int) tlvData.Offset,
+                               (Array) newTLVBytes, (int) 0,
+                               (int) TLVTypeLength.TypeLengthLength);
 
                     tlvData = new ByteArraySegment(newTLVBytes, offset, length);
                 }
 
                 // set the description
-                Array.Copy(bytes, 0,
-                           tlvData.Bytes, ValueOffset,
+                Array.Copy((Array) bytes, (int) 0,
+                           (Array) tlvData.Bytes, (int) ValueOffset,
                            bytes.Length);
             }
         }

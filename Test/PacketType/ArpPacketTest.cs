@@ -23,10 +23,10 @@ using System.Net;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
-using PacketDotNet.Utils;
 using SharpPcap;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using PacketDotNet.ARP;
 
 namespace Test.PacketType
 {
@@ -116,7 +116,7 @@ namespace Test.PacketType
 
             var localMac = System.Net.NetworkInformation.PhysicalAddress.Parse("AA-BB-CC-DD-EE-FF");
 
-            new PacketDotNet.ARPPacket(PacketDotNet.ARPOperation.Request,
+            new ARPPacket(ARPOperation.Request,
                                        System.Net.NetworkInformation.PhysicalAddress.Parse("00-00-00-00-00-00"),
                                        destinationIP,
                                        localMac,

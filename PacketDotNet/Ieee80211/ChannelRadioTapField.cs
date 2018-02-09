@@ -19,10 +19,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using PacketDotNet.MiscUtil.Conversion;
-using PacketDotNet.Utils;
+using PacketDotNet.Utils.Conversion;
 
 namespace PacketDotNet.Ieee80211
 {

@@ -25,6 +25,7 @@ using SharpPcap.LibPcap;
 using PacketDotNet;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using PacketDotNet.ICMP;
 
 namespace Test.PacketType
 {

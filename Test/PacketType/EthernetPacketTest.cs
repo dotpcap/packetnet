@@ -24,9 +24,13 @@ using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
-using PacketDotNet.Utils;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using PacketDotNet.Ethernet;
+using PacketDotNet.IP;
+using PacketDotNet.Tcp;
+using PacketDotNet.Udp;
+using PacketDotNet.Utils;
 
 namespace Test.PacketType
 {

@@ -19,9 +19,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
 using System.Net.NetworkInformation;
-using PacketDotNet.Utils;
 using System.IO;
-using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.Utils;
+using PacketDotNet.Utils.Conversion;
 
 namespace PacketDotNet.Ieee80211
     {
@@ -140,7 +140,7 @@ namespace PacketDotNet.Ieee80211
    
             
             /// <summary>
-            /// Writes the provided address into the backing <see cref="PacketDotNet.Utils.ByteArraySegment"/>
+            /// Writes the provided address into the backing <see cref="ByteArraySegment"/>
             /// starting at the provided offset.
             /// </summary>
             /// <param name='offset'>
@@ -254,7 +254,7 @@ namespace PacketDotNet.Ieee80211
 			}
 			
             /// <summary>
-            /// Parses the <see cref="PacketDotNet.Utils.ByteArraySegment"/> into a MacFrame.
+            /// Parses the <see cref="ByteArraySegment"/> into a MacFrame.
             /// </summary>
             /// <returns>
             /// The parsed MacFrame or null if it could not be parsed.
@@ -292,7 +292,7 @@ namespace PacketDotNet.Ieee80211
             }
             
             /// <summary>
-            /// Parses the <see cref="PacketDotNet.Utils.ByteArraySegment"/> into a MacFrame.
+            /// Parses the <see cref="ByteArraySegment"/> into a MacFrame.
             /// </summary>
             /// <returns>
             /// The parsed MacFrame or null if it could not be parsed.

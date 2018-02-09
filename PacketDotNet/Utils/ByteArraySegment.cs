@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
 
 namespace PacketDotNet.Utils
@@ -57,14 +58,14 @@ namespace PacketDotNet.Utils
         /// </value>
         public int Length
         {
-            get { return length; }
+            get { return this.length; }
             set
             {
                 // check for invalid values
                 if(value < 0)
                     throw new System.InvalidOperationException("attempting to set a negative length of " + value);
 
-                length = value;
+                this.length = value;
                 log.DebugFormat("Length: {0}", value);
             }
         }
@@ -81,7 +82,7 @@ namespace PacketDotNet.Utils
         /// A <see cref="T:System.Byte[]"/>
         /// </param>
         public ByteArraySegment(byte[] Bytes) :
-            this(Bytes, 0, Bytes.Length)
+            this(Bytes, (int) 0, Bytes.Length)
         { }
 
         /// <summary>
@@ -155,18 +156,18 @@ namespace PacketDotNet.Utils
         /// </returns>
         public byte[] ActualBytes()
         {
-            log.DebugFormat("{0}", ToString());
+            log.DebugFormat("{0}", this.ToString());
 
-            if(NeedsCopyForActualBytes)
+            if(this.NeedsCopyForActualBytes)
             {
                 log.Debug("needs copy");
-                var newBytes = new byte[Length];
-                Array.Copy(Bytes, Offset, newBytes, 0, Length);
+                var newBytes = new byte[this.Length];
+                Array.Copy((Array) this.Bytes, (int) this.Offset, (Array) newBytes, (int) 0, (int) this.Length);
                 return newBytes;
             } else
             {
                 log.Debug("does not need copy");
-                return Bytes;
+                return this.Bytes;
             }
         }
 
@@ -183,7 +184,7 @@ namespace PacketDotNet.Utils
             {
                 // we need a copy unless we are at the start of the byte[]
                 // and the length is the total byte[] length
-                var okWithoutCopy = ((Offset == 0) && (Length == Bytes.Length));
+                var okWithoutCopy = ((this.Offset == 0) && (this.Length == this.Bytes.Length));
                 var retval = !okWithoutCopy;
 
                 log.DebugFormat("retval {0}", retval);
@@ -202,8 +203,8 @@ namespace PacketDotNet.Utils
         /// </returns>
         public ByteArraySegment EncapsulatedBytes()
         {
-            var numberOfBytesAfterThisSegment = BytesLength - (Offset + Length);
-            return EncapsulatedBytes(numberOfBytesAfterThisSegment);
+            var numberOfBytesAfterThisSegment = this.BytesLength - (this.Offset + this.Length);
+            return this.EncapsulatedBytes(numberOfBytesAfterThisSegment);
         }
 
         /// <summary>
@@ -220,23 +221,23 @@ namespace PacketDotNet.Utils
         {
             log.DebugFormat("NewSegmentLength {0}", NewSegmentLength);
 
-            int startingOffset = Offset + Length; // start at the end of the current segment
+            int startingOffset = this.Offset + this.Length; // start at the end of the current segment
             log.DebugFormat("startingOffset({0}) = Offset({1}) + Length({2})",
                             startingOffset,
-                            Offset,
-                            Length);
+                            this.Offset,
+                            this.Length);
 
             // ensure that the new segment length isn't longer than the number of bytes
             // available after the current segment
-            NewSegmentLength = Math.Min(NewSegmentLength, BytesLength - startingOffset);
+            NewSegmentLength = Math.Min(NewSegmentLength, this.BytesLength - startingOffset);
 
             // calculate the ByteLength property of the new ByteArraySegment
             int NewByteLength = startingOffset + NewSegmentLength;
 
             log.DebugFormat("NewSegmentLength {0}, NewByteLength {1}, BytesLength {2}",
-                            NewSegmentLength, NewByteLength, BytesLength);
+                            NewSegmentLength, NewByteLength, this.BytesLength);
 
-            return new ByteArraySegment(Bytes, startingOffset, NewSegmentLength, NewByteLength);
+            return new ByteArraySegment(this.Bytes, startingOffset, NewSegmentLength, NewByteLength);
         }
 
         /// <summary>
@@ -248,7 +249,7 @@ namespace PacketDotNet.Utils
         public override string ToString ()
         {
             return string.Format("[ByteArraySegment: Length={0}, Bytes.Length={1}, BytesLength={2}, Offset={3}, NeedsCopyForActualBytes={4}]",
-                                 Length, Bytes.Length, BytesLength, Offset, NeedsCopyForActualBytes);
+                                 this.Length, this.Bytes.Length, this.BytesLength, this.Offset, this.NeedsCopyForActualBytes);
         }
     }
 }

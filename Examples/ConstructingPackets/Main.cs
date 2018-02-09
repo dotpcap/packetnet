@@ -1,5 +1,8 @@
 using System;
 using PacketDotNet;
+using PacketDotNet.Ethernet;
+using PacketDotNet.IP;
+using PacketDotNet.Tcp;
 
 namespace ConstructingPackets
 {

@@ -59,7 +59,7 @@ namespace PacketDotNet.Ieee80211
             /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.InformationElementList"/> class.
             /// </summary>
             /// <param name='bas'>
-            /// A <see cref="PacketDotNet.Utils.ByteArraySegment"/> containing one or more information elements.
+            /// A <see cref="ByteArraySegment"/> containing one or more information elements.
             /// bas.Offset should point to the first byte of the first Information Element. 
             /// </param>
             public InformationElementList (ByteArraySegment bas)
@@ -156,7 +156,7 @@ namespace PacketDotNet.Ieee80211
             /// in the list into the provided buffer.
             /// </summary>
             /// <param name='destination'>
-            /// The <see cref="PacketDotNet.Utils.ByteArraySegment"/> to copy the elements into.
+            /// The <see cref="ByteArraySegment"/> to copy the elements into.
             /// </param>
             /// <param name='offset'>
             /// The offset into destination at which to start copy the <see cref="InformationElement">InformationElements</see>

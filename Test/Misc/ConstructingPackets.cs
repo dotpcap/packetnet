@@ -21,6 +21,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using NUnit.Framework;
 using PacketDotNet;
+using PacketDotNet.Ethernet;
+using PacketDotNet.IP;
+using PacketDotNet.Tcp;
 
 namespace Test.Misc
 {

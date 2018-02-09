@@ -3,8 +3,10 @@ using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using System.Collections.Generic;
-using SharpPcap;
+using PacketDotNet.OSPF;
+using PacketDotNet.PPP;
 using PacketDotNet.Utils;
+using SharpPcap;
 
 namespace Test.PacketType
 {

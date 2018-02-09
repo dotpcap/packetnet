@@ -19,12 +19,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using PacketDotNet.Utils;
 using System.Net.NetworkInformation;
-using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.Utils;
+using PacketDotNet.Utils.Conversion;
 
 namespace PacketDotNet.Ieee80211
     {
@@ -111,7 +108,7 @@ namespace PacketDotNet.Ieee80211
             }
             
             /// <summary>
-            /// Writes the address properties into the backing <see cref="PacketDotNet.Utils.ByteArraySegment"/>.
+            /// Writes the address properties into the backing <see cref="ByteArraySegment"/>.
             /// </summary>
             /// <remarks>
             /// The address position into which a particular address property is written is determined by the 

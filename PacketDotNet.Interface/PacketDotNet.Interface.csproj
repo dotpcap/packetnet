@@ -12,6 +12,7 @@
     <Authors>Chris Morgan (chmorgan@gmail.com)</Authors>
     <Company />
     <Product />
+    <RootNamespace>PacketDotNet</RootNamespace>
   </PropertyGroup>
 
 </Project>

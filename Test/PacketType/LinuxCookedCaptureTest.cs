@@ -23,6 +23,10 @@ using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
+using PacketDotNet.ARP;
+using PacketDotNet.LinuxSLL;
+using PacketDotNet.Tcp;
+using PacketDotNet.Udp;
 
 namespace Test.PacketType
 {

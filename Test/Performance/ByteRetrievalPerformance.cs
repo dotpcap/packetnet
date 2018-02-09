@@ -20,8 +20,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
-using log4net.Core;
-using PacketDotNet;
+using PacketDotNet.Ethernet;
+using PacketDotNet.IP;
 
 namespace Test.Performance
 {

@@ -36,7 +36,7 @@ namespace PacketDotNet.Utils
 
         /// <summary>Creates a CRC32 object using the <see cref="DefaultPolynomial"/>.</summary>
         public Crc32()
-            : this(DefaultPolynomial)
+            : this((uint) DefaultPolynomial)
         {
         }
 
@@ -44,13 +44,13 @@ namespace PacketDotNet.Utils
         /// <remarks>The polynomial should be supplied in its bit-reflected form. <see cref="DefaultPolynomial"/>.</remarks>
         public Crc32(uint polynomial)
         {
-            HashSizeValue = 32;
-            _crc32Table = (uint[])_crc32TablesCache[polynomial];
-            if (_crc32Table == null) {
-                _crc32Table = BuildCrc32Table(polynomial);
-                _crc32TablesCache.Add(polynomial, _crc32Table);
+            this.HashSizeValue = 32;
+            this._crc32Table = (uint[])_crc32TablesCache[polynomial];
+            if (this._crc32Table == null) {
+                this._crc32Table = BuildCrc32Table(polynomial);
+                _crc32TablesCache.Add(polynomial, this._crc32Table);
             }
-            Initialize();
+            this.Initialize();
         }
 
         // static constructor
@@ -97,7 +97,7 @@ namespace PacketDotNet.Utils
         public byte[] ComputeHash(string asciiString)
         {
             byte[] rawBytes = Encoding.ASCII.GetBytes(asciiString);
-            return ComputeHash(rawBytes);
+            return this.ComputeHash(rawBytes);
         }
 
         /// <summary>Computes the hash value for the given input stream.</summary>
@@ -107,30 +107,30 @@ namespace PacketDotNet.Utils
             var buffer = new byte[4096];
             int bytesRead;
             while ((bytesRead = inputStream.Read(buffer, 0, 4096)) > 0) {
-                HashCore(buffer, 0, bytesRead);
+                this.HashCore(buffer, 0, bytesRead);
             }
-            return HashFinal();
+            return this.HashFinal();
         }
 
         /// <summary>Computes the hash value for the input data.</summary>
         /// <remarks>The computation preserves the internal state between the calls, so it can be used for computation of a stream data.</remarks>
         public new byte[] ComputeHash(byte[] buffer)
         {
-            return ComputeHash(buffer, 0, buffer.Length);
+            return this.ComputeHash(buffer, 0, buffer.Length);
         }
 
         /// <summary>Computes the hash value for the input data.</summary>
         /// <remarks>The computation preserves the internal state between the calls, so it can be used for computation of a stream data.</remarks>
         public new byte[] ComputeHash(byte[] buffer, int offset, int count)
         {
-            HashCore(buffer, offset, count);
-            return HashFinal();
+            this.HashCore(buffer, offset, count);
+            return this.HashFinal();
         }
 
         /// <summary>Initializes an implementation of HashAlgorithm.</summary>
         public override sealed void Initialize()
         {
-            _crc = _allOnes;
+            this._crc = _allOnes;
         }
 
         #endregion Public Methods
@@ -141,9 +141,9 @@ namespace PacketDotNet.Utils
         protected override void HashCore(byte[] buffer, int offset, int count)
         {
             for (int i = offset; i < count; i++) {
-                ulong ptr = (_crc & 0xFF) ^ buffer[i];
-                _crc >>= 8;
-                _crc ^= _crc32Table[ptr];
+                ulong ptr = (this._crc & 0xFF) ^ buffer[i];
+                this._crc >>= 8;
+                this._crc ^= this._crc32Table[ptr];
             }
         }
 
@@ -151,7 +151,7 @@ namespace PacketDotNet.Utils
         protected override byte[] HashFinal()
         {
             var finalHash = new byte[4];
-            ulong finalCrc = _crc ^ _allOnes;
+            ulong finalCrc = this._crc ^ _allOnes;
 
             finalHash[3] = (byte)((finalCrc >> 0) & 0xFF);
             finalHash[2] = (byte)((finalCrc >> 8) & 0xFF);

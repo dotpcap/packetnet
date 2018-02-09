@@ -1,7 +1,7 @@
 #if DEBUG
 #endif
 
-namespace PacketDotNet.Interface.Interfaces
+namespace PacketDotNet.Interfaces
 {
 #if !DEBUG
     // For Release builds we disable logging by using this class

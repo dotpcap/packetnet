@@ -22,6 +22,7 @@ using System;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
+using PacketDotNet.L2TP;
 
 namespace Test.PacketType
 {

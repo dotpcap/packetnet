@@ -22,8 +22,8 @@ using System;
 using System.Net;
 using System.IO;
 using NUnit.Framework;
-using PacketDotNet.MiscUtil.Conversion;
-using PacketDotNet.MiscUtil.IO;
+using PacketDotNet.Utils.Conversion;
+using PacketDotNet.Utils.IO;
 
 namespace Test.Performance
 {
@@ -139,7 +139,7 @@ namespace Test.Performance
 
             for(int i = 0; i < testRuns; i++)
             {
-                var actualValue = PacketDotNet.MiscUtil.Conversion.EndianBitConverter.Big.ToInt32(bytes, startIndex);
+                var actualValue = EndianBitConverter.Big.ToInt32(bytes, startIndex);
 
                 // NOTE: Assert.AreEqual() significantly slows, by a factor of ~6x
                 //       the execution of this loop, so we perform ourself and

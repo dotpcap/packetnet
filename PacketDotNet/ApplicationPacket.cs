@@ -15,9 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using PacketDotNet.Utils;
-
-﻿namespace PacketDotNet
+namespace PacketDotNet
 {
     /// <summary>
     /// Represents an application layer packet as described at http://en.wikipedia.org/wiki/Application_Layer

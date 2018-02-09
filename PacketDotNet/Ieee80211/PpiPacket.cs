@@ -25,11 +25,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Text;
+using PacketDotNet.IP;
+using PacketDotNet.MiscUtil.Utils;
 using PacketDotNet.Utils;
-using System.Linq;
-using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.Utils.Conversion;
 
 namespace PacketDotNet.Ieee80211
     {

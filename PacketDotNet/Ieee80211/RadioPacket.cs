@@ -24,9 +24,10 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Text;
-using System.Linq;
-using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.IP;
+using PacketDotNet.MiscUtil.Utils;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Conversion;
 
 namespace PacketDotNet.Ieee80211
     {
@@ -188,7 +189,7 @@ namespace PacketDotNet.Ieee80211
                     }
 
                     // calculate the padding needed to right-justify the property names
-                    int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                    int padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                     // build the output string
                     buffer.AppendLine("Ieee80211RadioPacket");

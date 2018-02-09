@@ -1,4 +1,4 @@
-﻿namespace PacketDotNet.Interface.Interfaces
+﻿namespace PacketDotNet.Interfaces
 {
     public interface ISourceDestinationPort
     {

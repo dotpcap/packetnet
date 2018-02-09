@@ -22,6 +22,8 @@ using System;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
+using PacketDotNet.Ethernet;
+using PacketDotNet.GRE;
 
 namespace Test.PacketType
 {
@@ -42,7 +44,7 @@ namespace Test.PacketType
             Assert.IsNotNull(p);
 
             var gerp = (GREPacket)p.Extract(typeof(GREPacket));
-            Assert.AreEqual(gerp.Protocol, PacketDotNet.EthernetPacketType.IpV6);
+            Assert.AreEqual(gerp.Protocol, EthernetPacketType.IpV6);
             Console.WriteLine(gerp.GetType());
 
 

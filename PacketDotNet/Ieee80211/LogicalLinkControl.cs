@@ -18,10 +18,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2017 Chris Morgan <chmorgan@gmail.com>
  */
 using System;
-using System.Net.NetworkInformation;
+using PacketDotNet.Ethernet;
 using PacketDotNet.Utils;
-using System.IO;
-using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.Utils.Conversion;
 
 namespace PacketDotNet.Ieee80211
     {

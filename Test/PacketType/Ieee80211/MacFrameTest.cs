@@ -18,15 +18,13 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
 using NUnit.Framework;
 using SharpPcap;
-using PacketDotNet.Utils;
 using System.Net.NetworkInformation;
-using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.Utils.Conversion;
 
 namespace Test.PacketType
 {

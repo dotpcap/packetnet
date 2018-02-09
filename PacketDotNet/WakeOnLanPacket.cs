@@ -24,6 +24,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Text;
+using PacketDotNet.Ethernet;
+using PacketDotNet.MiscUtil.Utils;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -76,7 +78,7 @@ namespace PacketDotNet
                 // copy the syncSequence on the first pass
                 if(i == 0)
                 {
-                    Array.Copy(syncSequence, 0, packetBytes, i, syncSequence.Length);
+                    Array.Copy((Array) syncSequence, (int) 0, (Array) packetBytes, i, (int) syncSequence.Length);
                 }
                 else
                 {
@@ -117,7 +119,7 @@ namespace PacketDotNet
             get
             {
                 byte[] destinationMAC = new byte[EthernetFields.MacAddressLength];
-                Array.Copy(header.Bytes, header.Offset + syncSequence.Length,
+                Array.Copy((Array) header.Bytes, (int) (header.Offset + syncSequence.Length),
                            destinationMAC, 0,
                            EthernetFields.MacAddressLength);
                 return new PhysicalAddress(destinationMAC);
@@ -125,8 +127,8 @@ namespace PacketDotNet
             set
             {
                 byte[] destinationMAC = value.GetAddressBytes();
-                Array.Copy(destinationMAC, 0,
-                           header.Bytes, header.Offset + syncSequence.Length,
+                Array.Copy((Array) destinationMAC, (int) 0,
+                           (Array) header.Bytes, (int) (header.Offset + syncSequence.Length),
                            EthernetFields.MacAddressLength);
             }
         }
@@ -267,7 +269,7 @@ namespace PacketDotNet
                 properties.Add("destination", HexPrinter.PrintMACAddress(DestinationMAC));
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                int padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("WOL:  ******* WOL - \"Wake-On-Lan\" - offset=? length=" + TotalPacketLength);
@@ -280,7 +282,7 @@ namespace PacketDotNet
             }
 
             // append the base string output
-            buffer.Append(base.ToString(outputFormat));
+            buffer.Append((string) base.ToString(outputFormat));
 
             return buffer.ToString();
         }

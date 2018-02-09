@@ -21,8 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using NUnit.Framework;
 using PacketDotNet;
-using PacketDotNet.Utils;
-using SharpPcap;
+using PacketDotNet.Ieee8021Q;
 using SharpPcap.LibPcap;
 
 namespace Test.PacketType

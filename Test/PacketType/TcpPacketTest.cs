@@ -22,9 +22,10 @@ using System;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
-using PacketDotNet.Utils;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using PacketDotNet.Tcp;
+using PacketDotNet.Utils;
 using SharpPcap;
 
 namespace Test.PacketType

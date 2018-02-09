@@ -19,15 +19,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
-using PacketDotNet.Utils;
 using System.Net.NetworkInformation;
 using PacketDotNet.Ieee80211;
+using PacketDotNet.Utils;
 
 namespace Test.PacketType
 {

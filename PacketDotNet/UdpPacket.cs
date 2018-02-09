@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
+ using PacketDotNet.Interfaces;
 
 namespace PacketDotNet
 {
@@ -30,7 +31,7 @@ namespace PacketDotNet
     /// See http://en.wikipedia.org/wiki/Udp
     /// </summary>
     [Serializable]
-    public class UdpPacket : TransportPacket
+    public class UdpPacket : TransportPacket, ISourceDestinationPort
     {
 #if DEBUG
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

@@ -22,7 +22,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System.Text;
 using System.Collections.Generic;
 using MiscUtil.Conversion;
-using PacketDotNet.Tcp;
+ using PacketDotNet.Interfaces;
+ using PacketDotNet.Tcp;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -32,7 +33,7 @@ namespace PacketDotNet
     /// See: http://en.wikipedia.org/wiki/Transmission_Control_Protocol
     /// </summary>
     [Serializable]
-    public class TcpPacket : TransportPacket
+    public class TcpPacket : TransportPacket,ISourceDestinationPort
     {
 #if DEBUG
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

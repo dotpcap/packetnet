@@ -1,9 +1,8 @@
-using System;
 #if DEBUG
 using log4net.Core;
 #endif
 
-namespace PacketDotNet
+namespace PacketDotNet.Interfaces
 {
 #if !DEBUG
     // For Release builds we disable logging by using this class

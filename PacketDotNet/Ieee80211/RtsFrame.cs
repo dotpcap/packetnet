@@ -25,9 +25,7 @@ using System.Text;
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// RTS Frame has a ReceiverAddress[6], TransmitterAddress[6] and a FrameCheckSequence[4],
@@ -91,4 +89,4 @@ namespace PacketDotNet
             }
         } 
     }
-}
+

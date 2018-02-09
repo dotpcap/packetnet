@@ -22,9 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Every 802.11 frame has a control field that contains information about the frame including
@@ -586,4 +584,4 @@ namespace PacketDotNet
             }
         } 
     }
-}
+

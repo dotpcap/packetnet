@@ -26,9 +26,7 @@ using System.Net.NetworkInformation;
 using MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Format of a CTS or an ACK frame
@@ -99,4 +97,4 @@ namespace PacketDotNet
         } 
     }
 
-}
+

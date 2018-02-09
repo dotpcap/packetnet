@@ -25,9 +25,7 @@ using System.Text;
 using MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Qos data frames are like regualr data frames except they contain a quality of service 
@@ -176,4 +174,4 @@ namespace PacketDotNet
             }
         } 
     }
-}
+

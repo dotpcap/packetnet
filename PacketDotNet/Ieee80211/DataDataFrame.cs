@@ -24,9 +24,7 @@ using System.Linq;
 using System.Text;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Data data frame.
@@ -107,4 +105,4 @@ namespace PacketDotNet
 
         } 
     }
-}
+

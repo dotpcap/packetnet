@@ -22,9 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// The Sequence control field occurs in management and data frames and is used to 
@@ -101,4 +99,4 @@ namespace PacketDotNet
             }
         } 
     }
-}
+

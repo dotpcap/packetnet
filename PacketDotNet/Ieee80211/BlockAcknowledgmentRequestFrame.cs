@@ -26,9 +26,7 @@ using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Block acknowledgment request frame.
@@ -228,4 +226,4 @@ namespace PacketDotNet
             }
         } 
     }
-}
+

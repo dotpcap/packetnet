@@ -33,9 +33,7 @@ using MiscUtil.Conversion;
 using PacketDotNet.Utils;
 using System.Linq;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// .Net analog of a PpiHeader.h from airpcap
@@ -520,4 +518,3 @@ namespace PacketDotNet
         #endregion Private Methods
         }
     }
-}

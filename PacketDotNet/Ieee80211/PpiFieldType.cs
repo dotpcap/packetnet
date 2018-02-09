@@ -23,9 +23,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 #endregion Header
 using System;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
 
     #region Enumerations
@@ -94,4 +92,3 @@ namespace PacketDotNet
 
     #endregion Enumerations
     }
-}

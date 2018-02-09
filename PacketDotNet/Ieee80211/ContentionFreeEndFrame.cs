@@ -25,9 +25,7 @@ using System.Text;
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Contention free end frame.
@@ -126,4 +124,4 @@ namespace PacketDotNet
             }
         } 
     }
-}
+

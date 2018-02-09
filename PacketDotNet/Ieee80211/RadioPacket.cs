@@ -28,9 +28,7 @@ using System.Linq;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// .Net analog of a ieee80211_radiotap_header from airpcap.h
@@ -422,4 +420,3 @@ namespace PacketDotNet
             }
         } 
     }
-}

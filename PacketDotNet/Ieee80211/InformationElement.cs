@@ -24,9 +24,7 @@ using System.Linq;
 using System.Text;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Information element, a variable-length component of management frames
@@ -372,4 +370,4 @@ namespace PacketDotNet
             
         } 
     }
-}
+

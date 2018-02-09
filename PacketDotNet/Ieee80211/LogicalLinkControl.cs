@@ -23,9 +23,7 @@ using PacketDotNet.Utils;
 using MiscUtil.Conversion;
 using System.IO;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Logical link control.
@@ -170,4 +168,4 @@ namespace PacketDotNet
             }
         }
     }
-}
+

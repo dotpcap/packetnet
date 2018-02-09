@@ -23,9 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// The potential results of authentication or association operations.
@@ -163,4 +161,3 @@ namespace PacketDotNet
             CipherSuitePolicyRejection = 46
         } 
     }
-}

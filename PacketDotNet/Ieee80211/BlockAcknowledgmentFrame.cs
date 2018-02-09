@@ -26,9 +26,7 @@ using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Format of the 802.11 block acknowledgment frame.
@@ -300,4 +298,3 @@ namespace PacketDotNet
             }
         } 
     }
-}

@@ -23,9 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Specifies the reasons why a station may have been disassociated or deauthenticated by an access point.
@@ -166,4 +164,4 @@ namespace PacketDotNet
             CipherUnsupported = 45
         } 
     }
-}
+

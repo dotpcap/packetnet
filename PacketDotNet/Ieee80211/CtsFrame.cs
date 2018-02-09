@@ -25,9 +25,7 @@ using System.Text;
 using PacketDotNet.Utils;
 using System.Net.NetworkInformation;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Format of a CTS frame
@@ -113,4 +111,4 @@ namespace PacketDotNet
         } 
     }
 
-}
+

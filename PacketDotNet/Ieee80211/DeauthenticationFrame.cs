@@ -26,9 +26,7 @@ using PacketDotNet.Utils;
 using MiscUtil.Conversion;
 using System.Net.NetworkInformation;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Deauthentication frame.
@@ -166,4 +164,3 @@ namespace PacketDotNet
 
         } 
     }
-}

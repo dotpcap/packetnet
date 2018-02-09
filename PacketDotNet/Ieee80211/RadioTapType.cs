@@ -20,9 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         ///<summary>
         /// NOTE: Might be out-of-date information since it mentions Ethereal
@@ -175,4 +173,4 @@ namespace PacketDotNet
             Extended = 31,
         }; 
     }
-}
+

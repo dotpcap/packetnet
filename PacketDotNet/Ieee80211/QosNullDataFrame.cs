@@ -24,9 +24,7 @@ using System.Text;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// The Qos null data frame serves the same purpose as <see cref="NullDataFrame"/> but also includes a
@@ -149,4 +147,4 @@ namespace PacketDotNet
             }
         } 
     }
-}
+

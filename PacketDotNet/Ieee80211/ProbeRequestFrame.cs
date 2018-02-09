@@ -25,9 +25,7 @@ using System.Text;
 using PacketDotNet.Utils;
 using System.Net.NetworkInformation;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Probe request frames are used by stations to scan the area for existing networks.
@@ -162,4 +160,4 @@ namespace PacketDotNet
             }
         } 
     }
-}
+

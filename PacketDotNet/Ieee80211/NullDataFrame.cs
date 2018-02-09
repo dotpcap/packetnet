@@ -24,9 +24,7 @@ using System.Linq;
 using System.Text;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Null data frames are like normal data frames except they carry no payload. They are primarily used for control purposes
@@ -103,4 +101,4 @@ namespace PacketDotNet
 
         } 
     }
-}
+

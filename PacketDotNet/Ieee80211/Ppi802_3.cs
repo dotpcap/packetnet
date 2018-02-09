@@ -25,9 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Contains information specific to 802.3 packets.
@@ -165,4 +163,3 @@ namespace PacketDotNet
         #endregion Constructors
         }
     }
-}

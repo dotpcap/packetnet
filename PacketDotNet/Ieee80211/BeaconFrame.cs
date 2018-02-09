@@ -26,9 +26,7 @@ using PacketDotNet.Utils;
 using MiscUtil.Conversion;
 using System.Net.NetworkInformation;
 
-namespace PacketDotNet
-{
-    namespace Ieee80211
+namespace PacketDotNet.Ieee80211
     {
         /// <summary>
         /// Format of an 802.11 management beacon frame.
@@ -279,4 +277,4 @@ namespace PacketDotNet
 
         } 
     }
-}
+

@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of PacketDotNet
 
 PacketDotNet is free software: you can redistribute it and/or modify
@@ -18,11 +18,11 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-﻿using System;
+ using System;
 using System.Text;
 using System.Collections.Generic;
 using MiscUtil.Conversion;
- using PacketDotNet.Interfaces;
+ using PacketDotNet.Interface.Interfaces;
  using PacketDotNet.Tcp;
 using PacketDotNet.Utils;
 
@@ -33,7 +33,7 @@ namespace PacketDotNet
     /// See: http://en.wikipedia.org/wiki/Transmission_Control_Protocol
     /// </summary>
     [Serializable]
-    public class TcpPacket : TransportPacket,ISourceDestinationPort
+    public class TcpPacket : TransportPacket, ISourceDestinationPort
     {
 #if DEBUG
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);

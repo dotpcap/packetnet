@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Utils;
 using MiscUtil.Conversion;
- using PacketDotNet.Interfaces;
+ using PacketDotNet.Interface.Interfaces;
 
 namespace PacketDotNet
 {

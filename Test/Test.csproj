@@ -32,12 +32,15 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpPcap">
+      <HintPath>..\..\..\SharpPcap\bin\Debug\net451\SharpPcap.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="log4net">
-      <HintPath>..\PacketDotNet\Libraries\log4net.dll</HintPath>
-    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -109,10 +112,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\..\SharpPcap\SharpPcap.csproj">
-      <Project>{23F75E13-8F57-4659-B007-E6B7ED849F3E}</Project>
-      <Name>SharpPcap</Name>
-    </ProjectReference>
     <ProjectReference Include="..\PacketDotNet.Interface\PacketDotNet.Interface.csproj">
       <Project>{591FD369-A7FA-4DD2-AC5B-11B472CD2E61}</Project>
       <Name>PacketDotNet.Interface</Name>
@@ -124,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="log4net.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

@@ -21,8 +21,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Text;
 using PacketDotNet;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-using MiscUtil.Conversion;
 
 namespace PacketDotNet
 {

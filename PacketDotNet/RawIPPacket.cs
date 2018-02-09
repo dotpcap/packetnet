@@ -22,7 +22,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Utils;
-using MiscUtil.Conversion;
 
 namespace PacketDotNet
 {

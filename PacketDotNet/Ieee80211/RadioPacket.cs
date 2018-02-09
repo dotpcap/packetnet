@@ -25,8 +25,8 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Text;
 using System.Linq;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-using MiscUtil.Conversion;
 
 namespace PacketDotNet.Ieee80211
     {

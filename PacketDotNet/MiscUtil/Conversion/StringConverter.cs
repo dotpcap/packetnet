@@ -17,10 +17,11 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2017 Andrew <pandipd@outlook.com>
  */
+
 using System;
 using System.Text;
 
-namespace MiscUtil.Conversion
+namespace PacketDotNet.MiscUtil.Conversion
 {
     /// <summary>
     /// String encoding converter

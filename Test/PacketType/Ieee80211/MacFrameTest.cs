@@ -26,7 +26,7 @@ using NUnit.Framework;
 using SharpPcap;
 using PacketDotNet.Utils;
 using System.Net.NetworkInformation;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 
 namespace Test.PacketType
 {

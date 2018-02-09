@@ -1,5 +1,5 @@
 
-namespace MiscUtil.Conversion
+namespace PacketDotNet.MiscUtil.Conversion
 {
     /// <summary>
     /// Implementation of EndianBitConverter which converts to/from big-endian

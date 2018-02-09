@@ -1,6 +1,6 @@
 using System;
 using System.IO;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 
 namespace PacketDotNet.Ieee80211
 {

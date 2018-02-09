@@ -23,8 +23,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PacketDotNet.Utils;
-using MiscUtil.Conversion;
 using System.Net.NetworkInformation;
+using PacketDotNet.MiscUtil.Conversion;
 
 namespace PacketDotNet.Ieee80211
     {

@@ -24,7 +24,7 @@ using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
 using System.IO;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 
 namespace Test.PacketType
 {

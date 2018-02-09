@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace MiscUtil.Conversion
+namespace PacketDotNet.MiscUtil.Conversion
 {
     /// <summary>
     /// Equivalent of System.BitConverter, but with either endianness.
@@ -119,7 +119,7 @@ namespace MiscUtil.Conversion
         /// <returns>A character formed by two bytes beginning at startIndex.</returns>
         public char ToChar (byte[] value, int startIndex)
         {
-            return unchecked((char) (CheckedFromBytes(value, startIndex, 2)));
+            return unchecked((char) (this.CheckedFromBytes(value, startIndex, 2)));
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace MiscUtil.Conversion
         /// <returns>A double precision floating point number formed by eight bytes beginning at startIndex.</returns>
         public double ToDouble (byte[] value, int startIndex)
         {
-            return Int64BitsToDouble(ToInt64(value, startIndex));
+            return this.Int64BitsToDouble(this.ToInt64(value, startIndex));
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace MiscUtil.Conversion
         /// <returns>A single precision floating point number formed by four bytes beginning at startIndex.</returns>
         public float ToSingle (byte[] value, int startIndex)
         {
-            return Int32BitsToSingle(ToInt32(value, startIndex));
+            return this.Int32BitsToSingle(this.ToInt32(value, startIndex));
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace MiscUtil.Conversion
         /// <returns>A 16-bit signed integer formed by two bytes beginning at startIndex.</returns>
         public short ToInt16 (byte[] value, int startIndex)
         {
-            return unchecked((short) (CheckedFromBytes(value, startIndex, 2)));
+            return unchecked((short) (this.CheckedFromBytes(value, startIndex, 2)));
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace MiscUtil.Conversion
         /// <returns>A 32-bit signed integer formed by four bytes beginning at startIndex.</returns>
         public int ToInt32 (byte[] value, int startIndex)
         {
-            return unchecked((int) (CheckedFromBytes(value, startIndex, 4)));
+            return unchecked((int) (this.CheckedFromBytes(value, startIndex, 4)));
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace MiscUtil.Conversion
         /// <returns>A 64-bit signed integer formed by eight bytes beginning at startIndex.</returns>
         public long ToInt64 (byte[] value, int startIndex)
         {
-            return CheckedFromBytes(value, startIndex, 8);
+            return this.CheckedFromBytes(value, startIndex, 8);
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace MiscUtil.Conversion
         /// <returns>A 16-bit unsigned integer formed by two bytes beginning at startIndex.</returns>
         public ushort ToUInt16 (byte[] value, int startIndex)
         {
-            return unchecked((ushort) (CheckedFromBytes(value, startIndex, 2)));
+            return unchecked((ushort) (this.CheckedFromBytes(value, startIndex, 2)));
         }
 
         /// <summary>
@@ -198,7 +198,7 @@ namespace MiscUtil.Conversion
         /// <returns>A 32-bit unsigned integer formed by four bytes beginning at startIndex.</returns>
         public uint ToUInt32 (byte[] value, int startIndex)
         {
-            return unchecked((uint) (CheckedFromBytes(value, startIndex, 4)));
+            return unchecked((uint) (this.CheckedFromBytes(value, startIndex, 4)));
         }
 
         /// <summary>
@@ -209,7 +209,7 @@ namespace MiscUtil.Conversion
         /// <returns>A 64-bit unsigned integer formed by eight bytes beginning at startIndex.</returns>
         public ulong ToUInt64 (byte[] value, int startIndex)
         {
-            return unchecked((ulong) (CheckedFromBytes(value, startIndex, 8)));
+            return unchecked((ulong) (this.CheckedFromBytes(value, startIndex, 8)));
         }
 
         /// <summary>
@@ -245,7 +245,7 @@ namespace MiscUtil.Conversion
         long CheckedFromBytes(byte[] value, int startIndex, int bytesToConvert)
         {
             CheckByteArgument(value, startIndex, bytesToConvert);
-            return FromBytes(value, startIndex, bytesToConvert);
+            return this.FromBytes(value, startIndex, bytesToConvert);
         }
 
         /// <summary>
@@ -323,7 +323,7 @@ namespace MiscUtil.Conversion
             int[] parts = new int[4];
             for (int i=0; i < 4; i++)
             {
-                parts[i] = ToInt32(value, startIndex+i*4);
+                parts[i] = this.ToInt32(value, startIndex+i*4);
             }
             return new Decimal(parts);
         }
@@ -339,7 +339,7 @@ namespace MiscUtil.Conversion
             int[] parts = decimal.GetBits(value);
             for (int i=0; i < 4; i++)
             {
-                CopyBytesImpl(parts[i], 4, bytes, i*4);
+                this.CopyBytesImpl(parts[i], 4, bytes, i*4);
             }
             return bytes;
         }
@@ -356,7 +356,7 @@ namespace MiscUtil.Conversion
             int[] parts = decimal.GetBits(value);
             for (int i=0; i < 4; i++)
             {
-                CopyBytesImpl(parts[i], 4, buffer, i*4+index);
+                this.CopyBytesImpl(parts[i], 4, buffer, i*4+index);
             }
         }
         #endregion
@@ -372,7 +372,7 @@ namespace MiscUtil.Conversion
         byte[] GetBytes(long value, int bytes)
         {
             byte[] buffer = new byte[bytes];
-            CopyBytes(value, bytes, buffer, 0);
+            this.CopyBytes(value, bytes, buffer, 0);
             return buffer;
         }
 
@@ -393,7 +393,7 @@ namespace MiscUtil.Conversion
         /// <returns>An array of bytes with length 2.</returns>
         public byte[] GetBytes(char value)
         {
-            return GetBytes(value, 2);
+            return this.GetBytes(value, 2);
         }
 
         /// <summary>
@@ -403,7 +403,7 @@ namespace MiscUtil.Conversion
         /// <returns>An array of bytes with length 8.</returns>
         public byte[] GetBytes(double value)
         {
-            return GetBytes(DoubleToInt64Bits(value), 8);
+            return this.GetBytes(this.DoubleToInt64Bits(value), 8);
         }
 
         /// <summary>
@@ -413,7 +413,7 @@ namespace MiscUtil.Conversion
         /// <returns>An array of bytes with length 2.</returns>
         public byte[] GetBytes(short value)
         {
-            return GetBytes(value, 2);
+            return this.GetBytes(value, 2);
         }
 
         /// <summary>
@@ -423,7 +423,7 @@ namespace MiscUtil.Conversion
         /// <returns>An array of bytes with length 4.</returns>
         public byte[] GetBytes(int value)
         {
-            return GetBytes(value, 4);
+            return this.GetBytes(value, 4);
         }
 
         /// <summary>
@@ -433,7 +433,7 @@ namespace MiscUtil.Conversion
         /// <returns>An array of bytes with length 8.</returns>
         public byte[] GetBytes(long value)
         {
-            return GetBytes(value, 8);
+            return this.GetBytes(value, 8);
         }
 
         /// <summary>
@@ -443,7 +443,7 @@ namespace MiscUtil.Conversion
         /// <returns>An array of bytes with length 4.</returns>
         public byte[] GetBytes(float value)
         {
-            return GetBytes(SingleToInt32Bits(value), 4);
+            return this.GetBytes(this.SingleToInt32Bits(value), 4);
         }
 
         /// <summary>
@@ -453,7 +453,7 @@ namespace MiscUtil.Conversion
         /// <returns>An array of bytes with length 2.</returns>
         public byte[] GetBytes(ushort value)
         {
-            return GetBytes(value, 2);
+            return this.GetBytes(value, 2);
         }
 
         /// <summary>
@@ -463,7 +463,7 @@ namespace MiscUtil.Conversion
         /// <returns>An array of bytes with length 4.</returns>
         public byte[] GetBytes(uint value)
         {
-            return GetBytes(value, 4);
+            return this.GetBytes(value, 4);
         }
 
         /// <summary>
@@ -473,7 +473,7 @@ namespace MiscUtil.Conversion
         /// <returns>An array of bytes with length 8.</returns>
         public byte[] GetBytes(ulong value)
         {
-            return GetBytes(unchecked((long)value), 8);
+            return this.GetBytes(unchecked((long)value), 8);
         }
 
         #endregion
@@ -499,7 +499,7 @@ namespace MiscUtil.Conversion
             {
                 throw new ArgumentOutOfRangeException("Buffer not big enough for value");
             }
-            CopyBytesImpl(value, bytes, buffer, index);
+            this.CopyBytesImpl(value, bytes, buffer, index);
         }
 
         /// <summary>
@@ -524,7 +524,7 @@ namespace MiscUtil.Conversion
         /// <param name="index">The first index into the array to copy the bytes into</param>
         public void CopyBytes(bool value, byte[] buffer, int index)
         {
-            CopyBytes(value ? 1 : 0, 1, buffer, index);
+            this.CopyBytes(value ? 1 : 0, 1, buffer, index);
         }
 
         /// <summary>
@@ -536,7 +536,7 @@ namespace MiscUtil.Conversion
         /// <param name="index">The first index into the array to copy the bytes into</param>
         public void CopyBytes(char value, byte[] buffer, int index)
         {
-            CopyBytes(value, 2, buffer, index);
+            this.CopyBytes(value, 2, buffer, index);
         }
 
         /// <summary>
@@ -548,7 +548,7 @@ namespace MiscUtil.Conversion
         /// <param name="index">The first index into the array to copy the bytes into</param>
         public void CopyBytes(double value, byte[] buffer, int index)
         {
-            CopyBytes(DoubleToInt64Bits(value), 8, buffer, index);
+            this.CopyBytes(this.DoubleToInt64Bits(value), 8, buffer, index);
         }
 
         /// <summary>
@@ -560,7 +560,7 @@ namespace MiscUtil.Conversion
         /// <param name="index">The first index into the array to copy the bytes into</param>
         public void CopyBytes(short value, byte[] buffer, int index)
         {
-            CopyBytes(value, 2, buffer, index);
+            this.CopyBytes(value, 2, buffer, index);
         }
 
         /// <summary>
@@ -572,7 +572,7 @@ namespace MiscUtil.Conversion
         /// <param name="index">The first index into the array to copy the bytes into</param>
         public void CopyBytes(int value, byte[] buffer, int index)
         {
-            CopyBytes(value, 4, buffer, index);
+            this.CopyBytes(value, 4, buffer, index);
         }
 
         /// <summary>
@@ -584,7 +584,7 @@ namespace MiscUtil.Conversion
         /// <param name="index">The first index into the array to copy the bytes into</param>
         public void CopyBytes(long value, byte[] buffer, int index)
         {
-            CopyBytes(value, 8, buffer, index);
+            this.CopyBytes(value, 8, buffer, index);
         }
 
         /// <summary>
@@ -596,7 +596,7 @@ namespace MiscUtil.Conversion
         /// <param name="index">The first index into the array to copy the bytes into</param>
         public void CopyBytes(float value, byte[] buffer, int index)
         {
-            CopyBytes(SingleToInt32Bits(value), 4, buffer, index);
+            this.CopyBytes(this.SingleToInt32Bits(value), 4, buffer, index);
         }
 
         /// <summary>
@@ -608,7 +608,7 @@ namespace MiscUtil.Conversion
         /// <param name="index">The first index into the array to copy the bytes into</param>
         public void CopyBytes(ushort value, byte[] buffer, int index)
         {
-            CopyBytes(value, 2, buffer, index);
+            this.CopyBytes(value, 2, buffer, index);
         }
 
         /// <summary>
@@ -620,7 +620,7 @@ namespace MiscUtil.Conversion
         /// <param name="index">The first index into the array to copy the bytes into</param>
         public void CopyBytes(uint value, byte[] buffer, int index)
         {
-            CopyBytes(value, 4, buffer, index);
+            this.CopyBytes(value, 4, buffer, index);
         }
 
         /// <summary>
@@ -632,7 +632,7 @@ namespace MiscUtil.Conversion
         /// <param name="index">The first index into the array to copy the bytes into</param>
         public void CopyBytes(ulong value, byte[] buffer, int index)
         {
-            CopyBytes(unchecked((long)value), 8, buffer, index);
+            this.CopyBytes(unchecked((long)value), 8, buffer, index);
         }
 
         #endregion
@@ -680,7 +680,7 @@ namespace MiscUtil.Conversion
             /// </summary>
             internal int AsInt32
             {
-                get { return i; }
+                get { return this.i; }
             }
 
             /// <summary>
@@ -688,7 +688,7 @@ namespace MiscUtil.Conversion
             /// </summary>
             internal float AsSingle
             {
-                get { return f; }
+                get { return this.f; }
             }
         }
         #endregion

@@ -205,7 +205,7 @@ namespace Test.PacketType
         public void TestStringConverter()
         {
             var bytes = new byte[] { 0xd8, 0xc4, 0xc2, 0xf2, 0x61, 0xd1, 0xe5, 0xd4 };
-            Assert.AreEqual("QDB2/JVM", MiscUtil.Conversion.StringConverter.EbcdicToAscii(bytes, 0, bytes.Length));
+            Assert.AreEqual("QDB2/JVM", PacketDotNet.MiscUtil.Conversion.StringConverter.EbcdicToAscii(bytes, 0, bytes.Length));
         }
     }
 }

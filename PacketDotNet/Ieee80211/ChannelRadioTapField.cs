@@ -188,8 +188,8 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         public override void CopyTo(byte[] dest, int offset)
         {
-            EndianBitConverter.Little.CopyBytes(FrequencyMHz, dest, offset);
-            EndianBitConverter.Little.CopyBytes((UInt16) Flags, dest, offset + 2);
+            EndianBitConverter.Little.CopyBytes(this.FrequencyMHz, dest, offset);
+            EndianBitConverter.Little.CopyBytes((UInt16) this.Flags, dest, offset + 2);
         }
 
         /// <summary>
@@ -200,9 +200,9 @@ namespace PacketDotNet.Ieee80211
         /// </param>
         public ChannelRadioTapField(BinaryReader br)
         {
-            FrequencyMHz = br.ReadUInt16();
-            Channel = ChannelFromFrequencyMHz(FrequencyMHz);
-            Flags = (RadioTapChannelFlags) br.ReadUInt16();
+            this.FrequencyMHz = br.ReadUInt16();
+            this.Channel = ChannelFromFrequencyMHz(this.FrequencyMHz);
+            this.Flags = (RadioTapChannelFlags) br.ReadUInt16();
         }
 
         /// <summary>
@@ -224,8 +224,8 @@ namespace PacketDotNet.Ieee80211
         /// </param>
         public ChannelRadioTapField(UInt16 FrequencyMhz, RadioTapChannelFlags Flags)
         {
-            this.FrequencyMHz = FrequencyMHz;
-            this.Channel = ChannelFromFrequencyMHz(FrequencyMHz);
+            this.FrequencyMHz = this.FrequencyMHz;
+            this.Channel = ChannelFromFrequencyMHz(this.FrequencyMHz);
             this.Flags = Flags;
         }
 
@@ -237,8 +237,7 @@ namespace PacketDotNet.Ieee80211
         /// </returns>
         public override string ToString()
         {
-            return string.Format("FrequencyMHz {0}, Channel {1}, Flags {2}",
-                FrequencyMHz, Channel, Flags);
+            return string.Format("FrequencyMHz {0}, Channel {1}, Flags {2}", this.FrequencyMHz, this.Channel, this.Flags);
         }
     }
 }

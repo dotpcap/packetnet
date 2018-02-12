@@ -52,8 +52,7 @@ namespace PacketDotNet.Ieee80211
                     return (MacFields.FrameControlLength +
                         MacFields.DurationIDLength +
                         (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        InformationElements.Length);
+                        MacFields.SequenceControlLength + this.InformationElements.Length);
                 }
             }
    
@@ -75,14 +74,14 @@ namespace PacketDotNet.Ieee80211
             /// </param>
             public ProbeRequestFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                this.header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                DestinationAddress = GetAddress (0);
-                SourceAddress = GetAddress (1);
-                BssId = GetAddress (2);
-                SequenceControl = new SequenceControlField (SequenceControlBytes);
+                this.FrameControl = new FrameControlField (this.FrameControlBytes);
+                this.Duration = new DurationField (this.DurationBytes);
+                this.DestinationAddress = this.GetAddress (0);
+                this.SourceAddress = this.GetAddress (1);
+                this.BssId = this.GetAddress (2);
+                this.SequenceControl = new SequenceControlField (this.SequenceControlBytes);
 				
 				if(bas.Length > ProbeRequestFields.InformationElement1Position)
 				{
@@ -91,15 +90,15 @@ namespace PacketDotNet.Ieee80211
                     	(bas.Offset + ProbeRequestFields.InformationElement1Position),
                     	(bas.Length - ProbeRequestFields.InformationElement1Position));
 
-                	InformationElements = new InformationElementList (infoElementsSegment);
+				    this.InformationElements = new InformationElementList (infoElementsSegment);
 				}
 				else
 				{
-					InformationElements = new InformationElementList ();
+				    this.InformationElements = new InformationElementList ();
 				}
                 //cant set length until after we have handled the information elements
                 //as they vary in length
-                header.Length = FrameSize;
+                this.header.Length = this.FrameSize;
             }
    
             /// <summary>
@@ -130,7 +129,7 @@ namespace PacketDotNet.Ieee80211
                 this.SequenceControl = new SequenceControlField ();
                 this.InformationElements = new InformationElementList (InformationElements);
                 
-                this.FrameControl.SubType = PacketDotNet.Ieee80211.FrameControlField.FrameSubTypes.ManagementProbeRequest;
+                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementProbeRequest;
             }
             
             /// <summary>
@@ -138,22 +137,22 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((this.header == null) || (this.header.Length > (this.header.BytesLength - this.header.Offset)) || (this.header.Length < this.FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    this.header = new ByteArraySegment (new Byte[this.FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
                 this.DurationBytes = this.Duration.Field;
-                SetAddress (0, DestinationAddress);
-                SetAddress (1, SourceAddress);
-                SetAddress (2, BssId);
+                this.SetAddress (0, this.DestinationAddress);
+                this.SetAddress (1, this.SourceAddress);
+                this.SetAddress (2, this.BssId);
                 this.SequenceControlBytes = this.SequenceControl.Field;
                 
                 //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
-                this.InformationElements.CopyTo (header, header.Offset + ProbeRequestFields.InformationElement1Position);
-                
-                header.Length = FrameSize;
+                this.InformationElements.CopyTo (this.header, this.header.Offset + ProbeRequestFields.InformationElement1Position);
+
+                this.header.Length = this.FrameSize;
             }
         } 
     }

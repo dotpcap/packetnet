@@ -62,7 +62,7 @@ namespace PacketDotNet.Tcp
         {
             get
             {
-                int granularity = ((int)Values >> 15);
+                int granularity = ((int) this.Values >> 15);
                 return (granularity != 0);
             }
         }
@@ -72,13 +72,13 @@ namespace PacketDotNet.Tcp
         /// </summary>
         public ushort Timeout
         {
-            get { return (ushort)((int)Values & TimeoutMask); }
+            get { return (ushort)((int) this.Values & TimeoutMask); }
         }
 
         // a convenient property to grab the value fields for further processing
         private ushort Values
         {
-            get { return EndianBitConverter.Big.ToUInt16(Bytes, ValuesFieldOffset); }
+            get { return EndianBitConverter.Big.ToUInt16(this.Bytes, ValuesFieldOffset); }
         }
         #endregion
 
@@ -92,7 +92,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override string ToString()
         {
-            return "[" + Kind.ToString() + ": Granularity=" + (Granularity ? "minutes" : "seconds") + " Timeout=" + Timeout + "]";
+            return "[" + this.Kind.ToString() + ": Granularity=" + (this.Granularity ? "minutes" : "seconds") + " Timeout=" + this.Timeout + "]";
         }
 
         #endregion

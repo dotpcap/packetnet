@@ -78,7 +78,7 @@ namespace PacketDotNet.OSPF
             get
             {
                 var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + SummaryLSAFields.NetworkMaskPosition);
-                return new System.Net.IPAddress(val);
+                return new IPAddress(val);
             }
             set
             {

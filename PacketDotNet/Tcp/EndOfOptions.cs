@@ -60,7 +60,7 @@ namespace PacketDotNet.Tcp
         /// </summary>
         public override byte Length
         {
-            get { return EndOfOptions.OptionLength; }
+            get { return OptionLength; }
         }
 
         #endregion

@@ -72,13 +72,13 @@ namespace PacketDotNet.LLDP
         {
             log.Debug("");
 
-            EmptyTLVDataInit();
+            this.EmptyTLVDataInit();
 
-            Type = TLVTypes.PortID;
-            SubType = subType;
+            this.Type = TLVTypes.PortID;
+            this.SubType = subType;
 
             // method will resize the tlv
-            SubTypeValue = subTypeValue;
+            this.SubTypeValue = subTypeValue;
         }
 
         /// <summary>
@@ -87,18 +87,18 @@ namespace PacketDotNet.LLDP
         /// <param name="networkAddress">
         /// A <see cref="LLDP.NetworkAddress"/>
         /// </param>
-        public PortID(LLDP.NetworkAddress networkAddress)
+        public PortID(NetworkAddress networkAddress)
         {
             log.DebugFormat("NetworkAddress {0}", networkAddress.ToString());
 
             var length = TLVTypeLength.TypeLengthLength + SubTypeLength;
             var bytes = new byte[length];
             var offset = 0;
-            tlvData = new ByteArraySegment(bytes, offset, length);
+            this.tlvData = new ByteArraySegment(bytes, offset, length);
 
-            Type = TLVTypes.PortID;
-            SubType = PortSubTypes.NetworkAddress;
-            SubTypeValue = networkAddress;
+            this.Type = TLVTypes.PortID;
+            this.SubType = PortSubTypes.NetworkAddress;
+            this.SubTypeValue = networkAddress;
         }
 
         #endregion
@@ -110,10 +110,10 @@ namespace PacketDotNet.LLDP
         /// </value>
         public PortSubTypes SubType
         {
-            get { return (PortSubTypes)tlvData.Bytes[tlvData.Offset + TLVTypeLength.TypeLengthLength]; }
+            get { return (PortSubTypes) this.tlvData.Bytes[this.tlvData.Offset + TLVTypeLength.TypeLengthLength]; }
             set
             {
-                tlvData.Bytes[tlvData.Offset + TLVTypeLength.TypeLengthLength] = (byte)value;
+                this.tlvData.Bytes[this.tlvData.Offset + TLVTypeLength.TypeLengthLength] = (byte)value;
             }
         }
 
@@ -122,8 +122,8 @@ namespace PacketDotNet.LLDP
         /// </value>
         public object SubTypeValue
         {
-            get { return GetSubTypeValue(); }
-            set { SetSubTypeValue(value); }
+            get { return this.GetSubTypeValue(); }
+            set { this.SetSubTypeValue(value); }
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         private int DataOffset
         {
-            get { return ValueOffset + SubTypeLength; }
+            get { return this.ValueOffset + SubTypeLength; }
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         private int DataLength
         {
-            get { return Length - SubTypeLength; }
+            get { return this.Length - SubTypeLength; }
         }
 
         #endregion
@@ -154,14 +154,14 @@ namespace PacketDotNet.LLDP
             var length = TLVTypeLength.TypeLengthLength + SubTypeLength;
             var bytes = new byte[length];
             int offset = 0;
-            tlvData = new ByteArraySegment(bytes, offset, length);
+            this.tlvData = new ByteArraySegment(bytes, offset, length);
         }
 
         private object GetSubTypeValue()
         {
             byte[] arrAddress;
 
-            switch (SubType)
+            switch (this.SubType)
             {
                 case PortSubTypes.InterfaceAlias:
                 case PortSubTypes.InterfaceName:
@@ -169,19 +169,19 @@ namespace PacketDotNet.LLDP
                 case PortSubTypes.PortComponent:
                 case PortSubTypes.AgentCircuitID:
                     // get the address
-                    arrAddress = new byte[DataLength];
-                    Array.Copy(tlvData.Bytes, DataOffset, arrAddress, 0, DataLength);
+                    arrAddress = new byte[this.DataLength];
+                    Array.Copy(this.tlvData.Bytes, this.DataOffset, arrAddress, 0, this.DataLength);
                     return arrAddress;
                 case PortSubTypes.MACAddress:
                     // get the address
-                    arrAddress = new byte[DataLength];
-                    Array.Copy(tlvData.Bytes, DataOffset, arrAddress, 0, DataLength);
+                    arrAddress = new byte[this.DataLength];
+                    Array.Copy(this.tlvData.Bytes, this.DataOffset, arrAddress, 0, this.DataLength);
                     PhysicalAddress address = new PhysicalAddress(arrAddress);
                     return address;
                 case PortSubTypes.NetworkAddress:
                     // get the address
-                    AddressFamily addressFamily = (AddressFamily)tlvData.Bytes[DataLength];
-                    return GetNetworkAddress(addressFamily);
+                    AddressFamily addressFamily = (AddressFamily) this.tlvData.Bytes[this.DataLength];
+                    return this.GetNetworkAddress(addressFamily);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -189,20 +189,20 @@ namespace PacketDotNet.LLDP
 
         private void SetSubTypeValue(object subTypeValue)
         {
-            switch (SubType)
+            switch (this.SubType)
             {
                 case PortSubTypes.InterfaceAlias:
                 case PortSubTypes.InterfaceName:
                 case PortSubTypes.LocallyAssigned:
                 case PortSubTypes.PortComponent:
                 case PortSubTypes.AgentCircuitID:
-                    SetSubTypeValue((byte[])subTypeValue);
+                    this.SetSubTypeValue((byte[])subTypeValue);
                     break;
                 case PortSubTypes.MACAddress:
-                    SetSubTypeValue(((PhysicalAddress)subTypeValue).GetAddressBytes());
+                    this.SetSubTypeValue(((PhysicalAddress)subTypeValue).GetAddressBytes());
                     break;
                 case PortSubTypes.NetworkAddress:
-                    SetSubTypeValue(((NetworkAddress)subTypeValue).Bytes);
+                    this.SetSubTypeValue(((NetworkAddress)subTypeValue).Bytes);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -212,7 +212,7 @@ namespace PacketDotNet.LLDP
         private void SetSubTypeValue(byte[] val)
         {
             // does our current length match?
-            int dataLength = Length - SubTypeLength;
+            int dataLength = this.Length - SubTypeLength;
             if(dataLength != val.Length)
             {
                 var headerLength = TLVTypeLength.TypeLengthLength + SubTypeLength;
@@ -220,27 +220,26 @@ namespace PacketDotNet.LLDP
                 var newBytes = new byte[newLength];
 
                 // copy the header data over
-                Array.Copy(tlvData.Bytes, tlvData.Offset,
+                Array.Copy(this.tlvData.Bytes, this.tlvData.Offset,
                            newBytes, 0,
                            headerLength);
 
                 var offset = 0;
-                tlvData = new ByteArraySegment(newBytes, offset, newLength);
+                this.tlvData = new ByteArraySegment(newBytes, offset, newLength);
             }
 
-            Array.Copy(val, 0,
-                       tlvData.Bytes, ValueOffset + SubTypeLength,
+            Array.Copy(val, 0, this.tlvData.Bytes, this.ValueOffset + SubTypeLength,
                        val.Length);
         }
 
         private NetworkAddress GetNetworkAddress(AddressFamily addressFamily)
         {
-            if(SubType != PortSubTypes.NetworkAddress)
+            if(this.SubType != PortSubTypes.NetworkAddress)
             {
                 throw new ArgumentOutOfRangeException("SubType != PortSubTypes.NetworkAddress");
             }
 
-            var networkAddress = new NetworkAddress(tlvData.Bytes, DataOffset, DataLength);
+            var networkAddress = new NetworkAddress(this.tlvData.Bytes, this.DataOffset, this.DataLength);
 
             return networkAddress;
         }
@@ -253,7 +252,7 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public override string ToString ()
         {
-            return string.Format("[PortID: SubType={0}, SubTypeValue={1}]", SubType, SubTypeValue);
+            return string.Format("[PortID: SubType={0}, SubTypeValue={1}]", this.SubType, this.SubTypeValue);
         }
 
         #endregion

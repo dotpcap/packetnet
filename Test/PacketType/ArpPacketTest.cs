@@ -86,10 +86,10 @@ namespace Test.PacketType
                 switch(packetIndex)
                 {
                 case 0:
-                    VerifyPacket0(p);
+                    this.VerifyPacket0(p);
                     break;
                 case 1:
-                    VerifyPacket1(p);
+                    this.VerifyPacket1(p);
                     break;
                 default:
                     Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
@@ -109,10 +109,10 @@ namespace Test.PacketType
         public void ConstructingFromValues()
         {
             var localIPBytes = new byte[4] {124, 10, 10, 20};
-            var localIP = new System.Net.IPAddress(localIPBytes);
+            var localIP = new IPAddress(localIPBytes);
 
             var destinationIPBytes = new byte[4] {192, 168, 1, 10};
-            var destinationIP = new System.Net.IPAddress(destinationIPBytes);
+            var destinationIP = new IPAddress(destinationIPBytes);
 
             var localMac = System.Net.NetworkInformation.PhysicalAddress.Parse("AA-BB-CC-DD-EE-FF");
 
@@ -169,7 +169,7 @@ namespace Test.PacketType
             bool foundARP = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = PacketDotNet.Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
                 var arpPacket = (ARPPacket)p.Extract(typeof(ARPPacket));
                 if (arpPacket == null)

@@ -42,9 +42,9 @@ namespace PacketDotNet.Ethernet
 
         static EthernetFields()
         {
-            SourceMacPosition = EthernetFields.MacAddressLength;
-            TypePosition = EthernetFields.MacAddressLength * 2;
-            HeaderLength = EthernetFields.TypePosition + EthernetFields.TypeLength;
+            SourceMacPosition = MacAddressLength;
+            TypePosition = MacAddressLength * 2;
+            HeaderLength = TypePosition + TypeLength;
         }
 
         /// <summary>

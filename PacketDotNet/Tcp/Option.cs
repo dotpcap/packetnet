@@ -43,7 +43,7 @@ namespace PacketDotNet.Tcp
         /// </param>
         public Option(byte[] bytes, int offset, int length)
         {
-            optionData = new ByteArraySegment(bytes, offset, length);
+            this.optionData = new ByteArraySegment(bytes, offset, length);
         }
 
         #endregion
@@ -55,7 +55,7 @@ namespace PacketDotNet.Tcp
         /// </summary>
         public virtual byte Length
         {
-            get { return Bytes[LengthFieldOffset]; }
+            get { return this.Bytes[LengthFieldOffset]; }
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace PacketDotNet.Tcp
         /// </summary>
         public OptionTypes Kind
         {
-            get { return (OptionTypes)Bytes[KindFieldOffset]; }
+            get { return (OptionTypes) this.Bytes[KindFieldOffset]; }
         }
 
         /// <summary>
@@ -73,8 +73,8 @@ namespace PacketDotNet.Tcp
         {
             get
             {
-                byte[] bytes = new byte[optionData.Length];
-                Array.Copy(optionData.Bytes, optionData.Offset, bytes, 0, optionData.Length);
+                byte[] bytes = new byte[this.optionData.Length];
+                Array.Copy(this.optionData.Bytes, this.optionData.Offset, bytes, 0, this.optionData.Length);
                 return  bytes;
             }
         }
@@ -91,7 +91,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override string ToString()
         {
-            return "[" + Kind.ToString() + "]";
+            return "[" + this.Kind.ToString() + "]";
         }
 
         #endregion

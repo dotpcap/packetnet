@@ -74,7 +74,7 @@ namespace PacketDotNet.LLDP
             get
             {
                 // get the type
-                ushort typeAndLength = TypeAndLength;
+                ushort typeAndLength = this.TypeAndLength;
                 // remove the length info
                 return (TLVTypes)(typeAndLength >> LengthBits);
             }
@@ -86,9 +86,9 @@ namespace PacketDotNet.LLDP
                 // shift type into the type position
                 var type = (ushort)((ushort)value << LengthBits);
                 // save the old length
-                ushort length = (ushort)(LengthMask & TypeAndLength);
+                ushort length = (ushort)(LengthMask & this.TypeAndLength);
                 // set the type
-                TypeAndLength = (ushort)(type | length);
+                this.TypeAndLength = (ushort)(type | length);
             }
         }
 
@@ -102,7 +102,7 @@ namespace PacketDotNet.LLDP
             get
             {
                 // get the length
-                ushort typeAndLength = TypeAndLength;
+                ushort typeAndLength = this.TypeAndLength;
                 // remove the type info
                 return LengthMask & typeAndLength;
             }
@@ -113,13 +113,13 @@ namespace PacketDotNet.LLDP
             {
                 log.DebugFormat("value {0}", value);
 
-                if(value < 0) { throw new System.ArgumentOutOfRangeException("Length", "Length must be a positive value"); }
+                if(value < 0) { throw new ArgumentOutOfRangeException("Length", "Length must be a positive value"); }
                 if(value > MaximumTLVLength) { throw new ArgumentOutOfRangeException("Length", "The maximum value for a TLV length is 511"); }
 
                 // save the old type
-                ushort type = (ushort)(TypeMask & TypeAndLength);
+                ushort type = (ushort)(TypeMask & this.TypeAndLength);
                 // set the length
-                TypeAndLength = (ushort)(type | value);
+                this.TypeAndLength = (ushort)(type | value);
             }
         }
 
@@ -130,12 +130,12 @@ namespace PacketDotNet.LLDP
         {
             get
             {
-                return EndianBitConverter.Big.ToUInt16(byteArraySegment.Bytes, byteArraySegment.Offset);
+                return EndianBitConverter.Big.ToUInt16(this.byteArraySegment.Bytes, this.byteArraySegment.Offset);
             }
 
             set
             {
-                EndianBitConverter.Big.CopyBytes(value, byteArraySegment.Bytes, byteArraySegment.Offset);
+                EndianBitConverter.Big.CopyBytes(value, this.byteArraySegment.Bytes, this.byteArraySegment.Offset);
             }
         }
     }

@@ -107,7 +107,7 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    var bytes = new Byte[Length];
+                    var bytes = new Byte[this.Length];
                     int index = 0;
                     foreach (var ie in this)
                     {

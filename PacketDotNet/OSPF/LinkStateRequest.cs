@@ -22,7 +22,7 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public LinkStateRequest()
         {
-            byte[] b = new byte[LinkStateRequest.Length];
+            byte[] b = new byte[Length];
             this.header = new ByteArraySegment(b);
         }
 
@@ -66,7 +66,7 @@ namespace PacketDotNet.OSPF
             get
             {
                 var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + LinkStateRequestFields.AdvertisingRouterPosition);
-                return new System.Net.IPAddress(val);
+                return new IPAddress(val);
             }
             set
             {
@@ -86,7 +86,7 @@ namespace PacketDotNet.OSPF
             get
             {
                 var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + LinkStateRequestFields.LinkStateIdPosition);
-                return new System.Net.IPAddress(val);
+                return new IPAddress(val);
             }
             set
             {

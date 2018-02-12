@@ -21,7 +21,7 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public ASExternalLink()
         {
-            byte[] b = new byte[ASExternalLink.Length];
+            byte[] b = new byte[Length];
             this.header = new ByteArraySegment(b);
         }
 
@@ -106,7 +106,7 @@ namespace PacketDotNet.OSPF
             get
             {
                 var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + ASExternalLinkFields.ForwardingAddressPosition);
-                return new System.Net.IPAddress(val);
+                return new IPAddress(val);
             }
             set
             {

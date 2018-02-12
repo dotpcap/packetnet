@@ -42,13 +42,13 @@ namespace PacketDotNet.Utils
         {
             get
             {
-                return theByteArraySegment;
+                return this.theByteArraySegment;
             }
 
             set
             {
-                thePacket = null;
-                theByteArraySegment = value;
+                this.thePacket = null;
+                this.theByteArraySegment = value;
             }
         }
 
@@ -64,13 +64,13 @@ namespace PacketDotNet.Utils
         {
             get
             {
-                return thePacket;
+                return this.thePacket;
             }
 
             set
             {
-                theByteArraySegment = null;
-                thePacket = value;
+                this.theByteArraySegment = null;
+                this.thePacket = value;
             }
         }
 
@@ -84,13 +84,13 @@ namespace PacketDotNet.Utils
         /// </param>
         public void AppendToMemoryStream(MemoryStream ms)
         {
-            if(ThePacket != null)
+            if(this.ThePacket != null)
             {
-                var theBytes = ThePacket.Bytes;
+                var theBytes = this.ThePacket.Bytes;
                 ms.Write(theBytes, 0, theBytes.Length);
-            } else if(TheByteArraySegment != null)
+            } else if(this.TheByteArraySegment != null)
             {
-                var theBytes = TheByteArraySegment.ActualBytes();
+                var theBytes = this.TheByteArraySegment.ActualBytes();
                 ms.Write(theBytes, 0, theBytes.Length);
             }
         }
@@ -102,10 +102,10 @@ namespace PacketDotNet.Utils
         {
             get
             {
-                if(ThePacket != null)
+                if(this.ThePacket != null)
                 {
                     return PayloadType.Packet;
-                } else if(TheByteArraySegment != null)
+                } else if(this.TheByteArraySegment != null)
                 {
                     return PayloadType.Bytes;
                 } else

@@ -80,13 +80,13 @@ namespace Test.PacketType
                 switch(packetIndex)
                 {
                 case 0:
-                    VerifyPacket0(p);
+                    this.VerifyPacket0(p);
                     break;
                 case 1:
-                    VerifyPacket1(p);
+                    this.VerifyPacket1(p);
                     break;
                 case 2:
-                    VerifyPacket2(p);
+                    this.VerifyPacket2(p);
                     break;
                 default:
                     Assert.Fail("didn't expect to get to packetIndex " + packetIndex);

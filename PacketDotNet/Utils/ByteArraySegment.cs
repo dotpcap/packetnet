@@ -63,7 +63,7 @@ namespace PacketDotNet.Utils
             {
                 // check for invalid values
                 if(value < 0)
-                    throw new System.InvalidOperationException("attempting to set a negative length of " + value);
+                    throw new InvalidOperationException("attempting to set a negative length of " + value);
 
                 this.length = value;
                 log.DebugFormat("Length: {0}", value);

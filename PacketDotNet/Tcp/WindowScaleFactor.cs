@@ -60,7 +60,7 @@ namespace PacketDotNet.Tcp
         /// </summary>
         public byte ScaleFactor
         {
-            get { return Bytes[ScaleFactorFieldOffset]; }
+            get { return this.Bytes[ScaleFactorFieldOffset]; }
         }
 
         #endregion
@@ -76,7 +76,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override string ToString()
         {
-            return "[" + Kind.ToString() + ": ScaleFactor=" + ScaleFactor.ToString() + " (multiply by " + (1 << ScaleFactor).ToString() + ")]";
+            return "[" + this.Kind.ToString() + ": ScaleFactor=" + this.ScaleFactor.ToString() + " (multiply by " + (1 << this.ScaleFactor).ToString() + ")]";
         }
 
         #endregion

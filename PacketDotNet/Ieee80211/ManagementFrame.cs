@@ -52,10 +52,10 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-					if(header.Length >= (MacFields.SequenceControlPosition + MacFields.SequenceControlLength))
+					if(this.header.Length >= (MacFields.SequenceControlPosition + MacFields.SequenceControlLength))
 					{
-						return EndianBitConverter.Little.ToUInt16(header.Bytes,
-						                                          (header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+						return EndianBitConverter.Little.ToUInt16(this.header.Bytes,
+						                                          (this.header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
 					}
 					else
 					{
@@ -65,9 +65,8 @@ namespace PacketDotNet.Ieee80211
 
                 set
                 {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     (header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes,
+                                                     (this.header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
                 }
             }
 
@@ -85,10 +84,7 @@ namespace PacketDotNet.Ieee80211
             /// </returns>
             protected override String GetAddressString()
             {
-                return String.Format("SA {0} DA {1} BSSID {2}",
-                                     SourceAddress, 
-                                     DestinationAddress, 
-                                     BssId);
+                return String.Format("SA {0} DA {1} BSSID {2}", this.SourceAddress, this.DestinationAddress, this.BssId);
             }
         } 
     }

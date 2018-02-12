@@ -28,7 +28,7 @@ namespace Test.Performance
             var startTime = DateTime.Now;
 
             // run the test
-            for (int i = 0; i < testRuns; i++)
+            for (int i = 0; i < this.testRuns; i++)
             {
                 Array.Copy(ethernetPacket.Bytes, EthernetFields.SourceMacPosition,
                     hwAddress, 0, EthernetFields.MacAddressLength);
@@ -41,7 +41,7 @@ namespace Test.Performance
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
 
             // calculate the statistics
-            var rate = new Rate(startTime, endTime, testRuns, "Test runs");
+            var rate = new Rate(startTime, endTime, this.testRuns, "Test runs");
 
             // output the statistics to the console
             Console.WriteLine(rate.ToString());
@@ -65,7 +65,7 @@ namespace Test.Performance
             var startTime = DateTime.Now;
 
             // run the test
-            for (int i = 0; i < testRuns; i++)
+            for (int i = 0; i < this.testRuns; i++)
             {
                 Buffer.BlockCopy(ethernetPacket.Bytes, EthernetFields.SourceMacPosition,
                     hwAddress, 0, EthernetFields.MacAddressLength);
@@ -78,7 +78,7 @@ namespace Test.Performance
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
 
             // calculate the statistics
-            var rate = new Rate(startTime, endTime, testRuns, "Test runs");
+            var rate = new Rate(startTime, endTime, this.testRuns, "Test runs");
 
             // output the statistics to the console
             Console.WriteLine(rate.ToString());

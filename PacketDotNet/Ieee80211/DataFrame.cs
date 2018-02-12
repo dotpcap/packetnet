@@ -62,12 +62,12 @@ namespace PacketDotNet.Ieee80211
             protected void AssignDefaultAddresses ()
             {
                 PhysicalAddress zeroAddress = PhysicalAddress.Parse ("000000000000");
-                
-                SourceAddress = zeroAddress;
-                DestinationAddress = zeroAddress;
-                TransmitterAddress = zeroAddress;
-                ReceiverAddress = zeroAddress;
-                BssId = zeroAddress;
+
+                this.SourceAddress = zeroAddress;
+                this.DestinationAddress = zeroAddress;
+                this.TransmitterAddress = zeroAddress;
+                this.ReceiverAddress = zeroAddress;
+                this.BssId = zeroAddress;
             }
             
             /// <summary>
@@ -79,31 +79,31 @@ namespace PacketDotNet.Ieee80211
             /// </remarks>
             protected void ReadAddresses ()
             {   
-                if ((!FrameControl.ToDS) && (!FrameControl.FromDS))
+                if ((!this.FrameControl.ToDS) && (!this.FrameControl.FromDS))
                 {
-                    DestinationAddress = GetAddress (0);
-                    SourceAddress = GetAddress (1);
-                    BssId = GetAddress (2);
+                    this.DestinationAddress = this.GetAddress (0);
+                    this.SourceAddress = this.GetAddress (1);
+                    this.BssId = this.GetAddress (2);
                 }
-                else if ((FrameControl.ToDS) && (!FrameControl.FromDS))
+                else if ((this.FrameControl.ToDS) && (!this.FrameControl.FromDS))
                 {
-                    BssId = GetAddress (0);
-                    SourceAddress = GetAddress (1);
-                    DestinationAddress = GetAddress (2);
+                    this.BssId = this.GetAddress (0);
+                    this.SourceAddress = this.GetAddress (1);
+                    this.DestinationAddress = this.GetAddress (2);
                 }
-                else if ((!FrameControl.ToDS) && (FrameControl.FromDS))
+                else if ((!this.FrameControl.ToDS) && (this.FrameControl.FromDS))
                 {
-                    DestinationAddress = GetAddress (0);
-                    BssId = GetAddress (1);
-                    SourceAddress = GetAddress (2);
+                    this.DestinationAddress = this.GetAddress (0);
+                    this.BssId = this.GetAddress (1);
+                    this.SourceAddress = this.GetAddress (2);
                 }
                 else
                 {
                     //both are true so we are in WDS mode again. BSSID is not valid in this mode
-                    ReceiverAddress = GetAddress (0);
-                    TransmitterAddress = GetAddress (1);
-                    DestinationAddress = GetAddress (2);
-                    SourceAddress = GetAddress (3);
+                    this.ReceiverAddress = this.GetAddress (0);
+                    this.TransmitterAddress = this.GetAddress (1);
+                    this.DestinationAddress = this.GetAddress (2);
+                    this.SourceAddress = this.GetAddress (3);
                 }
             }
             
@@ -116,30 +116,30 @@ namespace PacketDotNet.Ieee80211
             /// </remarks>
             protected void WriteAddressBytes ()
             {
-                if ((!FrameControl.ToDS) && (!FrameControl.FromDS))
+                if ((!this.FrameControl.ToDS) && (!this.FrameControl.FromDS))
                 {
-                    SetAddress (0, DestinationAddress);
-                    SetAddress (1, SourceAddress);
-                    SetAddress (2, BssId);
+                    this.SetAddress (0, this.DestinationAddress);
+                    this.SetAddress (1, this.SourceAddress);
+                    this.SetAddress (2, this.BssId);
                 }
-                else if ((FrameControl.ToDS) && (!FrameControl.FromDS))
+                else if ((this.FrameControl.ToDS) && (!this.FrameControl.FromDS))
                 {
-                    SetAddress (0, BssId);
-                    SetAddress (1, SourceAddress);
-                    SetAddress (2, DestinationAddress);
+                    this.SetAddress (0, this.BssId);
+                    this.SetAddress (1, this.SourceAddress);
+                    this.SetAddress (2, this.DestinationAddress);
                 }
-                else if ((!FrameControl.ToDS) && (FrameControl.FromDS))
+                else if ((!this.FrameControl.ToDS) && (this.FrameControl.FromDS))
                 {
-                    SetAddress (0, DestinationAddress);
-                    SetAddress (1, BssId);
-                    SetAddress (2, SourceAddress);
+                    this.SetAddress (0, this.DestinationAddress);
+                    this.SetAddress (1, this.BssId);
+                    this.SetAddress (2, this.SourceAddress);
                 }
                 else
                 {
-                    SetAddress (0, ReceiverAddress);
-                    SetAddress (1, TransmitterAddress);
-                    SetAddress (2, DestinationAddress);
-                    SetAddress (3, SourceAddress);
+                    this.SetAddress (0, this.ReceiverAddress);
+                    this.SetAddress (1, this.TransmitterAddress);
+                    this.SetAddress (2, this.DestinationAddress);
+                    this.SetAddress (3, this.SourceAddress);
                 }
             }
             
@@ -150,10 +150,10 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-					if(header.Length >= (MacFields.SequenceControlPosition + MacFields.SequenceControlLength))
+					if(this.header.Length >= (MacFields.SequenceControlPosition + MacFields.SequenceControlLength))
 					{
-						return EndianBitConverter.Little.ToUInt16 (header.Bytes,
-						                                           (header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+						return EndianBitConverter.Little.ToUInt16 (this.header.Bytes,
+						                                           (this.header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
 					}
 					else
 					{
@@ -163,9 +163,8 @@ namespace PacketDotNet.Ieee80211
 
                 set
                 {
-                    EndianBitConverter.Little.CopyBytes (value,
-                                                     header.Bytes,
-                                                     (header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+                    EndianBitConverter.Little.CopyBytes (value, this.header.Bytes,
+                                                     (this.header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
                 }
             }
 
@@ -188,20 +187,13 @@ namespace PacketDotNet.Ieee80211
             protected override String GetAddressString()
             {
                 String addresses = null;
-                if (FrameControl.ToDS && FrameControl.FromDS)
+                if (this.FrameControl.ToDS && this.FrameControl.FromDS)
                 {
-                    addresses = String.Format("SA {0} DA {1} TA {2} RA {3}", 
-                                              SourceAddress, 
-                                              DestinationAddress, 
-                                              TransmitterAddress, 
-                                              ReceiverAddress);
+                    addresses = String.Format("SA {0} DA {1} TA {2} RA {3}", this.SourceAddress, this.DestinationAddress, this.TransmitterAddress, this.ReceiverAddress);
                 }
                 else
                 {
-                    addresses = String.Format("SA {0} DA {1} BSSID {2}",
-                                              SourceAddress, 
-                                              DestinationAddress, 
-                                              BssId);
+                    addresses = String.Format("SA {0} DA {1} BSSID {2}", this.SourceAddress, this.DestinationAddress, this.BssId);
                 }
                 return addresses;
             }

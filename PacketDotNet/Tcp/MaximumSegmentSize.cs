@@ -60,7 +60,7 @@ namespace PacketDotNet.Tcp
         /// </summary>
         public ushort Value
         {
-            get { return EndianBitConverter.Big.ToUInt16(Bytes, ValueFieldOffset); }
+            get { return EndianBitConverter.Big.ToUInt16(this.Bytes, ValueFieldOffset); }
         }
 
         #endregion
@@ -75,7 +75,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override string ToString()
         {
-            return "[" + Kind.ToString() + ": Value=" + Value.ToString() + " bytes]";
+            return "[" + this.Kind.ToString() + ": Value=" + this.Value.ToString() + " bytes]";
         }
 
         #endregion

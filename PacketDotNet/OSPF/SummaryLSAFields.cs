@@ -22,7 +22,7 @@ namespace PacketDotNet.OSPF
 
         static SummaryLSAFields()
         {
-            NetworkMaskPosition = LSAFields.HeaderEnd;
+            NetworkMaskPosition = HeaderEnd;
             MetricPosition  = NetworkMaskPosition + NetworkMaskLength;
             TOSMetricPosition = MetricPosition + MetricLength;
         }

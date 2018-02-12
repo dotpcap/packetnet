@@ -50,7 +50,7 @@ namespace PacketDotNet.MiscUtil.Utils
                 rnd.NextBytes(randomAddressBytes);
             } else
             {
-                throw new System.InvalidOperationException("Unknown version of " + version);
+                throw new InvalidOperationException("Unknown version of " + version);
             }
 
             return new System.Net.IPAddress(randomAddressBytes);

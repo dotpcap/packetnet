@@ -78,11 +78,11 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + LSAFields.LSAgePosition);
+                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + LSAFields.LSAgePosition);
             }
             set
             {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + LSAFields.LSAgePosition);
+                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.LSAgePosition);
             }
         }
 
@@ -93,11 +93,11 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                return header.Bytes[header.Offset + LSAFields.OptionsPosition];
+                return this.header.Bytes[this.header.Offset + LSAFields.OptionsPosition];
             }
             set
             {
-                header.Bytes[header.Offset + LSAFields.OptionsPosition] = value;
+                this.header.Bytes[this.header.Offset + LSAFields.OptionsPosition] = value;
             }
         }
 
@@ -108,11 +108,11 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                return (LSAType)header.Bytes[header.Offset + LSAFields.LSTypePosition];
+                return (LSAType) this.header.Bytes[this.header.Offset + LSAFields.LSTypePosition];
             }
             set
             {
-                header.Bytes[header.Offset + LSAFields.LSTypePosition] = (byte)value;
+                this.header.Bytes[this.header.Offset + LSAFields.LSTypePosition] = (byte)value;
             }
         }
 
@@ -126,15 +126,15 @@ namespace PacketDotNet.OSPF
             get
             {
 
-                var val = EndianBitConverter.Little.ToUInt32(header.Bytes, header.Offset + LSAFields.LinkStateIDPosition);
-                return new System.Net.IPAddress(val);
+                var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + LSAFields.LinkStateIDPosition);
+                return new IPAddress(val);
 
             }
             set
             {
                 byte[] address = value.GetAddressBytes();
                 Array.Copy((Array) address, (int) 0,
-                           (Array) header.Bytes, (int) (header.Offset + LSAFields.LinkStateIDPosition),
+                           (Array) this.header.Bytes, (int) (this.header.Offset + LSAFields.LinkStateIDPosition),
                            address.Length);
             }
         }
@@ -146,14 +146,14 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(header.Bytes, header.Offset + LSAFields.AdvertisingRouterIDPosition);
-                return new System.Net.IPAddress(val);
+                var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + LSAFields.AdvertisingRouterIDPosition);
+                return new IPAddress(val);
             }
             set
             {
                 byte[] address = value.GetAddressBytes();
                 Array.Copy((Array) address, (int) 0,
-                           (Array) header.Bytes, (int) (header.Offset + LSAFields.AdvertisingRouterIDPosition),
+                           (Array) this.header.Bytes, (int) (this.header.Offset + LSAFields.AdvertisingRouterIDPosition),
                            address.Length);
             }
         }
@@ -166,11 +166,11 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                return EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + LSAFields.LSSequenceNumberPosition);
+                return EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + LSAFields.LSSequenceNumberPosition);
             }
             set
             {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + LSAFields.LSSequenceNumberPosition);
+                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.LSSequenceNumberPosition);
             }
         }
 
@@ -182,11 +182,11 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + LSAFields.ChecksumPosition);
+                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + LSAFields.ChecksumPosition);
             }
             set
             {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + LSAFields.ChecksumPosition);
+                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.ChecksumPosition);
             }
         }
 
@@ -198,11 +198,11 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + LSAFields.PacketLengthPosition);
+                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + LSAFields.PacketLengthPosition);
             }
             set
             {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + LSAFields.PacketLengthPosition);
+                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.PacketLengthPosition);
             }
         }
 
@@ -225,7 +225,7 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                return header.ActualBytes();
+                return this.header.ActualBytes();
             }
         }
 

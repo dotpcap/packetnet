@@ -74,7 +74,7 @@ namespace ConstructingWiFiPackets
 
 
             //Make the probe packet to send
-            System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
+            ASCIIEncoding encoding = new ASCIIEncoding();
             InformationElement ssidIe = new InformationElement(InformationElement.ElementId.ServiceSetIdentity, encoding.GetBytes(ssid));
             InformationElement supportedRatesIe = new InformationElement(InformationElement.ElementId.SupportedRates,
                 new byte[] { 0x02, 0x04, 0x0b, 0x16, 0x0c, 0x12, 0x18, 0x24 });

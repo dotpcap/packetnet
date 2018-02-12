@@ -199,7 +199,7 @@ namespace Test.PacketType
             [Test]
             public void Test_FindFirstById_FindElement ()
             {
-                BeaconFrame beaconFrame = LoadBeaconFrameFromFile("../../CaptureFiles/80211_beacon_frame.pcap");
+                BeaconFrame beaconFrame = this.LoadBeaconFrameFromFile("../../CaptureFiles/80211_beacon_frame.pcap");
                             
                 InformationElement infoElement = beaconFrame.InformationElements.FindFirstById (InformationElement.ElementId.DsParameterSet);
                 Assert.AreEqual (InformationElement.ElementId.DsParameterSet, infoElement.Id);
@@ -208,7 +208,7 @@ namespace Test.PacketType
             [Test]
             public void Test_FindFirstById_ElementNotPresent ()
             {
-                BeaconFrame beaconFrame = LoadBeaconFrameFromFile ("../../CaptureFiles/80211_beacon_frame.pcap");
+                BeaconFrame beaconFrame = this.LoadBeaconFrameFromFile ("../../CaptureFiles/80211_beacon_frame.pcap");
                             
                 InformationElement infoElement = beaconFrame.InformationElements.FindFirstById (InformationElement.ElementId.ChallengeText);
                 Assert.IsNull (infoElement);
@@ -217,7 +217,7 @@ namespace Test.PacketType
             [Test]
             public void Test_FindById_FindRepeatedElement ()
             {
-                BeaconFrame beaconFrame = LoadBeaconFrameFromFile ("../../CaptureFiles/80211_beacon_frame.pcap");
+                BeaconFrame beaconFrame = this.LoadBeaconFrameFromFile ("../../CaptureFiles/80211_beacon_frame.pcap");
                             
                 InformationElement[] infoElements = beaconFrame.InformationElements.FindById (InformationElement.ElementId.VendorSpecific);
                 
@@ -233,7 +233,7 @@ namespace Test.PacketType
             [Test]
             public void Test_FindById_ElementNotPresent ()
             {
-                BeaconFrame beaconFrame = LoadBeaconFrameFromFile ("../../CaptureFiles/80211_beacon_frame.pcap");
+                BeaconFrame beaconFrame = this.LoadBeaconFrameFromFile ("../../CaptureFiles/80211_beacon_frame.pcap");
                             
                 InformationElement[] infoElements = beaconFrame.InformationElements.FindById (InformationElement.ElementId.ChallengeText);
                 Assert.AreEqual (0, infoElements.Length);

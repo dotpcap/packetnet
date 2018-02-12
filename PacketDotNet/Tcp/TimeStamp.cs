@@ -62,7 +62,7 @@ namespace PacketDotNet.Tcp
         /// </summary>
         public uint Value
         {
-            get { return EndianBitConverter.Big.ToUInt32(Bytes, ValueFieldOffset); }
+            get { return EndianBitConverter.Big.ToUInt32(this.Bytes, ValueFieldOffset); }
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace PacketDotNet.Tcp
         /// </summary>
         public uint EchoReply
         {
-            get { return EndianBitConverter.Big.ToUInt32(Bytes, EchoReplyFieldOffset); }
+            get { return EndianBitConverter.Big.ToUInt32(this.Bytes, EchoReplyFieldOffset); }
         }
 
         #endregion
@@ -85,7 +85,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override string ToString()
         {
-            return "[" + Kind.ToString() + ": Value=" + Value.ToString() + " EchoReply=" + EchoReply.ToString() + "]";
+            return "[" + this.Kind.ToString() + ": Value=" + this.Value.ToString() + " EchoReply=" + this.EchoReply.ToString() + "]";
         }
 
         #endregion

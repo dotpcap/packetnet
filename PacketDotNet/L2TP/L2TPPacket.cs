@@ -37,14 +37,14 @@ namespace PacketDotNet.L2TP
         {
             get
             {
-                return 8 == (header.Bytes[header.Offset] & 0x8);
+                return 8 == (this.header.Bytes[this.header.Offset] & 0x8);
             }
         }
         virtual public bool HasLength
         {
             get
             {
-                return 4 == (header.Bytes[header.Offset] & 0x4);
+                return 4 == (this.header.Bytes[this.header.Offset] & 0x4);
             }
         }
 
@@ -52,7 +52,7 @@ namespace PacketDotNet.L2TP
         {
             get
             {
-                return 2 == (header.Bytes[header.Offset] & 0x2);
+                return 2 == (this.header.Bytes[this.header.Offset] & 0x2);
             }
         }
 
@@ -60,7 +60,7 @@ namespace PacketDotNet.L2TP
         {
             get
             {
-                return 2 == (header.Bytes[header.Offset] & 0x2);
+                return 2 == (this.header.Bytes[this.header.Offset] & 0x2);
             }
         }
 
@@ -68,7 +68,7 @@ namespace PacketDotNet.L2TP
         {
             get
             {
-                return 2 == (header.Bytes[header.Offset] & 0x2);
+                return 2 == (this.header.Bytes[this.header.Offset] & 0x2);
             }
         }
 
@@ -76,7 +76,7 @@ namespace PacketDotNet.L2TP
         {
             get
             {
-                return (header.Bytes[header.Offset + 1] & 0x7);
+                return (this.header.Bytes[this.header.Offset + 1] & 0x7);
             }
         }
 
@@ -84,10 +84,10 @@ namespace PacketDotNet.L2TP
         {
             get
             {
-                if (HasLength)
-                    return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + 3);
+                if (this.HasLength)
+                    return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + 3);
                 else
-                    return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + 2);
+                    return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + 2);
 
             }
         }
@@ -96,16 +96,16 @@ namespace PacketDotNet.L2TP
         {
             get
             {
-                if (HasLength)
-                    return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + 5);
+                if (this.HasLength)
+                    return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + 5);
                 else
-                    return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + 4);
+                    return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + 4);
 
             }
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color
+        override public String Color
         {
             get
             {
@@ -123,18 +123,15 @@ namespace PacketDotNet.L2TP
         public L2TPPacket(ByteArraySegment bas, Packet ParentPacket)
         {
             // slice off the header portion
-            header = new ByteArraySegment(bas)
+            this.header = new ByteArraySegment(bas)
             {
                 Length = L2TPFields.HeaderLength
             };
-            if (HasLength)
-                header.Length += L2TPFields.LengthsLength;
-            if (HasSequence)
-                header.Length += L2TPFields.NsLength + L2TPFields.NrLength;
-            if (HasOffset)
-                header.Length += L2TPFields.OffsetSizeLength + L2TPFields.OffsetPadLength;
+            if (this.HasLength) this.header.Length += L2TPFields.LengthsLength;
+            if (this.HasSequence) this.header.Length += L2TPFields.NsLength + L2TPFields.NrLength;
+            if (this.HasOffset) this.header.Length += L2TPFields.OffsetSizeLength + L2TPFields.OffsetPadLength;
 
-            var payload = header.EncapsulatedBytes();
+            var payload = this.header.EncapsulatedBytes();
             try
             {
                 this.PayloadPacket = new PPPPacket(payload)
@@ -144,7 +141,7 @@ namespace PacketDotNet.L2TP
             } catch (Exception)
             {
                 //it's not a PPP packet, just attach the data
-                payloadPacketOrData.TheByteArraySegment = payload;
+                this.payloadPacketOrData.TheByteArraySegment = payload;
             }
             this.ParentPacket = ParentPacket;
         }
@@ -160,7 +157,7 @@ namespace PacketDotNet.L2TP
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
-                color = Color;
+                color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 

@@ -36,7 +36,7 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return (byte)((Field >> 0x8) & 0x3);
+                    return (byte)((this.Field >> 0x8) & 0x3);
                 }
 
                 set
@@ -47,8 +47,8 @@ namespace PacketDotNet.Ieee80211
                     }
 
                     //unset the two bits before setting them to the value
-                    Field &= unchecked((UInt16)~(0x0300));
-                    Field |= (UInt16)(value << 0x8);
+                    this.Field &= unchecked((UInt16)~(0x0300));
+                    this.Field |= (UInt16)(value << 0x8);
                 }
             }
    
@@ -281,7 +281,7 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    int typeAndSubtype = (Field >> 8); //get rid of the flags
+                    int typeAndSubtype = (this.Field >> 8); //get rid of the flags
                     int type = ((typeAndSubtype & 0xC) >> 2);
                     return (FrameTypes)type;
                 }
@@ -295,7 +295,7 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    int typeAndSubtype = (Field >> 8); //get rid of the flags
+                    int typeAndSubtype = (this.Field >> 8); //get rid of the flags
                     int type = (((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4));
                     return (FrameSubTypes)type;
                 }
@@ -307,9 +307,9 @@ namespace PacketDotNet.Ieee80211
                     //shift it into the right position in the field
                     typeAndSubtype = typeAndSubtype << 0x8;
                     //Unset all the bits related to the type and subtype
-                    Field &= 0x03FF;
+                    this.Field &= 0x03FF;
                     //Set the type bits
-                    Field |= (UInt16)typeAndSubtype;
+                    this.Field |= (UInt16)typeAndSubtype;
                 }
             }
 
@@ -320,18 +320,18 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return ((Field & 0x1) == 1) ? true : false;
+                    return ((this.Field & 0x1) == 1) ? true : false;
                 }
 
                 set
                 {
                     if (value)
                     {
-                        Field |= 0x1;
+                        this.Field |= 0x1;
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(0x1));
+                        this.Field &= unchecked((UInt16)~(0x1));
                     }
                 }
             }
@@ -343,18 +343,18 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return (((Field >> 1) & 0x1) == 1) ? true : false;
+                    return (((this.Field >> 1) & 0x1) == 1) ? true : false;
                 }
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x1);
+                        this.Field |= (1 << 0x1);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x1));
+                        this.Field &= unchecked((UInt16)~(1 << 0x1));
                     }
                 }
             }
@@ -367,18 +367,18 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return (((Field >> 2) & 0x1) == 1) ? true : false;
+                    return (((this.Field >> 2) & 0x1) == 1) ? true : false;
                 }
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x2);
+                        this.Field |= (1 << 0x2);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x2));
+                        this.Field &= unchecked((UInt16)~(1 << 0x2));
                     }
                 }
             }
@@ -391,18 +391,18 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return (((Field >> 3) & 0x1) == 1) ? true : false;
+                    return (((this.Field >> 3) & 0x1) == 1) ? true : false;
                 }
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x3);
+                        this.Field |= (1 << 0x3);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x3));
+                        this.Field &= unchecked((UInt16)~(1 << 0x3));
                     }
                 }
             }
@@ -414,18 +414,18 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return (((Field >> 4) & 0x1) == 1) ? true : false;
+                    return (((this.Field >> 4) & 0x1) == 1) ? true : false;
                 }
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x4);
+                        this.Field |= (1 << 0x4);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x4));
+                        this.Field &= unchecked((UInt16)~(1 << 0x4));
                     }
                 }
             }
@@ -437,18 +437,18 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return (((Field >> 5) & 0x1) == 1) ? true : false;
+                    return (((this.Field >> 5) & 0x1) == 1) ? true : false;
                 }
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x5);
+                        this.Field |= (1 << 0x5);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x5));
+                        this.Field &= unchecked((UInt16)~(1 << 0x5));
                     }
                 }
             }
@@ -459,8 +459,8 @@ namespace PacketDotNet.Ieee80211
             [ObsoleteAttribute("This property is obsolete. Use Protected instead.", false)]
             public bool Wep
             {
-                get { return Protected; }
-                set { Protected = value; }
+                get { return this.Protected; }
+                set { this.Protected = value; }
             }
 
             /// <summary>
@@ -470,18 +470,18 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return (((Field >> 6) & 0x1) == 1) ? true : false;
+                    return (((this.Field >> 6) & 0x1) == 1) ? true : false;
                 }
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x6);
+                        this.Field |= (1 << 0x6);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x6));
+                        this.Field &= unchecked((UInt16)~(1 << 0x6));
                     }
                 }
             }
@@ -494,18 +494,18 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return (((Field >> 0x7) & 0x1) == 1) ? true : false;
+                    return (((this.Field >> 0x7) & 0x1) == 1) ? true : false;
                 }
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x7);
+                        this.Field |= (1 << 0x7);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x7));
+                        this.Field &= unchecked((UInt16)~(1 << 0x7));
                     }
                 }
             }
@@ -547,33 +547,33 @@ namespace PacketDotNet.Ieee80211
             {
                 var flags = new List<String>();
                 
-                flags.Add(SubType.ToString());
+                flags.Add(this.SubType.ToString());
                 
-                if (ToDS)
+                if (this.ToDS)
                 {
                     flags.Add("ToDS");
                 }
-                if (FromDS)
+                if (this.FromDS)
                 {
                     flags.Add("FromDS");
                 }
-                if (Retry)
+                if (this.Retry)
                 {
                     flags.Add("Retry");
                 }
-                if (PowerManagement)
+                if (this.PowerManagement)
                 {
                     flags.Add("PowerManagement");
                 }
-                if (MoreData)
+                if (this.MoreData)
                 {
                     flags.Add("MoreData");
                 }
-                if (Protected)
+                if (this.Protected)
                 {
                     flags.Add("Wep");
                 }
-                if (Order)
+                if (this.Order)
                 {
                     flags.Add("Order");
                 }

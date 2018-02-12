@@ -52,16 +52,13 @@ namespace PacketDotNet.PPP
         {
             get
             {
-                return (PPPProtocol)EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                      header.Offset + PPPFields.ProtocolPosition);
+                return (PPPProtocol)EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + PPPFields.ProtocolPosition);
             }
 
             set
             {
                 var val = (UInt16)value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + PPPFields.ProtocolPosition);
+                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + PPPFields.ProtocolPosition);
             }
         }
 
@@ -77,7 +74,7 @@ namespace PacketDotNet.PPP
             int offset = 0;
             int length = PPPFields.HeaderLength;
             var headerBytes = new byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            this.header = new ByteArraySegment(headerBytes, offset, length);
 
             // setup some typical values and default values
             this.Protocol = PPPProtocol.Padding;
@@ -94,13 +91,13 @@ namespace PacketDotNet.PPP
             log.Debug("");
 
             // slice off the header portion as our header
-            header = new ByteArraySegment(bas)
+            this.header = new ByteArraySegment(bas)
             {
                 Length = PPPFields.HeaderLength
             };
 
             // parse the encapsulated bytes
-            payloadPacketOrData = ParseEncapsulatedBytes(header, Protocol);
+            this.payloadPacketOrData = ParseEncapsulatedBytes(this.header, this.Protocol);
         }
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
@@ -131,7 +128,7 @@ namespace PacketDotNet.PPP
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color
+        public override String Color
         {
             get
             {
@@ -148,7 +145,7 @@ namespace PacketDotNet.PPP
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
-                color = Color;
+                color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
@@ -157,21 +154,20 @@ namespace PacketDotNet.PPP
                 // build the output string
                 buffer.AppendFormat("{0}[PPPPacket: Protocol={2}]{1}",
                     color,
-                    colorEscape,
-                    Protocol);
+                    colorEscape, this.Protocol);
             }
 
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
                 Dictionary<string,string> properties = new Dictionary<string,string>();
-                properties.Add("protocol", Protocol.ToString() + " (0x" + Protocol.ToString("x") + ")");
+                properties.Add("protocol", this.Protocol.ToString() + " (0x" + this.Protocol.ToString("x") + ")");
 
                 // calculate the padding needed to right-justify the property names
                 int padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
-                buffer.AppendLine("PPP:  ******* PPP - \"Point-to-Point Protocol\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("PPP:  ******* PPP - \"Point-to-Point Protocol\" - offset=? length=" + this.TotalPacketLength);
                 buffer.AppendLine("PPP:");
                 foreach(var property in properties)
                 {
@@ -194,7 +190,7 @@ namespace PacketDotNet.PPP
         /// </returns>
         public static PPPoEPacket RandomPacket()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

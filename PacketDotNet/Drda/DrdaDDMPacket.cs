@@ -48,7 +48,7 @@ namespace PacketDotNet.Drda
         {
             get
             {
-                return BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.LengthPosition);
+                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + DrdaDDMFields.LengthPosition);
             }
         }
 
@@ -59,7 +59,7 @@ namespace PacketDotNet.Drda
         {
             get
             {
-                return header.Bytes[header.Offset + DrdaDDMFields.MagicPosition];
+                return this.header.Bytes[this.header.Offset + DrdaDDMFields.MagicPosition];
             }
         }
 
@@ -70,7 +70,7 @@ namespace PacketDotNet.Drda
         {
             get
             {
-                return header.Bytes[header.Offset + DrdaDDMFields.FormatPosition];
+                return this.header.Bytes[this.header.Offset + DrdaDDMFields.FormatPosition];
             }
         }
 
@@ -81,7 +81,7 @@ namespace PacketDotNet.Drda
         {
             get
             {
-                return BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.CorrelIdPosition);
+                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + DrdaDDMFields.CorrelIdPosition);
             }
         }
 
@@ -92,7 +92,7 @@ namespace PacketDotNet.Drda
         {
             get
             {
-                return BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.Length2Position);
+                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + DrdaDDMFields.Length2Position);
             }
         }
 
@@ -103,7 +103,7 @@ namespace PacketDotNet.Drda
         {
             get
             {
-                return (DrdaCodepointType)BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.CodePointPosition);
+                return (DrdaCodepointType)EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + DrdaDDMFields.CodePointPosition);
             }
         }
 
@@ -116,23 +116,23 @@ namespace PacketDotNet.Drda
         {
             get
             {
-                if (paramters == null) paramters = new List<DrdaDDMParameter>();
-                if (paramters.Count > 0) return paramters;
-                var offset = header.Offset + DrdaDDMFields.DDMHeadTotalLength;
+                if (this.paramters == null) this.paramters = new List<DrdaDDMParameter>();
+                if (this.paramters.Count > 0) return this.paramters;
+                var offset = this.header.Offset + DrdaDDMFields.DDMHeadTotalLength;
                 var ddmTotalLength = this.Length;
-                while (offset < header.Offset+ ddmTotalLength)
+                while (offset < this.header.Offset+ ddmTotalLength)
                 {
-                    int length = BigEndianBitConverter.Big.ToUInt16(header.Bytes, offset);
+                    int length = EndianBitConverter.Big.ToUInt16(this.header.Bytes, offset);
                     if (length == 0)
                     {
-                        length = header.Offset + ddmTotalLength - offset;
+                        length = this.header.Offset + ddmTotalLength - offset;
                     }
-                    if (offset + length <= header.Offset + ddmTotalLength)
+                    if (offset + length <= this.header.Offset + ddmTotalLength)
                     {
                         var parameter = new DrdaDDMParameter()
                         {
                             Length = length,
-                            DrdaCodepoint = (DrdaCodepointType)BigEndianBitConverter.Big.ToUInt16(header.Bytes, offset + DrdaDDMFields.ParameterLengthLength)
+                            DrdaCodepoint = (DrdaCodepointType)EndianBitConverter.Big.ToUInt16(this.header.Bytes, offset + DrdaDDMFields.ParameterLengthLength)
                         };
 
                         var startIndex = offset + DrdaDDMFields.ParameterLengthLength + DrdaDDMFields.ParameterCodePointLength;
@@ -142,17 +142,18 @@ namespace PacketDotNet.Drda
                         {
                             startIndex++;
                             strLength-=2;
-                            parameter.Data = ASCIIEncoding.UTF8.GetString(header.Bytes, startIndex,strLength).Trim();
+                            parameter.Data = Encoding.UTF8.GetString(this.header.Bytes, startIndex,strLength).Trim();
                         }
                         else
                         {
-                            parameter.Data = StringConverter.EbcdicToAscii(header.Bytes, startIndex, strLength).Trim();
+                            parameter.Data = StringConverter.EbcdicToAscii(this.header.Bytes, startIndex, strLength).Trim();
                         }
-                        paramters.Add(parameter);
+
+                        this.paramters.Add(parameter);
                     }
                     offset += length;
                 }
-                return paramters;
+                return this.paramters;
             }
         }
 
@@ -165,7 +166,7 @@ namespace PacketDotNet.Drda
             log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(bas);
+            this.header = new ByteArraySegment(bas);
         }
 
         /// <summary>
@@ -189,7 +190,7 @@ namespace PacketDotNet.Drda
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
-                color = Color;
+                color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
             if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
@@ -197,15 +198,9 @@ namespace PacketDotNet.Drda
                 // build the output string
                 buffer.AppendFormat("{0}[DrdaDDMPacket: Length={2}, Magic=0x{3:x2}, Format=0x{4:x2}, CorrelId={5}, Length2={6}, CodePoint={7}]{1}",
                     color,
-                    colorEscape,
-                    Length,
-                    Magic,
-                    Format,
-                    CorrelId,
-                    Length2,
-                    CodePoint);
+                    colorEscape, this.Length, this.Magic, this.Format, this.CorrelId, this.Length2, this.CodePoint);
                 buffer.Append(" Paramters:{");
-                foreach(var paramter in Parameters)
+                foreach(var paramter in this.Parameters)
                 {
                     buffer.AppendFormat("{0}[DrdaDDMParameter: Length={2}, CodePoint={3}, Data='{4}']{1}",
                     color,

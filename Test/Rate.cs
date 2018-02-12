@@ -14,7 +14,7 @@ namespace Test
         public Rate(DateTime Start, DateTime End,
                     int EventCount, string EventType)
         {
-            Elapsed = End - Start;
+            this.Elapsed = End - Start;
             this.EventCount = EventCount;
             this.EventType = EventType;
         }
@@ -26,17 +26,13 @@ namespace Test
         {
             get
             {
-                return ((Double)EventCount / (Double)Elapsed.Ticks) * TimeSpan.TicksPerSecond;
+                return ((Double) this.EventCount / (Double) this.Elapsed.Ticks) * TimeSpan.TicksPerSecond;
             }
         }
 
         public override string ToString ()
         {
-            return String.Format(" {0,10} {1} at a rate of {2,12} / second ({3} seconds elapsed)",
-                                 EventCount,
-                                 EventType,
-                                 RatePerSecond.ToString("n"),
-                                 Elapsed);
+            return String.Format(" {0,10} {1} at a rate of {2,12} / second ({3} seconds elapsed)", this.EventCount, this.EventType, this.RatePerSecond.ToString("n"), this.Elapsed);
         }
     }
 }

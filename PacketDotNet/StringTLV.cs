@@ -59,9 +59,9 @@ namespace PacketDotNet
         {
             var bytes = new byte[TLVTypeLength.TypeLengthLength];
             var offset = 0;
-            tlvData = new ByteArraySegment(bytes, offset, bytes.Length);
+            this.tlvData = new ByteArraySegment(bytes, offset, bytes.Length);
 
-            Type = tlvType;
+            this.Type = tlvType;
             this.StringValue = StringValue;
         }
 
@@ -76,34 +76,32 @@ namespace PacketDotNet
         {
             get
             {
-                return System.Text.ASCIIEncoding.ASCII.GetString(tlvData.Bytes,
-                                                                 ValueOffset,
-                                                                 Length);
+                return System.Text.Encoding.ASCII.GetString(this.tlvData.Bytes, this.ValueOffset, this.Length);
             }
 
             set
             {
-                var bytes = System.Text.ASCIIEncoding.ASCII.GetBytes(value);
+                var bytes = System.Text.Encoding.ASCII.GetBytes(value);
                 var length = TLVTypeLength.TypeLengthLength + bytes.Length;
 
                 // is the tlv the correct size?
-                if(tlvData.Length != length)
+                if(this.tlvData.Length != length)
                 {
                     // allocate new memory for this tlv
                     var newTLVBytes = new byte[length];
                     var offset = 0;
 
                     // copy header over
-                    Array.Copy((Array) tlvData.Bytes, (int) tlvData.Offset,
+                    Array.Copy((Array) this.tlvData.Bytes, (int) this.tlvData.Offset,
                                (Array) newTLVBytes, (int) 0,
                                (int) TLVTypeLength.TypeLengthLength);
 
-                    tlvData = new ByteArraySegment(newTLVBytes, offset, length);
+                    this.tlvData = new ByteArraySegment(newTLVBytes, offset, length);
                 }
 
                 // set the description
                 Array.Copy((Array) bytes, (int) 0,
-                           (Array) tlvData.Bytes, (int) ValueOffset,
+                           (Array) this.tlvData.Bytes, (int) this.ValueOffset,
                            bytes.Length);
             }
         }
@@ -116,7 +114,7 @@ namespace PacketDotNet
         /// </returns>
         public override string ToString ()
         {
-            return string.Format("[{0}: Description={1}]", Type, StringValue);
+            return string.Format("[{0}: Description={1}]", this.Type, this.StringValue);
         }
 
         #endregion

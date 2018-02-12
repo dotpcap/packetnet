@@ -163,7 +163,7 @@ namespace Test.Misc
                         captureFileReader.Open();
 
                         fileAndPacketIndex++;
-                    } catch(System.Exception e)
+                    } catch(Exception e)
                     {
                         log.Error("caught exception",e);
                         throw;
@@ -239,7 +239,7 @@ namespace Test.Misc
         [Test]
         public void _ToString()
         {
-            ResetPacketPosition();
+            this.ResetPacketPosition();
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
@@ -250,7 +250,7 @@ namespace Test.Misc
             Packet p;
             while((p = GetNextPacket()) != null)
             {
-                OutputPacket(p, StringOutputType.Normal);
+                this.OutputPacket(p, StringOutputType.Normal);
             }
 
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
@@ -259,7 +259,7 @@ namespace Test.Misc
         [Test]
         public void ToColoredString()
         {
-            ResetPacketPosition();
+            this.ResetPacketPosition();
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
@@ -270,7 +270,7 @@ namespace Test.Misc
             Packet p;
             while((p = GetNextPacket()) != null)
             {
-                OutputPacket(p, StringOutputType.Colored);
+                this.OutputPacket(p, StringOutputType.Colored);
             }
 
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
@@ -279,7 +279,7 @@ namespace Test.Misc
         [Test]
         public void ToVerboseString()
         {
-            ResetPacketPosition();
+            this.ResetPacketPosition();
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
@@ -290,7 +290,7 @@ namespace Test.Misc
             Packet p;
             while((p = GetNextPacket()) != null)
             {
-                OutputPacket(p, StringOutputType.Verbose);
+                this.OutputPacket(p, StringOutputType.Verbose);
             }
 
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
@@ -299,7 +299,7 @@ namespace Test.Misc
         [Test]
         public void ToColoredVerboseString()
         {
-            ResetPacketPosition();
+            this.ResetPacketPosition();
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
@@ -310,7 +310,7 @@ namespace Test.Misc
             Packet p;
             while((p = GetNextPacket()) != null)
             {
-                OutputPacket(p, StringOutputType.VerboseColored);
+                this.OutputPacket(p, StringOutputType.VerboseColored);
             }
 
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;

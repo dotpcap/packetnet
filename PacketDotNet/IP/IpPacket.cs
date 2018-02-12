@@ -70,32 +70,32 @@ namespace PacketDotNet.IP
                 // set NextHeader (Protocol) based on the type of this packet
                 if(value is TcpPacket)
                 {
-                    NextHeader = IPProtocolType.TCP;
+                    this.NextHeader = IPProtocolType.TCP;
                 } else if(value is UdpPacket)
                 {
-                    NextHeader = IPProtocolType.UDP;
+                    this.NextHeader = IPProtocolType.UDP;
                 } else if(value is ICMPv6Packet)
                 {
-                    NextHeader = IPProtocolType.ICMPV6;
+                    this.NextHeader = IPProtocolType.ICMPV6;
                 } else if(value is ICMPv4Packet)
                 {
-                    NextHeader = IPProtocolType.ICMP;
+                    this.NextHeader = IPProtocolType.ICMP;
                 } else if(value is IGMPv2Packet)
                 {
-                    NextHeader = IPProtocolType.IGMP;
+                    this.NextHeader = IPProtocolType.IGMP;
                 } else if (value is OSPFPacket)
                 {
-                    NextHeader = IPProtocolType.OSPF;
+                    this.NextHeader = IPProtocolType.OSPF;
                 } else // NOTE: new checks go here
                 {
-                    NextHeader = IPProtocolType.NONE;
+                    this.NextHeader = IPProtocolType.NONE;
                 }
 
                 // update the payload length based on the size
                 // of the payload packet
                 var newPayloadLength = (ushort)base.PayloadPacket.Bytes.Length;
                 log.DebugFormat("newPayloadLength {0}", newPayloadLength);
-                PayloadLength = newPayloadLength;
+                this.PayloadLength = newPayloadLength;
             }
         }
 
@@ -143,8 +143,8 @@ namespace PacketDotNet.IP
         /// </value>
         public virtual IPProtocolType NextHeader
         {
-            get { return Protocol; }
-            set { Protocol = value; }
+            get { return this.Protocol; }
+            set { this.Protocol = value; }
         }
 
         /// <value>
@@ -164,8 +164,8 @@ namespace PacketDotNet.IP
         /// </value>
         public virtual int HopLimit
         {
-            get { return TimeToLive; }
-            set { TimeToLive = value; }
+            get { return this.TimeToLive; }
+            set { this.TimeToLive = value; }
         }
 
         /// <summary>
@@ -224,7 +224,7 @@ namespace PacketDotNet.IP
         /// <returns>
         /// A <see cref="System.Net.IPAddress"/>
         /// </returns>
-        public static System.Net.IPAddress GetIPAddress(System.Net.Sockets.AddressFamily ipType,
+        public static IPAddress GetIPAddress(System.Net.Sockets.AddressFamily ipType,
                                                         int fieldOffset,
                                                         byte[] bytes)
         {
@@ -237,13 +237,13 @@ namespace PacketDotNet.IP
                 address = new byte[IPv6Fields.AddressLength];
             } else
             {
-                throw new System.InvalidOperationException("ipType " + ipType + " unknown");
+                throw new InvalidOperationException("ipType " + ipType + " unknown");
             }
 
-            System.Array.Copy(bytes, fieldOffset,
+            Array.Copy(bytes, fieldOffset,
                               address, 0, address.Length);
 
-            return new System.Net.IPAddress(address);
+            return new IPAddress(address);
         }
 
         /// <summary>
@@ -359,7 +359,7 @@ namespace PacketDotNet.IP
                 return IPv6Packet.RandomPacket();
             } else
             {
-                throw new System.InvalidOperationException("Unknown version of " + version);
+                throw new InvalidOperationException("Unknown version of " + version);
             }
         }
     }

@@ -49,16 +49,13 @@ namespace PacketDotNet
         {
             get
             {
-                return (NullPacketType)EndianBitConverter.Little.ToUInt32(header.Bytes,
-                    header.Offset + NullFields.ProtocolPosition);
+                return (NullPacketType)EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + NullFields.ProtocolPosition);
             }
 
             set
             {
                 var val = (UInt32)value;
-                EndianBitConverter.Little.CopyBytes(val,
-                    header.Bytes,
-                    header.Offset + NullFields.ProtocolPosition);
+                EndianBitConverter.Little.CopyBytes(val, this.header.Bytes, this.header.Offset + NullFields.ProtocolPosition);
             }
         }
 
@@ -73,7 +70,7 @@ namespace PacketDotNet
             int offset = 0;
             int length = NullFields.HeaderLength;
             var headerBytes = new byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            this.header = new ByteArraySegment(headerBytes, offset, length);
 
             // setup some typical values and default values
             this.Protocol = TheType;
@@ -90,13 +87,13 @@ namespace PacketDotNet
             log.Debug("");
 
             // slice off the header portion as our header
-            header = new ByteArraySegment(bas)
+            this.header = new ByteArraySegment(bas)
             {
                 Length = NullFields.HeaderLength
             };
 
             // parse the encapsulated bytes
-            payloadPacketOrData = ParseEncapsulatedBytes(header, Protocol);
+            this.payloadPacketOrData = ParseEncapsulatedBytes(this.header, this.Protocol);
         }
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
@@ -121,14 +118,14 @@ namespace PacketDotNet
                 break;
             case NullPacketType.IPX:
             default:
-                throw new System.NotImplementedException("Protocol of " + Protocol + " is not implemented");
+                throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");
             }
 
             return payloadPacketOrData;
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color
+        public override String Color
         {
             get
             {
@@ -152,7 +149,7 @@ namespace PacketDotNet
         /// </returns>
         public static NullPacket RandomPacket()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

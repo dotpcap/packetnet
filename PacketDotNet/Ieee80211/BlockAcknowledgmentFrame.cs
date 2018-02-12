@@ -68,11 +68,10 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-					if(header.Length >= 
+					if(this.header.Length >= 
 					   (BlockAcknowledgmentField.BlockAckRequestControlPosition + BlockAcknowledgmentField.BlockAckRequestControlLength))
 					{
-						return EndianBitConverter.Little.ToUInt16(header.Bytes,
-						                                          header.Offset + BlockAcknowledgmentField.BlockAckRequestControlPosition);
+						return EndianBitConverter.Little.ToUInt16(this.header.Bytes, this.header.Offset + BlockAcknowledgmentField.BlockAckRequestControlPosition);
 					}
 					else
 					{
@@ -82,9 +81,7 @@ namespace PacketDotNet.Ieee80211
 
                 set
                 {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + BlockAcknowledgmentField.BlockAckRequestControlPosition);
+                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + BlockAcknowledgmentField.BlockAckRequestControlPosition);
                 }
             }
 
@@ -109,11 +106,10 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-					if(header.Length >= 
+					if(this.header.Length >= 
 					   (BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition + BlockAcknowledgmentField.BlockAckStartingSequenceControlLength))
 					{
-						return EndianBitConverter.Little.ToUInt16 (header.Bytes,
-						                                           header.Offset + BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
+						return EndianBitConverter.Little.ToUInt16 (this.header.Bytes, this.header.Offset + BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
 					}
 					else
 					{
@@ -123,9 +119,7 @@ namespace PacketDotNet.Ieee80211
 
                 set
                 {
-                    EndianBitConverter.Little.CopyBytes (value,
-                        header.Bytes,
-                        header.Offset + BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
+                    EndianBitConverter.Little.CopyBytes (value, this.header.Bytes, this.header.Offset + BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
                 }
             }
    
@@ -144,25 +138,25 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return blockAckBitmap;
+                    return this.blockAckBitmap;
                 }
                 
                 set
                 {
                     if (value.Length == 8)
                     {
-                        BlockAcknowledgmentControl.CompressedBitmap = true;
+                        this.BlockAcknowledgmentControl.CompressedBitmap = true;
                     }
                     else if (value.Length == 64)
                     {
-                        BlockAcknowledgmentControl.CompressedBitmap = false;
+                        this.BlockAcknowledgmentControl.CompressedBitmap = false;
                     }
                     else
                     {
                         throw new ArgumentException ("Invalid BlockAckBitmap size. Must be either 8 or 64 bytes long.");
                     }
-                    
-                    blockAckBitmap = value;
+
+                    this.blockAckBitmap = value;
                 }
             }
             
@@ -170,25 +164,22 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-					Byte[] bitmap = new Byte[GetBitmapLength ()];
-					if(header.Length >= (BlockAcknowledgmentField.BlockAckBitmapPosition + GetBitmapLength()))
+					Byte[] bitmap = new Byte[this.GetBitmapLength ()];
+					if(this.header.Length >= (BlockAcknowledgmentField.BlockAckBitmapPosition + this.GetBitmapLength()))
 					{
-						Array.Copy (header.Bytes,
+						Array.Copy (this.header.Bytes,
 						            (BlockAcknowledgmentField.BlockAckBitmapPosition),
 						            bitmap,
-						            0,
-						            GetBitmapLength ());
+						            0, this.GetBitmapLength ());
 					}
 					return bitmap;
                 }
                 
                 set
                 {
-                    Array.Copy (BlockAckBitmap,
-                                0,
-                                header.Bytes,
-                                BlockAcknowledgmentField.BlockAckBitmapPosition,
-                                GetBitmapLength());
+                    Array.Copy (this.BlockAckBitmap,
+                                0, this.header.Bytes,
+                                BlockAcknowledgmentField.BlockAckBitmapPosition, this.GetBitmapLength());
                 }
             }
 
@@ -204,15 +195,14 @@ namespace PacketDotNet.Ieee80211
                         MacFields.DurationIDLength +
                         (MacFields.AddressLength * 2) +
                         BlockAcknowledgmentField.BlockAckRequestControlLength +
-                        BlockAcknowledgmentField.BlockAckStartingSequenceControlLength +
-                        GetBitmapLength());
+                        BlockAcknowledgmentField.BlockAckStartingSequenceControlLength + this.GetBitmapLength());
                 }
             }
 
 
             private int GetBitmapLength()
             {
-                return BlockAcknowledgmentControl.CompressedBitmap ? 8 : 64;
+                return this.BlockAcknowledgmentControl.CompressedBitmap ? 8 : 64;
             }
             /// <summary>
             /// Constructor
@@ -222,16 +212,16 @@ namespace PacketDotNet.Ieee80211
             /// </param>
             public BlockAcknowledgmentFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                this.header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                ReceiverAddress = GetAddress (0);
-                TransmitterAddress = GetAddress (1);
-                BlockAcknowledgmentControl = new BlockAcknowledgmentControlField (BlockAckRequestControlBytes);
-                BlockAckStartingSequenceControl = BlockAckStartingSequenceControlBytes;
-                BlockAckBitmap = BlockAckBitmapBytes;
-                header.Length = FrameSize;
+                this.FrameControl = new FrameControlField (this.FrameControlBytes);
+                this.Duration = new DurationField (this.DurationBytes);
+                this.ReceiverAddress = this.GetAddress (0);
+                this.TransmitterAddress = this.GetAddress (1);
+                this.BlockAcknowledgmentControl = new BlockAcknowledgmentControlField (this.BlockAckRequestControlBytes);
+                this.BlockAckStartingSequenceControl = this.BlockAckStartingSequenceControlBytes;
+                this.BlockAckBitmap = this.BlockAckBitmapBytes;
+                this.header.Length = this.FrameSize;
             }
             
             /// <summary>
@@ -265,21 +255,21 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((this.header == null) || (this.header.Length > (this.header.BytesLength - this.header.Offset)) || (this.header.Length < this.FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    this.header = new ByteArraySegment (new Byte[this.FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
                 this.DurationBytes = this.Duration.Field;
-                SetAddress (0, ReceiverAddress);
-                SetAddress (1, TransmitterAddress);
+                this.SetAddress (0, this.ReceiverAddress);
+                this.SetAddress (1, this.TransmitterAddress);
                 
                 this.BlockAckRequestControlBytes = this.BlockAcknowledgmentControl.Field;
                 this.BlockAckStartingSequenceControlBytes = this.BlockAckStartingSequenceControl;
-                BlockAckBitmapBytes = BlockAckBitmap;
-                
-                header.Length = FrameSize;
+                this.BlockAckBitmapBytes = this.BlockAckBitmap;
+
+                this.header.Length = this.FrameSize;
             }
             
             /// <summary>
@@ -291,7 +281,7 @@ namespace PacketDotNet.Ieee80211
             /// </returns>
             protected override String GetAddressString()
             {
-                return String.Format("RA {0} TA {1}", ReceiverAddress, TransmitterAddress);
+                return String.Format("RA {0} TA {1}", this.ReceiverAddress, this.TransmitterAddress);
             }
         } 
     }

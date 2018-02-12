@@ -64,11 +64,11 @@ namespace PacketDotNet.LLDP
             var length = TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength + EnabledCapabilitiesLength;
             var bytes = new byte[length];
             var offset = 0;
-            tlvData = new ByteArraySegment(bytes, offset, length);
+            this.tlvData = new ByteArraySegment(bytes, offset, length);
 
-            Type = TLVTypes.SystemCapabilities;
-            Capabilities = capabilities;
-            Enabled = enabled;
+            this.Type = TLVTypes.SystemCapabilities;
+            this.Capabilities = capabilities;
+            this.Enabled = enabled;
         }
 
         #endregion
@@ -83,15 +83,12 @@ namespace PacketDotNet.LLDP
             get
             {
                 // get the capabilities
-                return BigEndianBitConverter.Big.ToUInt16(tlvData.Bytes,
-                                                          tlvData.Offset + TLVTypeLength.TypeLengthLength);
+                return EndianBitConverter.Big.ToUInt16(this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength);
             }
             set
             {
                 // set the capabilities
-                EndianBitConverter.Big.CopyBytes(value,
-                                                 tlvData.Bytes,
-                                                 tlvData.Offset + TLVTypeLength.TypeLengthLength);
+                EndianBitConverter.Big.CopyBytes(value, this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength);
             }
         }
 
@@ -102,16 +99,14 @@ namespace PacketDotNet.LLDP
         {
             get
             {
-                return EndianBitConverter.Big.ToUInt16(tlvData.Bytes,
-                                                       tlvData.Offset + TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength);
+                return EndianBitConverter.Big.ToUInt16(this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength);
             }
 
             set
             {
                 // Add the length of the previous field, the SystemCapabilities field, to get
                 // to the location of the EnabledCapabilities
-                EndianBitConverter.Big.CopyBytes(value, tlvData.Bytes,
-                                                 ValueOffset + SystemCapabilitiesLength);
+                EndianBitConverter.Big.CopyBytes(value, this.tlvData.Bytes, this.ValueOffset + SystemCapabilitiesLength);
             }
         }
 
@@ -131,7 +126,7 @@ namespace PacketDotNet.LLDP
         public bool IsCapable(CapabilityOptions capability)
         {
             ushort mask = (ushort)capability;
-            if ((Capabilities & mask) != 0)
+            if ((this.Capabilities & mask) != 0)
             {
                 return true;
             }
@@ -153,7 +148,7 @@ namespace PacketDotNet.LLDP
         public bool IsEnabled(CapabilityOptions capability)
         {
             ushort mask = (ushort)capability;
-            if ((Enabled & mask) != 0)
+            if ((this.Enabled & mask) != 0)
             {
                 return true;
             }
@@ -171,7 +166,7 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public override string ToString ()
         {
-            return string.Format("[SystemCapabilities: Capabilities={0}, Enabled={1}]", Capabilities, Enabled);
+            return string.Format("[SystemCapabilities: Capabilities={0}, Enabled={1}]", this.Capabilities, this.Enabled);
         }
 
         #endregion

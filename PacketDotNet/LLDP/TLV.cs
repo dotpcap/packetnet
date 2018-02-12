@@ -65,15 +65,15 @@ namespace PacketDotNet.LLDP
             //       the length of the ByteArrayAndOffset which would overwrite the value
             //       we are trying to retrieve
             var byteArraySegment = new ByteArraySegment(bytes, offset, TLVTypeLength.TypeLengthLength);
-            TypeLength = new TLVTypeLength(byteArraySegment);
+            this.TypeLength = new TLVTypeLength(byteArraySegment);
 
             // set the tlvData assuming we have at least the bytes required for the
             // type/length fields
-            tlvData = new ByteArraySegment(bytes, offset, TypeLength.Length + TLVTypeLength.TypeLengthLength)
+            this.tlvData = new ByteArraySegment(bytes, offset, this.TypeLength.Length + TLVTypeLength.TypeLengthLength)
             {
 
                 // retrieve the actual length
-                Length = TypeLength.Length + TLVTypeLength.TypeLengthLength
+                Length = this.TypeLength.Length + TLVTypeLength.TypeLengthLength
             };
         }
 
@@ -87,11 +87,11 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public int Length
         {
-            get { return TypeLength.Length; }
+            get { return this.TypeLength.Length; }
 
             // Length set property is internal because the tlv length is
             // automatically set based on the length of the tlv value
-            internal set { TypeLength.Length = value; }
+            internal set { this.TypeLength.Length = value; }
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public int TotalLength
         {
-            get { return tlvData.Length; }
+            get { return this.tlvData.Length; }
         }
 
         /// <summary>
@@ -107,12 +107,12 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public TLVTypes Type
         {
-            get { return TypeLength.Type; }
+            get { return this.TypeLength.Type; }
 
             set
             {
                 log.DebugFormat("value {0}", value);
-                TypeLength.Type = value;
+                this.TypeLength.Type = value;
             }
         }
 
@@ -121,7 +121,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         internal int ValueOffset
         {
-            get { return tlvData.Offset + TLVTypeLength.TypeLengthLength; }
+            get { return this.tlvData.Offset + TLVTypeLength.TypeLengthLength; }
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace PacketDotNet.LLDP
         {
             get
             {
-                return tlvData.ActualBytes();
+                return this.tlvData.ActualBytes();
             }
         }
 
@@ -149,14 +149,14 @@ namespace PacketDotNet.LLDP
         /// </summary>
         internal ByteArraySegment tlvData
         {
-            get { return _tlvData; }
+            get { return this._tlvData; }
 
             set
             {
-                _tlvData = value;
+                this._tlvData = value;
 
                 // create a new TypeLength that points at the new ByteArrayAndOffset
-                TypeLength = new TLVTypeLength(value)
+                this.TypeLength = new TLVTypeLength(value)
                 {
 
                     // update the length based upon the length of the ByteArrayAndOffset

@@ -47,12 +47,12 @@ namespace PacketDotNet.PPP
         {
             get
             {
-                return header.Bytes[header.Offset + PPPoEFields.VersionTypePosition];
+                return this.header.Bytes[this.header.Offset + PPPoEFields.VersionTypePosition];
             }
 
             set
             {
-                header.Bytes[header.Offset + PPPoEFields.VersionTypePosition] = value;
+                this.header.Bytes[this.header.Offset + PPPoEFields.VersionTypePosition] = value;
             }
         }
 
@@ -64,17 +64,17 @@ namespace PacketDotNet.PPP
         {
             get
             {
-                return (byte)((VersionType >> 4) & 0xF0);
+                return (byte)((this.VersionType >> 4) & 0xF0);
             }
 
             set
             {
-                var versionType = VersionType;
+                var versionType = this.VersionType;
 
                 // mask the new value in
                 versionType = (byte)((versionType & 0x0F) | ((value << 4) & 0xF0));
 
-                VersionType = versionType;
+                this.VersionType = versionType;
             }
         }
 
@@ -85,17 +85,17 @@ namespace PacketDotNet.PPP
         {
             get
             {
-                return (byte)((VersionType) & 0x0F);
+                return (byte)((this.VersionType) & 0x0F);
             }
 
             set
             {
-                var versionType = VersionType;
+                var versionType = this.VersionType;
 
                 // mask the new value in
                 versionType = (byte)((versionType & 0xF0) | (value & 0xF0));
 
-                VersionType = versionType;
+                this.VersionType = versionType;
             }
         }
 
@@ -107,16 +107,13 @@ namespace PacketDotNet.PPP
         {
             get
             {
-                return (PPPoECode)EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                                  header.Offset + PPPoEFields.CodePosition);
+                return (PPPoECode)EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + PPPoEFields.CodePosition);
             }
 
             set
             {
                 var val = (UInt16)value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + PPPoEFields.CodePosition);
+                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + PPPoEFields.CodePosition);
             }
         }
 
@@ -127,16 +124,13 @@ namespace PacketDotNet.PPP
         {
             get
             {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                      header.Offset + PPPoEFields.SessionIdPosition);
+                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + PPPoEFields.SessionIdPosition);
             }
 
             set
             {
                 var val = (UInt16)value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + PPPoEFields.SessionIdPosition);
+                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + PPPoEFields.SessionIdPosition);
             }
         }
 
@@ -147,16 +141,13 @@ namespace PacketDotNet.PPP
         {
             get
             {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                      header.Offset + PPPoEFields.LengthPosition);
+                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + PPPoEFields.LengthPosition);
             }
 
             set
             {
                 var val = (UInt16)value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + PPPoEFields.LengthPosition);
+                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + PPPoEFields.LengthPosition);
             }
         }
 
@@ -172,7 +163,7 @@ namespace PacketDotNet.PPP
             int offset = 0;
             int length = PPPoEFields.HeaderLength;
             var headerBytes = new byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            this.header = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
             this.Code = Code;
@@ -195,13 +186,13 @@ namespace PacketDotNet.PPP
             log.Debug("");
 
             // slice off the header portion
-            header = new ByteArraySegment(bas)
+            this.header = new ByteArraySegment(bas)
             {
                 Length = PPPoEFields.HeaderLength
             };
 
             // parse the encapsulated bytes
-            payloadPacketOrData = ParseEncapsulatedBytes(header);
+            this.payloadPacketOrData = ParseEncapsulatedBytes(this.header);
         }
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header)
@@ -221,7 +212,7 @@ namespace PacketDotNet.PPP
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color
+        public override String Color
         {
             get
             {
@@ -238,7 +229,7 @@ namespace PacketDotNet.PPP
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
-                color = Color;
+                color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
@@ -247,12 +238,7 @@ namespace PacketDotNet.PPP
                 // build the output string
                 buffer.AppendFormat("{0}[PPPoEPacket: Version={2}, Type={3}, Code={4}, SessionId={5}, Length={6}]{1}",
                     color,
-                    colorEscape,
-                    Version,
-                    Type,
-                    Code,
-                    SessionId,
-                    Length);
+                    colorEscape, this.Version, this.Type, this.Code, this.SessionId, this.Length);
             }
 
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
@@ -260,11 +246,11 @@ namespace PacketDotNet.PPP
                 // collect the properties and their value
                 Dictionary<string,string> properties = new Dictionary<string,string>();
                 // FIXME: The version output is incorrect
-                properties.Add("", Convert.ToString((byte) Version, 2).PadLeft(4, '0') + " .... = version: " + Version.ToString());
-                properties.Add(" ", ".... " + Convert.ToString((byte) Type, 2).PadLeft(4, '0') + " = type: " + Type.ToString());
+                properties.Add("", Convert.ToString((byte) this.Version, 2).PadLeft(4, '0') + " .... = version: " + this.Version.ToString());
+                properties.Add(" ", ".... " + Convert.ToString((byte) this.Type, 2).PadLeft(4, '0') + " = type: " + this.Type.ToString());
                 // FIXME: The Code output is incorrect
-                properties.Add("code", Code.ToString() + " (0x" + Code.ToString("x") + ")");
-                properties.Add("session id", "0x" + SessionId.ToString("x"));
+                properties.Add("code", this.Code.ToString() + " (0x" + this.Code.ToString("x") + ")");
+                properties.Add("session id", "0x" + this.SessionId.ToString("x"));
                 // TODO: Implement a PayloadLength property for PPPoE
                 //properties.Add("payload length", PayloadLength.ToString());
 
@@ -272,7 +258,7 @@ namespace PacketDotNet.PPP
                 int padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
-                buffer.AppendLine("PPPoE:  ******* PPPoE - \"Point-to-Point Protocol over Ethernet\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("PPPoE:  ******* PPPoE - \"Point-to-Point Protocol over Ethernet\" - offset=? length=" + this.TotalPacketLength);
                 buffer.AppendLine("PPPoE:");
                 foreach(var property in properties)
                 {
@@ -302,7 +288,7 @@ namespace PacketDotNet.PPP
         /// </returns>
         public static PPPoEPacket RandomPacket()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

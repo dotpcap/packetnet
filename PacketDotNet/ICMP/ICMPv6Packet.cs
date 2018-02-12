@@ -52,7 +52,7 @@ namespace PacketDotNet.ICMP
         {
             get
             {
-                var val = header.Bytes[header.Offset + ICMPv6Fields.TypePosition];
+                var val = this.header.Bytes[this.header.Offset + ICMPv6Fields.TypePosition];
 
                 if(Enum.IsDefined(typeof(ICMPv6Types), val))
                     return (ICMPv6Types)val;
@@ -62,7 +62,7 @@ namespace PacketDotNet.ICMP
 
             set
             {
-                header.Bytes[header.Offset + ICMPv6Fields.TypePosition] = (byte)value;
+                this.header.Bytes[this.header.Offset + ICMPv6Fields.TypePosition] = (byte)value;
             }
         }
 
@@ -71,12 +71,12 @@ namespace PacketDotNet.ICMP
         {
             get
             {
-                return header.Bytes[header.Offset + ICMPv6Fields.CodePosition];
+                return this.header.Bytes[this.header.Offset + ICMPv6Fields.CodePosition];
             }
 
             set
             {
-                header.Bytes[header.Offset + ICMPv6Fields.CodePosition] = (byte)value;
+                this.header.Bytes[this.header.Offset + ICMPv6Fields.CodePosition] = (byte)value;
             }
         }
 
@@ -87,16 +87,13 @@ namespace PacketDotNet.ICMP
         {
             get
             {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                      header.Offset + ICMPv6Fields.ChecksumPosition);
+                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + ICMPv6Fields.ChecksumPosition);
             }
 
             set
             {
                 var theValue = value;
-                EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + ICMPv6Fields.ChecksumPosition);
+                EndianBitConverter.Big.CopyBytes(theValue, this.header.Bytes, this.header.Offset + ICMPv6Fields.ChecksumPosition);
             }
         }
 
@@ -110,7 +107,7 @@ namespace PacketDotNet.ICMP
         {
             log.Debug("");
 
-            header = new ByteArraySegment(bas);
+            this.header = new ByteArraySegment(bas);
         }
 
         /// <summary>
@@ -139,31 +136,31 @@ namespace PacketDotNet.ICMP
         /// </summary>
         public override void UpdateCalculatedValues ()
         {
-            if(skipUpdating)
+            if(this.skipUpdating)
                 return;
 
             // prevent us from entering this routine twice
             // by setting this flag, the act of retrieving the Bytes
             // property will cause this routine to be called which will
             // retrieve Bytes recursively and overflow the stack
-            skipUpdating = true;
+            this.skipUpdating = true;
 
             // start with this packet with a zeroed out checksum field
-            Checksum = 0;
-            var originalBytes = Bytes;
+            this.Checksum = 0;
+            var originalBytes = this.Bytes;
 
-            var ipv6Parent = ParentPacket as IPv6Packet;
+            var ipv6Parent = this.ParentPacket as IPv6Packet;
             var bytesToChecksum = ipv6Parent.AttachPseudoIPHeader(originalBytes);
 
             // calculate the one's complement sum of the tcp header
-            Checksum = (ushort)ChecksumUtils.OnesComplementSum(bytesToChecksum);
+            this.Checksum = (ushort)ChecksumUtils.OnesComplementSum(bytesToChecksum);
 
             // clear the skip variable
-            skipUpdating = false;
+            this.skipUpdating = false;
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color
+        override public String Color
         {
             get
             {
@@ -180,7 +177,7 @@ namespace PacketDotNet.ICMP
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
-                color = Color;
+                color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
@@ -189,26 +186,24 @@ namespace PacketDotNet.ICMP
                 // build the output string
                 buffer.AppendFormat("{0}[ICMPPacket: Type={2}, Code={3}]{1}",
                     color,
-                    colorEscape,
-                    Type,
-                    Code);
+                    colorEscape, this.Type, this.Code);
             }
 
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
                 Dictionary<string,string> properties = new Dictionary<string,string>();
-                properties.Add("type", Type.ToString() + " (" + (int)Type + ")");
-                properties.Add("code", Code.ToString());
+                properties.Add("type", this.Type.ToString() + " (" + (int) this.Type + ")");
+                properties.Add("code", this.Code.ToString());
                 // TODO: Implement a checksum verification for ICMPv6
-                properties.Add("checksum", "0x" + Checksum.ToString("x"));
+                properties.Add("checksum", "0x" + this.Checksum.ToString("x"));
                 // TODO: Implement ICMPv6 Option fields here?
 
                 // calculate the padding needed to right-justify the property names
                 int padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
-                buffer.AppendLine("ICMP:  ******* ICMPv6 - \"Internet Control Message Protocol (Version 6)\"- offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("ICMP:  ******* ICMPv6 - \"Internet Control Message Protocol (Version 6)\"- offset=? length=" + this.TotalPacketLength);
                 buffer.AppendLine("ICMP:");
                 foreach (var property in properties)
                 {

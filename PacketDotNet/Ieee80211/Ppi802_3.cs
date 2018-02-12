@@ -110,8 +110,8 @@ namespace PacketDotNet.Ieee80211
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
-                    writer.Write((uint)Flags);
-                    writer.Write((uint)Errors);
+                    writer.Write((uint) this.Flags);
+                    writer.Write((uint) this.Errors);
                     return ms.ToArray();
                 }
             }
@@ -132,8 +132,8 @@ namespace PacketDotNet.Ieee80211
             /// </param>
             public Ppi802_3(BinaryReader br)
             {
-                Flags = (StandardFlags) br.ReadUInt32();
-                Errors = (ErrorFlags) br.ReadUInt32();
+                this.Flags = (StandardFlags) br.ReadUInt32();
+                this.Errors = (ErrorFlags) br.ReadUInt32();
             }
             
             /// <summary>

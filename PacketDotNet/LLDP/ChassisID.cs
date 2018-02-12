@@ -75,14 +75,14 @@ namespace PacketDotNet.LLDP
         {
             log.DebugFormat("subType {0}", subType);
 
-            EmptyTLVDataInit();
+            this.EmptyTLVDataInit();
 
-            Type = TLVTypes.ChassisID;
+            this.Type = TLVTypes.ChassisID;
 
-            SubType = subType;
+            this.SubType = subType;
 
             // method will resize the tlv
-            SubTypeValue = subTypeValue;
+            this.SubTypeValue = subTypeValue;
         }
 
         /// <summary>
@@ -95,12 +95,12 @@ namespace PacketDotNet.LLDP
         {
             log.DebugFormat("MACAddress {0}", MACAddress.ToString());
 
-            EmptyTLVDataInit();
+            this.EmptyTLVDataInit();
 
-            Type = TLVTypes.ChassisID;
-            SubType = ChassisSubTypes.MACAddress;
+            this.Type = TLVTypes.ChassisID;
+            this.SubType = ChassisSubTypes.MACAddress;
 
-            SubTypeValue = MACAddress;
+            this.SubTypeValue = MACAddress;
         }
 
         /// <summary>
@@ -114,12 +114,12 @@ namespace PacketDotNet.LLDP
         {
             log.DebugFormat("InterfaceName {0}", InterfaceName);
 
-            EmptyTLVDataInit();
+            this.EmptyTLVDataInit();
 
-            Type = TLVTypes.ChassisID;
-            SubType = ChassisSubTypes.InterfaceName;
+            this.Type = TLVTypes.ChassisID;
+            this.SubType = ChassisSubTypes.InterfaceName;
 
-            SetSubTypeValue(InterfaceName);
+            this.SetSubTypeValue(InterfaceName);
         }
 
         #endregion
@@ -133,13 +133,13 @@ namespace PacketDotNet.LLDP
         {
             get
             {
-                return (ChassisSubTypes)tlvData.Bytes[ValueOffset];
+                return (ChassisSubTypes) this.tlvData.Bytes[this.ValueOffset];
             }
 
             set
             {
                 // set the subtype
-                tlvData.Bytes[ValueOffset] = (byte)value;
+                this.tlvData.Bytes[this.ValueOffset] = (byte)value;
             }
         }
 
@@ -148,8 +148,8 @@ namespace PacketDotNet.LLDP
         /// </value>
         public object SubTypeValue
         {
-            get { return GetSubTypeValue(); }
-            set { SetSubTypeValue(value); }
+            get { return this.GetSubTypeValue(); }
+            set { this.SetSubTypeValue(value); }
         }
 
         /// <summary>
@@ -157,11 +157,11 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public byte[] ChassisComponent
         {
-            get { return (byte[])GetSubTypeValue(); }
+            get { return (byte[]) this.GetSubTypeValue(); }
             set
             {
-                SubType = ChassisSubTypes.ChassisComponent;
-                SetSubTypeValue(value);
+                this.SubType = ChassisSubTypes.ChassisComponent;
+                this.SetSubTypeValue(value);
             }
         }
 
@@ -170,11 +170,11 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public string InterfaceName
         {
-            get { return (string)GetSubTypeValue(); }
+            get { return (string) this.GetSubTypeValue(); }
             set
             {
-                SubType = ChassisSubTypes.InterfaceName;
-                SetSubTypeValue(value);
+                this.SubType = ChassisSubTypes.InterfaceName;
+                this.SetSubTypeValue(value);
             }
         }
 
@@ -183,24 +183,24 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public PhysicalAddress MACAddress
         {
-            get { return (PhysicalAddress)GetSubTypeValue(); }
+            get { return (PhysicalAddress) this.GetSubTypeValue(); }
             set
             {
-                SubType = ChassisSubTypes.MACAddress;
-                SetSubTypeValue(value);
+                this.SubType = ChassisSubTypes.MACAddress;
+                this.SetSubTypeValue(value);
             }
         }
 
         /// <summary>
         /// If SubType is NetworkAddress the network address
         /// </summary>
-        public LLDP.NetworkAddress NetworkAddress
+        public NetworkAddress NetworkAddress
         {
-            get { return (LLDP.NetworkAddress)GetSubTypeValue(); }
+            get { return (NetworkAddress) this.GetSubTypeValue(); }
             set
             {
-                SubType = ChassisSubTypes.NetworkAddress;
-                SetSubTypeValue(value);
+                this.SubType = ChassisSubTypes.NetworkAddress;
+                this.SetSubTypeValue(value);
             }
         }
 
@@ -209,11 +209,11 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public byte[] PortComponent
         {
-            get { return (byte[])GetSubTypeValue(); }
+            get { return (byte[]) this.GetSubTypeValue(); }
             set
             {
-                SubType = ChassisSubTypes.PortComponent;
-                SetSubTypeValue(value);
+                this.SubType = ChassisSubTypes.PortComponent;
+                this.SetSubTypeValue(value);
             }
         }
 
@@ -222,11 +222,11 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public byte[] InterfaceAlias
         {
-            get { return (byte[])GetSubTypeValue(); }
+            get { return (byte[]) this.GetSubTypeValue(); }
             set
             {
-                SubType = ChassisSubTypes.InterfaceAlias;
-                SetSubTypeValue(value);
+                this.SubType = ChassisSubTypes.InterfaceAlias;
+                this.SetSubTypeValue(value);
             }
         }
 
@@ -242,38 +242,38 @@ namespace PacketDotNet.LLDP
             var length = TLVTypeLength.TypeLengthLength + SubTypeLength;
             var bytes = new byte[length];
             int offset = 0;
-            tlvData = new ByteArraySegment(bytes, offset, length);
+            this.tlvData = new ByteArraySegment(bytes, offset, length);
         }
 
         private object GetSubTypeValue()
         {
             byte[] val;
-            int dataOffset = ValueOffset + SubTypeLength;
-            int dataLength = Length - SubTypeLength;
+            int dataOffset = this.ValueOffset + SubTypeLength;
+            int dataLength = this.Length - SubTypeLength;
 
-            switch (SubType)
+            switch (this.SubType)
             {
                 case ChassisSubTypes.ChassisComponent:
                 case ChassisSubTypes.InterfaceAlias:
                 case ChassisSubTypes.LocallyAssigned:
                 case ChassisSubTypes.PortComponent:
                     val = new byte[dataLength];
-                    Array.Copy(tlvData.Bytes, dataOffset,
+                    Array.Copy(this.tlvData.Bytes, dataOffset,
                                val, 0,
                                dataLength);
                     return val;
                 case ChassisSubTypes.NetworkAddress:
-                    return new NetworkAddress(tlvData.Bytes,
+                    return new NetworkAddress(this.tlvData.Bytes,
                                               dataOffset,
                                               dataLength);
                 case ChassisSubTypes.MACAddress:
                     val = new byte[dataLength];
-                    Array.Copy(tlvData.Bytes, dataOffset,
+                    Array.Copy(this.tlvData.Bytes, dataOffset,
                                val, 0,
                                dataLength);
                     return new PhysicalAddress(val);
                 case ChassisSubTypes.InterfaceName:
-                    return System.Text.ASCIIEncoding.ASCII.GetString(tlvData.Bytes, dataOffset, dataLength);
+                    return System.Text.Encoding.ASCII.GetString(this.tlvData.Bytes, dataOffset, dataLength);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -284,7 +284,7 @@ namespace PacketDotNet.LLDP
             byte[] valBytes;
 
             // make sure we have the correct type
-            switch (SubType)
+            switch (this.SubType)
             {
                 case ChassisSubTypes.ChassisComponent:
                 case ChassisSubTypes.InterfaceAlias:
@@ -297,7 +297,7 @@ namespace PacketDotNet.LLDP
 
                     valBytes = (byte[])val;
 
-                    SetSubTypeValue(valBytes);
+                    this.SetSubTypeValue(valBytes);
                     break;
                 case ChassisSubTypes.NetworkAddress:
                     if(!(val is NetworkAddress))
@@ -307,7 +307,7 @@ namespace PacketDotNet.LLDP
 
                     valBytes = ((NetworkAddress)val).Bytes;
 
-                    SetSubTypeValue(valBytes);
+                    this.SetSubTypeValue(valBytes);
                     break;
                 case ChassisSubTypes.InterfaceName:
                     if(!(val is string))
@@ -317,9 +317,9 @@ namespace PacketDotNet.LLDP
 
                     var interfaceName = (string)val;
 
-                    valBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(interfaceName);
+                    valBytes = System.Text.Encoding.ASCII.GetBytes(interfaceName);
 
-                    SetSubTypeValue(valBytes);
+                    this.SetSubTypeValue(valBytes);
                     break;
                 case ChassisSubTypes.MACAddress:
                     if(!(val is PhysicalAddress))
@@ -329,7 +329,7 @@ namespace PacketDotNet.LLDP
 
                     var physicalAddress = (PhysicalAddress)val;
 
-                    SetSubTypeValue(physicalAddress.GetAddressBytes());
+                    this.SetSubTypeValue(physicalAddress.GetAddressBytes());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -339,19 +339,19 @@ namespace PacketDotNet.LLDP
         private void SetSubTypeValue(byte[] subTypeValue)
         {
             // is the length different than the current length?
-            if(subTypeValue.Length != Length)
+            if(subTypeValue.Length != this.Length)
             {
                 var headerLength = TLVTypeLength.TypeLengthLength + SubTypeLength;
                 var newTlvMemory = new byte[headerLength + subTypeValue.Length];
 
                 // copy the header data over
-                Array.Copy(tlvData.Bytes, tlvData.Offset, newTlvMemory, 0, headerLength);
+                Array.Copy(this.tlvData.Bytes, this.tlvData.Offset, newTlvMemory, 0, headerLength);
 
                 // update the tlv memory pointer, offset and length
-                tlvData = new ByteArraySegment(newTlvMemory, 0, newTlvMemory.Length);
+                this.tlvData = new ByteArraySegment(newTlvMemory, 0, newTlvMemory.Length);
             }
 
-            Array.Copy(subTypeValue, 0, tlvData.Bytes, ValueOffset + SubTypeLength,
+            Array.Copy(subTypeValue, 0, this.tlvData.Bytes, this.ValueOffset + SubTypeLength,
                        subTypeValue.Length);
         }
 
@@ -363,7 +363,7 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public override string ToString ()
         {
-            return string.Format("[ChassisID: SubType={0}, SubTypeValue={1}]", SubType, SubTypeValue);
+            return string.Format("[ChassisID: SubType={0}, SubTypeValue={1}]", this.SubType, this.SubTypeValue);
         }
 
         #endregion

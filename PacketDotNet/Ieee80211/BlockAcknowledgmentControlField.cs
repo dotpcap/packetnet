@@ -49,18 +49,18 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return (AcknowledgementPolicy)(Field & 0x1);
+                    return (AcknowledgementPolicy)(this.Field & 0x1);
                 }
                 
                 set
                 {
                     if (value == AcknowledgementPolicy.Immediate)
                     {
-                        Field |= 0x1;
+                        this.Field |= 0x1;
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(0x1));
+                        this.Field &= unchecked((UInt16)~(0x1));
                     }
                 }
             }
@@ -72,18 +72,18 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return (((Field >> 1) & 0x1) == 1) ? true : false;
+                    return (((this.Field >> 1) & 0x1) == 1) ? true : false;
                 }
                 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x1);
+                        this.Field |= (1 << 0x1);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x1));
+                        this.Field &= unchecked((UInt16)~(1 << 0x1));
                     }
                 }
             }
@@ -97,18 +97,18 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return (((Field >> 2) & 0x1) == 1) ? true : false;
+                    return (((this.Field >> 2) & 0x1) == 1) ? true : false;
                 }
                 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x2);
+                        this.Field |= (1 << 0x2);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x2));
+                        this.Field &= unchecked((UInt16)~(1 << 0x2));
                     }
                 }
             }
@@ -120,13 +120,13 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return (byte)(Field >> 12);
+                    return (byte)(this.Field >> 12);
                 }
                 
                 set
                 {
-                    Field &= 0x0FFF;
-                    Field |= (UInt16)(value << 12);
+                    this.Field &= 0x0FFF;
+                    this.Field |= (UInt16)(value << 12);
                 }
             }
 
@@ -154,7 +154,7 @@ namespace PacketDotNet.Ieee80211
             /// </param>
             public BlockAcknowledgmentControlField(UInt16 field)
             {
-                Field = field;
+                this.Field = field;
             }
         } 
     }

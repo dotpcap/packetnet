@@ -58,7 +58,7 @@ namespace PacketDotNet.OSPF
             int offset = 0;
             int length = OSPFv2Fields.HeaderLength;
             var headerBytes = new byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            this.header = new ByteArraySegment(headerBytes, offset, length);
 
             this.Version = ospfVersion;
         }
@@ -69,7 +69,7 @@ namespace PacketDotNet.OSPF
         public OSPFv2Packet(byte[] Bytes, int Offset)
         {
             log.Debug("");
-            header = new ByteArraySegment(Bytes, Offset, OSPFv2Fields.HeaderLength);
+            this.header = new ByteArraySegment(Bytes, Offset, OSPFv2Fields.HeaderLength);
             this.Version = ospfVersion;
         }
 
@@ -80,12 +80,12 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                return (OSPFVersion)header.Bytes[header.Offset + OSPFv2Fields.VersionPosition];
+                return (OSPFVersion) this.header.Bytes[this.header.Offset + OSPFv2Fields.VersionPosition];
             }
 
             set
             {
-                header.Bytes[header.Offset + OSPFv2Fields.VersionPosition] = (byte)value;
+                this.header.Bytes[this.header.Offset + OSPFv2Fields.VersionPosition] = (byte)value;
             }
         }
 
@@ -96,7 +96,7 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                var val = header.Bytes[header.Offset + OSPFv2Fields.TypePosition];
+                var val = this.header.Bytes[this.header.Offset + OSPFv2Fields.TypePosition];
 
                 if (Enum.IsDefined(typeof(OSPFPacketType), val))
                     return (OSPFPacketType)val;
@@ -105,7 +105,7 @@ namespace PacketDotNet.OSPF
             }
             set
             {
-                header.Bytes[header.Offset + OSPFv2Fields.TypePosition] = (byte)value;
+                this.header.Bytes[this.header.Offset + OSPFv2Fields.TypePosition] = (byte)value;
             }
         }
 
@@ -116,11 +116,11 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + OSPFv2Fields.PacketLengthPosition);
+                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + OSPFv2Fields.PacketLengthPosition);
             }
             set
             {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.PacketLengthPosition);
+                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.PacketLengthPosition);
             }
         }
 
@@ -131,14 +131,14 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(header.Bytes, header.Offset + OSPFv2Fields.RouterIDPosition);
+                var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + OSPFv2Fields.RouterIDPosition);
                 return new System.Net.IPAddress(val);
             }
             set
             {
                 byte[] address = value.GetAddressBytes();
                 Array.Copy((Array) address, (int) 0,
-                           (Array) header.Bytes, (int) (header.Offset + OSPFv2Fields.RouterIDPosition),
+                           (Array) this.header.Bytes, (int) (this.header.Offset + OSPFv2Fields.RouterIDPosition),
                            address.Length);
             }
         }
@@ -150,14 +150,14 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(header.Bytes, header.Offset + OSPFv2Fields.AreaIDPosition);
+                var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + OSPFv2Fields.AreaIDPosition);
                 return new System.Net.IPAddress(val);
             }
             set
             {
                 byte[] address = value.GetAddressBytes();
                 Array.Copy((Array) address, (int) 0,
-                           (Array) header.Bytes, (int) (header.Offset + OSPFv2Fields.AreaIDPosition),
+                           (Array) this.header.Bytes, (int) (this.header.Offset + OSPFv2Fields.AreaIDPosition),
                            address.Length);
             }
         }
@@ -170,11 +170,11 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + OSPFv2Fields.ChecksumPosition);
+                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + OSPFv2Fields.ChecksumPosition);
             }
             set
             {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.ChecksumPosition);
+                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.ChecksumPosition);
             }
         }
 
@@ -185,11 +185,11 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + OSPFv2Fields.AuTypePosition);
+                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + OSPFv2Fields.AuTypePosition);
             }
             set
             {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.AuTypePosition);
+                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.AuTypePosition);
             }
         }
 
@@ -200,11 +200,11 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                return EndianBitConverter.Big.ToUInt64(header.Bytes, header.Offset + OSPFv2Fields.AuthorizationPosition);
+                return EndianBitConverter.Big.ToUInt64(this.header.Bytes, this.header.Offset + OSPFv2Fields.AuthorizationPosition);
             }
             set
             {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.AuthorizationPosition);
+                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.AuthorizationPosition);
             }
         }
 
@@ -232,7 +232,7 @@ namespace PacketDotNet.OSPF
         /// <param name="outputFormat">Output format.</param>
         public override string ToString(StringOutputType outputFormat)
         {
-            return ToString();
+            return this.ToString();
         }
     }
 }

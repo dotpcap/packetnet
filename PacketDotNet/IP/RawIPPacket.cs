@@ -54,31 +54,31 @@ namespace PacketDotNet.IP
             // If the first nibble is 0x06, then you have IP v6
             // The RawIPPacketProtocol enum has been defined to match this.
             var firstNibble = bas.Bytes[0] >> 4;
-            Protocol = (RawIPPacketProtocol)firstNibble;
+            this.Protocol = (RawIPPacketProtocol)firstNibble;
 
-            header = new ByteArraySegment(bas)
+            this.header = new ByteArraySegment(bas)
             {
                 Length = 0
             };
 
             // parse the encapsulated bytes
-            payloadPacketOrData = new PacketOrByteArraySegment();
+            this.payloadPacketOrData = new PacketOrByteArraySegment();
 
-            switch (Protocol)
+            switch (this.Protocol)
             {
             case RawIPPacketProtocol.IPv4:
-                payloadPacketOrData.ThePacket = new IPv4Packet(header.EncapsulatedBytes());
+                this.payloadPacketOrData.ThePacket = new IPv4Packet(this.header.EncapsulatedBytes());
                 break;
             case RawIPPacketProtocol.IPv6:
-                payloadPacketOrData.ThePacket = new IPv6Packet(header.EncapsulatedBytes());
+                this.payloadPacketOrData.ThePacket = new IPv6Packet(this.header.EncapsulatedBytes());
                 break;
             default:
-                throw new System.NotImplementedException("Protocol of " + Protocol + " is not implemented");
+                throw new NotImplementedException("Protocol of " + this.Protocol + " is not implemented");
             }
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color
+        public override String Color
         {
             get
             {
@@ -95,7 +95,7 @@ namespace PacketDotNet.IP
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
-                color = Color;
+                color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
@@ -104,21 +104,20 @@ namespace PacketDotNet.IP
                 // build the output string
                 buffer.AppendFormat("{0}[RawPacket: Protocol={2}]{1}",
                     color,
-                    colorEscape,
-                    Protocol);
+                    colorEscape, this.Protocol);
             }
 
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
                 Dictionary<string, string> properties = new Dictionary<string, string>();
-                properties.Add("protocol", Protocol.ToString() + " (0x" + Protocol.ToString("x") + ")");
+                properties.Add("protocol", this.Protocol.ToString() + " (0x" + this.Protocol.ToString("x") + ")");
 
                 // calculate the padding needed to right-justify the property names
                 int padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
-                buffer.AppendLine("Raw:  ******* Raw - \"Raw IP Packet\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("Raw:  ******* Raw - \"Raw IP Packet\" - offset=? length=" + this.TotalPacketLength);
                 buffer.AppendLine("Raw:");
                 foreach (var property in properties)
                 {

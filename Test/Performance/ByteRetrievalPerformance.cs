@@ -49,7 +49,7 @@ namespace Test.Performance
         [Test]
         public void TestOptimalByteRetrieval()
         {
-            var ethernetPacket = BuildNonContiguousEthernetPacket();
+            var ethernetPacket = this.BuildNonContiguousEthernetPacket();
 
             // now extract a contiguous series of bytes
             var contiguousBytes = ethernetPacket.Bytes;
@@ -102,7 +102,7 @@ namespace Test.Performance
         [Test]
         public void TestSubOptimalByteRetrieval()
         {
-            var ethernetPacket = BuildNonContiguousEthernetPacket();
+            var ethernetPacket = this.BuildNonContiguousEthernetPacket();
 
             byte[] lastByteArray = null;
 

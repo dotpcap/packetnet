@@ -20,7 +20,7 @@ namespace PacketDotNet.OSPF
 
         static RouterLSAFields()
         {
-            RouterOptionsPosition = LSAFields.HeaderEnd;
+            RouterOptionsPosition = HeaderEnd;
             LinkNumberPosition = RouterOptionsPosition + RouterOptionsLength;
             RouterLinksStart = LinkNumberPosition + LinkNumberLength;
         }

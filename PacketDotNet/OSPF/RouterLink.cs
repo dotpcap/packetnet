@@ -71,7 +71,7 @@ namespace PacketDotNet.OSPF
             get
             {
                 var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + RouterLinkFields.LinkIDPosition);
-                return new System.Net.IPAddress(val);
+                return new IPAddress(val);
             }
             set
             {
@@ -90,7 +90,7 @@ namespace PacketDotNet.OSPF
             get
             {
                 var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + RouterLinkFields.LinkDataPosition);
-                return new System.Net.IPAddress(val);
+                return new IPAddress(val);
             }
             set
             {

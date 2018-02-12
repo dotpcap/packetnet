@@ -182,22 +182,22 @@ namespace Test.PacketType
                 switch(packetIndex)
                 {
                 case 0:
-                    VerifyPacket0(p, rawCapture);
+                    this.VerifyPacket0(p, rawCapture);
                     break;
                 case 1:
-                    VerifyPacket1(p, rawCapture);
+                    this.VerifyPacket1(p, rawCapture);
                     break;
                 case 2:
-                    VerifyPacket2(p, rawCapture);
+                    this.VerifyPacket2(p, rawCapture);
                     break;
                 case 3:
-                    VerifyPacket3(p, rawCapture);
+                    this.VerifyPacket3(p, rawCapture);
                     break;
                 case 4:
-                    VerifyPacket4(p, rawCapture);
+                    this.VerifyPacket4(p, rawCapture);
                     break;
                 case 5:
-                    VerifyPacket5(p, rawCapture);
+                    this.VerifyPacket5(p, rawCapture);
                     break;
                 default:
                     Assert.Fail("didn't expect to get to packetIndex " + packetIndex);

@@ -84,7 +84,7 @@ namespace Test.PacketType
                 switch(packetIndex)
                 {
                 case 0:
-                    VerifyPacket0(p, rawCapture, linkLayer);
+                    this.VerifyPacket0(p, rawCapture, linkLayer);
                     break;
                 default:
                     Assert.Fail("didn't expect to get to packetIndex " + packetIndex);

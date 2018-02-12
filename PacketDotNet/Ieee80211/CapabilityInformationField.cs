@@ -37,12 +37,12 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return GetBitFieldValue(0);
+                    return this.GetBitFieldValue(0);
                 }
 
                 set
                 {
-                    SetBitFieldValue(0, value);
+                    this.SetBitFieldValue(0, value);
                 }
             }
 
@@ -55,12 +55,12 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return GetBitFieldValue(1);
+                    return this.GetBitFieldValue(1);
                 }
 
                 set
                 {
-                    SetBitFieldValue(1, value);
+                    this.SetBitFieldValue(1, value);
                 }
             }
 
@@ -75,12 +75,12 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return GetBitFieldValue(2);
+                    return this.GetBitFieldValue(2);
                 }
 
                 set
                 {
-                    SetBitFieldValue(2, value);
+                    this.SetBitFieldValue(2, value);
                 }
             }
 
@@ -95,12 +95,12 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return GetBitFieldValue(3);
+                    return this.GetBitFieldValue(3);
                 }
 
                 set
                 {
-                    SetBitFieldValue(3, value);
+                    this.SetBitFieldValue(3, value);
                 }
             }
 
@@ -115,12 +115,12 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return GetBitFieldValue(4);
+                    return this.GetBitFieldValue(4);
                 }
 
                 set
                 {
-                    SetBitFieldValue(4, value);
+                    this.SetBitFieldValue(4, value);
                 }
             }
 
@@ -135,12 +135,12 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return GetBitFieldValue(5);
+                    return this.GetBitFieldValue(5);
                 }
 
                 set
                 {
-                    SetBitFieldValue(5, value);
+                    this.SetBitFieldValue(5, value);
                 }
             }
 
@@ -155,12 +155,12 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return GetBitFieldValue(6);
+                    return this.GetBitFieldValue(6);
                 }
 
                 set
                 {
-                    SetBitFieldValue(6, value);
+                    this.SetBitFieldValue(6, value);
                 }
             }
 
@@ -175,12 +175,12 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return GetBitFieldValue(7);
+                    return this.GetBitFieldValue(7);
                 }
 
                 set
                 {
-                    SetBitFieldValue(7, value);
+                    this.SetBitFieldValue(7, value);
                 }
             }
 
@@ -195,12 +195,12 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return GetBitFieldValue(10);
+                    return this.GetBitFieldValue(10);
                 }
 
                 set
                 {
-                    SetBitFieldValue(10, value);
+                    this.SetBitFieldValue(10, value);
                 }
             }
 
@@ -215,12 +215,12 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return GetBitFieldValue(13);
+                    return this.GetBitFieldValue(13);
                 }
 
                 set
                 {
-                    SetBitFieldValue(13, value);
+                    this.SetBitFieldValue(13, value);
                 }
             }
 
@@ -230,18 +230,18 @@ namespace PacketDotNet.Ieee80211
             /// <param name="index">0 indexed position of the bit</param>
             private bool GetBitFieldValue(ushort index)
             {
-                return (((Field >> index) & 0x1) == 1) ? true : false;
+                return (((this.Field >> index) & 0x1) == 1) ? true : false;
             }
 
             private void SetBitFieldValue(ushort index, bool value)
             {
                 if (value)
                 {
-                    Field |= unchecked((UInt16)(1 << index));
+                    this.Field |= unchecked((UInt16)(1 << index));
                 }
                 else
                 {
-                    Field &= unchecked((UInt16)~(1 << index));
+                    this.Field &= unchecked((UInt16)~(1 << index));
                 }
             }
 

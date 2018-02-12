@@ -264,7 +264,7 @@ namespace PacketDotNet.Utils.IO
         {
             if (value == null)
             {
-                throw (new System.ArgumentNullException("value"));
+                throw (new ArgumentNullException("value"));
             }
             this.WriteInternal(value, value.Length);
         }

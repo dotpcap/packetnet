@@ -64,13 +64,13 @@ namespace PacketDotNet.Tcp
         {
             get
             {
-                int numOfBlocks = (Length - SACKBlocksFieldOffset) / BlockLength;
+                int numOfBlocks = (this.Length - SACKBlocksFieldOffset) / BlockLength;
                 ushort[] blocks = new ushort[numOfBlocks];
                 int offset = 0;
                 for(int i = 0; i < numOfBlocks; i++)
                 {
                     offset = SACKBlocksFieldOffset + (i * BlockLength);
-                    blocks[i] = EndianBitConverter.Big.ToUInt16(Bytes, offset);
+                    blocks[i] = EndianBitConverter.Big.ToUInt16(this.Bytes, offset);
                 }
                 return blocks;
             }
@@ -88,11 +88,11 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override string ToString()
         {
-            string output = "[" + Kind.ToString() + ": ";
+            string output = "[" + this.Kind.ToString() + ": ";
 
-            for(int i = 0; i < SACKBlocks.Length; i++)
+            for(int i = 0; i < this.SACKBlocks.Length; i++)
             {
-                output += "Block" + i + "=" + SACKBlocks[i].ToString() + " ";
+                output += "Block" + i + "=" + this.SACKBlocks[i].ToString() + " ";
             }
 
             output.TrimEnd();

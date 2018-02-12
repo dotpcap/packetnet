@@ -45,14 +45,14 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return (short)(Field >> 4);
+                    return (short)(this.Field >> 4);
                 }
 
                 set
                 {
                     //Use the & mask to make sure we only overwrite the sequence number part of the field
-                    Field &= 0xF;
-                    Field |= (UInt16)(value << 4);
+                    this.Field &= 0xF;
+                    this.Field |= (UInt16)(value << 4);
                 }
             }
    
@@ -66,13 +66,13 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-                    return (byte)(Field & 0x000F);
+                    return (byte)(this.Field & 0x000F);
                 }
 
                 set
                 {
-                    Field &= unchecked((ushort)~0xF);
-                    Field |= (UInt16)(value & 0x0F);
+                    this.Field &= unchecked((ushort)~0xF);
+                    this.Field |= (UInt16)(value & 0x0F);
                 }
             }
 

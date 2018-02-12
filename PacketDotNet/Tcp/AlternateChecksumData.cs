@@ -61,8 +61,8 @@ namespace PacketDotNet.Tcp
         {
             get
             {
-                byte[] data = new byte[Length - DataFieldOffset];
-                Array.Copy(Bytes, DataFieldOffset, data, 0, data.Length);
+                byte[] data = new byte[this.Length - DataFieldOffset];
+                Array.Copy(this.Bytes, DataFieldOffset, data, 0, data.Length);
                 return data;
             }
         }
@@ -79,7 +79,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override string ToString()
         {
-            return "[" + Kind.ToString() + ": Data=0x" + Data.ToString() + "]";
+            return "[" + this.Kind.ToString() + ": Data=0x" + this.Data.ToString() + "]";
         }
 
         #endregion

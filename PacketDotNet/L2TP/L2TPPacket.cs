@@ -33,44 +33,44 @@ namespace PacketDotNet.L2TP
     public class L2TPPacket : Packet
     {
 
-        virtual public bool DataMessage => 8 == (this.header.Bytes[this.header.Offset] & 0x8);
+        public virtual Boolean DataMessage => 8 == (this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset] & 0x8);
 
-        virtual public bool HasLength => 4 == (this.header.Bytes[this.header.Offset] & 0x4);
+        public virtual Boolean HasLength => 4 == (this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset] & 0x4);
 
-        virtual public bool HasSequence => 2 == (this.header.Bytes[this.header.Offset] & 0x2);
+        public virtual Boolean HasSequence => 2 == (this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset] & 0x2);
 
-        virtual public bool HasOffset => 2 == (this.header.Bytes[this.header.Offset] & 0x2);
+        public virtual Boolean HasOffset => 2 == (this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset] & 0x2);
 
-        virtual public bool IsPriority => 2 == (this.header.Bytes[this.header.Offset] & 0x2);
+        public virtual Boolean IsPriority => 2 == (this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset] & 0x2);
 
-        virtual public int Version => (this.header.Bytes[this.header.Offset + 1] & 0x7);
+        public virtual Int32 Version => (this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset + 1] & 0x7);
 
-        virtual public int TunnelID
+        public virtual Int32 TunnelID
         {
             get
             {
                 if (this.HasLength)
-                    return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + 3);
+                    return EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + 3);
                 else
-                    return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + 2);
+                    return EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + 2);
 
             }
         }
 
-        virtual public int SessionID
+        public virtual Int32 SessionID
         {
             get
             {
                 if (this.HasLength)
-                    return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + 5);
+                    return EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + 5);
                 else
-                    return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + 4);
+                    return EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + 4);
 
             }
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public String Color => AnsiEscapeSequences.DarkGray;
+        public override String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary>
         /// Constructor
@@ -81,15 +81,15 @@ namespace PacketDotNet.L2TP
         public L2TPPacket(ByteArraySegment bas, Packet ParentPacket)
         {
             // slice off the header portion
-            this.header = new ByteArraySegment(bas)
+            this.HeaderByteArraySegment = new ByteArraySegment(bas)
             {
                 Length = L2TPFields.HeaderLength
             };
-            if (this.HasLength) this.header.Length += L2TPFields.LengthsLength;
-            if (this.HasSequence) this.header.Length += L2TPFields.NsLength + L2TPFields.NrLength;
-            if (this.HasOffset) this.header.Length += L2TPFields.OffsetSizeLength + L2TPFields.OffsetPadLength;
+            if (this.HasLength) this.HeaderByteArraySegment.Length += L2TPFields.LengthsLength;
+            if (this.HasSequence) this.HeaderByteArraySegment.Length += L2TPFields.NsLength + L2TPFields.NrLength;
+            if (this.HasOffset) this.HeaderByteArraySegment.Length += L2TPFields.OffsetSizeLength + L2TPFields.OffsetPadLength;
 
-            var payload = this.header.EncapsulatedBytes();
+            var payload = this.HeaderByteArraySegment.EncapsulatedBytes();
             try
             {
                 this.PayloadPacket = new PPPPacket(payload)
@@ -99,18 +99,18 @@ namespace PacketDotNet.L2TP
             } catch (Exception)
             {
                 //it's not a PPP packet, just attach the data
-                this.payloadPacketOrData.TheByteArraySegment = payload;
+                this.PayloadPacketOrData.TheByteArraySegment = payload;
             }
             this.ParentPacket = ParentPacket;
         }
 
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
             
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
@@ -129,7 +129,7 @@ namespace PacketDotNet.L2TP
 
 
             // append the base string output
-            buffer.Append((string) base.ToString(outputFormat));
+            buffer.Append((String) base.ToString(outputFormat));
             
             return buffer.ToString();
         }

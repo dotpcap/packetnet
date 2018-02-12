@@ -51,7 +51,7 @@ namespace PacketDotNet.LLDP
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
@@ -64,7 +64,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public LLDPPacket()
         {
-            log.Debug("");
+            Log.Debug("");
 
             // all lldp packets end with an EndOfLLDPDU tlv so add one
             // by default
@@ -79,12 +79,12 @@ namespace PacketDotNet.LLDP
         /// </param>
         public LLDPPacket(ByteArraySegment bas)
         {
-            log.Debug("");
+            Log.Debug("");
 
-            this.header = new ByteArraySegment(bas);
+            this.HeaderByteArraySegment = new ByteArraySegment(bas);
 
             // Initiate the TLV list from the existing data
-            this.ParseByteArrayIntoTlvs(this.header.Bytes, this.header.Offset);
+            this.ParseByteArrayIntoTlvs(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset);
         }
 
         #endregion
@@ -94,10 +94,10 @@ namespace PacketDotNet.LLDP
         /// <value>
         /// The current length of the LLDPDU
         /// </value>
-        public int Length
+        public Int32 Length
         {
-            get => this._Length;
-            set => this._Length = value;
+            get => this._length;
+            set => this._length = value;
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         /// <param name="index">The index of the item being set/retrieved in the collection</param>
         /// <returns>The requested TLV</returns>
-        public TLV this[int index]
+        public TLV this[Int32 index]
         {
             get => this.TlvCollection[index];
             set => this.TlvCollection[index] = value;
@@ -153,11 +153,11 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Parse byte[] into TLVs
         /// </summary>
-        public void ParseByteArrayIntoTlvs(byte[] bytes, int offset)
+        public void ParseByteArrayIntoTlvs(Byte[] bytes, Int32 offset)
         {
-            log.DebugFormat("bytes.Length {0}, offset {1}", bytes.Length, offset);
+            Log.DebugFormat("bytes.Length {0}, offset {1}", bytes.Length, offset);
 
-            int position = 0;
+            Int32 position = 0;
 
             this.TlvCollection.Clear();
 
@@ -172,11 +172,11 @@ namespace PacketDotNet.LLDP
                 TLV currentTlv = TLVFactory(bytes, offset + position, typeLength.Type);
                 if (currentTlv == null)
                 {
-                    log.Debug("currentTlv == null");
+                    Log.Debug("currentTlv == null");
                     break;
                 }
 
-                log.DebugFormat("Adding tlv {0}, Type {1}",
+                Log.DebugFormat("Adding tlv {0}, Type {1}",
                                 currentTlv.GetType(), currentTlv.Type);
                 this.TlvCollection.Add(currentTlv);
 
@@ -190,13 +190,13 @@ namespace PacketDotNet.LLDP
                 position += (currentTlv.TotalLength);
             }
 
-            log.DebugFormat("Done, position {0}", position);
+            Log.DebugFormat("Done, position {0}", position);
         }
 
         /// <summary>
         ///
         /// </summary>
-        /// <param name="Bytes">
+        /// <param name="bytes">
         /// A <see cref="T:System.Byte[]"/>
         /// </param>
         /// <param name="offset">
@@ -208,30 +208,30 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A <see cref="TLV"/>
         /// </returns>
-        private static TLV TLVFactory(byte[] Bytes, int offset, TLVTypes type)
+        private static TLV TLVFactory(Byte[] bytes, Int32 offset, TLVTypes type)
         {
             switch(type)
             {
                 case TLVTypes.ChassisID:
-                    return new ChassisID(Bytes, offset);
+                    return new ChassisID(bytes, offset);
                 case TLVTypes.PortID:
-                    return new PortID(Bytes, offset);
+                    return new PortID(bytes, offset);
                 case TLVTypes.TimeToLive:
-                    return new TimeToLive(Bytes, offset);
+                    return new TimeToLive(bytes, offset);
                 case TLVTypes.PortDescription:
-                    return new PortDescription(Bytes, offset);
+                    return new PortDescription(bytes, offset);
                 case TLVTypes.SystemName:
-                    return new SystemName(Bytes, offset);
+                    return new SystemName(bytes, offset);
                 case TLVTypes.SystemDescription:
-                    return new SystemDescription(Bytes, offset);
+                    return new SystemDescription(bytes, offset);
                 case TLVTypes.SystemCapabilities:
-                    return new SystemCapabilities(Bytes, offset);
+                    return new SystemCapabilities(bytes, offset);
                 case TLVTypes.ManagementAddress:
-                    return new ManagementAddress(Bytes, offset);
+                    return new ManagementAddress(bytes, offset);
                 case TLVTypes.OrganizationSpecific:
-                    return new OrganizationSpecific(Bytes, offset);
+                    return new OrganizationSpecific(bytes, offset);
                 case TLVTypes.EndOfLLDPU:
-                    return new EndOfLLDPDU(Bytes, offset);
+                    return new EndOfLLDPDU(bytes, offset);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -249,16 +249,16 @@ namespace PacketDotNet.LLDP
 
             var lldpPacket = new LLDPPacket();
 
-            byte[] physicalAddressBytes = new byte[EthernetFields.MacAddressLength];
+            Byte[] physicalAddressBytes = new Byte[EthernetFields.MacAddressLength];
             rnd.NextBytes(physicalAddressBytes);
             var physicalAddress = new PhysicalAddress(physicalAddressBytes);
             lldpPacket.TlvCollection.Add(new ChassisID(physicalAddress));
 
-            byte[] networkAddress = new byte[IPv4Fields.AddressLength];
+            Byte[] networkAddress = new Byte[IPv4Fields.AddressLength];
             rnd.NextBytes(networkAddress);
             lldpPacket.TlvCollection.Add(new PortID(new NetworkAddress(new IPAddress(networkAddress))));
 
-            ushort seconds = (ushort)rnd.Next(0,120);
+            UInt16 seconds = (UInt16)rnd.Next(0,120);
             lldpPacket.TlvCollection.Add(new TimeToLive(seconds));
 
             lldpPacket.TlvCollection.Add(new EndOfLLDPDU());
@@ -267,11 +267,11 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -282,7 +282,7 @@ namespace PacketDotNet.LLDP
             if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the string of tlvs
-                string tlvs = "{";
+                String tlvs = "{";
                 var r = new Regex(@"[^(\.)]([^\.]*)$");
                 foreach(TLV tlv in this.TlvCollection)
                 {
@@ -315,7 +315,7 @@ namespace PacketDotNet.LLDP
             }
 
             // append the base string output
-            buffer.Append((string) base.ToString(outputFormat));
+            buffer.Append((String) base.ToString(outputFormat));
 
             return buffer.ToString();
         }
@@ -329,7 +329,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public TLVCollection TlvCollection = new TLVCollection();
 
-        int _Length;
+        private Int32 _length;
 
         #endregion
     }

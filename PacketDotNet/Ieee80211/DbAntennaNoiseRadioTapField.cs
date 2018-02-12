@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
@@ -16,17 +17,17 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length => 1;
+        public override UInt16 Length => 1;
 
         /// <summary>
         /// Antenna noise in dB
         /// </summary>
-        public byte AntennaNoisedB { get; set; }
+        public Byte AntennaNoisedB { get; set; }
             
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
             dest[offset] = this.AntennaNoisedB;
         }
@@ -56,7 +57,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='AntennaNoisedB'>
         /// Antenna signal noise in dB.
         /// </param>
-        public DbAntennaNoiseRadioTapField(byte AntennaNoisedB)
+        public DbAntennaNoiseRadioTapField(Byte AntennaNoisedB)
         {
             this.AntennaNoisedB = AntennaNoisedB;
         }
@@ -67,9 +68,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("AntennaNoisedB {0}", this.AntennaNoisedB);
+            return $"AntennaNoisedB {this.AntennaNoisedB}";
         }
     }
 }

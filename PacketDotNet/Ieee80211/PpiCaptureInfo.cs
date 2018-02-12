@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
@@ -19,7 +20,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override int Length => 0;
+        public override Int32 Length => 0;
 
         /// <summary>
         /// Gets the field bytes. This doesn't include the PPI field header.
@@ -27,7 +28,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public override byte[] Bytes => new byte[0];
+        public override Byte[] Bytes => new Byte[0];
 
         #endregion Properties
 

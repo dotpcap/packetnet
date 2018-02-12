@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
@@ -16,19 +17,19 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length => 1;
+        public override UInt16 Length => 1;
 
         /// <summary>
         /// Rate in Mbps
         /// </summary>
-        public double RateMbps { get; set; }
+        public Double RateMbps { get; set; }
             
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
-            dest[offset] = (byte) (this.RateMbps / 0.5);
+            dest[offset] = (Byte) (this.RateMbps / 0.5);
         }
 
         /// <summary>
@@ -57,7 +58,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='RateMbps'>
         /// Rate mbps.
         /// </param>
-        public RateRadioTapField(double RateMbps)
+        public RateRadioTapField(Double RateMbps)
         {
             this.RateMbps = RateMbps;             
         }
@@ -68,9 +69,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("RateMbps {0}", this.RateMbps);
+            return $"RateMbps {this.RateMbps}";
         }
     }
 }

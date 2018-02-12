@@ -33,25 +33,26 @@ namespace PacketDotNet.OSPF
     /// </summary>
     public class LSA
     {
-        internal ByteArraySegment header;
+        internal ByteArraySegment Header;
 
         /// <summary>
         /// The I pv4 bytes count.
         /// </summary>
-        public const int IPv4BytesCount = 4;
+        // ReSharper disable once InconsistentNaming
+        public const Int32 IPv4BytesCount = 4;
 
         /// <summary>
         /// The length of the network mask.
         /// </summary>
-        public const int NetworkMaskLength = 4;
+        public const Int32 NetworkMaskLength = 4;
 
         /// <summary>
         /// Default constructor
         /// </summary>
         public LSA()
         {
-            byte[] b = new byte[OSPFv2Fields.LSAHeaderLength];
-            this.header = new ByteArraySegment(b);
+            Byte[] b = new Byte[OSPFv2Fields.LSAHeaderLength];
+            this.Header = new ByteArraySegment(b);
         }
 
         /// <summary>
@@ -66,27 +67,27 @@ namespace PacketDotNet.OSPF
         /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public LSA(byte[] packet, int offset, int length)
+        public LSA(Byte[] packet, Int32 offset, Int32 length)
         {
-            this.header = new ByteArraySegment(packet, offset, length);
+            this.Header = new ByteArraySegment(packet, offset, length);
         }
 
         /// <summary>
         /// The time in seconds since the LSA was originated.
         /// </summary>
-        public ushort LSAge
+        public UInt16 LSAge
         {
-            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + LSAFields.LSAgePosition);
-            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.LSAgePosition);
+            get => EndianBitConverter.Big.ToUInt16(this.Header.Bytes, this.Header.Offset + LSAFields.LSAgePosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.Header.Bytes, this.Header.Offset + LSAFields.LSAgePosition);
         }
 
         /// <summary>
         /// The optional capabilities supported by the described portion of the routing domain.
         /// </summary>
-        public byte Options
+        public Byte Options
         {
-            get => this.header.Bytes[this.header.Offset + LSAFields.OptionsPosition];
-            set => this.header.Bytes[this.header.Offset + LSAFields.OptionsPosition] = value;
+            get => this.Header.Bytes[this.Header.Offset + LSAFields.OptionsPosition];
+            set => this.Header.Bytes[this.Header.Offset + LSAFields.OptionsPosition] = value;
         }
 
         ///<summary>
@@ -94,8 +95,8 @@ namespace PacketDotNet.OSPF
         ///</summary>
         public LSAType LSType
         {
-            get => (LSAType) this.header.Bytes[this.header.Offset + LSAFields.LSTypePosition];
-            set => this.header.Bytes[this.header.Offset + LSAFields.LSTypePosition] = (byte)value;
+            get => (LSAType) this.Header.Bytes[this.Header.Offset + LSAFields.LSTypePosition];
+            set => this.Header.Bytes[this.Header.Offset + LSAFields.LSTypePosition] = (Byte)value;
         }
 
         /// <summary>
@@ -108,15 +109,15 @@ namespace PacketDotNet.OSPF
             get
             {
 
-                var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + LSAFields.LinkStateIDPosition);
+                var val = EndianBitConverter.Little.ToUInt32(this.Header.Bytes, this.Header.Offset + LSAFields.LinkStateIDPosition);
                 return new IPAddress(val);
 
             }
             set
             {
-                byte[] address = value.GetAddressBytes();
-                Array.Copy((Array) address, (int) 0,
-                           (Array) this.header.Bytes, (int) (this.header.Offset + LSAFields.LinkStateIDPosition),
+                Byte[] address = value.GetAddressBytes();
+                Array.Copy(address, 0,
+                           this.Header.Bytes, this.Header.Offset + LSAFields.LinkStateIDPosition,
                            address.Length);
             }
         }
@@ -128,14 +129,14 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + LSAFields.AdvertisingRouterIDPosition);
+                var val = EndianBitConverter.Little.ToUInt32(this.Header.Bytes, this.Header.Offset + LSAFields.AdvertisingRouterIDPosition);
                 return new IPAddress(val);
             }
             set
             {
-                byte[] address = value.GetAddressBytes();
-                Array.Copy((Array) address, (int) 0,
-                           (Array) this.header.Bytes, (int) (this.header.Offset + LSAFields.AdvertisingRouterIDPosition),
+                Byte[] address = value.GetAddressBytes();
+                Array.Copy(address, 0,
+                           this.Header.Bytes, this.Header.Offset + LSAFields.AdvertisingRouterIDPosition,
                            address.Length);
             }
         }
@@ -144,37 +145,37 @@ namespace PacketDotNet.OSPF
         /// Detects old or duplicate LSAs.  Successive instances of an LSA
         /// are given successive LS sequence numbers.
         /// </summary>
-        public uint LSSequenceNumber
+        public UInt32 LSSequenceNumber
         {
-            get => EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + LSAFields.LSSequenceNumberPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.LSSequenceNumberPosition);
+            get => EndianBitConverter.Big.ToUInt32(this.Header.Bytes, this.Header.Offset + LSAFields.LSSequenceNumberPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.Header.Bytes, this.Header.Offset + LSAFields.LSSequenceNumberPosition);
         }
 
         /// <summary>
         /// The Fletcher checksum of the complete contents of the LSA,
         /// including the LSA header but excluding the LS age field.
         /// </summary>
-        public ushort Checksum
+        public UInt16 Checksum
         {
-            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + LSAFields.ChecksumPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.ChecksumPosition);
+            get => EndianBitConverter.Big.ToUInt16(this.Header.Bytes, this.Header.Offset + LSAFields.ChecksumPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.Header.Bytes, this.Header.Offset + LSAFields.ChecksumPosition);
         }
 
         /// <summary>
         /// The length in bytes of the LSA.  This includes the 20 byte LSA
         /// header.
         /// </summary>
-        public ushort Length
+        public UInt16 Length
         {
-            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + LSAFields.PacketLengthPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.PacketLengthPosition);
+            get => EndianBitConverter.Big.ToUInt16(this.Header.Bytes, this.Header.Offset + LSAFields.PacketLengthPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.Header.Bytes, this.Header.Offset + LSAFields.PacketLengthPosition);
         }
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents the current <see cref="LSA"/>.
         /// </summary>
         /// <returns>A <see cref="System.String"/> that represents the current <see cref="LSA"/>.</returns>
-        public override string ToString()
+        public override String ToString()
         {
             StringBuilder builder = new StringBuilder();
             builder.AppendFormat("LSA Type {0}, Checksum {1:X2}\n", this.LSType, this.Checksum);
@@ -185,6 +186,6 @@ namespace PacketDotNet.OSPF
         /// Gets the bytes.
         /// </summary>
         /// <value>The bytes.</value>
-        public virtual byte[] Bytes => this.header.ActualBytes();
+        public virtual Byte[] Bytes => this.Header.ActualBytes();
     }
 }

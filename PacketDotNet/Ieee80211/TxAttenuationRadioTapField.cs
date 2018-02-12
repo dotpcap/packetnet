@@ -20,17 +20,17 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length => 2;
+        public override UInt16 Length => 2;
 
         /// <summary>
         /// Transmit power
         /// </summary>
-        public int TxPower { get; set; }
+        public Int32 TxPower { get; set; }
    
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
             UInt16 absValue = (UInt16) Math.Abs(this.TxPower);
             EndianBitConverter.Little.CopyBytes(absValue, dest, offset);
@@ -44,7 +44,7 @@ namespace PacketDotNet.Ieee80211
         /// </param>
         public TxAttenuationRadioTapField(BinaryReader br)
         {
-            this.TxPower = -(int)br.ReadUInt16();
+            this.TxPower = -(Int32)br.ReadUInt16();
         }
             
         /// <summary>
@@ -61,7 +61,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='TxPower'>
         /// Transmit power expressed as unitless distance from max power set at factory calibration. 0 is max power.
         /// </param>
-        public TxAttenuationRadioTapField (int TxPower)
+        public TxAttenuationRadioTapField (Int32 TxPower)
         {
             this.TxPower = TxPower;
         }
@@ -72,9 +72,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("TxPower {0}", this.TxPower);
+            return $"TxPower {this.TxPower}";
         }
     }
 }

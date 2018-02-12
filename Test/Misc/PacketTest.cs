@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
+using System;
 using NUnit.Framework;
 using PacketDotNet.Tcp;
 
@@ -29,10 +30,10 @@ namespace Test.Misc
         [Test]
         public void TestSettingPayloadData()
         {
-            byte[] data = new byte[10];
-            for(int i = 0; i < data.Length; i++)
+            Byte[] data = new Byte[10];
+            for(Int32 i = 0; i < data.Length; i++)
             {
-                data[i] = (byte)i;
+                data[i] = (Byte)i;
             }
 
             // NOTE: we use TcpPacket because it has a simple constructor. We can't

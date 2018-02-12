@@ -1,3 +1,5 @@
+using System;
+
 namespace PacketDotNet.OSPF
 {
     /// <summary>
@@ -7,12 +9,12 @@ namespace PacketDotNet.OSPF
     public class ASExternalLSAFields : LSAFields
     {
         /// <summary> The length of the NetworkMask field in bytes</summary>
-        public readonly static int NetworkMaskLength = 4;
+        public static readonly Int32 NetworkMaskLength = 4;
 
         /// <summary> The relative postion of the NetworkMask field</summary>
-        public readonly static int NetworkMaskPosition;
+        public static readonly Int32 NetworkMaskPosition;
         /// <summary> The relative postion of the Metric field</summary>
-        public readonly static int MetricPosition;
+        public static readonly Int32 MetricPosition;
 
         static ASExternalLSAFields()
         {

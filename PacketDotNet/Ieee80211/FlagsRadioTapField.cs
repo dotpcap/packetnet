@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
@@ -16,7 +17,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length => 1;
+        public override UInt16 Length => 1;
 
         /// <summary>
         /// Flags set
@@ -26,9 +27,9 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
-            dest[offset] = (byte) this.Flags;
+            dest[offset] = (Byte) this.Flags;
         }
 
         /// <summary>
@@ -68,9 +69,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("Flags {0}", this.Flags);
+            return $"Flags {this.Flags}";
         }
     }
 }

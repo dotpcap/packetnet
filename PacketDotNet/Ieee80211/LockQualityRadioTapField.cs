@@ -19,7 +19,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length => 2;
+        public override UInt16 Length => 2;
 
         /// <summary>
         /// Signal quality
@@ -29,7 +29,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
             EndianBitConverter.Little.CopyBytes(this.SignalQuality, dest, offset);
         }
@@ -70,9 +70,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("SignalQuality {0}", this.SignalQuality);
+            return String.Format("SignalQuality {0}", this.SignalQuality);
         }
     }
 }

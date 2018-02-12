@@ -29,6 +29,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Contains information specific to 802.3 packets.
         /// </summary>
+        // ReSharper disable once InconsistentNaming
         public class Ppi802_3 : PpiField
         {
             /// <summary>
@@ -78,7 +79,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The length.
             /// </value>
-            public override int Length => 8;
+            public override Int32 Length => 8;
 
             /// <summary>
             /// Gets or sets the standard 802.2 flags.
@@ -101,14 +102,14 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The bytes.
             /// </value>
-            public override byte[] Bytes
+            public override Byte[] Bytes
             {
                 get
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
-                    writer.Write((uint) this.Flags);
-                    writer.Write((uint) this.Errors);
+                    writer.Write((UInt32) this.Flags);
+                    writer.Write((UInt32) this.Errors);
                     return ms.ToArray();
                 }
             }

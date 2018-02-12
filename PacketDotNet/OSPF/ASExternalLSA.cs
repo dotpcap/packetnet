@@ -15,19 +15,19 @@ namespace PacketDotNet.OSPF
         /// <summary>
         /// The type of the lsa.
         /// </summary>
-        public static readonly LSAType lsaType = LSAType.ASExternal;
+        public static readonly LSAType LSAType = LSAType.ASExternal;
 
-        const int ASExternalLinkLength = 12;
+        private const Int32 ASExternalLinkLength = 12;
 
         /// <summary>
         /// Default constructor
         /// </summary>
         public ASExternalLSA()
         {
-            byte[] b = new byte[ASExternalLSAFields.MetricPosition];
-            this.header = new ByteArraySegment(b);
-            this.LSType = lsaType;
-            this.Length = (ushort)this.header.Bytes.Length;
+            Byte[] b = new Byte[ASExternalLSAFields.MetricPosition];
+            this.Header = new ByteArraySegment(b);
+            this.LSType = LSAType;
+            this.Length = (UInt16)this.Header.Bytes.Length;
         }
 
         /// <summary>
@@ -35,19 +35,19 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public ASExternalLSA(List<ASExternalLink> links)
         {
-            int length = ASExternalLSAFields.MetricPosition + ASExternalLink.Length * links.Count;
-            int offset = ASExternalLSAFields.MetricPosition;
-            byte[] b = new byte[length];
+            Int32 length = ASExternalLSAFields.MetricPosition + ASExternalLink.Length * links.Count;
+            Int32 offset = ASExternalLSAFields.MetricPosition;
+            Byte[] b = new Byte[length];
 
             foreach (ASExternalLink l in links)
             {
-                Array.Copy((Array) l.Bytes, (int) 0, (Array) b, offset, (int) ASExternalLink.Length);
+                Array.Copy(l.Bytes, 0, b, offset, ASExternalLink.Length);
                 offset += ASExternalLink.Length;
             }
 
-            this.header = new ByteArraySegment(b);
-            this.LSType = lsaType;
-            this.Length = (ushort)this.header.Bytes.Length;
+            this.Header = new ByteArraySegment(b);
+            this.LSType = LSAType;
+            this.Length = (UInt16)this.Header.Bytes.Length;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace PacketDotNet.OSPF
         /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public ASExternalLSA(byte[] packet, int offset, int length) :
+        public ASExternalLSA(Byte[] packet, Int32 offset, Int32 length) :
             base(packet, offset, length)
         {
 
@@ -76,14 +76,14 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + ASExternalLSAFields.NetworkMaskPosition);
+                var val = EndianBitConverter.Little.ToUInt32(this.Header.Bytes, this.Header.Offset + ASExternalLSAFields.NetworkMaskPosition);
                 return new IPAddress(val);
             }
             set
             {
-                byte[] address = value.GetAddressBytes();
-                Array.Copy((Array) address, (int) 0,
-                    (Array) this.header.Bytes, (int) (this.header.Offset + ASExternalLSAFields.NetworkMaskPosition),
+                Byte[] address = value.GetAddressBytes();
+                Array.Copy(address, 0,
+                    this.Header.Bytes, this.Header.Offset + ASExternalLSAFields.NetworkMaskPosition,
                     address.Length);
             }
         }
@@ -95,12 +95,12 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                int linkCnt = (this.Length - NetworkMaskLength - OSPFv2Fields.LSAHeaderLength) / ASExternalLinkLength;
+                Int32 linkCnt = (this.Length - NetworkMaskLength - OSPFv2Fields.LSAHeaderLength) / ASExternalLinkLength;
                 List<ASExternalLink> ret = new List<ASExternalLink>(linkCnt);
-                for(int i = 0; i < linkCnt; i++)
+                for(Int32 i = 0; i < linkCnt; i++)
                 {
-                    ASExternalLink l = new ASExternalLink(this.header.Bytes,
-                        this.header.Offset + ASExternalLSAFields.MetricPosition + i * ASExternalLink.Length,
+                    ASExternalLink l = new ASExternalLink(this.Header.Bytes,
+                        this.Header.Offset + ASExternalLSAFields.MetricPosition + i * ASExternalLink.Length,
                         ASExternalLink.Length);
                     ret.Add(l);
                 }

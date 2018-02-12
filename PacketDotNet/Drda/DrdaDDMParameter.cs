@@ -18,6 +18,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2017 Andrew <pandipd@outlook.com>
  */
 
+using System;
+
 namespace PacketDotNet.Drda
 {
     /// <summary>
@@ -28,7 +30,7 @@ namespace PacketDotNet.Drda
         /// <summary>
         /// The Length field
         /// </summary>
-        public int Length { set; get; }
+        public Int32 Length { set; get; }
 
         /// <summary>
         /// The Drda Code Point Type field
@@ -38,6 +40,6 @@ namespace PacketDotNet.Drda
         /// <summary>
         /// The Other Data field
         /// </summary>
-        public string Data { set; get; }
+        public String Data { set; get; }
     }
 }

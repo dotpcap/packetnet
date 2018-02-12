@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
@@ -9,11 +10,10 @@ namespace PacketDotNet.Ieee80211
     /// </summary>
     public class PpiUnknown : PpiField
     {
-        private PpiFieldType fieldType;
         #region Properties
 
         /// <summary>Type of the field</summary>
-        public override PpiFieldType FieldType => this.fieldType;
+        public override PpiFieldType FieldType { get; }
 
         /// <summary>
         /// Gets the length of the field data.
@@ -21,7 +21,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override int Length => this.Bytes.Length;
+        public override Int32 Length => this.Bytes.Length;
 
         /// <summary>
         /// Gets the field bytes. This doesn't include the PPI field header.
@@ -29,7 +29,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public override byte[] Bytes => this.UnknownBytes;
+        public override Byte[] Bytes => this.UnknownBytes;
 
         /// <summary>
         /// Gets or sets the field data.
@@ -37,7 +37,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The fields values bytes.
         /// </value>
-        public byte[] UnknownBytes { get; set; }
+        public Byte[] UnknownBytes { get; set; }
             
         #endregion Properties
 
@@ -59,9 +59,9 @@ namespace PacketDotNet.Ieee80211
         /// <param name='length'>
         /// The number of bytes the unknown field contains.
         /// </param>
-        public PpiUnknown (int typeNumber, BinaryReader br, int length)
+        public PpiUnknown (Int32 typeNumber, BinaryReader br, Int32 length)
         {
-            this.fieldType = (PpiFieldType) typeNumber;
+            this.FieldType = (PpiFieldType) typeNumber;
             this.UnknownBytes = br.ReadBytes(length);
         }
    
@@ -71,9 +71,9 @@ namespace PacketDotNet.Ieee80211
         /// <param name='typeNumber'>
         /// The PPI field type number.
         /// </param>
-        public PpiUnknown (int typeNumber)
+        public PpiUnknown (Int32 typeNumber)
         {
-            this.fieldType = (PpiFieldType)typeNumber;
+            this.FieldType = (PpiFieldType)typeNumber;
         }
         /// <summary>
         /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiUnknown"/> class.
@@ -84,9 +84,9 @@ namespace PacketDotNet.Ieee80211
         /// <param name='UnknownBytes'>
         /// The field data.
         /// </param>
-        public PpiUnknown (int typeNumber, byte[] UnknownBytes)
+        public PpiUnknown (Int32 typeNumber, Byte[] UnknownBytes)
         {
-            this.fieldType = (PpiFieldType)typeNumber;
+            this.FieldType = (PpiFieldType)typeNumber;
             this.UnknownBytes = UnknownBytes;
         }
             

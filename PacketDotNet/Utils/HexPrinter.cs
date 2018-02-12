@@ -15,6 +15,7 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System;
 using System.Net.NetworkInformation;
 using System.Text;
 
@@ -41,13 +42,13 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public static string GetString(byte[] Byte,
-                                       int Offset,
-                                       int Length)
+        public static String GetString(Byte[] Byte,
+                                       Int32 Offset,
+                                       Int32 Length)
         {
             StringBuilder sb = new StringBuilder();
 
-            for(int i = Offset; i < Offset + Length; i++)
+            for(Int32 i = Offset; i < Offset + Length; i++)
             {
                 sb.AppendFormat("[{0:x2}]", Byte[i]);
             }
@@ -64,12 +65,12 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public static string PrintMACAddress(PhysicalAddress address)
+        public static String PrintMACAddress(PhysicalAddress address)
         {
-            byte[] bytes = address.GetAddressBytes();
-            string output = "";
+            Byte[] bytes = address.GetAddressBytes();
+            String output = "";
 
-            for(int i = 0; i < bytes.Length; i++)
+            for(Int32 i = 0; i < bytes.Length; i++)
             {
                 output += bytes[i].ToString("x").PadLeft(2, '0') + ":";
             }

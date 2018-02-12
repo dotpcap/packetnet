@@ -18,6 +18,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
+using System;
+
 namespace PacketDotNet.Tcp
 {
     /// <summary>
@@ -45,7 +47,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public SACKPermitted(byte[] bytes, int offset, int length) :
+        public SACKPermitted(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
         { }
 

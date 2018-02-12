@@ -35,7 +35,7 @@ namespace PacketDotNet.LLDP
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
@@ -57,7 +57,7 @@ namespace PacketDotNet.LLDP
         /// <param name="offset">
         /// The TLVs offset from the start of byte[] bytes
         /// </param>
-        public TLV(byte[] bytes, int offset)
+        public TLV(Byte[] bytes, Int32 offset)
         {
             // setup a local ByteArrayAndOffset in order to retrieve the value length
             // NOTE: we cannot set tlvData to retrieve the value length as
@@ -69,7 +69,7 @@ namespace PacketDotNet.LLDP
 
             // set the tlvData assuming we have at least the bytes required for the
             // type/length fields
-            this.tlvData = new ByteArraySegment(bytes, offset, this.TypeLength.Length + TLVTypeLength.TypeLengthLength)
+            this.TLVData = new ByteArraySegment(bytes, offset, this.TypeLength.Length + TLVTypeLength.TypeLengthLength)
             {
 
                 // retrieve the actual length
@@ -85,7 +85,7 @@ namespace PacketDotNet.LLDP
         /// Length of value portion of the TLV
         /// NOTE: Does not include the length of the Type and Length fields
         /// </summary>
-        public int Length
+        public Int32 Length
         {
             get => this.TypeLength.Length;
 
@@ -97,7 +97,7 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Total length of the TLV, including the length of the Type and Length fields
         /// </summary>
-        public int TotalLength => this.tlvData.Length;
+        public Int32 TotalLength => this.TLVData.Length;
 
         /// <summary>
         /// Tlv type
@@ -108,7 +108,7 @@ namespace PacketDotNet.LLDP
 
             set
             {
-                log.DebugFormat("value {0}", value);
+                Log.DebugFormat("value {0}", value);
                 this.TypeLength.Type = value;
             }
         }
@@ -116,12 +116,12 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Offset to the value bytes of the TLV
         /// </summary>
-        internal int ValueOffset => this.tlvData.Offset + TLVTypeLength.TypeLengthLength;
+        internal Int32 ValueOffset => this.TLVData.Offset + TLVTypeLength.TypeLengthLength;
 
         /// <summary>
         /// Return a byte[] that contains the tlv
         /// </summary>
-        public virtual byte[] Bytes => this.tlvData.ActualBytes();
+        public virtual Byte[] Bytes => this.TLVData.ActualBytes();
 
         #endregion
 
@@ -135,7 +135,7 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Points to the TLV data
         /// </summary>
-        internal ByteArraySegment tlvData
+        internal ByteArraySegment TLVData
         {
             get => this._tlvData;
 

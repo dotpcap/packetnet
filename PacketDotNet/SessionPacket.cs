@@ -28,7 +28,7 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        public SessionPacket()
+        protected SessionPacket()
         {}
     }
 }

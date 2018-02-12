@@ -33,22 +33,22 @@ namespace PacketDotNet.Utils
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
-        private int length;
+        private Int32 _length;
 
         /// <value>
         /// The byte[] array
         /// </value>
-        public byte[] Bytes { get; private set; }
+        public Byte[] Bytes { get; private set; }
 
         /// <value>
         /// The maximum number of bytes we should treat Bytes as having, allows
         /// for controling the number of bytes produced by EncapsulatedBytes()
         /// </value>
-        public int BytesLength { get; private set; }
+        public Int32 BytesLength { get; private set; }
 
         /// <value>
         /// Number of bytes beyond the offset into Bytes
@@ -56,79 +56,79 @@ namespace PacketDotNet.Utils
         /// Take care when setting this parameter as many things are based on
         /// the value of this property being correct
         /// </value>
-        public int Length
+        public Int32 Length
         {
-            get => this.length;
+            get => this._length;
             set
             {
                 // check for invalid values
                 if(value < 0)
                     throw new InvalidOperationException("attempting to set a negative length of " + value);
 
-                this.length = value;
-                log.DebugFormat("Length: {0}", value);
+                this._length = value;
+                Log.DebugFormat("Length: {0}", value);
             }
         }
 
         /// <value>
         /// Offset into Bytes
         /// </value>
-        public int Offset { get; private set; }
+        public Int32 Offset { get; private set; }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="Bytes">
+        /// <param name="bytes">
         /// A <see cref="T:System.Byte[]"/>
         /// </param>
-        public ByteArraySegment(byte[] Bytes) :
-            this(Bytes, (int) 0, Bytes.Length)
+        public ByteArraySegment(Byte[] bytes) :
+            this(bytes, (Int32) 0, bytes.Length)
         { }
 
         /// <summary>
         /// Constructor from a byte array, offset into the byte array and
         /// a length beyond that offset of the bytes this class is referencing
         /// </summary>
-        /// <param name="Bytes">
+        /// <param name="bytes">
         /// A <see cref="System.Byte"/>
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// A <see cref="System.Int32"/>
         /// </param>
-        /// <param name="Length">
+        /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public ByteArraySegment(byte[] Bytes, int Offset, int Length)
-            : this(Bytes, Offset, Length, Bytes.Length)
+        public ByteArraySegment(Byte[] bytes, Int32 offset, Int32 length)
+            : this(bytes, offset, length, bytes.Length)
         { }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="Bytes">
+        /// <param name="bytes">
         /// A <see cref="T:System.Byte[]"/>
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// A <see cref="System.Int32"/>
         /// </param>
-        /// <param name="Length">
+        /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        /// <param name="BytesLength">
+        /// <param name="bytesLength">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public ByteArraySegment(byte[] Bytes, int Offset, int Length, int BytesLength)
+        public ByteArraySegment(Byte[] bytes, Int32 offset, Int32 length, Int32 bytesLength)
         {
-            log.DebugFormat("Bytes.Length {0}, Offset {1}, Length {2}, BytesLength {3}",
-                            Bytes.Length,
-                            Offset,
-                            Length,
-                            BytesLength);
+            Log.DebugFormat("Bytes.Length {0}, Offset {1}, Length {2}, BytesLength {3}",
+                            bytes.Length,
+                            offset,
+                            length,
+                            bytesLength);
 
-            this.Bytes = Bytes;
-            this.Offset = Offset;
-            this.Length = Length;
-            this.BytesLength = Math.Min(BytesLength, Bytes.Length);
+            this.Bytes = bytes;
+            this.Offset = offset;
+            this.Length = length;
+            this.BytesLength = Math.Min(bytesLength, bytes.Length);
         }
 
         /// <summary>
@@ -154,19 +154,19 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="System.Byte"/>
         /// </returns>
-        public byte[] ActualBytes()
+        public Byte[] ActualBytes()
         {
-            log.DebugFormat("{0}", this.ToString());
+            Log.DebugFormat("{0}", this.ToString());
 
             if(this.NeedsCopyForActualBytes)
             {
-                log.Debug("needs copy");
-                var newBytes = new byte[this.Length];
-                Array.Copy((Array) this.Bytes, (int) this.Offset, (Array) newBytes, (int) 0, (int) this.Length);
+                Log.Debug("needs copy");
+                var newBytes = new Byte[this.Length];
+                Array.Copy((Array) this.Bytes, (Int32) this.Offset, (Array) newBytes, (Int32) 0, (Int32) this.Length);
                 return newBytes;
             } else
             {
-                log.Debug("does not need copy");
+                Log.Debug("does not need copy");
                 return this.Bytes;
             }
         }
@@ -178,7 +178,7 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="System.Boolean"/>
         /// </returns>
-        public bool NeedsCopyForActualBytes
+        public Boolean NeedsCopyForActualBytes
         {
             get
             {
@@ -187,7 +187,7 @@ namespace PacketDotNet.Utils
                 var okWithoutCopy = ((this.Offset == 0) && (this.Length == this.Bytes.Length));
                 var retval = !okWithoutCopy;
 
-                log.DebugFormat("retval {0}", retval);
+                Log.DebugFormat("retval {0}", retval);
 
                 return retval;
             }
@@ -210,34 +210,34 @@ namespace PacketDotNet.Utils
         /// <summary>
         /// Create the segment after the current one
         /// </summary>
-        /// <param name="NewSegmentLength">
+        /// <param name="newSegmentLength">
         /// A <see cref="System.Int32"/> that can be used to limit the segment length
         /// of the ByteArraySegment that is to be returned. Often used to exclude trailing bytes.
         /// </param>
         /// <returns>
         /// A <see cref="ByteArraySegment"/>
         /// </returns>
-        public ByteArraySegment EncapsulatedBytes(int NewSegmentLength)
+        public ByteArraySegment EncapsulatedBytes(Int32 newSegmentLength)
         {
-            log.DebugFormat("NewSegmentLength {0}", NewSegmentLength);
+            Log.DebugFormat("NewSegmentLength {0}", newSegmentLength);
 
-            int startingOffset = this.Offset + this.Length; // start at the end of the current segment
-            log.DebugFormat("startingOffset({0}) = Offset({1}) + Length({2})",
+            Int32 startingOffset = this.Offset + this.Length; // start at the end of the current segment
+            Log.DebugFormat("startingOffset({0}) = Offset({1}) + Length({2})",
                             startingOffset,
                             this.Offset,
                             this.Length);
 
             // ensure that the new segment length isn't longer than the number of bytes
             // available after the current segment
-            NewSegmentLength = Math.Min(NewSegmentLength, this.BytesLength - startingOffset);
+            newSegmentLength = Math.Min(newSegmentLength, this.BytesLength - startingOffset);
 
             // calculate the ByteLength property of the new ByteArraySegment
-            int NewByteLength = startingOffset + NewSegmentLength;
+            Int32 newByteLength = startingOffset + newSegmentLength;
 
-            log.DebugFormat("NewSegmentLength {0}, NewByteLength {1}, BytesLength {2}",
-                            NewSegmentLength, NewByteLength, this.BytesLength);
+            Log.DebugFormat("NewSegmentLength {0}, NewByteLength {1}, BytesLength {2}",
+                            newSegmentLength, newByteLength, this.BytesLength);
 
-            return new ByteArraySegment(this.Bytes, startingOffset, NewSegmentLength, NewByteLength);
+            return new ByteArraySegment(this.Bytes, startingOffset, newSegmentLength, newByteLength);
         }
 
         /// <summary>
@@ -246,9 +246,9 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString ()
+        public override String ToString ()
         {
-            return string.Format("[ByteArraySegment: Length={0}, Bytes.Length={1}, BytesLength={2}, Offset={3}, NeedsCopyForActualBytes={4}]",
+            return String.Format("[ByteArraySegment: Length={0}, Bytes.Length={1}, BytesLength={2}, Offset={3}, NeedsCopyForActualBytes={4}]",
                                  this.Length, this.Bytes.Length, this.BytesLength, this.Offset, this.NeedsCopyForActualBytes);
         }
     }

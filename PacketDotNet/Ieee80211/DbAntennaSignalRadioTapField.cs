@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
@@ -16,17 +17,17 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length => 1;
+        public override UInt16 Length => 1;
 
         /// <summary>
         /// Signal strength in dB
         /// </summary>
-        public byte SignalStrengthdB { get; set; }
+        public Byte SignalStrengthdB { get; set; }
             
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
             dest[offset] = this.SignalStrengthdB;
         }
@@ -56,7 +57,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='SignalStrengthdB'>
         /// Signal strength in dB
         /// </param>
-        public DbAntennaSignalRadioTapField (byte SignalStrengthdB)
+        public DbAntennaSignalRadioTapField (Byte SignalStrengthdB)
         {
             this.SignalStrengthdB = SignalStrengthdB;
         }
@@ -67,9 +68,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("SignalStrengthdB {0}", this.SignalStrengthdB);
+            return $"SignalStrengthdB {this.SignalStrengthdB}";
         }
     }
 }

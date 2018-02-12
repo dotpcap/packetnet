@@ -39,7 +39,7 @@ namespace PacketDotNet.LLDP
         /// The System Name TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public SystemName(byte[] bytes, int offset) :
+        public SystemName(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {}
 
@@ -49,7 +49,7 @@ namespace PacketDotNet.LLDP
         /// <param name="name">
         /// A textual Name of the system
         /// </param>
-        public SystemName(string name) : base(TLVTypes.SystemName, name)
+        public SystemName(String name) : base(TLVTypes.SystemName, name)
         {
         }
 
@@ -60,7 +60,7 @@ namespace PacketDotNet.LLDP
         /// <value>
         /// A textual Name of the system
         /// </value>
-        public string Name
+        public String Name
         {
             get => this.StringValue;
             set => this.StringValue = value;

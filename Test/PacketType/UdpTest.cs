@@ -85,12 +85,12 @@ namespace Test.PacketType
         public void ConstructUdpPacketFromValuesAndCheckThatLengthIsUpdated()
         {
             // build a udp packet
-            ushort sourcePort = 200;
-            ushort destinationPort = 300;
-            byte[] dataBytes = new byte[32];
-            for(int i = 0; i < dataBytes.Length; i++)
+            UInt16 sourcePort = 200;
+            UInt16 destinationPort = 300;
+            Byte[] dataBytes = new Byte[32];
+            for(Int32 i = 0; i < dataBytes.Length; i++)
             {
-                dataBytes[i] = (byte)i;
+                dataBytes[i] = (Byte)i;
             }
 
             var udpPacket = new UdpPacket(sourcePort, destinationPort)
@@ -137,7 +137,7 @@ namespace Test.PacketType
             dev.Open();
 
             // checksums from wireshark of the capture file
-            int[] expectedChecksum = {0x2be9,
+            Int32[] expectedChecksum = {0x2be9,
                                       0x9e06,
                                       0xd279,
                                       0x4709,
@@ -148,7 +148,7 @@ namespace Test.PacketType
                                       0xb8e6,
                                       0x932c};
 
-            int packetIndex = 0;
+            Int32 packetIndex = 0;
             RawCapture rawCapture;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
@@ -175,9 +175,9 @@ namespace Test.PacketType
             dev.Open();
 
             // checksums from wireshark of the capture file
-            int[] expectedChecksum = {0x61fb};
+            Int32[] expectedChecksum = {0x61fb};
 
-            int packetIndex = 0;
+            Int32 packetIndex = 0;
             RawCapture rawCapture;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
@@ -240,7 +240,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            bool foundudpPacket = false;
+            Boolean foundudpPacket = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);

@@ -1,3 +1,5 @@
+using System;
+
 namespace PacketDotNet.OSPF
 {
     /// <summary>
@@ -7,14 +9,14 @@ namespace PacketDotNet.OSPF
     public class NetworkLSAFields : LSAFields
     {
         /// <summary> The length of the NetworkMask field in bytes</summary>
-        public readonly static int NetworkMaskLength = 4;
+        public static readonly Int32 NetworkMaskLength = 4;
         /// <summary> The length of the AttachedRouter field in bytes</summary>
-        public readonly static int AttachedRouterLength = 4;
+        public static readonly Int32 AttachedRouterLength = 4;
 
         /// <summary> The relative postion of the NetworkMask field</summary>
-        public readonly static int NetworkMaskPosition;
+        public static readonly Int32 NetworkMaskPosition;
         /// <summary> The relative postion of the AttachedRouter field</summary>
-        public readonly static int AttachedRouterPosition;
+        public static readonly Int32 AttachedRouterPosition;
 
         static NetworkLSAFields()
         {

@@ -32,20 +32,20 @@ namespace PacketDotNet
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
         /// <summary>
         /// Constructor
         /// </summary>
-        public TransportPacket()
+        protected TransportPacket()
         {
         }
 
         /// <value>
         /// The Checksum version
         /// </value>
-        public abstract ushort Checksum
+        public abstract UInt16 Checksum
         {
             get;
             set;
@@ -59,7 +59,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        internal int CalculateChecksum(TransportChecksumOption option)
+        internal Int32 CalculateChecksum(TransportChecksumOption option)
         {
             // save the checksum field value so it can be restored, altering the checksum is not
             // an intended side effect of this method
@@ -70,13 +70,13 @@ namespace PacketDotNet
             this.Checksum = 0;
 
             // copy the tcp section with data
-            byte[] dataToChecksum = ((IpPacket) this.ParentPacket).PayloadPacket.Bytes;
+            Byte[] dataToChecksum = ((IpPacket) this.ParentPacket).PayloadPacket.Bytes;
 
              if (option == TransportChecksumOption.AttachPseudoIPHeader)
                 dataToChecksum = ((IpPacket) this.ParentPacket).AttachPseudoIPHeader(dataToChecksum);
 
             // calculate the one's complement sum of the tcp header
-            int cs = ChecksumUtils.OnesComplementSum(dataToChecksum);
+            Int32 cs = ChecksumUtils.OnesComplementSum(dataToChecksum);
 
             // restore the checksum field value
             this.Checksum = originalChecksum;
@@ -93,19 +93,19 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Boolean"/>
         /// </returns>
-        public virtual bool IsValidChecksum(TransportChecksumOption option)
+        public virtual Boolean IsValidChecksum(TransportChecksumOption option)
         {
             var upperLayer = ((IpPacket) this.ParentPacket).PayloadPacket.Bytes;
 
-            log.DebugFormat("option: {0}, upperLayer.Length {1}",
+            Log.DebugFormat("option: {0}, upperLayer.Length {1}",
                             option, upperLayer.Length);
 
             if (option == TransportChecksumOption.AttachPseudoIPHeader)
                 upperLayer = ((IpPacket) this.ParentPacket).AttachPseudoIPHeader(upperLayer);
 
             var onesSum = ChecksumUtils.OnesSum(upperLayer);
-            const int expectedOnesSum = 0xffff;
-            log.DebugFormat("onesSum {0} expected {1}",
+            const Int32 expectedOnesSum = 0xffff;
+            Log.DebugFormat("onesSum {0} expected {1}",
                             onesSum,
                             expectedOnesSum);
 

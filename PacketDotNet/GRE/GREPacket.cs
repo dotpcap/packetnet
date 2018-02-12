@@ -34,26 +34,26 @@ namespace PacketDotNet.GRE
     public class GREPacket : Packet
     {
 
-        virtual public bool HasCheckSum => 8 == (this.header.Bytes[this.header.Offset + 1] & 0x8);
+        public virtual Boolean HasCheckSum => 8 == (this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset + 1] & 0x8);
 
-        virtual public bool HasReserved => 4 == (this.header.Bytes[this.header.Offset + 1] & 0x4);
+        public virtual Boolean HasReserved => 4 == (this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset + 1] & 0x4);
 
-        virtual public bool HasKey => 2 == (this.header.Bytes[this.header.Offset + 1] & 0x2);
+        public virtual Boolean HasKey => 2 == (this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset + 1] & 0x2);
 
-        virtual public bool HasSequence => 1 == (this.header.Bytes[this.header.Offset + 1] & 0x1);
+        public virtual Boolean HasSequence => 1 == (this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset + 1] & 0x1);
 
 
-        virtual public int Version => (this.header.Bytes[2] & 0x7);
+        public virtual Int32 Version => (this.HeaderByteArraySegment.Bytes[2] & 0x7);
 
-        virtual public EthernetPacketType Protocol => (EthernetPacketType) EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + GREFields.FlagsLength);
+        public virtual EthernetPacketType Protocol => (EthernetPacketType) EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + GREFields.FlagsLength);
 
 
         /// <summary> Fetch the GRE header checksum.</summary>
-        virtual public short Checksum => BitConverter.ToInt16(this.header.Bytes, this.header.Offset + GREFields.ChecksumPosition);
+        public virtual Int16 Checksum => BitConverter.ToInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + GREFields.ChecksumPosition);
 
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public String Color => AnsiEscapeSequences.DarkGray;
+        public override String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary>
         /// Constructor
@@ -64,27 +64,27 @@ namespace PacketDotNet.GRE
         public GREPacket(ByteArraySegment bas, Packet ParentPacket)
         {
             // slice off the header portion
-            this.header = new ByteArraySegment(bas)
+            this.HeaderByteArraySegment = new ByteArraySegment(bas)
             {
                 Length = GREFields.FlagsLength + GREFields.ProtocolLength
             };
-            if (this.HasCheckSum) this.header.Length += GREFields.ChecksumLength;
-            if (this.HasReserved) this.header.Length += GREFields.ReservedLength;
-            if (this.HasKey) this.header.Length += GREFields.KeyLength;
-            if (this.HasSequence) this.header.Length += GREFields.SequenceLength;
+            if (this.HasCheckSum) this.HeaderByteArraySegment.Length += GREFields.ChecksumLength;
+            if (this.HasReserved) this.HeaderByteArraySegment.Length += GREFields.ReservedLength;
+            if (this.HasKey) this.HeaderByteArraySegment.Length += GREFields.KeyLength;
+            if (this.HasSequence) this.HeaderByteArraySegment.Length += GREFields.SequenceLength;
 
             // parse the encapsulated bytes
-            this.payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(this.header, this.Protocol);
+            this.PayloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(this.HeaderByteArraySegment, this.Protocol);
             this.ParentPacket = ParentPacket;
         }
         
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
             
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
@@ -93,23 +93,27 @@ namespace PacketDotNet.GRE
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            switch (outputFormat)
             {
-                // build the output string
-                buffer.AppendFormat("{0}[GREPacket: Type={2}",
-                    color,
-                    colorEscape, this.Protocol);
-            }
-
-            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
-            {
-                // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
-                properties.Add("Protocol ", this.Protocol + " (0x" + this.Protocol.ToString("x") + ")");
+                case StringOutputType.Normal:
+                case StringOutputType.Colored:
+                    // build the output string
+                    buffer.AppendFormat("{0}[GREPacket: Type={2}",
+                        color,
+                        colorEscape, this.Protocol);
+                    break;
+                case StringOutputType.Verbose:
+                case StringOutputType.VerboseColored:
+                    // collect the properties and their value
+                    Dictionary<String, String> properties = new Dictionary<String, String>
+                    {
+                        { "Protocol ", this.Protocol + " (0x" + this.Protocol.ToString("x") + ")" }
+                    };
+                    break;
             }
 
             // append the base string output
-            buffer.Append((string) base.ToString(outputFormat));
+            buffer.Append((String) base.ToString(outputFormat));
             
             return buffer.ToString();
         }

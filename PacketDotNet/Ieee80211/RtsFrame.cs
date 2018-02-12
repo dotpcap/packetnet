@@ -43,7 +43,7 @@ namespace PacketDotNet.Ieee80211
             /// <summary>
             /// Length of the frame
             /// </summary>
-            public override int FrameSize => (MacFields.FrameControlLength +
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
                                               MacFields.DurationIDLength +
                                               (MacFields.AddressLength * 2));
 
@@ -55,14 +55,14 @@ namespace PacketDotNet.Ieee80211
             /// </param>
             public RtsFrame (ByteArraySegment bas)
             {
-                this.header = new ByteArraySegment (bas);
+                this.HeaderByteArraySegment = new ByteArraySegment (bas);
 
                 this.FrameControl = new FrameControlField (this.FrameControlBytes);
                 this.Duration = new DurationField (this.DurationBytes);
                 this.ReceiverAddress = this.GetAddress (0);
                 this.TransmitterAddress = this.GetAddress(1);
 
-                this.header.Length = this.FrameSize;
+                this.HeaderByteArraySegment.Length = this.FrameSize;
             }
    
             /// <summary>
@@ -74,7 +74,7 @@ namespace PacketDotNet.Ieee80211
             /// </returns>
             protected override String GetAddressString()
             {
-                return String.Format("RA {0} TA {1}", this.ReceiverAddress, this.TransmitterAddress);
+                return $"RA {this.ReceiverAddress} TA {this.TransmitterAddress}";
             }
         } 
     }

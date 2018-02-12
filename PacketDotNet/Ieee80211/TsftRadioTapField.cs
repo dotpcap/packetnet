@@ -18,7 +18,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length => 8;
+        public override UInt16 Length => 8;
 
         /// <summary>
         /// Timestamp in microseconds
@@ -28,7 +28,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
             EndianBitConverter.Little.CopyBytes(this.TimestampUsec, dest, offset);
         }
@@ -69,9 +69,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("TimestampUsec {0}", this.TimestampUsec);
+            return $"TimestampUsec {this.TimestampUsec}";
         }
     }
 }

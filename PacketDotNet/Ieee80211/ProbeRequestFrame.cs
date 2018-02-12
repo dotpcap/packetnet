@@ -31,7 +31,7 @@ namespace PacketDotNet.Ieee80211
         {
             private class ProbeRequestFields
             {
-                public readonly static int InformationElement1Position;
+                public static readonly Int32 InformationElement1Position;
 
                 static ProbeRequestFields()
                 {
@@ -45,7 +45,7 @@ namespace PacketDotNet.Ieee80211
             /// This does not include the FCS, it represents only the header bytes that would
             /// would preceed any payload.
             /// </summary>
-            public override int FrameSize => (MacFields.FrameControlLength +
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
                                               MacFields.DurationIDLength +
                                               (MacFields.AddressLength * 3) +
                                               MacFields.SequenceControlLength + this.InformationElements.Length);
@@ -68,7 +68,7 @@ namespace PacketDotNet.Ieee80211
             /// </param>
             public ProbeRequestFrame (ByteArraySegment bas)
             {
-                this.header = new ByteArraySegment (bas);
+                this.HeaderByteArraySegment = new ByteArraySegment (bas);
 
                 this.FrameControl = new FrameControlField (this.FrameControlBytes);
                 this.Duration = new DurationField (this.DurationBytes);
@@ -92,7 +92,7 @@ namespace PacketDotNet.Ieee80211
 				}
                 //cant set length until after we have handled the information elements
                 //as they vary in length
-                this.header.Length = this.FrameSize;
+                this.HeaderByteArraySegment.Length = this.FrameSize;
             }
    
             /// <summary>
@@ -131,9 +131,9 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((this.header == null) || (this.header.Length > (this.header.BytesLength - this.header.Offset)) || (this.header.Length < this.FrameSize))
+                if ((this.HeaderByteArraySegment == null) || (this.HeaderByteArraySegment.Length > (this.HeaderByteArraySegment.BytesLength - this.HeaderByteArraySegment.Offset)) || (this.HeaderByteArraySegment.Length < this.FrameSize))
                 {
-                    this.header = new ByteArraySegment (new Byte[this.FrameSize]);
+                    this.HeaderByteArraySegment = new ByteArraySegment (new Byte[this.FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
@@ -144,9 +144,9 @@ namespace PacketDotNet.Ieee80211
                 this.SequenceControlBytes = this.SequenceControl.Field;
                 
                 //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
-                this.InformationElements.CopyTo (this.header, this.header.Offset + ProbeRequestFields.InformationElement1Position);
+                this.InformationElements.CopyTo (this.HeaderByteArraySegment, this.HeaderByteArraySegment.Offset + ProbeRequestFields.InformationElement1Position);
 
-                this.header.Length = this.FrameSize;
+                this.HeaderByteArraySegment.Length = this.FrameSize;
             }
         } 
     }

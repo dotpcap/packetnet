@@ -37,7 +37,7 @@ namespace PacketDotNet.Ieee80211
             /// <summary>
             /// Length of the frame
             /// </summary>
-            override public int FrameSize => (MacFields.FrameControlLength +
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
                                               MacFields.DurationIDLength +
                                               MacFields.AddressLength);
 
@@ -49,13 +49,13 @@ namespace PacketDotNet.Ieee80211
             /// </param>
             public CtsFrame (ByteArraySegment bas)
             {
-                this.header = new ByteArraySegment (bas);
+                this.HeaderByteArraySegment = new ByteArraySegment (bas);
 
                 this.FrameControl = new FrameControlField (this.FrameControlBytes);
                 this.Duration = new DurationField (this.DurationBytes);
                 this.ReceiverAddress = this.GetAddress(0);
 
-                this.header.Length = this.FrameSize;
+                this.HeaderByteArraySegment.Length = this.FrameSize;
             }
 			
 			/// <summary>
@@ -78,9 +78,9 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((this.header == null) || (this.header.Length > (this.header.BytesLength - this.header.Offset)) || (this.header.Length < this.FrameSize))
+                if ((this.HeaderByteArraySegment == null) || (this.HeaderByteArraySegment.Length > (this.HeaderByteArraySegment.BytesLength - this.HeaderByteArraySegment.Offset)) || (this.HeaderByteArraySegment.Length < this.FrameSize))
                 {
-                    this.header = new ByteArraySegment (new Byte[this.FrameSize]);
+                    this.HeaderByteArraySegment = new ByteArraySegment (new Byte[this.FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
@@ -97,7 +97,7 @@ namespace PacketDotNet.Ieee80211
             /// </returns>
             protected override String GetAddressString()
             {
-                return String.Format("RA {0}", this.ReceiverAddress);
+                return $"RA {this.ReceiverAddress}";
             }
         } 
     }

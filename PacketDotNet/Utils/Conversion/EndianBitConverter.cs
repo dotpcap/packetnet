@@ -18,7 +18,7 @@ namespace PacketDotNet.Utils.Conversion
         /// most significant byte is on the right end of a word.
         /// </remarks>
         /// <returns>true if this converter is little-endian, false otherwise.</returns>
-        public abstract bool IsLittleEndian();
+        public abstract Boolean IsLittleEndian();
 
         /// <summary>
         /// Indicates the byte order ("endianess") in which data is converted using this class.
@@ -27,19 +27,18 @@ namespace PacketDotNet.Utils.Conversion
         #endregion
 
         #region Factory properties
-        static LittleEndianBitConverter little = new LittleEndianBitConverter();
+
         /// <summary>
         /// Returns a little-endian bit converter instance. The same instance is
         /// always returned.
         /// </summary>
-        public static LittleEndianBitConverter Little => little;
+        public static LittleEndianBitConverter Little { get; } = new LittleEndianBitConverter();
 
-        static BigEndianBitConverter big = new BigEndianBitConverter();
         /// <summary>
         /// Returns a big-endian bit converter instance. The same instance is
         /// always returned.
         /// </summary>
-        public static BigEndianBitConverter Big => big;
+        public static BigEndianBitConverter Big { get; } = new BigEndianBitConverter();
 
         #endregion
 
@@ -51,7 +50,7 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">The number to convert. </param>
         /// <returns>A 64-bit signed integer whose value is equivalent to value.</returns>
-        public long DoubleToInt64Bits(double value)
+        public Int64 DoubleToInt64Bits(Double value)
         {
             return BitConverter.DoubleToInt64Bits(value);
         }
@@ -63,7 +62,7 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">The number to convert. </param>
         /// <returns>A double-precision floating point number whose value is equivalent to value.</returns>
-        public double Int64BitsToDouble (long value)
+        public Double Int64BitsToDouble (Int64 value)
         {
             return BitConverter.Int64BitsToDouble(value);
         }
@@ -75,7 +74,7 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">The number to convert. </param>
         /// <returns>A 32-bit signed integer whose value is equivalent to value.</returns>
-        public int SingleToInt32Bits(float value)
+        public Int32 SingleToInt32Bits(Single value)
         {
             return new Int32SingleUnion(value).AsInt32;
         }
@@ -87,7 +86,7 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">The number to convert. </param>
         /// <returns>A single-precision floating point number whose value is equivalent to value.</returns>
-        public float Int32BitsToSingle (int value)
+        public Single Int32BitsToSingle (Int32 value)
         {
             return new Int32SingleUnion(value).AsSingle;
         }
@@ -100,7 +99,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>true if the byte at startIndex in value is nonzero; otherwise, false.</returns>
-        public bool ToBoolean (byte[] value, int startIndex)
+        public Boolean ToBoolean (Byte[] value, Int32 startIndex)
         {
             CheckByteArgument(value, startIndex, 1);
             return BitConverter.ToBoolean(value, startIndex);
@@ -112,9 +111,9 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A character formed by two bytes beginning at startIndex.</returns>
-        public char ToChar (byte[] value, int startIndex)
+        public Char ToChar (Byte[] value, Int32 startIndex)
         {
-            return unchecked((char) (this.CheckedFromBytes(value, startIndex, 2)));
+            return unchecked((Char) (this.CheckedFromBytes(value, startIndex, 2)));
         }
 
         /// <summary>
@@ -124,7 +123,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A double precision floating point number formed by eight bytes beginning at startIndex.</returns>
-        public double ToDouble (byte[] value, int startIndex)
+        public Double ToDouble (Byte[] value, Int32 startIndex)
         {
             return this.Int64BitsToDouble(this.ToInt64(value, startIndex));
         }
@@ -136,7 +135,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A single precision floating point number formed by four bytes beginning at startIndex.</returns>
-        public float ToSingle (byte[] value, int startIndex)
+        public Single ToSingle (Byte[] value, Int32 startIndex)
         {
             return this.Int32BitsToSingle(this.ToInt32(value, startIndex));
         }
@@ -147,9 +146,9 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 16-bit signed integer formed by two bytes beginning at startIndex.</returns>
-        public short ToInt16 (byte[] value, int startIndex)
+        public Int16 ToInt16 (Byte[] value, Int32 startIndex)
         {
-            return unchecked((short) (this.CheckedFromBytes(value, startIndex, 2)));
+            return unchecked((Int16) (this.CheckedFromBytes(value, startIndex, 2)));
         }
 
         /// <summary>
@@ -158,9 +157,9 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 32-bit signed integer formed by four bytes beginning at startIndex.</returns>
-        public int ToInt32 (byte[] value, int startIndex)
+        public Int32 ToInt32 (Byte[] value, Int32 startIndex)
         {
-            return unchecked((int) (this.CheckedFromBytes(value, startIndex, 4)));
+            return unchecked((Int32) (this.CheckedFromBytes(value, startIndex, 4)));
         }
 
         /// <summary>
@@ -169,7 +168,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 64-bit signed integer formed by eight bytes beginning at startIndex.</returns>
-        public long ToInt64 (byte[] value, int startIndex)
+        public Int64 ToInt64 (Byte[] value, Int32 startIndex)
         {
             return this.CheckedFromBytes(value, startIndex, 8);
         }
@@ -180,9 +179,9 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 16-bit unsigned integer formed by two bytes beginning at startIndex.</returns>
-        public ushort ToUInt16 (byte[] value, int startIndex)
+        public UInt16 ToUInt16 (Byte[] value, Int32 startIndex)
         {
-            return unchecked((ushort) (this.CheckedFromBytes(value, startIndex, 2)));
+            return unchecked((UInt16) (this.CheckedFromBytes(value, startIndex, 2)));
         }
 
         /// <summary>
@@ -191,9 +190,9 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 32-bit unsigned integer formed by four bytes beginning at startIndex.</returns>
-        public uint ToUInt32 (byte[] value, int startIndex)
+        public UInt32 ToUInt32 (Byte[] value, Int32 startIndex)
         {
-            return unchecked((uint) (this.CheckedFromBytes(value, startIndex, 4)));
+            return unchecked((UInt32) (this.CheckedFromBytes(value, startIndex, 4)));
         }
 
         /// <summary>
@@ -202,9 +201,9 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 64-bit unsigned integer formed by eight bytes beginning at startIndex.</returns>
-        public ulong ToUInt64 (byte[] value, int startIndex)
+        public UInt64 ToUInt64 (Byte[] value, Int32 startIndex)
         {
-            return unchecked((ulong) (this.CheckedFromBytes(value, startIndex, 8)));
+            return unchecked((UInt64) (this.CheckedFromBytes(value, startIndex, 8)));
         }
 
         /// <summary>
@@ -217,7 +216,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <exception cref="ArgumentOutOfRangeException">
         /// startIndex is less than zero or greater than the length of value minus bytesRequired.
         /// </exception>
-        static void CheckByteArgument(byte[] value, int startIndex, int bytesRequired)
+        private static void CheckByteArgument(Byte[] value, Int32 startIndex, Int32 bytesRequired)
         {
             if (value==null)
             {
@@ -237,7 +236,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="startIndex">The index of the first byte to convert</param>
         /// <param name="bytesToConvert">The number of bytes to convert</param>
         /// <returns></returns>
-        long CheckedFromBytes(byte[] value, int startIndex, int bytesToConvert)
+        private Int64 CheckedFromBytes(Byte[] value, Int32 startIndex, Int32 bytesToConvert)
         {
             CheckByteArgument(value, startIndex, bytesToConvert);
             return this.FromBytes(value, startIndex, bytesToConvert);
@@ -252,7 +251,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="startIndex">The index of the first byte to convert</param>
         /// <param name="bytesToConvert">The number of bytes to use in the conversion</param>
         /// <returns>The converted number</returns>
-        protected abstract long FromBytes(byte[] value, int startIndex, int bytesToConvert);
+        protected abstract Int64 FromBytes(Byte[] value, Int32 startIndex, Int32 bytesToConvert);
         #endregion
 
         #region ToString conversions
@@ -265,7 +264,7 @@ namespace PacketDotNet.Utils.Conversion
         /// A String of hexadecimal pairs separated by hyphens, where each pair
         /// represents the corresponding element in value; for example, "7F-2C-4A".
         /// </returns>
-        public static string ToString(byte[] value)
+        public static String ToString(Byte[] value)
         {
             return BitConverter.ToString(value);
         }
@@ -280,7 +279,7 @@ namespace PacketDotNet.Utils.Conversion
         /// A String of hexadecimal pairs separated by hyphens, where each pair
         /// represents the corresponding element in value; for example, "7F-2C-4A".
         /// </returns>
-        public static string ToString(byte[] value, int startIndex)
+        public static String ToString(Byte[] value, Int32 startIndex)
         {
             return BitConverter.ToString(value, startIndex);
         }
@@ -296,7 +295,7 @@ namespace PacketDotNet.Utils.Conversion
         /// A String of hexadecimal pairs separated by hyphens, where each pair
         /// represents the corresponding element in value; for example, "7F-2C-4A".
         /// </returns>
-        public static string ToString(byte[] value, int startIndex, int length)
+        public static String ToString(Byte[] value, Int32 startIndex, Int32 length)
         {
             return BitConverter.ToString(value, startIndex, length);
         }
@@ -310,13 +309,13 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A decimal  formed by sixteen bytes beginning at startIndex.</returns>
-        public decimal ToDecimal (byte[] value, int startIndex)
+        public Decimal ToDecimal (Byte[] value, Int32 startIndex)
         {
             // HACK: This always assumes four parts, each in their own endianness,
             // starting with the first part at the start of the byte array.
             // On the other hand, there's no real format specified...
-            int[] parts = new int[4];
-            for (int i=0; i < 4; i++)
+            Int32[] parts = new Int32[4];
+            for (Int32 i=0; i < 4; i++)
             {
                 parts[i] = this.ToInt32(value, startIndex+i*4);
             }
@@ -328,11 +327,11 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <returns>An array of bytes with length 16.</returns>
-        public byte[] GetBytes(decimal value)
+        public Byte[] GetBytes(Decimal value)
         {
-            byte[] bytes = new byte[16];
-            int[] parts = decimal.GetBits(value);
-            for (int i=0; i < 4; i++)
+            Byte[] bytes = new Byte[16];
+            Int32[] parts = Decimal.GetBits(value);
+            for (Int32 i=0; i < 4; i++)
             {
                 this.CopyBytesImpl(parts[i], 4, bytes, i*4);
             }
@@ -346,10 +345,10 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">A character to convert.</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
-        public void CopyBytes(decimal value, byte[] buffer, int index)
+        public void CopyBytes(Decimal value, Byte[] buffer, Int32 index)
         {
-            int[] parts = decimal.GetBits(value);
-            for (int i=0; i < 4; i++)
+            Int32[] parts = Decimal.GetBits(value);
+            for (Int32 i=0; i < 4; i++)
             {
                 this.CopyBytesImpl(parts[i], 4, buffer, i*4+index);
             }
@@ -364,9 +363,9 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">The value to get bytes for</param>
         /// <param name="bytes">The number of significant bytes to return</param>
-        byte[] GetBytes(long value, int bytes)
+        private Byte[] GetBytes(Int64 value, Int32 bytes)
         {
-            byte[] buffer = new byte[bytes];
+            Byte[] buffer = new Byte[bytes];
             this.CopyBytes(value, bytes, buffer, 0);
             return buffer;
         }
@@ -376,7 +375,7 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">A Boolean value.</param>
         /// <returns>An array of bytes with length 1.</returns>
-        public byte[] GetBytes(bool value)
+        public Byte[] GetBytes(Boolean value)
         {
             return BitConverter.GetBytes(value);
         }
@@ -386,7 +385,7 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">A character to convert.</param>
         /// <returns>An array of bytes with length 2.</returns>
-        public byte[] GetBytes(char value)
+        public Byte[] GetBytes(Char value)
         {
             return this.GetBytes(value, 2);
         }
@@ -396,7 +395,7 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <returns>An array of bytes with length 8.</returns>
-        public byte[] GetBytes(double value)
+        public Byte[] GetBytes(Double value)
         {
             return this.GetBytes(this.DoubleToInt64Bits(value), 8);
         }
@@ -406,7 +405,7 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <returns>An array of bytes with length 2.</returns>
-        public byte[] GetBytes(short value)
+        public Byte[] GetBytes(Int16 value)
         {
             return this.GetBytes(value, 2);
         }
@@ -416,7 +415,7 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <returns>An array of bytes with length 4.</returns>
-        public byte[] GetBytes(int value)
+        public Byte[] GetBytes(Int32 value)
         {
             return this.GetBytes(value, 4);
         }
@@ -426,7 +425,7 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <returns>An array of bytes with length 8.</returns>
-        public byte[] GetBytes(long value)
+        public Byte[] GetBytes(Int64 value)
         {
             return this.GetBytes(value, 8);
         }
@@ -436,7 +435,7 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <returns>An array of bytes with length 4.</returns>
-        public byte[] GetBytes(float value)
+        public Byte[] GetBytes(Single value)
         {
             return this.GetBytes(this.SingleToInt32Bits(value), 4);
         }
@@ -446,7 +445,7 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <returns>An array of bytes with length 2.</returns>
-        public byte[] GetBytes(ushort value)
+        public Byte[] GetBytes(UInt16 value)
         {
             return this.GetBytes(value, 2);
         }
@@ -456,7 +455,7 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <returns>An array of bytes with length 4.</returns>
-        public byte[] GetBytes(uint value)
+        public Byte[] GetBytes(UInt32 value)
         {
             return this.GetBytes(value, 4);
         }
@@ -466,9 +465,9 @@ namespace PacketDotNet.Utils.Conversion
         /// </summary>
         /// <param name="value">The number to convert.</param>
         /// <returns>An array of bytes with length 8.</returns>
-        public byte[] GetBytes(ulong value)
+        public Byte[] GetBytes(UInt64 value)
         {
-            return this.GetBytes(unchecked((long)value), 8);
+            return this.GetBytes(unchecked((Int64)value), 8);
         }
 
         #endregion
@@ -484,7 +483,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="bytes">The number of significant bytes to copy</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
-        void CopyBytes(long value, int bytes, byte[] buffer, int index)
+        private void CopyBytes(Int64 value, Int32 bytes, Byte[] buffer, Int32 index)
         {
             if (buffer==null)
             {
@@ -508,7 +507,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="bytes">The number of significant bytes to copy</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
-        protected abstract void CopyBytesImpl(long value, int bytes, byte[] buffer, int index);
+        protected abstract void CopyBytesImpl(Int64 value, Int32 bytes, Byte[] buffer, Int32 index);
 
         /// <summary>
         /// Copies the specified Boolean value into the specified byte array,
@@ -517,7 +516,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">A Boolean value.</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
-        public void CopyBytes(bool value, byte[] buffer, int index)
+        public void CopyBytes(Boolean value, Byte[] buffer, Int32 index)
         {
             this.CopyBytes(value ? 1 : 0, 1, buffer, index);
         }
@@ -529,7 +528,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">A character to convert.</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
-        public void CopyBytes(char value, byte[] buffer, int index)
+        public void CopyBytes(Char value, Byte[] buffer, Int32 index)
         {
             this.CopyBytes(value, 2, buffer, index);
         }
@@ -541,7 +540,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">The number to convert.</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
-        public void CopyBytes(double value, byte[] buffer, int index)
+        public void CopyBytes(Double value, Byte[] buffer, Int32 index)
         {
             this.CopyBytes(this.DoubleToInt64Bits(value), 8, buffer, index);
         }
@@ -553,7 +552,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">The number to convert.</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
-        public void CopyBytes(short value, byte[] buffer, int index)
+        public void CopyBytes(Int16 value, Byte[] buffer, Int32 index)
         {
             this.CopyBytes(value, 2, buffer, index);
         }
@@ -565,7 +564,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">The number to convert.</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
-        public void CopyBytes(int value, byte[] buffer, int index)
+        public void CopyBytes(Int32 value, Byte[] buffer, Int32 index)
         {
             this.CopyBytes(value, 4, buffer, index);
         }
@@ -577,7 +576,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">The number to convert.</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
-        public void CopyBytes(long value, byte[] buffer, int index)
+        public void CopyBytes(Int64 value, Byte[] buffer, Int32 index)
         {
             this.CopyBytes(value, 8, buffer, index);
         }
@@ -589,7 +588,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">The number to convert.</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
-        public void CopyBytes(float value, byte[] buffer, int index)
+        public void CopyBytes(Single value, Byte[] buffer, Int32 index)
         {
             this.CopyBytes(this.SingleToInt32Bits(value), 4, buffer, index);
         }
@@ -601,7 +600,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">The number to convert.</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
-        public void CopyBytes(ushort value, byte[] buffer, int index)
+        public void CopyBytes(UInt16 value, Byte[] buffer, Int32 index)
         {
             this.CopyBytes(value, 2, buffer, index);
         }
@@ -613,7 +612,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">The number to convert.</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
-        public void CopyBytes(uint value, byte[] buffer, int index)
+        public void CopyBytes(UInt32 value, Byte[] buffer, Int32 index)
         {
             this.CopyBytes(value, 4, buffer, index);
         }
@@ -625,9 +624,9 @@ namespace PacketDotNet.Utils.Conversion
         /// <param name="value">The number to convert.</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
-        public void CopyBytes(ulong value, byte[] buffer, int index)
+        public void CopyBytes(UInt64 value, Byte[] buffer, Int32 index)
         {
-            this.CopyBytes(unchecked((long)value), 8, buffer, index);
+            this.CopyBytes(unchecked((Int64)value), 8, buffer, index);
         }
 
         #endregion
@@ -637,24 +636,22 @@ namespace PacketDotNet.Utils.Conversion
         /// Union used solely for the equivalent of DoubleToInt64Bits and vice versa.
         /// </summary>
         [StructLayout(LayoutKind.Explicit)]
-            struct Int32SingleUnion
+        private struct Int32SingleUnion
         {
             /// <summary>
             /// Int32 version of the value.
             /// </summary>
-            [FieldOffset(0)]
-            int i;
+            [FieldOffset(0)] private readonly Int32 i;
             /// <summary>
             /// Single version of the value.
             /// </summary>
-            [FieldOffset(0)]
-            float f;
+            [FieldOffset(0)] private readonly Single f;
 
             /// <summary>
             /// Creates an instance representing the given integer.
             /// </summary>
             /// <param name="i">The integer value of the new instance.</param>
-            internal Int32SingleUnion(int i)
+            internal Int32SingleUnion(Int32 i)
             {
                 this.f = 0; // Just to keep the compiler happy
                 this.i = i;
@@ -664,7 +661,7 @@ namespace PacketDotNet.Utils.Conversion
             /// Creates an instance representing the given floating point number.
             /// </summary>
             /// <param name="f">The floating point value of the new instance.</param>
-            internal Int32SingleUnion(float f)
+            internal Int32SingleUnion(Single f)
             {
                 this.i = 0; // Just to keep the compiler happy
                 this.f = f;
@@ -673,12 +670,12 @@ namespace PacketDotNet.Utils.Conversion
             /// <summary>
             /// Returns the value of the instance as an integer.
             /// </summary>
-            internal int AsInt32 => this.i;
+            internal Int32 AsInt32 => this.i;
 
             /// <summary>
             /// Returns the value of the instance as a floating point number.
             /// </summary>
-            internal float AsSingle => this.f;
+            internal Single AsSingle => this.f;
         }
         #endregion
     }

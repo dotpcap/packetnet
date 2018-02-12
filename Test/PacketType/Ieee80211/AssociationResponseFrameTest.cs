@@ -145,7 +145,7 @@ namespace Test.PacketType
 			public void Test_ConstructorWithCorruptBuffer ()
 			{
 				//buffer is way too short for frame. We are just checking it doesn't throw
-				byte[] corruptBuffer = new byte[]{0x01};
+				Byte[] corruptBuffer = new Byte[]{0x01};
 				AssociationResponseFrame frame = new AssociationResponseFrame(new ByteArraySegment(corruptBuffer));
 				Assert.IsFalse(frame.FCSValid);
 			}

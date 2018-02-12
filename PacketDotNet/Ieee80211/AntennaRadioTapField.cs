@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
@@ -16,17 +17,17 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length => 1;
+        public override UInt16 Length => 1;
 
         /// <summary>
         /// Antenna number
         /// </summary>
-        public byte Antenna { get; set; }
+        public Byte Antenna { get; set; }
             
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
             dest[offset] = this.Antenna;
         }
@@ -56,7 +57,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='Antenna'>
         /// Antenna index of the Rx/Tx antenna for this packet. The first antenna is antenna 0.
         /// </param>
-        public AntennaRadioTapField (byte Antenna)
+        public AntennaRadioTapField (Byte Antenna)
         {
             this.Antenna = Antenna;
         }
@@ -67,9 +68,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("Antenna {0}", this.Antenna);
+            return $"Antenna {this.Antenna}";
         }
     }
 }

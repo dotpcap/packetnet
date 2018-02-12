@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
@@ -16,22 +17,22 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length => 2;
+        public override UInt16 Length => 2;
 
         /// <summary>
         /// Hop set
         /// </summary>
-        public byte ChannelHoppingSet { get; set; }
+        public Byte ChannelHoppingSet { get; set; }
 
         /// <summary>
         /// Hop pattern
         /// </summary>
-        public byte Pattern { get; set; }
+        public Byte Pattern { get; set; }
             
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
             dest[offset] = this.ChannelHoppingSet;
             dest[offset + 1] = this.Pattern;
@@ -47,8 +48,8 @@ namespace PacketDotNet.Ieee80211
         {
             var u16 = br.ReadUInt16();
 
-            this.ChannelHoppingSet = (byte)(u16 & 0xff);
-            this.Pattern = (byte)((u16 >> 8) & 0xff);
+            this.ChannelHoppingSet = (Byte)(u16 & 0xff);
+            this.Pattern = (Byte)((u16 >> 8) & 0xff);
         }
    
         /// <summary>
@@ -68,7 +69,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='Pattern'>
         /// Channel hopping pattern.
         /// </param>
-        public FhssRadioTapField(byte ChannelHoppingSet, byte Pattern)
+        public FhssRadioTapField(Byte ChannelHoppingSet, Byte Pattern)
         {
             this.ChannelHoppingSet = ChannelHoppingSet;
             this.Pattern = Pattern;
@@ -80,10 +81,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("ChannelHoppingSet {0}, Pattern {1}",
-                this.ChannelHoppingSet, this.Pattern);
+            return $"ChannelHoppingSet {this.ChannelHoppingSet}, Pattern {this.Pattern}";
         }
     }
 }

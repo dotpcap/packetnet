@@ -30,7 +30,7 @@ namespace PacketDotNet.Utils
     [Serializable]
     public class PacketOrByteArraySegment
     {
-        private ByteArraySegment theByteArraySegment;
+        private ByteArraySegment _theByteArraySegment;
 
         /// <summary>
         /// Gets or sets the byte array segment.
@@ -40,16 +40,16 @@ namespace PacketDotNet.Utils
         /// </value>
         public ByteArraySegment TheByteArraySegment
         {
-            get => this.theByteArraySegment;
+            get => this._theByteArraySegment;
 
             set
             {
-                this.thePacket = null;
-                this.theByteArraySegment = value;
+                this._thePacket = null;
+                this._theByteArraySegment = value;
             }
         }
 
-        private Packet thePacket;
+        private Packet _thePacket;
 
         /// <summary>
         /// Gets or sets the packet.
@@ -59,12 +59,12 @@ namespace PacketDotNet.Utils
         /// </value>
         public Packet ThePacket
         {
-            get => this.thePacket;
+            get => this._thePacket;
 
             set
             {
-                this.theByteArraySegment = null;
-                this.thePacket = value;
+                this._theByteArraySegment = null;
+                this._thePacket = value;
             }
         }
 

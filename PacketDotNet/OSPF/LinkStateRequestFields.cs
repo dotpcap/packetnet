@@ -1,3 +1,5 @@
+using System;
+
 namespace PacketDotNet.OSPF
 {
     /// <summary>
@@ -7,18 +9,18 @@ namespace PacketDotNet.OSPF
     public class LinkStateRequestFields
     {
         /// <summary> The length of the LSType field in bytes</summary>
-        public readonly static int LSTypeLength = 4;
+        public static readonly Int32 LSTypeLength = 4;
         /// <summary> The length of the LinkStateID field in bytes</summary>
-        public readonly static int LinkStateIdLength = 4;
+        public static readonly Int32 LinkStateIdLength = 4;
         /// <summary> The length of the AdvertisingRouter field in bytes</summary>
-        public readonly static int AdvertisingRouterLength = 4;
+        public static readonly Int32 AdvertisingRouterLength = 4;
 
         /// <summary> The relative postion of the LSType field</summary>
-        public readonly static int LSTypePosition;
+        public static readonly Int32 LSTypePosition;
         /// <summary> The relative postion of the LinkStateID field</summary>
-        public readonly static int LinkStateIdPosition;
+        public static readonly Int32 LinkStateIdPosition;
         /// <summary> The relative postion of the AdvertisingRouter field</summary>
-        public readonly static int AdvertisingRouterPosition;
+        public static readonly Int32 AdvertisingRouterPosition;
 
         static LinkStateRequestFields()
         {

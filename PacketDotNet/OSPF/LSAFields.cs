@@ -18,6 +18,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2011 Georgi Baychev <georgi.baychev@gmail.com>
  */
 
+using System;
+
 namespace PacketDotNet.OSPF
 {
     /// <summary>
@@ -27,40 +29,40 @@ namespace PacketDotNet.OSPF
     public class LSAFields
     {
         /// <summary> The length of the LSAge field in bytes</summary>
-        public readonly static int LSAgeLength = 2;
+        public static readonly Int32 LSAgeLength = 2;
         /// <summary> The length of the Options field in bytes</summary>
-        public readonly static int OptionsLength = 1;
+        public static readonly Int32 OptionsLength = 1;
         /// <summary> The length of the LSType field in bytes</summary>
-        public readonly static int LSTypeLength = 1;
+        public static readonly Int32 LSTypeLength = 1;
         /// <summary> The length of the LinkStateID field in bytes</summary>
-        public readonly static int LinkStateIDLength = 4;
+        public static readonly Int32 LinkStateIDLength = 4;
         /// <summary> The length of the AdvertisingRouterID field in bytes</summary>
-        public readonly static int AdvertisingRouterIDLength = 4;
+        public static readonly Int32 AdvertisingRouterIDLength = 4;
         /// <summary> The length of the LSSeqeunceNumber field in bytes</summary>
-        public readonly static int LSSequenceNumberLength = 4;
+        public static readonly Int32 LSSequenceNumberLength = 4;
         /// <summary> The length of the Checksum field in bytes</summary>
-        public readonly static int ChecksumLength = 2;
+        public static readonly Int32 ChecksumLength = 2;
         /// <summary> The length of the Length field in bytes</summary>
-        public readonly static int PacketLength = 2;
+        public static readonly Int32 PacketLength = 2;
 
         /// <summary> The relative postion of the LSAge field</summary>
-        public readonly static int LSAgePosition = 0;
+        public static readonly Int32 LSAgePosition = 0;
         /// <summary> The relative postion of the Option field</summary>
-        public readonly static int OptionsPosition;
+        public static readonly Int32 OptionsPosition;
         /// <summary> The relative postion of the LSType field</summary>
-        public readonly static int LSTypePosition;
+        public static readonly Int32 LSTypePosition;
         /// <summary> The relative postion of the LinkStateID field</summary>
-        public readonly static int LinkStateIDPosition;
+        public static readonly Int32 LinkStateIDPosition;
         /// <summary> The relative postion of the AdvertisingRouterID field</summary>
-        public readonly static int AdvertisingRouterIDPosition;
+        public static readonly Int32 AdvertisingRouterIDPosition;
         /// <summary> The relative postion of the LSSequenceNumber field</summary>
-        public readonly static int LSSequenceNumberPosition;
+        public static readonly Int32 LSSequenceNumberPosition;
         /// <summary> The relative postion of the Checksum field</summary>
-        public readonly static int ChecksumPosition;
+        public static readonly Int32 ChecksumPosition;
         /// <summary> The relative postion of the Length field</summary>
-        public readonly static int PacketLengthPosition;
+        public static readonly Int32 PacketLengthPosition;
         /// <summary> The relative postion of the header's end</summary>
-        public readonly static int HeaderEnd;
+        public static readonly Int32 HeaderEnd;
 
         static LSAFields()
         {

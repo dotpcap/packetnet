@@ -18,6 +18,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
+using System;
+
 namespace PacketDotNet.Tcp
 {
     /// <summary>
@@ -44,7 +46,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public WindowScaleFactor(byte[] bytes, int offset, int length) :
+        public WindowScaleFactor(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
         { }
 
@@ -58,7 +60,7 @@ namespace PacketDotNet.Tcp
         ///  The multiplier is equal to 1 left-shifted by the ScaleFactor
         ///  So a scale factor of 7 would equal 1 &lt;&lt; 7 = 128
         /// </summary>
-        public byte ScaleFactor => this.Bytes[ScaleFactorFieldOffset];
+        public Byte ScaleFactor => this.Bytes[ScaleFactorFieldOffset];
 
         #endregion
 
@@ -71,9 +73,9 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return "[" + this.Kind.ToString() + ": ScaleFactor=" + this.ScaleFactor.ToString() + " (multiply by " + (1 << this.ScaleFactor).ToString() + ")]";
+            return $"[{this.Kind}: ScaleFactor={this.ScaleFactor} (multiply by {(1 << this.ScaleFactor)})]";
         }
 
         #endregion
@@ -81,7 +83,7 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the offset (in bytes) of the ScaleFactor Field
-        const int ScaleFactorFieldOffset = 2;
+        private const Int32 ScaleFactorFieldOffset = 2;
 
         #endregion
     }

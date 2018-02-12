@@ -44,7 +44,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override int Length => 20;
+        public override Int32 Length => 20;
 
         /// <summary>
         /// Radiotap-formatted channel flags.
@@ -70,7 +70,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The data rate.
         /// </value>
-        public double Rate { get; set; } 
+        public Double Rate { get; set; } 
    
         /// <summary>
         /// Gets or sets the TSF timer.
@@ -122,7 +122,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public override byte[] Bytes
+        public override Byte[] Bytes
         {
             get
             {
@@ -130,10 +130,10 @@ namespace PacketDotNet.Ieee80211
                 BinaryWriter writer = new BinaryWriter(ms);
                     
                 writer.Write(this.TSFTimer);
-                writer.Write((ushort)this.Flags);
-                writer.Write((ushort)(this.Rate * 2));
+                writer.Write((UInt16)this.Flags);
+                writer.Write((UInt16)(this.Rate * 2));
                 writer.Write(this.ChannelFrequency);
-                writer.Write((ushort)this.ChannelFlags);
+                writer.Write((UInt16)this.ChannelFlags);
                 writer.Write(this.FhssHopset);
                 writer.Write(this.FhssPattern);
                 writer.Write(this.AntennaSignalPower);

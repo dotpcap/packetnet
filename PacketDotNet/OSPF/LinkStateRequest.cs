@@ -13,17 +13,17 @@ namespace PacketDotNet.OSPF
         /// <summary>
         /// Size of LinkStateRequest in bytes
         /// </summary>
-        public static readonly int Length = 12;
+        public static readonly Int32 Length = 12;
 
-        internal ByteArraySegment header;
+        internal ByteArraySegment Header;
 
         /// <summary>
         /// Default constructor
         /// </summary>
         public LinkStateRequest()
         {
-            byte[] b = new byte[Length];
-            this.header = new ByteArraySegment(b);
+            Byte[] b = new Byte[Length];
+            this.Header = new ByteArraySegment(b);
         }
 
         /// <summary>
@@ -38,9 +38,9 @@ namespace PacketDotNet.OSPF
         /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public LinkStateRequest(byte[] packet, int offset, int length)
+        public LinkStateRequest(Byte[] packet, Int32 offset, Int32 length)
         {
-            this.header = new ByteArraySegment(packet, offset, length);
+            this.Header = new ByteArraySegment(packet, offset, length);
         }
 
         /// <summary>
@@ -48,8 +48,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public LSAType LSType
         {
-            get => (LSAType)EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + LinkStateRequestFields.LSTypePosition);
-            set => EndianBitConverter.Big.CopyBytes((UInt32)value, this.header.Bytes, this.header.Offset + LinkStateRequestFields.LSTypePosition);
+            get => (LSAType)EndianBitConverter.Big.ToUInt32(this.Header.Bytes, this.Header.Offset + LinkStateRequestFields.LSTypePosition);
+            set => EndianBitConverter.Big.CopyBytes((UInt32)value, this.Header.Bytes, this.Header.Offset + LinkStateRequestFields.LSTypePosition);
         }
 
         /// <summary>
@@ -59,14 +59,14 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + LinkStateRequestFields.AdvertisingRouterPosition);
+                var val = EndianBitConverter.Little.ToUInt32(this.Header.Bytes, this.Header.Offset + LinkStateRequestFields.AdvertisingRouterPosition);
                 return new IPAddress(val);
             }
             set
             {
-                byte[] address = value.GetAddressBytes();
-                Array.Copy((Array) address, (int) 0,
-                    (Array) this.header.Bytes, (int) (this.header.Offset + LinkStateRequestFields.AdvertisingRouterPosition),
+                Byte[] address = value.GetAddressBytes();
+                Array.Copy(address, 0,
+                    this.Header.Bytes, this.Header.Offset + LinkStateRequestFields.AdvertisingRouterPosition,
                     address.Length);
             }
         }
@@ -79,14 +79,14 @@ namespace PacketDotNet.OSPF
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + LinkStateRequestFields.LinkStateIdPosition);
+                var val = EndianBitConverter.Little.ToUInt32(this.Header.Bytes, this.Header.Offset + LinkStateRequestFields.LinkStateIdPosition);
                 return new IPAddress(val);
             }
             set
             {
-                byte[] address = value.GetAddressBytes();
-                Array.Copy((Array) address, (int) 0,
-                    (Array) this.header.Bytes, (int) (this.header.Offset + LinkStateRequestFields.LinkStateIdPosition),
+                Byte[] address = value.GetAddressBytes();
+                Array.Copy(address, 0,
+                    this.Header.Bytes, this.Header.Offset + LinkStateRequestFields.LinkStateIdPosition,
                     address.Length);
             }
         }
@@ -95,6 +95,6 @@ namespace PacketDotNet.OSPF
         /// Gets the bytes.
         /// </summary>
         /// <value>The bytes.</value>
-        public virtual byte[] Bytes => this.header.ActualBytes();
+        public virtual Byte[] Bytes => this.Header.ActualBytes();
     }
 }

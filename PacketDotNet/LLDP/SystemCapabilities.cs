@@ -32,8 +32,8 @@ namespace PacketDotNet.LLDP
     [Serializable]
     public class SystemCapabilities : TLV
     {
-        private const int SystemCapabilitiesLength = 2;
-        private const int EnabledCapabilitiesLength = 2;
+        private const Int32 SystemCapabilitiesLength = 2;
+        private const Int32 EnabledCapabilitiesLength = 2;
 
         #region Constructors
 
@@ -46,7 +46,7 @@ namespace PacketDotNet.LLDP
         /// The System Capabilities TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public SystemCapabilities(byte[] bytes, int offset) :
+        public SystemCapabilities(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {}
 
@@ -59,12 +59,12 @@ namespace PacketDotNet.LLDP
         /// <param name="enabled">
         /// A bitmap containing the enabled System Capabilities
         /// </param>
-        public SystemCapabilities(ushort capabilities, ushort enabled)
+        public SystemCapabilities(UInt16 capabilities, UInt16 enabled)
         {
             var length = TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength + EnabledCapabilitiesLength;
-            var bytes = new byte[length];
+            var bytes = new Byte[length];
             var offset = 0;
-            this.tlvData = new ByteArraySegment(bytes, offset, length);
+            this.TLVData = new ByteArraySegment(bytes, offset, length);
 
             this.Type = TLVTypes.SystemCapabilities;
             this.Capabilities = capabilities;
@@ -78,20 +78,20 @@ namespace PacketDotNet.LLDP
         /// <value>
         /// A bitmap containing the available System Capabilities
         /// </value>
-        public ushort Capabilities
+        public UInt16 Capabilities
         {
-            get => EndianBitConverter.Big.ToUInt16(this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength);
-            set => EndianBitConverter.Big.CopyBytes(value, this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength);
+            get => EndianBitConverter.Big.ToUInt16(this.TLVData.Bytes, this.TLVData.Offset + TLVTypeLength.TypeLengthLength);
+            set => EndianBitConverter.Big.CopyBytes(value, this.TLVData.Bytes, this.TLVData.Offset + TLVTypeLength.TypeLengthLength);
         }
 
         /// <value>
         /// A bitmap containing the Enabled System Capabilities
         /// </value>
-        public ushort Enabled
+        public UInt16 Enabled
         {
-            get => EndianBitConverter.Big.ToUInt16(this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength);
+            get => EndianBitConverter.Big.ToUInt16(this.TLVData.Bytes, this.TLVData.Offset + TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength);
 
-            set => EndianBitConverter.Big.CopyBytes(value, this.tlvData.Bytes, this.ValueOffset + SystemCapabilitiesLength);
+            set => EndianBitConverter.Big.CopyBytes(value, this.TLVData.Bytes, this.ValueOffset + SystemCapabilitiesLength);
         }
 
         #endregion
@@ -107,9 +107,9 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// Whether or not the system is capable of the function being tested
         /// </returns>
-        public bool IsCapable(CapabilityOptions capability)
+        public Boolean IsCapable(CapabilityOptions capability)
         {
-            ushort mask = (ushort)capability;
+            UInt16 mask = (UInt16)capability;
             if ((this.Capabilities & mask) != 0)
             {
                 return true;
@@ -129,9 +129,9 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// Whether or not the specified function is enabled
         /// </returns>
-        public bool IsEnabled(CapabilityOptions capability)
+        public Boolean IsEnabled(CapabilityOptions capability)
         {
-            ushort mask = (ushort)capability;
+            UInt16 mask = (UInt16)capability;
             if ((this.Enabled & mask) != 0)
             {
                 return true;
@@ -148,9 +148,9 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A human readable string
         /// </returns>
-        public override string ToString ()
+        public override String ToString ()
         {
-            return string.Format("[SystemCapabilities: Capabilities={0}, Enabled={1}]", this.Capabilities, this.Enabled);
+            return $"[SystemCapabilities: Capabilities={this.Capabilities}, Enabled={this.Enabled}]";
         }
 
         #endregion

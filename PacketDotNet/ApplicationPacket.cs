@@ -25,7 +25,7 @@ namespace PacketDotNet
         /// <summary>
         /// ApplicationPacket constructor
         /// </summary>
-        public ApplicationPacket()
+        protected ApplicationPacket()
         {}
     }
 }

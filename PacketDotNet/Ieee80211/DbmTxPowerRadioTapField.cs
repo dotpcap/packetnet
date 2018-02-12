@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
@@ -18,19 +19,19 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length => 1;
+        public override UInt16 Length => 1;
 
         /// <summary>
         /// Tx power in dBm
         /// </summary>
-        public sbyte TxPowerdBm { get; set; }
+        public SByte TxPowerdBm { get; set; }
    
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
-            dest[offset] = (byte)this.TxPowerdBm;
+            dest[offset] = (Byte)this.TxPowerdBm;
         }
             
         /// <summary>
@@ -58,7 +59,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='TxPowerdBm'>
         /// Transmit power expressed as dBm (decibels from a 1 milliwatt reference).
         /// </param>
-        public DbmTxPowerRadioTapField(sbyte TxPowerdBm)
+        public DbmTxPowerRadioTapField(SByte TxPowerdBm)
         {
             this.TxPowerdBm = TxPowerdBm;
         }
@@ -69,9 +70,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("TxPowerdBm {0}", this.TxPowerdBm);
+            return $"TxPowerdBm {this.TxPowerdBm}";
         }
     }
 }

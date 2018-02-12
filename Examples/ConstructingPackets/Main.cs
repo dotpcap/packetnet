@@ -10,12 +10,12 @@ namespace ConstructingPackets
     /// Example that shows how to construct a packet using packet constructors
     /// to build a tcp/ip ipv4 packet
     /// </summary>
-    class MainClass
+    internal class MainClass
     {
-        public static void Main(string[] args)
+        public static void Main(String[] args)
         {
-            ushort tcpSourcePort = 123;
-            ushort tcpDestinationPort = 321;
+            UInt16 tcpSourcePort = 123;
+            UInt16 tcpDestinationPort = 321;
             var tcpPacket = new TcpPacket(tcpSourcePort, tcpDestinationPort);
 
             var ipSourceAddress = System.Net.IPAddress.Parse("192.168.1.1");

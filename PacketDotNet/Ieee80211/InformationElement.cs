@@ -35,23 +35,23 @@ namespace PacketDotNet.Ieee80211
             /// <summary>
             /// The length in bytes of the Information Element id field.
             /// </summary>
-            public readonly static int ElementIdLength = 1;
+            public static readonly Int32 ElementIdLength = 1;
             /// <summary>
             /// The length in bytes of the Information Element length field.
             /// </summary>
-            public readonly static int ElementLengthLength = 1;
+            public static readonly Int32 ElementLengthLength = 1;
             /// <summary>
             /// The index of the id field in an Information Element.
             /// </summary>
-            public readonly static int ElementIdPosition = 0;
+            public static readonly Int32 ElementIdPosition = 0;
             /// <summary>
             /// The index of the length field in an Information Element.
             /// </summary>
-            public readonly static int ElementLengthPosition;
+            public static readonly Int32 ElementLengthPosition;
             /// <summary>
             /// The index of the first byte of the value field in an Information Element.
             /// </summary>
-            public readonly static int ElementValuePosition;
+            public static readonly Int32 ElementValuePosition;
 
             static InformationElement ()
             {
@@ -234,7 +234,7 @@ namespace PacketDotNet.Ieee80211
             public ElementId Id
             { 
                 get => (ElementId) this.bytes.Bytes [this.bytes.Offset + ElementIdPosition];
-                set => this.bytes.Bytes [this.bytes.Offset + ElementIdPosition] = (byte)value;
+                set => this.bytes.Bytes [this.bytes.Offset + ElementIdPosition] = (Byte)value;
             }
 
             /// <summary>
@@ -243,7 +243,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The length.
             /// </value>
-            public int ValueLength => Math.Min((this.bytes.Length - ElementValuePosition), this.bytes.Bytes [this.bytes.Offset + ElementLengthPosition]);
+            public Int32 ValueLength => Math.Min((this.bytes.Length - ElementValuePosition), this.bytes.Bytes [this.bytes.Offset + ElementLengthPosition]);
 
             /// <summary>
             /// Gets the length of the element including the Id and Length field
@@ -251,7 +251,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The length of the element.
             /// </value>
-            public byte ElementLength => (byte)(ElementIdLength + ElementLengthLength + this.ValueLength);
+            public Byte ElementLength => (Byte)(ElementIdLength + ElementLengthLength + this.ValueLength);
 
             /// <summary>
             /// Gets or sets the value of the element
@@ -275,12 +275,12 @@ namespace PacketDotNet.Ieee80211
                 
                 set
                 {
-                    if (value.Length > byte.MaxValue)
+                    if (value.Length > Byte.MaxValue)
                     {
                         throw new ArgumentException ("The provided value is too long. Maximum allowed length is 255 bytes.");
                     }
                     //Decide if the current ByteArraySegement is big enough to hold the new info element
-                    int newIeLength = ElementIdLength + ElementLengthLength + value.Length;
+                    Int32 newIeLength = ElementIdLength + ElementLengthLength + value.Length;
                     if (this.bytes.Length < newIeLength)
                     {
                         var newIe = new Byte[newIeLength];
@@ -290,7 +290,7 @@ namespace PacketDotNet.Ieee80211
                     
                     Array.Copy (value, 0, this.bytes.Bytes, this.bytes.Offset + ElementValuePosition, value.Length);
                     this.bytes.Length = newIeLength;
-                    this.bytes.Bytes [this.bytes.Offset + ElementLengthPosition] = (byte)value.Length;
+                    this.bytes.Bytes [this.bytes.Offset + ElementLengthPosition] = (Byte)value.Length;
                     
                 }
             }
@@ -313,7 +313,7 @@ namespace PacketDotNet.Ieee80211
             /// <c>true</c> if the specified <see cref="System.Object"/> is equal to the current
             /// <see cref="PacketDotNet.Ieee80211.InformationElement"/>; otherwise, <c>false</c>.
             /// </returns>
-            public override bool Equals(object obj)
+            public override Boolean Equals(Object obj)
             {
                 if (obj == null || this.GetType() != obj.GetType())
                 {
@@ -331,7 +331,7 @@ namespace PacketDotNet.Ieee80211
             /// A hash code for this instance that is suitable for use in hashing algorithms and data structures such as
             /// a hash table.
             /// </returns>
-            public override int GetHashCode()
+            public override Int32 GetHashCode()
             {
                 return this.Id.GetHashCode() ^ this.Value.GetHashCode();
             }

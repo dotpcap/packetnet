@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
@@ -16,19 +17,19 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length => 1;
+        public override UInt16 Length => 1;
 
         /// <summary>
         /// Antenna signal in dBm
         /// </summary>
-        public sbyte AntennaSignalDbm { get; set; }
+        public SByte AntennaSignalDbm { get; set; }
             
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
-            dest[offset] = (byte)this.AntennaSignalDbm;
+            dest[offset] = (Byte)this.AntennaSignalDbm;
         }
 
         /// <summary>
@@ -56,7 +57,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='AntennaSignalDbm'>
         /// Antenna signal power in dB.
         /// </param>
-        public DbmAntennaSignalRadioTapField (sbyte AntennaSignalDbm)
+        public DbmAntennaSignalRadioTapField (SByte AntennaSignalDbm)
         {
             this.AntennaSignalDbm = AntennaSignalDbm;
         }
@@ -67,9 +68,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("AntennaSignalDbm {0}", this.AntennaSignalDbm);
+            return $"AntennaSignalDbm {this.AntennaSignalDbm}";
         }
     }
 }

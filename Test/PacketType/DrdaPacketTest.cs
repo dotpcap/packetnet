@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2017 Andrew <pandipd@outlook.com>
  */
 
+using System;
 using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -31,14 +32,14 @@ namespace Test.PacketType
     [TestFixture]
     public class DrdaPacketTest
     {
-        DrdaDDMPacket excsatPacket;
-        DrdaDDMPacket secchkPacket;
-        DrdaDDMPacket accrdbPacket;
-        DrdaDDMPacket accrdbrmPacket;
-        List<DrdaDDMPacket> sqlsttPackets = new List<DrdaDDMPacket>();
-        DrdaDDMPacket prpsqlsttPacket;
-        DrdaDDMPacket sqlattrPacket;
-        bool packetsLoaded = false;
+        private DrdaDDMPacket excsatPacket;
+        private DrdaDDMPacket secchkPacket;
+        private DrdaDDMPacket accrdbPacket;
+        private DrdaDDMPacket accrdbrmPacket;
+        private readonly List<DrdaDDMPacket> sqlsttPackets = new List<DrdaDDMPacket>();
+        private DrdaDDMPacket prpsqlsttPacket;
+        private DrdaDDMPacket sqlattrPacket;
+        private Boolean packetsLoaded = false;
 
         [SetUp]
         public void Init()
@@ -46,7 +47,7 @@ namespace Test.PacketType
             if (this.packetsLoaded)
                 return;
             RawCapture raw;
-            int packetIndex = 0;
+            Int32 packetIndex = 0;
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/db2_select.pcap");
             dev.Open();
 
@@ -170,7 +171,7 @@ namespace Test.PacketType
         [Test]
         public void TestSqlsttPacket()
         {
-            int packetIndex = 0;
+            Int32 packetIndex = 0;
             foreach (var packet in this.sqlsttPackets)
             {
                 Assert.IsNotNull(packet);
@@ -202,7 +203,7 @@ namespace Test.PacketType
         [Test]
         public void TestStringConverter()
         {
-            var bytes = new byte[] { 0xd8, 0xc4, 0xc2, 0xf2, 0x61, 0xd1, 0xe5, 0xd4 };
+            var bytes = new Byte[] { 0xd8, 0xc4, 0xc2, 0xf2, 0x61, 0xd1, 0xe5, 0xd4 };
             Assert.AreEqual("QDB2/JVM", StringConverter.EbcdicToAscii(bytes, 0, bytes.Length));
         }
     }

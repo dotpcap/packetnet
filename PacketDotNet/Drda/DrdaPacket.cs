@@ -38,11 +38,11 @@ namespace PacketDotNet.Drda
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
-        private List<DrdaDDMPacket> ddmList;
+        private List<DrdaDDMPacket> _ddmList;
 
         /// <summary>
         /// Decde DDM Packet into List
@@ -51,24 +51,24 @@ namespace PacketDotNet.Drda
         {
             get
             {
-                if (this.ddmList == null)
+                if (this._ddmList == null)
                 {
-                    this.ddmList = new List<DrdaDDMPacket>();
+                    this._ddmList = new List<DrdaDDMPacket>();
                 }
-                if (this.ddmList.Count > 0) return this.ddmList;
-                int startOffset = this.header.Offset;
-                while (startOffset < this.header.BytesLength)
+                if (this._ddmList.Count > 0) return this._ddmList;
+                Int32 startOffset = this.HeaderByteArraySegment.Offset;
+                while (startOffset < this.HeaderByteArraySegment.BytesLength)
                 {
-                    ushort length = EndianBitConverter.Big.ToUInt16(this.header.Bytes, startOffset);
-                    if (startOffset + length <= this.header.BytesLength)
+                    UInt16 length = EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, startOffset);
+                    if (startOffset + length <= this.HeaderByteArraySegment.BytesLength)
                     {
-                        var ddmBas = new ByteArraySegment(this.header.Bytes, startOffset, length);
-                        this.ddmList.Add(new DrdaDDMPacket(ddmBas, this));
+                        var ddmBas = new ByteArraySegment(this.HeaderByteArraySegment.Bytes, startOffset, length);
+                        this._ddmList.Add(new DrdaDDMPacket(ddmBas, this));
                     }
                     startOffset += length;
                 }
-                log.DebugFormat("DrdaDDMPacket.Count {0}", this.ddmList.Count);
-                return this.ddmList;
+                Log.DebugFormat("DrdaDDMPacket.Count {0}", this._ddmList.Count);
+                return this._ddmList;
             }
         }
 
@@ -78,15 +78,15 @@ namespace PacketDotNet.Drda
         /// <param name="bas"></param>
         public DrdaPacket(ByteArraySegment bas)
         {
-            log.Debug("");
+            Log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            this.header = new ByteArraySegment(bas);
+            this.HeaderByteArraySegment = new ByteArraySegment(bas);
 
             // store the payload bytes
-            this.payloadPacketOrData = new PacketOrByteArraySegment
+            this.PayloadPacketOrData = new PacketOrByteArraySegment
             {
-                TheByteArraySegment = this.header.EncapsulatedBytes()
+                TheByteArraySegment = this.HeaderByteArraySegment.EncapsulatedBytes()
             };
         }
 
@@ -94,12 +94,12 @@ namespace PacketDotNet.Drda
         /// Constructor
         /// </summary>
         /// <param name="bas"></param>
-        /// <param name="ParentPacket"></param>
-        public DrdaPacket(ByteArraySegment bas,Packet ParentPacket) : this(bas)
+        /// <param name="parentPacket"></param>
+        public DrdaPacket(ByteArraySegment bas,Packet parentPacket) : this(bas)
         {
-            log.DebugFormat("ParentPacket.GetType() {0}", ParentPacket.GetType());
+            Log.DebugFormat("ParentPacket.GetType() {0}", parentPacket.GetType());
 
-            this.ParentPacket = ParentPacket;
+            this.ParentPacket = parentPacket;
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace PacketDotNet.Drda
         /// </summary>
         /// <param name="outputFormat"></param>
         /// <returns></returns>
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             return base.ToString(outputFormat);
         }

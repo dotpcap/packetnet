@@ -150,10 +150,10 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-					if(this.header.Length >= (MacFields.SequenceControlPosition + MacFields.SequenceControlLength))
+					if(this.HeaderByteArraySegment.Length >= (MacFields.SequenceControlPosition + MacFields.SequenceControlLength))
 					{
-						return EndianBitConverter.Little.ToUInt16 (this.header.Bytes,
-						                                           (this.header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+						return EndianBitConverter.Little.ToUInt16 (this.HeaderByteArraySegment.Bytes,
+						                                           (this.HeaderByteArraySegment.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
 					}
 					else
 					{
@@ -161,8 +161,8 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
 
-                set => EndianBitConverter.Little.CopyBytes (value, this.header.Bytes,
-                    (this.header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+                set => EndianBitConverter.Little.CopyBytes (value, this.HeaderByteArraySegment.Bytes,
+                    (this.HeaderByteArraySegment.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
             }
 
             /// <summary>
@@ -186,11 +186,11 @@ namespace PacketDotNet.Ieee80211
                 String addresses = null;
                 if (this.FrameControl.ToDS && this.FrameControl.FromDS)
                 {
-                    addresses = String.Format("SA {0} DA {1} TA {2} RA {3}", this.SourceAddress, this.DestinationAddress, this.TransmitterAddress, this.ReceiverAddress);
+                    addresses = $"SA {this.SourceAddress} DA {this.DestinationAddress} TA {this.TransmitterAddress} RA {this.ReceiverAddress}";
                 }
                 else
                 {
-                    addresses = String.Format("SA {0} DA {1} BSSID {2}", this.SourceAddress, this.DestinationAddress, this.BssId);
+                    addresses = $"SA {this.SourceAddress} DA {this.DestinationAddress} BSSID {this.BssId}";
                 }
                 return addresses;
             }

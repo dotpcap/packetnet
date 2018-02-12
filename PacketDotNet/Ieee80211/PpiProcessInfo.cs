@@ -20,7 +20,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override int Length
+        public override Int32 Length
         {
             get
             {
@@ -37,14 +37,14 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The process identifier.
         /// </value>
-        public uint ProcessId { get; set; }
+        public UInt32 ProcessId { get; set; }
         /// <summary>
         /// Gets or sets the thread identifier.
         /// </summary>
         /// <value>
         /// The thread identifier.
         /// </value>
-        public uint ThreadId { get; set; }
+        public UInt32 ThreadId { get; set; }
         /// <summary>
         /// Gets or sets the process path.
         /// </summary>
@@ -58,7 +58,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The user identifier.
         /// </value>
-        public uint UserId { get; set; }
+        public UInt32 UserId { get; set; }
         /// <summary>
         /// Gets or sets the user name.
         /// </summary>
@@ -72,7 +72,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The group identifier.
         /// </value>
-        public uint GroupId { get; set; }
+        public UInt32 GroupId { get; set; }
         /// <summary>
         /// Gets or sets the group name.
         /// </summary>
@@ -87,7 +87,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public override byte[] Bytes
+        public override Byte[] Bytes
         {
             get
             {
@@ -98,19 +98,19 @@ namespace PacketDotNet.Ieee80211
                 writer.Write(this.ThreadId);
                     
                 var pathBytes = Encoding.UTF8.GetBytes(this.ProcessPath ?? String.Empty);
-                writer.Write((byte)pathBytes.Length);
+                writer.Write((Byte)pathBytes.Length);
                 writer.Write(pathBytes);
                     
                 writer.Write(this.UserId);
                     
                 var userBytes = Encoding.UTF8.GetBytes(this.UserName ?? String.Empty);
-                writer.Write((byte)userBytes.Length);
+                writer.Write((Byte)userBytes.Length);
                 writer.Write(userBytes);
                     
                 writer.Write(this.GroupId);
                     
                 var groupBytes = Encoding.UTF8.GetBytes(this.GroupName ?? String.Empty);
-                writer.Write((byte)groupBytes.Length);
+                writer.Write((Byte)groupBytes.Length);
                 writer.Write(groupBytes);
                         
                 return ms.ToArray();

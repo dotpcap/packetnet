@@ -37,7 +37,7 @@ namespace Test.PacketType
         /// </summary>
         [TestCase("../../CaptureFiles/ICMPv4.pcap", LinkLayers.Ethernet)]
         [TestCase("../../CaptureFiles/ICMPv4_raw_linklayer.pcap", LinkLayers.Raw)]
-        public void ICMPv4Parsing(string pcapPath, LinkLayers linkLayer)
+        public void ICMPv4Parsing(String pcapPath, LinkLayers linkLayer)
         {
             var dev = new CaptureFileReaderDevice(pcapPath);
             dev.Open();
@@ -59,8 +59,8 @@ namespace Test.PacketType
             Assert.AreEqual(0x6b00, icmp.Sequence);
 
             // check that the message matches
-            string expectedString = "abcdefghijklmnopqrstuvwabcdefghi";
-            byte[] expectedData = System.Text.Encoding.ASCII.GetBytes(expectedString);
+            String expectedString = "abcdefghijklmnopqrstuvwabcdefghi";
+            Byte[] expectedData = System.Text.Encoding.ASCII.GetBytes(expectedString);
             Assert.AreEqual(expectedData, icmp.Data);
         }
 
@@ -106,7 +106,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            bool foundicmp = false;
+            Boolean foundicmp = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);

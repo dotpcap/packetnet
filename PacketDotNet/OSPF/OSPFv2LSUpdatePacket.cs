@@ -15,19 +15,19 @@ namespace PacketDotNet.OSPF
         /// <value>
         /// The packet type
         /// </value>
-        public static OSPFPacketType packetType = OSPFPacketType.LinkStateUpdate;
+        public static OSPFPacketType PacketType = OSPFPacketType.LinkStateUpdate;
 
         /// <summary>
         /// Constructs an OSPFv2 Link state update packet
         /// </summary>
         public OSPFv2LSUpdatePacket()
         {
-            byte[] b = new byte[OSPFv2Fields.HeaderLength + 4];
-            Array.Copy((Array) this.header.Bytes, (Array) b, (int) this.header.Bytes.Length);
-            this.header = new ByteArraySegment(b, 0, OSPFv2Fields.LSRStart);
-            this.Type = packetType;
+            Byte[] b = new Byte[OSPFv2Fields.HeaderLength + 4];
+            Array.Copy(this.HeaderByteArraySegment.Bytes, b, this.HeaderByteArraySegment.Bytes.Length);
+            this.HeaderByteArraySegment = new ByteArraySegment(b, 0, OSPFv2Fields.LSRStart);
+            this.Type = PacketType;
 
-            this.PacketLength = (ushort)this.header.Bytes.Length;
+            this.PacketLength = (UInt16)this.HeaderByteArraySegment.Bytes.Length;
             this.LSANumber = 0;
         }
 
@@ -37,43 +37,43 @@ namespace PacketDotNet.OSPF
         /// <param name="lsas">List of the LSA headers</param>
         public OSPFv2LSUpdatePacket(List<LSA> lsas)
         {
-            int length = 0;
-            int offset = OSPFv2Fields.HeaderLength + OSPFv2Fields.LSANumberLength;
+            Int32 length = 0;
+            Int32 offset = OSPFv2Fields.HeaderLength + OSPFv2Fields.LSANumberLength;
 
             //calculate the length for the LSAs
-            for (int i = 0; i < lsas.Count; i++)
+            for (Int32 i = 0; i < lsas.Count; i++)
             {
                 length += lsas[i].Bytes.Length;
             }
 
-            byte[] bytes = new byte[length + offset];
+            Byte[] bytes = new Byte[length + offset];
 
-            Array.Copy((Array) this.header.Bytes, (Array) bytes, (int) this.header.Length);
-            for (int i = 0; i < lsas.Count; i++)
+            Array.Copy(this.HeaderByteArraySegment.Bytes, bytes, this.HeaderByteArraySegment.Length);
+            for (Int32 i = 0; i < lsas.Count; i++)
             {
                 Array.Copy(lsas[i].Bytes, 0, bytes, offset, lsas[i].Bytes.Length);
                 offset += lsas[i].Bytes.Length;
             }
 
-            this.header = new ByteArraySegment(bytes);
-            this.Type = packetType;
-            this.PacketLength = (ushort)this.header.Bytes.Length;
-            this.LSANumber = (uint)lsas.Count;
+            this.HeaderByteArraySegment = new ByteArraySegment(bytes);
+            this.Type = PacketType;
+            this.PacketLength = (UInt16)this.HeaderByteArraySegment.Bytes.Length;
+            this.LSANumber = (UInt32)lsas.Count;
         }
 
         /// <summary>
         /// Constructs a packet from bytes and offset
         /// </summary>
-        /// <param name="Bytes">
+        /// <param name="bytes">
         /// A <see cref="System.Byte"/>
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public OSPFv2LSUpdatePacket(byte[] Bytes, int Offset) :
-            base(Bytes, Offset)
+        public OSPFv2LSUpdatePacket(Byte[] bytes, Int32 offset) :
+            base(bytes, offset)
         {
-            this.Type = packetType;
+            this.Type = PacketType;
         }
 
         /// <summary>
@@ -84,16 +84,16 @@ namespace PacketDotNet.OSPF
         /// </param>
         public OSPFv2LSUpdatePacket(ByteArraySegment bas)
         {
-            this.header = new ByteArraySegment(bas.Bytes);
+            this.HeaderByteArraySegment = new ByteArraySegment(bas.Bytes);
         }
 
         /// <summary>
         /// The number of LSAs included in this update.
         /// </summary>
-        public virtual uint LSANumber
+        public virtual UInt32 LSANumber
         {
-            get => EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + OSPFv2Fields.LSANumberPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.LSANumberPosition);
+            get => EndianBitConverter.Big.ToUInt32(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + OSPFv2Fields.LSANumberPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + OSPFv2Fields.LSANumberPosition);
         }
 
         /// <summary>
@@ -106,24 +106,24 @@ namespace PacketDotNet.OSPF
             {
                 List<LSA> ret = new List<LSA>();
 
-                int offset = this.header.Offset + OSPFv2Fields.LSAUpdatesPositon;
-                for (int i = 0; i < this.LSANumber; i++)
+                Int32 offset = this.HeaderByteArraySegment.Offset + OSPFv2Fields.LSAUpdatesPositon;
+                for (Int32 i = 0; i < this.LSANumber; i++)
                 {
-                    LSA l = new LSA(this.header.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
+                    LSA l = new LSA(this.HeaderByteArraySegment.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
                     switch (l.LSType)
                     {
                         case LSAType.ASExternal:
-                            ret.Add(new ASExternalLSA(this.header.Bytes, offset, l.Length));
+                            ret.Add(new ASExternalLSA(this.HeaderByteArraySegment.Bytes, offset, l.Length));
                             break;
                         case LSAType.Network:
-                            ret.Add(new NetworkLSA(this.header.Bytes, offset, l.Length));
+                            ret.Add(new NetworkLSA(this.HeaderByteArraySegment.Bytes, offset, l.Length));
                             break;
                         case LSAType.Router:
-                            ret.Add(new RouterLSA(this.header.Bytes, offset, l.Length));
+                            ret.Add(new RouterLSA(this.HeaderByteArraySegment.Bytes, offset, l.Length));
                             break;
                         case LSAType.Summary:
                         case LSAType.SummaryASBR:
-                            ret.Add(new SummaryLSA(this.header.Bytes, offset, l.Length));
+                            ret.Add(new SummaryLSA(this.HeaderByteArraySegment.Bytes, offset, l.Length));
                             break;
                     }
                     offset += l.Length;
@@ -136,12 +136,12 @@ namespace PacketDotNet.OSPF
         /// Returns a <see cref="System.String"/> that represents the current <see cref="OSPFv2LSUpdatePacket"/>.
         /// </summary>
         /// <returns>A <see cref="System.String"/> that represents the current <see cref="OSPFv2LSUpdatePacket"/>.</returns>
-        public override string ToString()
+        public override String ToString()
         {
             StringBuilder packet = new StringBuilder();
-            packet.Append((string) base.ToString());
+            packet.Append(base.ToString());
             packet.Append(" ");
-            packet.AppendFormat((string) "LSANumber: {0} ", (object) this.LSANumber);
+            packet.AppendFormat($"LSANumber: {this.LSANumber} ");
             return packet.ToString();
         }
 
@@ -154,7 +154,7 @@ namespace PacketDotNet.OSPF
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             return this.ToString();
         }

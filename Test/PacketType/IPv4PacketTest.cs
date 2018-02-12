@@ -24,7 +24,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
 using PacketDotNet;
 using PacketDotNet.IP;
-using PacketDotNet.MiscUtil.Utils;
 using PacketDotNet.Utils;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -45,7 +44,7 @@ namespace Test.PacketType
             Assert.AreEqual(destinationAddress, ip.DestinationAddress);
 
             // make sure the version is what we expect
-            Assert.AreEqual(IPv4Packet.ipVersion, ip.Version);
+            Assert.AreEqual(IPv4Packet.IPVersion, ip.Version);
 
             // retrieve the bytes for this IPv4Packet and construct another IPv4 packet from
             // these bytes
@@ -103,7 +102,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            bool foundipv4 = false;
+            Boolean foundipv4 = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);

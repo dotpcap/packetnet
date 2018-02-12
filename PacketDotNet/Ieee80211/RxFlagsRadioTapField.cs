@@ -18,7 +18,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length => 2;
+        public override UInt16 Length => 2;
 
         /// <summary>
         /// Gets or sets a value indicating whether the frame failed the PLCP CRC check.
@@ -26,12 +26,12 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// <c>true</c> if the PLCP CRC check failed; otherwise, <c>false</c>.
         /// </value>
-        public bool PlcpCrcCheckFailed {get; set;}
+        public Boolean PlcpCrcCheckFailed {get; set;}
             
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
             UInt16 flags = (UInt16)((this.PlcpCrcCheckFailed) ? 0x2 : 0x0);
             EndianBitConverter.Little.CopyBytes(flags, dest, offset);
@@ -63,7 +63,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='PlcpCrcCheckFailed'>
         /// PLCP CRC check failed.
         /// </param>
-        public RxFlagsRadioTapField(bool PlcpCrcCheckFailed)
+        public RxFlagsRadioTapField(Boolean PlcpCrcCheckFailed)
         {
             this.PlcpCrcCheckFailed = PlcpCrcCheckFailed;
         }
@@ -74,9 +74,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("PlcpCrcCheckFailed {0}", this.PlcpCrcCheckFailed);
+            return $"PlcpCrcCheckFailed {this.PlcpCrcCheckFailed}";
         }
     }
 }

@@ -170,10 +170,12 @@ namespace Test.PacketType
 
                 InformationElement ie2 = new InformationElement (
                     InformationElement.ElementId.VendorSpecific, new Byte[] { 0xFF, 0xFE, 0xFD, 0xFC });
-          
-                InformationElementList ieList = new InformationElementList ();
-                ieList.Add (ie1);
-                ieList.Add (ie2);
+
+                InformationElementList ieList = new InformationElementList
+                {
+                    ie1,
+                    ie2
+                };
 
                 Byte[] expectedBytes = new Byte[] { 0xD3, 0x5, 0x1, 0x2, 0x3, 0x4, 0x5, 0xDD, 0x4, 0xFF, 0xFE, 0xFD, 0xFC };
 

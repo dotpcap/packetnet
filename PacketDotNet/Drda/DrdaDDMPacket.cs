@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2017 Andrew <pandipd@outlook.com>
  */
 
+using System;
 using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Utils;
@@ -37,41 +38,41 @@ namespace PacketDotNet.Drda
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
         /// <summary>
         /// The Length field
         /// </summary>
-        public ushort Length => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + DrdaDDMFields.LengthPosition);
+        public UInt16 Length => EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + DrdaDDMFields.LengthPosition);
 
         /// <summary>
         /// The Magic field
         /// </summary>
-        public byte Magic => this.header.Bytes[this.header.Offset + DrdaDDMFields.MagicPosition];
+        public Byte Magic => this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset + DrdaDDMFields.MagicPosition];
 
         /// <summary>
         /// The Format field
         /// </summary>
-        public byte Format => this.header.Bytes[this.header.Offset + DrdaDDMFields.FormatPosition];
+        public Byte Format => this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset + DrdaDDMFields.FormatPosition];
 
         /// <summary>
         /// The CorrelId field
         /// </summary>
-        public ushort CorrelId => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + DrdaDDMFields.CorrelIdPosition);
+        public UInt16 CorrelId => EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + DrdaDDMFields.CorrelIdPosition);
 
         /// <summary>
         /// The Length2 field
         /// </summary>
-        public ushort Length2 => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + DrdaDDMFields.Length2Position);
+        public UInt16 Length2 => EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + DrdaDDMFields.Length2Position);
 
         /// <summary>
         /// The Code Point field
         /// </summary>
-        public DrdaCodepointType CodePoint => (DrdaCodepointType)EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + DrdaDDMFields.CodePointPosition);
+        public DrdaCodepointType CodePoint => (DrdaCodepointType)EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + DrdaDDMFields.CodePointPosition);
 
-        private List<DrdaDDMParameter> paramters;
+        private List<DrdaDDMParameter> _paramters;
 
         /// <summary>
         /// Decode Parameters field
@@ -80,23 +81,23 @@ namespace PacketDotNet.Drda
         {
             get
             {
-                if (this.paramters == null) this.paramters = new List<DrdaDDMParameter>();
-                if (this.paramters.Count > 0) return this.paramters;
-                var offset = this.header.Offset + DrdaDDMFields.DDMHeadTotalLength;
+                if (this._paramters == null) this._paramters = new List<DrdaDDMParameter>();
+                if (this._paramters.Count > 0) return this._paramters;
+                var offset = this.HeaderByteArraySegment.Offset + DrdaDDMFields.DDMHeadTotalLength;
                 var ddmTotalLength = this.Length;
-                while (offset < this.header.Offset+ ddmTotalLength)
+                while (offset < this.HeaderByteArraySegment.Offset+ ddmTotalLength)
                 {
-                    int length = EndianBitConverter.Big.ToUInt16(this.header.Bytes, offset);
+                    Int32 length = EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, offset);
                     if (length == 0)
                     {
-                        length = this.header.Offset + ddmTotalLength - offset;
+                        length = this.HeaderByteArraySegment.Offset + ddmTotalLength - offset;
                     }
-                    if (offset + length <= this.header.Offset + ddmTotalLength)
+                    if (offset + length <= this.HeaderByteArraySegment.Offset + ddmTotalLength)
                     {
                         var parameter = new DrdaDDMParameter()
                         {
                             Length = length,
-                            DrdaCodepoint = (DrdaCodepointType)EndianBitConverter.Big.ToUInt16(this.header.Bytes, offset + DrdaDDMFields.ParameterLengthLength)
+                            DrdaCodepoint = (DrdaCodepointType)EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, offset + DrdaDDMFields.ParameterLengthLength)
                         };
 
                         var startIndex = offset + DrdaDDMFields.ParameterLengthLength + DrdaDDMFields.ParameterCodePointLength;
@@ -106,18 +107,18 @@ namespace PacketDotNet.Drda
                         {
                             startIndex++;
                             strLength-=2;
-                            parameter.Data = Encoding.UTF8.GetString(this.header.Bytes, startIndex,strLength).Trim();
+                            parameter.Data = Encoding.UTF8.GetString(this.HeaderByteArraySegment.Bytes, startIndex,strLength).Trim();
                         }
                         else
                         {
-                            parameter.Data = StringConverter.EbcdicToAscii(this.header.Bytes, startIndex, strLength).Trim();
+                            parameter.Data = StringConverter.EbcdicToAscii(this.HeaderByteArraySegment.Bytes, startIndex, strLength).Trim();
                         }
 
-                        this.paramters.Add(parameter);
+                        this._paramters.Add(parameter);
                     }
                     offset += length;
                 }
-                return this.paramters;
+                return this._paramters;
             }
         }
 
@@ -127,30 +128,30 @@ namespace PacketDotNet.Drda
         /// <param name="bas">Payload Bytes</param>
         public DrdaDDMPacket(ByteArraySegment bas)
         {
-            log.Debug("");
+            Log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            this.header = new ByteArraySegment(bas);
+            this.HeaderByteArraySegment = new ByteArraySegment(bas);
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="bas">Payload Bytes</param>
-        /// <param name="ParentPacket">Parent Packet</param>
-        public DrdaDDMPacket(ByteArraySegment bas, Packet ParentPacket) : this(bas)
+        /// <param name="parentPacket">Parent Packet</param>
+        public DrdaDDMPacket(ByteArraySegment bas, Packet parentPacket) : this(bas)
         {
-            log.DebugFormat("ParentPacket.GetType() {0}", ParentPacket.GetType());
+            Log.DebugFormat("ParentPacket.GetType() {0}", parentPacket.GetType());
 
-            this.ParentPacket = ParentPacket;
+            this.ParentPacket = parentPacket;
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {

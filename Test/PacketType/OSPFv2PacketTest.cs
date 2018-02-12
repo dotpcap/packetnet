@@ -11,26 +11,26 @@ using SharpPcap;
 namespace Test.PacketType
 {
     [TestFixture]
-    class OSPFv2PacketTest
+    internal class OSPFv2PacketTest
     {
-        private const int OSPF_HELLO_INDEX = 0;
-        private const int OSPF_DBD_INDEX = 9;
-        private const int OSPF_DBD_LSA_INDEX = 11;
-        private const int OSPF_LSR_INDEX = 17;
-        private const int OSPF_LSU_INDEX = 18;
-        private const int OSPF_LSA_INDEX = 23;
-        private const int OSPF_LSU_LSA_INDEX = 31;
+        private const Int32 OSPF_HELLO_INDEX = 0;
+        private const Int32 OSPF_DBD_INDEX = 9;
+        private const Int32 OSPF_DBD_LSA_INDEX = 11;
+        private const Int32 OSPF_LSR_INDEX = 17;
+        private const Int32 OSPF_LSU_INDEX = 18;
+        private const Int32 OSPF_LSA_INDEX = 23;
+        private const Int32 OSPF_LSU_LSA_INDEX = 31;
 
-        OSPFv2Packet helloPacket;
-        OSPFv2Packet ddPacket;
-        OSPFv2Packet ddLSAPacket;
-        OSPFv2Packet lsrPacket;
-        OSPFv2Packet lsuPacket;
-        OSPFv2Packet lsaPacket;
+        private OSPFv2Packet helloPacket;
+        private OSPFv2Packet ddPacket;
+        private OSPFv2Packet ddLSAPacket;
+        private OSPFv2Packet lsrPacket;
+        private OSPFv2Packet lsuPacket;
+        private OSPFv2Packet lsaPacket;
 
-        OSPFv2LSUpdatePacket lsaHolder;
+        private OSPFv2LSUpdatePacket lsaHolder;
 
-        bool packetsLoaded = false;
+        private Boolean packetsLoaded = false;
 
         [SetUp]
         public void Init()
@@ -39,7 +39,7 @@ namespace Test.PacketType
                 return;
 
             RawCapture raw;
-            int packetIndex = 0;
+            Int32 packetIndex = 0;
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/ospfv2.pcap");
             dev.Open();
 
@@ -436,9 +436,9 @@ namespace Test.PacketType
             Assert.AreEqual(0x80000004, rl.LSSequenceNumber);
             Assert.AreEqual(0x7caa, rl.Checksum);
             Assert.AreEqual(48, rl.Length);
-            Assert.AreEqual(0, rl.vBit);
-            Assert.AreEqual(0, rl.eBit);
-            Assert.AreEqual(0, rl.bBit);
+            Assert.AreEqual(0, rl.VBit);
+            Assert.AreEqual(0, rl.EBit);
+            Assert.AreEqual(0, rl.BBit);
             Assert.AreEqual(2, rl.RouterLinks.Count);
 
             RouterLink rlink = rl.RouterLinks[0];
@@ -466,9 +466,9 @@ namespace Test.PacketType
             Assert.AreEqual(0x80000006, rl.LSSequenceNumber);
             Assert.AreEqual(0x36b1, rl.Checksum);
             Assert.AreEqual(36, rl.Length);
-            Assert.AreEqual(0, rl.vBit);
-            Assert.AreEqual(0, rl.eBit);
-            Assert.AreEqual(1, rl.bBit);
+            Assert.AreEqual(0, rl.VBit);
+            Assert.AreEqual(0, rl.EBit);
+            Assert.AreEqual(1, rl.BBit);
             Assert.AreEqual(1, rl.RouterLinks.Count);
 
             rlink = rl.RouterLinks[0];
@@ -550,7 +550,7 @@ namespace Test.PacketType
             Assert.AreEqual(36, al.Length);
 
             ASExternalLink aslink = al.ASExternalLinks[0];
-            Assert.AreEqual(aslink.eBit, 1);
+            Assert.AreEqual(aslink.EBit, 1);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
             Assert.AreEqual(0, aslink.TOS);
@@ -571,7 +571,7 @@ namespace Test.PacketType
             Assert.AreEqual(36, al.Length);
 
             aslink = al.ASExternalLinks[0];
-            Assert.AreEqual(aslink.eBit, 1);
+            Assert.AreEqual(aslink.EBit, 1);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
             Assert.AreEqual(0, aslink.TOS);
@@ -584,7 +584,7 @@ namespace Test.PacketType
             RawCapture raw;
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/ospfv2_md5.pcap");
             OSPFv2HelloPacket[] testSubjects = new OSPFv2HelloPacket[4];
-            int i = 0;
+            Int32 i = 0;
 
             dev.Open();
             while ((raw = dev.GetNextPacket()) != null && i < 4)
@@ -594,10 +594,10 @@ namespace Test.PacketType
             }
             dev.Close();
 
-            Assert.AreEqual(testSubjects[0].Authentication, (long)0x000000103c7ec4f7);
-            Assert.AreEqual(testSubjects[1].Authentication, (long)0x000000103c7ec4fc);
-            Assert.AreEqual(testSubjects[2].Authentication, (long)0x000000103c7ec501);
-            Assert.AreEqual(testSubjects[3].Authentication, (long)0x000000103c7ec505);
+            Assert.AreEqual(testSubjects[0].Authentication, (Int64)0x000000103c7ec4f7);
+            Assert.AreEqual(testSubjects[1].Authentication, (Int64)0x000000103c7ec4fc);
+            Assert.AreEqual(testSubjects[2].Authentication, (Int64)0x000000103c7ec501);
+            Assert.AreEqual(testSubjects[3].Authentication, (Int64)0x000000103c7ec505);
             Assert.AreEqual(0, testSubjects[0].NeighborID.Count);
             Assert.AreEqual(0, testSubjects[1].NeighborID.Count);
             Assert.AreEqual(1, testSubjects[2].NeighborID.Count);
@@ -633,7 +633,7 @@ namespace Test.PacketType
             Assert.AreEqual(0, p.NeighborID.Count);
 
             //test re-creation
-            byte[] bytes = p.Bytes;
+            Byte[] bytes = p.Bytes;
             OSPFv2HelloPacket hp = new OSPFv2HelloPacket(new ByteArraySegment(bytes));
 
             Assert.AreEqual(OSPFVersion.OSPFv2, hp.Version);
@@ -649,11 +649,13 @@ namespace Test.PacketType
             Assert.AreEqual(0, hp.NeighborID.Count);
 
             //test ctor 2
-            List<System.Net.IPAddress> neighbors = new List<System.Net.IPAddress>();
-            neighbors.Add(System.Net.IPAddress.Parse("172.168.144.1"));
-            neighbors.Add(System.Net.IPAddress.Parse("123.192.133.255"));
-            neighbors.Add(System.Net.IPAddress.Parse("61.72.84.3"));
-            neighbors.Add(System.Net.IPAddress.Parse("127.0.0.1"));
+            List<System.Net.IPAddress> neighbors = new List<System.Net.IPAddress>
+            {
+                System.Net.IPAddress.Parse("172.168.144.1"),
+                System.Net.IPAddress.Parse("123.192.133.255"),
+                System.Net.IPAddress.Parse("61.72.84.3"),
+                System.Net.IPAddress.Parse("127.0.0.1")
+            };
 
             OSPFv2HelloPacket p2 = new OSPFv2HelloPacket(System.Net.IPAddress.Parse("255.255.255.0"), 3, 4, neighbors);
             Assert.AreEqual(3, p2.HelloInterval);
@@ -682,7 +684,7 @@ namespace Test.PacketType
             Assert.AreEqual(0x02, d.DBDescriptionOptions);
 
             //test re-creation
-            byte[] bytes = d.Bytes;
+            Byte[] bytes = d.Bytes;
             OSPFv2DDPacket dp = new OSPFv2DDPacket(new ByteArraySegment(bytes));
 
             Assert.AreEqual(OSPFPacketType.DatabaseDescription, d.Type);
@@ -779,7 +781,7 @@ namespace Test.PacketType
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.255.252"), p.AreaID);
 
             //test re-creation
-            byte[] bytes = p.Bytes;
+            Byte[] bytes = p.Bytes;
             OSPFv2LSRequestPacket lp = new OSPFv2LSRequestPacket(new ByteArraySegment(bytes));
 
             Assert.AreEqual(OSPFVersion.OSPFv2, lp.Version);
@@ -852,9 +854,9 @@ namespace Test.PacketType
                 AdvertisingRouter = System.Net.IPAddress.Parse("2.2.2.2"),
                 LSSequenceNumber = 0x80000001,
                 Checksum = 0xaaaa,
-                vBit = 1,
-                eBit = 0,
-                bBit = 1
+                VBit = 1,
+                EBit = 0,
+                BBit = 1
             };
 
 
@@ -866,9 +868,9 @@ namespace Test.PacketType
             Assert.AreEqual(0x80000001, rl.LSSequenceNumber);
             Assert.AreEqual(0xaaaa, rl.Checksum);
             Assert.AreEqual(24, rl.Length);
-            Assert.AreEqual(1, rl.vBit);
-            Assert.AreEqual(0, rl.eBit);
-            Assert.AreEqual(1, rl.bBit);
+            Assert.AreEqual(1, rl.VBit);
+            Assert.AreEqual(0, rl.EBit);
+            Assert.AreEqual(1, rl.BBit);
             Assert.AreEqual(0, rl.RouterLinks.Count);
 
             List<RouterLink> rlist = new List<RouterLink>();
@@ -902,9 +904,9 @@ namespace Test.PacketType
                 AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5"),
                 LSSequenceNumber = 0x80000004,
                 Checksum = 0x7caa,
-                vBit = 0,
-                eBit = 0,
-                bBit = 0
+                VBit = 0,
+                EBit = 0,
+                BBit = 0
             };
 
             Assert.AreEqual(446, rl.LSAge);
@@ -915,9 +917,9 @@ namespace Test.PacketType
             Assert.AreEqual(0x80000004, rl.LSSequenceNumber);
             Assert.AreEqual(0x7caa, rl.Checksum);
             Assert.AreEqual(48, rl.Length);
-            Assert.AreEqual(0, rl.vBit);
-            Assert.AreEqual(0, rl.eBit);
-            Assert.AreEqual(0, rl.bBit);
+            Assert.AreEqual(0, rl.VBit);
+            Assert.AreEqual(0, rl.EBit);
+            Assert.AreEqual(0, rl.BBit);
             Assert.AreEqual(2, rl.RouterLinks.Count);
 
             rlink = rl.RouterLinks[0];
@@ -964,9 +966,11 @@ namespace Test.PacketType
             Assert.AreEqual(24, nl.Length);
 
             //ctor 2
-            List<System.Net.IPAddress> rtrs = new List<System.Net.IPAddress>();
-            rtrs.Add(System.Net.IPAddress.Parse("5.5.5.5"));
-            rtrs.Add(System.Net.IPAddress.Parse("4.4.4.4"));
+            List<System.Net.IPAddress> rtrs = new List<System.Net.IPAddress>
+            {
+                System.Net.IPAddress.Parse("5.5.5.5"),
+                System.Net.IPAddress.Parse("4.4.4.4")
+            };
 
             nl = new NetworkLSA(rtrs)
             {
@@ -1101,15 +1105,17 @@ namespace Test.PacketType
             //ctor 2;
             ASExternalLink aslink = new ASExternalLink
             {
-                eBit = 1,
+                EBit = 1,
                 Metric = 100,
                 ExternalRouteTag = 0,
                 TOS = 0,
                 ForwardingAddress = System.Net.IPAddress.Parse("0.0.0.0")
             };
 
-            List<ASExternalLink> links = new List<ASExternalLink>();
-            links.Add(aslink);
+            List<ASExternalLink> links = new List<ASExternalLink>
+            {
+                aslink
+            };
 
             al = new ASExternalLSA(links)
             {
@@ -1136,7 +1142,7 @@ namespace Test.PacketType
             Assert.AreEqual(36, al.Length);
 
             aslink = al.ASExternalLinks[0];
-            Assert.AreEqual(1, aslink.eBit);
+            Assert.AreEqual(1, aslink.EBit);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
             Assert.AreEqual(0, aslink.TOS);
@@ -1167,7 +1173,7 @@ namespace Test.PacketType
             Assert.AreEqual(0, p.LSANumber);
 
             //test re-creation
-            byte[] bytes = p.Bytes;
+            Byte[] bytes = p.Bytes;
             OSPFv2LSUpdatePacket lp = new OSPFv2LSUpdatePacket(new ByteArraySegment(bytes));
 
             Assert.AreEqual(OSPFVersion.OSPFv2, lp.Version);
@@ -1208,15 +1214,17 @@ namespace Test.PacketType
                 AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5"),
                 LSSequenceNumber = 0x80000004,
                 Checksum = 0x7caa,
-                vBit = 0,
-                eBit = 0,
-                bBit = 0
+                VBit = 0,
+                EBit = 0,
+                BBit = 0
             };
 
             //add network lsa
-            List<System.Net.IPAddress> rtrs = new List<System.Net.IPAddress>();
-            rtrs.Add(System.Net.IPAddress.Parse("5.5.5.5"));
-            rtrs.Add(System.Net.IPAddress.Parse("4.4.4.4"));
+            List<System.Net.IPAddress> rtrs = new List<System.Net.IPAddress>
+            {
+                System.Net.IPAddress.Parse("5.5.5.5"),
+                System.Net.IPAddress.Parse("4.4.4.4")
+            };
 
             nl = new NetworkLSA(rtrs)
             {
@@ -1263,15 +1271,17 @@ namespace Test.PacketType
             //add AS External LSA
             ASExternalLink aslink = new ASExternalLink
             {
-                eBit = 1,
+                EBit = 1,
                 Metric = 100,
                 ExternalRouteTag = 0,
                 TOS = 0,
                 ForwardingAddress = System.Net.IPAddress.Parse("0.0.0.0")
             };
 
-            List<ASExternalLink> links = new List<ASExternalLink>();
-            links.Add(aslink);
+            List<ASExternalLink> links = new List<ASExternalLink>
+            {
+                aslink
+            };
 
             al = new ASExternalLSA(links)
             {
@@ -1286,11 +1296,13 @@ namespace Test.PacketType
             };
 
             //put them all together in a list
-            List<LSA> lsas = new List<LSA>();
-            lsas.Add(rl);
-            lsas.Add(nl);
-            lsas.Add(sl);
-            lsas.Add(al);
+            List<LSA> lsas = new List<LSA>
+            {
+                rl,
+                nl,
+                sl,
+                al
+            };
 
             p = new OSPFv2LSUpdatePacket(lsas)
             {
@@ -1317,9 +1329,9 @@ namespace Test.PacketType
             Assert.AreEqual(0x80000004, rl.LSSequenceNumber);
             Assert.AreEqual(0x7caa, rl.Checksum);
             Assert.AreEqual(48, rl.Length);
-            Assert.AreEqual(0, rl.vBit);
-            Assert.AreEqual(0, rl.eBit);
-            Assert.AreEqual(0, rl.bBit);
+            Assert.AreEqual(0, rl.VBit);
+            Assert.AreEqual(0, rl.EBit);
+            Assert.AreEqual(0, rl.BBit);
             Assert.AreEqual(2, rl.RouterLinks.Count);
 
             rlink = rl.RouterLinks[0];
@@ -1383,7 +1395,7 @@ namespace Test.PacketType
             Assert.AreEqual(36, al.Length);
 
             aslink = al.ASExternalLinks[0];
-            Assert.AreEqual(1, aslink.eBit);
+            Assert.AreEqual(1, aslink.EBit);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
             Assert.AreEqual(0, aslink.TOS);
@@ -1399,7 +1411,7 @@ namespace Test.PacketType
             Assert.AreEqual(OSPFPacketType.LinkStateAcknowledgment, p.Type);
 
             //test re-creation
-            byte[] bytes = p.Bytes;
+            Byte[] bytes = p.Bytes;
             OSPFv2DDPacket p2 = new OSPFv2DDPacket(new ByteArraySegment(bytes));
 
             Assert.AreEqual(OSPFPacketType.LinkStateAcknowledgment, p2.Type);

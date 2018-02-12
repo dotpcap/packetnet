@@ -64,7 +64,7 @@ namespace PacketDotNet.Ieee80211
             /// </param>
             public InformationElementList (ByteArraySegment bas)
             {
-                int index = 0;
+                Int32 index = 0;
                 while ((index + InformationElement.ElementLengthPosition) < bas.Length)
                 {
                     var ieStartPosition = bas.Offset + index;
@@ -83,11 +83,11 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The length
             /// </value>
-            public int Length
+            public Int32 Length
             {
                 get
                 {
-                    int length = 0;
+                    Int32 length = 0;
                     foreach (InformationElement ie in this)
                     {
                         length += ie.ElementLength;
@@ -108,7 +108,7 @@ namespace PacketDotNet.Ieee80211
                 get
                 {
                     var bytes = new Byte[this.Length];
-                    int index = 0;
+                    Int32 index = 0;
                     foreach (var ie in this)
                     {
                         var ieBytes = ie.Bytes;
@@ -163,9 +163,9 @@ namespace PacketDotNet.Ieee80211
             /// </param>
             /// <remarks>Ensure that the destination is large enough to contain serialised elements
             /// before calling this method</remarks>
-            public void CopyTo (ByteArraySegment destination, int offset)
+            public void CopyTo (ByteArraySegment destination, Int32 offset)
             {
-                int index = 0;
+                Int32 index = 0;
                 foreach (var ie in this)
                 {
                     var ieBytes = ie.Bytes;

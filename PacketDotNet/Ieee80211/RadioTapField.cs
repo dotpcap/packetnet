@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
@@ -23,7 +24,7 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="RadioTapField"/>
         /// </returns>
-        public static RadioTapField Parse(int bitIndex, BinaryReader br)
+        public static RadioTapField Parse(Int32 bitIndex, BinaryReader br)
         {
             var Type = (RadioTapType)bitIndex;
             switch (Type)
@@ -70,11 +71,11 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public abstract ushort Length {get;}
+        public abstract UInt16 Length {get;}
             
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public abstract void CopyTo(byte[] dest, int offset);
+        public abstract void CopyTo(Byte[] dest, Int32 offset);
     };
 }

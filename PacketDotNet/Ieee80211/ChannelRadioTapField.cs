@@ -38,7 +38,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length => 4;
+        public override UInt16 Length => 4;
 
         /// <summary>
         /// Frequency in MHz
@@ -48,7 +48,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Channel number derived from frequency
         /// </summary>
-        public int Channel { get; set; }
+        public Int32 Channel { get; set; }
 
         /// <summary>
         /// Channel flags
@@ -66,7 +66,7 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        public static int ChannelFromFrequencyMHz(int frequencyMHz)
+        public static Int32 ChannelFromFrequencyMHz(Int32 frequencyMHz)
         {
             switch (frequencyMHz)
             {
@@ -180,7 +180,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
             EndianBitConverter.Little.CopyBytes(this.FrequencyMHz, dest, offset);
             EndianBitConverter.Little.CopyBytes((UInt16) this.Flags, dest, offset + 2);
@@ -229,9 +229,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("FrequencyMHz {0}, Channel {1}, Flags {2}", this.FrequencyMHz, this.Channel, this.Flags);
+            return String.Format("FrequencyMHz {0}, Channel {1}, Flags {2}", this.FrequencyMHz, this.Channel, this.Flags);
         }
     }
 }

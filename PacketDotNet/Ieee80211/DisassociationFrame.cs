@@ -32,9 +32,9 @@ namespace PacketDotNet.Ieee80211
         {
             private class DisassociationFields
             {
-                public readonly static int ReasonCodeLength = 2;
+                public static readonly Int32 ReasonCodeLength = 2;
 
-                public readonly static int ReasonCodePosition;
+                public static readonly Int32 ReasonCodePosition;
 
                 static DisassociationFields()
                 {
@@ -54,9 +54,9 @@ namespace PacketDotNet.Ieee80211
             {
                 get
                 {
-					if(this.header.Length >= (DisassociationFields.ReasonCodePosition + DisassociationFields.ReasonCodeLength))
+					if(this.HeaderByteArraySegment.Length >= (DisassociationFields.ReasonCodePosition + DisassociationFields.ReasonCodeLength))
 					{
-						return (ReasonCode)EndianBitConverter.Little.ToUInt16 (this.header.Bytes, this.header.Offset + DisassociationFields.ReasonCodePosition);
+						return (ReasonCode)EndianBitConverter.Little.ToUInt16 (this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + DisassociationFields.ReasonCodePosition);
 					}
 					else
 					{
@@ -64,7 +64,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
                 
-                set => EndianBitConverter.Little.CopyBytes ((UInt16)value, this.header.Bytes, this.header.Offset + DisassociationFields.ReasonCodePosition);
+                set => EndianBitConverter.Little.CopyBytes ((UInt16)value, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + DisassociationFields.ReasonCodePosition);
             }
 
             /// <summary>
@@ -73,7 +73,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize => (MacFields.FrameControlLength +
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
                                               MacFields.DurationIDLength +
                                               (MacFields.AddressLength * 3) +
                                               MacFields.SequenceControlLength +
@@ -87,7 +87,7 @@ namespace PacketDotNet.Ieee80211
             /// </param>
             public DisassociationFrame (ByteArraySegment bas)
             {
-                this.header = new ByteArraySegment (bas);
+                this.HeaderByteArraySegment = new ByteArraySegment (bas);
 
                 this.FrameControl = new FrameControlField (this.FrameControlBytes);
                 this.Duration = new DurationField (this.DurationBytes);
@@ -97,7 +97,7 @@ namespace PacketDotNet.Ieee80211
                 this.SequenceControl = new SequenceControlField (this.SequenceControlBytes);
                 this.Reason = this.ReasonBytes;
 
-                this.header.Length = this.FrameSize;
+                this.HeaderByteArraySegment.Length = this.FrameSize;
             }
             
             /// <summary>
@@ -131,9 +131,9 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((this.header == null) || (this.header.Length > (this.header.BytesLength - this.header.Offset)) || (this.header.Length < this.FrameSize))
+                if ((this.HeaderByteArraySegment == null) || (this.HeaderByteArraySegment.Length > (this.HeaderByteArraySegment.BytesLength - this.HeaderByteArraySegment.Offset)) || (this.HeaderByteArraySegment.Length < this.FrameSize))
                 {
-                    this.header = new ByteArraySegment (new Byte[this.FrameSize]);
+                    this.HeaderByteArraySegment = new ByteArraySegment (new Byte[this.FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
@@ -144,7 +144,7 @@ namespace PacketDotNet.Ieee80211
                 this.SequenceControlBytes = this.SequenceControl.Field;
                 this.ReasonBytes = this.Reason;
 
-                this.header.Length = this.FrameSize;
+                this.HeaderByteArraySegment.Length = this.FrameSize;
             }
         } 
     }

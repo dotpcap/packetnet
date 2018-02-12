@@ -18,6 +18,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
+using System;
+
 namespace PacketDotNet.Tcp
 {
     /// <summary>
@@ -44,7 +46,7 @@ namespace PacketDotNet.Tcp
         /// References:
         ///  http://datatracker.ietf.org/doc/rfc1146/
         /// </remarks>
-         public AlternateChecksumRequest(byte[] bytes, int offset, int length) :
+         public AlternateChecksumRequest(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
         { }
 
@@ -67,9 +69,9 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return "[" + this.Kind.ToString() + ": ChecksumType=" + this.Checksum.ToString() + "]";
+            return $"[{this.Kind}: ChecksumType={this.Checksum}]";
         }
 
         #endregion
@@ -77,7 +79,7 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the offset (in bytes) of the Checksum field
-        const int ChecksumFieldOffset = 2;
+        private const Int32 ChecksumFieldOffset = 2;
 
         #endregion
     }

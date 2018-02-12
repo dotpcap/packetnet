@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
@@ -20,7 +21,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override int Length => 12;
+        public override Int32 Length => 12;
 
         /// <summary>
         /// Gets or sets the 802.11n MAC extension flags.
@@ -35,14 +36,14 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// the A-MPDU id.
         /// </value>
-        public uint AMpduId { get; set; }
+        public UInt32 AMpduId { get; set; }
         /// <summary>
         /// Gets or sets the number of zero-length pad delimiters
         /// </summary>
         /// <value>
         /// The delimiter count.
         /// </value>
-        public byte DelimiterCount { get; set; }
+        public Byte DelimiterCount { get; set; }
             
         /// <summary>
         /// Gets the field bytes. This doesn't include the PPI field header.
@@ -50,17 +51,17 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public override byte[] Bytes
+        public override Byte[] Bytes
         {
             get
             {
                 MemoryStream ms = new MemoryStream();
                 BinaryWriter writer = new BinaryWriter(ms);
                     
-                writer.Write((uint) this.Flags);
+                writer.Write((UInt32) this.Flags);
                 writer.Write(this.AMpduId);
                 writer.Write(this.DelimiterCount);
-                writer.Write(new byte[3]);
+                writer.Write(new Byte[3]);
                     
                 return ms.ToArray();
             }

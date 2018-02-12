@@ -26,7 +26,6 @@ using PacketDotNet.ARP;
 using PacketDotNet.Ieee8021Q;
 using PacketDotNet.IP;
 using PacketDotNet.LLDP;
-using PacketDotNet.MiscUtil.Utils;
 using PacketDotNet.PPP;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Conversion;
@@ -62,27 +61,26 @@ namespace PacketDotNet.Ethernet
                 base.PayloadPacket = value;
 
                 // set Type based on the type of the payload
-                if(value is IPv4Packet)
+                switch (value)
                 {
-                    this.Type = EthernetPacketType.IpV4;
-                } else if(value is IPv6Packet)
-                {
-                    this.Type = EthernetPacketType.IpV6;
-                } else if(value is ARPPacket)
-                {
-                    this.Type = EthernetPacketType.Arp;
-                }
-                else if(value is LLDPPacket)
-                {
-                    this.Type = EthernetPacketType.LLDP;
-                }
-                else if(value is PPPoEPacket)
-                {
-                    this.Type = EthernetPacketType.PointToPointProtocolOverEthernetSessionStage;
-                }
-                else // NOTE: new types should be inserted here
-                {
-                    this.Type = EthernetPacketType.None;
+                    case IPv4Packet _:
+                        this.Type = EthernetPacketType.IpV4;
+                        break;
+                    case IPv6Packet _:
+                        this.Type = EthernetPacketType.IpV6;
+                        break;
+                    case ARPPacket _:
+                        this.Type = EthernetPacketType.Arp;
+                        break;
+                    case LLDPPacket _:
+                        this.Type = EthernetPacketType.LLDP;
+                        break;
+                    case PPPoEPacket _:
+                        this.Type = EthernetPacketType.PointToPointProtocolOverEthernetSessionStage;
+                        break;
+                    default:
+                        this.Type = EthernetPacketType.None;
+                        break;
                 }
             }
         }
@@ -92,15 +90,15 @@ namespace PacketDotNet.Ethernet
         {
             get
             {
-                byte[] hwAddress = new byte[EthernetFields.MacAddressLength];
-                Array.Copy((Array) this.header.Bytes, (int) (this.header.Offset + EthernetFields.SourceMacPosition),
+                Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
+                Array.Copy((Array) this.HeaderByteArraySegment.Bytes, (Int32) (this.HeaderByteArraySegment.Offset + EthernetFields.SourceMacPosition),
                            hwAddress, 0, hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
 
             set
             {
-                byte[] hwAddress = value.GetAddressBytes();
+                Byte[] hwAddress = value.GetAddressBytes();
                 if(hwAddress.Length != EthernetFields.MacAddressLength)
                 {
                     throw new InvalidOperationException("address length " + hwAddress.Length
@@ -108,7 +106,7 @@ namespace PacketDotNet.Ethernet
                                                                + EthernetFields.MacAddressLength);
                 }
 
-                Array.Copy((Array) hwAddress, (int) 0, (Array) this.header.Bytes, (int) (this.header.Offset + EthernetFields.SourceMacPosition),
+                Array.Copy((Array) hwAddress, (Int32) 0, (Array) this.HeaderByteArraySegment.Bytes, (Int32) (this.HeaderByteArraySegment.Offset + EthernetFields.SourceMacPosition),
                            hwAddress.Length);
             }
         }
@@ -118,15 +116,15 @@ namespace PacketDotNet.Ethernet
         {
             get
             {
-                byte[] hwAddress = new byte[EthernetFields.MacAddressLength];
-                Array.Copy((Array) this.header.Bytes, (int) (this.header.Offset + EthernetFields.DestinationMacPosition),
+                Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
+                Array.Copy((Array) this.HeaderByteArraySegment.Bytes, (Int32) (this.HeaderByteArraySegment.Offset + EthernetFields.DestinationMacPosition),
                            hwAddress, 0, hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
 
             set
             {
-                byte[] hwAddress = value.GetAddressBytes();
+                Byte[] hwAddress = value.GetAddressBytes();
                 if(hwAddress.Length != EthernetFields.MacAddressLength)
                 {
                     throw new InvalidOperationException("address length " + hwAddress.Length
@@ -134,7 +132,7 @@ namespace PacketDotNet.Ethernet
                                                                + EthernetFields.MacAddressLength);
                 }
 
-                Array.Copy((Array) hwAddress, (int) 0, (Array) this.header.Bytes, (int) (this.header.Offset + EthernetFields.DestinationMacPosition),
+                Array.Copy((Array) hwAddress, (Int32) 0, (Array) this.HeaderByteArraySegment.Bytes, (Int32) (this.HeaderByteArraySegment.Offset + EthernetFields.DestinationMacPosition),
                            hwAddress.Length);
             }
         }
@@ -144,12 +142,12 @@ namespace PacketDotNet.Ethernet
         /// </value>
         public virtual EthernetPacketType Type
         {
-            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + EthernetFields.TypePosition);
+            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + EthernetFields.TypePosition);
 
             set
             {
                 Int16 val = (Int16)value;
-                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + EthernetFields.TypePosition);
+                EndianBitConverter.Big.CopyBytes(val, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + EthernetFields.TypePosition);
             }
         }
 
@@ -163,10 +161,10 @@ namespace PacketDotNet.Ethernet
             log.Debug("");
 
             // allocate memory for this packet
-            int offset = 0;
-            int length = EthernetFields.HeaderLength;
-            var headerBytes = new byte[length];
-            this.header = new ByteArraySegment(headerBytes, offset, length);
+            Int32 offset = 0;
+            Int32 length = EthernetFields.HeaderLength;
+            var headerBytes = new Byte[length];
+            this.HeaderByteArraySegment = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
             this.SourceHwAddress = SourceHwAddress;
@@ -185,13 +183,13 @@ namespace PacketDotNet.Ethernet
             log.Debug("");
 
             // slice off the header portion
-            this.header = new ByteArraySegment(bas)
+            this.HeaderByteArraySegment = new ByteArraySegment(bas)
             {
                 Length = EthernetFields.HeaderLength
             };
 
             // parse the encapsulated bytes
-            this.payloadPacketOrData = ParseEncapsulatedBytes(this.header, this.Type);
+            this.PayloadPacketOrData = ParseEncapsulatedBytes(this.HeaderByteArraySegment, this.Type);
         }
 
         /// <summary>
@@ -252,11 +250,11 @@ namespace PacketDotNet.Ethernet
         public override String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -264,39 +262,43 @@ namespace PacketDotNet.Ethernet
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            switch (outputFormat)
             {
-                // build the output string
-                buffer.AppendFormat("{0}[EthernetPacket: SourceHwAddress={2}, DestinationHwAddress={3}, Type={4}]{1}",
-                    color,
-                    colorEscape,
-                    HexPrinter.PrintMACAddress(this.SourceHwAddress),
-                    HexPrinter.PrintMACAddress(this.DestinationHwAddress), this.Type.ToString());
-            }
+                case StringOutputType.Normal:
+                case StringOutputType.Colored:
+                    // build the output string
+                    buffer.AppendFormat("{0}[EthernetPacket: SourceHwAddress={2}, DestinationHwAddress={3}, Type={4}]{1}",
+                        color,
+                        colorEscape,
+                        HexPrinter.PrintMACAddress(this.SourceHwAddress),
+                        HexPrinter.PrintMACAddress(this.DestinationHwAddress), this.Type.ToString());
+                    break;
+                case StringOutputType.Verbose:
+                case StringOutputType.VerboseColored:
+                    // collect the properties and their value
+                    Dictionary<String, String> properties = new Dictionary<String, String>
+                    {
+                        {"destination", HexPrinter.PrintMACAddress(this.DestinationHwAddress)},
+                        {"source", HexPrinter.PrintMACAddress(this.SourceHwAddress)},
+                        {"type", this.Type.ToString() + " (0x" + this.Type.ToString("x") + ")"}
+                    };
 
-            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
-            {
-                // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
-                properties.Add("destination", HexPrinter.PrintMACAddress(this.DestinationHwAddress));
-                properties.Add("source", HexPrinter.PrintMACAddress(this.SourceHwAddress));
-                properties.Add("type", this.Type.ToString() + " (0x" + this.Type.ToString("x") + ")");
+                    // calculate the padding needed to right-justify the property names
+                    Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
-                // calculate the padding needed to right-justify the property names
-                int padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
-
-                // build the output string
-                buffer.AppendLine("Eth:  ******* Ethernet - \"Ethernet\" - offset=? length=" + this.TotalPacketLength);
-                buffer.AppendLine("Eth:");
-                foreach(var property in properties)
-                {
-                    buffer.AppendLine("Eth: " + property.Key.PadLeft(padLength) + " = " + property.Value);
-                }
-                buffer.AppendLine("Eth:");
+                    // build the output string
+                    buffer.AppendLine("Eth:  ******* Ethernet - \"Ethernet\" - offset=? length=" + this.TotalPacketLength);
+                    buffer.AppendLine("Eth:");
+                    foreach(var property in properties)
+                    {
+                        buffer.AppendLine("Eth: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    }
+                    buffer.AppendLine("Eth:");
+                    break;
             }
 
             // append the base output
-            buffer.Append((string) base.ToString(outputFormat));
+            buffer.Append((String) base.ToString(outputFormat));
 
             return buffer.ToString();
         }
@@ -312,8 +314,8 @@ namespace PacketDotNet.Ethernet
         {
             var rnd = new Random();
 
-            byte[] srcPhysicalAddress = new byte[EthernetFields.MacAddressLength];
-            byte[] dstPhysicalAddress = new byte[EthernetFields.MacAddressLength];
+            Byte[] srcPhysicalAddress = new Byte[EthernetFields.MacAddressLength];
+            Byte[] dstPhysicalAddress = new Byte[EthernetFields.MacAddressLength];
 
             rnd.NextBytes(srcPhysicalAddress);
             rnd.NextBytes(dstPhysicalAddress);

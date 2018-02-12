@@ -25,7 +25,7 @@ namespace PacketDotNet
         /// <summary>
         /// DataLinkPacket constructor
         /// </summary>
-        public DataLinkPacket()
+        protected DataLinkPacket()
         {}
     }
 }

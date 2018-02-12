@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
+using System;
 using PacketDotNet.Utils.Conversion;
 
 namespace PacketDotNet.Tcp
@@ -49,7 +50,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public TimeStamp(byte[] bytes, int offset, int length) :
+        public TimeStamp(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
         { }
 
@@ -60,12 +61,12 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The Timestamp value
         /// </summary>
-        public uint Value => EndianBitConverter.Big.ToUInt32(this.Bytes, ValueFieldOffset);
+        public UInt32 Value => EndianBitConverter.Big.ToUInt32(this.Bytes, ValueFieldOffset);
 
         /// <summary>
         /// The Echo Reply
         /// </summary>
-        public uint EchoReply => EndianBitConverter.Big.ToUInt32(this.Bytes, EchoReplyFieldOffset);
+        public UInt32 EchoReply => EndianBitConverter.Big.ToUInt32(this.Bytes, EchoReplyFieldOffset);
 
         #endregion
 
@@ -77,9 +78,9 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return "[" + this.Kind.ToString() + ": Value=" + this.Value.ToString() + " EchoReply=" + this.EchoReply.ToString() + "]";
+            return $"[{this.Kind}: Value={this.Value} EchoReply={this.EchoReply}]";
         }
 
         #endregion
@@ -87,10 +88,10 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the offset (in bytes) of the Value Field
-        const int ValueFieldOffset = 2;
+        private const Int32 ValueFieldOffset = 2;
 
         // the offset (in bytes) of the Echo Reply Field
-        const int EchoReplyFieldOffset = 6;
+        private const Int32 EchoReplyFieldOffset = 6;
 
         #endregion
     }

@@ -16,23 +16,23 @@ namespace PacketDotNet.Utils.IO
         /// <summary>
         /// Whether or not this reader has been disposed yet.
         /// </summary>
-        bool disposed=false;
+        private Boolean _disposed=false;
         /// <summary>
         /// Decoder to use for string conversions.
         /// </summary>
-        Decoder decoder;
+        private readonly Decoder _decoder;
         /// <summary>
         /// Buffer used for temporary storage before conversion into primitives
         /// </summary>
-        byte[] buffer = new byte[16];
+        private readonly Byte[] _buffer = new Byte[16];
         /// <summary>
         /// Buffer used for temporary storage when reading a single character
         /// </summary>
-        char[] charBuffer = new char[1];
+        private readonly Char[] _charBuffer = new Char[1];
         /// <summary>
         /// Minimum number of bytes used to encode a character
         /// </summary>
-        int minBytesPerChar;
+        private readonly Int32 _minBytesPerChar;
         #endregion
 
         #region Constructors
@@ -54,55 +54,46 @@ namespace PacketDotNet.Utils.IO
         /// <param name="bitConverter">Converter to use when reading data</param>
         /// <param name="stream">Stream to read data from</param>
         /// <param name="encoding">Encoding to use when reading character data</param>
-        public EndianBinaryReader (EndianBitConverter bitConverter,    Stream stream, Encoding encoding)
+        public EndianBinaryReader (EndianBitConverter bitConverter, Stream stream, Encoding encoding)
         {
-            if (bitConverter==null)
-            {
-                throw new ArgumentNullException("bitConverter");
-            }
             if (stream==null)
             {
                 throw new ArgumentNullException("stream");
             }
-            if (encoding==null)
-            {
-                throw new ArgumentNullException("encoding");
-            }
+
             if (!stream.CanRead)
             {
                 throw new ArgumentException("Stream isn't writable", "stream");
             }
-            this.stream = stream;
-            this.bitConverter = bitConverter;
-            this.encoding = encoding;
-            this.decoder = encoding.GetDecoder();
-            this.minBytesPerChar = 1;
+            this.BaseStream = stream;
+            this.BitConverter = bitConverter ?? throw new ArgumentNullException("bitConverter");
+            this.Encoding = encoding ?? throw new ArgumentNullException("encoding");
+            this._decoder = encoding.GetDecoder();
+            this._minBytesPerChar = 1;
 
             if (encoding is UnicodeEncoding)
             {
-                this.minBytesPerChar = 2;
+                this._minBytesPerChar = 2;
             }
         }
         #endregion
 
         #region Properties
-        EndianBitConverter bitConverter;
+
         /// <summary>
         /// The bit converter used to read values from the stream
         /// </summary>
-        public EndianBitConverter BitConverter => this.bitConverter;
+        public EndianBitConverter BitConverter { get; }
 
-        Encoding encoding;
         /// <summary>
         /// The encoding used to read strings
         /// </summary>
-        public Encoding Encoding => this.encoding;
+        public Encoding Encoding { get; }
 
-        Stream stream;
         /// <summary>
         /// Gets the underlying stream of the EndianBinaryReader.
         /// </summary>
-        public Stream BaseStream => this.stream;
+        public Stream BaseStream { get; }
 
         #endregion
 
@@ -120,40 +111,40 @@ namespace PacketDotNet.Utils.IO
         /// </summary>
         /// <param name="offset">Offset to seek to.</param>
         /// <param name="origin">Origin of seek operation.</param>
-        public void Seek (int offset, SeekOrigin origin)
+        public void Seek (Int32 offset, SeekOrigin origin)
         {
             this.CheckDisposed();
-            this.stream.Seek (offset, origin);
+            this.BaseStream.Seek (offset, origin);
         }
 
         /// <summary>
         /// Reads a single byte from the stream.
         /// </summary>
         /// <returns>The byte read</returns>
-        public byte ReadByte()
+        public Byte ReadByte()
         {
-            this.ReadInternal(this.buffer, 1);
-            return this.buffer[0];
+            this.ReadInternal(this._buffer, 1);
+            return this._buffer[0];
         }
 
         /// <summary>
         /// Reads a single signed byte from the stream.
         /// </summary>
         /// <returns>The byte read</returns>
-        public sbyte ReadSByte()
+        public SByte ReadSByte()
         {
-            this.ReadInternal(this.buffer, 1);
-            return unchecked((sbyte)this.buffer[0]);
+            this.ReadInternal(this._buffer, 1);
+            return unchecked((SByte)this._buffer[0]);
         }
 
         /// <summary>
         /// Reads a boolean from the stream. 1 byte is read.
         /// </summary>
         /// <returns>The boolean read</returns>
-        public bool ReadBoolean()
+        public Boolean ReadBoolean()
         {
-            this.ReadInternal(this.buffer, 1);
-            return this.bitConverter.ToBoolean(this.buffer, 0);
+            this.ReadInternal(this._buffer, 1);
+            return this.BitConverter.ToBoolean(this._buffer, 0);
         }
 
         /// <summary>
@@ -161,10 +152,10 @@ namespace PacketDotNet.Utils.IO
         /// for this reader. 2 bytes are read.
         /// </summary>
         /// <returns>The 16-bit integer read</returns>
-        public short ReadInt16()
+        public Int16 ReadInt16()
         {
-            this.ReadInternal(this.buffer, 2);
-            return this.bitConverter.ToInt16(this.buffer, 0);
+            this.ReadInternal(this._buffer, 2);
+            return this.BitConverter.ToInt16(this._buffer, 0);
         }
 
         /// <summary>
@@ -172,10 +163,10 @@ namespace PacketDotNet.Utils.IO
         /// for this reader. 4 bytes are read.
         /// </summary>
         /// <returns>The 32-bit integer read</returns>
-        public int ReadInt32()
+        public Int32 ReadInt32()
         {
-            this.ReadInternal(this.buffer, 4);
-            return this.bitConverter.ToInt32(this.buffer, 0);
+            this.ReadInternal(this._buffer, 4);
+            return this.BitConverter.ToInt32(this._buffer, 0);
         }
 
         /// <summary>
@@ -183,10 +174,10 @@ namespace PacketDotNet.Utils.IO
         /// for this reader. 8 bytes are read.
         /// </summary>
         /// <returns>The 64-bit integer read</returns>
-        public long ReadInt64()
+        public Int64 ReadInt64()
         {
-            this.ReadInternal(this.buffer, 8);
-            return this.bitConverter.ToInt64(this.buffer, 0);
+            this.ReadInternal(this._buffer, 8);
+            return this.BitConverter.ToInt64(this._buffer, 0);
         }
 
         /// <summary>
@@ -194,10 +185,10 @@ namespace PacketDotNet.Utils.IO
         /// for this reader. 2 bytes are read.
         /// </summary>
         /// <returns>The 16-bit unsigned integer read</returns>
-        public ushort ReadUInt16()
+        public UInt16 ReadUInt16()
         {
-            this.ReadInternal(this.buffer, 2);
-            return this.bitConverter.ToUInt16(this.buffer, 0);
+            this.ReadInternal(this._buffer, 2);
+            return this.BitConverter.ToUInt16(this._buffer, 0);
         }
 
         /// <summary>
@@ -205,10 +196,10 @@ namespace PacketDotNet.Utils.IO
         /// for this reader. 4 bytes are read.
         /// </summary>
         /// <returns>The 32-bit unsigned integer read</returns>
-        public uint ReadUInt32()
+        public UInt32 ReadUInt32()
         {
-            this.ReadInternal(this.buffer, 4);
-            return this.bitConverter.ToUInt32(this.buffer, 0);
+            this.ReadInternal(this._buffer, 4);
+            return this.BitConverter.ToUInt32(this._buffer, 0);
         }
 
         /// <summary>
@@ -216,10 +207,10 @@ namespace PacketDotNet.Utils.IO
         /// for this reader. 8 bytes are read.
         /// </summary>
         /// <returns>The 64-bit unsigned integer read</returns>
-        public ulong ReadUInt64()
+        public UInt64 ReadUInt64()
         {
-            this.ReadInternal(this.buffer, 8);
-            return this.bitConverter.ToUInt64(this.buffer, 0);
+            this.ReadInternal(this._buffer, 8);
+            return this.BitConverter.ToUInt64(this._buffer, 0);
         }
 
         /// <summary>
@@ -227,10 +218,10 @@ namespace PacketDotNet.Utils.IO
         /// for this reader. 4 bytes are read.
         /// </summary>
         /// <returns>The floating point value read</returns>
-        public float ReadSingle()
+        public Single ReadSingle()
         {
-            this.ReadInternal(this.buffer, 4);
-            return this.bitConverter.ToSingle(this.buffer, 0);
+            this.ReadInternal(this._buffer, 4);
+            return this.BitConverter.ToSingle(this._buffer, 0);
         }
 
         /// <summary>
@@ -238,10 +229,10 @@ namespace PacketDotNet.Utils.IO
         /// for this reader. 8 bytes are read.
         /// </summary>
         /// <returns>The floating point value read</returns>
-        public double ReadDouble()
+        public Double ReadDouble()
         {
-            this.ReadInternal(this.buffer, 8);
-            return this.bitConverter.ToDouble(this.buffer, 0);
+            this.ReadInternal(this._buffer, 8);
+            return this.BitConverter.ToDouble(this._buffer, 0);
         }
 
         /// <summary>
@@ -249,10 +240,10 @@ namespace PacketDotNet.Utils.IO
         /// for this reader. 16 bytes are read.
         /// </summary>
         /// <returns>The decimal value read</returns>
-        public decimal ReadDecimal()
+        public Decimal ReadDecimal()
         {
-            this.ReadInternal(this.buffer, 16);
-            return this.bitConverter.ToDecimal(this.buffer, 0);
+            this.ReadInternal(this._buffer, 16);
+            return this.BitConverter.ToDecimal(this._buffer, 0);
         }
 
         /// <summary>
@@ -261,16 +252,16 @@ namespace PacketDotNet.Utils.IO
         /// -1 is returned.
         /// </summary>
         /// <returns>The character read, or -1 for end of stream.</returns>
-        public int Read()
+        public Int32 Read()
         {
-            int charsRead = this.Read(this.charBuffer, 0, 1);
+            Int32 charsRead = this.Read(this._charBuffer, 0, 1);
             if (charsRead==0)
             {
                 return -1;
             }
             else
             {
-                return this.charBuffer[0];
+                return this._charBuffer[0];
             }
         }
 
@@ -284,10 +275,10 @@ namespace PacketDotNet.Utils.IO
         /// <returns>The number of characters actually read. This will only be less than
         /// the requested number of characters if the end of the stream is reached.
         /// </returns>
-        public int Read(char[] data, int index, int count)
+        public Int32 Read(Char[] data, Int32 index, Int32 count)
         {
             this.CheckDisposed();
-            if (this.buffer==null)
+            if (this._buffer==null)
             {
                 throw new ArgumentNullException("buffer");
             }
@@ -305,43 +296,43 @@ namespace PacketDotNet.Utils.IO
                     ("Not enough space in buffer for specified number of characters starting at specified index");
             }
 
-            int read=0;
-            bool firstTime=true;
+            Int32 read=0;
+            Boolean firstTime=true;
 
             // Use the normal buffer if we're only reading a small amount, otherwise
             // use at most 4K at a time.
-            byte[] byteBuffer = this.buffer;
+            Byte[] byteBuffer = this._buffer;
 
-            if (byteBuffer.Length < count*this.minBytesPerChar)
+            if (byteBuffer.Length < count*this._minBytesPerChar)
             {
-                byteBuffer = new byte[4096];
+                byteBuffer = new Byte[4096];
             }
 
             while (read < count)
             {
-                int amountToRead;
+                Int32 amountToRead;
                 // First time through we know we haven't previously read any data
                 if (firstTime)
                 {
-                    amountToRead = count*this.minBytesPerChar;
+                    amountToRead = count*this._minBytesPerChar;
                     firstTime=false;
                 }
                 // After that we can only assume we need to fully read "chars left -1" characters
                 // and a single byte of the character we may be in the middle of
                 else
                 {
-                    amountToRead = ((count-read-1)*this.minBytesPerChar)+1;
+                    amountToRead = ((count-read-1)*this._minBytesPerChar)+1;
                 }
                 if (amountToRead > byteBuffer.Length)
                 {
                     amountToRead = byteBuffer.Length;
                 }
-                int bytesRead = this.TryReadInternal(byteBuffer, amountToRead);
+                Int32 bytesRead = this.TryReadInternal(byteBuffer, amountToRead);
                 if (bytesRead==0)
                 {
                     return read;
                 }
-                int decoded = this.decoder.GetChars(byteBuffer, 0, bytesRead, data, index);
+                Int32 decoded = this._decoder.GetChars(byteBuffer, 0, bytesRead, data, index);
                 read += decoded;
                 index += decoded;
             }
@@ -358,7 +349,7 @@ namespace PacketDotNet.Utils.IO
         /// <returns>The number of bytes actually read. This will only be less than
         /// the requested number of bytes if the end of the stream is reached.
         /// </returns>
-        public int Read(byte[] buffer, int index, int count)
+        public Int32 Read(Byte[] buffer, Int32 index, Int32 count)
         {
             this.CheckDisposed();
             if (buffer==null)
@@ -378,10 +369,10 @@ namespace PacketDotNet.Utils.IO
                 throw new ArgumentException
                     ("Not enough space in buffer for specified number of bytes starting at specified index");
             }
-            int read=0;
+            Int32 read=0;
             while (count > 0)
             {
-                int block = this.stream.Read(buffer, index, count);
+                Int32 block = this.BaseStream.Read(buffer, index, count);
                 if (block==0)
                 {
                     return read;
@@ -400,22 +391,22 @@ namespace PacketDotNet.Utils.IO
         /// </summary>
         /// <param name="count">The number of bytes to read</param>
         /// <returns>The bytes read</returns>
-        public byte[] ReadBytes(int count)
+        public Byte[] ReadBytes(Int32 count)
         {
             this.CheckDisposed();
             if (count < 0)
             {
                 throw new ArgumentOutOfRangeException("count");
             }
-            byte[] ret = new byte[count];
-            int index=0;
+            Byte[] ret = new Byte[count];
+            Int32 index=0;
             while (index < count)
             {
-                int read = this.stream.Read(ret, index, count-index);
+                Int32 read = this.BaseStream.Read(ret, index, count-index);
                 // Stream has finished half way through. That's fine, return what we've got.
                 if (read==0)
                 {
-                    byte[] copy = new byte[index];
+                    Byte[] copy = new Byte[index];
                     Buffer.BlockCopy(ret, 0, copy, 0, index);
                     return copy;
                 }
@@ -431,9 +422,9 @@ namespace PacketDotNet.Utils.IO
         /// </summary>
         /// <param name="count">The number of bytes to read</param>
         /// <returns>The bytes read</returns>
-        public byte[] ReadBytesOrThrow(int count)
+        public Byte[] ReadBytesOrThrow(Int32 count)
         {
-            byte[] ret = new byte[count];
+            Byte[] ret = new Byte[count];
             this.ReadInternal(ret, count);
             return ret;
         }
@@ -445,14 +436,14 @@ namespace PacketDotNet.Utils.IO
         /// of the bit converter.
         /// </summary>
         /// <returns>The 7-bit encoded integer read from the stream.</returns>
-        public int Read7BitEncodedInt()
+        public Int32 Read7BitEncodedInt()
         {
             this.CheckDisposed();
 
-            int ret=0;
-            for (int shift = 0; shift < 35; shift+=7)
+            Int32 ret=0;
+            for (Int32 shift = 0; shift < 35; shift+=7)
             {
-                int b = this.stream.ReadByte();
+                Int32 b = this.BaseStream.ReadByte();
                 if (b==-1)
                 {
                     throw new EndOfStreamException();
@@ -474,14 +465,14 @@ namespace PacketDotNet.Utils.IO
         /// of the bit converter.
         /// </summary>
         /// <returns>The 7-bit encoded integer read from the stream.</returns>
-        public int ReadBigEndian7BitEncodedInt()
+        public Int32 ReadBigEndian7BitEncodedInt()
         {
             this.CheckDisposed();
 
-            int ret=0;
-            for (int i=0; i < 5; i++)
+            Int32 ret=0;
+            for (Int32 i=0; i < 5; i++)
             {
-                int b = this.stream.ReadByte();
+                Int32 b = this.BaseStream.ReadByte();
                 if (b==-1)
                 {
                     throw new EndOfStreamException();
@@ -503,13 +494,13 @@ namespace PacketDotNet.Utils.IO
         /// the encoding for this reader.
         /// </summary>
         /// <returns>The string read from the stream.</returns>
-        public string ReadString()
+        public String ReadString()
         {
-            int bytesToRead = this.Read7BitEncodedInt();
+            Int32 bytesToRead = this.Read7BitEncodedInt();
 
-            byte[] data = new byte[bytesToRead];
+            Byte[] data = new Byte[bytesToRead];
             this.ReadInternal(data, bytesToRead);
-            return this.encoding.GetString(data, 0, data.Length);
+            return this.Encoding.GetString(data, 0, data.Length);
         }
 
         #endregion
@@ -518,9 +509,9 @@ namespace PacketDotNet.Utils.IO
         /// <summary>
         /// Checks whether or not the reader has been disposed, throwing an exception if so.
         /// </summary>
-        void CheckDisposed()
+        private void CheckDisposed()
         {
-            if (this.disposed)
+            if (this._disposed)
             {
                 throw new ObjectDisposedException("EndianBinaryReader");
             }
@@ -532,13 +523,13 @@ namespace PacketDotNet.Utils.IO
         /// </summary>
         /// <param name="data">Buffer to read into</param>
         /// <param name="size">Number of bytes to read</param>
-        void ReadInternal (byte[] data, int size)
+        private void ReadInternal (Byte[] data, Int32 size)
         {
             this.CheckDisposed();
-            int index=0;
+            Int32 index=0;
             while (index < size)
             {
-                int read = this.stream.Read(data, index, size-index);
+                Int32 read = this.BaseStream.Read(data, index, size-index);
                 if (read==0)
                 {
                     throw new EndOfStreamException
@@ -557,13 +548,13 @@ namespace PacketDotNet.Utils.IO
         /// <param name="data">Buffer to read into</param>
         /// <param name="size">Number of bytes to read</param>
         /// <returns>Number of bytes actually read</returns>
-        int TryReadInternal (byte[] data, int size)
+        private Int32 TryReadInternal (Byte[] data, Int32 size)
         {
             this.CheckDisposed();
-            int index=0;
+            Int32 index=0;
             while (index < size)
             {
-                int read = this.stream.Read(data, index, size-index);
+                Int32 read = this.BaseStream.Read(data, index, size-index);
                 if (read==0)
                 {
                     return index;
@@ -580,10 +571,10 @@ namespace PacketDotNet.Utils.IO
         /// </summary>
         public void Dispose()
         {
-            if (!this.disposed)
+            if (!this._disposed)
             {
-                this.disposed = true;
-                ((IDisposable)this.stream).Dispose();
+                this._disposed = true;
+                ((IDisposable)this.BaseStream).Dispose();
             }
         }
         #endregion

@@ -84,7 +84,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize => (MacFields.FrameControlLength +
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
                                               MacFields.DurationIDLength +
                                               (MacFields.AddressLength * 3) +
                                               MacFields.SequenceControlLength);
@@ -97,7 +97,7 @@ namespace PacketDotNet.Ieee80211
             /// </param>
             public ActionFrame (ByteArraySegment bas)
             {
-                this.header = new ByteArraySegment (bas);
+                this.HeaderByteArraySegment = new ByteArraySegment (bas);
 
                 this.FrameControl = new FrameControlField (this.FrameControlBytes);
                 this.Duration = new DurationField (this.DurationBytes);
@@ -106,11 +106,11 @@ namespace PacketDotNet.Ieee80211
                 this.BssId = this.GetAddress (2);
                 this.SequenceControl = new SequenceControlField (this.SequenceControlBytes);
 
-                this.header.Length = this.FrameSize; 
+                this.HeaderByteArraySegment.Length = this.FrameSize; 
                 var availablePayloadLength = this.GetAvailablePayloadLength();
 				if(availablePayloadLength > 0)
 				{
-				    this.payloadPacketOrData.TheByteArraySegment = this.header.EncapsulatedBytes (availablePayloadLength);
+				    this.PayloadPacketOrData.TheByteArraySegment = this.HeaderByteArraySegment.EncapsulatedBytes (availablePayloadLength);
 				}
             }
             
@@ -146,9 +146,9 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((this.header == null) || (this.header.Length > (this.header.BytesLength - this.header.Offset)) || (this.header.Length < this.FrameSize))
+                if ((this.HeaderByteArraySegment == null) || (this.HeaderByteArraySegment.Length > (this.HeaderByteArraySegment.BytesLength - this.HeaderByteArraySegment.Offset)) || (this.HeaderByteArraySegment.Length < this.FrameSize))
                 {
-                    this.header = new ByteArraySegment (new Byte[this.FrameSize]);
+                    this.HeaderByteArraySegment = new ByteArraySegment (new Byte[this.FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;

@@ -43,24 +43,24 @@ namespace PacketDotNet
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
         /// <summary>
         /// Used internally when building new packet dissectors
         /// </summary>
-        protected ByteArraySegment header;
+        protected ByteArraySegment HeaderByteArraySegment;
 
         /// <summary>
         /// Used internally when building new packet dissectors
         /// </summary>
-        protected PacketOrByteArraySegment payloadPacketOrData = new PacketOrByteArraySegment();
+        protected PacketOrByteArraySegment PayloadPacketOrData = new PacketOrByteArraySegment();
 
         /// <summary>
         /// The parent packet. Accessible via the 'ParentPacket' property
         /// </summary>
-        private Packet parentPacket;
+        private Packet _parentPacket;
 
         /// <summary>
         /// Gets the total length of the packet.
@@ -70,19 +70,19 @@ namespace PacketDotNet
         /// <value>
         /// The total length of the packet.
         /// </value>
-        protected int TotalPacketLength
+        protected Int32 TotalPacketLength
         {
             get
             {
-                int totalLength = 0;
-                totalLength += this.header.Length;
+                Int32 totalLength = 0;
+                totalLength += this.HeaderByteArraySegment.Length;
 
-                if(this.payloadPacketOrData.Type == PayloadType.Bytes)
+                if(this.PayloadPacketOrData.Type == PayloadType.Bytes)
                 {
-                    totalLength += this.payloadPacketOrData.TheByteArraySegment.Length;
-                } else if(this.payloadPacketOrData.Type == PayloadType.Packet)
+                    totalLength += this.PayloadPacketOrData.TheByteArraySegment.Length;
+                } else if(this.PayloadPacketOrData.Type == PayloadType.Packet)
                 {
-                    totalLength += this.payloadPacketOrData.ThePacket.TotalPacketLength;
+                    totalLength += this.PayloadPacketOrData.ThePacket.TotalPacketLength;
                 }
 
                 return totalLength;
@@ -99,46 +99,46 @@ namespace PacketDotNet
         /// are the same instance and the offsets indicate that the bytes
         /// are contiguous
         /// </value>
-        protected bool SharesMemoryWithSubPackets
+        protected Boolean SharesMemoryWithSubPackets
         {
             get
             {
-                log.Debug("");
+                Log.Debug("");
 
-                switch(this.payloadPacketOrData.Type)
+                switch(this.PayloadPacketOrData.Type)
                 {
                 case PayloadType.Bytes:
                     // is the byte array payload the same byte[] and does the offset indicate
                     // that the bytes are contiguous?
-                    if((this.header.Bytes == this.payloadPacketOrData.TheByteArraySegment.Bytes) &&
-                       ((this.header.Offset + this.header.Length) == this.payloadPacketOrData.TheByteArraySegment.Offset))
+                    if((this.HeaderByteArraySegment.Bytes == this.PayloadPacketOrData.TheByteArraySegment.Bytes) &&
+                       ((this.HeaderByteArraySegment.Offset + this.HeaderByteArraySegment.Length) == this.PayloadPacketOrData.TheByteArraySegment.Offset))
                     {
-                        log.Debug("PayloadType.Bytes returning true");
+                        Log.Debug("PayloadType.Bytes returning true");
                         return true;
                     } else
                     {
-                        log.Debug("PayloadType.Bytes returning false");
+                        Log.Debug("PayloadType.Bytes returning false");
                         return false;
                     }
                 case PayloadType.Packet:
                     // is the byte array payload the same as the payload packet header and does
                     // the offset indicate that the bytes are contiguous?
-                    if((this.header.Bytes == this.payloadPacketOrData.ThePacket.header.Bytes) &&
-                       ((this.header.Offset + this.header.Length) == this.payloadPacketOrData.ThePacket.header.Offset))
+                    if((this.HeaderByteArraySegment.Bytes == this.PayloadPacketOrData.ThePacket.HeaderByteArraySegment.Bytes) &&
+                       ((this.HeaderByteArraySegment.Offset + this.HeaderByteArraySegment.Length) == this.PayloadPacketOrData.ThePacket.HeaderByteArraySegment.Offset))
                     {
                         // and does the sub packet share memory with its sub packets?
-                        var retval = this.payloadPacketOrData.ThePacket.SharesMemoryWithSubPackets;
-                        log.DebugFormat("PayloadType.Packet retval {0}", retval);
+                        var retval = this.PayloadPacketOrData.ThePacket.SharesMemoryWithSubPackets;
+                        Log.DebugFormat("PayloadType.Packet retval {0}", retval);
                         return retval;
                     } else
                     {
-                        log.Debug("PayloadType.Packet returning false");
+                        Log.Debug("PayloadType.Packet returning false");
                         return false;
                     }
                 case PayloadType.None:
                     // no payload data or packet thus we must share memory with
                     // our non-existent sub packets
-                    log.Debug("PayloadType.None, returning true");
+                    Log.Debug("PayloadType.None, returning true");
                     return true;
                 default:
                     throw new NotImplementedException();
@@ -151,14 +151,14 @@ namespace PacketDotNet
         /// </summary>
         public virtual Packet ParentPacket
         {
-            get => this.parentPacket;
-            set => this.parentPacket = value;
+            get => this._parentPacket;
+            set => this._parentPacket = value;
         }
 
         /// <value>
         /// Returns a
         /// </value>
-        public virtual byte[] Header => this.header.ActualBytes();
+        public virtual Byte[] Header => this.HeaderByteArraySegment.ActualBytes();
 
         /// <summary>
         /// Packet that this packet carries if one is present.
@@ -167,14 +167,14 @@ namespace PacketDotNet
         /// </summary>
         public virtual Packet PayloadPacket
         {
-            get => this.payloadPacketOrData.ThePacket;
+            get => this.PayloadPacketOrData.ThePacket;
             set
             {
                 if (this == value)
                     throw new InvalidOperationException("A packet cannot have itself as its payload.");
 
-                this.payloadPacketOrData.ThePacket = value;
-                this.payloadPacketOrData.ThePacket.ParentPacket = this;
+                this.PayloadPacketOrData.ThePacket = value;
+                this.PayloadPacketOrData.ThePacket.ParentPacket = this;
             }
         }
 
@@ -183,27 +183,27 @@ namespace PacketDotNet
         /// Note that the packet MAY have a null PayloadData but a
         /// non-null PayloadPacket
         /// </summary>
-        public byte[] PayloadData
+        public Byte[] PayloadData
         {
             get
             {
-                if(this.payloadPacketOrData.TheByteArraySegment == null)
+                if(this.PayloadPacketOrData.TheByteArraySegment == null)
                 {
-                    log.Debug("returning null");
+                    Log.Debug("returning null");
                     return null;
                 } else
                 {
-                    var retval = this.payloadPacketOrData.TheByteArraySegment.ActualBytes();
-                    log.DebugFormat("retval.Length: {0}", retval.Length);
+                    var retval = this.PayloadPacketOrData.TheByteArraySegment.ActualBytes();
+                    Log.DebugFormat("retval.Length: {0}", retval.Length);
                     return retval;
                 }
             }
 
             set
             {
-                log.DebugFormat("value.Length {0}", value.Length);
+                Log.DebugFormat("value.Length {0}", value.Length);
 
-                this.payloadPacketOrData.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
+                this.PayloadPacketOrData.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
             }
         }
 
@@ -211,11 +211,11 @@ namespace PacketDotNet
         /// byte[] containing this packet and its payload
         /// NOTE: Use 'public virtual ByteArraySegment BytesHighPerformance' for highest performance
         /// </summary>
-        public virtual byte[] Bytes
+        public virtual Byte[] Bytes
         {
             get
             {
-                log.Debug("");
+                Log.Debug("");
 
                 // Retrieve the byte array container
                 var ba = this.BytesHighPerformance;
@@ -236,7 +236,7 @@ namespace PacketDotNet
         {
             get
             {
-                log.Debug("");
+                Log.Debug("");
 
                 // ensure calculated values are properly updated
                 this.RecursivelyUpdateCalculatedValues();
@@ -247,13 +247,13 @@ namespace PacketDotNet
                 {
                     // The high performance path that is often taken because it is called on
                     // packets that have not had their header, or any of their sub packets, resized
-                    var newByteArraySegment = new ByteArraySegment(this.header.Bytes, this.header.Offset, this.header.BytesLength - this.header.Offset);
-                    log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}",
+                    var newByteArraySegment = new ByteArraySegment(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset, this.HeaderByteArraySegment.BytesLength - this.HeaderByteArraySegment.Offset);
+                    Log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}",
                                     newByteArraySegment.ToString());
                     return newByteArraySegment;
                 } else // need to rebuild things from scratch
                 {
-                    log.Debug("rebuilding the byte array");
+                    Log.Debug("rebuilding the byte array");
 
                     var ms = new MemoryStream();
 
@@ -263,7 +263,7 @@ namespace PacketDotNet
                     var theHeader = this.Header;
                     ms.Write(theHeader, 0, theHeader.Length);
 
-                    this.payloadPacketOrData.AppendToMemoryStream(ms);
+                    this.PayloadPacketOrData.AppendToMemoryStream(ms);
 
                     var newBytes = ms.ToArray();
 
@@ -275,31 +275,31 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        public Packet()
+        protected Packet()
         {
         }
 
         /// <summary>
         /// Parse bytes into a packet
         /// </summary>
-        /// <param name="LinkLayer">
+        /// <param name="linkLayer">
         /// A <see cref="LinkLayers"/>
         /// </param>
-        /// <param name="PacketData">
+        /// <param name="packetData">
         /// A <see cref="System.Byte"/>
         /// </param>
         /// <returns>
         /// A <see cref="Packet"/>
         /// </returns>
-        public static Packet ParsePacket(LinkLayers LinkLayer,
-                                         byte[] PacketData)
+        public static Packet ParsePacket(LinkLayers linkLayer,
+                                         Byte[] packetData)
         {
             Packet p;
-            var bas = new ByteArraySegment(PacketData);
+            var bas = new ByteArraySegment(packetData);
 
-            log.DebugFormat("LinkLayer {0}", LinkLayer);
+            Log.DebugFormat("LinkLayer {0}", linkLayer);
 
-            switch(LinkLayer)
+            switch(linkLayer)
             {
             case LinkLayers.Ethernet:
                 p = new EthernetPacket(bas);
@@ -326,7 +326,7 @@ namespace PacketDotNet
                 p = new RawIPPacket(bas);
                 break;
             default:
-                throw new NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");
+                throw new NotImplementedException("LinkLayer of " + linkLayer + " is not implemented");
             }
 
             return p;
@@ -342,9 +342,9 @@ namespace PacketDotNet
             this.UpdateCalculatedValues();
 
             // if the packet contains another packet, call its
-            if(this.payloadPacketOrData.Type == PayloadType.Packet)
+            if(this.PayloadPacketOrData.Type == PayloadType.Packet)
             {
-                this.payloadPacketOrData.ThePacket.RecursivelyUpdateCalculatedValues();
+                this.PayloadPacketOrData.ThePacket.RecursivelyUpdateCalculatedValues();
             }
         }
 
@@ -376,11 +376,11 @@ namespace PacketDotNet
         /// <param name="outputFormat">
         /// <see cref="StringOutputType" />
         /// </param>
-        public virtual string ToString(StringOutputType outputFormat)
+        public virtual String ToString(StringOutputType outputFormat)
         {
-            if(this.payloadPacketOrData.Type == PayloadType.Packet)
+            if(this.PayloadPacketOrData.Type == PayloadType.Packet)
             {
-                return this.payloadPacketOrData.ThePacket.ToString(outputFormat);
+                return this.PayloadPacketOrData.ThePacket.ToString(outputFormat);
             } else
             {
                 return String.Empty;
@@ -396,20 +396,20 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public string PrintHex()
+        public String PrintHex()
         {
-            byte[] data = this.BytesHighPerformance.Bytes;
+            Byte[] data = this.BytesHighPerformance.Bytes;
             var buffer = new StringBuilder();
-            string segmentNumber = "";
-            string bytes = "";
-            string ascii = "";
+            String segmentNumber = "";
+            String bytes = "";
+            String ascii = "";
 
             buffer.AppendLine("Data:  ******* Raw Hex Output - length=" + data.Length + " bytes");
             buffer.AppendLine("Data: Segment:                   Bytes:                              Ascii:");
             buffer.AppendLine("Data: --------------------------------------------------------------------------");
 
             // parse the raw data
-            for(int i = 1; i <= data.Length; i++)
+            for(Int32 i = 1; i <= data.Length; i++)
             {
                 // add the current byte to the bytes hex string
                 bytes += (data[i-1].ToString("x")).PadLeft(2, '0') + " ";
@@ -421,7 +421,7 @@ namespace PacketDotNet
                 }
                 else
                 {
-                    ascii += Encoding.ASCII.GetString(new byte[1] { data[i-1] });
+                    ascii += Encoding.ASCII.GetString(new Byte[1] { data[i-1] });
                 }
 
                 // add an additional space to split the bytes into
@@ -476,7 +476,7 @@ namespace PacketDotNet
             // search for a packet type that matches the given one
             do
             {
-                if(type.IsAssignableFrom(p.GetType ()))
+                if(type.IsInstanceOfType(p))
                 {
                     return p;
                 }

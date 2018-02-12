@@ -43,14 +43,14 @@ namespace PacketDotNet.IP
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
         /// <summary>
         /// The default time to live value for Ip packets being constructed
         /// </summary>
-        protected int DefaultTimeToLive = 64;
+        protected Int32 DefaultTimeToLive = 64;
 
         /// <value>
         /// Payload packet, overridden to set the NextHeader/Protocol based
@@ -65,33 +65,35 @@ namespace PacketDotNet.IP
                 base.PayloadPacket = value;
 
                 // set NextHeader (Protocol) based on the type of this packet
-                if(value is TcpPacket)
+                switch (value)
                 {
-                    this.NextHeader = IPProtocolType.TCP;
-                } else if(value is UdpPacket)
-                {
-                    this.NextHeader = IPProtocolType.UDP;
-                } else if(value is ICMPv6Packet)
-                {
-                    this.NextHeader = IPProtocolType.ICMPV6;
-                } else if(value is ICMPv4Packet)
-                {
-                    this.NextHeader = IPProtocolType.ICMP;
-                } else if(value is IGMPv2Packet)
-                {
-                    this.NextHeader = IPProtocolType.IGMP;
-                } else if (value is OSPFPacket)
-                {
-                    this.NextHeader = IPProtocolType.OSPF;
-                } else // NOTE: new checks go here
-                {
-                    this.NextHeader = IPProtocolType.NONE;
+                    case TcpPacket _:
+                        this.NextHeader = IPProtocolType.TCP;
+                        break;
+                    case UdpPacket _:
+                        this.NextHeader = IPProtocolType.UDP;
+                        break;
+                    case ICMPv6Packet _:
+                        this.NextHeader = IPProtocolType.ICMPV6;
+                        break;
+                    case ICMPv4Packet _:
+                        this.NextHeader = IPProtocolType.ICMP;
+                        break;
+                    case IGMPv2Packet _:
+                        this.NextHeader = IPProtocolType.IGMP;
+                        break;
+                    case OSPFPacket _:
+                        this.NextHeader = IPProtocolType.OSPF;
+                        break;
+                    default:
+                        this.NextHeader = IPProtocolType.NONE;
+                        break;
                 }
 
                 // update the payload length based on the size
                 // of the payload packet
-                var newPayloadLength = (ushort)base.PayloadPacket.Bytes.Length;
-                log.DebugFormat("newPayloadLength {0}", newPayloadLength);
+                var newPayloadLength = (UInt16)base.PayloadPacket.Bytes.Length;
+                Log.DebugFormat("newPayloadLength {0}", newPayloadLength);
                 this.PayloadLength = newPayloadLength;
             }
         }
@@ -149,7 +151,7 @@ namespace PacketDotNet.IP
         /// Named 'TimeToLive' in IPv4
         /// Named 'HopLimit' in IPv6
         /// </value>
-        public abstract int TimeToLive
+        public abstract Int32 TimeToLive
         {
             get;
             set;
@@ -159,7 +161,7 @@ namespace PacketDotNet.IP
         /// The number of hops remaining for this packet
         /// Included along side of TimeToLive for user convienence
         /// </value>
-        public virtual int HopLimit
+        public virtual Int32 HopLimit
         {
             get => this.TimeToLive;
             set => this.TimeToLive = value;
@@ -170,7 +172,7 @@ namespace PacketDotNet.IP
         /// NOTE: This field is the number of 32bit words in the ip header,
         ///       ie. the number of bytes is 4x this value
         /// </summary>
-        public abstract int HeaderLength
+        public abstract Int32 HeaderLength
         {
             get; set;
         }
@@ -179,7 +181,7 @@ namespace PacketDotNet.IP
         /// ipv4 total number of bytes in the ipv4 header + payload,
         /// ipv6 PayloadLength + IPv6Fields.HeaderLength
         /// </summary>
-        public abstract int TotalLength
+        public abstract Int32 TotalLength
         {
             get; set;
         }
@@ -188,7 +190,7 @@ namespace PacketDotNet.IP
         /// ipv6 payload length in bytes,
         /// calculate from ipv4.TotalLength - (ipv4.HeaderLength * 4)
         /// </summary>
-        public abstract ushort PayloadLength
+        public abstract UInt16 PayloadLength
         {
             get;
             set;
@@ -204,7 +206,7 @@ namespace PacketDotNet.IP
         /// <returns>
         /// A <see cref="System.Byte"/>
         /// </returns>
-        internal abstract byte[] AttachPseudoIPHeader(byte[] origHeader);
+        internal abstract Byte[] AttachPseudoIPHeader(Byte[] origHeader);
 
         /// <summary>
         /// Convert an ip address from a byte[]
@@ -222,19 +224,20 @@ namespace PacketDotNet.IP
         /// A <see cref="System.Net.IPAddress"/>
         /// </returns>
         public static IPAddress GetIPAddress(System.Net.Sockets.AddressFamily ipType,
-                                                        int fieldOffset,
-                                                        byte[] bytes)
+                                                        Int32 fieldOffset,
+                                                        Byte[] bytes)
         {
-            byte[] address;
-            if(ipType == System.Net.Sockets.AddressFamily.InterNetwork) // ipv4
+            Byte[] address;
+            switch (ipType)
             {
-                address = new byte[IPv4Fields.AddressLength];
-            } else if(ipType == System.Net.Sockets.AddressFamily.InterNetworkV6)
-            {
-                address = new byte[IPv6Fields.AddressLength];
-            } else
-            {
-                throw new InvalidOperationException("ipType " + ipType + " unknown");
+                case System.Net.Sockets.AddressFamily.InterNetwork:
+                    address = new Byte[IPv4Fields.AddressLength];
+                    break;
+                case System.Net.Sockets.AddressFamily.InterNetworkV6:
+                    address = new Byte[IPv6Fields.AddressLength];
+                    break;
+                default:
+                    throw new InvalidOperationException("ipType " + ipType + " unknown");
             }
 
             Array.Copy(bytes, fieldOffset,
@@ -246,7 +249,7 @@ namespace PacketDotNet.IP
         /// <summary>
         /// IpPacket constructor
         /// </summary>
-        public IpPacket()
+        protected IpPacket()
         {}
 
         /// <summary>
@@ -255,59 +258,56 @@ namespace PacketDotNet.IP
         /// <param name="payload">
         /// A <see cref="ByteArraySegment"/>
         /// </param>
-        /// <param name="ProtocolType">
+        /// <param name="protocolType">
         /// A <see cref="IPProtocolType"/>
         /// </param>
-        /// <param name="ParentPacket">
+        /// <param name="parentPacket">
         /// A <see cref="Packet"/>
         /// </param>
         /// <returns>
         /// A <see cref="PacketOrByteArraySegment"/>
         /// </returns>
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment payload,
-                                                                        IPProtocolType ProtocolType,
-                                                                        Packet ParentPacket)
+                                                                        IPProtocolType protocolType,
+                                                                        Packet parentPacket)
         {
-            log.DebugFormat("payload: {0}, ParentPacket.GetType() {1}",
+            Log.DebugFormat("payload: {0}, ParentPacket.GetType() {1}",
                             payload,
-                            ParentPacket.GetType());
+                            parentPacket.GetType());
 
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
             // if we are an ipv4 packet with a non-zero FragementOffset we shouldn't attempt
             // to decode the content, it is a continuation of a previous packet so it won't
             // have the proper headers for its type, that was in the first packet fragment
-            var ipv4Packet = ParentPacket.Extract(typeof(IPv4Packet)) as IPv4Packet;
-            if (ipv4Packet != null)
+            var ipv4Packet = parentPacket.Extract(typeof(IPv4Packet)) as IPv4Packet;
+            if (ipv4Packet?.FragmentOffset > 0)
             {
-                if (ipv4Packet.FragmentOffset > 0)
-                {
-                    payloadPacketOrData.TheByteArraySegment = payload;
-                    return payloadPacketOrData;
-                }
+                payloadPacketOrData.TheByteArraySegment = payload;
+                return payloadPacketOrData;
             }
 
-            switch(ProtocolType)
+            switch(protocolType)
             {
             case IPProtocolType.TCP:
                 payloadPacketOrData.ThePacket = new TcpPacket(payload,
-                                                              ParentPacket);
+                                                              parentPacket);
                 break;
             case IPProtocolType.UDP:
                 payloadPacketOrData.ThePacket = new UdpPacket(payload,
-                                                              ParentPacket);
+                                                              parentPacket);
                 break;
             case IPProtocolType.ICMP:
                 payloadPacketOrData.ThePacket = new ICMPv4Packet(payload,
-                                                                 ParentPacket);
+                                                                 parentPacket);
                 break;
             case IPProtocolType.ICMPV6:
                 payloadPacketOrData.ThePacket = new ICMPv6Packet(payload,
-                                                                 ParentPacket);
+                                                                 parentPacket);
                 break;
             case IPProtocolType.IGMP:
                 payloadPacketOrData.ThePacket = new IGMPv2Packet(payload,
-                                                                 ParentPacket);
+                                                                 parentPacket);
                 break;
             case IPProtocolType.OSPF:
                 payloadPacketOrData.ThePacket = OSPFPacket.ConstructOSPFPacket(payload.Bytes,
@@ -315,19 +315,35 @@ namespace PacketDotNet.IP
                 break;                    
             case IPProtocolType.IPIP:
                 payloadPacketOrData.ThePacket = new IPv4Packet(payload,
-                                                               ParentPacket);
+                                                               parentPacket);
                 break;
             case IPProtocolType.IPV6:
                 payloadPacketOrData.ThePacket = new IPv6Packet(payload,
-                                                               ParentPacket);
+                                                               parentPacket);
                 break;
             case IPProtocolType.GRE:
                 payloadPacketOrData.ThePacket = new GREPacket(payload,
-                                                                ParentPacket);
+                                                                parentPacket);
                 break;
-
-            // NOTE: new payload parsing entries go here
-            default:
+                    
+                case IPProtocolType.IP:
+                case IPProtocolType.EGP:
+                case IPProtocolType.PUP:
+                case IPProtocolType.IDP:
+                case IPProtocolType.TP:
+                case IPProtocolType.ROUTING:
+                case IPProtocolType.FRAGMENT:
+                case IPProtocolType.RSVP:
+                case IPProtocolType.ESP:
+                case IPProtocolType.AH:
+                case IPProtocolType.NONE:
+                case IPProtocolType.DSTOPTS:
+                case IPProtocolType.MTP:
+                case IPProtocolType.ENCAP:
+                case IPProtocolType.PIM:
+                case IPProtocolType.COMP:
+                case IPProtocolType.RAW:
+                default:
                 payloadPacketOrData.TheByteArraySegment = payload;
                 break;
             }
@@ -346,17 +362,16 @@ namespace PacketDotNet.IP
         /// </returns>
         public static IpPacket RandomPacket(IpVersion version)
         {
-            log.DebugFormat("version {0}", version);
+            Log.DebugFormat("version {0}", version);
 
-            if(version == IpVersion.IPv4)
+            switch (version)
             {
-                return IPv4Packet.RandomPacket();
-            } else if(version == IpVersion.IPv6)
-            {
-                return IPv6Packet.RandomPacket();
-            } else
-            {
-                throw new InvalidOperationException("Unknown version of " + version);
+                case IpVersion.IPv4:
+                    return IPv4Packet.RandomPacket();
+                case IpVersion.IPv6:
+                    return IPv6Packet.RandomPacket();
+                default:
+                    throw new InvalidOperationException("Unknown version of " + version);
             }
         }
     }

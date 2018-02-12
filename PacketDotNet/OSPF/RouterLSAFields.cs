@@ -1,3 +1,5 @@
+using System;
+
 namespace PacketDotNet.OSPF
 {
     /// <summary>
@@ -7,16 +9,16 @@ namespace PacketDotNet.OSPF
     public class RouterLSAFields : LSAFields
     {
         /// <summary> The length of the RouterOptions field in bytes</summary>
-        public readonly static int RouterOptionsLength = 2;
+        public static readonly Int32 RouterOptionsLength = 2;
         /// <summary> The length of the LinkNumber field in bytes</summary>
-        public readonly static int LinkNumberLength = 2;
+        public static readonly Int32 LinkNumberLength = 2;
 
         /// <summary> The relative postion of the RouterOptions field</summary>
-        public readonly static int RouterOptionsPosition;
+        public static readonly Int32 RouterOptionsPosition;
         /// <summary> The relative postion of the LinkNumber field</summary>
-        public readonly static int LinkNumberPosition;
+        public static readonly Int32 LinkNumberPosition;
         /// <summary> The relative postion of the start of the RouterLink(s)</summary>
-        public readonly static int RouterLinksStart;
+        public static readonly Int32 RouterLinksStart;
 
         static RouterLSAFields()
         {

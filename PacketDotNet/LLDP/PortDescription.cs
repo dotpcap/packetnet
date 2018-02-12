@@ -34,7 +34,7 @@ namespace PacketDotNet.LLDP
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
@@ -49,10 +49,10 @@ namespace PacketDotNet.LLDP
         /// The Port Description TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public PortDescription(byte[] bytes, int offset) :
+        public PortDescription(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {
-            log.Debug("");
+            Log.Debug("");
         }
 
         /// <summary>
@@ -61,9 +61,9 @@ namespace PacketDotNet.LLDP
         /// <param name="description">
         /// A textual description of the port
         /// </param>
-        public PortDescription(string description) : base(TLVTypes.PortDescription, description)
+        public PortDescription(String description) : base(TLVTypes.PortDescription, description)
         {
-            log.Debug("");
+            Log.Debug("");
         }
 
         #endregion
@@ -73,7 +73,7 @@ namespace PacketDotNet.LLDP
         /// <value>
         /// A textual Description of the port
         /// </value>
-        public string Description
+        public String Description
         {
             get => this.StringValue;
             set => this.StringValue = value;

@@ -1,3 +1,5 @@
+using System;
+
 namespace PacketDotNet.OSPF
 {
     /// <summary>
@@ -7,28 +9,28 @@ namespace PacketDotNet.OSPF
     public class RouterLinkFields
     {
         /// <summary> The length of the LinkID field in bytes</summary>
-        public readonly static int LinkIDLength = 4;
+        public static readonly Int32 LinkIDLength = 4;
         /// <summary> The length of the LinkData field in bytes</summary>
-        public readonly static int LinkDataLength = 4;
+        public static readonly Int32 LinkDataLength = 4;
         /// <summary> The length of the Type field in bytes</summary>
-        public readonly static int TypeLength = 1;
+        public static readonly Int32 TypeLength = 1;
         /// <summary> The length of the TOSNumber field in bytes</summary>
-        public readonly static int TOSNumberLength = 1;
+        public static readonly Int32 TOSNumberLength = 1;
         /// <summary> The length of the Metric field in bytes</summary>
-        public readonly static int MetricLength = 2;
+        public static readonly Int32 MetricLength = 2;
 
         /// <summary> The relative postion of the LinkID field</summary>
-        public readonly static int LinkIDPosition;
+        public static readonly Int32 LinkIDPosition;
         /// <summary> The relative postion of the LinkData field</summary>
-        public readonly static int LinkDataPosition;
+        public static readonly Int32 LinkDataPosition;
         /// <summary> The relative postion of the Type field</summary>
-        public readonly static int TypePosition;
+        public static readonly Int32 TypePosition;
         /// <summary> The relative postion of the TOSNumber field</summary>
-        public readonly static int TOSNumberPosition;
+        public static readonly Int32 TOSNumberPosition;
         /// <summary> The relative postion of the Metric field</summary>
-        public readonly static int MetricPosition;
+        public static readonly Int32 MetricPosition;
         /// <summary> The relative postion of the AdditionalMetrics field</summary>
-        public readonly static int AdditionalMetricsPosition;
+        public static readonly Int32 AdditionalMetricsPosition;
 
         static RouterLinkFields()
         {

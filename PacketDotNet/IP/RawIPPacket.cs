@@ -22,7 +22,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PacketDotNet.MiscUtil.Utils;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet.IP
@@ -56,21 +55,21 @@ namespace PacketDotNet.IP
             var firstNibble = bas.Bytes[0] >> 4;
             this.Protocol = (RawIPPacketProtocol)firstNibble;
 
-            this.header = new ByteArraySegment(bas)
+            this.HeaderByteArraySegment = new ByteArraySegment(bas)
             {
                 Length = 0
             };
 
             // parse the encapsulated bytes
-            this.payloadPacketOrData = new PacketOrByteArraySegment();
+            this.PayloadPacketOrData = new PacketOrByteArraySegment();
 
             switch (this.Protocol)
             {
             case RawIPPacketProtocol.IPv4:
-                this.payloadPacketOrData.ThePacket = new IPv4Packet(this.header.EncapsulatedBytes());
+                this.PayloadPacketOrData.ThePacket = new IPv4Packet(this.HeaderByteArraySegment.EncapsulatedBytes());
                 break;
             case RawIPPacketProtocol.IPv6:
-                this.payloadPacketOrData.ThePacket = new IPv6Packet(this.header.EncapsulatedBytes());
+                this.PayloadPacketOrData.ThePacket = new IPv6Packet(this.HeaderByteArraySegment.EncapsulatedBytes());
                 break;
             default:
                 throw new NotImplementedException("Protocol of " + this.Protocol + " is not implemented");
@@ -81,11 +80,11 @@ namespace PacketDotNet.IP
         public override String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -93,35 +92,39 @@ namespace PacketDotNet.IP
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            switch (outputFormat)
             {
-                // build the output string
-                buffer.AppendFormat("{0}[RawPacket: Protocol={2}]{1}",
-                    color,
-                    colorEscape, this.Protocol);
-            }
+                case StringOutputType.Normal:
+                case StringOutputType.Colored:
+                    // build the output string
+                    buffer.AppendFormat("{0}[RawPacket: Protocol={2}]{1}",
+                        color,
+                        colorEscape, this.Protocol);
+                    break;
+                case StringOutputType.Verbose:
+                case StringOutputType.VerboseColored:
+                    // collect the properties and their value
+                    Dictionary<String, String> properties = new Dictionary<String, String>
+                    {
+                        { "protocol", this.Protocol.ToString() + " (0x" + this.Protocol.ToString("x") + ")" }
+                    };
 
-            if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
-            {
-                // collect the properties and their value
-                Dictionary<string, string> properties = new Dictionary<string, string>();
-                properties.Add("protocol", this.Protocol.ToString() + " (0x" + this.Protocol.ToString("x") + ")");
+                    // calculate the padding needed to right-justify the property names
+                    Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
-                // calculate the padding needed to right-justify the property names
-                int padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
-
-                // build the output string
-                buffer.AppendLine("Raw:  ******* Raw - \"Raw IP Packet\" - offset=? length=" + this.TotalPacketLength);
-                buffer.AppendLine("Raw:");
-                foreach (var property in properties)
-                {
-                    buffer.AppendLine("Raw: " + property.Key.PadLeft(padLength) + " = " + property.Value);
-                }
-                buffer.AppendLine("Raw:");
+                    // build the output string
+                    buffer.AppendLine("Raw:  ******* Raw - \"Raw IP Packet\" - offset=? length=" + this.TotalPacketLength);
+                    buffer.AppendLine("Raw:");
+                    foreach (var property in properties)
+                    {
+                        buffer.AppendLine("Raw: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    }
+                    buffer.AppendLine("Raw:");
+                    break;
             }
 
             // append the base output
-            buffer.Append((string) base.ToString(outputFormat));
+            buffer.Append((String) base.ToString(outputFormat));
 
             return buffer.ToString();
         }

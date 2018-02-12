@@ -18,6 +18,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2017 Chris Morgan <chmorgan@gmail.com>
  */
 
+using System;
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -29,16 +31,16 @@ namespace PacketDotNet
         /// <summary>
         /// Length of the Protocol field in bytes, the field is of type
         /// </summary>
-        public static readonly int ProtocolLength = 4;
+        public static readonly Int32 ProtocolLength = 4;
 
         /// <summary>
         /// Offset from the start of the packet where the Protocol field is located
         /// </summary>
-        public static readonly int ProtocolPosition = 0;
+        public static readonly Int32 ProtocolPosition = 0;
 
         /// <summary>
         /// The length of the header
         /// </summary>
-        public static readonly int HeaderLength = ProtocolLength;
+        public static readonly Int32 HeaderLength = ProtocolLength;
     }
 }

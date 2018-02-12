@@ -37,7 +37,7 @@ namespace PacketDotNet.Ieee80211
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
@@ -45,22 +45,22 @@ namespace PacketDotNet.Ieee80211
             /// Gets or sets the destination service access point.
             /// </summary>
             /// <value>The dsap.</value>
-            public byte DSAP
+            public Byte DSAP
             {
-                get => this.header.Bytes[this.header.Offset + LogicalLinkControlFields.DsapPosition];
+                get => this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset + LogicalLinkControlFields.DsapPosition];
 
-                set => this.header.Bytes[this.header.Offset + LogicalLinkControlFields.DsapPosition] = value;
+                set => this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset + LogicalLinkControlFields.DsapPosition] = value;
             }
 
             /// <summary>
             /// Gets or sets the source service access point.
             /// </summary>
             /// <value>The ssap.</value>
-            public byte SSAP
+            public Byte SSAP
             {
-                get => this.header.Bytes[this.header.Offset + LogicalLinkControlFields.SsapPosition];
+                get => this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset + LogicalLinkControlFields.SsapPosition];
 
-                set => this.header.Bytes[this.header.Offset + LogicalLinkControlFields.SsapPosition] = value;
+                set => this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset + LogicalLinkControlFields.SsapPosition] = value;
             }
 
             /// <summary>
@@ -69,12 +69,12 @@ namespace PacketDotNet.Ieee80211
             /// <value>The control organization code.</value>
             protected UInt32 ControlOrganizationCode
             {
-                get => EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
+                get => EndianBitConverter.Big.ToUInt32(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
 
                 set
                 {
                     var val = (UInt32)value;
-                    EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
+                    EndianBitConverter.Big.CopyBytes(val, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
                 }
             }
 
@@ -82,9 +82,9 @@ namespace PacketDotNet.Ieee80211
             /// Gets or sets the control.
             /// </summary>
             /// <value>The control.</value>
-            public byte Control
+            public Byte Control
             {
-                get => (byte)((this.ControlOrganizationCode >> 24) & 0xFF);
+                get => (Byte)((this.ControlOrganizationCode >> 24) & 0xFF);
 
                 set => throw new NotImplementedException("Control setter not implemented");
             }
@@ -95,7 +95,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>The organization code.</value>
             public UInt32 OrganizationCode
             {
-                get => (byte)((this.ControlOrganizationCode & 0x00FFFFFF));
+                get => (Byte)((this.ControlOrganizationCode & 0x00FFFFFF));
 
                 set => throw new NotImplementedException("OrganizationCode setter not implemented");
             }
@@ -106,12 +106,12 @@ namespace PacketDotNet.Ieee80211
             /// <value>The type.</value>
             public EthernetPacketType Type
             {
-                get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + LogicalLinkControlFields.TypePosition);
+                get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + LogicalLinkControlFields.TypePosition);
 
                 set
                 {
                     Int16 val = (Int16)value;
-                    EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + LogicalLinkControlFields.TypePosition);
+                    EndianBitConverter.Big.CopyBytes(val, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + LogicalLinkControlFields.TypePosition);
                 }
             }
 
@@ -122,13 +122,13 @@ namespace PacketDotNet.Ieee80211
             public LogicalLinkControl(ByteArraySegment bas)
             {
             // set the header field, header field values are retrieved from this byte array
-                this.header = new ByteArraySegment(bas)
+                this.HeaderByteArraySegment = new ByteArraySegment(bas)
             {
                 Length = LogicalLinkControlFields.HeaderLength
             };
 
             // parse the payload via an EthernetPacket method
-                this.payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(this.header, this.Type);
+                this.PayloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(this.HeaderByteArraySegment, this.Type);
             }
         }
     }

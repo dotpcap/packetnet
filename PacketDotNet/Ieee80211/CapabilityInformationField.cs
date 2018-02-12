@@ -33,7 +33,7 @@ namespace PacketDotNet.Ieee80211
             /// 
             /// This field and IsIbss should be mutually exclusive
             /// </summary>
-            public bool IsEss
+            public Boolean IsEss
             {
                 get => this.GetBitFieldValue(0);
 
@@ -45,7 +45,7 @@ namespace PacketDotNet.Ieee80211
             /// 
             /// This field and IsEss should be mutually exclusive
             /// </summary>
-            public bool IsIbss
+            public Boolean IsIbss
             {
                 get => this.GetBitFieldValue(1);
 
@@ -59,7 +59,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// <c>true</c> if cf pollable; otherwise, <c>false</c>.
             /// </value>
-            public bool CfPollable
+            public Boolean CfPollable
             {
                 get => this.GetBitFieldValue(2);
 
@@ -73,7 +73,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// <c>true</c> if cf poll request; otherwise, <c>false</c>.
             /// </value>
-            public bool CfPollRequest
+            public Boolean CfPollRequest
             {
                 get => this.GetBitFieldValue(3);
 
@@ -87,7 +87,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// <c>true</c> if privacy; otherwise, <c>false</c>.
             /// </value>
-            public bool Privacy
+            public Boolean Privacy
             {
                 get => this.GetBitFieldValue(4);
 
@@ -101,7 +101,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// <c>true</c> if short preamble; otherwise, <c>false</c>.
             /// </value>
-            public bool ShortPreamble
+            public Boolean ShortPreamble
             {
                 get => this.GetBitFieldValue(5);
 
@@ -115,7 +115,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// <c>true</c> if pbcc; otherwise, <c>false</c>.
             /// </value>
-            public bool Pbcc
+            public Boolean Pbcc
             {
                 get => this.GetBitFieldValue(6);
 
@@ -129,7 +129,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// <c>true</c> if channel agility; otherwise, <c>false</c>.
             /// </value>
-            public bool ChannelAgility
+            public Boolean ChannelAgility
             {
                 get => this.GetBitFieldValue(7);
 
@@ -143,7 +143,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// <c>true</c> if short time slot; otherwise, <c>false</c>.
             /// </value>
-            public bool ShortTimeSlot
+            public Boolean ShortTimeSlot
             {
                 get => this.GetBitFieldValue(10);
 
@@ -157,7 +157,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// <c>true</c> if dss ofdm; otherwise, <c>false</c>.
             /// </value>
-            public bool DssOfdm
+            public Boolean DssOfdm
             {
                 get => this.GetBitFieldValue(13);
 
@@ -168,12 +168,12 @@ namespace PacketDotNet.Ieee80211
             /// Returns true if the bit is set false if not.
             /// </summary>
             /// <param name="index">0 indexed position of the bit</param>
-            private bool GetBitFieldValue(ushort index)
+            private Boolean GetBitFieldValue(UInt16 index)
             {
                 return (((this.Field >> index) & 0x1) == 1) ? true : false;
             }
 
-            private void SetBitFieldValue(ushort index, bool value)
+            private void SetBitFieldValue(UInt16 index, Boolean value)
             {
                 if (value)
                 {

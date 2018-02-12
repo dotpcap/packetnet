@@ -28,50 +28,50 @@ namespace PacketDotNet.Utils
         /// <summary>
         /// Delimits the start of an ansi color sequence, the color code goes after this
         /// </summary>
-        public readonly static String EscapeBegin;
+        public static readonly String EscapeBegin;
         /// <summary>
         /// Delimits the stop of the ansi color sequence, the color code comes before this
         /// </summary>
-        public readonly static String EscapeEnd = "m";
+        public static readonly String EscapeEnd = "m";
 
 #pragma warning disable 1591
-        public readonly static String Reset;
-        public readonly static String Bold;
-        public readonly static String Underline;
-        public readonly static String Inverse;
-        public readonly static String Black;
-        public readonly static String Blue;
-        public readonly static String Green;
-        public readonly static String Cyan;
-        public readonly static String Red;
-        public readonly static String Purple;
-        public readonly static String Brown;
-        public readonly static String LightGray;
-        public readonly static String DarkGray;
-        public readonly static String LightBlue;
-        public readonly static String LightGreen;
-        public readonly static String LightCyan;
-        public readonly static String LightRed;
-        public readonly static String LightPurple;
-        public readonly static String Yellow;
-        public readonly static String White;
-        public readonly static String RedBackground;
-        public readonly static String GreenBackground;
-        public readonly static String YellowBackground;
-        public readonly static String BlueBackground;
-        public readonly static String PurpleBackground;
-        public readonly static String CyanBackground;
-        public readonly static String LightGrayBackground;
+        public static readonly String Reset;
+        public static readonly String Bold;
+        public static readonly String Underline;
+        public static readonly String Inverse;
+        public static readonly String Black;
+        public static readonly String Blue;
+        public static readonly String Green;
+        public static readonly String Cyan;
+        public static readonly String Red;
+        public static readonly String Purple;
+        public static readonly String Brown;
+        public static readonly String LightGray;
+        public static readonly String DarkGray;
+        public static readonly String LightBlue;
+        public static readonly String LightGreen;
+        public static readonly String LightCyan;
+        public static readonly String LightRed;
+        public static readonly String LightPurple;
+        public static readonly String Yellow;
+        public static readonly String White;
+        public static readonly String RedBackground;
+        public static readonly String GreenBackground;
+        public static readonly String YellowBackground;
+        public static readonly String BlueBackground;
+        public static readonly String PurpleBackground;
+        public static readonly String CyanBackground;
+        public static readonly String LightGrayBackground;
 #pragma warning restore 1591
 
-        private static string BuildValue(string ColorCode)
+        private static String BuildValue(String ColorCode)
         {
             return EscapeBegin + ColorCode + EscapeEnd;
         }
 
         static AnsiEscapeSequences()
         {
-            EscapeBegin = "" + (char) 27 + "[";
+            EscapeBegin = "" + (Char) 27 + "[";
             Reset = BuildValue("0");
             Bold = BuildValue("0;1");
             Underline = BuildValue("0;4");

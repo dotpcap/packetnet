@@ -37,7 +37,7 @@ namespace PacketDotNet.IP
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
@@ -62,7 +62,7 @@ namespace PacketDotNet.IP
             // is this an ethernet packet?
             if(packet is EthernetPacket)
             {
-                log.Debug("packet is EthernetPacket");
+                Log.Debug("packet is EthernetPacket");
 
                 var thePayload = packet.PayloadPacket;
 
@@ -71,14 +71,14 @@ namespace PacketDotNet.IP
                 // the payload of the PPPPpacket
                 if(thePayload is PPPoEPacket)
                 {
-                    log.Debug("thePayload is PPPoEPacket");
+                    Log.Debug("thePayload is PPPoEPacket");
                     return thePayload.PayloadPacket.PayloadPacket;
                 }
 
                 return thePayload;
             } else
             {
-                log.Debug("else");
+                Log.Debug("else");
                 return packet.PayloadPacket;
             }
         }

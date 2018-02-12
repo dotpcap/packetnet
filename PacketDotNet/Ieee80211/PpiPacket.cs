@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using PacketDotNet.IP;
-using PacketDotNet.MiscUtil.Utils;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Conversion;
 
@@ -76,9 +75,9 @@ namespace PacketDotNet.Ieee80211
             
             private UInt16 LengthBytes
             {
-                get => EndianBitConverter.Little.ToUInt16 (this.header.Bytes, this.header.Offset + PpiHeaderFields.LengthPosition);
+                get => EndianBitConverter.Little.ToUInt16 (this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + PpiHeaderFields.LengthPosition);
 
-                set => EndianBitConverter.Little.CopyBytes (value, this.header.Bytes, this.header.Offset + PpiHeaderFields.LengthPosition);
+                set => EndianBitConverter.Little.CopyBytes (value, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + PpiHeaderFields.LengthPosition);
             }
 
             
@@ -87,13 +86,13 @@ namespace PacketDotNet.Ieee80211
             /// Version 0. Only increases for drastic changes, introduction of compatible
             /// new fields does not count.
             /// </summary>
-            public byte Version { get; set; }
+            public Byte Version { get; set; }
             
-            private byte VersionBytes
+            private Byte VersionBytes
             {
-                get => this.header.Bytes [this.header.Offset + PpiHeaderFields.VersionPosition];
+                get => this.HeaderByteArraySegment.Bytes [this.HeaderByteArraySegment.Offset + PpiHeaderFields.VersionPosition];
 
-                set => this.header.Bytes [this.header.Offset + PpiHeaderFields.VersionPosition] = value;
+                set => this.HeaderByteArraySegment.Bytes [this.HeaderByteArraySegment.Offset + PpiHeaderFields.VersionPosition] = value;
             }
             
             /// <summary>
@@ -106,9 +105,9 @@ namespace PacketDotNet.Ieee80211
             
             private HeaderFlags FlagsBytes
             {
-                get => (HeaderFlags) this.header.Bytes[this.header.Offset + PpiHeaderFields.FlagsPosition];
+                get => (HeaderFlags) this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset + PpiHeaderFields.FlagsPosition];
 
-                set => this.header.Bytes[this.header.Offset + PpiHeaderFields.FlagsPosition] = (byte) value;
+                set => this.HeaderByteArraySegment.Bytes[this.HeaderByteArraySegment.Offset + PpiHeaderFields.FlagsPosition] = (Byte) value;
             }
             
             /// <summary>
@@ -122,9 +121,9 @@ namespace PacketDotNet.Ieee80211
             
             private LinkLayers LinkTypeBytes
             {
-                get => (LinkLayers) EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + PpiHeaderFields.DataLinkTypePosition);
+                get => (LinkLayers) EndianBitConverter.Little.ToUInt32(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + PpiHeaderFields.DataLinkTypePosition);
 
-                set => EndianBitConverter.Little.CopyBytes((uint) this.LinkType, this.header.Bytes, this.header.Offset + PpiHeaderFields.DataLinkTypePosition);
+                set => EndianBitConverter.Little.CopyBytes((UInt32) this.LinkType, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + PpiHeaderFields.DataLinkTypePosition);
             }
             
             /// <summary>
@@ -133,7 +132,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The number of fields.
             /// </value>
-            public int Count => this.PpiFields.Count;
+            public Int32 Count => this.PpiFields.Count;
 
             /// <summary>
             /// Gets the <see cref="PacketDotNet.Ieee80211.PpiPacket"/> at the specified index.
@@ -141,7 +140,7 @@ namespace PacketDotNet.Ieee80211
             /// <param name='index'>
             /// Index.
             /// </param>
-            public PpiField this[int index] => this.PpiFields[index];
+            public PpiField this[Int32 index] => this.PpiFields[index];
 
             private List<PpiField> PpiFields { get; set; }
 
@@ -157,20 +156,20 @@ namespace PacketDotNet.Ieee80211
             public PpiPacket (ByteArraySegment bas)
             {
                 // slice off the header portion
-                this.header = new ByteArraySegment (bas);
+                this.HeaderByteArraySegment = new ByteArraySegment (bas);
 
                 this.Version = this.VersionBytes;
                 this.Flags = this.FlagsBytes;
                 
                 // update the header size based on the headers packet length
-                this.header.Length = this.LengthBytes;
+                this.HeaderByteArraySegment.Length = this.LengthBytes;
                 this.LinkType = this.LinkTypeBytes;
                 this.PpiFields = this.ReadPpiFields();
     
                 PpiCommon commonField = this.FindFirstByType(PpiFieldType.PpiCommon) as PpiCommon;
                 
                 // parse the encapsulated bytes
-                this.payloadPacketOrData = ParseEncapsulatedBytes (this.header, commonField);
+                this.PayloadPacketOrData = ParseEncapsulatedBytes (this.HeaderByteArraySegment, commonField);
             }
             
             /// <summary>
@@ -225,7 +224,7 @@ namespace PacketDotNet.Ieee80211
             /// <param name='field'>
             /// <c>true</c> if the field is in the packet, <c>false</c> if not.
             /// </param>
-            public bool Contains(PpiField field)
+            public Boolean Contains(PpiField field)
             {
                 return this.PpiFields.Contains(field);
             }
@@ -236,7 +235,7 @@ namespace PacketDotNet.Ieee80211
             /// <param name='type'>
             /// <c>true</c> if there is a field of the specified type in the packet, <c>false</c> if not.
             /// </param>
-            public bool Contains(PpiFieldType type)
+            public Boolean Contains(PpiFieldType type)
             {
                 return (this.PpiFields.Find(field => field.FieldType == type) != null);
             }
@@ -276,11 +275,11 @@ namespace PacketDotNet.Ieee80211
             }
 
             /// <summary cref="Packet.ToString(StringOutputType)" />
-            public override string ToString (StringOutputType outputFormat)
+            public override String ToString (StringOutputType outputFormat)
             {
                 var buffer = new StringBuilder ();
-                string color = "";
-                string colorEscape = "";
+                String color = "";
+                String colorEscape = "";
 
                 if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
                 {
@@ -300,9 +299,11 @@ namespace PacketDotNet.Ieee80211
                 if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
                 {
                     // collect the properties and their value
-                    var properties = new Dictionary<string, string> ();
-                    properties.Add ("version", this.Version.ToString ());
-                    properties.Add ("length", this.Length.ToString ());
+                    var properties = new Dictionary<String, String>
+                    {
+                        {"version", this.Version.ToString()},
+                        {"length", this.Length.ToString()}
+                    };
 
                     var ppiField = this.PpiFields;
 
@@ -313,7 +314,7 @@ namespace PacketDotNet.Ieee80211
                     }
 
                     // calculate the padding needed to right-justify the property names
-                    int padLength = RandomUtils.LongestStringLength (new List<string> (properties.Keys));
+                    Int32 padLength = RandomUtils.LongestStringLength (new List<String> (properties.Keys));
 
                     // build the output string
                     buffer.AppendLine ("Ieee80211PpiPacket");
@@ -349,34 +350,34 @@ namespace PacketDotNet.Ieee80211
             {
                 //If aligned is true then fields must all start on 32bit boundaries so we might need
                 //to read some extra padding from the end of the header fields.
-                bool aligned = ((this.Flags & HeaderFlags.Alignment32Bit) == HeaderFlags.Alignment32Bit);
+                Boolean aligned = ((this.Flags & HeaderFlags.Alignment32Bit) == HeaderFlags.Alignment32Bit);
                 
                 var totalFieldLength = this.Length;
              
-                if ((this.header == null) || (totalFieldLength > this.header.Length))
+                if ((this.HeaderByteArraySegment == null) || (totalFieldLength > this.HeaderByteArraySegment.Length))
                 {
-                    this.header = new ByteArraySegment (new Byte[totalFieldLength]);
+                    this.HeaderByteArraySegment = new ByteArraySegment (new Byte[totalFieldLength]);
                 }
 
-                this.header.Length = totalFieldLength;
+                this.HeaderByteArraySegment.Length = totalFieldLength;
 
                 this.VersionBytes = this.Version;
                 this.FlagsBytes = this.Flags;
-                this.LengthBytes = (ushort)totalFieldLength;
+                this.LengthBytes = (UInt16)totalFieldLength;
                 this.LinkTypeBytes = this.LinkType;
                 
-                MemoryStream ms = new MemoryStream(this.header.Bytes, this.header.Offset + PpiHeaderFields.FirstFieldPosition,
+                MemoryStream ms = new MemoryStream(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + PpiHeaderFields.FirstFieldPosition,
                                                    totalFieldLength - PpiHeaderFields.FirstFieldPosition);
                 BinaryWriter writer = new BinaryWriter(ms);
                 foreach (var field in this.PpiFields)
                 {
-                    writer.Write((ushort) field.FieldType);
-                    writer.Write((ushort) field.Length);
+                    writer.Write((UInt16) field.FieldType);
+                    writer.Write((UInt16) field.Length);
                     writer.Write(field.Bytes);
                     var paddingBytesRequired = this.GetDistanceTo32BitAlignment(field.Length);
                     if(aligned && (paddingBytesRequired > 0))
                     {
-                        writer.Write(new byte[paddingBytesRequired]);
+                        writer.Write(new Byte[paddingBytesRequired]);
                     }
                 }
             }
@@ -392,18 +393,18 @@ namespace PacketDotNet.Ieee80211
             {
                 //If aligned is true then fields must all start on 32bit boundaries so we might need
                 //to read some extra padding from the end of the header fields.
-                bool aligned = ((this.Flags & HeaderFlags.Alignment32Bit) == HeaderFlags.Alignment32Bit);
+                Boolean aligned = ((this.Flags & HeaderFlags.Alignment32Bit) == HeaderFlags.Alignment32Bit);
                 
                 var retList = new List<PpiField> ();
 
                 // create a binary reader that points to the memory immediately after the dtl
-                var offset = this.header.Offset + PpiHeaderFields.FirstFieldPosition;
-                var br = new BinaryReader (new MemoryStream (this.header.Bytes,
+                var offset = this.HeaderByteArraySegment.Offset + PpiHeaderFields.FirstFieldPosition;
+                var br = new BinaryReader (new MemoryStream (this.HeaderByteArraySegment.Bytes,
                                                        offset,
-                                                       (int)(this.header.Length - offset)));
-                int type = 0;
-                int length = PpiHeaderFields.FirstFieldPosition;
-                while(length < this.header.Length)
+                                                       (Int32)(this.HeaderByteArraySegment.Length - offset)));
+                Int32 type = 0;
+                Int32 length = PpiHeaderFields.FirstFieldPosition;
+                while(length < this.HeaderByteArraySegment.Length)
                 {
                     type = br.ReadUInt16 ();
                     var fieldLength = br.ReadUInt16 ();
@@ -442,7 +443,7 @@ namespace PacketDotNet.Ieee80211
                 
                 if (commonField != null)
                 {
-                    bool fcsPresent = ((commonField.Flags & PpiCommon.CommonFlags.FcsIncludedInFrame) == PpiCommon.CommonFlags.FcsIncludedInFrame);
+                    Boolean fcsPresent = ((commonField.Flags & PpiCommon.CommonFlags.FcsIncludedInFrame) == PpiCommon.CommonFlags.FcsIncludedInFrame);
                     
                     if (fcsPresent)
                     {
@@ -470,7 +471,7 @@ namespace PacketDotNet.Ieee80211
                 return payloadPacketOrData;
             }
    
-            private int GetDistanceTo32BitAlignment(int length)
+            private Int32 GetDistanceTo32BitAlignment(Int32 length)
             {
                 return ((length % 4) == 0) ? 0 : 4 - (length % 4);
             }

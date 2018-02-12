@@ -42,7 +42,7 @@ namespace PacketDotNet
         /// The Port Description TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public StringTLV(byte[] bytes, int offset) :
+        public StringTLV(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {}
 
@@ -55,11 +55,11 @@ namespace PacketDotNet
         /// <param name="StringValue">
         /// A <see cref="System.String"/>
         /// </param>
-        public StringTLV(TLVTypes tlvType, string StringValue)
+        public StringTLV(TLVTypes tlvType, String StringValue)
         {
-            var bytes = new byte[TLVTypeLength.TypeLengthLength];
+            var bytes = new Byte[TLVTypeLength.TypeLengthLength];
             var offset = 0;
-            this.tlvData = new ByteArraySegment(bytes, offset, bytes.Length);
+            this.TLVData = new ByteArraySegment(bytes, offset, bytes.Length);
 
             this.Type = tlvType;
             this.StringValue = StringValue;
@@ -72,9 +72,9 @@ namespace PacketDotNet
         /// <value>
         /// A textual Description of the port
         /// </value>
-        public string StringValue
+        public String StringValue
         {
-            get => System.Text.Encoding.ASCII.GetString(this.tlvData.Bytes, this.ValueOffset, this.Length);
+            get => System.Text.Encoding.ASCII.GetString(this.TLVData.Bytes, this.ValueOffset, this.Length);
 
             set
             {
@@ -82,23 +82,23 @@ namespace PacketDotNet
                 var length = TLVTypeLength.TypeLengthLength + bytes.Length;
 
                 // is the tlv the correct size?
-                if(this.tlvData.Length != length)
+                if(this.TLVData.Length != length)
                 {
                     // allocate new memory for this tlv
-                    var newTLVBytes = new byte[length];
+                    var newTLVBytes = new Byte[length];
                     var offset = 0;
 
                     // copy header over
-                    Array.Copy((Array) this.tlvData.Bytes, (int) this.tlvData.Offset,
-                               (Array) newTLVBytes, (int) 0,
-                               (int) TLVTypeLength.TypeLengthLength);
+                    Array.Copy((Array) this.TLVData.Bytes, (Int32) this.TLVData.Offset,
+                               (Array) newTLVBytes, (Int32) 0,
+                               (Int32) TLVTypeLength.TypeLengthLength);
 
-                    this.tlvData = new ByteArraySegment(newTLVBytes, offset, length);
+                    this.TLVData = new ByteArraySegment(newTLVBytes, offset, length);
                 }
 
                 // set the description
-                Array.Copy((Array) bytes, (int) 0,
-                           (Array) this.tlvData.Bytes, (int) this.ValueOffset,
+                Array.Copy((Array) bytes, (Int32) 0,
+                           (Array) this.TLVData.Bytes, (Int32) this.ValueOffset,
                            bytes.Length);
             }
         }
@@ -109,9 +109,9 @@ namespace PacketDotNet
         /// <returns>
         /// A human readable string
         /// </returns>
-        public override string ToString ()
+        public override String ToString ()
         {
-            return string.Format("[{0}: Description={1}]", this.Type, this.StringValue);
+            return $"[{this.Type}: Description={this.StringValue}]";
         }
 
         #endregion

@@ -101,10 +101,9 @@ namespace PacketDotNet
             if (IsValid(bas))
             {
                 // set the header field, header field values are retrieved from this byte array
-                this.HeaderByteArraySegment = new ByteArraySegment(bas)
-                {
-                    Length = this.Bytes.Length
-                };
+                // ReSharper disable once UseObjectOrCollectionInitializer
+                this.HeaderByteArraySegment = new ByteArraySegment(bas);
+                this.HeaderByteArraySegment.Length = this.Bytes.Length;
             }
         }
 

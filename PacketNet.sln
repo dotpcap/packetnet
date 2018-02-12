@@ -18,11 +18,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{98EB8373-B1FF-493B-B7E5-3C93780C0070}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		appveyor.yml = appveyor.yml
+		ArchitectureNotes = ArchitectureNotes
 		LICENSE = LICENSE
+		PacketDotNet.nuspec = PacketDotNet.nuspec
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketDotNet.Interface", "PacketDotNet.Interface\PacketDotNet.Interface.csproj", "{591FD369-A7FA-4DD2-AC5B-11B472CD2E61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PacketDotNet.Interface", "PacketDotNet.Interface\PacketDotNet.Interface.csproj", "{591FD369-A7FA-4DD2-AC5B-11B472CD2E61}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

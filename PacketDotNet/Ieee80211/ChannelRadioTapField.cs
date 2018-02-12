@@ -57,17 +57,17 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ChannelRadioTapField" /> class.
         /// </summary>
-        /// <param name='FrequencyMhz'>
+        /// <param name='frequencyMhz'>
         ///     Tx/Rx Frequency in MHz.
         /// </param>
-        /// <param name='Flags'>
+        /// <param name='flags'>
         ///     Flags.
         /// </param>
-        public ChannelRadioTapField(UInt16 FrequencyMhz, RadioTapChannelFlags Flags)
+        public ChannelRadioTapField(UInt16 frequencyMhz, RadioTapChannelFlags flags)
         {
             this.FrequencyMHz = this.FrequencyMHz;
             this.Channel = ChannelFromFrequencyMHz(this.FrequencyMHz);
-            this.Flags = Flags;
+            this.Flags = flags;
         }
 
         /// <summary>Type of the field</summary>

@@ -15,21 +15,21 @@ namespace Test.PacketType
     internal class OSPFv2PacketTest
     {
         private const Int32 OSPF_DBD_INDEX = 9;
-        private const Int32 OSPF_DBD_LSA_INDEX = 11;
+        private const Int32 OSPFDbdLSAIndex = 11;
         private const Int32 OSPF_HELLO_INDEX = 0;
         private const Int32 OSPF_LSA_INDEX = 23;
         private const Int32 OSPF_LSR_INDEX = 17;
         private const Int32 OSPF_LSU_INDEX = 18;
         private const Int32 OSPF_LSU_LSA_INDEX = 31;
-        private OSPFv2Packet ddLSAPacket;
-        private OSPFv2Packet ddPacket;
+        private OSPFv2Packet _ddLSAPacket;
+        private OSPFv2Packet _ddPacket;
 
-        private OSPFv2Packet helloPacket;
+        private OSPFv2Packet _helloPacket;
 
-        private OSPFv2LSUpdatePacket lsaHolder;
-        private OSPFv2Packet lsaPacket;
-        private OSPFv2Packet lsrPacket;
-        private OSPFv2Packet lsuPacket;
+        private OSPFv2LSUpdatePacket _lsaHolder;
+        private OSPFv2Packet _lsaPacket;
+        private OSPFv2Packet _lsrPacket;
+        private OSPFv2Packet _lsuPacket;
 
         private Boolean packetsLoaded;
 
@@ -53,25 +53,25 @@ namespace Test.PacketType
                 switch (packetIndex)
                 {
                     case OSPF_HELLO_INDEX:
-                        this.helloPacket = p;
+                        this._helloPacket = p;
                         break;
                     case OSPF_DBD_INDEX:
-                        this.ddPacket = p;
+                        this._ddPacket = p;
                         break;
-                    case OSPF_DBD_LSA_INDEX:
-                        this.ddLSAPacket = p;
+                    case OSPFDbdLSAIndex:
+                        this._ddLSAPacket = p;
                         break;
                     case OSPF_LSU_INDEX:
-                        this.lsuPacket = p;
+                        this._lsuPacket = p;
                         break;
                     case OSPF_LSA_INDEX:
-                        this.lsaPacket = p;
+                        this._lsaPacket = p;
                         break;
                     case OSPF_LSR_INDEX:
-                        this.lsrPacket = p;
+                        this._lsrPacket = p;
                         break;
                     case OSPF_LSU_LSA_INDEX:
-                        this.lsaHolder = (OSPFv2LSUpdatePacket) p;
+                        this._lsaHolder = (OSPFv2LSUpdatePacket) p;
                         break;
                     default: /* do nothing */ break;
                 }
@@ -163,12 +163,12 @@ namespace Test.PacketType
         public void TestDBDPacket()
         {
             OSPFv2DDPacket dp = null;
-            Assert.IsNotNull(this.ddPacket);
-            Assert.AreEqual(OSPFVersion.OSPFv2, this.ddPacket.Version);
-            Assert.AreEqual(OSPFPacketType.DatabaseDescription, this.ddPacket.Type);
-            Assert.AreEqual(this.ddPacket is OSPFv2DDPacket, true);
-            Assert.AreEqual(0xa052, this.ddPacket.Checksum);
-            dp = (OSPFv2DDPacket) this.ddPacket;
+            Assert.IsNotNull(this._ddPacket);
+            Assert.AreEqual(OSPFVersion.OSPFv2, this._ddPacket.Version);
+            Assert.AreEqual(OSPFPacketType.DatabaseDescription, this._ddPacket.Type);
+            Assert.AreEqual(this._ddPacket is OSPFv2DDPacket, true);
+            Assert.AreEqual(0xa052, this._ddPacket.Checksum);
+            dp = (OSPFv2DDPacket) this._ddPacket;
             Assert.AreEqual(1098361214, dp.DDSequence);
             Assert.AreEqual(0, dp.LSAHeader.Count);
         }
@@ -274,13 +274,13 @@ namespace Test.PacketType
         public void TestDDWithLSA()
         {
             OSPFv2DDPacket dp = null;
-            Assert.IsNotNull(this.ddLSAPacket);
-            Assert.AreEqual(OSPFVersion.OSPFv2, this.ddLSAPacket.Version);
-            Assert.AreEqual(OSPFPacketType.DatabaseDescription, this.ddLSAPacket.Type);
-            Assert.AreEqual(0xf067, this.ddLSAPacket.Checksum);
-            dp = (OSPFv2DDPacket) this.ddLSAPacket;
+            Assert.IsNotNull(this._ddLSAPacket);
+            Assert.AreEqual(OSPFVersion.OSPFv2, this._ddLSAPacket.Version);
+            Assert.AreEqual(OSPFPacketType.DatabaseDescription, this._ddLSAPacket.Type);
+            Assert.AreEqual(0xf067, this._ddLSAPacket.Checksum);
+            dp = (OSPFv2DDPacket) this._ddLSAPacket;
             Assert.AreEqual(1098361214, dp.DDSequence);
-            Assert.AreEqual(172, this.ddLSAPacket.PacketLength);
+            Assert.AreEqual(172, this._ddLSAPacket.PacketLength);
 
             List<LSA> lsas = dp.LSAHeader;
             Assert.AreEqual(7, lsas.Count);
@@ -421,12 +421,12 @@ namespace Test.PacketType
         public void TestHelloPacket()
         {
             OSPFv2HelloPacket hp = null;
-            Assert.IsNotNull(this.helloPacket);
-            Assert.AreEqual(this.helloPacket is OSPFv2HelloPacket, true);
-            hp = (OSPFv2HelloPacket) this.helloPacket;
-            Assert.AreEqual(OSPFVersion.OSPFv2, this.helloPacket.Version);
-            Assert.AreEqual(OSPFPacketType.Hello, this.helloPacket.Type);
-            Assert.AreEqual(0x273b, this.helloPacket.Checksum);
+            Assert.IsNotNull(this._helloPacket);
+            Assert.AreEqual(this._helloPacket is OSPFv2HelloPacket, true);
+            hp = (OSPFv2HelloPacket) this._helloPacket;
+            Assert.AreEqual(OSPFVersion.OSPFv2, this._helloPacket.Version);
+            Assert.AreEqual(OSPFPacketType.Hello, this._helloPacket.Type);
+            Assert.AreEqual(0x273b, this._helloPacket.Checksum);
             Assert.AreEqual(IPAddress.Parse("255.255.255.0"), hp.NetworkMask);
             Assert.AreEqual(0x02, hp.HelloOptions);
             Assert.AreEqual(0, hp.NeighborID.Count);
@@ -435,7 +435,7 @@ namespace Test.PacketType
         [Test]
         public void TestLinkStateRequests()
         {
-            OSPFv2LSRequestPacket p = (OSPFv2LSRequestPacket) this.lsrPacket;
+            OSPFv2LSRequestPacket p = (OSPFv2LSRequestPacket) this._lsrPacket;
             List<LinkStateRequest> requests = p.LinkStateRequests;
             Assert.AreEqual(requests.Count, 7);
 
@@ -484,11 +484,11 @@ namespace Test.PacketType
             ASExternalLSA al;
             LSA l;
 
-            Assert.AreNotEqual(null, this.lsaHolder);
-            Assert.AreEqual(11, this.lsaHolder.LSANumber);
-            Assert.AreEqual(11, this.lsaHolder.LSAUpdates.Count);
+            Assert.AreNotEqual(null, this._lsaHolder);
+            Assert.AreEqual(11, this._lsaHolder.LSANumber);
+            Assert.AreEqual(11, this._lsaHolder.LSAUpdates.Count);
 
-            l = this.lsaHolder.LSAUpdates[0];
+            l = this._lsaHolder.LSAUpdates[0];
             Assert.AreEqual(typeof(RouterLSA), l.GetType());
             rl = (RouterLSA) l;
             Assert.AreEqual(446, rl.LSAge);
@@ -518,7 +518,7 @@ namespace Test.PacketType
             Assert.AreEqual(0, rlink.TOSNumber);
             Assert.AreEqual(10, rlink.Metric);
 
-            l = this.lsaHolder.LSAUpdates[1];
+            l = this._lsaHolder.LSAUpdates[1];
             Assert.AreEqual(typeof(RouterLSA), l.GetType());
             rl = (RouterLSA) l;
             Assert.AreEqual(10, rl.LSAge);
@@ -541,7 +541,7 @@ namespace Test.PacketType
             Assert.AreEqual(0, rlink.TOSNumber);
             Assert.AreEqual(10, rlink.Metric);
 
-            l = this.lsaHolder.LSAUpdates[2];
+            l = this._lsaHolder.LSAUpdates[2];
             Assert.AreEqual(typeof(NetworkLSA), l.GetType());
             nl = (NetworkLSA) l;
             Assert.AreEqual(446, nl.LSAge);
@@ -556,7 +556,7 @@ namespace Test.PacketType
             Assert.AreEqual(IPAddress.Parse("4.4.4.4"), nl.AttachedRouters[1]);
             Assert.AreEqual(32, nl.Length);
 
-            l = this.lsaHolder.LSAUpdates[3];
+            l = this._lsaHolder.LSAUpdates[3];
             Assert.AreEqual(typeof(SummaryLSA), l.GetType());
             sl = (SummaryLSA) l;
             Assert.AreEqual(11, sl.LSAge);
@@ -570,7 +570,7 @@ namespace Test.PacketType
             Assert.AreEqual(30, sl.Metric);
             Assert.AreEqual(28, sl.Length);
 
-            l = this.lsaHolder.LSAUpdates[4];
+            l = this._lsaHolder.LSAUpdates[4];
             Assert.AreEqual(typeof(SummaryLSA), l.GetType());
             sl = (SummaryLSA) l;
             Assert.AreEqual(11, sl.LSAge);
@@ -584,7 +584,7 @@ namespace Test.PacketType
             Assert.AreEqual(20, sl.Metric);
             Assert.AreEqual(28, sl.Length);
 
-            l = this.lsaHolder.LSAUpdates[6];
+            l = this._lsaHolder.LSAUpdates[6];
             Assert.AreEqual(typeof(SummaryLSA), l.GetType());
             sl = (SummaryLSA) l;
             Assert.AreEqual(11, sl.LSAge);
@@ -598,7 +598,7 @@ namespace Test.PacketType
             Assert.AreEqual(20, sl.Metric);
             Assert.AreEqual(28, sl.Length);
 
-            l = this.lsaHolder.LSAUpdates[7];
+            l = this._lsaHolder.LSAUpdates[7];
             Assert.AreEqual(typeof(ASExternalLSA), l.GetType());
             al = (ASExternalLSA) l;
             Assert.AreEqual(197, al.LSAge);
@@ -619,7 +619,7 @@ namespace Test.PacketType
             Assert.AreEqual(0, aslink.TOS);
             Assert.AreEqual(IPAddress.Parse("0.0.0.0"), aslink.ForwardingAddress);
 
-            l = this.lsaHolder.LSAUpdates[8];
+            l = this._lsaHolder.LSAUpdates[8];
             Assert.AreEqual(typeof(ASExternalLSA), l.GetType());
             al = (ASExternalLSA) l;
             Assert.AreEqual(197, al.LSAge);
@@ -644,13 +644,13 @@ namespace Test.PacketType
         [Test]
         public void TestLSAPacket()
         {
-            Assert.IsNotNull(this.lsaPacket);
-            Assert.AreEqual(OSPFVersion.OSPFv2, this.lsaPacket.Version);
-            Assert.AreEqual(OSPFPacketType.LinkStateAcknowledgment, this.lsaPacket.Type);
-            Assert.AreEqual(0xe95e, this.lsaPacket.Checksum);
-            Assert.AreEqual(284, this.lsaPacket.PacketLength);
-            Assert.AreEqual(IPAddress.Parse("0.0.0.1"), this.lsaPacket.AreaID);
-            OSPFv2LSAPacket ack = (OSPFv2LSAPacket) this.lsaPacket;
+            Assert.IsNotNull(this._lsaPacket);
+            Assert.AreEqual(OSPFVersion.OSPFv2, this._lsaPacket.Version);
+            Assert.AreEqual(OSPFPacketType.LinkStateAcknowledgment, this._lsaPacket.Type);
+            Assert.AreEqual(0xe95e, this._lsaPacket.Checksum);
+            Assert.AreEqual(284, this._lsaPacket.PacketLength);
+            Assert.AreEqual(IPAddress.Parse("0.0.0.1"), this._lsaPacket.AreaID);
+            OSPFv2LSAPacket ack = (OSPFv2LSAPacket) this._lsaPacket;
             Assert.AreEqual(13, ack.LSAAcknowledge.Count);
 
             LSA l = ack.LSAAcknowledge[0];
@@ -942,12 +942,12 @@ namespace Test.PacketType
         public void TestLSRPacket()
         {
             OSPFv2LSRequestPacket lp = null;
-            Assert.IsNotNull(this.lsrPacket);
-            Assert.AreEqual(OSPFVersion.OSPFv2, this.lsrPacket.Version);
-            Assert.AreEqual(OSPFPacketType.LinkStateRequest, this.lsrPacket.Type);
-            Assert.AreEqual(0x7595, this.lsrPacket.Checksum);
-            Assert.AreEqual(this.lsrPacket is OSPFv2LSRequestPacket, true);
-            lp = (OSPFv2LSRequestPacket) this.lsrPacket;
+            Assert.IsNotNull(this._lsrPacket);
+            Assert.AreEqual(OSPFVersion.OSPFv2, this._lsrPacket.Version);
+            Assert.AreEqual(OSPFPacketType.LinkStateRequest, this._lsrPacket.Type);
+            Assert.AreEqual(0x7595, this._lsrPacket.Checksum);
+            Assert.AreEqual(this._lsrPacket is OSPFv2LSRequestPacket, true);
+            lp = (OSPFv2LSRequestPacket) this._lsrPacket;
             Assert.AreEqual(7, lp.LinkStateRequests.Count);
         }
 
@@ -1208,12 +1208,12 @@ namespace Test.PacketType
         public void TestLSUPacket()
         {
             OSPFv2LSUpdatePacket lp = null;
-            Assert.IsNotNull(this.lsuPacket);
-            Assert.AreEqual(OSPFVersion.OSPFv2, this.lsuPacket.Version);
-            Assert.AreEqual(OSPFPacketType.LinkStateUpdate, this.lsuPacket.Type);
-            Assert.AreEqual(0x961f, this.lsuPacket.Checksum);
-            Assert.AreEqual(this.lsuPacket is OSPFv2LSUpdatePacket, true);
-            lp = (OSPFv2LSUpdatePacket) this.lsuPacket;
+            Assert.IsNotNull(this._lsuPacket);
+            Assert.AreEqual(OSPFVersion.OSPFv2, this._lsuPacket.Version);
+            Assert.AreEqual(OSPFPacketType.LinkStateUpdate, this._lsuPacket.Type);
+            Assert.AreEqual(0x961f, this._lsuPacket.Checksum);
+            Assert.AreEqual(this._lsuPacket is OSPFv2LSUpdatePacket, true);
+            lp = (OSPFv2LSUpdatePacket) this._lsuPacket;
             Assert.AreEqual(1, lp.LSANumber);
             List<LSA> l = lp.LSAUpdates;
             Assert.AreEqual(1, l.Count);

@@ -63,13 +63,13 @@ namespace PacketDotNet.IGMP
         /// <param name="bas">
         ///     A <see cref="ByteArraySegment" />
         /// </param>
-        /// <param name="ParentPacket">
+        /// <param name="parentPacket">
         ///     A <see cref="Packet" />
         /// </param>
         public IGMPv2Packet(ByteArraySegment bas,
-            Packet ParentPacket) : this(bas)
+            Packet parentPacket) : this(bas)
         {
-            this.ParentPacket = ParentPacket;
+            this.ParentPacket = parentPacket;
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>

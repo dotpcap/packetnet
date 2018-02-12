@@ -31,7 +31,7 @@ namespace PacketDotNet.Ieee80211
     /// </summary>
     public class BlockAcknowledgmentFrame : MacFrame
     {
-        private Byte[] blockAckBitmap;
+        private Byte[] _blockAckBitmap;
 
         /// <summary>
         ///     Constructor
@@ -56,25 +56,25 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentFrame" /> class.
         /// </summary>
-        /// <param name='TransmitterAddress'>
+        /// <param name='transmitterAddress'>
         ///     Transmitter address.
         /// </param>
-        /// <param name='ReceiverAddress'>
+        /// <param name='receiverAddress'>
         ///     Receiver address.
         /// </param>
-        /// <param name='BlockAckBitmap'>
+        /// <param name='blockAckBitmap'>
         ///     The Block ack bitmap signalling the receive status of the MSDUs.
         /// </param>
-        public BlockAcknowledgmentFrame(PhysicalAddress TransmitterAddress,
-            PhysicalAddress ReceiverAddress,
-            Byte[] BlockAckBitmap)
+        public BlockAcknowledgmentFrame(PhysicalAddress transmitterAddress,
+            PhysicalAddress receiverAddress,
+            Byte[] blockAckBitmap)
         {
             this.FrameControl = new FrameControlField();
             this.Duration = new DurationField();
-            this.ReceiverAddress = ReceiverAddress;
-            this.TransmitterAddress = TransmitterAddress;
+            this.ReceiverAddress = receiverAddress;
+            this.TransmitterAddress = transmitterAddress;
             this.BlockAcknowledgmentControl = new BlockAcknowledgmentControlField();
-            this.BlockAckBitmap = BlockAckBitmap;
+            this.BlockAckBitmap = blockAckBitmap;
 
             this.FrameControl.SubType = FrameControlField.FrameSubTypes.ControlBlockAcknowledgment;
         }
@@ -103,7 +103,7 @@ namespace PacketDotNet.Ieee80211
         /// </exception>
         public Byte[] BlockAckBitmap
         {
-            get => this.blockAckBitmap;
+            get => this._blockAckBitmap;
 
             set
             {
@@ -120,7 +120,7 @@ namespace PacketDotNet.Ieee80211
                     throw new ArgumentException("Invalid BlockAckBitmap size. Must be either 8 or 64 bytes long.");
                 }
 
-                this.blockAckBitmap = value;
+                this._blockAckBitmap = value;
             }
         }
 

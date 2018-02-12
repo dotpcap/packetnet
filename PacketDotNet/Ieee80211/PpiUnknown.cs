@@ -83,13 +83,13 @@ namespace PacketDotNet.Ieee80211
         /// <param name='typeNumber'>
         ///     The PPI field type number.
         /// </param>
-        /// <param name='UnknownBytes'>
+        /// <param name='unknownBytes'>
         ///     The field data.
         /// </param>
-        public PpiUnknown(Int32 typeNumber, Byte[] UnknownBytes)
+        public PpiUnknown(Int32 typeNumber, Byte[] unknownBytes)
         {
             this.FieldType = (PpiFieldType) typeNumber;
-            this.UnknownBytes = UnknownBytes;
+            this.UnknownBytes = unknownBytes;
         }
 
         #endregion Constructors

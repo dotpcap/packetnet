@@ -29,12 +29,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbAntennaNoiseRadioTapField" /> class.
         /// </summary>
-        /// <param name='AntennaNoisedB'>
+        /// <param name='antennaNoisedB'>
         ///     Antenna signal noise in dB.
         /// </param>
-        public DbAntennaNoiseRadioTapField(Byte AntennaNoisedB)
+        public DbAntennaNoiseRadioTapField(Byte antennaNoisedB)
         {
-            this.AntennaNoisedB = AntennaNoisedB;
+            this.AntennaNoisedB = antennaNoisedB;
         }
 
         /// <summary>Type of the field</summary>

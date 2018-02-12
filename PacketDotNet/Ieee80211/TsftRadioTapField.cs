@@ -30,12 +30,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.TsftRadioTapField" /> class.
         /// </summary>
-        /// <param name='TimestampUsec'>
+        /// <param name='timestampUsec'>
         ///     Value in microseconds of the Time Synchronization Function timer
         /// </param>
-        public TsftRadioTapField(UInt64 TimestampUsec)
+        public TsftRadioTapField(UInt64 timestampUsec)
         {
-            this.TimestampUsec = TimestampUsec;
+            this.TimestampUsec = timestampUsec;
         }
 
         /// <summary>Type of the field</summary>

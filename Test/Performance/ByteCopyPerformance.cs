@@ -9,7 +9,7 @@ namespace Test.Performance
     public class ByteCopyPerformance
     {
         // The number of times the test is run
-        private readonly Int32 testRuns = 40000;
+        private readonly Int32 _testRuns = 40000;
 
         [Test]
         public void ArrayCopyPerformance()
@@ -29,7 +29,7 @@ namespace Test.Performance
             var startTime = DateTime.Now;
 
             // run the test
-            for (Int32 i = 0; i < this.testRuns; i++)
+            for (Int32 i = 0; i < this._testRuns; i++)
             {
                 Array.Copy(ethernetPacket.Bytes, EthernetFields.SourceMacPosition,
                     hwAddress, 0, EthernetFields.MacAddressLength);
@@ -42,7 +42,7 @@ namespace Test.Performance
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
 
             // calculate the statistics
-            var rate = new Rate(startTime, endTime, this.testRuns, "Test runs");
+            var rate = new Rate(startTime, endTime, this._testRuns, "Test runs");
 
             // output the statistics to the console
             Console.WriteLine(rate.ToString());
@@ -66,7 +66,7 @@ namespace Test.Performance
             var startTime = DateTime.Now;
 
             // run the test
-            for (Int32 i = 0; i < this.testRuns; i++)
+            for (Int32 i = 0; i < this._testRuns; i++)
             {
                 Buffer.BlockCopy(ethernetPacket.Bytes, EthernetFields.SourceMacPosition,
                     hwAddress, 0, EthernetFields.MacAddressLength);
@@ -79,7 +79,7 @@ namespace Test.Performance
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
 
             // calculate the statistics
-            var rate = new Rate(startTime, endTime, this.testRuns, "Test runs");
+            var rate = new Rate(startTime, endTime, this._testRuns, "Test runs");
 
             // output the statistics to the console
             Console.WriteLine(rate.ToString());

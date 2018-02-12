@@ -30,7 +30,7 @@ namespace PacketDotNet.LLDP
     public class SystemDescription : StringTLV
     {
 #if DEBUG
-        private static readonly log4net.ILog log =
+        private static readonly log4net.ILog Log =
  log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
@@ -54,7 +54,7 @@ namespace PacketDotNet.LLDP
         public SystemDescription(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {
-            log.Debug("");
+            Log.Debug("");
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace PacketDotNet.LLDP
         public SystemDescription(String description) : base(TLVTypes.SystemDescription,
             description)
         {
-            log.Debug("");
+            Log.Debug("");
         }
 
         #endregion

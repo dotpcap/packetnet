@@ -53,19 +53,19 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentRequestFrame" /> class.
         /// </summary>
-        /// <param name='TransmitterAddress'>
+        /// <param name='transmitterAddress'>
         ///     Transmitter address.
         /// </param>
-        /// <param name='ReceiverAddress'>
+        /// <param name='receiverAddress'>
         ///     Receiver address.
         /// </param>
-        public BlockAcknowledgmentRequestFrame(PhysicalAddress TransmitterAddress,
-            PhysicalAddress ReceiverAddress)
+        public BlockAcknowledgmentRequestFrame(PhysicalAddress transmitterAddress,
+            PhysicalAddress receiverAddress)
         {
             this.FrameControl = new FrameControlField();
             this.Duration = new DurationField();
-            this.ReceiverAddress = ReceiverAddress;
-            this.TransmitterAddress = TransmitterAddress;
+            this.ReceiverAddress = receiverAddress;
+            this.TransmitterAddress = transmitterAddress;
             this.BlockAcknowledgmentControl = new BlockAcknowledgmentControlField();
 
             this.FrameControl.SubType = FrameControlField.FrameSubTypes.ControlBlockAcknowledgmentRequest;

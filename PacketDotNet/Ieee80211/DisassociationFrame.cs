@@ -54,24 +54,24 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DisassociationFrame" /> class.
         /// </summary>
-        /// <param name='SourceAddress'>
+        /// <param name='sourceAddress'>
         ///     Source address.
         /// </param>
-        /// <param name='DestinationAddress'>
+        /// <param name='destinationAddress'>
         ///     Destination address.
         /// </param>
-        /// <param name='BssId'>
+        /// <param name='bssId'>
         ///     Bss identifier (MAC Address of the Access Point).
         /// </param>
-        public DisassociationFrame(PhysicalAddress SourceAddress,
-            PhysicalAddress DestinationAddress,
-            PhysicalAddress BssId)
+        public DisassociationFrame(PhysicalAddress sourceAddress,
+            PhysicalAddress destinationAddress,
+            PhysicalAddress bssId)
         {
             this.FrameControl = new FrameControlField();
             this.Duration = new DurationField();
-            this.DestinationAddress = DestinationAddress;
-            this.SourceAddress = SourceAddress;
-            this.BssId = BssId;
+            this.DestinationAddress = destinationAddress;
+            this.SourceAddress = sourceAddress;
+            this.BssId = bssId;
             this.SequenceControl = new SequenceControlField();
 
             this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementDisassociation;

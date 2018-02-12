@@ -18,12 +18,15 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet.PPP
 {
     /// <summary>
     ///     Values for the Code field of a PPPoE packet
     ///     See http://tools.ietf.org/html/rfc2516
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum PPPoECode : ushort
     {
         /// <summary>

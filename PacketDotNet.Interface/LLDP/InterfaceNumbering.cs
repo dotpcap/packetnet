@@ -31,7 +31,7 @@ namespace PacketDotNet.LLDP
         Unknown,
 
         /// <summary>Interface Index</summary>
-        ifIndex,
+        IfIndex,
 
         /// <summary>System Port Number</summary>
         SystemPortNumber

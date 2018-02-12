@@ -39,7 +39,7 @@ namespace PacketDotNet.GRE
         /// <param name="bas">
         ///     A <see cref="ByteArraySegment" />
         /// </param>
-        public GREPacket(ByteArraySegment bas, Packet ParentPacket)
+        public GREPacket(ByteArraySegment bas, Packet parentPacket)
         {
             // slice off the header portion
             this.HeaderByteArraySegment = new ByteArraySegment(bas)
@@ -54,7 +54,7 @@ namespace PacketDotNet.GRE
             // parse the encapsulated bytes
             this.PayloadPacketOrData =
                 EthernetPacket.ParseEncapsulatedBytes(this.HeaderByteArraySegment, this.Protocol);
-            this.ParentPacket = ParentPacket;
+            this.ParentPacket = parentPacket;
         }
 
 

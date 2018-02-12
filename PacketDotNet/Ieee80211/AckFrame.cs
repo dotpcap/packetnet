@@ -49,14 +49,14 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.AckFrame" /> class.
         /// </summary>
-        /// <param name='ReceiverAddress'>
+        /// <param name='receiverAddress'>
         ///     Receiver address.
         /// </param>
-        public AckFrame(PhysicalAddress ReceiverAddress)
+        public AckFrame(PhysicalAddress receiverAddress)
         {
             this.FrameControl = new FrameControlField();
             this.Duration = new DurationField();
-            this.ReceiverAddress = ReceiverAddress;
+            this.ReceiverAddress = receiverAddress;
 
             this.FrameControl.SubType = FrameControlField.FrameSubTypes.ControlACK;
         }

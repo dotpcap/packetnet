@@ -18,12 +18,15 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 *  Copyright 2017 Chris Morgan <chmorgan@gmail.com>
 */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet
 {
     /// <summary>
     ///     Code constants for link layer null packet payload types.
     ///     See http://www.tcpdump.org/linktypes.html
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum NullPacketType : ushort
     {
         /// <summary>

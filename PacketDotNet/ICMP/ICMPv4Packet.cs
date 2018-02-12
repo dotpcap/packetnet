@@ -35,7 +35,7 @@ namespace PacketDotNet.ICMP
     public class ICMPv4Packet : InternetPacket
     {
 #if DEBUG
-        private static readonly log4net.ILog log =
+        private static readonly log4net.ILog Log =
  log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
@@ -131,7 +131,7 @@ namespace PacketDotNet.ICMP
         /// </param>
         public ICMPv4Packet(ByteArraySegment bas)
         {
-            log.Debug("");
+            Log.Debug("");
 
             this.HeaderByteArraySegment = new ByteArraySegment(bas)
             {
@@ -151,13 +151,13 @@ namespace PacketDotNet.ICMP
         /// <param name="bas">
         ///     A <see cref="ByteArraySegment" />
         /// </param>
-        /// <param name="ParentPacket">
+        /// <param name="parentPacket">
         ///     A <see cref="Packet" />
         /// </param>
         public ICMPv4Packet(ByteArraySegment bas,
-            Packet ParentPacket) : this(bas)
+            Packet parentPacket) : this(bas)
         {
-            this.ParentPacket = ParentPacket;
+            this.ParentPacket = parentPacket;
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>

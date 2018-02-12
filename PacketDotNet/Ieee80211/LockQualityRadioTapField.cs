@@ -30,12 +30,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.LockQualityRadioTapField" /> class.
         /// </summary>
-        /// <param name='SignalQuality'>
+        /// <param name='signalQuality'>
         ///     Signal quality.
         /// </param>
-        public LockQualityRadioTapField(UInt16 SignalQuality)
+        public LockQualityRadioTapField(UInt16 signalQuality)
         {
-            this.SignalQuality = SignalQuality;
+            this.SignalQuality = signalQuality;
         }
 
         /// <summary>Type of the field</summary>

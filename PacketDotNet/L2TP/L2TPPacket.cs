@@ -38,7 +38,7 @@ namespace PacketDotNet.L2TP
         /// <param name="bas">
         ///     A <see cref="ByteArraySegment" />
         /// </param>
-        public L2TPPacket(ByteArraySegment bas, Packet ParentPacket)
+        public L2TPPacket(ByteArraySegment bas, Packet parentPacket)
         {
             // slice off the header portion
             this.HeaderByteArraySegment = new ByteArraySegment(bas)
@@ -64,7 +64,7 @@ namespace PacketDotNet.L2TP
                 this.PayloadPacketOrData.TheByteArraySegment = payload;
             }
 
-            this.ParentPacket = ParentPacket;
+            this.ParentPacket = parentPacket;
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>

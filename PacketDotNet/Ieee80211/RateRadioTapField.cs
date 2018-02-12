@@ -30,12 +30,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.RateRadioTapField" /> class.
         /// </summary>
-        /// <param name='RateMbps'>
+        /// <param name='rateMbps'>
         ///     Rate mbps.
         /// </param>
-        public RateRadioTapField(Double RateMbps)
+        public RateRadioTapField(Double rateMbps)
         {
-            this.RateMbps = RateMbps;
+            this.RateMbps = rateMbps;
         }
 
         /// <summary>Type of the field</summary>

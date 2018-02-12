@@ -32,12 +32,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.TxAttenuationRadioTapField" /> class.
         /// </summary>
-        /// <param name='TxPower'>
+        /// <param name='txPower'>
         ///     Transmit power expressed as unitless distance from max power set at factory calibration. 0 is max power.
         /// </param>
-        public TxAttenuationRadioTapField(Int32 TxPower)
+        public TxAttenuationRadioTapField(Int32 txPower)
         {
-            this.TxPower = TxPower;
+            this.TxPower = txPower;
         }
 
         /// <summary>Type of the field</summary>

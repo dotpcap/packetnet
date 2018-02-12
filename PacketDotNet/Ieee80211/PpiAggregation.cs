@@ -61,12 +61,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiAggregation" /> class.
         /// </summary>
-        /// <param name='InterfaceId'>
+        /// <param name='interfaceId'>
         ///     The interface id.
         /// </param>
-        public PpiAggregation(UInt32 InterfaceId)
+        public PpiAggregation(UInt32 interfaceId)
         {
-            this.InterfaceId = InterfaceId;
+            this.InterfaceId = interfaceId;
         }
 
         /// <summary>

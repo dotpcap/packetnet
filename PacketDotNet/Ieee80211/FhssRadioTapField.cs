@@ -32,16 +32,16 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FhssRadioTapField" /> class.
         /// </summary>
-        /// <param name='ChannelHoppingSet'>
+        /// <param name='channelHoppingSet'>
         ///     Channel hopping set.
         /// </param>
-        /// <param name='Pattern'>
+        /// <param name='pattern'>
         ///     Channel hopping pattern.
         /// </param>
-        public FhssRadioTapField(Byte ChannelHoppingSet, Byte Pattern)
+        public FhssRadioTapField(Byte channelHoppingSet, Byte pattern)
         {
-            this.ChannelHoppingSet = ChannelHoppingSet;
-            this.Pattern = Pattern;
+            this.ChannelHoppingSet = channelHoppingSet;
+            this.Pattern = pattern;
         }
 
         /// <summary>Type of the field</summary>

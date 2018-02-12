@@ -23,6 +23,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 #endregion Header
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PacketDotNet.Ieee80211
 {
@@ -32,6 +33,7 @@ namespace PacketDotNet.Ieee80211
     ///     from PPI v 1.0.10
     /// </summary>
     [Flags]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum PpiFieldType
     {
         /// <summary>

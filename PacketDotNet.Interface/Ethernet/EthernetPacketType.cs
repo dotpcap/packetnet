@@ -15,6 +15,8 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet.Ethernet
 {
     /// Copied from Pcap.Net @ 20091117
@@ -24,6 +26,7 @@ namespace PacketDotNet.Ethernet
     ///     It is used to indicate which protocol is encapsulated in the payload.
     ///     Also contains entries taken from linux/if_ether.h and tcpdump/ethertype.h
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum EthernetPacketType : ushort
     {
         /// <summary>

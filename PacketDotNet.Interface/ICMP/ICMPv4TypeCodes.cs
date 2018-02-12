@@ -18,6 +18,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet.ICMP
 {
     /// <summary>
@@ -27,6 +29,7 @@ namespace PacketDotNet.ICMP
     ///     Note that these values represent the combined
     ///     type and code fields, where the type field is the upper byte
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum ICMPv4TypeCodes : ushort
     {
 #pragma warning disable 1591

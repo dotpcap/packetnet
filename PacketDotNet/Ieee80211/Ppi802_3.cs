@@ -143,16 +143,16 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.Ppi802_3" /> class.
         /// </summary>
-        /// <param name='Flags'>
+        /// <param name='flags'>
         ///     Standard Flags.
         /// </param>
-        /// <param name='Errors'>
+        /// <param name='errors'>
         ///     Error Flags.
         /// </param>
-        public Ppi802_3(StandardFlags Flags, ErrorFlags Errors)
+        public Ppi802_3(StandardFlags flags, ErrorFlags errors)
         {
-            this.Flags = Flags;
-            this.Errors = Errors;
+            this.Flags = flags;
+            this.Errors = errors;
         }
 
         /// <summary>

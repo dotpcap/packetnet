@@ -33,22 +33,22 @@ namespace PacketDotNet.Utils
         /// <param name="Byte">
         ///     A <see cref="System.Byte" />
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         ///     A <see cref="System.Int32" />
         /// </param>
-        /// <param name="Length">
+        /// <param name="length">
         ///     A <see cref="System.Int32" />
         /// </param>
         /// <returns>
         ///     A <see cref="System.String" />
         /// </returns>
         public static String GetString(Byte[] Byte,
-            Int32 Offset,
-            Int32 Length)
+            Int32 offset,
+            Int32 length)
         {
             StringBuilder sb = new StringBuilder();
 
-            for (Int32 i = Offset; i < Offset + Length; i++)
+            for (Int32 i = offset; i < offset + length; i++)
             {
                 sb.AppendFormat("[{0:x2}]", Byte[i]);
             }

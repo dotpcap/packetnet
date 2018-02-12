@@ -36,32 +36,33 @@ namespace Test.Misc
     [TestFixture]
     public class StringOutput
     {
-        private static CaptureFileReaderDevice captureFileReader;
+        private static CaptureFileReaderDevice _captureFileReader;
 
-        private static FileAndPacketIndexes currentFAPI;
+        private static FileAndPacketIndexes _currentFapi;
 
-        private static String currentPacketDescription;
+        private static String _currentPacketDescription;
 
         /// <summary>
         ///     Index into FileAndPacketIndexes.PacketIndex
         /// </summary>
-        private static Int32 currentPacketIndex;
+        private static Int32 _currentPacketIndex;
 
-        private static readonly Int32 expectedTotalPackets;
+        private static readonly Int32 ExpectedTotalPackets;
 
-        private static Int32 fileAndPacketIndex;
+        private static Int32 _fileAndPacketIndex;
 
-        private static readonly List<FileAndPacketIndexes> fileAndPacketIndexes;
-        private static Int32 indexIntoPacketFile;
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        // ReSharper disable once InconsistentNaming
+        private static readonly List<FileAndPacketIndexes> _fileAndPacketIndexes;
+        private static Int32 _indexIntoPacketFile;
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static String packetFileName;
+        private static String _packetFileName;
 
-        private static Int32 totalPacketsReturned;
+        private static Int32 _totalPacketsReturned;
 
         static StringOutput()
         {
-            fileAndPacketIndexes = new List<FileAndPacketIndexes>();
+            _fileAndPacketIndexes = new List<FileAndPacketIndexes>();
 
             /*
              * TODO:
@@ -75,7 +76,7 @@ namespace Test.Misc
             // setup an array of file names and packet indexes
 
             // ethernet arp request and response
-            fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "arp_request_response.pcap",
+            _fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "arp_request_response.pcap",
                 new List<Int32>(new[] {0, 1}),
                 new List<String>(new[]
                 {
@@ -84,21 +85,21 @@ namespace Test.Misc
                 })));
 
             // linux cooked capture, ipv4, tcp
-            fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "LinuxCookedCapture.pcap",
+            _fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "LinuxCookedCapture.pcap",
                 new List<Int32>(new[] {2}),
                 new List<String>(new[] {"linux cooked capture, ipv4, tcp"})));
 
             // ethernet, ipv6, icmpv6
-            fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "ipv6_icmpv6_packet.pcap",
+            _fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "ipv6_icmpv6_packet.pcap",
                 new List<Int32>(new[] {0}),
                 new List<String>(new[] {"ethernet, ipv6, icmpv6"})));
 
             // ethernet, PPPoE, PPP, ipv4, udp
-            fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "PPPoEPPP.pcap",
+            _fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "PPPoEPPP.pcap",
                 new List<Int32>(new[] {1}),
                 new List<String>(new[] {"ethernet, PPPoE, PPP, ipv4, udp"})));
 
-            expectedTotalPackets = 5;
+            ExpectedTotalPackets = 5;
         }
 
         [Test]
@@ -183,64 +184,64 @@ namespace Test.Misc
 
         private static Packet GetNextPacket()
         {
-            if (currentFAPI != null)
+            if (_currentFapi != null)
             {
-                log.DebugFormat("currentFAPI.PacketIndexes.Count {0}," +
+                Log.DebugFormat("currentFAPI.PacketIndexes.Count {0}," +
                                 "currentPacketIndex {1}",
-                    currentFAPI.PacketIndexes.Count,
-                    currentPacketIndex);
+                    _currentFapi.PacketIndexes.Count,
+                    _currentPacketIndex);
             }
             else
             {
-                log.Debug("currentFAPI is null");
+                Log.Debug("currentFAPI is null");
             }
 
             // do we need to open a file up or are we done with the current file?
-            if ((packetFileName == null) ||
-                (currentFAPI == null) ||
-                (currentFAPI.PacketIndexes.Count == currentPacketIndex))
+            if ((_packetFileName == null) ||
+                (_currentFapi == null) ||
+                (_currentFapi.PacketIndexes.Count == _currentPacketIndex))
             {
-                log.Debug("opening a new file up");
+                Log.Debug("opening a new file up");
 
                 // close the open device if there was one
-                if (captureFileReader != null)
+                if (_captureFileReader != null)
                 {
-                    captureFileReader.Close();
-                    captureFileReader = null;
+                    _captureFileReader.Close();
+                    _captureFileReader = null;
                 }
 
                 // do we have any more files to process?
-                if (fileAndPacketIndex >= fileAndPacketIndexes.Count)
+                if (_fileAndPacketIndex >= _fileAndPacketIndexes.Count)
                 {
-                    log.DebugFormat("totalPacketsReturned {0}, expectedTotalPackets {1}",
-                        totalPacketsReturned,
-                        expectedTotalPackets);
+                    Log.DebugFormat("totalPacketsReturned {0}, expectedTotalPackets {1}",
+                        _totalPacketsReturned,
+                        ExpectedTotalPackets);
 
-                    Assert.AreEqual(expectedTotalPackets, totalPacketsReturned,
+                    Assert.AreEqual(ExpectedTotalPackets, _totalPacketsReturned,
                         "expectedTotalPackets does not match totalPacketsReturned");
 
                     return null;
                 }
 
-                currentFAPI = fileAndPacketIndexes[fileAndPacketIndex];
-                currentPacketIndex = 0;
-                packetFileName = currentFAPI.Filename;
+                _currentFapi = _fileAndPacketIndexes[_fileAndPacketIndex];
+                _currentPacketIndex = 0;
+                _packetFileName = _currentFapi.Filename;
 
                 // opening a new file, we are at the first index into the new file
-                indexIntoPacketFile = 0;
+                _indexIntoPacketFile = 0;
 
                 try
                 {
-                    log.DebugFormat("Opening {0}", currentFAPI.Filename);
+                    Log.DebugFormat("Opening {0}", _currentFapi.Filename);
 
-                    captureFileReader = new CaptureFileReaderDevice(currentFAPI.Filename);
-                    captureFileReader.Open();
+                    _captureFileReader = new CaptureFileReaderDevice(_currentFapi.Filename);
+                    _captureFileReader.Open();
 
-                    fileAndPacketIndex++;
+                    _fileAndPacketIndex++;
                 }
                 catch (Exception e)
                 {
-                    log.Error("caught exception", e);
+                    Log.Error("caught exception", e);
                     throw;
                 }
             }
@@ -249,37 +250,37 @@ namespace Test.Misc
 
             do
             {
-                log.DebugFormat("currentPacketIndex {0}", currentPacketIndex);
-                log.DebugFormat("indexIntoPacketFile {0}, currentFAPI.PacketIndexes[currentPacketIndex] {1}",
-                    indexIntoPacketFile,
-                    currentFAPI.PacketIndexes[currentPacketIndex]);
+                Log.DebugFormat("currentPacketIndex {0}", _currentPacketIndex);
+                Log.DebugFormat("indexIntoPacketFile {0}, currentFAPI.PacketIndexes[currentPacketIndex] {1}",
+                    _indexIntoPacketFile,
+                    _currentFapi.PacketIndexes[_currentPacketIndex]);
 
-                log.Debug("retrieving packet");
+                Log.Debug("retrieving packet");
 
                 // read the next packet
-                var packet = captureFileReader.GetNextPacket();
+                var packet = _captureFileReader.GetNextPacket();
                 Assert.IsNotNull(packet, "Expected a valid packet but it was null");
 
                 p = Packet.ParsePacket(packet.LinkLayerType, packet.Data);
 
-                currentPacketDescription = currentFAPI.PacketDescription[currentPacketIndex];
+                _currentPacketDescription = _currentFapi.PacketDescription[_currentPacketIndex];
 
                 // advance our index into the current packet file
-                indexIntoPacketFile++;
-            } while ((indexIntoPacketFile - 1) != currentFAPI.PacketIndexes[currentPacketIndex]);
+                _indexIntoPacketFile++;
+            } while ((_indexIntoPacketFile - 1) != _currentFapi.PacketIndexes[_currentPacketIndex]);
             // does the current index match the index of the packet we want?
 
             // and because we got a packet we advance our index into the FileAndPacketIndex class
-            currentPacketIndex++;
+            _currentPacketIndex++;
 
-            log.Debug("returning packet");
-            totalPacketsReturned++;
+            Log.Debug("returning packet");
+            _totalPacketsReturned++;
             return p;
         }
 
         private void OutputPacket(Packet p, StringOutputType outputType)
         {
-            Console.WriteLine(currentPacketDescription + " - " + outputType);
+            Console.WriteLine(_currentPacketDescription + " - " + outputType);
             Console.Write(p.ToString(outputType));
             if (outputType == StringOutputType.Verbose || outputType == StringOutputType.VerboseColored)
                 Console.Write(p.PrintHex());
@@ -288,18 +289,18 @@ namespace Test.Misc
 
         private void ResetPacketPosition()
         {
-            fileAndPacketIndex = 0;
-            currentPacketIndex = 0;
-            packetFileName = null;
+            _fileAndPacketIndex = 0;
+            _currentPacketIndex = 0;
+            _packetFileName = null;
 
-            indexIntoPacketFile = 0;
+            _indexIntoPacketFile = 0;
 
-            totalPacketsReturned = 0;
+            _totalPacketsReturned = 0;
 
-            if (captureFileReader != null)
+            if (_captureFileReader != null)
             {
-                captureFileReader.Close();
-                captureFileReader = null;
+                _captureFileReader.Close();
+                _captureFileReader = null;
             }
         }
 
@@ -309,13 +310,13 @@ namespace Test.Misc
             public readonly List<String> PacketDescription;
             public readonly List<Int32> PacketIndexes;
 
-            public FileAndPacketIndexes(String Filename,
-                List<Int32> PacketIndexes,
-                List<String> PacketDescription)
+            public FileAndPacketIndexes(String filename,
+                List<Int32> packetIndexes,
+                List<String> packetDescription)
             {
-                this.Filename = Filename;
-                this.PacketIndexes = PacketIndexes;
-                this.PacketDescription = PacketDescription;
+                this.Filename = filename;
+                this.PacketIndexes = packetIndexes;
+                this.PacketDescription = packetDescription;
             }
         }
 

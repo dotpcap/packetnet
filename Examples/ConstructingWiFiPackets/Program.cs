@@ -11,8 +11,8 @@ namespace ConstructingWiFiPackets
 {
     internal class Program
     {
-        private static PhysicalAddress adapterAddress;
-        private static Boolean stopCapturing;
+        private static PhysicalAddress _adapterAddress;
+        private static Boolean _stopCapturing;
 
         private static void device_OnPacketArrival(Object sender, CaptureEventArgs e)
         {
@@ -21,7 +21,7 @@ namespace ConstructingWiFiPackets
             if (p.FrameControl.SubType == FrameControlField.FrameSubTypes.ManagementProbeResponse)
             {
                 ProbeResponseFrame probeResponse = p as ProbeResponseFrame;
-                if (probeResponse.DestinationAddress == adapterAddress)
+                if (probeResponse.DestinationAddress == _adapterAddress)
                 {
                     Console.WriteLine(probeResponse.ToString());
                 }
@@ -31,7 +31,7 @@ namespace ConstructingWiFiPackets
         private static void HandleCancelKeyPress(Object sender, ConsoleCancelEventArgs e)
         {
             Console.WriteLine("-- Stopping capture");
-            stopCapturing = true;
+            _stopCapturing = true;
 
             // tell the handler that we are taking care of shutting down, don't
             // shut us down after we return because we need to do just a little
@@ -85,7 +85,7 @@ namespace ConstructingWiFiPackets
 
             device.Open(DeviceMode.Normal);
             device.FcsValidation = AirPcapValidationType.ACCEPT_CORRECT_FRAMES;
-            adapterAddress = device.MacAddress;
+            _adapterAddress = device.MacAddress;
             device.AirPcapLinkType = AirPcapLinkTypes._802_11;
 
             PhysicalAddress broadcastAddress = PhysicalAddress.Parse("FF-FF-FF-FF-FF-FF");
@@ -115,7 +115,7 @@ namespace ConstructingWiFiPackets
             device.SendPacket(probeBytes, probeBytes.Length - 4);
 
 
-            while (stopCapturing == false)
+            while (_stopCapturing == false)
             {
                 var rawCapture = device.GetNextPacket();
 
@@ -134,7 +134,7 @@ namespace ConstructingWiFiPackets
                 if (p.FrameControl.SubType == FrameControlField.FrameSubTypes.ManagementProbeResponse)
                 {
                     ProbeResponseFrame probeResponse = p as ProbeResponseFrame;
-                    if (probeResponse.DestinationAddress.Equals(adapterAddress))
+                    if (probeResponse.DestinationAddress.Equals(_adapterAddress))
                     {
                         var ie = probeResponse.InformationElements.FindFirstById(InformationElement.ElementId
                             .ServiceSetIdentity);

@@ -76,11 +76,11 @@ namespace Test.PacketType
             [Test]
             public void Test_Constructor_ConstructWithValues()
             {
-                Byte[] BlockAckBitmap = {0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8};
+                Byte[] blockAckBitmap = {0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8};
 
                 BlockAcknowledgmentFrame frame = new BlockAcknowledgmentFrame(PhysicalAddress.Parse("111111111111"),
                     PhysicalAddress.Parse("222222222222"),
-                    BlockAckBitmap);
+                    blockAckBitmap);
 
                 frame.FrameControl.ToDS = false;
                 frame.FrameControl.FromDS = true;
@@ -120,7 +120,7 @@ namespace Test.PacketType
                 Assert.AreEqual("111111111111", recreatedFrame.TransmitterAddress.ToString().ToUpper());
                 Assert.AreEqual("222222222222", recreatedFrame.ReceiverAddress.ToString().ToUpper());
 
-                CollectionAssert.AreEqual(BlockAckBitmap, recreatedFrame.BlockAckBitmap);
+                CollectionAssert.AreEqual(blockAckBitmap, recreatedFrame.BlockAckBitmap);
 
                 Assert.AreEqual(fcs, recreatedFrame.FrameCheckSequence);
             }

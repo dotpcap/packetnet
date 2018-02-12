@@ -39,7 +39,7 @@ namespace PacketDotNet.Ethernet
     public class EthernetPacket : InternetLinkLayerPacket
     {
 #if DEBUG
-        private static readonly log4net.ILog log =
+        private static readonly log4net.ILog Log =
  log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
@@ -161,11 +161,11 @@ namespace PacketDotNet.Ethernet
         /// <summary>
         ///     Construct a new ethernet packet from source and destination mac addresses
         /// </summary>
-        public EthernetPacket(PhysicalAddress SourceHwAddress,
-            PhysicalAddress DestinationHwAddress,
+        public EthernetPacket(PhysicalAddress sourceHwAddress,
+            PhysicalAddress destinationHwAddress,
             EthernetPacketType ethernetPacketType)
         {
-            log.Debug("");
+            Log.Debug("");
 
             // allocate memory for this packet
             Int32 offset = 0;
@@ -174,8 +174,8 @@ namespace PacketDotNet.Ethernet
             this.HeaderByteArraySegment = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
-            this.SourceHwAddress = SourceHwAddress;
-            this.DestinationHwAddress = DestinationHwAddress;
+            this.SourceHwAddress = sourceHwAddress;
+            this.DestinationHwAddress = destinationHwAddress;
             this.Type = ethernetPacketType;
         }
 
@@ -187,7 +187,7 @@ namespace PacketDotNet.Ethernet
         /// </param>
         public EthernetPacket(ByteArraySegment bas)
         {
-            log.Debug("");
+            Log.Debug("");
 
             // slice off the header portion
             this.HeaderByteArraySegment = new ByteArraySegment(bas)
@@ -203,26 +203,26 @@ namespace PacketDotNet.Ethernet
         ///     Used by the EthernetPacket constructor. Located here because the LinuxSLL constructor
         ///     also needs to perform the same operations as it contains an ethernet type
         /// </summary>
-        /// <param name="Header">
+        /// <param name="header">
         ///     A <see cref="ByteArraySegment" />
         /// </param>
-        /// <param name="Type">
+        /// <param name="type">
         ///     A <see cref="EthernetPacketType" />
         /// </param>
         /// <returns>
         ///     A <see cref="PacketOrByteArraySegment" />
         /// </returns>
-        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
-            EthernetPacketType Type)
+        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment header,
+            EthernetPacketType type)
         {
             // slice off the payload
-            var payload = Header.EncapsulatedBytes();
-            log.DebugFormat("payload {0}", payload.ToString());
+            var payload = header.EncapsulatedBytes();
+            Log.DebugFormat("payload {0}", payload.ToString());
 
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
             // parse the encapsulated bytes
-            switch (Type)
+            switch (type)
             {
                 case EthernetPacketType.IpV4:
                     payloadPacketOrData.ThePacket = new IPv4Packet(payload);

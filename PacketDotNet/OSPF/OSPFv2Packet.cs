@@ -34,7 +34,7 @@ namespace PacketDotNet.OSPF
     public abstract class OSPFv2Packet : OSPFPacket
     {
 #if DEBUG
-        private static readonly log4net.ILog log =
+        private static readonly log4net.ILog Log =
  log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't

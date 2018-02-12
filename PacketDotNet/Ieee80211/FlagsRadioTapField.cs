@@ -35,12 +35,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FlagsRadioTapField" /> class.
         /// </summary>
-        /// <param name='Flags'>
+        /// <param name='flags'>
         ///     Flags.
         /// </param>
-        public FlagsRadioTapField(RadioTapFlags Flags)
+        public FlagsRadioTapField(RadioTapFlags flags)
         {
-            this.Flags = Flags;
+            this.Flags = flags;
         }
 
         /// <summary>Type of the field</summary>

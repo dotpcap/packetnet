@@ -29,12 +29,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbmAntennaSignalRadioTapField" /> class.
         /// </summary>
-        /// <param name='AntennaSignalDbm'>
+        /// <param name='antennaSignalDbm'>
         ///     Antenna signal power in dB.
         /// </param>
-        public DbmAntennaSignalRadioTapField(SByte AntennaSignalDbm)
+        public DbmAntennaSignalRadioTapField(SByte antennaSignalDbm)
         {
-            this.AntennaSignalDbm = AntennaSignalDbm;
+            this.AntennaSignalDbm = antennaSignalDbm;
         }
 
         /// <summary>Type of the field</summary>

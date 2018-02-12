@@ -71,11 +71,11 @@ namespace PacketDotNet.Utils
         {
             String longest = "";
 
-            foreach (String L in stringsList)
+            foreach (String l in stringsList)
             {
-                if (L.Length > longest.Length)
+                if (l.Length > longest.Length)
                 {
-                    longest = L;
+                    longest = l;
                 }
             }
 

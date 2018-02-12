@@ -20,6 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PacketDotNet.Ieee80211
 {
@@ -33,6 +34,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Sepcifies the frame types down to the sub type level.
         /// </summary>
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum FrameSubTypes
         {
             /// <summary>

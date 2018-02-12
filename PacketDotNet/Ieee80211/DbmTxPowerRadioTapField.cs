@@ -31,12 +31,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbmTxPowerRadioTapField" /> class.
         /// </summary>
-        /// <param name='TxPowerdBm'>
+        /// <param name='txPowerdBm'>
         ///     Transmit power expressed as dBm (decibels from a 1 milliwatt reference).
         /// </param>
-        public DbmTxPowerRadioTapField(SByte TxPowerdBm)
+        public DbmTxPowerRadioTapField(SByte txPowerdBm)
         {
-            this.TxPowerdBm = TxPowerdBm;
+            this.TxPowerdBm = txPowerdBm;
         }
 
         /// <summary>Type of the field</summary>

@@ -31,12 +31,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.RxFlagsRadioTapField" /> class.
         /// </summary>
-        /// <param name='PlcpCrcCheckFailed'>
+        /// <param name='plcpCrcCheckFailed'>
         ///     PLCP CRC check failed.
         /// </param>
-        public RxFlagsRadioTapField(Boolean PlcpCrcCheckFailed)
+        public RxFlagsRadioTapField(Boolean plcpCrcCheckFailed)
         {
-            this.PlcpCrcCheckFailed = PlcpCrcCheckFailed;
+            this.PlcpCrcCheckFailed = plcpCrcCheckFailed;
         }
 
         /// <summary>Type of the field</summary>

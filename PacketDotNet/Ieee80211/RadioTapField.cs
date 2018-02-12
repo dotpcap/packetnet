@@ -38,8 +38,8 @@ namespace PacketDotNet.Ieee80211
         /// </returns>
         public static RadioTapField Parse(Int32 bitIndex, BinaryReader br)
         {
-            var Type = (RadioTapType) bitIndex;
-            switch (Type)
+            var type = (RadioTapType) bitIndex;
+            switch (type)
             {
                 case RadioTapType.Flags:
                     return new FlagsRadioTapField(br);

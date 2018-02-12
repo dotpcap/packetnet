@@ -216,7 +216,7 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         public static readonly Int32 ElementValuePosition;
 
-        private ByteArraySegment bytes;
+        private ByteArraySegment _bytes;
 
         static InformationElement()
         {
@@ -233,7 +233,7 @@ namespace PacketDotNet.Ieee80211
         /// </param>
         public InformationElement(ByteArraySegment bas)
         {
-            this.bytes = bas;
+            this._bytes = bas;
         }
 
         /// <summary>
@@ -251,7 +251,7 @@ namespace PacketDotNet.Ieee80211
         public InformationElement(ElementId id, Byte[] value)
         {
             var ie = new Byte[ElementIdLength + ElementLengthLength + value.Length];
-            this.bytes = new ByteArraySegment(ie);
+            this._bytes = new ByteArraySegment(ie);
             this.Id = id;
             this.Value = value;
         }
@@ -262,7 +262,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         ///     The bytes.
         /// </value>
-        public Byte[] Bytes => this.bytes.ActualBytes();
+        public Byte[] Bytes => this._bytes.ActualBytes();
 
         /// <summary>
         ///     Gets the length of the element including the Id and Length field
@@ -280,8 +280,8 @@ namespace PacketDotNet.Ieee80211
         /// </value>
         public ElementId Id
         {
-            get => (ElementId) this.bytes.Bytes[this.bytes.Offset + ElementIdPosition];
-            set => this.bytes.Bytes[this.bytes.Offset + ElementIdPosition] = (Byte) value;
+            get => (ElementId) this._bytes.Bytes[this._bytes.Offset + ElementIdPosition];
+            set => this._bytes.Bytes[this._bytes.Offset + ElementIdPosition] = (Byte) value;
         }
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace PacketDotNet.Ieee80211
             get
             {
                 var valueArray = new Byte[this.ValueLength];
-                Array.Copy(this.bytes.Bytes, this.bytes.Offset + ElementValuePosition,
+                Array.Copy(this._bytes.Bytes, this._bytes.Offset + ElementValuePosition,
                     valueArray, 0, this.ValueLength);
                 return valueArray;
             }
@@ -313,16 +313,16 @@ namespace PacketDotNet.Ieee80211
 
                 //Decide if the current ByteArraySegement is big enough to hold the new info element
                 Int32 newIeLength = ElementIdLength + ElementLengthLength + value.Length;
-                if (this.bytes.Length < newIeLength)
+                if (this._bytes.Length < newIeLength)
                 {
                     var newIe = new Byte[newIeLength];
-                    newIe[ElementIdPosition] = this.bytes.Bytes[this.bytes.Offset + ElementIdPosition];
-                    this.bytes = new ByteArraySegment(newIe);
+                    newIe[ElementIdPosition] = this._bytes.Bytes[this._bytes.Offset + ElementIdPosition];
+                    this._bytes = new ByteArraySegment(newIe);
                 }
 
-                Array.Copy(value, 0, this.bytes.Bytes, this.bytes.Offset + ElementValuePosition, value.Length);
-                this.bytes.Length = newIeLength;
-                this.bytes.Bytes[this.bytes.Offset + ElementLengthPosition] = (Byte) value.Length;
+                Array.Copy(value, 0, this._bytes.Bytes, this._bytes.Offset + ElementValuePosition, value.Length);
+                this._bytes.Length = newIeLength;
+                this._bytes.Bytes[this._bytes.Offset + ElementLengthPosition] = (Byte) value.Length;
             }
         }
 
@@ -332,8 +332,8 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         ///     The length.
         /// </value>
-        public Int32 ValueLength => Math.Min((this.bytes.Length - ElementValuePosition),
-            this.bytes.Bytes[this.bytes.Offset + ElementLengthPosition]);
+        public Int32 ValueLength => Math.Min((this._bytes.Length - ElementValuePosition),
+            this._bytes.Bytes[this._bytes.Offset + ElementLengthPosition]);
 
         /// <summary>
         ///     Determines whether the specified <see cref="System.Object" /> is equal to the current

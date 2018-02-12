@@ -8,7 +8,7 @@ namespace CapturingAndParsingPackets
     internal class MainClass
     {
         // used to stop the capture loop
-        private static Boolean stopCapturing;
+        private static Boolean _stopCapturing;
 
         public static void Main(String[] args)
         {
@@ -58,7 +58,7 @@ namespace CapturingAndParsingPackets
             Console.WriteLine("-- Listening on {0}, hit 'ctrl-c' to stop...",
                 device.Name);
 
-            while (stopCapturing == false)
+            while (_stopCapturing == false)
             {
                 var rawCapture = device.GetNextPacket();
 
@@ -90,7 +90,7 @@ namespace CapturingAndParsingPackets
         private static void HandleCancelKeyPress(Object sender, ConsoleCancelEventArgs e)
         {
             Console.WriteLine("-- Stopping capture");
-            stopCapturing = true;
+            _stopCapturing = true;
 
             // tell the handler that we are taking care of shutting down, don't
             // shut us down after we return because we need to do just a little

@@ -18,10 +18,10 @@ namespace PacketDotNet.Utils.IO
         /// </summary>
         public void Dispose()
         {
-            if (this.disposed) return;
+            if (this._disposed) return;
 
             this.Flush();
-            this.disposed = true;
+            this._disposed = true;
             ((IDisposable) this.BaseStream).Dispose();
         }
 
@@ -32,17 +32,17 @@ namespace PacketDotNet.Utils.IO
         /// <summary>
         ///     Whether or not this writer has been disposed yet.
         /// </summary>
-        private Boolean disposed;
+        private Boolean _disposed;
 
         /// <summary>
         ///     Buffer used for temporary storage during conversion from primitives
         /// </summary>
-        private readonly Byte[] buffer = new Byte[16];
+        private readonly Byte[] _buffer = new Byte[16];
 
         /// <summary>
         ///     Buffer used for Write(char)
         /// </summary>
-        private readonly Char[] charBuffer = new Char[1];
+        private readonly Char[] _charBuffer = new Char[1];
 
         #endregion
 
@@ -140,8 +140,8 @@ namespace PacketDotNet.Utils.IO
         /// <param name="value">The value to write</param>
         public void Write(Boolean value)
         {
-            this.BitConverter.CopyBytes(value, this.buffer, 0);
-            this.WriteInternal(this.buffer, 1);
+            this.BitConverter.CopyBytes(value, this._buffer, 0);
+            this.WriteInternal(this._buffer, 1);
         }
 
         /// <summary>
@@ -151,8 +151,8 @@ namespace PacketDotNet.Utils.IO
         /// <param name="value">The value to write</param>
         public void Write(Int16 value)
         {
-            this.BitConverter.CopyBytes(value, this.buffer, 0);
-            this.WriteInternal(this.buffer, 2);
+            this.BitConverter.CopyBytes(value, this._buffer, 0);
+            this.WriteInternal(this._buffer, 2);
         }
 
         /// <summary>
@@ -162,8 +162,8 @@ namespace PacketDotNet.Utils.IO
         /// <param name="value">The value to write</param>
         public void Write(Int32 value)
         {
-            this.BitConverter.CopyBytes(value, this.buffer, 0);
-            this.WriteInternal(this.buffer, 4);
+            this.BitConverter.CopyBytes(value, this._buffer, 0);
+            this.WriteInternal(this._buffer, 4);
         }
 
         /// <summary>
@@ -173,8 +173,8 @@ namespace PacketDotNet.Utils.IO
         /// <param name="value">The value to write</param>
         public void Write(Int64 value)
         {
-            this.BitConverter.CopyBytes(value, this.buffer, 0);
-            this.WriteInternal(this.buffer, 8);
+            this.BitConverter.CopyBytes(value, this._buffer, 0);
+            this.WriteInternal(this._buffer, 8);
         }
 
         /// <summary>
@@ -184,8 +184,8 @@ namespace PacketDotNet.Utils.IO
         /// <param name="value">The value to write</param>
         public void Write(UInt16 value)
         {
-            this.BitConverter.CopyBytes(value, this.buffer, 0);
-            this.WriteInternal(this.buffer, 2);
+            this.BitConverter.CopyBytes(value, this._buffer, 0);
+            this.WriteInternal(this._buffer, 2);
         }
 
         /// <summary>
@@ -195,8 +195,8 @@ namespace PacketDotNet.Utils.IO
         /// <param name="value">The value to write</param>
         public void Write(UInt32 value)
         {
-            this.BitConverter.CopyBytes(value, this.buffer, 0);
-            this.WriteInternal(this.buffer, 4);
+            this.BitConverter.CopyBytes(value, this._buffer, 0);
+            this.WriteInternal(this._buffer, 4);
         }
 
         /// <summary>
@@ -206,8 +206,8 @@ namespace PacketDotNet.Utils.IO
         /// <param name="value">The value to write</param>
         public void Write(UInt64 value)
         {
-            this.BitConverter.CopyBytes(value, this.buffer, 0);
-            this.WriteInternal(this.buffer, 8);
+            this.BitConverter.CopyBytes(value, this._buffer, 0);
+            this.WriteInternal(this._buffer, 8);
         }
 
         /// <summary>
@@ -217,8 +217,8 @@ namespace PacketDotNet.Utils.IO
         /// <param name="value">The value to write</param>
         public void Write(Single value)
         {
-            this.BitConverter.CopyBytes(value, this.buffer, 0);
-            this.WriteInternal(this.buffer, 4);
+            this.BitConverter.CopyBytes(value, this._buffer, 0);
+            this.WriteInternal(this._buffer, 4);
         }
 
         /// <summary>
@@ -228,8 +228,8 @@ namespace PacketDotNet.Utils.IO
         /// <param name="value">The value to write</param>
         public void Write(Double value)
         {
-            this.BitConverter.CopyBytes(value, this.buffer, 0);
-            this.WriteInternal(this.buffer, 8);
+            this.BitConverter.CopyBytes(value, this._buffer, 0);
+            this.WriteInternal(this._buffer, 8);
         }
 
         /// <summary>
@@ -239,8 +239,8 @@ namespace PacketDotNet.Utils.IO
         /// <param name="value">The value to write</param>
         public void Write(Decimal value)
         {
-            this.BitConverter.CopyBytes(value, this.buffer, 0);
-            this.WriteInternal(this.buffer, 16);
+            this.BitConverter.CopyBytes(value, this._buffer, 0);
+            this.WriteInternal(this._buffer, 16);
         }
 
         /// <summary>
@@ -249,8 +249,8 @@ namespace PacketDotNet.Utils.IO
         /// <param name="value">The value to write</param>
         public void Write(Byte value)
         {
-            this.buffer[0] = value;
-            this.WriteInternal(this.buffer, 1);
+            this._buffer[0] = value;
+            this.WriteInternal(this._buffer, 1);
         }
 
         /// <summary>
@@ -259,8 +259,8 @@ namespace PacketDotNet.Utils.IO
         /// <param name="value">The value to write</param>
         public void Write(SByte value)
         {
-            this.buffer[0] = unchecked((Byte) value);
-            this.WriteInternal(this.buffer, 1);
+            this._buffer[0] = unchecked((Byte) value);
+            this.WriteInternal(this._buffer, 1);
         }
 
         /// <summary>
@@ -295,8 +295,8 @@ namespace PacketDotNet.Utils.IO
         /// <param name="value">The value to write</param>
         public void Write(Char value)
         {
-            this.charBuffer[0] = value;
-            this.Write(this.charBuffer);
+            this._charBuffer[0] = value;
+            this.Write(this._charBuffer);
         }
 
         /// <summary>
@@ -350,13 +350,13 @@ namespace PacketDotNet.Utils.IO
             Int32 index = 0;
             while (value >= 128)
             {
-                this.buffer[index++] = (Byte) ((value & 0x7f) | 0x80);
+                this._buffer[index++] = (Byte) ((value & 0x7f) | 0x80);
                 value = value >> 7;
                 index++;
             }
 
-            this.buffer[index++] = (Byte) value;
-            this.BaseStream.Write(this.buffer, 0, index);
+            this._buffer[index++] = (Byte) value;
+            this.BaseStream.Write(this._buffer, 0, index);
         }
 
         #endregion
@@ -368,7 +368,7 @@ namespace PacketDotNet.Utils.IO
         /// </summary>
         private void CheckDisposed()
         {
-            if (this.disposed)
+            if (this._disposed)
             {
                 throw new ObjectDisposedException("EndianBinaryWriter");
             }

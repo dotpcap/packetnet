@@ -75,28 +75,28 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BeaconFrame" /> class.
         /// </summary>
-        /// <param name='SourceAddress'>
+        /// <param name='sourceAddress'>
         ///     Source address.
         /// </param>
-        /// <param name='BssId'>
+        /// <param name='bssId'>
         ///     Bss identifier (MAC Address of the Access Point).
         /// </param>
-        /// <param name='InformationElements'>
+        /// <param name='informationElements'>
         ///     Information elements.
         /// </param>
-        public BeaconFrame(PhysicalAddress SourceAddress,
-            PhysicalAddress BssId,
-            InformationElementList InformationElements)
+        public BeaconFrame(PhysicalAddress sourceAddress,
+            PhysicalAddress bssId,
+            InformationElementList informationElements)
         {
             this.FrameControl = new FrameControlField();
             this.Duration = new DurationField();
             this.SequenceControl = new SequenceControlField();
             this.CapabilityInformation = new CapabilityInformationField();
-            this.InformationElements = new InformationElementList(InformationElements);
+            this.InformationElements = new InformationElementList(informationElements);
             this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementBeacon;
-            this.SourceAddress = SourceAddress;
+            this.SourceAddress = sourceAddress;
             this.DestinationAddress = PhysicalAddress.Parse("FF-FF-FF-FF-FF-FF");
-            this.BssId = BssId;
+            this.BssId = bssId;
             this.BeaconInterval = 100;
         }
 

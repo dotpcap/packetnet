@@ -50,19 +50,19 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ContentionFreeEndFrame" /> class.
         /// </summary>
-        /// <param name='ReceiverAddress'>
+        /// <param name='receiverAddress'>
         ///     Receiver address.
         /// </param>
-        /// <param name='BssId'>
+        /// <param name='bssId'>
         ///     Bss identifier (MAC Address of the Access Point).
         /// </param>
-        public ContentionFreeEndFrame(PhysicalAddress ReceiverAddress,
-            PhysicalAddress BssId)
+        public ContentionFreeEndFrame(PhysicalAddress receiverAddress,
+            PhysicalAddress bssId)
         {
             this.FrameControl = new FrameControlField();
             this.Duration = new DurationField();
-            this.ReceiverAddress = ReceiverAddress;
-            this.BssId = BssId;
+            this.ReceiverAddress = receiverAddress;
+            this.BssId = bssId;
 
             this.FrameControl.SubType = FrameControlField.FrameSubTypes.ControlCFEnd;
         }

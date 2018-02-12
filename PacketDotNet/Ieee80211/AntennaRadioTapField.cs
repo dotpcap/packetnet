@@ -29,12 +29,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.AntennaRadioTapField" /> class.
         /// </summary>
-        /// <param name='Antenna'>
+        /// <param name='antenna'>
         ///     Antenna index of the Rx/Tx antenna for this packet. The first antenna is antenna 0.
         /// </param>
-        public AntennaRadioTapField(Byte Antenna)
+        public AntennaRadioTapField(Byte antenna)
         {
-            this.Antenna = Antenna;
+            this.Antenna = antenna;
         }
 
         /// <summary>Type of the field</summary>

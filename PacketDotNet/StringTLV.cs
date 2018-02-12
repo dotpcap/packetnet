@@ -54,17 +54,17 @@ namespace PacketDotNet
         /// <param name="tlvType">
         ///     A <see cref="TLVTypes" />
         /// </param>
-        /// <param name="StringValue">
+        /// <param name="stringValue">
         ///     A <see cref="System.String" />
         /// </param>
-        public StringTLV(TLVTypes tlvType, String StringValue)
+        public StringTLV(TLVTypes tlvType, String stringValue)
         {
             var bytes = new Byte[TLVTypeLength.TypeLengthLength];
             var offset = 0;
             this.TLVData = new ByteArraySegment(bytes, offset, bytes.Length);
 
             this.Type = tlvType;
-            this.StringValue = StringValue;
+            this.StringValue = stringValue;
         }
 
         #endregion

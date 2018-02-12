@@ -329,12 +329,12 @@ namespace PacketDotNet.Tcp
             Log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            this.HeaderByteArraySegment = new ByteArraySegment(bas)
-            {
-                // NOTE: we update the Length field AFTER the header field because
-                // we need the header to be valid to retrieve the value of DataOffset
-                Length = this.DataOffset * 4
-            };
+            // ReSharper disable once UseObjectOrCollectionInitializer
+            this.HeaderByteArraySegment = new ByteArraySegment(bas);
+
+            // NOTE: we update the Length field AFTER the header field because
+            // we need the header to be valid to retrieve the value of DataOffset
+            this.HeaderByteArraySegment.Length = this.DataOffset * 4;
 
             // store the payload bytes
             this.PayloadPacketOrData = new PacketOrByteArraySegment

@@ -26,14 +26,15 @@ using PacketDotNet.Utils.Conversion;
 namespace PacketDotNet.Drda
 {
     /// <summary>
-    /// DrdaPacket
-    /// See: https://en.wikipedia.org/wiki/Distributed_Data_Management_Architecture
+    ///     DrdaPacket
+    ///     See: https://en.wikipedia.org/wiki/Distributed_Data_Management_Architecture
     /// </summary>
     [Serializable]
-    public class DrdaPacket:Packet
+    public class DrdaPacket : Packet
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
@@ -45,7 +46,7 @@ namespace PacketDotNet.Drda
         private List<DrdaDDMPacket> _ddmList;
 
         /// <summary>
-        /// Decde DDM Packet into List
+        ///     Decde DDM Packet into List
         /// </summary>
         public List<DrdaDDMPacket> DrdaDDMPackets
         {
@@ -55,6 +56,7 @@ namespace PacketDotNet.Drda
                 {
                     this._ddmList = new List<DrdaDDMPacket>();
                 }
+
                 if (this._ddmList.Count > 0) return this._ddmList;
                 Int32 startOffset = this.HeaderByteArraySegment.Offset;
                 while (startOffset < this.HeaderByteArraySegment.BytesLength)
@@ -65,15 +67,17 @@ namespace PacketDotNet.Drda
                         var ddmBas = new ByteArraySegment(this.HeaderByteArraySegment.Bytes, startOffset, length);
                         this._ddmList.Add(new DrdaDDMPacket(ddmBas, this));
                     }
+
                     startOffset += length;
                 }
+
                 Log.DebugFormat("DrdaDDMPacket.Count {0}", this._ddmList.Count);
                 return this._ddmList;
             }
         }
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="bas"></param>
         public DrdaPacket(ByteArraySegment bas)
@@ -91,11 +95,11 @@ namespace PacketDotNet.Drda
         }
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="bas"></param>
         /// <param name="parentPacket"></param>
-        public DrdaPacket(ByteArraySegment bas,Packet parentPacket) : this(bas)
+        public DrdaPacket(ByteArraySegment bas, Packet parentPacket) : this(bas)
         {
             Log.DebugFormat("ParentPacket.GetType() {0}", parentPacket.GetType());
 
@@ -103,7 +107,6 @@ namespace PacketDotNet.Drda
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="outputFormat"></param>
         /// <returns></returns>

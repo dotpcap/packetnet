@@ -30,7 +30,7 @@ namespace Test.PacketType
     public class Vlan802_1QTest
     {
         /// <summary>
-        /// Test that a vlan packet can be properly parsed
+        ///     Test that a vlan packet can be properly parsed
         /// </summary>
         [Test]
         public void ParsingVlanPacket()
@@ -48,7 +48,7 @@ namespace Test.PacketType
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(p.ToString(StringOutputType.Verbose));
 
-            var vlanTag = (Ieee8021QPacket)p.Extract(typeof(Ieee8021QPacket));
+            var vlanTag = (Ieee8021QPacket) p.Extract(typeof(Ieee8021QPacket));
             Assert.AreEqual(IeeeP8021PPriorities.BestEffort_1, vlanTag.PriorityControlPoint);
             var tagId = 102;
             Assert.AreEqual(tagId, vlanTag.VLANIdentifier);

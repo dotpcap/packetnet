@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Conversion;
@@ -25,14 +26,15 @@ using PacketDotNet.Utils.Conversion;
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// Tlv type and length are 2 bytes
-    /// See http://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol#Frame_structure
+    ///     Tlv type and length are 2 bytes
+    ///     See http://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol#Frame_structure
     /// </summary>
     [Serializable]
     public class TLVTypeLength
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
@@ -42,7 +44,7 @@ namespace PacketDotNet.LLDP
 #endif
 
         /// <summary>
-        /// Length in bytes of the tlv type and length fields
+        ///     Length in bytes of the tlv type and length fields
         /// </summary>
         public const Int32 TypeLengthLength = 2;
 
@@ -56,18 +58,18 @@ namespace PacketDotNet.LLDP
         private readonly ByteArraySegment _byteArraySegment;
 
         /// <summary>
-        /// Construct a TLVTypeLength for a TLV
+        ///     Construct a TLVTypeLength for a TLV
         /// </summary>
         /// <param name="byteArraySegment">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
-        public TLVTypeLength (ByteArraySegment byteArraySegment)
+        public TLVTypeLength(ByteArraySegment byteArraySegment)
         {
             this._byteArraySegment = byteArraySegment;
         }
 
         /// <value>
-        /// The TLV Value's Type
+        ///     The TLV Value's Type
         /// </value>
         public TLVTypes Type
         {
@@ -76,7 +78,7 @@ namespace PacketDotNet.LLDP
                 // get the type
                 UInt16 typeAndLength = this.TypeAndLength;
                 // remove the length info
-                return (TLVTypes)(typeAndLength >> LengthBits);
+                return (TLVTypes) (typeAndLength >> LengthBits);
             }
 
             set
@@ -84,18 +86,18 @@ namespace PacketDotNet.LLDP
                 Log.DebugFormat("value of {0}", value);
 
                 // shift type into the type position
-                var type = (UInt16)((UInt16)value << LengthBits);
+                var type = (UInt16) ((UInt16) value << LengthBits);
                 // save the old length
-                UInt16 length = (UInt16)(LengthMask & this.TypeAndLength);
+                UInt16 length = (UInt16) (LengthMask & this.TypeAndLength);
                 // set the type
-                this.TypeAndLength = (UInt16)(type | length);
+                this.TypeAndLength = (UInt16) (type | length);
             }
         }
 
         /// <value>
-        /// The TLV Value's Length
-        /// NOTE: Value is the length of the TLV Value only, does not include the length
-        ///       of the type and length fields
+        ///     The TLV Value's Length
+        ///     NOTE: Value is the length of the TLV Value only, does not include the length
+        ///     of the type and length fields
         /// </value>
         public Int32 Length
         {
@@ -113,18 +115,25 @@ namespace PacketDotNet.LLDP
             {
                 Log.DebugFormat("value {0}", value);
 
-                if(value < 0) { throw new ArgumentOutOfRangeException("Length", "Length must be a positive value"); }
-                if(value > MaximumTLVLength) { throw new ArgumentOutOfRangeException("Length", "The maximum value for a TLV length is 511"); }
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException("Length", "Length must be a positive value");
+                }
+
+                if (value > MaximumTLVLength)
+                {
+                    throw new ArgumentOutOfRangeException("Length", "The maximum value for a TLV length is 511");
+                }
 
                 // save the old type
-                UInt16 type = (UInt16)(TypeMask & this.TypeAndLength);
+                UInt16 type = (UInt16) (TypeMask & this.TypeAndLength);
                 // set the length
-                this.TypeAndLength = (UInt16)(type | value);
+                this.TypeAndLength = (UInt16) (type | value);
             }
         }
 
         /// <value>
-        /// A unsigned short representing the concatenated Type and Length
+        ///     A unsigned short representing the concatenated Type and Length
         /// </value>
         private UInt16 TypeAndLength
         {

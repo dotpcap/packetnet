@@ -19,12 +19,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.IO;
 using NUnit.Framework;
-using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
-using System.IO;
 using PacketDotNet.Utils.Conversion;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -33,8 +33,58 @@ namespace Test.PacketType
         [TestFixture]
         public class RadioPacketTest
         {
+            [Test]
+            public void ConstructFrameWithSinglePresenceField()
+            {
+                RadioPacket p = new RadioPacket();
+
+                var expectedLength = 8;
+                Assert.AreEqual(expectedLength, p.Length);
+
+                FlagsRadioTapField flagsField = new FlagsRadioTapField();
+                flagsField.Flags |= RadioTapFlags.FcsIncludedInFrame;
+                flagsField.Flags |= RadioTapFlags.WepEncrypted;
+                p.Add(flagsField);
+
+                expectedLength += flagsField.Length;
+                Assert.AreEqual(expectedLength, p.Length);
+
+                //We will add the noise field before the signal field. This is not the order required
+                //for radiotap and so will test that the fields are correctly reordered when written
+                DbAntennaNoiseRadioTapField dbAntennaNoiseField = new DbAntennaNoiseRadioTapField
+                {
+                    AntennaNoisedB = 33
+                };
+                p.Add(dbAntennaNoiseField);
+
+                expectedLength += dbAntennaNoiseField.Length;
+                Assert.AreEqual(expectedLength, p.Length);
+
+                DbAntennaSignalRadioTapField dbAntennaSignalField = new DbAntennaSignalRadioTapField
+                {
+                    SignalStrengthdB = 44
+                };
+                p.Add(dbAntennaSignalField);
+
+                expectedLength += dbAntennaSignalField.Length;
+                Assert.AreEqual(expectedLength, p.Length);
+
+                //we will just put a single byte of data because we dont want it to be parsed into 
+                //an 802.11 frame in this test
+                p.PayloadData = new Byte[] {0xFF};
+
+                var frameBytes = p.Bytes;
+
+                RadioPacket recreatedFrame = Packet.ParsePacket(LinkLayers.Ieee80211_Radio, frameBytes) as RadioPacket;
+
+                Assert.IsNotNull(p[RadioTapType.Flags]);
+                Assert.IsNotNull(p[RadioTapType.DbAntennaSignal]);
+                Assert.IsNotNull(p[RadioTapType.DbAntennaNoise]);
+                Assert.AreEqual(new Byte[] {0xFF}, recreatedFrame.PayloadData);
+            }
+
             /// <summary>
-            /// Test that parsing an ip packet yields the proper field values
+            ///     Test that parsing an ip packet yields the proper field values
             /// </summary>
             [Test]
             public void ReadingPacketsFromFile()
@@ -58,108 +108,61 @@ namespace Test.PacketType
                 Assert.IsNotNull(macFrame);
                 Assert.IsTrue(macFrame.AppendFcs);
             }
-			
-			[Test]
-			public void ReadPacketWithNoFcs()
-			{
-				var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_radio_without_fcs.pcap");
-                dev.Open ();
-                var rawCapture = dev.GetNextPacket ();
-                dev.Close ();
-                
-                RadioPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
-                Assert.IsNotNull (p.PayloadPacket);
+
+            [Test]
+            public void ReadPacketWithNoFcs()
+            {
+                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_radio_without_fcs.pcap");
+                dev.Open();
+                var rawCapture = dev.GetNextPacket();
+                dev.Close();
+
+                RadioPacket p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
+                Assert.IsNotNull(p.PayloadPacket);
 
                 TsftRadioTapField tsftField = p[RadioTapType.Tsft] as TsftRadioTapField;
                 Assert.IsNotNull(tsftField);
                 Assert.AreEqual(38724775, tsftField.TimestampUsec);
-                
+
                 FlagsRadioTapField flagsField = p[RadioTapType.Flags] as FlagsRadioTapField;
                 Assert.IsNotNull(flagsField);
-                Assert.AreEqual(0, (Int32)flagsField.Flags);
-                
+                Assert.AreEqual(0, (Int32) flagsField.Flags);
+
                 RateRadioTapField rateField = p[RadioTapType.Rate] as RateRadioTapField;
                 Assert.IsNotNull(rateField);
                 Assert.AreEqual(1, rateField.RateMbps);
-                    
+
                 ChannelRadioTapField channelField = p[RadioTapType.Channel] as ChannelRadioTapField;
                 Assert.IsNotNull(channelField);
                 Assert.AreEqual(2462, channelField.FrequencyMHz);
                 Assert.AreEqual(11, channelField.Channel);
                 Assert.AreEqual(RadioTapChannelFlags.Channel2Ghz | RadioTapChannelFlags.Cck, channelField.Flags);
-                
-                DbmAntennaSignalRadioTapField dbmSignalField = p[RadioTapType.DbmAntennaSignal] as DbmAntennaSignalRadioTapField;
+
+                DbmAntennaSignalRadioTapField dbmSignalField =
+                    p[RadioTapType.DbmAntennaSignal] as DbmAntennaSignalRadioTapField;
                 Assert.IsNotNull(dbmSignalField);
                 Assert.AreEqual(-61, dbmSignalField.AntennaSignalDbm);
-                
-                DbmAntennaNoiseRadioTapField dbmNoiseField = p[RadioTapType.DbmAntennaNoise] as DbmAntennaNoiseRadioTapField;
+
+                DbmAntennaNoiseRadioTapField dbmNoiseField =
+                    p[RadioTapType.DbmAntennaNoise] as DbmAntennaNoiseRadioTapField;
                 Assert.IsNotNull(dbmNoiseField);
                 Assert.AreEqual(-84, dbmNoiseField.AntennaNoisedBm);
-                
+
                 AntennaRadioTapField antennaField = p[RadioTapType.Antenna] as AntennaRadioTapField;
                 Assert.IsNotNull(antennaField);
                 Assert.AreEqual(0, antennaField.Antenna);
-                
-                DbAntennaSignalRadioTapField dbSignalField = p[RadioTapType.DbAntennaSignal] as DbAntennaSignalRadioTapField;
+
+                DbAntennaSignalRadioTapField dbSignalField =
+                    p[RadioTapType.DbAntennaSignal] as DbAntennaSignalRadioTapField;
                 Assert.IsNotNull(dbSignalField);
                 Assert.AreEqual(23, dbSignalField.SignalStrengthdB);
-                
+
                 MacFrame macFrame = p.PayloadPacket as MacFrame;
                 Assert.IsFalse(macFrame.AppendFcs);
                 Assert.IsFalse(macFrame.FCSValid);
-			}
-   
-            [Test]
-            public void ConstructFrameWithSinglePresenceField()
-            {
-                RadioPacket p = new RadioPacket();
-                
-                var expectedLength = 8;
-                Assert.AreEqual(expectedLength, p.Length);
-                
-                FlagsRadioTapField flagsField = new FlagsRadioTapField();
-                flagsField.Flags |= RadioTapFlags.FcsIncludedInFrame;
-                flagsField.Flags |= RadioTapFlags.WepEncrypted;
-                p.Add(flagsField);
-                
-                expectedLength += flagsField.Length;
-                Assert.AreEqual(expectedLength, p.Length);
-
-                //We will add the noise field before the signal field. This is not the order required
-                //for radiotap and so will test that the fields are correctly reordered when written
-                DbAntennaNoiseRadioTapField dbAntennaNoiseField = new DbAntennaNoiseRadioTapField
-                {
-                    AntennaNoisedB = 33
-                };
-                p.Add(dbAntennaNoiseField);
-                
-                expectedLength += dbAntennaNoiseField.Length;
-                Assert.AreEqual(expectedLength, p.Length);
-
-                DbAntennaSignalRadioTapField dbAntennaSignalField = new DbAntennaSignalRadioTapField
-                {
-                    SignalStrengthdB = 44
-                };
-                p.Add(dbAntennaSignalField);
-                
-                expectedLength += dbAntennaSignalField.Length;
-                Assert.AreEqual(expectedLength, p.Length);
-                
-                //we will just put a single byte of data because we dont want it to be parsed into 
-                //an 802.11 frame in this test
-                p.PayloadData = new Byte[]{0xFF};
-                
-                var frameBytes = p.Bytes;
-                
-                RadioPacket recreatedFrame = Packet.ParsePacket(LinkLayers.Ieee80211_Radio, frameBytes) as RadioPacket;
-                
-                Assert.IsNotNull(p[RadioTapType.Flags]);
-                Assert.IsNotNull(p[RadioTapType.DbAntennaSignal]);
-                Assert.IsNotNull(p[RadioTapType.DbAntennaNoise]);
-                Assert.AreEqual(new Byte[]{0xFF}, recreatedFrame.PayloadData);
             }
-            
-            
+
+
             [Test]
             public void RemoveRadioTapField()
             {
@@ -182,11 +185,11 @@ namespace Test.PacketType
                 Assert.IsNotNull(macFrame);
                 Assert.IsTrue(macFrame.AppendFcs);
                 Assert.IsTrue(macFrame.FCSValid);
-                
+
                 //Now remove a couple of radio tap fields and check that it is still valid
                 p.Remove(RadioTapType.Rate);
                 p.Remove(RadioTapType.Antenna);
-                
+
                 RadioPacket recreatedFrame = Packet.ParsePacket(rawCapture.LinkLayerType, p.Bytes) as RadioPacket;
                 Assert.IsNotNull(recreatedFrame);
                 Assert.IsNotNull(recreatedFrame[RadioTapType.Flags]);
@@ -202,41 +205,9 @@ namespace Test.PacketType
                 Assert.IsTrue(recreatedMacFrame.AppendFcs);
                 Assert.IsTrue(recreatedMacFrame.FCSValid);
             }
-            
+
             [Test]
-            public void UnhandledRadioTapField()
-            {
-                MemoryStream ms = new MemoryStream();
-                BinaryWriter bs = new BinaryWriter(ms);
-                bs.Write((Byte)0x0); //version
-                bs.Write((Byte)0x0); //pad
-                bs.Write((UInt16) 0x0010); //length
-                bs.Write((UInt32) 0x80000002); //present 1 (wth flags field)
-                bs.Write((UInt32) 0x00010000); //present 2 (with unhandled field)
-                bs.Write((UInt16) 0x0010); //Flags field (FCS included flag set)
-                bs.Write((UInt16) 0x1234); //a made up field that we want to keep even though we dont know what it is
-                
-                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_plus_radiotap_header.pcap");
-                dev.Open();
-                var rawCapture = dev.GetNextPacket();
-                dev.Close();
-    
-                RadioPacket anotherRadioPacket = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
-                bs.Write(anotherRadioPacket.PayloadPacket.Bytes);
-                
-                var radioTap = ms.ToArray();
-                
-                RadioPacket p = Packet.ParsePacket(LinkLayers.Ieee80211_Radio, radioTap) as RadioPacket;
-                Assert.AreEqual(16, p.Length);
-                p.Add(new TsftRadioTapField(0x123456789));
-                RadioPacket finalFrame = Packet.ParsePacket(LinkLayers.Ieee80211_Radio, p.Bytes) as RadioPacket;
-                
-                Assert.AreEqual(24, finalFrame.Length);
-                Assert.AreEqual(0x1234, EndianBitConverter.Little.ToUInt16(finalFrame.Bytes, finalFrame.Length - 2));
-            }
-            
-            [Test]
-            public void TestContainsField ()
+            public void TestContainsField()
             {
                 var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_plus_radiotap_header.pcap");
                 dev.Open();
@@ -248,6 +219,39 @@ namespace Test.PacketType
                 Assert.IsTrue(p.Contains(RadioTapType.Flags));
                 Assert.IsFalse(p.Contains(RadioTapType.Fhss));
             }
-        } 
+
+            [Test]
+            public void UnhandledRadioTapField()
+            {
+                MemoryStream ms = new MemoryStream();
+                BinaryWriter bs = new BinaryWriter(ms);
+                bs.Write((Byte) 0x0); //version
+                bs.Write((Byte) 0x0); //pad
+                bs.Write((UInt16) 0x0010); //length
+                bs.Write(0x80000002); //present 1 (wth flags field)
+                bs.Write((UInt32) 0x00010000); //present 2 (with unhandled field)
+                bs.Write((UInt16) 0x0010); //Flags field (FCS included flag set)
+                bs.Write((UInt16) 0x1234); //a made up field that we want to keep even though we dont know what it is
+
+                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_plus_radiotap_header.pcap");
+                dev.Open();
+                var rawCapture = dev.GetNextPacket();
+                dev.Close();
+
+                RadioPacket anotherRadioPacket =
+                    Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
+                bs.Write(anotherRadioPacket.PayloadPacket.Bytes);
+
+                var radioTap = ms.ToArray();
+
+                RadioPacket p = Packet.ParsePacket(LinkLayers.Ieee80211_Radio, radioTap) as RadioPacket;
+                Assert.AreEqual(16, p.Length);
+                p.Add(new TsftRadioTapField(0x123456789));
+                RadioPacket finalFrame = Packet.ParsePacket(LinkLayers.Ieee80211_Radio, p.Bytes) as RadioPacket;
+
+                Assert.AreEqual(24, finalFrame.Length);
+                Assert.AreEqual(0x1234, EndianBitConverter.Little.ToUInt16(finalFrame.Bytes, finalFrame.Length - 2));
+            }
+        }
     }
 }

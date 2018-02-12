@@ -23,24 +23,25 @@ using System;
 namespace PacketDotNet
 {
     /// <summary>
-    /// The fields in a Null packet
-    /// See http://www.tcpdump.org/linktypes.html
+    ///     The fields in a Null packet
+    ///     See http://www.tcpdump.org/linktypes.html
     /// </summary>
     public class NullFields
     {
         /// <summary>
-        /// Length of the Protocol field in bytes, the field is of type
+        ///     Length of the Protocol field in bytes, the field is of type
         /// </summary>
         public static readonly Int32 ProtocolLength = 4;
 
         /// <summary>
-        /// Offset from the start of the packet where the Protocol field is located
-        /// </summary>
-        public static readonly Int32 ProtocolPosition = 0;
-
-        /// <summary>
-        /// The length of the header
+        ///     The length of the header
         /// </summary>
         public static readonly Int32 HeaderLength = ProtocolLength;
+
+
+        /// <summary>
+        ///     Offset from the start of the packet where the Protocol field is located
+        /// </summary>
+        public static readonly Int32 ProtocolPosition = 0;
     }
 }

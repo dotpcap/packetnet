@@ -24,14 +24,14 @@ using PacketDotNet.PPP;
 namespace PacketDotNet.OSPF
 {
     /// <summary>
-    /// Represents an OSPF packet. OSPF is a dynamic routing IGP protocol
-    /// OSPF Version 2 (for IPv4) is defined in RFC 2328.
-    /// OSPF Version 3 (for IPv6) is defined in RFC 5340.
+    ///     Represents an OSPF packet. OSPF is a dynamic routing IGP protocol
+    ///     OSPF Version 2 (for IPv4) is defined in RFC 2328.
+    ///     OSPF Version 3 (for IPv6) is defined in RFC 5340.
     /// </summary>
     public abstract class OSPFPacket : Packet
     {
         /// <summary>
-        /// Constructs the right version and type of an OSPFPacket
+        ///     Constructs the right version and type of an OSPFPacket
         /// </summary>
         /// <param name="payload">The bytes from which the packet is conctructed</param>
         /// <param name="offset">The offset of this packet from the parent packet</param>
@@ -45,7 +45,7 @@ namespace PacketDotNet.OSPF
                 throw new Exception("No such OSPF version: " + v);
             }
 
-            switch ((OSPFVersion)v)
+            switch ((OSPFVersion) v)
             {
                 case OSPFVersion.OSPFv2:
                     return ConstructV2Packet(payload, offset);
@@ -61,7 +61,7 @@ namespace PacketDotNet.OSPF
         private static OSPFv2Packet ConstructV2Packet(Byte[] payload, Int32 offset)
         {
             OSPFv2Packet p;
-            OSPFPacketType type = (OSPFPacketType)payload[offset + OSPFv2Fields.TypePosition];
+            OSPFPacketType type = (OSPFPacketType) payload[offset + OSPFv2Fields.TypePosition];
 
             switch (type)
             {
@@ -78,7 +78,7 @@ namespace PacketDotNet.OSPF
                     p = new OSPFv2LSRequestPacket(payload, offset);
                     break;
                 case OSPFPacketType.LinkStateUpdate:
-                    p = new OSPFv2LSUpdatePacket(payload,offset);
+                    p = new OSPFv2LSUpdatePacket(payload, offset);
                     break;
                 default:
                     throw new Exception("Malformed OSPF packet");

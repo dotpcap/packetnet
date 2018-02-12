@@ -20,10 +20,10 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
-using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Ethernet;
 using PacketDotNet.GRE;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -43,11 +43,9 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var gerp = (GREPacket)p.Extract(typeof(GREPacket));
+            var gerp = (GREPacket) p.Extract(typeof(GREPacket));
             Assert.AreEqual(gerp.Protocol, EthernetPacketType.IpV6);
             Console.WriteLine(gerp.GetType());
-
-
-        }        
+        }
     }
 }

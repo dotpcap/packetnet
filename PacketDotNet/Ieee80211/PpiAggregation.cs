@@ -4,8 +4,8 @@ using System.IO;
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
-    /// The PPI Aggregation field is used to identify which physical interface a frame was collected on
-    /// when multiple capture interfaces are in use.
+    ///     The PPI Aggregation field is used to identify which physical interface a frame was collected on
+    ///     when multiple capture interfaces are in use.
     /// </summary>
     public class PpiAggregation : PpiField
     {
@@ -15,26 +15,26 @@ namespace PacketDotNet.Ieee80211
         public override PpiFieldType FieldType => PpiFieldType.PpiAggregation;
 
         /// <summary>
-        /// Gets the length of the field data.
+        ///     Gets the length of the field data.
         /// </summary>
         /// <value>
-        /// The length.
+        ///     The length.
         /// </value>
         public override Int32 Length => 4;
 
         /// <summary>
-        /// Zero-based index of the physical interface the packet was captured from.
+        ///     Zero-based index of the physical interface the packet was captured from.
         /// </summary>
         /// <value>
-        /// The interface id.
+        ///     The interface id.
         /// </value>
         public UInt32 InterfaceId { get; set; }
-            
+
         /// <summary>
-        /// Gets the field bytes. This doesn't include the PPI field header.
+        ///     Gets the field bytes. This doesn't include the PPI field header.
         /// </summary>
         /// <value>
-        /// The bytes.
+        ///     The bytes.
         /// </value>
         public override Byte[] Bytes => BitConverter.GetBytes(this.InterfaceId);
 
@@ -43,40 +43,39 @@ namespace PacketDotNet.Ieee80211
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiAggregation"/> class from the 
-        /// provided stream.
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiAggregation" /> class from the
+        ///     provided stream.
         /// </summary>
         /// <remarks>
-        /// The position of the BinaryReader's underlying stream will be advanced to the end
-        /// of the PPI field.
+        ///     The position of the BinaryReader's underlying stream will be advanced to the end
+        ///     of the PPI field.
         /// </remarks>
         /// <param name='br'>
-        /// The stream the field will be read from
+        ///     The stream the field will be read from
         /// </param>
-        public PpiAggregation (BinaryReader br)
+        public PpiAggregation(BinaryReader br)
         {
             this.InterfaceId = br.ReadUInt32();
         }
-   
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiAggregation"/> class.
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiAggregation" /> class.
         /// </summary>
         /// <param name='InterfaceId'>
-        /// The interface id.
+        ///     The interface id.
         /// </param>
         public PpiAggregation(UInt32 InterfaceId)
         {
             this.InterfaceId = InterfaceId;
         }
-            
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiAggregation"/> class.
-        /// </summary>
-        public PpiAggregation ()
-        {
 
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiAggregation" /> class.
+        /// </summary>
+        public PpiAggregation()
+        {
         }
-            
+
         #endregion Constructors
     }
 }

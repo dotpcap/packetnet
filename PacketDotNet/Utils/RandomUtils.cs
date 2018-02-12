@@ -17,25 +17,26 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using PacketDotNet.IP;
 
 namespace PacketDotNet.Utils
 {
     /// <summary>
-    /// Random utility methods
+    ///     Random utility methods
     /// </summary>
     public class RandomUtils
     {
         /// <summary>
-        /// Generate a random ip address
+        ///     Generate a random ip address
         /// </summary>
         /// <param name="version">
-        /// A <see cref="IpVersion"/>
+        ///     A <see cref="IpVersion" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Net.IPAddress"/>
+        ///     A <see cref="System.Net.IPAddress" />
         /// </returns>
-        public static System.Net.IPAddress GetIPAddress(IpVersion version)
+        public static IPAddress GetIPAddress(IpVersion version)
         {
             var rnd = new Random();
             Byte[] randomAddressBytes;
@@ -54,29 +55,30 @@ namespace PacketDotNet.Utils
                     throw new InvalidOperationException("Unknown version of " + version);
             }
 
-            return new System.Net.IPAddress(randomAddressBytes);
+            return new IPAddress(randomAddressBytes);
         }
 
         /// <summary>
-        /// Get the length of the longest string in a list of strings
+        ///     Get the length of the longest string in a list of strings
         /// </summary>
         /// <param name="stringsList">
-        /// A <see cref="T:List{System.String}"/>
+        ///     A <see cref="T:List{System.String}" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </returns>
         public static Int32 LongestStringLength(List<String> stringsList)
         {
-            String longest="";
+            String longest = "";
 
-            foreach(String L in stringsList)
+            foreach (String L in stringsList)
             {
                 if (L.Length > longest.Length)
                 {
                     longest = L;
                 }
             }
+
             return longest.Length;
         }
     }

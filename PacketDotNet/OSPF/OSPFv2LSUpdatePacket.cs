@@ -7,18 +7,18 @@ using PacketDotNet.Utils.Conversion;
 namespace PacketDotNet.OSPF
 {
     /// <summary>
-    /// Link State Update packets are OSPF packet type 4.  These packets
-    /// implement the flooding of LSAs. See http://www.ietf.org/rfc/rfc2328.txt for details.
+    ///     Link State Update packets are OSPF packet type 4.  These packets
+    ///     implement the flooding of LSAs. See http://www.ietf.org/rfc/rfc2328.txt for details.
     /// </summary>
     public class OSPFv2LSUpdatePacket : OSPFv2Packet
     {
         /// <value>
-        /// The packet type
+        ///     The packet type
         /// </value>
         public static OSPFPacketType PacketType = OSPFPacketType.LinkStateUpdate;
 
         /// <summary>
-        /// Constructs an OSPFv2 Link state update packet
+        ///     Constructs an OSPFv2 Link state update packet
         /// </summary>
         public OSPFv2LSUpdatePacket()
         {
@@ -27,12 +27,12 @@ namespace PacketDotNet.OSPF
             this.HeaderByteArraySegment = new ByteArraySegment(b, 0, OSPFv2Fields.LSRStart);
             this.Type = PacketType;
 
-            this.PacketLength = (UInt16)this.HeaderByteArraySegment.Bytes.Length;
+            this.PacketLength = (UInt16) this.HeaderByteArraySegment.Bytes.Length;
             this.LSANumber = 0;
         }
 
         /// <summary>
-        /// Constructs an OSPFv2 link state update with LSAs
+        ///     Constructs an OSPFv2 link state update with LSAs
         /// </summary>
         /// <param name="lsas">List of the LSA headers</param>
         public OSPFv2LSUpdatePacket(List<LSA> lsas)
@@ -57,18 +57,18 @@ namespace PacketDotNet.OSPF
 
             this.HeaderByteArraySegment = new ByteArraySegment(bytes);
             this.Type = PacketType;
-            this.PacketLength = (UInt16)this.HeaderByteArraySegment.Bytes.Length;
-            this.LSANumber = (UInt32)lsas.Count;
+            this.PacketLength = (UInt16) this.HeaderByteArraySegment.Bytes.Length;
+            this.LSANumber = (UInt32) lsas.Count;
         }
 
         /// <summary>
-        /// Constructs a packet from bytes and offset
+        ///     Constructs a packet from bytes and offset
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="System.Byte"/>
+        ///     A <see cref="System.Byte" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         public OSPFv2LSUpdatePacket(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
@@ -77,10 +77,10 @@ namespace PacketDotNet.OSPF
         }
 
         /// <summary>
-        /// Constructs an OSPFv2 LSU packet from ByteArraySegment
+        ///     Constructs an OSPFv2 LSU packet from ByteArraySegment
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
         public OSPFv2LSUpdatePacket(ByteArraySegment bas)
         {
@@ -88,18 +88,21 @@ namespace PacketDotNet.OSPF
         }
 
         /// <summary>
-        /// The number of LSAs included in this update.
+        ///     The number of LSAs included in this update.
         /// </summary>
         public virtual UInt32 LSANumber
         {
-            get => EndianBitConverter.Big.ToUInt32(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + OSPFv2Fields.LSANumberPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + OSPFv2Fields.LSANumberPosition);
+            get => EndianBitConverter.Big.ToUInt32(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + OSPFv2Fields.LSANumberPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + OSPFv2Fields.LSANumberPosition);
         }
 
         /// <summary>
-        /// A list of LSA, contained in this packet
+        ///     A list of LSA, contained in this packet
         /// </summary>
-        /// See <see cref="LSA"/>
+        /// See
+        /// <see cref="LSA" />
         public virtual List<LSA> LSAUpdates
         {
             get
@@ -126,16 +129,18 @@ namespace PacketDotNet.OSPF
                             ret.Add(new SummaryLSA(this.HeaderByteArraySegment.Bytes, offset, l.Length));
                             break;
                     }
+
                     offset += l.Length;
                 }
+
                 return ret;
             }
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="OSPFv2LSUpdatePacket"/>.
+        ///     Returns a <see cref="System.String" /> that represents the current <see cref="OSPFv2LSUpdatePacket" />.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="OSPFv2LSUpdatePacket"/>.</returns>
+        /// <returns>A <see cref="System.String" /> that represents the current <see cref="OSPFv2LSUpdatePacket" />.</returns>
         public override String ToString()
         {
             StringBuilder packet = new StringBuilder();
@@ -146,11 +151,11 @@ namespace PacketDotNet.OSPF
         }
 
         /// <summary cref="Packet.ToString()">
-        /// Output the packet information in the specified format
-        ///  Normal - outputs the packet info to a single line
-        ///  Colored - outputs the packet info to a single line with coloring
-        ///  Verbose - outputs detailed info about the packet
-        ///  VerboseColored - outputs detailed info about the packet with coloring
+        ///     Output the packet information in the specified format
+        ///     Normal - outputs the packet info to a single line
+        ///     Colored - outputs the packet info to a single line with coloring
+        ///     Verbose - outputs detailed info about the packet
+        ///     VerboseColored - outputs detailed info about the packet with coloring
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>

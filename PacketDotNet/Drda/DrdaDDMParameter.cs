@@ -23,23 +23,23 @@ using System;
 namespace PacketDotNet.Drda
 {
     /// <summary>
-    /// The DDM Parameter subsection field
+    ///     The DDM Parameter subsection field
     /// </summary>
     public class DrdaDDMParameter
     {
         /// <summary>
-        /// The Length field
+        ///     The Other Data field
         /// </summary>
-        public Int32 Length { set; get; }
+        public String Data { set; get; }
 
         /// <summary>
-        /// The Drda Code Point Type field
+        ///     The Drda Code Point Type field
         /// </summary>
         public DrdaCodepointType DrdaCodepoint { set; get; }
 
         /// <summary>
-        /// The Other Data field
+        ///     The Length field
         /// </summary>
-        public String Data { set; get; }
+        public Int32 Length { set; get; }
     }
 }

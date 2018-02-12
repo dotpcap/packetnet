@@ -32,30 +32,6 @@ namespace Test.PacketType
     public class PPPoEPPPTest
     {
         [Test]
-        public void TestParsingPPPoePPPPacket()
-        {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/PPPoEPPP.pcap");
-            dev.Open();
-
-            RawCapture rawCapture;
-            Packet packet;
-
-            // first packet is a udp packet
-            rawCapture = dev.GetNextPacket();
-            packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-            var udpPacket = (UdpPacket)packet.Extract(typeof(UdpPacket));
-            Assert.IsNotNull(udpPacket, "Expected a valid udp packet for the first packet");
-
-            // second packet is the PPPoe Ptp packet
-            rawCapture = dev.GetNextPacket();
-            packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-            var anotherUdpPacket = (UdpPacket)packet.Extract(typeof(UdpPacket));
-            Assert.IsNotNull(anotherUdpPacket, "Expected a valid udp packet for the second packet as well");
-
-            dev.Close();
-        }
-
-        [Test]
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
@@ -68,7 +44,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var pppoe = (PPPoEPacket)p.Extract(typeof(PPPoEPacket));
+            var pppoe = (PPPoEPacket) p.Extract(typeof(PPPoEPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(pppoe.ToString());
@@ -87,11 +63,34 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var pppoe = (PPPoEPacket)p.Extract(typeof(PPPoEPacket));
+            var pppoe = (PPPoEPacket) p.Extract(typeof(PPPoEPacket));
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(pppoe.ToString(StringOutputType.Verbose));
         }
+
+        [Test]
+        public void TestParsingPPPoePPPPacket()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/PPPoEPPP.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+            Packet packet;
+
+            // first packet is a udp packet
+            rawCapture = dev.GetNextPacket();
+            packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var udpPacket = (UdpPacket) packet.Extract(typeof(UdpPacket));
+            Assert.IsNotNull(udpPacket, "Expected a valid udp packet for the first packet");
+
+            // second packet is the PPPoe Ptp packet
+            rawCapture = dev.GetNextPacket();
+            packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var anotherUdpPacket = (UdpPacket) packet.Extract(typeof(UdpPacket));
+            Assert.IsNotNull(anotherUdpPacket, "Expected a valid udp packet for the second packet as well");
+
+            dev.Close();
+        }
     }
 }
-

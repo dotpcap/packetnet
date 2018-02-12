@@ -21,7 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet.OSPF
 {
     /// <summary>
-    /// The different LSA types
+    ///     The different LSA types
     /// </summary>
     public enum LSAType : byte
     {

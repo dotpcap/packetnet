@@ -1,25 +1,26 @@
 using System;
-using SharpPcap;
 using PacketDotNet;
+using SharpPcap;
+using Version = SharpPcap.Version;
 
 namespace CapturingAndParsingPackets
 {
     internal class MainClass
     {
         // used to stop the capture loop
-        private static Boolean stopCapturing = false;
+        private static Boolean stopCapturing;
 
         public static void Main(String[] args)
         {
             // Print SharpPcap version
-            String ver = SharpPcap.Version.VersionString;
+            String ver = Version.VersionString;
             Console.WriteLine("PacketDotNet example using SharpPcap {0}", ver);
 
             // Retrieve the device list
             var devices = CaptureDeviceList.Instance;
 
             // If no devices were found print an error
-            if(devices.Count < 1)
+            if (devices.Count < 1)
             {
                 Console.WriteLine("No devices were found on this machine");
                 return;
@@ -33,7 +34,7 @@ namespace CapturingAndParsingPackets
             Int32 i = 0;
 
             // Print out the devices
-            foreach(var dev in devices)
+            foreach (var dev in devices)
             {
                 /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
@@ -42,7 +43,7 @@ namespace CapturingAndParsingPackets
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to capture: ");
-            i = Int32.Parse( Console.ReadLine() );
+            i = Int32.Parse(Console.ReadLine());
 
             // Register a cancle handler that lets us break out of our capture loop
             Console.CancelKeyPress += HandleCancelKeyPress;
@@ -57,14 +58,14 @@ namespace CapturingAndParsingPackets
             Console.WriteLine("-- Listening on {0}, hit 'ctrl-c' to stop...",
                 device.Name);
 
-            while(stopCapturing == false)
+            while (stopCapturing == false)
             {
                 var rawCapture = device.GetNextPacket();
 
                 // null packets can be returned in the case where
                 // the GetNextRawPacket() timed out, we should just attempt
                 // to retrieve another packet by looping the while() again
-                if(rawCapture == null)
+                if (rawCapture == null)
                 {
                     // go back to the start of the while()
                     continue;

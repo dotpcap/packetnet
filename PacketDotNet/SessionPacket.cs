@@ -21,14 +21,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet
 {
     /// <summary>
-    /// Session layer packet
+    ///     Session layer packet
     /// </summary>
     public abstract class SessionPacket : Packet
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        protected SessionPacket()
-        {}
     }
 }

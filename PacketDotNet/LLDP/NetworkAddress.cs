@@ -18,60 +18,25 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
+using System.Net;
 using PacketDotNet.IP;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// A Network Address
+    ///     A Network Address
     /// </summary>
     public class NetworkAddress
     {
         /// <summary>
-        /// Length of AddressFamily field in bytes
+        ///     Length of AddressFamily field in bytes
         /// </summary>
         internal const Int32 AddressFamilyLength = 1;
 
         internal ByteArraySegment Data;
-
-        #region Constructors
-
-        /// <summary>
-        /// Creates a Network Address entity
-        /// </summary>
-        /// <param name="address">
-        /// The Network Address
-        /// </param>
-        public NetworkAddress(System.Net.IPAddress address)
-        {
-            this.Address = address;
-        }
-
-        /// <summary>
-        /// Create a network address from byte data
-        /// </summary>
-        /// <param name="bytes">
-        /// A <see cref="T:System.Byte[]"/>
-        /// </param>
-        /// <param name="offset">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        /// <param name="length">
-        /// A <see cref="System.Int32"/>
-        /// </param>
-        public NetworkAddress(Byte[] bytes, Int32 offset, Int32 length)
-        {
-            this.Data = new ByteArraySegment(bytes, offset, length);
-        }
-
-        #endregion
-
-        /// <summary>
-        /// Number of bytes in the NetworkAddress
-        /// </summary>
-        internal Int32 Length => AddressFamilyLength + this.Address.GetAddressBytes().Length;
 
         internal Byte[] Bytes
         {
@@ -81,11 +46,48 @@ namespace PacketDotNet.LLDP
                 var data = new Byte[AddressFamilyLength + addressBytes.Length];
                 data[0] = (Byte) this.AddressFamily;
                 Array.Copy(addressBytes, 0,
-                           data, AddressFamilyLength,
-                           addressBytes.Length);
+                    data, AddressFamilyLength,
+                    addressBytes.Length);
                 return data;
             }
         }
+
+        /// <summary>
+        ///     Number of bytes in the NetworkAddress
+        /// </summary>
+        internal Int32 Length => AddressFamilyLength + this.Address.GetAddressBytes().Length;
+
+        #region Constructors
+
+        /// <summary>
+        ///     Creates a Network Address entity
+        /// </summary>
+        /// <param name="address">
+        ///     The Network Address
+        /// </param>
+        public NetworkAddress(IPAddress address)
+        {
+            this.Address = address;
+        }
+
+        /// <summary>
+        ///     Create a network address from byte data
+        /// </summary>
+        /// <param name="bytes">
+        ///     A <see cref="T:System.Byte[]" />
+        /// </param>
+        /// <param name="offset">
+        ///     A <see cref="System.Int32" />
+        /// </param>
+        /// <param name="length">
+        ///     A <see cref="System.Int32" />
+        /// </param>
+        public NetworkAddress(Byte[] bytes, Int32 offset, Int32 length)
+        {
+            this.Data = new ByteArraySegment(bytes, offset, length);
+        }
+
+        #endregion
 
         #region Members
 
@@ -93,16 +95,16 @@ namespace PacketDotNet.LLDP
         public AddressFamily AddressFamily
         {
             get => (AddressFamily) this.Data.Bytes[this.Data.Offset];
-            set => this.Data.Bytes[this.Data.Offset] = (Byte)value;
+            set => this.Data.Bytes[this.Data.Offset] = (Byte) value;
         }
 
         private static Int32 LengthFromAddressFamily(AddressFamily addressFamily)
         {
             Int32 length;
 
-            if(addressFamily == AddressFamily.IPv4)
+            if (addressFamily == AddressFamily.IPv4)
                 length = IPv4Fields.AddressLength;
-            else if(addressFamily == AddressFamily.IPv6)
+            else if (addressFamily == AddressFamily.IPv6)
                 length = IPv6Fields.AddressLength;
             else
                 throw new NotImplementedException("Unknown addressFamily of " + addressFamily);
@@ -110,29 +112,28 @@ namespace PacketDotNet.LLDP
             return length;
         }
 
-        private static AddressFamily AddressFamilyFromSocketAddress(System.Net.IPAddress address)
+        private static AddressFamily AddressFamilyFromSocketAddress(IPAddress address)
         {
-            if(address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+            if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
             {
                 return AddressFamily.IPv4;
-            } else
-            {
-                return AddressFamily.IPv6;
             }
+
+            return AddressFamily.IPv6;
         }
 
         /// <summary>The Network Address</summary>
-        public System.Net.IPAddress Address
+        public IPAddress Address
         {
             get
             {
                 var length = LengthFromAddressFamily(this.AddressFamily);
                 var bytes = new Byte[length];
                 Array.Copy(this.Data.Bytes, this.Data.Offset + AddressFamilyLength,
-                           bytes, 0,
-                           bytes.Length);
+                    bytes, 0,
+                    bytes.Length);
 
-                return new System.Net.IPAddress(bytes);
+                return new IPAddress(bytes);
             }
 
             set
@@ -141,7 +142,7 @@ namespace PacketDotNet.LLDP
                 var length = LengthFromAddressFamily(AddressFamilyFromSocketAddress(value));
                 length += AddressFamilyLength;
 
-                if((this.Data == null) || this.Data.Length != length)
+                if ((this.Data == null) || this.Data.Length != length)
                 {
                     var bytes = new Byte[length];
                     var offset = 0;
@@ -154,29 +155,29 @@ namespace PacketDotNet.LLDP
 
                 var addressBytes = value.GetAddressBytes();
                 Array.Copy(addressBytes, 0, this.Data.Bytes, this.Data.Offset + AddressFamilyLength,
-                           addressBytes.Length);
+                    addressBytes.Length);
             }
         }
 
         /// <summary>
-        /// Equals override
+        ///     Equals override
         /// </summary>
         /// <param name="obj">
-        /// A <see cref="System.Object"/>
+        ///     A <see cref="System.Object" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Boolean"/>
+        ///     A <see cref="System.Boolean" />
         /// </returns>
-        public override Boolean Equals (Object obj)
+        public override Boolean Equals(Object obj)
         {
             // Check for null values and compare run-time types.
             if (obj == null || this.GetType() != obj.GetType())
                 return false;
 
-            var na = (NetworkAddress)obj;
+            var na = (NetworkAddress) obj;
 
-            if(this.AddressFamily.Equals(na.AddressFamily) &&
-               this.Address.Equals(na.Address))
+            if (this.AddressFamily.Equals(na.AddressFamily) &&
+                this.Address.Equals(na.Address))
             {
                 return true;
             }
@@ -185,23 +186,23 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// GetHashCode() override
+        ///     GetHashCode() override
         /// </summary>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </returns>
-        public override Int32 GetHashCode ()
+        public override Int32 GetHashCode()
         {
             return this.AddressFamily.GetHashCode() + this.Address.GetHashCode();
         }
 
         /// <summary>
-        /// ToString() override
+        ///     ToString() override
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        ///     A <see cref="System.String" />
         /// </returns>
-        public override String ToString ()
+        public override String ToString()
         {
             return String.Format("[NetworkAddress: AddressFamily={0}, Address={1}]", this.AddressFamily, this.Address);
         }

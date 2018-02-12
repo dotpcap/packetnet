@@ -19,27 +19,27 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using NUnit.Framework;
-using SharpPcap;
-using SharpPcap.LibPcap;
-using PacketDotNet;
 using System.Collections.Generic;
+using NUnit.Framework;
+using PacketDotNet;
 using PacketDotNet.Drda;
 using PacketDotNet.Utils.Conversion;
+using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
     [TestFixture]
     public class DrdaPacketTest
     {
-        private DrdaDDMPacket excsatPacket;
-        private DrdaDDMPacket secchkPacket;
+        private readonly List<DrdaDDMPacket> sqlsttPackets = new List<DrdaDDMPacket>();
         private DrdaDDMPacket accrdbPacket;
         private DrdaDDMPacket accrdbrmPacket;
-        private readonly List<DrdaDDMPacket> sqlsttPackets = new List<DrdaDDMPacket>();
+        private DrdaDDMPacket excsatPacket;
+        private Boolean packetsLoaded;
         private DrdaDDMPacket prpsqlsttPacket;
+        private DrdaDDMPacket secchkPacket;
         private DrdaDDMPacket sqlattrPacket;
-        private Boolean packetsLoaded = false;
 
         [SetUp]
         public void Init()
@@ -83,14 +83,40 @@ namespace Test.PacketType
                                 this.sqlattrPacket = ddm;
                                 break;
                             //Still have SQLCARD and QRYDTA decode work to do
-                            default: /* do nothing */break;
+                            default: /* do nothing */ break;
                         }
                     }
                 }
+
                 packetIndex++;
             }
+
             dev.Close();
             this.packetsLoaded = true;
+        }
+
+        [Test]
+        public void TestAccrdbPacket()
+        {
+            Assert.IsNotNull(this.accrdbPacket);
+            Assert.IsNotNull(this.accrdbPacket.Parameters);
+            Assert.AreEqual(DrdaCodepointType.ACCRDB, this.accrdbPacket.CodePoint);
+            foreach (var parameter in this.accrdbPacket.Parameters)
+            {
+                switch (parameter.DrdaCodepoint)
+                {
+                    case DrdaCodepointType.RDBNAM:
+                        Assert.AreEqual("SAMPLE", parameter.Data);
+                        break;
+                    case DrdaCodepointType.PRDID:
+                        Assert.AreEqual("JCC03670", parameter.Data);
+                        break;
+                    case DrdaCodepointType.TYPDEFNAM:
+                        Assert.AreEqual("QTDSQLASC", parameter.Data);
+                        break;
+                    default: /* do nothing */ break;
+                }
+            }
         }
 
         [Test]
@@ -115,31 +141,7 @@ namespace Test.PacketType
                     case DrdaCodepointType.SRVCLSNM:
                         Assert.AreEqual("QDB2/JVM", parameter.Data);
                         break;
-                    default: /* do nothing */break;
-                }
-            }
-        }
-
-        [Test]
-        public void TestAccrdbPacket()
-        {
-            Assert.IsNotNull(this.accrdbPacket);
-            Assert.IsNotNull(this.accrdbPacket.Parameters);
-            Assert.AreEqual(DrdaCodepointType.ACCRDB, this.accrdbPacket.CodePoint);
-            foreach (var parameter in this.accrdbPacket.Parameters)
-            {
-                switch (parameter.DrdaCodepoint)
-                {
-                    case DrdaCodepointType.RDBNAM:
-                        Assert.AreEqual("SAMPLE", parameter.Data);
-                        break;
-                    case DrdaCodepointType.PRDID:
-                        Assert.AreEqual("JCC03670", parameter.Data);
-                        break;
-                    case DrdaCodepointType.TYPDEFNAM:
-                        Assert.AreEqual("QTDSQLASC", parameter.Data);
-                        break;
-                    default: /* do nothing */break;
+                    default: /* do nothing */ break;
                 }
             }
         }
@@ -163,8 +165,20 @@ namespace Test.PacketType
                     case DrdaCodepointType.PASSWORD:
                         Assert.AreEqual("db2inst1", parameter.Data);
                         break;
-                    default: /* do nothing */break;
+                    default: /* do nothing */ break;
                 }
+            }
+        }
+
+        [Test]
+        public void TestSqlattrPacket()
+        {
+            Assert.IsNotNull(this.sqlattrPacket);
+            Assert.IsNotNull(this.sqlattrPacket.Parameters);
+            Assert.AreEqual(DrdaCodepointType.SQLATTR, this.sqlattrPacket.CodePoint);
+            if (this.sqlattrPacket.Parameters[0].DrdaCodepoint == DrdaCodepointType.DATA)
+            {
+                Assert.AreEqual("FOR READ ONLY", this.sqlattrPacket.Parameters[0].Data);
             }
         }
 
@@ -184,26 +198,15 @@ namespace Test.PacketType
                     else if (packetIndex == 1)
                         Assert.AreEqual("SELECT * FROM SYSCAT.TABLES", packet.Parameters[0].Data);
                 }
-                packetIndex++;
-            }
-        }
 
-        [Test]
-        public void TestSqlattrPacket()
-        {
-            Assert.IsNotNull(this.sqlattrPacket);
-            Assert.IsNotNull(this.sqlattrPacket.Parameters);
-            Assert.AreEqual(DrdaCodepointType.SQLATTR, this.sqlattrPacket.CodePoint);
-            if (this.sqlattrPacket.Parameters[0].DrdaCodepoint == DrdaCodepointType.DATA)
-            {
-                Assert.AreEqual("FOR READ ONLY", this.sqlattrPacket.Parameters[0].Data);
+                packetIndex++;
             }
         }
 
         [Test]
         public void TestStringConverter()
         {
-            var bytes = new Byte[] { 0xd8, 0xc4, 0xc2, 0xf2, 0x61, 0xd1, 0xe5, 0xd4 };
+            var bytes = new Byte[] {0xd8, 0xc4, 0xc2, 0xf2, 0x61, 0xd1, 0xe5, 0xd4};
             Assert.AreEqual("QDB2/JVM", StringConverter.EbcdicToAscii(bytes, 0, bytes.Length));
         }
     }

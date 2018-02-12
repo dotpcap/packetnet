@@ -21,9 +21,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet.Drda
 {
     /// <summary>
-    /// Drda Code Point Type
+    ///     Drda Code Point Type
     /// </summary>
-    public enum DrdaCodepointType:ushort
+    public enum DrdaCodepointType : ushort
     {
 #pragma warning disable 1591
         DATA = 0x0000,

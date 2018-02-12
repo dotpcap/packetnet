@@ -28,14 +28,15 @@ using PacketDotNet.Utils.Conversion;
 namespace PacketDotNet.PPP
 {
     /// <summary>
-    /// PPP packet
-    /// See http://en.wikipedia.org/wiki/Point-to-Point_Protocol
+    ///     PPP packet
+    ///     See http://en.wikipedia.org/wiki/Point-to-Point_Protocol
     /// </summary>
     [Serializable]
     public class PPPPacket : Packet
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
@@ -45,24 +46,26 @@ namespace PacketDotNet.PPP
 #endif
 
         /// <summary>
-        /// See http://www.iana.org/assignments/ppp-numbers
+        ///     See http://www.iana.org/assignments/ppp-numbers
         /// </summary>
         public PPPProtocol Protocol
         {
-            get => (PPPProtocol)EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + PPPFields.ProtocolPosition);
+            get => (PPPProtocol) EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + PPPFields.ProtocolPosition);
 
             set
             {
-                var val = (UInt16)value;
-                EndianBitConverter.Big.CopyBytes(val, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + PPPFields.ProtocolPosition);
+                var val = (UInt16) value;
+                EndianBitConverter.Big.CopyBytes(val, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + PPPFields.ProtocolPosition);
             }
         }
 
         /// <summary>
-        /// Construct a new PPPPacket from source and destination mac addresses
+        ///     Construct a new PPPPacket from source and destination mac addresses
         /// </summary>
         public PPPPacket(PPPoECode code,
-                     UInt16 sessionId)
+            UInt16 sessionId)
         {
             Log.Debug("");
 
@@ -77,10 +80,10 @@ namespace PacketDotNet.PPP
         }
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
         public PPPPacket(ByteArraySegment bas)
         {
@@ -97,7 +100,7 @@ namespace PacketDotNet.PPP
         }
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment header,
-                                                                        PPPProtocol protocol)
+            PPPProtocol protocol)
         {
             // slice off the payload
             var payload = header.EncapsulatedBytes();
@@ -106,18 +109,18 @@ namespace PacketDotNet.PPP
 
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
-            switch(protocol)
+            switch (protocol)
             {
-            case PPPProtocol.IPv4:
-                payloadPacketOrData.ThePacket = new IPv4Packet(payload);
-                break;
-            case PPPProtocol.IPv6:
-                payloadPacketOrData.ThePacket = new IPv6Packet(payload);
-                break;
-            default:
-                //Probably a control packet, lets just add it to the data
-                payloadPacketOrData.TheByteArraySegment = payload;
-                break;
+                case PPPProtocol.IPv4:
+                    payloadPacketOrData.ThePacket = new IPv4Packet(payload);
+                    break;
+                case PPPProtocol.IPv6:
+                    payloadPacketOrData.ThePacket = new IPv6Packet(payload);
+                    break;
+                default:
+                    //Probably a control packet, lets just add it to the data
+                    payloadPacketOrData.TheByteArraySegment = payload;
+                    break;
             }
 
             return payloadPacketOrData;
@@ -133,7 +136,7 @@ namespace PacketDotNet.PPP
             String color = "";
             String colorEscape = "";
 
-            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
                 color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
@@ -153,34 +156,36 @@ namespace PacketDotNet.PPP
                     // collect the properties and their value
                     Dictionary<String, String> properties = new Dictionary<String, String>
                     {
-                        { "protocol", this.Protocol.ToString() + " (0x" + this.Protocol.ToString("x") + ")" }
+                        {"protocol", this.Protocol + " (0x" + this.Protocol.ToString("x") + ")"}
                     };
 
                     // calculate the padding needed to right-justify the property names
                     Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                     // build the output string
-                    buffer.AppendLine("PPP:  ******* PPP - \"Point-to-Point Protocol\" - offset=? length=" + this.TotalPacketLength);
+                    buffer.AppendLine("PPP:  ******* PPP - \"Point-to-Point Protocol\" - offset=? length=" +
+                                      this.TotalPacketLength);
                     buffer.AppendLine("PPP:");
-                    foreach(var property in properties)
+                    foreach (var property in properties)
                     {
                         buffer.AppendLine("PPP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
                     }
+
                     buffer.AppendLine("PPP:");
                     break;
             }
 
             // append the base output
-            buffer.Append((String) base.ToString(outputFormat));
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
         }
 
         /// <summary>
-        /// Generate a random PPPoEPacket
+        ///     Generate a random PPPoEPacket
         /// </summary>
         /// <returns>
-        /// A <see cref="PPPoEPacket"/>
+        ///     A <see cref="PPPoEPacket" />
         /// </returns>
         public static PPPoEPacket RandomPacket()
         {
@@ -188,4 +193,3 @@ namespace PacketDotNet.PPP
         }
     }
 }
-

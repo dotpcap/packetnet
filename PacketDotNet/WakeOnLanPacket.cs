@@ -30,17 +30,17 @@ using PacketDotNet.Utils;
 namespace PacketDotNet
 {
     /// <summary>
-    /// Wake-On-Lan
-    /// See: http://en.wikipedia.org/wiki/Wake-on-LAN
-    /// See: http://wiki.wireshark.org/WakeOnLAN
+    ///     Wake-On-Lan
+    ///     See: http://en.wikipedia.org/wiki/Wake-on-LAN
+    ///     See: http://wiki.wireshark.org/WakeOnLAN
     /// </summary>
     public class WakeOnLanPacket : Packet
     {
-
         #region Preprocessor Directives
 
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
@@ -54,10 +54,10 @@ namespace PacketDotNet
         #region Constructors
 
         /// <summary>
-        /// Create a Wake-On-LAN packet from the destination MAC address
+        ///     Create a Wake-On-LAN packet from the destination MAC address
         /// </summary>
         /// <param name="destinationMAC">
-        /// A <see cref="System.Net.NetworkInformation.PhysicalAddress"/>
+        ///     A <see cref="System.Net.NetworkInformation.PhysicalAddress" />
         /// </param>
         public WakeOnLanPacket(PhysicalAddress destinationMAC)
         {
@@ -72,12 +72,12 @@ namespace PacketDotNet
             // write the data to the payload
             // - synchronization sequence (6 bytes)
             // - destination MAC (16 copies of 6 bytes)
-            for(Int32 i = 0; i < packetLength; i+=EthernetFields.MacAddressLength)
+            for (Int32 i = 0; i < packetLength; i += EthernetFields.MacAddressLength)
             {
                 // copy the syncSequence on the first pass
-                if(i == 0)
+                if (i == 0)
                 {
-                    Array.Copy((Array) SyncSequence, (Int32) 0, (Array) packetBytes, i, (Int32) SyncSequence.Length);
+                    Array.Copy(SyncSequence, 0, packetBytes, i, SyncSequence.Length);
                 }
                 else
                 {
@@ -89,16 +89,16 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
         public WakeOnLanPacket(ByteArraySegment bas)
         {
             Log.Debug("");
 
-            if(IsValid(bas))
+            if (IsValid(bas))
             {
                 // set the header field, header field values are retrieved from this byte array
                 this.HeaderByteArraySegment = new ByteArraySegment(bas)
@@ -113,24 +113,24 @@ namespace PacketDotNet
         #region Properties
 
         /// <summary>
-        /// The Physical Address (MAC) of the host being woken up from sleep
+        ///     The Physical Address (MAC) of the host being woken up from sleep
         /// </summary>
         public PhysicalAddress DestinationMAC
         {
             get
             {
                 Byte[] destinationMAC = new Byte[EthernetFields.MacAddressLength];
-                Array.Copy((Array) this.HeaderByteArraySegment.Bytes, (Int32) (this.HeaderByteArraySegment.Offset + SyncSequence.Length),
-                           destinationMAC, 0,
-                           EthernetFields.MacAddressLength);
+                Array.Copy(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + SyncSequence.Length,
+                    destinationMAC, 0,
+                    EthernetFields.MacAddressLength);
                 return new PhysicalAddress(destinationMAC);
             }
             set
             {
                 Byte[] destinationMAC = value.GetAddressBytes();
-                Array.Copy((Array) destinationMAC, (Int32) 0,
-                           (Array) this.HeaderByteArraySegment.Bytes, (Int32) (this.HeaderByteArraySegment.Offset + SyncSequence.Length),
-                           EthernetFields.MacAddressLength);
+                Array.Copy(destinationMAC, 0,
+                    this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + SyncSequence.Length,
+                    EthernetFields.MacAddressLength);
             }
         }
 
@@ -139,10 +139,10 @@ namespace PacketDotNet
         #region Methods
 
         /// <summary>
-        /// Generate a random WakeOnLanPacket
+        ///     Generate a random WakeOnLanPacket
         /// </summary>
         /// <returns>
-        /// A <see cref="WakeOnLanPacket"/>
+        ///     A <see cref="WakeOnLanPacket" />
         /// </returns>
         public static WakeOnLanPacket RandomPacket()
         {
@@ -156,12 +156,12 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Checks the validity of the Wake-On-LAN payload
-        ///  - by checking the synchronization sequence
-        ///  - by checking to see if there are 16 iterations of the Destination MAC address
+        ///     Checks the validity of the Wake-On-LAN payload
+        ///     - by checking the synchronization sequence
+        ///     - by checking to see if there are 16 iterations of the Destination MAC address
         /// </summary>
         /// <returns>
-        /// True if the Wake-On-LAN payload is valid
+        ///     True if the Wake-On-LAN payload is valid
         /// </returns>
         public Boolean IsValid()
         {
@@ -169,13 +169,13 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// See IsValid
+        ///     See IsValid
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Boolean"/>
+        ///     A <see cref="System.Boolean" />
         /// </returns>
         public static Boolean IsValid(ByteArraySegment bas)
         {
@@ -189,36 +189,39 @@ namespace PacketDotNet
 
             // validate the 16 repetitions of the wolDestinationMAC
             // - verify that the wolDestinationMAC address repeats 16 times in sequence
-            for(Int32 i = 0; i<(EthernetFields.MacAddressLength * MACRepetitions); i+=EthernetFields.MacAddressLength)
+            for (Int32 i = 0;
+                i < (EthernetFields.MacAddressLength * MACRepetitions);
+                i += EthernetFields.MacAddressLength)
             {
                 // Extract the sample from the payload for comparison
                 Array.Copy(bas.Bytes, bas.Offset + i, buffer, 0, buffer.Length);
 
                 // check the synchronization sequence on the first pass
-                if(i == 0)
+                if (i == 0)
                 {
                     // validate the synchronization sequence
-                    if(!buffer.SequenceEqual(SyncSequence))
+                    if (!buffer.SequenceEqual(SyncSequence))
                         return false;
                 }
                 else
                 {
                     // fail the validation on malformed WOL Magic Packets
-                    if(!buffer.SequenceEqual(destinationMAC))
+                    if (!buffer.SequenceEqual(destinationMAC))
                         return false;
                 }
             }
+
             return true;
         }
 
         /// <summary>
-        /// Compare two instances
+        ///     Compare two instances
         /// </summary>
         /// <param name="obj">
-        /// A <see cref="System.Object"/>
+        ///     A <see cref="System.Object" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Boolean"/>
+        ///     A <see cref="System.Boolean" />
         /// </returns>
         public override Boolean Equals(Object obj)
         {
@@ -226,16 +229,16 @@ namespace PacketDotNet
             if (obj == null || this.GetType() != obj.GetType())
                 return false;
 
-            var wol = (WakeOnLanPacket)obj;
+            var wol = (WakeOnLanPacket) obj;
 
             return this.DestinationMAC.Equals(wol.DestinationMAC);
         }
 
         /// <summary>
-        /// GetHashCode override
+        ///     GetHashCode override
         /// </summary>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </returns>
         public override Int32 GetHashCode()
         {
@@ -249,7 +252,7 @@ namespace PacketDotNet
             String color = "";
             String colorEscape = "";
 
-            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
                 color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
@@ -268,25 +271,27 @@ namespace PacketDotNet
                     // collect the properties and their value
                     Dictionary<String, String> properties = new Dictionary<String, String>
                     {
-                        { "destination", HexPrinter.PrintMACAddress(this.DestinationMAC) }
+                        {"destination", HexPrinter.PrintMACAddress(this.DestinationMAC)}
                     };
 
                     // calculate the padding needed to right-justify the property names
                     Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                     // build the output string
-                    buffer.AppendLine("WOL:  ******* WOL - \"Wake-On-Lan\" - offset=? length=" + this.TotalPacketLength);
+                    buffer.AppendLine("WOL:  ******* WOL - \"Wake-On-Lan\" - offset=? length=" +
+                                      this.TotalPacketLength);
                     buffer.AppendLine("WOL:");
-                    foreach(var property in properties)
+                    foreach (var property in properties)
                     {
                         buffer.AppendLine("WOL: " + property.Key.PadLeft(padLength) + " = " + property.Value);
                     }
+
                     buffer.AppendLine("WOL:");
                     break;
             }
 
             // append the base string output
-            buffer.Append((String) base.ToString(outputFormat));
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
         }
@@ -296,7 +301,7 @@ namespace PacketDotNet
         #region Members
 
         // the WOL synchronization sequence
-        private static readonly Byte[] SyncSequence = new Byte[6] { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
+        private static readonly Byte[] SyncSequence = new Byte[6] {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 
         // the number of times the Destination MAC appears in the payload
         private static readonly Int32 MACRepetitions = 16;

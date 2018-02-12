@@ -23,96 +23,98 @@ using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet.Ieee80211
+{
+    /// <summary>
+    ///     Contention free end frame.
+    /// </summary>
+    public class ContentionFreeEndFrame : MacFrame
     {
         /// <summary>
-        /// Contention free end frame.
+        ///     Constructor
         /// </summary>
-        public class ContentionFreeEndFrame : MacFrame
+        /// <param name="bas">
+        ///     A <see cref="ByteArraySegment" />
+        /// </param>
+        public ContentionFreeEndFrame(ByteArraySegment bas)
         {
-            /// <summary>
-            /// Receiver address
-            /// </summary>
-            public PhysicalAddress ReceiverAddress {get; set;}
+            this.HeaderByteArraySegment = new ByteArraySegment(bas);
 
-            /// <summary>
-            /// BSS ID
-            /// </summary>
-            public PhysicalAddress BssId {get; set;}
+            this.FrameControl = new FrameControlField(this.FrameControlBytes);
+            this.Duration = new DurationField(this.DurationBytes);
+            this.ReceiverAddress = this.GetAddress(0);
+            this.BssId = this.GetAddress(1);
 
-            /// <summary>
-            /// Length of the frame
-            /// </summary>
-            public override Int32 FrameSize => (MacFields.FrameControlLength +
-                                              MacFields.DurationIDLength +
-                                              (MacFields.AddressLength * 2));
+            this.HeaderByteArraySegment.Length = this.FrameSize;
+        }
 
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public ContentionFreeEndFrame (ByteArraySegment bas)
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ContentionFreeEndFrame" /> class.
+        /// </summary>
+        /// <param name='ReceiverAddress'>
+        ///     Receiver address.
+        /// </param>
+        /// <param name='BssId'>
+        ///     Bss identifier (MAC Address of the Access Point).
+        /// </param>
+        public ContentionFreeEndFrame(PhysicalAddress ReceiverAddress,
+            PhysicalAddress BssId)
+        {
+            this.FrameControl = new FrameControlField();
+            this.Duration = new DurationField();
+            this.ReceiverAddress = ReceiverAddress;
+            this.BssId = BssId;
+
+            this.FrameControl.SubType = FrameControlField.FrameSubTypes.ControlCFEnd;
+        }
+
+        /// <summary>
+        ///     Length of the frame
+        /// </summary>
+        public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                            MacFields.DurationIDLength +
+                                            (MacFields.AddressLength * 2));
+
+        /// <summary>
+        ///     BSS ID
+        /// </summary>
+        public PhysicalAddress BssId { get; set; }
+
+        /// <summary>
+        ///     Receiver address
+        /// </summary>
+        public PhysicalAddress ReceiverAddress { get; set; }
+
+        /// <summary>
+        ///     Writes the current packet properties to the backing ByteArraySegment.
+        /// </summary>
+        public override void UpdateCalculatedValues()
+        {
+            if ((this.HeaderByteArraySegment == null) ||
+                (this.HeaderByteArraySegment.Length >
+                 (this.HeaderByteArraySegment.BytesLength - this.HeaderByteArraySegment.Offset)) ||
+                (this.HeaderByteArraySegment.Length < this.FrameSize))
             {
-                this.HeaderByteArraySegment = new ByteArraySegment (bas);
+                this.HeaderByteArraySegment = new ByteArraySegment(new Byte[this.FrameSize]);
+            }
 
-                this.FrameControl = new FrameControlField (this.FrameControlBytes);
-                this.Duration = new DurationField (this.DurationBytes);
-                this.ReceiverAddress = this.GetAddress (0);
-                this.BssId = this.GetAddress (1);
+            this.FrameControlBytes = this.FrameControl.Field;
+            this.DurationBytes = this.Duration.Field;
+            this.SetAddress(0, this.ReceiverAddress);
+            this.SetAddress(1, this.BssId);
 
-                this.HeaderByteArraySegment.Length = this.FrameSize;
-            }
-   
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ContentionFreeEndFrame"/> class.
-            /// </summary>
-            /// <param name='ReceiverAddress'>
-            /// Receiver address.
-            /// </param>
-            /// <param name='BssId'>
-            /// Bss identifier (MAC Address of the Access Point).
-            /// </param>
-            public ContentionFreeEndFrame (PhysicalAddress ReceiverAddress,
-                                           PhysicalAddress BssId)
-            {
-                this.FrameControl = new FrameControlField ();
-                this.Duration = new DurationField ();
-                this.ReceiverAddress = ReceiverAddress;
-                this.BssId = BssId;
-                
-                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ControlCFEnd;
-            }
-            
-            /// <summary>
-            /// Writes the current packet properties to the backing ByteArraySegment.
-            /// </summary>
-            public override void UpdateCalculatedValues ()
-            {
-                if ((this.HeaderByteArraySegment == null) || (this.HeaderByteArraySegment.Length > (this.HeaderByteArraySegment.BytesLength - this.HeaderByteArraySegment.Offset)) || (this.HeaderByteArraySegment.Length < this.FrameSize))
-                {
-                    this.HeaderByteArraySegment = new ByteArraySegment (new Byte[this.FrameSize]);
-                }
-                
-                this.FrameControlBytes = this.FrameControl.Field;
-                this.DurationBytes = this.Duration.Field;
-                this.SetAddress (0, this.ReceiverAddress);
-                this.SetAddress (1, this.BssId);
+            this.HeaderByteArraySegment.Length = this.FrameSize;
+        }
 
-                this.HeaderByteArraySegment.Length = this.FrameSize;
-            }
-            
-            /// <summary>
-            /// Returns a string with a description of the addresses used in the packet.
-            /// This is used as a compoent of the string returned by ToString().
-            /// </summary>
-            /// <returns>
-            /// The address string.
-            /// </returns>
-            protected override String GetAddressString()
-            {
-                return $"RA {this.ReceiverAddress} BSSID {this.BssId}";
-            }
-        } 
+        /// <summary>
+        ///     Returns a string with a description of the addresses used in the packet.
+        ///     This is used as a compoent of the string returned by ToString().
+        /// </summary>
+        /// <returns>
+        ///     The address string.
+        /// </returns>
+        protected override String GetAddressString()
+        {
+            return $"RA {this.ReceiverAddress} BSSID {this.BssId}";
+        }
     }
-
+}

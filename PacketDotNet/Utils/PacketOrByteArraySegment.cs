@@ -24,19 +24,21 @@ using System.IO;
 namespace PacketDotNet.Utils
 {
     /// <summary>
-    /// Encapsulates and ensures that we have either a Packet OR
-    /// a ByteArraySegment but not both
+    ///     Encapsulates and ensures that we have either a Packet OR
+    ///     a ByteArraySegment but not both
     /// </summary>
     [Serializable]
     public class PacketOrByteArraySegment
     {
         private ByteArraySegment _theByteArraySegment;
 
+        private Packet _thePacket;
+
         /// <summary>
-        /// Gets or sets the byte array segment.
+        ///     Gets or sets the byte array segment.
         /// </summary>
         /// <value>
-        /// The byte array segment.
+        ///     The byte array segment.
         /// </value>
         public ByteArraySegment TheByteArraySegment
         {
@@ -49,13 +51,11 @@ namespace PacketDotNet.Utils
             }
         }
 
-        private Packet _thePacket;
-
         /// <summary>
-        /// Gets or sets the packet.
+        ///     Gets or sets the packet.
         /// </summary>
         /// <value>
-        /// The packet.
+        ///     The packet.
         /// </value>
         public Packet ThePacket
         {
@@ -68,44 +68,46 @@ namespace PacketDotNet.Utils
             }
         }
 
-        /// <summary>
-        /// Appends to the MemoryStream either the byte[] represented by TheByteArray, or
-        /// if ThePacket is non-null, the Packet.Bytes will be appended to the memory stream
-        /// which will append ThePacket's header and any encapsulated packets it contains
-        /// </summary>
-        /// <param name="ms">
-        /// A <see cref="MemoryStream"/>
-        /// </param>
-        public void AppendToMemoryStream(MemoryStream ms)
-        {
-            if(this.ThePacket != null)
-            {
-                var theBytes = this.ThePacket.Bytes;
-                ms.Write(theBytes, 0, theBytes.Length);
-            } else if(this.TheByteArraySegment != null)
-            {
-                var theBytes = this.TheByteArraySegment.ActualBytes();
-                ms.Write(theBytes, 0, theBytes.Length);
-            }
-        }
-
         /// <value>
-        /// Whether or not this container contains a packet, a byte[] or neither
+        ///     Whether or not this container contains a packet, a byte[] or neither
         /// </value>
         public PayloadType Type
         {
             get
             {
-                if(this.ThePacket != null)
+                if (this.ThePacket != null)
                 {
                     return PayloadType.Packet;
-                } else if(this.TheByteArraySegment != null)
+                }
+
+                if (this.TheByteArraySegment != null)
                 {
                     return PayloadType.Bytes;
-                } else
-                {
-                    return PayloadType.None;
                 }
+
+                return PayloadType.None;
+            }
+        }
+
+        /// <summary>
+        ///     Appends to the MemoryStream either the byte[] represented by TheByteArray, or
+        ///     if ThePacket is non-null, the Packet.Bytes will be appended to the memory stream
+        ///     which will append ThePacket's header and any encapsulated packets it contains
+        /// </summary>
+        /// <param name="ms">
+        ///     A <see cref="MemoryStream" />
+        /// </param>
+        public void AppendToMemoryStream(MemoryStream ms)
+        {
+            if (this.ThePacket != null)
+            {
+                var theBytes = this.ThePacket.Bytes;
+                ms.Write(theBytes, 0, theBytes.Length);
+            }
+            else if (this.TheByteArraySegment != null)
+            {
+                var theBytes = this.TheByteArraySegment.ActualBytes();
+                ms.Write(theBytes, 0, theBytes.Length);
             }
         }
     }

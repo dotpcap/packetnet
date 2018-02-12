@@ -18,14 +18,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet
 {
     /// <summary>
-    /// Represents an application layer packet as described at http://en.wikipedia.org/wiki/Application_Layer
+    ///     Represents an application layer packet as described at http://en.wikipedia.org/wiki/Application_Layer
     /// </summary>
     public abstract class ApplicationPacket : Packet
     {
-        /// <summary>
-        /// ApplicationPacket constructor
-        /// </summary>
-        protected ApplicationPacket()
-        {}
     }
 }

@@ -6,22 +6,22 @@ using PacketDotNet.Utils;
 namespace PacketDotNet.OSPF
 {
     /// <summary>
-    /// Link State Acknowledgment Packets are OSPF packet type 5.  To make
-    /// the flooding of LSAs reliable, flooded LSAs are explicitly
-    /// acknowledged. See http://www.ietf.org/rfc/rfc2328.txt for details.
+    ///     Link State Acknowledgment Packets are OSPF packet type 5.  To make
+    ///     the flooding of LSAs reliable, flooded LSAs are explicitly
+    ///     acknowledged. See http://www.ietf.org/rfc/rfc2328.txt for details.
     /// </summary>
     public class OSPFv2LSAPacket : OSPFv2Packet
     {
         /// <value>
-        /// The packet type
+        ///     The packet type
         /// </value>
         public static OSPFPacketType PacketType = OSPFPacketType.LinkStateAcknowledgment;
 
         /// <summary>
-        /// Constructs an OSPFv2 Link State Acknowledge packet from ByteArraySegment
+        ///     Constructs an OSPFv2 Link State Acknowledge packet from ByteArraySegment
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
         public OSPFv2LSAPacket(ByteArraySegment bas)
         {
@@ -29,7 +29,7 @@ namespace PacketDotNet.OSPF
         }
 
         /// <summary>
-        /// Constructs an Link OSPFv2 State Acknowledge packet
+        ///     Constructs an Link OSPFv2 State Acknowledge packet
         /// </summary>
         public OSPFv2LSAPacket()
         {
@@ -38,11 +38,11 @@ namespace PacketDotNet.OSPF
             this.HeaderByteArraySegment = new ByteArraySegment(b, 0, OSPFv2Fields.LSAHeaderPosition);
             this.Type = PacketType;
 
-            this.PacketLength = (UInt16)this.HeaderByteArraySegment.Bytes.Length;
+            this.PacketLength = (UInt16) this.HeaderByteArraySegment.Bytes.Length;
         }
 
         /// <summary>
-        /// Constructs an OSPFv2 Link State Acknowledge packet with LSA headers
+        ///     Constructs an OSPFv2 Link State Acknowledge packet with LSA headers
         /// </summary>
         /// <param name="lsas">List of the LSA headers</param>
         public OSPFv2LSAPacket(List<LSA> lsas)
@@ -54,23 +54,23 @@ namespace PacketDotNet.OSPF
             Array.Copy(this.HeaderByteArraySegment.Bytes, bytes, this.HeaderByteArraySegment.Length);
             for (Int32 i = 0; i < lsas.Count; i++)
             {
-                Array.Copy(lsas[i].Bytes, 0, bytes, offset, OSPFv2Fields.LSAHeaderLength); 
+                Array.Copy(lsas[i].Bytes, 0, bytes, offset, OSPFv2Fields.LSAHeaderLength);
                 offset += 20;
             }
 
             this.HeaderByteArraySegment = new ByteArraySegment(bytes);
             this.Type = PacketType;
-            this.PacketLength = (UInt16)this.HeaderByteArraySegment.Bytes.Length;
+            this.PacketLength = (UInt16) this.HeaderByteArraySegment.Bytes.Length;
         }
 
         /// <summary>
-        /// Constructs a packet from bytes and offset
+        ///     Constructs a packet from bytes and offset
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="System.Byte"/>
+        ///     A <see cref="System.Byte" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         public OSPFv2LSAPacket(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
@@ -79,7 +79,7 @@ namespace PacketDotNet.OSPF
         }
 
         /// <summary>
-        /// List of LSA acknowledgements.
+        ///     List of LSA acknowledgements.
         /// </summary>
         public virtual List<LSA> LSAAcknowledge
         {
@@ -102,14 +102,15 @@ namespace PacketDotNet.OSPF
                     ret.Add(l);
                     offset += OSPFv2Fields.LSAHeaderLength;
                 }
+
                 return ret;
             }
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="OSPFv2LSAPacket"/>.
+        ///     Returns a <see cref="System.String" /> that represents the current <see cref="OSPFv2LSAPacket" />.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="OSPFv2LSAPacket"/>.</returns>
+        /// <returns>A <see cref="System.String" /> that represents the current <see cref="OSPFv2LSAPacket" />.</returns>
         public override String ToString()
         {
             StringBuilder packet = new StringBuilder();
@@ -119,11 +120,11 @@ namespace PacketDotNet.OSPF
         }
 
         /// <summary cref="Packet.ToString()">
-        /// Output the packet information in the specified format
-        ///  Normal - outputs the packet info to a single line
-        ///  Colored - outputs the packet info to a single line with coloring
-        ///  Verbose - outputs detailed info about the packet
-        ///  VerboseColored - outputs detailed info about the packet with coloring
+        ///     Output the packet information in the specified format
+        ///     Normal - outputs the packet info to a single line
+        ///     Colored - outputs the packet info to a single line with coloring
+        ///     Verbose - outputs detailed info about the packet
+        ///     VerboseColored - outputs detailed info about the packet with coloring
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>

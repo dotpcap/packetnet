@@ -19,194 +19,25 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Net.NetworkInformation;
-using NUnit.Framework;
-using SharpPcap;
-using SharpPcap.LibPcap;
-using PacketDotNet;
 using System.IO;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using NUnit.Framework;
+using PacketDotNet;
 using PacketDotNet.Ethernet;
 using PacketDotNet.IP;
 using PacketDotNet.Tcp;
 using PacketDotNet.Utils;
+using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
     [TestFixture]
     public class IPv6PacketTest
     {
-        // icmpv6
-        public void VerifyPacket0(Packet p, RawCapture rawCapture, LinkLayers linkLayer)
-        {
-            Assert.IsNotNull(p);
-            Console.WriteLine(p.ToString());
-
-            Assert.AreEqual(linkLayer, rawCapture.LinkLayerType);
-
-            if (linkLayer == LinkLayers.Ethernet)
-            {
-                EthernetPacket e = (EthernetPacket)p;
-                Assert.AreEqual(PhysicalAddress.Parse("00-A0-CC-D9-41-75"), e.SourceHwAddress);
-                Assert.AreEqual(PhysicalAddress.Parse("33-33-00-00-00-02"), e.DestinationHwAddress);
-            }
-
-            var ip = (IpPacket)p.Extract (typeof(IpPacket));
-            Console.WriteLine("ip {0}", ip.ToString());
-            Assert.AreEqual(System.Net.IPAddress.Parse("fe80::2a0:ccff:fed9:4175"), ip.SourceAddress);
-            Assert.AreEqual(System.Net.IPAddress.Parse("ff02::2"), ip.DestinationAddress);
-            Assert.AreEqual(IpVersion.IPv6, ip.Version);
-            Assert.AreEqual(IPProtocolType.ICMPV6, ip.Protocol);
-            Assert.AreEqual(16,  ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
-            Assert.AreEqual(255, ip.HopLimit);
-            Assert.AreEqual(255, ip.TimeToLive);
-            Assert.AreEqual(0x3a, (Byte)ip.NextHeader);
-            Console.WriteLine("Failed: ip.ComputeIPChecksum() not implemented.");
-            Assert.AreEqual(1221145299, rawCapture.Timeval.Seconds);
-            Assert.AreEqual(453568.000, rawCapture.Timeval.MicroSeconds);
-        }
-
-        // Test that we can load and parse an IPv6 packet
-        // for multiple LinkLayerType types
-        [TestCase("../../CaptureFiles/ipv6_icmpv6_packet.pcap", LinkLayers.Ethernet)]
-        [TestCase("../../CaptureFiles/ipv6_icmpv6_packet_raw_linklayer.pcap", LinkLayers.Raw)]
-        public void IPv6PacketTestParsing(String pcapPath, LinkLayers linkLayer)
-        {
-            var dev = new CaptureFileReaderDevice(pcapPath);
-            dev.Open();
-
-            RawCapture rawCapture;
-            Int32 packetIndex = 0;
-            while((rawCapture = dev.GetNextPacket()) != null)
-            {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                Console.WriteLine("got packet");
-                switch(packetIndex)
-                {
-                case 0:
-                    this.VerifyPacket0(p, rawCapture, linkLayer);
-                    break;
-                default:
-                    Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
-                    break;
-                }
-
-                packetIndex++;
-            }
-
-            dev.Close();
-        }
-
-        /// <summary>
-        /// Test that we can load and parse an IPv6 TCP packet and that
-        /// the computed tcp checksum matches the expected checksum
-        /// </summary>
-        [Test]
-        public void TCPChecksumIPv6()
-        {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_http.pcap");
-            dev.Open();
-
-            // checksums from wireshark of the capture file
-            Int32[] expectedChecksum = {0x41a2,
-                                      0x4201,
-                                      0x5728,
-                                      0xf448,
-                                      0xee07,
-                                      0x939c,
-                                      0x63e4,
-                                      0x4590,
-                                      0x3725,
-                                      0x3723};
-
-            Int32 packetIndex = 0;
-            RawCapture rawCapture;
-            while ((rawCapture = dev.GetNextPacket()) != null)
-            {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var t = (TcpPacket)p.Extract(typeof(TcpPacket));
-                Assert.IsNotNull(t, "Expected t to not be null");
-                Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
-
-                // compare the computed checksum to the expected one
-                Assert.AreEqual(expectedChecksum[packetIndex],
-                                t.CalculateTCPChecksum(),
-                                "Checksum mismatch");
-
-                packetIndex++;
-            }
-
-            dev.Close();
-        }
-
-        // Test that we can correctly set the data section of a IPv6 packet
-        [Test]
-        public void TCPDataIPv6()
-        {
-            String s = "-++++=== HELLLLOOO ===++++-";
-            Byte[] data = System.Text.Encoding.UTF8.GetBytes(s);
-
-            //create random packet
-            TcpPacket p = TcpPacket.RandomPacket();
-
-            //replace pkt's data with our string
-            p.PayloadData = data;
-
-            //sanity check
-            Assert.AreEqual(s, System.Text.Encoding.Default.GetString(p.PayloadData));
-        }
-
-        [Test]
-        public void ConstructFromValues()
-        {
-            var sourceAddress = RandomUtils.GetIPAddress(IpVersion.IPv6);
-            var destinationAddress = RandomUtils.GetIPAddress(IpVersion.IPv6);
-            var ipPacket = new IPv6Packet(sourceAddress, destinationAddress);
-
-            Assert.AreEqual(sourceAddress, ipPacket.SourceAddress);
-            Assert.AreEqual(destinationAddress, ipPacket.DestinationAddress);
-        }
-
-        [Test]
-        public void PrintString()
-        {
-            Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_http.pcap");
-            dev.Open();
-            Console.WriteLine("Reading packet data");
-            var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-            Console.WriteLine("Parsing");
-            var ip = (IPv6Packet)p.Extract(typeof(IPv6Packet));
-
-            Console.WriteLine("Printing human readable string");
-            Console.WriteLine(ip.ToString());
-        }
-
-        [Test]
-        public void PrintVerboseString()
-        {
-            Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_http.pcap");
-            dev.Open();
-            Console.WriteLine("Reading packet data");
-            var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-            Console.WriteLine("Parsing");
-            var ip = (IPv6Packet)p.Extract(typeof(IPv6Packet));
-
-            Console.WriteLine("Printing human readable string");
-            Console.WriteLine(ip.ToString(StringOutputType.Verbose));
-        }
-
-        [Test]
-        public void RandomPacket()
-        {
-            IPv6Packet.RandomPacket();
-        }
-
         [Test]
         public void BinarySerialization()
         {
@@ -218,26 +49,28 @@ namespace Test.PacketType
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var ipv6 = (IPv6Packet)p.Extract(typeof(IPv6Packet));
+                var ipv6 = (IPv6Packet) p.Extract(typeof(IPv6Packet));
                 if (ipv6 == null)
                 {
                     continue;
                 }
+
                 foundipv6 = true;
 
                 var memoryStream = new MemoryStream();
                 BinaryFormatter serializer = new BinaryFormatter();
                 serializer.Serialize(memoryStream, ipv6);
 
-                memoryStream.Seek (0, SeekOrigin.Begin);
+                memoryStream.Seek(0, SeekOrigin.Begin);
                 BinaryFormatter deserializer = new BinaryFormatter();
-                IPv6Packet fromFile = (IPv6Packet)deserializer.Deserialize(memoryStream);
+                IPv6Packet fromFile = (IPv6Packet) deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(ipv6.Bytes, fromFile.Bytes);
                 Assert.AreEqual(ipv6.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
                 Assert.AreEqual(ipv6.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
                 Assert.AreEqual(ipv6.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(ipv6.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
+                Assert.AreEqual(ipv6.BytesHighPerformance.NeedsCopyForActualBytes,
+                    fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(ipv6.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(ipv6.Color, fromFile.Color);
                 Assert.AreEqual(ipv6.Header, fromFile.Header);
@@ -266,5 +99,178 @@ namespace Test.PacketType
             Assert.IsTrue(foundipv6, "Capture file contained no ipv6 packets");
         }
 
+        [Test]
+        public void ConstructFromValues()
+        {
+            var sourceAddress = RandomUtils.GetIPAddress(IpVersion.IPv6);
+            var destinationAddress = RandomUtils.GetIPAddress(IpVersion.IPv6);
+            var ipPacket = new IPv6Packet(sourceAddress, destinationAddress);
+
+            Assert.AreEqual(sourceAddress, ipPacket.SourceAddress);
+            Assert.AreEqual(destinationAddress, ipPacket.DestinationAddress);
+        }
+
+        // Test that we can load and parse an IPv6 packet
+        // for multiple LinkLayerType types
+        [TestCase("../../CaptureFiles/ipv6_icmpv6_packet.pcap", LinkLayers.Ethernet)]
+        [TestCase("../../CaptureFiles/ipv6_icmpv6_packet_raw_linklayer.pcap", LinkLayers.Raw)]
+        public void IPv6PacketTestParsing(String pcapPath, LinkLayers linkLayer)
+        {
+            var dev = new CaptureFileReaderDevice(pcapPath);
+            dev.Open();
+
+            RawCapture rawCapture;
+            Int32 packetIndex = 0;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                Console.WriteLine("got packet");
+                switch (packetIndex)
+                {
+                    case 0:
+                        this.VerifyPacket0(p, rawCapture, linkLayer);
+                        break;
+                    default:
+                        Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
+                        break;
+                }
+
+                packetIndex++;
+            }
+
+            dev.Close();
+        }
+
+        [Test]
+        public void PrintString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_http.pcap");
+            dev.Open();
+            Console.WriteLine("Reading packet data");
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+            Console.WriteLine("Parsing");
+            var ip = (IPv6Packet) p.Extract(typeof(IPv6Packet));
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(ip.ToString());
+        }
+
+        [Test]
+        public void PrintVerboseString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_http.pcap");
+            dev.Open();
+            Console.WriteLine("Reading packet data");
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+            Console.WriteLine("Parsing");
+            var ip = (IPv6Packet) p.Extract(typeof(IPv6Packet));
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(ip.ToString(StringOutputType.Verbose));
+        }
+
+        [Test]
+        public void RandomPacket()
+        {
+            IPv6Packet.RandomPacket();
+        }
+
+        /// <summary>
+        ///     Test that we can load and parse an IPv6 TCP packet and that
+        ///     the computed tcp checksum matches the expected checksum
+        /// </summary>
+        [Test]
+        public void TCPChecksumIPv6()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_http.pcap");
+            dev.Open();
+
+            // checksums from wireshark of the capture file
+            Int32[] expectedChecksum =
+            {
+                0x41a2,
+                0x4201,
+                0x5728,
+                0xf448,
+                0xee07,
+                0x939c,
+                0x63e4,
+                0x4590,
+                0x3725,
+                0x3723
+            };
+
+            Int32 packetIndex = 0;
+            RawCapture rawCapture;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var t = (TcpPacket) p.Extract(typeof(TcpPacket));
+                Assert.IsNotNull(t, "Expected t to not be null");
+                Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
+
+                // compare the computed checksum to the expected one
+                Assert.AreEqual(expectedChecksum[packetIndex],
+                    t.CalculateTCPChecksum(),
+                    "Checksum mismatch");
+
+                packetIndex++;
+            }
+
+            dev.Close();
+        }
+
+        // Test that we can correctly set the data section of a IPv6 packet
+        [Test]
+        public void TCPDataIPv6()
+        {
+            String s = "-++++=== HELLLLOOO ===++++-";
+            Byte[] data = Encoding.UTF8.GetBytes(s);
+
+            //create random packet
+            TcpPacket p = TcpPacket.RandomPacket();
+
+            //replace pkt's data with our string
+            p.PayloadData = data;
+
+            //sanity check
+            Assert.AreEqual(s, Encoding.Default.GetString(p.PayloadData));
+        }
+
+        // icmpv6
+        public void VerifyPacket0(Packet p, RawCapture rawCapture, LinkLayers linkLayer)
+        {
+            Assert.IsNotNull(p);
+            Console.WriteLine(p.ToString());
+
+            Assert.AreEqual(linkLayer, rawCapture.LinkLayerType);
+
+            if (linkLayer == LinkLayers.Ethernet)
+            {
+                EthernetPacket e = (EthernetPacket) p;
+                Assert.AreEqual(PhysicalAddress.Parse("00-A0-CC-D9-41-75"), e.SourceHwAddress);
+                Assert.AreEqual(PhysicalAddress.Parse("33-33-00-00-00-02"), e.DestinationHwAddress);
+            }
+
+            var ip = (IpPacket) p.Extract(typeof(IpPacket));
+            Console.WriteLine("ip {0}", ip);
+            Assert.AreEqual(IPAddress.Parse("fe80::2a0:ccff:fed9:4175"), ip.SourceAddress);
+            Assert.AreEqual(IPAddress.Parse("ff02::2"), ip.DestinationAddress);
+            Assert.AreEqual(IpVersion.IPv6, ip.Version);
+            Assert.AreEqual(IPProtocolType.ICMPV6, ip.Protocol);
+            Assert.AreEqual(16, ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
+            Assert.AreEqual(255, ip.HopLimit);
+            Assert.AreEqual(255, ip.TimeToLive);
+            Assert.AreEqual(0x3a, (Byte) ip.NextHeader);
+            Console.WriteLine("Failed: ip.ComputeIPChecksum() not implemented.");
+            Assert.AreEqual(1221145299, rawCapture.Timeval.Seconds);
+            Assert.AreEqual(453568.000, rawCapture.Timeval.MicroSeconds);
+        }
     }
 }

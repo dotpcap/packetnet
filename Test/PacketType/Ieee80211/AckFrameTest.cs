@@ -19,12 +19,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Net.NetworkInformation;
 using NUnit.Framework;
 using PacketDotNet;
-using SharpPcap.LibPcap;
 using PacketDotNet.Ieee80211;
-using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -33,74 +33,73 @@ namespace Test.PacketType
         [TestFixture]
         public class AckFrameTest
         {
-			
-			[Test]
-            public void Test_Constructor ()
-            {
-                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_ack_frame.pcap");
-                dev.Open ();
-                var rawCapture = dev.GetNextPacket ();
-                dev.Close ();
-
-                Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
-                AckFrame frame = (AckFrame)p.PayloadPacket;
-
-                Assert.AreEqual (0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual (FrameControlField.FrameSubTypes.ControlACK, frame.FrameControl.SubType);
-                Assert.IsFalse (frame.FrameControl.ToDS);
-                Assert.IsFalse (frame.FrameControl.FromDS);
-                Assert.IsFalse (frame.FrameControl.MoreFragments);
-                Assert.IsFalse (frame.FrameControl.Retry);
-                Assert.IsFalse (frame.FrameControl.PowerManagement);
-                Assert.IsFalse (frame.FrameControl.MoreData);
-                Assert.IsFalse (frame.FrameControl.Protected);
-                Assert.IsFalse (frame.FrameControl.Order);
-                Assert.AreEqual (0, frame.Duration.Field); //this need expanding on in the future
-                Assert.AreEqual ("F8DB7F491342", frame.ReceiverAddress.ToString ().ToUpper ());
-                Assert.AreEqual (0xD2F5BE07, frame.FrameCheckSequence);
-                Assert.AreEqual (10, frame.FrameSize);
-            }	
-				
             [Test]
-            public void Test_Constructor_ConstructWithValues ()
+            public void Test_Constructor()
             {
-                AckFrame frame = new AckFrame (PhysicalAddress.Parse ("111111111111"));
-                
+                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_ack_frame.pcap");
+                dev.Open();
+                var rawCapture = dev.GetNextPacket();
+                dev.Close();
+
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                AckFrame frame = (AckFrame) p.PayloadPacket;
+
+                Assert.AreEqual(0, frame.FrameControl.ProtocolVersion);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlACK, frame.FrameControl.SubType);
+                Assert.IsFalse(frame.FrameControl.ToDS);
+                Assert.IsFalse(frame.FrameControl.FromDS);
+                Assert.IsFalse(frame.FrameControl.MoreFragments);
+                Assert.IsFalse(frame.FrameControl.Retry);
+                Assert.IsFalse(frame.FrameControl.PowerManagement);
+                Assert.IsFalse(frame.FrameControl.MoreData);
+                Assert.IsFalse(frame.FrameControl.Protected);
+                Assert.IsFalse(frame.FrameControl.Order);
+                Assert.AreEqual(0, frame.Duration.Field); //this need expanding on in the future
+                Assert.AreEqual("F8DB7F491342", frame.ReceiverAddress.ToString().ToUpper());
+                Assert.AreEqual(0xD2F5BE07, frame.FrameCheckSequence);
+                Assert.AreEqual(10, frame.FrameSize);
+            }
+
+            [Test]
+            public void Test_Constructor_ConstructWithValues()
+            {
+                AckFrame frame = new AckFrame(PhysicalAddress.Parse("111111111111"));
+
                 frame.FrameControl.ToDS = false;
                 frame.FrameControl.FromDS = true;
                 frame.FrameControl.MoreFragments = true;
-                
+
                 frame.Duration.Field = 0x1234;
-                
-                frame.UpdateFrameCheckSequence ();
+
+                frame.UpdateFrameCheckSequence();
                 UInt32 fcs = frame.FrameCheckSequence;
-                
+
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
-                var bas = new ByteArraySegment (bytes);
+                var bas = new ByteArraySegment(bytes);
 
                 //create a new frame that should be identical to the original
-                AckFrame recreatedFrame = MacFrame.ParsePacket (bas) as AckFrame;
-                recreatedFrame.UpdateFrameCheckSequence ();
-                
-                Assert.AreEqual (FrameControlField.FrameSubTypes.ControlACK, recreatedFrame.FrameControl.SubType);
-                Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
-                Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
-                Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);
-                
-                Assert.AreEqual ("111111111111", recreatedFrame.ReceiverAddress.ToString ().ToUpper ());
-                
-                Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
+                AckFrame recreatedFrame = MacFrame.ParsePacket(bas) as AckFrame;
+                recreatedFrame.UpdateFrameCheckSequence();
+
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlACK, recreatedFrame.FrameControl.SubType);
+                Assert.IsFalse(recreatedFrame.FrameControl.ToDS);
+                Assert.IsTrue(recreatedFrame.FrameControl.FromDS);
+                Assert.IsTrue(recreatedFrame.FrameControl.MoreFragments);
+
+                Assert.AreEqual("111111111111", recreatedFrame.ReceiverAddress.ToString().ToUpper());
+
+                Assert.AreEqual(fcs, recreatedFrame.FrameCheckSequence);
             }
-			
-			[Test]
-			public void Test_ConstructorWithCorruptBuffer ()
-			{
-				//buffer is way too short for frame. We are just checking it doesn't throw
-				Byte[] corruptBuffer = new Byte[]{0x01};
-				AckFrame frame = new AckFrame(new ByteArraySegment(corruptBuffer));
-				Assert.IsFalse(frame.FCSValid);
-			}
-        } 
+
+            [Test]
+            public void Test_ConstructorWithCorruptBuffer()
+            {
+                //buffer is way too short for frame. We are just checking it doesn't throw
+                Byte[] corruptBuffer = {0x01};
+                AckFrame frame = new AckFrame(new ByteArraySegment(corruptBuffer));
+                Assert.IsFalse(frame.FCSValid);
+            }
+        }
     }
 }

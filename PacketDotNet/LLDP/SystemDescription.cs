@@ -18,18 +18,20 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
 
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// A System Description TLV
+    ///     A System Description TLV
     /// </summary>
     [Serializable]
     public class SystemDescription : StringTLV
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
@@ -41,13 +43,13 @@ namespace PacketDotNet.LLDP
         #region Constructors
 
         /// <summary>
-        /// Creates a System Description TLV
+        ///     Creates a System Description TLV
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The System Description TLV's offset from the
-        /// origin of the LLDP
+        ///     The System Description TLV's offset from the
+        ///     origin of the LLDP
         /// </param>
         public SystemDescription(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
@@ -56,13 +58,13 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Creates a System Description TLV and sets it value
+        ///     Creates a System Description TLV and sets it value
         /// </summary>
         /// <param name="description">
-        /// A textual Description of the system
+        ///     A textual Description of the system
         /// </param>
         public SystemDescription(String description) : base(TLVTypes.SystemDescription,
-                                                            description)
+            description)
         {
             log.Debug("");
         }
@@ -72,7 +74,7 @@ namespace PacketDotNet.LLDP
         #region Properties
 
         /// <value>
-        /// A textual Description of the system
+        ///     A textual Description of the system
         /// </value>
         public String Description
         {

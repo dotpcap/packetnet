@@ -27,8 +27,8 @@ using PacketDotNet.Utils;
 namespace PacketDotNet.IP
 {
     /// <summary>
-    /// Raw IP packet
-    /// See http://www.tcpdump.org/linktypes.html look for LINKTYPE_RAW or DLT_RAW
+    ///     Raw IP packet
+    ///     See http://www.tcpdump.org/linktypes.html look for LINKTYPE_RAW or DLT_RAW
     /// </summary>
     [Serializable]
     public class RawIPPacket : Packet
@@ -36,16 +36,15 @@ namespace PacketDotNet.IP
         /// <summary>
         /// </summary>
         public RawIPPacketProtocol Protocol;
-       
+
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
         public RawIPPacket(ByteArraySegment bas)
         {
-
             // Pcap raw link layer format does not have any header
             // you need to identify whether you have ipv4 or ipv6
             // directly by checking the IP version number.
@@ -53,7 +52,7 @@ namespace PacketDotNet.IP
             // If the first nibble is 0x06, then you have IP v6
             // The RawIPPacketProtocol enum has been defined to match this.
             var firstNibble = bas.Bytes[0] >> 4;
-            this.Protocol = (RawIPPacketProtocol)firstNibble;
+            this.Protocol = (RawIPPacketProtocol) firstNibble;
 
             this.HeaderByteArraySegment = new ByteArraySegment(bas)
             {
@@ -65,14 +64,16 @@ namespace PacketDotNet.IP
 
             switch (this.Protocol)
             {
-            case RawIPPacketProtocol.IPv4:
-                this.PayloadPacketOrData.ThePacket = new IPv4Packet(this.HeaderByteArraySegment.EncapsulatedBytes());
-                break;
-            case RawIPPacketProtocol.IPv6:
-                this.PayloadPacketOrData.ThePacket = new IPv6Packet(this.HeaderByteArraySegment.EncapsulatedBytes());
-                break;
-            default:
-                throw new NotImplementedException("Protocol of " + this.Protocol + " is not implemented");
+                case RawIPPacketProtocol.IPv4:
+                    this.PayloadPacketOrData.ThePacket =
+                        new IPv4Packet(this.HeaderByteArraySegment.EncapsulatedBytes());
+                    break;
+                case RawIPPacketProtocol.IPv6:
+                    this.PayloadPacketOrData.ThePacket =
+                        new IPv6Packet(this.HeaderByteArraySegment.EncapsulatedBytes());
+                    break;
+                default:
+                    throw new NotImplementedException("Protocol of " + this.Protocol + " is not implemented");
             }
         }
 
@@ -106,28 +107,29 @@ namespace PacketDotNet.IP
                     // collect the properties and their value
                     Dictionary<String, String> properties = new Dictionary<String, String>
                     {
-                        { "protocol", this.Protocol.ToString() + " (0x" + this.Protocol.ToString("x") + ")" }
+                        {"protocol", this.Protocol + " (0x" + this.Protocol.ToString("x") + ")"}
                     };
 
                     // calculate the padding needed to right-justify the property names
                     Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                     // build the output string
-                    buffer.AppendLine("Raw:  ******* Raw - \"Raw IP Packet\" - offset=? length=" + this.TotalPacketLength);
+                    buffer.AppendLine("Raw:  ******* Raw - \"Raw IP Packet\" - offset=? length=" +
+                                      this.TotalPacketLength);
                     buffer.AppendLine("Raw:");
                     foreach (var property in properties)
                     {
                         buffer.AppendLine("Raw: " + property.Key.PadLeft(padLength) + " = " + property.Value);
                     }
+
                     buffer.AppendLine("Raw:");
                     break;
             }
 
             // append the base output
-            buffer.Append((String) base.ToString(outputFormat));
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
         }
     }
 }
-

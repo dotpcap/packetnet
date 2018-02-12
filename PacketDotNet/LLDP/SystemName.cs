@@ -18,52 +18,54 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
 
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// A System Name TLV
+    ///     A System Name TLV
     /// </summary>
     [Serializable]
     public class SystemName : StringTLV
     {
-        #region Constructors
-
-        /// <summary>
-        /// Creates a System Name TLV
-        /// </summary>
-        /// <param name="bytes">
-        /// </param>
-        /// <param name="offset">
-        /// The System Name TLV's offset from the
-        /// origin of the LLDP
-        /// </param>
-        public SystemName(Byte[] bytes, Int32 offset) :
-            base(bytes, offset)
-        {}
-
-        /// <summary>
-        /// Creates a System Name TLV and sets it value
-        /// </summary>
-        /// <param name="name">
-        /// A textual Name of the system
-        /// </param>
-        public SystemName(String name) : base(TLVTypes.SystemName, name)
-        {
-        }
-
-        #endregion
-
         #region Properties
 
         /// <value>
-        /// A textual Name of the system
+        ///     A textual Name of the system
         /// </value>
         public String Name
         {
             get => this.StringValue;
             set => this.StringValue = value;
+        }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        ///     Creates a System Name TLV
+        /// </summary>
+        /// <param name="bytes">
+        /// </param>
+        /// <param name="offset">
+        ///     The System Name TLV's offset from the
+        ///     origin of the LLDP
+        /// </param>
+        public SystemName(Byte[] bytes, Int32 offset) :
+            base(bytes, offset)
+        {
+        }
+
+        /// <summary>
+        ///     Creates a System Name TLV and sets it value
+        /// </summary>
+        /// <param name="name">
+        ///     A textual Name of the system
+        /// </param>
+        public SystemName(String name) : base(TLVTypes.SystemName, name)
+        {
         }
 
         #endregion

@@ -14,6 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
 using PacketDotNet.IP;
 using PacketDotNet.Utils;
@@ -21,13 +22,14 @@ using PacketDotNet.Utils;
 namespace PacketDotNet
 {
     /// <summary>
-    /// Transport layer packet
+    ///     Transport layer packet
     /// </summary>
     [Serializable]
     public abstract class TransportPacket : Packet
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
@@ -35,29 +37,21 @@ namespace PacketDotNet
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        protected TransportPacket()
-        {
-        }
 
         /// <value>
-        /// The Checksum version
+        ///     The Checksum version
         /// </value>
-        public abstract UInt16 Checksum
-        {
-            get;
-            set;
-        }
+        public abstract UInt16 Checksum { get; set; }
 
         /// <summary>
-        /// Calculates the transport layer checksum, either for the
-        /// tcp or udp packet
+        ///     Calculates the transport layer checksum, either for the
+        ///     tcp or udp packet
         /// </summary>
-        /// <param name="option"><see cref="TransportPacket.TransportChecksumOption"/></param>
+        /// <param name="option">
+        ///     <see cref="TransportPacket.TransportChecksumOption" />
+        /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </returns>
         internal Int32 CalculateChecksum(TransportChecksumOption option)
         {
@@ -72,7 +66,7 @@ namespace PacketDotNet
             // copy the tcp section with data
             Byte[] dataToChecksum = ((IpPacket) this.ParentPacket).PayloadPacket.Bytes;
 
-             if (option == TransportChecksumOption.AttachPseudoIPHeader)
+            if (option == TransportChecksumOption.AttachPseudoIPHeader)
                 dataToChecksum = ((IpPacket) this.ParentPacket).AttachPseudoIPHeader(dataToChecksum);
 
             // calculate the one's complement sum of the tcp header
@@ -85,20 +79,20 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Determine if the transport layer checksum is valid
+        ///     Determine if the transport layer checksum is valid
         /// </summary>
         /// <param name="option">
-        /// A <see cref="TransportChecksumOption"/>
+        ///     A <see cref="TransportChecksumOption" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Boolean"/>
+        ///     A <see cref="System.Boolean" />
         /// </returns>
         public virtual Boolean IsValidChecksum(TransportChecksumOption option)
         {
             var upperLayer = ((IpPacket) this.ParentPacket).PayloadPacket.Bytes;
 
             Log.DebugFormat("option: {0}, upperLayer.Length {1}",
-                            option, upperLayer.Length);
+                option, upperLayer.Length);
 
             if (option == TransportChecksumOption.AttachPseudoIPHeader)
                 upperLayer = ((IpPacket) this.ParentPacket).AttachPseudoIPHeader(upperLayer);
@@ -106,26 +100,26 @@ namespace PacketDotNet
             var onesSum = ChecksumUtils.OnesSum(upperLayer);
             const Int32 expectedOnesSum = 0xffff;
             Log.DebugFormat("onesSum {0} expected {1}",
-                            onesSum,
-                            expectedOnesSum);
+                onesSum,
+                expectedOnesSum);
 
             return (onesSum == expectedOnesSum);
         }
 
         /// <summary>
-        /// Options for use when creating a transport layer checksum
+        ///     Options for use when creating a transport layer checksum
         /// </summary>
         public enum TransportChecksumOption
         {
             /// <summary>
-            /// No extra options
+            ///     No extra options
             /// </summary>
             None,
 
             /// <summary>
-            /// Attach a pseudo IP header to the transport data being checksummed
+            ///     Attach a pseudo IP header to the transport data being checksummed
             /// </summary>
-            AttachPseudoIPHeader,
+            AttachPseudoIPHeader
         }
     }
 }

@@ -33,13 +33,14 @@ using PacketDotNet.Utils.Conversion;
 namespace PacketDotNet.Ethernet
 {
     /// <summary>
-    /// See http://en.wikipedia.org/wiki/Ethernet#Ethernet_frame_types_and_the_EtherType_field
+    ///     See http://en.wikipedia.org/wiki/Ethernet#Ethernet_frame_types_and_the_EtherType_field
     /// </summary>
     [Serializable]
     public class EthernetPacket : InternetLinkLayerPacket
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
@@ -49,8 +50,8 @@ namespace PacketDotNet.Ethernet
 #endif
 
         /// <value>
-        /// Payload packet, overridden to set the 'Type' field based on
-        /// the type of packet being used here if the PayloadPacket is being set
+        ///     Payload packet, overridden to set the 'Type' field based on
+        ///     the type of packet being used here if the PayloadPacket is being set
         /// </value>
         public override Packet PayloadPacket
         {
@@ -91,23 +92,25 @@ namespace PacketDotNet.Ethernet
             get
             {
                 Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
-                Array.Copy((Array) this.HeaderByteArraySegment.Bytes, (Int32) (this.HeaderByteArraySegment.Offset + EthernetFields.SourceMacPosition),
-                           hwAddress, 0, hwAddress.Length);
+                Array.Copy(this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + EthernetFields.SourceMacPosition,
+                    hwAddress, 0, hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
 
             set
             {
                 Byte[] hwAddress = value.GetAddressBytes();
-                if(hwAddress.Length != EthernetFields.MacAddressLength)
+                if (hwAddress.Length != EthernetFields.MacAddressLength)
                 {
                     throw new InvalidOperationException("address length " + hwAddress.Length
-                                                               + " not equal to the expected length of "
-                                                               + EthernetFields.MacAddressLength);
+                                                                          + " not equal to the expected length of "
+                                                                          + EthernetFields.MacAddressLength);
                 }
 
-                Array.Copy((Array) hwAddress, (Int32) 0, (Array) this.HeaderByteArraySegment.Bytes, (Int32) (this.HeaderByteArraySegment.Offset + EthernetFields.SourceMacPosition),
-                           hwAddress.Length);
+                Array.Copy(hwAddress, 0, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + EthernetFields.SourceMacPosition,
+                    hwAddress.Length);
             }
         }
 
@@ -117,46 +120,50 @@ namespace PacketDotNet.Ethernet
             get
             {
                 Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
-                Array.Copy((Array) this.HeaderByteArraySegment.Bytes, (Int32) (this.HeaderByteArraySegment.Offset + EthernetFields.DestinationMacPosition),
-                           hwAddress, 0, hwAddress.Length);
+                Array.Copy(this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + EthernetFields.DestinationMacPosition,
+                    hwAddress, 0, hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
 
             set
             {
                 Byte[] hwAddress = value.GetAddressBytes();
-                if(hwAddress.Length != EthernetFields.MacAddressLength)
+                if (hwAddress.Length != EthernetFields.MacAddressLength)
                 {
                     throw new InvalidOperationException("address length " + hwAddress.Length
-                                                               + " not equal to the expected length of "
-                                                               + EthernetFields.MacAddressLength);
+                                                                          + " not equal to the expected length of "
+                                                                          + EthernetFields.MacAddressLength);
                 }
 
-                Array.Copy((Array) hwAddress, (Int32) 0, (Array) this.HeaderByteArraySegment.Bytes, (Int32) (this.HeaderByteArraySegment.Offset + EthernetFields.DestinationMacPosition),
-                           hwAddress.Length);
+                Array.Copy(hwAddress, 0, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + EthernetFields.DestinationMacPosition,
+                    hwAddress.Length);
             }
         }
 
         /// <value>
-        /// Type of packet that this ethernet packet encapsulates
+        ///     Type of packet that this ethernet packet encapsulates
         /// </value>
         public virtual EthernetPacketType Type
         {
-            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + EthernetFields.TypePosition);
+            get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + EthernetFields.TypePosition);
 
             set
             {
-                Int16 val = (Int16)value;
-                EndianBitConverter.Big.CopyBytes(val, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + EthernetFields.TypePosition);
+                Int16 val = (Int16) value;
+                EndianBitConverter.Big.CopyBytes(val, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + EthernetFields.TypePosition);
             }
         }
 
         /// <summary>
-        /// Construct a new ethernet packet from source and destination mac addresses
+        ///     Construct a new ethernet packet from source and destination mac addresses
         /// </summary>
         public EthernetPacket(PhysicalAddress SourceHwAddress,
-                              PhysicalAddress DestinationHwAddress,
-                              EthernetPacketType ethernetPacketType)
+            PhysicalAddress DestinationHwAddress,
+            EthernetPacketType ethernetPacketType)
         {
             log.Debug("");
 
@@ -173,10 +180,10 @@ namespace PacketDotNet.Ethernet
         }
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
         public EthernetPacket(ByteArraySegment bas)
         {
@@ -193,20 +200,20 @@ namespace PacketDotNet.Ethernet
         }
 
         /// <summary>
-        /// Used by the EthernetPacket constructor. Located here because the LinuxSLL constructor
-        /// also needs to perform the same operations as it contains an ethernet type
+        ///     Used by the EthernetPacket constructor. Located here because the LinuxSLL constructor
+        ///     also needs to perform the same operations as it contains an ethernet type
         /// </summary>
         /// <param name="Header">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
         /// <param name="Type">
-        /// A <see cref="EthernetPacketType"/>
+        ///     A <see cref="EthernetPacketType" />
         /// </param>
         /// <returns>
-        /// A <see cref="PacketOrByteArraySegment"/>
+        ///     A <see cref="PacketOrByteArraySegment" />
         /// </returns>
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
-                                                                        EthernetPacketType Type)
+            EthernetPacketType Type)
         {
             // slice off the payload
             var payload = Header.EncapsulatedBytes();
@@ -215,32 +222,32 @@ namespace PacketDotNet.Ethernet
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
             // parse the encapsulated bytes
-            switch(Type)
+            switch (Type)
             {
-            case EthernetPacketType.IpV4:
-                payloadPacketOrData.ThePacket = new IPv4Packet(payload);
-                break;
-            case EthernetPacketType.IpV6:
-                payloadPacketOrData.ThePacket = new IPv6Packet(payload);
-                break;
-            case EthernetPacketType.Arp:
-                payloadPacketOrData.ThePacket = new ARPPacket(payload);
-                break;
-            case EthernetPacketType.LLDP:
-                payloadPacketOrData.ThePacket = new LLDPPacket(payload);
-                break;
-            case EthernetPacketType.PointToPointProtocolOverEthernetSessionStage:
-                payloadPacketOrData.ThePacket = new PPPoEPacket(payload);
-                break;
-            case EthernetPacketType.WakeOnLan:
-                payloadPacketOrData.ThePacket = new WakeOnLanPacket(payload);
-                break;
-            case EthernetPacketType.VLanTaggedFrame:
-                payloadPacketOrData.ThePacket = new Ieee8021QPacket(payload);
-                break;
-            default: // consider the sub-packet to be a byte array
-                payloadPacketOrData.TheByteArraySegment = payload;
-                break;
+                case EthernetPacketType.IpV4:
+                    payloadPacketOrData.ThePacket = new IPv4Packet(payload);
+                    break;
+                case EthernetPacketType.IpV6:
+                    payloadPacketOrData.ThePacket = new IPv6Packet(payload);
+                    break;
+                case EthernetPacketType.Arp:
+                    payloadPacketOrData.ThePacket = new ARPPacket(payload);
+                    break;
+                case EthernetPacketType.LLDP:
+                    payloadPacketOrData.ThePacket = new LLDPPacket(payload);
+                    break;
+                case EthernetPacketType.PointToPointProtocolOverEthernetSessionStage:
+                    payloadPacketOrData.ThePacket = new PPPoEPacket(payload);
+                    break;
+                case EthernetPacketType.WakeOnLan:
+                    payloadPacketOrData.ThePacket = new WakeOnLanPacket(payload);
+                    break;
+                case EthernetPacketType.VLanTaggedFrame:
+                    payloadPacketOrData.ThePacket = new Ieee8021QPacket(payload);
+                    break;
+                default: // consider the sub-packet to be a byte array
+                    payloadPacketOrData.TheByteArraySegment = payload;
+                    break;
             }
 
             return payloadPacketOrData;
@@ -256,7 +263,7 @@ namespace PacketDotNet.Ethernet
             String color = "";
             String colorEscape = "";
 
-            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
                 color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
@@ -267,7 +274,8 @@ namespace PacketDotNet.Ethernet
                 case StringOutputType.Normal:
                 case StringOutputType.Colored:
                     // build the output string
-                    buffer.AppendFormat("{0}[EthernetPacket: SourceHwAddress={2}, DestinationHwAddress={3}, Type={4}]{1}",
+                    buffer.AppendFormat(
+                        "{0}[EthernetPacket: SourceHwAddress={2}, DestinationHwAddress={3}, Type={4}]{1}",
                         color,
                         colorEscape,
                         HexPrinter.PrintMACAddress(this.SourceHwAddress),
@@ -280,35 +288,37 @@ namespace PacketDotNet.Ethernet
                     {
                         {"destination", HexPrinter.PrintMACAddress(this.DestinationHwAddress)},
                         {"source", HexPrinter.PrintMACAddress(this.SourceHwAddress)},
-                        {"type", this.Type.ToString() + " (0x" + this.Type.ToString("x") + ")"}
+                        {"type", this.Type + " (0x" + this.Type.ToString("x") + ")"}
                     };
 
                     // calculate the padding needed to right-justify the property names
                     Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                     // build the output string
-                    buffer.AppendLine("Eth:  ******* Ethernet - \"Ethernet\" - offset=? length=" + this.TotalPacketLength);
+                    buffer.AppendLine("Eth:  ******* Ethernet - \"Ethernet\" - offset=? length=" +
+                                      this.TotalPacketLength);
                     buffer.AppendLine("Eth:");
-                    foreach(var property in properties)
+                    foreach (var property in properties)
                     {
                         buffer.AppendLine("Eth: " + property.Key.PadLeft(padLength) + " = " + property.Value);
                     }
+
                     buffer.AppendLine("Eth:");
                     break;
             }
 
             // append the base output
-            buffer.Append((String) base.ToString(outputFormat));
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
         }
 
         /// <summary>
-        /// Generate a random EthernetPacket
-        /// TODO: could improve this routine to set a random payload as well
+        ///     Generate a random EthernetPacket
+        ///     TODO: could improve this routine to set a random payload as well
         /// </summary>
         /// <returns>
-        /// A <see cref="EthernetPacket"/>
+        ///     A <see cref="EthernetPacket" />
         /// </returns>
         public static EthernetPacket RandomPacket()
         {
@@ -321,8 +331,8 @@ namespace PacketDotNet.Ethernet
             rnd.NextBytes(dstPhysicalAddress);
 
             return new EthernetPacket(new PhysicalAddress(srcPhysicalAddress),
-                                      new PhysicalAddress(dstPhysicalAddress),
-                                      EthernetPacketType.None);
+                new PhysicalAddress(dstPhysicalAddress),
+                EthernetPacketType.None);
         }
     }
 }

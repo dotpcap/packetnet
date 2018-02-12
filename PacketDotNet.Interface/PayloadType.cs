@@ -21,23 +21,23 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet
 {
     /// <summary>
-    /// Differentiates between a packet class payload, a byte[] payload
-    /// or no payload
+    ///     Differentiates between a packet class payload, a byte[] payload
+    ///     or no payload
     /// </summary>
     public enum PayloadType
     {
         /// <summary>
-        /// Constant packet.
+        ///     Constant packet.
         /// </summary>
         Packet,
 
         /// <summary>
-        /// Constant bytes.
+        ///     Constant bytes.
         /// </summary>
         Bytes,
 
         /// <summary>
-        /// Constant none.
+        ///     Constant none.
         /// </summary>
         None
     }

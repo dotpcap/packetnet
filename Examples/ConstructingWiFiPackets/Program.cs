@@ -1,24 +1,48 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using SharpPcap.AirPcap;
-using PacketDotNet.Ieee80211;
 using System.Net.NetworkInformation;
-using SharpPcap;
+using System.Text;
 using PacketDotNet;
+using PacketDotNet.Ieee80211;
+using SharpPcap;
+using SharpPcap.AirPcap;
+using Version = SharpPcap.Version;
 
 namespace ConstructingWiFiPackets
 {
     internal class Program
     {
         private static PhysicalAddress adapterAddress;
-        private static Boolean stopCapturing = false;
+        private static Boolean stopCapturing;
+
+        private static void device_OnPacketArrival(Object sender, CaptureEventArgs e)
+        {
+            MacFrame p = Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data) as MacFrame;
+
+            if (p.FrameControl.SubType == FrameControlField.FrameSubTypes.ManagementProbeResponse)
+            {
+                ProbeResponseFrame probeResponse = p as ProbeResponseFrame;
+                if (probeResponse.DestinationAddress == adapterAddress)
+                {
+                    Console.WriteLine(probeResponse.ToString());
+                }
+            }
+        }
+
+        private static void HandleCancelKeyPress(Object sender, ConsoleCancelEventArgs e)
+        {
+            Console.WriteLine("-- Stopping capture");
+            stopCapturing = true;
+
+            // tell the handler that we are taking care of shutting down, don't
+            // shut us down after we return because we need to do just a little
+            // bit more processing to close the open capture device etc
+            e.Cancel = true;
+        }
 
         private static void Main(String[] args)
         {
             // Print SharpPcap version
-            String ver = SharpPcap.Version.VersionString;
+            String ver = Version.VersionString;
             Console.WriteLine("PacketDotNet example using SharpPcap {0}", ver);
 
             // Retrieve the device list
@@ -57,8 +81,8 @@ namespace ConstructingWiFiPackets
             // use a PcapDevice.OnPacketArrival handler
             Console.CancelKeyPress += HandleCancelKeyPress;
 
-            var device = (AirPcapDevice)devices[i];
-            
+            var device = (AirPcapDevice) devices[i];
+
             device.Open(DeviceMode.Normal);
             device.FcsValidation = AirPcapValidationType.ACCEPT_CORRECT_FRAMES;
             adapterAddress = device.MacAddress;
@@ -66,25 +90,26 @@ namespace ConstructingWiFiPackets
 
             PhysicalAddress broadcastAddress = PhysicalAddress.Parse("FF-FF-FF-FF-FF-FF");
 
-            
+
             Console.Write("Please enter the SSID to probe for (use empty string for broadcast probe): ");
             String ssid = Console.ReadLine();
             Console.WriteLine();
 
 
-
             //Make the probe packet to send
             ASCIIEncoding encoding = new ASCIIEncoding();
-            InformationElement ssidIe = new InformationElement(InformationElement.ElementId.ServiceSetIdentity, encoding.GetBytes(ssid));
+            InformationElement ssidIe = new InformationElement(InformationElement.ElementId.ServiceSetIdentity,
+                encoding.GetBytes(ssid));
             InformationElement supportedRatesIe = new InformationElement(InformationElement.ElementId.SupportedRates,
-                new Byte[] { 0x02, 0x04, 0x0b, 0x16, 0x0c, 0x12, 0x18, 0x24 });
-            InformationElement extendedSupportedRatesIe = new InformationElement(InformationElement.ElementId.ExtendedSupportedRates,
-                new Byte[] { 0x30, 0x48, 0x60, 0x6c });
+                new Byte[] {0x02, 0x04, 0x0b, 0x16, 0x0c, 0x12, 0x18, 0x24});
+            InformationElement extendedSupportedRatesIe = new InformationElement(
+                InformationElement.ElementId.ExtendedSupportedRates,
+                new Byte[] {0x30, 0x48, 0x60, 0x6c});
             //Create a broadcast probe
             ProbeRequestFrame probe = new ProbeRequestFrame(device.MacAddress,
-                                                            broadcastAddress,
-                                                            broadcastAddress,
-                                                            new InformationElementList() {ssidIe, supportedRatesIe, extendedSupportedRatesIe});
+                broadcastAddress,
+                broadcastAddress,
+                new InformationElementList {ssidIe, supportedRatesIe, extendedSupportedRatesIe});
 
             Byte[] probeBytes = probe.Bytes;
             device.SendPacket(probeBytes, probeBytes.Length - 4);
@@ -111,37 +136,13 @@ namespace ConstructingWiFiPackets
                     ProbeResponseFrame probeResponse = p as ProbeResponseFrame;
                     if (probeResponse.DestinationAddress.Equals(adapterAddress))
                     {
-                        var ie = probeResponse.InformationElements.FindFirstById(InformationElement.ElementId.ServiceSetIdentity);
-                        Console.WriteLine("Response: {0}, SSID: {1}", probeResponse.SourceAddress, Encoding.UTF8.GetString(ie.Value)); 
+                        var ie = probeResponse.InformationElements.FindFirstById(InformationElement.ElementId
+                            .ServiceSetIdentity);
+                        Console.WriteLine("Response: {0}, SSID: {1}", probeResponse.SourceAddress,
+                            Encoding.UTF8.GetString(ie.Value));
                     }
                 }
             }
-        }
-
-        private static void device_OnPacketArrival(Object sender, CaptureEventArgs e)
-        {
-            MacFrame p = Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data) as MacFrame;
-
-            if (p.FrameControl.SubType == FrameControlField.FrameSubTypes.ManagementProbeResponse)
-            {
-                ProbeResponseFrame probeResponse = p as ProbeResponseFrame;
-                if (probeResponse.DestinationAddress == adapterAddress)
-                {
-                    Console.WriteLine(probeResponse.ToString());
-
-                }
-            }
-        }
-
-        private static void HandleCancelKeyPress(Object sender, ConsoleCancelEventArgs e)
-        {
-            Console.WriteLine("-- Stopping capture");
-            stopCapturing = true;
-
-            // tell the handler that we are taking care of shutting down, don't
-            // shut us down after we return because we need to do just a little
-            // bit more processing to close the open capture device etc
-            e.Cancel = true;
         }
     }
 }

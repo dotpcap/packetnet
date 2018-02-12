@@ -7,18 +7,18 @@ using PacketDotNet.Utils.Conversion;
 namespace PacketDotNet.OSPF
 {
     /// <summary>
-    /// Router-LSAs are the Type 1 LSAs. The LSA describes the state and cost of
-    /// the router's links (i.e., interfaces) to the area.
+    ///     Router-LSAs are the Type 1 LSAs. The LSA describes the state and cost of
+    ///     the router's links (i.e., interfaces) to the area.
     /// </summary>
     public class RouterLSA : LSA
     {
         /// <summary>
-        /// The type of the lsa.
+        ///     The type of the lsa.
         /// </summary>
         public static readonly LSAType LSAType = LSAType.Router;
 
         /// <summary>
-        /// Default constructor
+        ///     Default constructor
         /// </summary>
         public RouterLSA()
         {
@@ -26,11 +26,11 @@ namespace PacketDotNet.OSPF
             this.Header = new ByteArraySegment(b);
             this.LSType = LSAType;
             this.LinkNumber = 0;
-            this.Length = (UInt16)this.Header.Bytes.Length;
+            this.Length = (UInt16) this.Header.Bytes.Length;
         }
 
         /// <summary>
-        /// Constructs a Router LSA with a list of router links
+        ///     Constructs a Router LSA with a list of router links
         /// </summary>
         public RouterLSA(List<RouterLink> links)
         {
@@ -40,6 +40,7 @@ namespace PacketDotNet.OSPF
             {
                 length += l.Bytes.Length;
             }
+
             length += RouterLSAFields.RouterLinksStart;
 
             Byte[] b = new Byte[length];
@@ -51,82 +52,71 @@ namespace PacketDotNet.OSPF
             }
 
             this.LSType = LSAType;
-            this.LinkNumber = (UInt16)links.Count;
-            this.Length = (UInt16)this.Header.Bytes.Length;
+            this.LinkNumber = (UInt16) links.Count;
+            this.Length = (UInt16) this.Header.Bytes.Length;
         }
 
         /// <summary>
-        /// Constructs a packet from bytes and offset and length
+        ///     Constructs a packet from bytes and offset and length
         /// </summary>
         /// <param name="packet">
-        /// A <see cref="System.Byte"/>
+        ///     A <see cref="System.Byte" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         public RouterLSA(Byte[] packet, Int32 offset, Int32 length) :
             base(packet, offset, length)
         {
-
         }
 
         /// <summary>
-        /// When set, the router is an endpoint of one or more fully
-        /// adjacent virtual links having the described area as Transit area
-        /// </summary>
-        public Int32 VBit
-        {
-            get
-            {
-                Byte flags = (Byte)((this.Header.Bytes[this.Header.Offset + RouterLSAFields.RouterOptionsPosition] >> 2) & 1);
-                return flags;
-            }
-            set => this.Header.Bytes[this.Header.Offset + RouterLSAFields.RouterOptionsPosition] |= (Byte)((value & 1) << 2);
-        }
-
-        /// <summary>
-        /// When set, the router is an AS boundary router
-        /// </summary>
-        public Int32 EBit
-        {
-            get
-            {
-                Byte flags = (Byte)((this.Header.Bytes[this.Header.Offset + RouterLSAFields.RouterOptionsPosition] >> 1) & 1);
-                return flags;
-            }
-            set => this.Header.Bytes[this.Header.Offset + RouterLSAFields.RouterOptionsPosition] |= (Byte)((value & 1) << 1);
-        }
-
-        /// <summary>
-        /// When set, the router is an area border router
+        ///     When set, the router is an area border router
         /// </summary>
         public Int32 BBit
         {
             get
             {
-                Byte flags = (Byte)(this.Header.Bytes[this.Header.Offset + RouterLSAFields.RouterOptionsPosition] & 1);
+                Byte flags = (Byte) (this.Header.Bytes[this.Header.Offset + RouterLSAFields.RouterOptionsPosition] & 1);
                 return flags;
             }
-            set => this.Header.Bytes[this.Header.Offset + RouterLSAFields.RouterOptionsPosition] |= (Byte)(value & 1);
+            set => this.Header.Bytes[this.Header.Offset + RouterLSAFields.RouterOptionsPosition] |= (Byte) (value & 1);
         }
 
         /// <summary>
-        /// The number of the contained links in this RouterLSA
+        ///     When set, the router is an AS boundary router
+        /// </summary>
+        public Int32 EBit
+        {
+            get
+            {
+                Byte flags =
+                    (Byte) ((this.Header.Bytes[this.Header.Offset + RouterLSAFields.RouterOptionsPosition] >> 1) & 1);
+                return flags;
+            }
+            set => this.Header.Bytes[this.Header.Offset + RouterLSAFields.RouterOptionsPosition] |=
+                (Byte) ((value & 1) << 1);
+        }
+
+        /// <summary>
+        ///     The number of the contained links in this RouterLSA
         /// </summary>
         public UInt16 LinkNumber
         {
-            get => EndianBitConverter.Big.ToUInt16(this.Header.Bytes,this.Header.Offset + RouterLSAFields.LinkNumberPosition);
+            get => EndianBitConverter.Big.ToUInt16(this.Header.Bytes,
+                this.Header.Offset + RouterLSAFields.LinkNumberPosition);
 
-            set => EndianBitConverter.Big.CopyBytes(value, this.Header.Bytes, this.Header.Offset + RouterLSAFields.LinkNumberPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.Header.Bytes,
+                this.Header.Offset + RouterLSAFields.LinkNumberPosition);
         }
 
         /// <summary>
-        /// The contained router links in this RouterLSA
+        ///     The contained router links in this RouterLSA
         /// </summary>
-        /// <see cref="RouterLink"/>
+        /// <see cref="RouterLink" />
         public List<RouterLink> RouterLinks
         {
             get
@@ -147,9 +137,25 @@ namespace PacketDotNet.OSPF
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="RouterLSA"/>.
+        ///     When set, the router is an endpoint of one or more fully
+        ///     adjacent virtual links having the described area as Transit area
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="RouterLSA"/>.</returns>
+        public Int32 VBit
+        {
+            get
+            {
+                Byte flags =
+                    (Byte) ((this.Header.Bytes[this.Header.Offset + RouterLSAFields.RouterOptionsPosition] >> 2) & 1);
+                return flags;
+            }
+            set => this.Header.Bytes[this.Header.Offset + RouterLSAFields.RouterOptionsPosition] |=
+                (Byte) ((value & 1) << 2);
+        }
+
+        /// <summary>
+        ///     Returns a <see cref="System.String" /> that represents the current <see cref="RouterLSA" />.
+        /// </summary>
+        /// <returns>A <see cref="System.String" /> that represents the current <see cref="RouterLSA" />.</returns>
         public override String ToString()
         {
             StringBuilder ret = new StringBuilder();

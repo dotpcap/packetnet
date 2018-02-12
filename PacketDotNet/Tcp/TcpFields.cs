@@ -23,8 +23,8 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace PacketDotNet.Tcp
 {
-    /// <summary> IP protocol field encoding information.
-    ///
+    /// <summary>
+    ///     IP protocol field encoding information.
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public struct TcpFields
@@ -47,31 +47,43 @@ namespace PacketDotNet.Tcp
 
         /// <summary> Length of the sequence number in bytes.</summary>
         public static readonly Int32 SequenceNumberLength = 4;
+
         /// <summary> Length of the acknowledgment number in bytes.</summary>
         public static readonly Int32 AckNumberLength = 4;
+
         /// <summary> Length of the data offset and flags field in bytes.</summary>
         public static readonly Int32 DataOffsetAndFlagsLength = 2;
+
         /// <summary> Length of the window size field in bytes.</summary>
         public static readonly Int32 WindowSizeLength = 2;
+
         /// <summary> Length of the checksum field in bytes.</summary>
         public static readonly Int32 ChecksumLength = 2;
+
         /// <summary> Length of the urgent field in bytes.</summary>
         public static readonly Int32 UrgentPointerLength = 2;
 
         /// <summary> Position of the source port field.</summary>
         public static readonly Int32 SourcePortPosition = 0;
+
         /// <summary> Position of the destination port field.</summary>
         public static readonly Int32 DestinationPortPosition;
+
         /// <summary> Position of the sequence number field.</summary>
         public static readonly Int32 SequenceNumberPosition;
+
         /// <summary> Position of the acknowledgment number field.</summary>
         public static readonly Int32 AckNumberPosition;
+
         /// <summary> Position of the data offset </summary>
         public static readonly Int32 DataOffsetAndFlagsPosition;
+
         /// <summary> Position of the window size field.</summary>
         public static readonly Int32 WindowSizePosition;
+
         /// <summary> Position of the checksum field.</summary>
         public static readonly Int32 ChecksumPosition;
+
         /// <summary> Position of the urgent pointer field.</summary>
         public static readonly Int32 UrgentPointerPosition;
 

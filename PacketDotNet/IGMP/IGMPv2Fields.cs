@@ -26,24 +26,32 @@ namespace PacketDotNet.IGMP
     /// <summary> IGMP protocol field encoding information. </summary>
     public class IGMPv2Fields
     {
-        /// <summary> Length of the IGMP message type code in bytes.</summary>
-        public static readonly Int32 TypeLength = 1;
-        /// <summary> Length of the IGMP max response code in bytes.</summary>
-        public static readonly Int32 MaxResponseTimeLength = 1;
         /// <summary> Length of the IGMP header checksum in bytes.</summary>
         public static readonly Int32 ChecksumLength = 2;
-        /// <summary> Length of group address in bytes.</summary>
-        public static readonly Int32 GroupAddressLength;
-        /// <summary> Position of the IGMP message type.</summary>
-        public static readonly Int32 TypePosition = 0;
-        /// <summary> Position of the IGMP max response code.</summary>
-        public static readonly Int32 MaxResponseTimePosition;
+
         /// <summary> Position of the IGMP header checksum.</summary>
         public static readonly Int32 ChecksumPosition;
+
+        /// <summary> Length of group address in bytes.</summary>
+        public static readonly Int32 GroupAddressLength;
+
         /// <summary> Position of the IGMP group address.</summary>
         public static readonly Int32 GroupAddressPosition;
+
         /// <summary> Length in bytes of an IGMP header.</summary>
         public static readonly Int32 HeaderLength; // 8
+
+        /// <summary> Length of the IGMP max response code in bytes.</summary>
+        public static readonly Int32 MaxResponseTimeLength = 1;
+
+        /// <summary> Position of the IGMP max response code.</summary>
+        public static readonly Int32 MaxResponseTimePosition;
+
+        /// <summary> Length of the IGMP message type code in bytes.</summary>
+        public static readonly Int32 TypeLength = 1;
+
+        /// <summary> Position of the IGMP message type.</summary>
+        public static readonly Int32 TypePosition = 0;
 
         static IGMPv2Fields()
         {

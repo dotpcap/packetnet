@@ -17,36 +17,37 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
+
 using System;
 
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// Echo Reply Option
-    ///  Marked obsolete in the TCP spec Echo Reply Option has been
-    ///  replaced by the TSOPT (Timestamp Option)
+    ///     Echo Reply Option
+    ///     Marked obsolete in the TCP spec Echo Reply Option has been
+    ///     replaced by the TSOPT (Timestamp Option)
     /// </summary>
     /// <remarks>
-    /// References:
-    ///  http://datatracker.ietf.org/doc/rfc1072/
+    ///     References:
+    ///     http://datatracker.ietf.org/doc/rfc1072/
     /// </remarks>
     public class EchoReply : Option
     {
         #region Constructors
 
         /// <summary>
-        /// Creates an Echo Reply Option
+        ///     Creates an Echo Reply Option
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="T:System.Byte[]"/>
+        ///     A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
-        public EchoReply(Byte[] bytes, Int32 offset, Int32 length):
+        public EchoReply(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
         {
             throw new NotSupportedException("Obsolete: The Echo Option has been deprecated.");

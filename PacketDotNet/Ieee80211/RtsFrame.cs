@@ -23,59 +23,58 @@ using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet.Ieee80211
+{
+    /// <summary>
+    ///     RTS Frame has a ReceiverAddress[6], TransmitterAddress[6] and a FrameCheckSequence[4],
+    ///     these fields follow the common FrameControl[2] and DurationId[2] fields
+    /// </summary>
+    public class RtsFrame : MacFrame
     {
         /// <summary>
-        /// RTS Frame has a ReceiverAddress[6], TransmitterAddress[6] and a FrameCheckSequence[4],
-        /// these fields follow the common FrameControl[2] and DurationId[2] fields
+        ///     Constructor
         /// </summary>
-        public class RtsFrame : MacFrame
+        /// <param name="bas">
+        ///     A <see cref="ByteArraySegment" />
+        /// </param>
+        public RtsFrame(ByteArraySegment bas)
         {
-            /// <summary>
-            /// ReceiverAddress
-            /// </summary>
-            public PhysicalAddress ReceiverAddress {get; set;}
+            this.HeaderByteArraySegment = new ByteArraySegment(bas);
 
-            /// <summary>
-            /// TransmitterAddress
-            /// </summary>
-            public PhysicalAddress TransmitterAddress {get; set;}
+            this.FrameControl = new FrameControlField(this.FrameControlBytes);
+            this.Duration = new DurationField(this.DurationBytes);
+            this.ReceiverAddress = this.GetAddress(0);
+            this.TransmitterAddress = this.GetAddress(1);
 
-            /// <summary>
-            /// Length of the frame
-            /// </summary>
-            public override Int32 FrameSize => (MacFields.FrameControlLength +
-                                              MacFields.DurationIDLength +
-                                              (MacFields.AddressLength * 2));
+            this.HeaderByteArraySegment.Length = this.FrameSize;
+        }
 
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public RtsFrame (ByteArraySegment bas)
-            {
-                this.HeaderByteArraySegment = new ByteArraySegment (bas);
+        /// <summary>
+        ///     Length of the frame
+        /// </summary>
+        public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                            MacFields.DurationIDLength +
+                                            (MacFields.AddressLength * 2));
 
-                this.FrameControl = new FrameControlField (this.FrameControlBytes);
-                this.Duration = new DurationField (this.DurationBytes);
-                this.ReceiverAddress = this.GetAddress (0);
-                this.TransmitterAddress = this.GetAddress(1);
+        /// <summary>
+        ///     ReceiverAddress
+        /// </summary>
+        public PhysicalAddress ReceiverAddress { get; set; }
 
-                this.HeaderByteArraySegment.Length = this.FrameSize;
-            }
-   
-            /// <summary>
-            /// Returns a string with a description of the addresses used in the packet.
-            /// This is used as a compoent of the string returned by ToString().
-            /// </summary>
-            /// <returns>
-            /// The address string.
-            /// </returns>
-            protected override String GetAddressString()
-            {
-                return $"RA {this.ReceiverAddress} TA {this.TransmitterAddress}";
-            }
-        } 
+        /// <summary>
+        ///     TransmitterAddress
+        /// </summary>
+        public PhysicalAddress TransmitterAddress { get; set; }
+
+        /// <summary>
+        ///     Returns a string with a description of the addresses used in the packet.
+        ///     This is used as a compoent of the string returned by ToString().
+        /// </summary>
+        /// <returns>
+        ///     The address string.
+        /// </returns>
+        protected override String GetAddressString()
+        {
+            return $"RA {this.ReceiverAddress} TA {this.TransmitterAddress}";
+        }
     }
-
+}

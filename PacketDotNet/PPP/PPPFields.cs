@@ -23,25 +23,26 @@ using System;
 namespace PacketDotNet.PPP
 {
     /// <summary>
-    /// The fields in a PPP packet
-    /// See http://en.wikipedia.org/wiki/Point-to-Point_Protocol
+    ///     The fields in a PPP packet
+    ///     See http://en.wikipedia.org/wiki/Point-to-Point_Protocol
     /// </summary>
     public class PPPFields
     {
         /// <summary>
-        /// Length of the Protocol field in bytes, the field is of type
-        /// PPPProtocol
+        ///     Length of the Protocol field in bytes, the field is of type
+        ///     PPPProtocol
         /// </summary>
         public static readonly Int32 ProtocolLength = 2;
 
         /// <summary>
-        /// Offset from the start of the PPP packet where the Protocol field is located
-        /// </summary>
-        public static readonly Int32 ProtocolPosition = 0;
-
-        /// <summary>
-        /// The length of the header
+        ///     The length of the header
         /// </summary>
         public static readonly Int32 HeaderLength = ProtocolLength;
+
+
+        /// <summary>
+        ///     Offset from the start of the PPP packet where the Protocol field is located
+        /// </summary>
+        public static readonly Int32 ProtocolPosition = 0;
     }
 }

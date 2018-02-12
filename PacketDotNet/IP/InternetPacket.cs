@@ -23,16 +23,11 @@ using System;
 namespace PacketDotNet.IP
 {
     /// <summary>
-    /// Internet packets include IPv4, IPv6, IGMP etc, see
-    /// http://en.wikipedia.org/wiki/Internet_Layer
+    ///     Internet packets include IPv4, IPv6, IGMP etc, see
+    ///     http://en.wikipedia.org/wiki/Internet_Layer
     /// </summary>
     [Serializable]
     public class InternetPacket : Packet
     {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public InternetPacket()
-        { }
     }
 }

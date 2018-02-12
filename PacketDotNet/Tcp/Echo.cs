@@ -17,30 +17,31 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
+
 using System;
 
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// An Echo Option
-    ///  throws an exception because Echo Options
-    ///  are obsolete as per their spec
+    ///     An Echo Option
+    ///     throws an exception because Echo Options
+    ///     are obsolete as per their spec
     /// </summary>
     public class Echo : Option
     {
         #region Constructors
 
         /// <summary>
-        /// Creates an Echo Option
+        ///     Creates an Echo Option
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="T:System.Byte[]"/>
+        ///     A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         public Echo(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)

@@ -23,7 +23,7 @@ using System;
 namespace PacketDotNet.IP
 {
     /// <summary>
-    /// IP protocol field encoding information.
+    ///     IP protocol field encoding information.
     /// </summary>
     // ReSharper disable once InconsistentNaming
     public struct IPv4Fields
@@ -71,7 +71,7 @@ namespace PacketDotNet.IP
         public static readonly Int32 TtlPosition;
 
         /// <summary>
-        /// Position of the protocol used within the IP data
+        ///     Position of the protocol used within the IP data
         /// </summary>
         public static readonly Int32 ProtocolPosition;
 
@@ -88,7 +88,7 @@ namespace PacketDotNet.IP
         public static readonly Int32 HeaderLength; // == 20
 
         /// <summary>
-        /// Number of bytes in an IPv4 address
+        ///     Number of bytes in an IPv4 address
         /// </summary>
         public static readonly Int32 AddressLength = 4;
 

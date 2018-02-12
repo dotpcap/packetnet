@@ -23,53 +23,54 @@ using System;
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// End-of-Options Option
-    ///  Marks the end of the Options list
+    ///     End-of-Options Option
+    ///     Marks the end of the Options list
     /// </summary>
     /// <remarks>
-    /// References:
-    ///  http://datatracker.ietf.org/doc/rfc793/
+    ///     References:
+    ///     http://datatracker.ietf.org/doc/rfc793/
     /// </remarks>
     public class EndOfOptions : Option
     {
+        #region Members
+
+        /// <summary>
+        ///     The length (in bytes) of the EndOfOptions option
+        /// </summary>
+        internal const Int32 OptionLength = 1;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
-        /// Creates an End Of Options Option
+        ///     Creates an End Of Options Option
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="T:System.Byte[]"/>
+        ///     A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         public EndOfOptions(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
-        { }
+        {
+        }
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// The length of the EndOfOptions field
-        ///  Returns 1 as opposed to returning the length field because
-        ///  the EndOfOptions option is only 1 byte long and doesn't
-        ///  contain a length field
+        ///     The length of the EndOfOptions field
+        ///     Returns 1 as opposed to returning the length field because
+        ///     the EndOfOptions option is only 1 byte long and doesn't
+        ///     contain a length field
         /// </summary>
         public override Byte Length => OptionLength;
-
-        #endregion
-
-        #region Members
-
-        /// <summary>
-        /// The length (in bytes) of the EndOfOptions option
-        /// </summary>
-        internal const Int32 OptionLength = 1;
 
         #endregion
     }

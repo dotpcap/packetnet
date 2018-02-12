@@ -6,19 +6,19 @@ using PacketDotNet.Utils.Conversion;
 namespace PacketDotNet.OSPF
 {
     /// <summary>
-    /// Link state request, send by the LSR packets
+    ///     Link state request, send by the LSR packets
     /// </summary>
     public class LinkStateRequest
     {
         /// <summary>
-        /// Size of LinkStateRequest in bytes
+        ///     Size of LinkStateRequest in bytes
         /// </summary>
         public static readonly Int32 Length = 12;
 
         internal ByteArraySegment Header;
 
         /// <summary>
-        /// Default constructor
+        ///     Default constructor
         /// </summary>
         public LinkStateRequest()
         {
@@ -27,16 +27,16 @@ namespace PacketDotNet.OSPF
         }
 
         /// <summary>
-        /// Constructs a packet from bytes and offset abd length
+        ///     Constructs a packet from bytes and offset abd length
         /// </summary>
         /// <param name="packet">
-        /// A <see cref="System.Byte"/>
+        ///     A <see cref="System.Byte" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         public LinkStateRequest(Byte[] packet, Int32 offset, Int32 length)
         {
@@ -44,22 +44,14 @@ namespace PacketDotNet.OSPF
         }
 
         /// <summary>
-        /// The type of the request
-        /// </summary>
-        public LSAType LSType
-        {
-            get => (LSAType)EndianBitConverter.Big.ToUInt32(this.Header.Bytes, this.Header.Offset + LinkStateRequestFields.LSTypePosition);
-            set => EndianBitConverter.Big.CopyBytes((UInt32)value, this.Header.Bytes, this.Header.Offset + LinkStateRequestFields.LSTypePosition);
-        }
-
-        /// <summary>
-        /// The Router ID of the router that originated the LSR.
+        ///     The Router ID of the router that originated the LSR.
         /// </summary>
         public IPAddress AdvertisingRouter
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(this.Header.Bytes, this.Header.Offset + LinkStateRequestFields.AdvertisingRouterPosition);
+                var val = EndianBitConverter.Little.ToUInt32(this.Header.Bytes,
+                    this.Header.Offset + LinkStateRequestFields.AdvertisingRouterPosition);
                 return new IPAddress(val);
             }
             set
@@ -72,14 +64,21 @@ namespace PacketDotNet.OSPF
         }
 
         /// <summary>
-        /// This field identifies the portion of the internet environment
-        /// that is being described by the LSR.
+        ///     Gets the bytes.
+        /// </summary>
+        /// <value>The bytes.</value>
+        public virtual Byte[] Bytes => this.Header.ActualBytes();
+
+        /// <summary>
+        ///     This field identifies the portion of the internet environment
+        ///     that is being described by the LSR.
         /// </summary>
         public IPAddress LinkStateID
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(this.Header.Bytes, this.Header.Offset + LinkStateRequestFields.LinkStateIdPosition);
+                var val = EndianBitConverter.Little.ToUInt32(this.Header.Bytes,
+                    this.Header.Offset + LinkStateRequestFields.LinkStateIdPosition);
                 return new IPAddress(val);
             }
             set
@@ -92,9 +91,14 @@ namespace PacketDotNet.OSPF
         }
 
         /// <summary>
-        /// Gets the bytes.
+        ///     The type of the request
         /// </summary>
-        /// <value>The bytes.</value>
-        public virtual Byte[] Bytes => this.Header.ActualBytes();
+        public LSAType LSType
+        {
+            get => (LSAType) EndianBitConverter.Big.ToUInt32(this.Header.Bytes,
+                this.Header.Offset + LinkStateRequestFields.LSTypePosition);
+            set => EndianBitConverter.Big.CopyBytes((UInt32) value, this.Header.Bytes,
+                this.Header.Offset + LinkStateRequestFields.LSTypePosition);
+        }
     }
 }

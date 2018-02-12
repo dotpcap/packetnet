@@ -23,42 +23,50 @@ using System;
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// Window Scale Factor Option
-    ///  Expands the definition of the TCP window to 32 bits
+    ///     Window Scale Factor Option
+    ///     Expands the definition of the TCP window to 32 bits
     /// </summary>
     /// <remarks>
-    /// References:
-    ///  http://datatracker.ietf.org/doc/rfc1323/
+    ///     References:
+    ///     http://datatracker.ietf.org/doc/rfc1323/
     /// </remarks>
     public class WindowScaleFactor : Option
     {
+        #region Members
+
+        // the offset (in bytes) of the ScaleFactor Field
+        private const Int32 ScaleFactorFieldOffset = 2;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
-        /// Creates a Window Scale Factor Option
+        ///     Creates a Window Scale Factor Option
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="T:System.Byte[]"/>
+        ///     A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         public WindowScaleFactor(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
-        { }
+        {
+        }
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// The Window Scale Factor
-        ///  used as a multiplier to the window value
-        ///  The multiplier is equal to 1 left-shifted by the ScaleFactor
-        ///  So a scale factor of 7 would equal 1 &lt;&lt; 7 = 128
+        ///     The Window Scale Factor
+        ///     used as a multiplier to the window value
+        ///     The multiplier is equal to 1 left-shifted by the ScaleFactor
+        ///     So a scale factor of 7 would equal 1 &lt;&lt; 7 = 128
         /// </summary>
         public Byte ScaleFactor => this.Bytes[ScaleFactorFieldOffset];
 
@@ -67,23 +75,16 @@ namespace PacketDotNet.Tcp
         #region Methods
 
         /// <summary>
-        /// Returns the Option info as a string
-        ///  The multiplier is equal to a value of 1 left-shifted by the scale factor
+        ///     Returns the Option info as a string
+        ///     The multiplier is equal to a value of 1 left-shifted by the scale factor
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        ///     A <see cref="System.String" />
         /// </returns>
         public override String ToString()
         {
             return $"[{this.Kind}: ScaleFactor={this.ScaleFactor} (multiply by {(1 << this.ScaleFactor)})]";
         }
-
-        #endregion
-
-        #region Members
-
-        // the offset (in bytes) of the ScaleFactor Field
-        private const Int32 ScaleFactorFieldOffset = 2;
 
         #endregion
     }

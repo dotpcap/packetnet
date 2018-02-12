@@ -18,22 +18,23 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// An Organization Specific TLV
-    ///
-    /// [TLV Type Length : 2][Organizationally Unique Identifier OUI : 3]
-    /// [Organizationally Defined Subtype : 1][Organizationally Defined Information String : 0 - 507]
+    ///     An Organization Specific TLV
+    ///     [TLV Type Length : 2][Organizationally Unique Identifier OUI : 3]
+    ///     [Organizationally Defined Subtype : 1][Organizationally Defined Information String : 0 - 507]
     /// </summary>
     [Serializable]
     public class OrganizationSpecific : TLV
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
@@ -48,14 +49,14 @@ namespace PacketDotNet.LLDP
         #region Constructors
 
         /// <summary>
-        /// Creates an Organization Specific TLV
+        ///     Creates an Organization Specific TLV
         /// </summary>
         /// <param name="bytes">
-        /// The LLDP Data unit being modified
+        ///     The LLDP Data unit being modified
         /// </param>
         /// <param name="offset">
-        /// The Organization Specific TLV's offset from the
-        /// origin of the LLDP
+        ///     The Organization Specific TLV's offset from the
+        ///     origin of the LLDP
         /// </param>
         public OrganizationSpecific(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
@@ -64,16 +65,16 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Creates an Organization Specific TLV and sets it value
+        ///     Creates an Organization Specific TLV and sets it value
         /// </summary>
         /// <param name="oui">
-        /// An Organizationally Unique Identifier
+        ///     An Organizationally Unique Identifier
         /// </param>
         /// <param name="subType">
-        /// An Organizationally Defined SubType
+        ///     An Organizationally Defined SubType
         /// </param>
         /// <param name="infoString">
-        /// An Organizationally Defined Information String
+        ///     An Organizationally Defined Information String
         /// </param>
         public OrganizationSpecific(Byte[] oui, Int32 subType, Byte[] infoString)
         {
@@ -96,7 +97,7 @@ namespace PacketDotNet.LLDP
         #region Properties
 
         /// <summary>
-        /// An Organizationally Unique Identifier
+        ///     An Organizationally Unique Identifier
         /// </summary>
         public Byte[] OrganizationUniqueID
         {
@@ -104,8 +105,8 @@ namespace PacketDotNet.LLDP
             {
                 Byte[] oui = new Byte[OUILength];
                 Array.Copy(this.TLVData.Bytes, this.ValueOffset,
-                           oui, 0,
-                           OUILength);
+                    oui, 0,
+                    OUILength);
                 return oui;
             }
 
@@ -113,16 +114,16 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// An Organizationally Defined SubType
+        ///     An Organizationally Defined SubType
         /// </summary>
         public Int32 OrganizationDefinedSubType
         {
             get => this.TLVData.Bytes[this.ValueOffset + OUILength];
-            set => this.TLVData.Bytes[this.ValueOffset + OUILength] = (Byte)value;
+            set => this.TLVData.Bytes[this.ValueOffset + OUILength] = (Byte) value;
         }
 
         /// <summary>
-        /// An Organizationally Defined Information String
+        ///     An Organizationally Defined Information String
         /// </summary>
         public Byte[] OrganizationDefinedInfoString
         {
@@ -132,8 +133,8 @@ namespace PacketDotNet.LLDP
 
                 var bytes = new Byte[length];
                 Array.Copy(this.TLVData.Bytes, this.ValueOffset + OUILength + OUISubTypeLength,
-                           bytes, 0,
-                           length);
+                    bytes, 0,
+                    length);
 
                 return bytes;
             }
@@ -143,18 +144,18 @@ namespace PacketDotNet.LLDP
                 var length = this.Length - (OUILength + OUISubTypeLength);
 
                 // do we have the right sized tlv?
-                if(value.Length != length)
+                if (value.Length != length)
                 {
                     var headerLength = TLVTypeLength.TypeLengthLength + OUILength + OUISubTypeLength;
 
                     // resize the tlv
-                    var newLength =  headerLength + value.Length;
+                    var newLength = headerLength + value.Length;
                     var bytes = new Byte[newLength];
 
                     // copy the header bytes over
                     Array.Copy(this.TLVData.Bytes, this.TLVData.Offset,
-                               bytes, 0,
-                               headerLength);
+                        bytes, 0,
+                        headerLength);
 
                     // assign a new ByteArrayAndOffset to tlvData
                     var offset = 0;
@@ -163,19 +164,20 @@ namespace PacketDotNet.LLDP
 
                 // copy the byte array in
                 Array.Copy(value, 0, this.TLVData.Bytes, this.ValueOffset + OUILength + OUISubTypeLength,
-                           value.Length);
+                    value.Length);
             }
         }
 
         /// <summary>
-        /// Convert this Organization Specific TLV to a string.
+        ///     Convert this Organization Specific TLV to a string.
         /// </summary>
         /// <returns>
-        /// A human readable string
+        ///     A human readable string
         /// </returns>
-        public override String ToString ()
+        public override String ToString()
         {
-            return $"[OrganizationSpecific: OrganizationUniqueID={this.OrganizationUniqueID}, OrganizationDefinedSubType={this.OrganizationDefinedSubType}, OrganizationDefinedInfoString={this.OrganizationDefinedInfoString}]";
+            return
+                $"[OrganizationSpecific: OrganizationUniqueID={this.OrganizationUniqueID}, OrganizationDefinedSubType={this.OrganizationDefinedSubType}, OrganizationDefinedInfoString={this.OrganizationDefinedInfoString}]";
         }
 
         #endregion

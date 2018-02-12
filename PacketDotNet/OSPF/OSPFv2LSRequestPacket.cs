@@ -6,29 +6,29 @@ using PacketDotNet.Utils;
 namespace PacketDotNet.OSPF
 {
     /// <summary>
-    /// Link State Request packets are OSPF packet type 3.
-    /// The Link State Request packet is used to request the pieces of the
-    /// neighbor's database that are more up-to-date.
-    /// See http://www.ietf.org/rfc/rfc2328.txt for details.
+    ///     Link State Request packets are OSPF packet type 3.
+    ///     The Link State Request packet is used to request the pieces of the
+    ///     neighbor's database that are more up-to-date.
+    ///     See http://www.ietf.org/rfc/rfc2328.txt for details.
     /// </summary>
     public class OSPFv2LSRequestPacket : OSPFv2Packet
     {
         /// <value>
-        /// The packet type
+        ///     The packet type
         /// </value>
         public static OSPFPacketType PacketType = OSPFPacketType.LinkStateRequest;
 
         /// <summary>
-        /// Constructs an OSPFv2 LSR packet
+        ///     Constructs an OSPFv2 LSR packet
         /// </summary>
         public OSPFv2LSRequestPacket()
         {
             this.Type = PacketType;
-            this.PacketLength = (UInt16)this.HeaderByteArraySegment.Bytes.Length;
+            this.PacketLength = (UInt16) this.HeaderByteArraySegment.Bytes.Length;
         }
 
         /// <summary>
-        /// Constructs an OSPFv2 LSR packet with link state requests
+        ///     Constructs an OSPFv2 LSR packet with link state requests
         /// </summary>
         /// <param name="lsrs">List of the link state requests</param>
         public OSPFv2LSRequestPacket(List<LinkStateRequest> lsrs)
@@ -46,14 +46,14 @@ namespace PacketDotNet.OSPF
 
             this.HeaderByteArraySegment = new ByteArraySegment(bytes);
             this.Type = PacketType;
-            this.PacketLength = (UInt16)this.HeaderByteArraySegment.Bytes.Length;
+            this.PacketLength = (UInt16) this.HeaderByteArraySegment.Bytes.Length;
         }
 
         /// <summary>
-        /// Constructs an OSPFv2 LSR packet from ByteArraySegment
+        ///     Constructs an OSPFv2 LSR packet from ByteArraySegment
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
         public OSPFv2LSRequestPacket(ByteArraySegment bas)
         {
@@ -61,13 +61,13 @@ namespace PacketDotNet.OSPF
         }
 
         /// <summary>
-        /// Constructs a packet from bytes and offset
+        ///     Constructs a packet from bytes and offset
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="System.Byte"/>
+        ///     A <see cref="System.Byte" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         public OSPFv2LSRequestPacket(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
@@ -76,9 +76,10 @@ namespace PacketDotNet.OSPF
         }
 
         /// <summary>
-        /// A list of link state requests, contained in this packet
+        ///     A list of link state requests, contained in this packet
         /// </summary>
-        /// See <see cref="LinkStateRequest"/>
+        /// See
+        /// <see cref="LinkStateRequest" />
         public virtual List<LinkStateRequest> LinkStateRequests
         {
             get
@@ -95,18 +96,20 @@ namespace PacketDotNet.OSPF
 
                 for (Int32 i = 0; i < lsrCount; i++)
                 {
-                    LinkStateRequest request = new LinkStateRequest(this.HeaderByteArraySegment.Bytes, offset, LinkStateRequest.Length);
+                    LinkStateRequest request = new LinkStateRequest(this.HeaderByteArraySegment.Bytes, offset,
+                        LinkStateRequest.Length);
                     ret.Add(request);
                     offset += LinkStateRequest.Length;
                 }
+
                 return ret;
             }
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="OSPFv2LSRequestPacket"/>.
+        ///     Returns a <see cref="System.String" /> that represents the current <see cref="OSPFv2LSRequestPacket" />.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="OSPFv2LSRequestPacket"/>.</returns>
+        /// <returns>A <see cref="System.String" /> that represents the current <see cref="OSPFv2LSRequestPacket" />.</returns>
         public override String ToString()
         {
             StringBuilder packet = new StringBuilder();
@@ -117,11 +120,11 @@ namespace PacketDotNet.OSPF
         }
 
         /// <summary cref="Packet.ToString()">
-        /// Output the packet information in the specified format
-        ///  Normal - outputs the packet info to a single line
-        ///  Colored - outputs the packet info to a single line with coloring
-        ///  Verbose - outputs detailed info about the packet
-        ///  VerboseColored - outputs detailed info about the packet with coloring
+        ///     Output the packet information in the specified format
+        ///     Normal - outputs the packet info to a single line
+        ///     Colored - outputs the packet info to a single line with coloring
+        ///     Verbose - outputs detailed info about the packet
+        ///     VerboseColored - outputs detailed info about the packet with coloring
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>

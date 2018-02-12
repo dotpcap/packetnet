@@ -29,107 +29,17 @@ using PacketDotNet.Utils.Conversion;
 namespace PacketDotNet.LinuxSLL
 {
     /// <summary>
-    /// Represents a Linux cooked capture packet, the kinds of packets
-    /// received when capturing on an 'any' device
-    ///
-    /// See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
+    ///     Represents a Linux cooked capture packet, the kinds of packets
+    ///     received when capturing on an 'any' device
+    ///     See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
     /// </summary>
     public class LinuxSLLPacket : InternetLinkLayerPacket
     {
-        /// <value>
-        /// Information about the packet direction
-        /// </value>
-        public LinuxSLLType Type
-        {
-            get => (LinuxSLLType)EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + LinuxSLLFields.PacketTypePosition);
-
-            set
-            {
-                var theValue = (Int16)value;
-                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + LinuxSLLFields.PacketTypePosition);
-            }
-        }
-
-        /// <value>
-        /// The
-        /// </value>
-        public Int32 LinkLayerAddressType
-        {
-            get => EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
-
-            set
-            {
-                var theValue = (Int16)value;
-                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
-            }
-        }
-
-        /// <value>
-        /// Number of bytes in the link layer address of the sender of the packet
-        /// </value>
-        public Int32 LinkLayerAddressLength
-        {
-            get => EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
-
-            set
-            {
-                // range check
-                if((value < 0) || (value > 8))
-                {
-                    throw new InvalidOperationException("value of " + value + " out of range of 0 to 8");
-                }
-
-                var theValue = (Int16)value;
-                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
-            }
-        }
-
-        /// <value>
-        /// Link layer header bytes, maximum of 8 bytes
-        /// </value>
-        public Byte[] LinkLayerAddress
-        {
-            get
-            {
-                var headerLength = this.LinkLayerAddressLength;
-                var theHeader = new Byte[headerLength];
-                Array.Copy((Array) this.HeaderByteArraySegment.Bytes, (Int32) (this.HeaderByteArraySegment.Offset + LinuxSLLFields.LinkLayerAddressPosition),
-                           (Array) theHeader, (Int32) 0,
-                           (Int32) headerLength);
-                return theHeader;
-            }
-
-            set
-            {
-                // update the link layer length
-                this.LinkLayerAddressLength = value.Length;
-
-                // copy in the new link layer header bytes
-                Array.Copy((Array) value, (Int32) 0,
-                           (Array) this.HeaderByteArraySegment.Bytes, (Int32) (this.HeaderByteArraySegment.Offset + LinuxSLLFields.LinkLayerAddressPosition),
-                           value.Length);
-            }
-        }
-
-        /// <value>
-        /// The encapsulated protocol type
-        /// </value>
-        public EthernetPacketType EthernetProtocolType
-        {
-            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
-
-            set
-            {
-                var theValue = (Int16)value;
-                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
-            }
-        }
-
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
         public LinuxSLLPacket(ByteArraySegment bas)
         {
@@ -139,17 +49,117 @@ namespace PacketDotNet.LinuxSLL
             };
 
             // parse the payload via an EthernetPacket method
-            this.PayloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(this.HeaderByteArraySegment, this.EthernetProtocolType);
+            this.PayloadPacketOrData =
+                EthernetPacket.ParseEncapsulatedBytes(this.HeaderByteArraySegment, this.EthernetProtocolType);
+        }
+
+        /// <value>
+        ///     The encapsulated protocol type
+        /// </value>
+        public EthernetPacketType EthernetProtocolType
+        {
+            get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
+
+            set
+            {
+                var theValue = (Int16) value;
+                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
+            }
+        }
+
+        /// <value>
+        ///     Link layer header bytes, maximum of 8 bytes
+        /// </value>
+        public Byte[] LinkLayerAddress
+        {
+            get
+            {
+                var headerLength = this.LinkLayerAddressLength;
+                var theHeader = new Byte[headerLength];
+                Array.Copy(this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + LinuxSLLFields.LinkLayerAddressPosition,
+                    theHeader, 0,
+                    headerLength);
+                return theHeader;
+            }
+
+            set
+            {
+                // update the link layer length
+                this.LinkLayerAddressLength = value.Length;
+
+                // copy in the new link layer header bytes
+                Array.Copy(value, 0,
+                    this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + LinuxSLLFields.LinkLayerAddressPosition,
+                    value.Length);
+            }
+        }
+
+        /// <value>
+        ///     Number of bytes in the link layer address of the sender of the packet
+        /// </value>
+        public Int32 LinkLayerAddressLength
+        {
+            get => EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
+
+            set
+            {
+                // range check
+                if ((value < 0) || (value > 8))
+                {
+                    throw new InvalidOperationException("value of " + value + " out of range of 0 to 8");
+                }
+
+                var theValue = (Int16) value;
+                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
+            }
+        }
+
+        /// <value>
+        ///     The
+        /// </value>
+        public Int32 LinkLayerAddressType
+        {
+            get => EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
+
+            set
+            {
+                var theValue = (Int16) value;
+                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
+            }
+        }
+
+        /// <value>
+        ///     Information about the packet direction
+        /// </value>
+        public LinuxSLLType Type
+        {
+            get => (LinuxSLLType) EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + LinuxSLLFields.PacketTypePosition);
+
+            set
+            {
+                var theValue = (Int16) value;
+                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + LinuxSLLFields.PacketTypePosition);
+            }
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString (StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             String color = "";
             String colorEscape = "";
 
-            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
                 color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
@@ -160,7 +170,8 @@ namespace PacketDotNet.LinuxSLL
                 case StringOutputType.Normal:
                 case StringOutputType.Colored:
                     // build the output string
-                    buffer.AppendFormat("[{0}LinuxSLLPacket{1}: Type={2}, LinkLayerAddressType={3}, LinkLayerAddressLength={4}, Source={5}, ProtocolType={6}]",
+                    buffer.AppendFormat(
+                        "[{0}LinuxSLLPacket{1}: Type={2}, LinkLayerAddressType={3}, LinkLayerAddressLength={4}, Source={5}, ProtocolType={6}]",
                         color,
                         colorEscape, this.Type, this.LinkLayerAddressType, this.LinkLayerAddressLength,
                         BitConverter.ToString(this.LinkLayerAddress, 0), this.EthernetProtocolType);
@@ -170,11 +181,11 @@ namespace PacketDotNet.LinuxSLL
                     // collect the properties and their value
                     Dictionary<String, String> properties = new Dictionary<String, String>
                     {
-                        { "type", this.Type + " (" + ((Int32)this.Type) + ")" },
-                        { "link layer address type", this.LinkLayerAddressType.ToString() },
-                        { "link layer address length", this.LinkLayerAddressLength.ToString() },
-                        { "source", BitConverter.ToString(this.LinkLayerAddress) },
-                        { "protocol", this.EthernetProtocolType + " (0x" + this.EthernetProtocolType.ToString("x") + ")" }
+                        {"type", this.Type + " (" + ((Int32) this.Type) + ")"},
+                        {"link layer address type", this.LinkLayerAddressType.ToString()},
+                        {"link layer address length", this.LinkLayerAddressLength.ToString()},
+                        {"source", BitConverter.ToString(this.LinkLayerAddress)},
+                        {"protocol", this.EthernetProtocolType + " (0x" + this.EthernetProtocolType.ToString("x") + ")"}
                     };
 
 
@@ -182,18 +193,20 @@ namespace PacketDotNet.LinuxSLL
                     Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                     // build the output string
-                    buffer.AppendLine("LCC:  ******* LinuxSLL - \"Linux Cooked Capture\" - offset=? length=" + this.TotalPacketLength);
+                    buffer.AppendLine("LCC:  ******* LinuxSLL - \"Linux Cooked Capture\" - offset=? length=" +
+                                      this.TotalPacketLength);
                     buffer.AppendLine("LCC:");
-                    foreach(var property in properties)
+                    foreach (var property in properties)
                     {
                         buffer.AppendLine("LCC: " + property.Key.PadLeft(padLength) + " = " + property.Value);
                     }
+
                     buffer.AppendLine("LCC:");
                     break;
             }
 
             // append the base output
-            buffer.Append((String) base.ToString(outputFormat));
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
         }

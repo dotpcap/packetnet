@@ -30,14 +30,15 @@ using PacketDotNet.Utils.Conversion;
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// TcpPacket
-    /// See: http://en.wikipedia.org/wiki/Transmission_Control_Protocol
+    ///     TcpPacket
+    ///     See: http://en.wikipedia.org/wiki/Transmission_Control_Protocol
     /// </summary>
     [Serializable]
     public class TcpPacket : TransportPacket, ISourceDestinationPort
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
@@ -47,55 +48,65 @@ namespace PacketDotNet.Tcp
 #endif
 
         /// <value>
-        /// 20 bytes is the smallest tcp header
+        ///     20 bytes is the smallest tcp header
         /// </value>
         public const Int32 HeaderMinimumLength = 20;
 
         /// <summary> Fetch the port number on the source host.</summary>
         public virtual UInt16 SourcePort
         {
-            get => EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.SourcePortPosition);
+            get => EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + TcpFields.SourcePortPosition);
 
             set
             {
                 var theValue = value;
-                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.SourcePortPosition);
+                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + TcpFields.SourcePortPosition);
             }
         }
 
         /// <summary> Fetches the port number on the destination host.</summary>
         public virtual UInt16 DestinationPort
         {
-            get => EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.DestinationPortPosition);
+            get => EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + TcpFields.DestinationPortPosition);
 
             set
             {
                 var theValue = value;
-                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.DestinationPortPosition);
+                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + TcpFields.DestinationPortPosition);
             }
         }
 
         /// <summary> Fetch the packet sequence number.</summary>
         public UInt32 SequenceNumber
         {
-            get => EndianBitConverter.Big.ToUInt32(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.SequenceNumberPosition);
+            get => EndianBitConverter.Big.ToUInt32(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + TcpFields.SequenceNumberPosition);
 
-            set => EndianBitConverter.Big.CopyBytes(value, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.SequenceNumberPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + TcpFields.SequenceNumberPosition);
         }
 
         /// <summary> Fetch the packet acknowledgment number.</summary>
         public UInt32 AcknowledgmentNumber
         {
-            get => EndianBitConverter.Big.ToUInt32(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.AckNumberPosition);
+            get => EndianBitConverter.Big.ToUInt32(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + TcpFields.AckNumberPosition);
 
-            set => EndianBitConverter.Big.CopyBytes(value, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.AckNumberPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + TcpFields.AckNumberPosition);
         }
 
         private UInt16 DataOffsetAndFlags
         {
-            get => EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.DataOffsetAndFlagsPosition);
+            get => EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + TcpFields.DataOffsetAndFlagsPosition);
 
-            set => EndianBitConverter.Big.CopyBytes(value, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.DataOffsetAndFlagsPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + TcpFields.DataOffsetAndFlagsPosition);
         }
 
         /// <summary> The size of the tcp header in 32bit words </summary>
@@ -103,7 +114,7 @@ namespace PacketDotNet.Tcp
         {
             get
             {
-                var dataOffset = (Byte)((this.DataOffsetAndFlags >> 12) & 0xF);
+                var dataOffset = (Byte) ((this.DataOffsetAndFlags >> 12) & 0xF);
                 return dataOffset;
             }
 
@@ -111,7 +122,7 @@ namespace PacketDotNet.Tcp
             {
                 var dataOffset = this.DataOffsetAndFlags;
 
-                dataOffset = (UInt16)((dataOffset & 0x0FFF) | ((value << 12) & 0xF000));
+                dataOffset = (UInt16) ((dataOffset & 0x0FFF) | ((value << 12) & 0xF000));
 
                 // write the value back
                 this.DataOffsetAndFlags = dataOffset;
@@ -119,28 +130,32 @@ namespace PacketDotNet.Tcp
         }
 
         /// <summary>
-        /// The size of the receive window, which specifies the number of
-        /// bytes (beyond the sequence number in the acknowledgment field) that
-        /// the receiver is currently willing to receive.
+        ///     The size of the receive window, which specifies the number of
+        ///     bytes (beyond the sequence number in the acknowledgment field) that
+        ///     the receiver is currently willing to receive.
         /// </summary>
         public virtual UInt16 WindowSize
         {
-            get => EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.WindowSizePosition);
+            get => EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + TcpFields.WindowSizePosition);
 
-            set => EndianBitConverter.Big.CopyBytes(value, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.WindowSizePosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + TcpFields.WindowSizePosition);
         }
 
         /// <value>
-        /// Tcp checksum field value of type UInt16
+        ///     Tcp checksum field value of type UInt16
         /// </value>
         public override UInt16 Checksum
         {
-            get => EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.ChecksumPosition);
+            get => EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + TcpFields.ChecksumPosition);
 
             set
             {
                 var theValue = value;
-                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.ChecksumPosition);
+                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + TcpFields.ChecksumPosition);
             }
         }
 
@@ -153,13 +168,12 @@ namespace PacketDotNet.Tcp
                 if (this.ParentPacket.GetType() == typeof(IPv6Packet))
                     return this.ValidTCPChecksum;
                 // For IPv4 both the IP layer and the TCP layer contain checksums
-                else
-                    return ((IPv4Packet) this.ParentPacket).ValidIPChecksum && this.ValidTCPChecksum;
+                return ((IPv4Packet) this.ParentPacket).ValidIPChecksum && this.ValidTCPChecksum;
             }
         }
 
         /// <value>
-        /// True if the tcp checksum is valid
+        ///     True if the tcp checksum is valid
         /// </value>
         public virtual Boolean ValidTCPChecksum
         {
@@ -173,21 +187,21 @@ namespace PacketDotNet.Tcp
         }
 
         /// <summary>
-        /// Flags, 9 bits
+        ///     Flags, 9 bits
         /// </summary>
         public UInt16 AllFlags
         {
             get
             {
                 var flags = (this.DataOffsetAndFlags & 0x1FF);
-                return (UInt16)flags;
+                return (UInt16) flags;
             }
 
             set
             {
                 var flags = this.DataOffsetAndFlags;
 
-                flags = (UInt16)((flags & 0xFE00) | (value & 0x1FF));
+                flags = (UInt16) ((flags & 0xFE00) | (value & 0x1FF));
                 this.DataOffsetAndFlags = flags;
             }
         }
@@ -206,8 +220,9 @@ namespace PacketDotNet.Tcp
             set => this.SetFlag(value, TcpFields.TCP_ACK_MASK);
         }
 
-        /// <summary> Check the PSH flag, flag indicates the receiver should pass the
-        /// data to the application as soon as possible.
+        /// <summary>
+        ///     Check the PSH flag, flag indicates the receiver should pass the
+        ///     data to the application as soon as possible.
         /// </summary>
         public virtual Boolean Psh
         {
@@ -215,8 +230,9 @@ namespace PacketDotNet.Tcp
             set => this.SetFlag(value, TcpFields.TCP_PSH_MASK);
         }
 
-        /// <summary> Check the RST flag, flag indicates the session should be reset between
-        /// the sender and the receiver.
+        /// <summary>
+        ///     Check the RST flag, flag indicates the session should be reset between
+        ///     the sender and the receiver.
         /// </summary>
         public virtual Boolean Rst
         {
@@ -224,9 +240,10 @@ namespace PacketDotNet.Tcp
             set => this.SetFlag(value, TcpFields.TCP_RST_MASK);
         }
 
-        /// <summary> Check the SYN flag, flag indicates the sequence numbers should
-        /// be synchronized between the sender and receiver to initiate
-        /// a connection.
+        /// <summary>
+        ///     Check the SYN flag, flag indicates the sequence numbers should
+        ///     be synchronized between the sender and receiver to initiate
+        ///     a connection.
         /// </summary>
         public virtual Boolean Syn
         {
@@ -242,7 +259,7 @@ namespace PacketDotNet.Tcp
         }
 
         /// <value>
-        /// ECN flag
+        ///     ECN flag
         /// </value>
         public virtual Boolean ECN
         {
@@ -251,7 +268,7 @@ namespace PacketDotNet.Tcp
         }
 
         /// <value>
-        /// CWR flag
+        ///     CWR flag
         /// </value>
         public virtual Boolean CWR
         {
@@ -260,7 +277,7 @@ namespace PacketDotNet.Tcp
         }
 
         /// <value>
-        /// NS flag
+        ///     NS flag
         /// </value>
         public virtual Boolean NS
         {
@@ -271,19 +288,19 @@ namespace PacketDotNet.Tcp
         private void SetFlag(Boolean on, Int32 mask)
         {
             if (on)
-                this.AllFlags = (UInt16)(this.AllFlags | mask);
+                this.AllFlags = (UInt16) (this.AllFlags | mask);
             else
-                this.AllFlags = (UInt16)(this.AllFlags & ~mask);
+                this.AllFlags = (UInt16) (this.AllFlags & ~mask);
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override String Color => AnsiEscapeSequences.Yellow;
 
         /// <summary>
-        /// Create a new TCP packet from values
+        ///     Create a new TCP packet from values
         /// </summary>
         public TcpPacket(UInt16 sourcePort,
-                         UInt16 destinationPort)
+            UInt16 destinationPort)
         {
             Log.Debug("");
 
@@ -302,10 +319,10 @@ namespace PacketDotNet.Tcp
         }
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
         public TcpPacket(ByteArraySegment bas)
         {
@@ -314,7 +331,6 @@ namespace PacketDotNet.Tcp
             // set the header field, header field values are retrieved from this byte array
             this.HeaderByteArraySegment = new ByteArraySegment(bas)
             {
-
                 // NOTE: we update the Length field AFTER the header field because
                 // we need the header to be valid to retrieve the value of DataOffset
                 Length = this.DataOffset * 4
@@ -328,13 +344,13 @@ namespace PacketDotNet.Tcp
         }
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
         /// <param name="parentPacket">
-        /// A <see cref="Packet"/>
+        ///     A <see cref="Packet" />
         /// </param>
         public TcpPacket(ByteArraySegment bas, Packet parentPacket) : this(bas)
         {
@@ -350,11 +366,13 @@ namespace PacketDotNet.Tcp
             // actual total length (tcp header + tcp payload)
             var ipPayloadTotalLength = ipv4Parent.TotalLength - (ipv4Parent.HeaderLength * 4);
 
-            Log.DebugFormat($"ipv4Parent.TotalLength {ipv4Parent.TotalLength}, ipv4Parent.HeaderLength {ipv4Parent.HeaderLength * 4}");
+            Log.DebugFormat(
+                $"ipv4Parent.TotalLength {ipv4Parent.TotalLength}, ipv4Parent.HeaderLength {ipv4Parent.HeaderLength * 4}");
 
             var newTcpPayloadLength = ipPayloadTotalLength - this.Header.Length;
 
-            Log.DebugFormat($"Header.Length {this.HeaderByteArraySegment.Length}, Current payload length: {this.PayloadPacketOrData.TheByteArraySegment.Length}, new payload length { newTcpPayloadLength}");
+            Log.DebugFormat(
+                $"Header.Length {this.HeaderByteArraySegment.Length}, Current payload length: {this.PayloadPacketOrData.TheByteArraySegment.Length}, new payload length {newTcpPayloadLength}");
 
             // the length of the payload is the total payload length
             // above, minus the length of the tcp header
@@ -363,7 +381,7 @@ namespace PacketDotNet.Tcp
         }
 
         /// <summary>
-        /// Decode Payload to Support Drda procotol
+        ///     Decode Payload to Support Drda procotol
         /// </summary>
         /// <returns></returns>
         public TcpPacket DecodePayload()
@@ -372,6 +390,7 @@ namespace PacketDotNet.Tcp
             {
                 return this;
             }
+
             //PayloadData[2] is Magic field and Magic field==0xd0 means this may be a Drda Packet
             if (this.PayloadData.Length < DrdaDDMFields.DDMHeadTotalLength || this.PayloadData[2] != 0xd0) return this;
 
@@ -381,7 +400,7 @@ namespace PacketDotNet.Tcp
         }
 
         /// <summary>
-        /// Computes the TCP checksum. Does not update the current checksum value
+        ///     Computes the TCP checksum. Does not update the current checksum value
         /// </summary>
         /// <returns> The calculated TCP checksum.</returns>
         public Int32 CalculateTCPChecksum()
@@ -391,7 +410,7 @@ namespace PacketDotNet.Tcp
         }
 
         /// <summary>
-        /// Update the checksum value.
+        ///     Update the checksum value.
         /// </summary>
         public void UpdateTCPChecksum()
         {
@@ -402,26 +421,28 @@ namespace PacketDotNet.Tcp
         /// <summary> Fetch the urgent pointer.</summary>
         public Int32 UrgentPointer
         {
-            get => EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.UrgentPointerPosition);
+            get => EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + TcpFields.UrgentPointerPosition);
 
             set
             {
-                var theValue = (Int16)value;
-                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + TcpFields.UrgentPointerPosition);
+                var theValue = (Int16) value;
+                EndianBitConverter.Big.CopyBytes(theValue, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + TcpFields.UrgentPointerPosition);
             }
         }
 
         /// <summary>
-        /// Bytes that represent the tcp options
+        ///     Bytes that represent the tcp options
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        ///     A <see cref="System.String" />
         /// </returns>
         public Byte[] Options
         {
             get
             {
-                if(this.Urg)
+                if (this.Urg)
                 {
                     throw new NotImplementedException("Urg == true not implemented yet");
                 }
@@ -431,21 +452,21 @@ namespace PacketDotNet.Tcp
 
                 Byte[] optionBytes = new Byte[optionsLength];
                 Array.Copy(this.HeaderByteArraySegment.Bytes, this.HeaderByteArraySegment.Offset + optionsOffset,
-                           optionBytes, 0,
-                           optionsLength);
+                    optionBytes, 0,
+                    optionsLength);
 
                 return optionBytes;
             }
         }
 
         /// <summary>
-        /// Parses options, pointed to by optionBytes into an array of Options
+        ///     Parses options, pointed to by optionBytes into an array of Options
         /// </summary>
         /// <param name="optionBytes">
-        /// A <see cref="T:System.Byte[]"/>
+        ///     A <see cref="T:System.Byte[]" />
         /// </param>
         /// <returns>
-        /// A <see cref="List&lt;Option&gt;"/>
+        ///     A <see cref="List&lt;Option&gt;" />
         /// </returns>
         private List<Option> ParseOptions(Byte[] optionBytes)
         {
@@ -453,30 +474,31 @@ namespace PacketDotNet.Tcp
             OptionTypes type;
             Byte length;
 
-            if(optionBytes.Length == 0)
+            if (optionBytes.Length == 0)
                 return null;
 
             // reset the OptionsCollection list to prepare
             //  to be re-populated with new data
             var retval = new List<Option>();
 
-            while(offset < optionBytes.Length)
+            while (offset < optionBytes.Length)
             {
-                type = (OptionTypes)optionBytes[offset + Option.KindFieldOffset];
+                type = (OptionTypes) optionBytes[offset + Option.KindFieldOffset];
 
                 // some options have no length field, we cannot read
                 // the length field if it isn't present or we risk
                 // out-of-bounds issues
-                if((type == OptionTypes.EndOfOptionList) ||
-                   (type == OptionTypes.NoOperation))
+                if ((type == OptionTypes.EndOfOptionList) ||
+                    (type == OptionTypes.NoOperation))
                 {
                     length = 1;
-                } else
+                }
+                else
                 {
                     length = optionBytes[offset + Option.LengthFieldOffset];
                 }
 
-                switch(type)
+                switch (type)
                 {
                     case OptionTypes.EndOfOptionList:
                         retval.Add(new EndOfOptions(optionBytes, offset, length));
@@ -538,10 +560,11 @@ namespace PacketDotNet.Tcp
                     case OptionTypes.ConnectionCountNew:
                     case OptionTypes.ConnectionCountEcho:
                     case OptionTypes.QuickStartResponse:
-                        throw new NotSupportedException("Option: " + type.ToString() + " is not supported because its RFC specification is still experimental");
+                        throw new NotSupportedException("Option: " + type +
+                                                        " is not supported because its RFC specification is still experimental");
                     // add more options types here
                     default:
-                        throw new NotImplementedException("Option: " + type.ToString() + " not supported in Packet.Net yet");
+                        throw new NotImplementedException("Option: " + type + " not supported in Packet.Net yet");
                 }
             }
 
@@ -555,7 +578,7 @@ namespace PacketDotNet.Tcp
             String color = "";
             String colorEscape = "";
 
-            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
                 color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
@@ -569,15 +592,17 @@ namespace PacketDotNet.Tcp
                     // build flagstring
                     String flags = "{";
                     if (this.Urg)
-                        flags += "urg[0x" + Convert.ToString((Int32) this.UrgentPointer, 16) + "]|";
+                        flags += "urg[0x" + Convert.ToString(this.UrgentPointer, 16) + "]|";
                     if (this.Ack)
-                        flags += "ack[" + this.AcknowledgmentNumber + " (0x" + Convert.ToString((Int64) this.AcknowledgmentNumber, 16) + ")]|";
+                        flags += "ack[" + this.AcknowledgmentNumber + " (0x" +
+                                 Convert.ToString(this.AcknowledgmentNumber, 16) + ")]|";
                     if (this.Psh)
                         flags += "psh|";
                     if (this.Rst)
                         flags += "rst|";
                     if (this.Syn)
-                        flags += "syn[0x" + Convert.ToString((Int64) this.SequenceNumber, 16) + "," + this.SequenceNumber + "]|";
+                        flags += "syn[0x" + Convert.ToString(this.SequenceNumber, 16) + "," + this.SequenceNumber +
+                                 "]|";
                     flags = flags.TrimEnd('|');
                     flags += "}";
 
@@ -594,32 +619,37 @@ namespace PacketDotNet.Tcp
                     // collect the properties and their value
                     Dictionary<String, String> properties = new Dictionary<String, String>
                     {
-                        { "source port", this.SourcePort.ToString() },
-                        { "destination port", this.DestinationPort.ToString() },
-                        { "sequence number", this.SequenceNumber.ToString() + " (0x" + this.SequenceNumber.ToString("x") + ")" },
-                        { "acknowledgement number", this.AcknowledgmentNumber.ToString() + " (0x" + this.AcknowledgmentNumber.ToString("x") + ")" },
+                        {"source port", this.SourcePort.ToString()},
+                        {"destination port", this.DestinationPort.ToString()},
+                        {"sequence number", this.SequenceNumber + " (0x" + this.SequenceNumber.ToString("x") + ")"},
+                        {
+                            "acknowledgement number",
+                            this.AcknowledgmentNumber + " (0x" + this.AcknowledgmentNumber.ToString("x") + ")"
+                        },
                         // TODO: Implement a HeaderLength property for TCPPacket
                         //properties.Add("header length", HeaderLength.ToString());
-                        { "flags", "(0x" + this.AllFlags.ToString("x") + ")" }
+                        {"flags", "(0x" + this.AllFlags.ToString("x") + ")"}
                     };
-                    String flags = Convert.ToString((Int32) this.AllFlags, 2).PadLeft(8, '0');
+                    String flags = Convert.ToString(this.AllFlags, 2).PadLeft(8, '0');
                     properties.Add("", flags[0] + "... .... = [" + flags[0] + "] congestion window reduced");
                     properties.Add(" ", "." + flags[1] + ".. .... = [" + flags[1] + "] ECN - echo");
                     properties.Add("  ", ".." + flags[2] + ". .... = [" + flags[2] + "] urgent");
                     properties.Add("   ", "..." + flags[3] + " .... = [" + flags[3] + "] acknowledgement");
                     properties.Add("    ", ".... " + flags[4] + "... = [" + flags[4] + "] push");
                     properties.Add("     ", ".... ." + flags[5] + ".. = [" + flags[5] + "] reset");
-                    properties.Add("      ", ".... .."+ flags[6] + ". = [" + flags[6] + "] syn");
+                    properties.Add("      ", ".... .." + flags[6] + ". = [" + flags[6] + "] syn");
                     properties.Add("       ", ".... ..." + flags[7] + " = [" + flags[7] + "] fin");
                     properties.Add("window size", this.WindowSize.ToString());
-                    properties.Add("checksum", "0x" + this.Checksum.ToString() + " [" + (this.ValidChecksum ? "valid" : "invalid") + "]");
-                    properties.Add("options", "0x" + BitConverter.ToString(this.Options).Replace("-", "").PadLeft(12, '0'));
+                    properties.Add("checksum",
+                        "0x" + this.Checksum + " [" + (this.ValidChecksum ? "valid" : "invalid") + "]");
+                    properties.Add("options",
+                        "0x" + BitConverter.ToString(this.Options).Replace("-", "").PadLeft(12, '0'));
                     var parsedOptions = this.OptionsCollection;
-                    if(parsedOptions != null)
+                    if (parsedOptions != null)
                     {
-                        for(Int32 i = 0; i < parsedOptions.Count; i++)
+                        for (Int32 i = 0; i < parsedOptions.Count; i++)
                         {
-                            properties.Add("option" + (i + 1).ToString(), parsedOptions[i].ToString());
+                            properties.Add("option" + (i + 1), parsedOptions[i].ToString());
                         }
                     }
 
@@ -627,11 +657,12 @@ namespace PacketDotNet.Tcp
                     Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                     // build the output string
-                    buffer.AppendLine("TCP:  ******* TCP - \"Transmission Control Protocol\" - offset=? length=" + this.TotalPacketLength);
+                    buffer.AppendLine("TCP:  ******* TCP - \"Transmission Control Protocol\" - offset=? length=" +
+                                      this.TotalPacketLength);
                     buffer.AppendLine("TCP:");
-                    foreach(var property in properties)
+                    foreach (var property in properties)
                     {
-                        if(property.Key.Trim() != "")
+                        if (property.Key.Trim() != "")
                         {
                             buffer.AppendLine("TCP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
                         }
@@ -640,37 +671,38 @@ namespace PacketDotNet.Tcp
                             buffer.AppendLine("TCP: " + property.Key.PadLeft(padLength) + "   " + property.Value);
                         }
                     }
+
                     buffer.AppendLine("TCP:");
                     break;
                 }
             }
 
             // append the base class output
-            buffer.Append((String) base.ToString(outputFormat));
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
         }
 
         /// <summary>
-        /// Create a randomized tcp packet with the given ip version
+        ///     Create a randomized tcp packet with the given ip version
         /// </summary>
         /// <returns>
-        /// A <see cref="Packet"/>
+        ///     A <see cref="Packet" />
         /// </returns>
         public static TcpPacket RandomPacket()
         {
             var rnd = new Random();
 
             // create a randomized TcpPacket
-            var srcPort = (UInt16)rnd.Next(UInt16.MinValue, UInt16.MaxValue);
-            var dstPort = (UInt16)rnd.Next(UInt16.MinValue, UInt16.MaxValue);
+            var srcPort = (UInt16) rnd.Next(UInt16.MinValue, UInt16.MaxValue);
+            var dstPort = (UInt16) rnd.Next(UInt16.MinValue, UInt16.MaxValue);
             var tcpPacket = new TcpPacket(srcPort, dstPort);
 
             return tcpPacket;
         }
 
         /// <summary>
-        /// Contains the Options list attached to the TCP header
+        ///     Contains the Options list attached to the TCP header
         /// </summary>
         public List<Option> OptionsCollection => this.ParseOptions(this.Options);
     }

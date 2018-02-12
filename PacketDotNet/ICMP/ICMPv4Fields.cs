@@ -23,30 +23,37 @@ using System;
 namespace PacketDotNet.ICMP
 {
     /// <summary>
-    /// ICMP protocol field encoding information.
-    /// See http://en.wikipedia.org/wiki/ICMPv6
+    ///     ICMP protocol field encoding information.
+    ///     See http://en.wikipedia.org/wiki/ICMPv6
     /// </summary>
     public class ICMPv4Fields
     {
-        /// <summary> Length of the ICMP message type code in bytes.</summary>
-        public static readonly Int32 TypeCodeLength = 2;
         /// <summary> Length of the ICMP header checksum in bytes.</summary>
         public static readonly Int32 ChecksumLength = 2;
+
+        /// <summary> Position of the ICMP header checksum.</summary>
+        public static readonly Int32 ChecksumPosition;
+
+        /// <summary> Length in bytes of an ICMP header.</summary>
+        public static readonly Int32 HeaderLength;
+
         /// <summary> Length of the ICMP ID field in bytes.</summary>
         public static readonly Int32 IDLength = 2;
+
+        /// <summary> Position of the ICMP ID field </summary>
+        public static readonly Int32 IDPosition;
+
         /// <summary> Length of the ICMP Sequence field in bytes </summary>
         public static readonly Int32 SequenceLength = 2;
 
-        /// <summary> Position of the ICMP message type/code.</summary>
-        public static readonly Int32 TypeCodePosition = 0;
-        /// <summary> Position of the ICMP header checksum.</summary>
-        public static readonly Int32 ChecksumPosition;
-        /// <summary> Position of the ICMP ID field </summary>
-        public static readonly Int32 IDPosition;
         /// <summary> Position of the Sequence field </summary>
         public static readonly Int32 SequencePosition;
-        /// <summary> Length in bytes of an ICMP header.</summary>
-        public static readonly Int32 HeaderLength;
+
+        /// <summary> Length of the ICMP message type code in bytes.</summary>
+        public static readonly Int32 TypeCodeLength = 2;
+
+        /// <summary> Position of the ICMP message type/code.</summary>
+        public static readonly Int32 TypeCodePosition;
 
         static ICMPv4Fields()
         {

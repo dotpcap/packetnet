@@ -1,4 +1,4 @@
-    /*
+/*
 This file is part of PacketDotNet
 
 PacketDotNet is free software: you can redistribute it and/or modify
@@ -25,7 +25,8 @@ namespace PacketDotNet.PPP
     {
         /// <summary> OSPF protocol version 2.</summary>
         OSPFv2 = 2,
+
         /// <summary> OSPF protocol version 3.</summary>
-        OSPFv3 = 3,
+        OSPFv3 = 3
     }
 }

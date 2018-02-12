@@ -20,13 +20,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace PacketDotNet.IP
 {
-    /// <summary> Code constants for internet protocol versions.
-    ///
+    /// <summary>
+    ///     Code constants for internet protocol versions.
     /// </summary>
     public enum IpVersion
     {
         /// <summary> Internet protocol version 4.</summary>
         IPv4 = 4,
+
         /// <summary> Internet protocol version 6.</summary>
         IPv6 = 6
     }

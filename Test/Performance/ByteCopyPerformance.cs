@@ -1,4 +1,5 @@
 using System;
+using log4net.Core;
 using NUnit.Framework;
 using PacketDotNet.Ethernet;
 
@@ -22,7 +23,7 @@ namespace Test.Performance
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to improve performance
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             // Store the time before the processing starts
             var startTime = DateTime.Now;
@@ -59,7 +60,7 @@ namespace Test.Performance
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to improve performance
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             // Store the time before the processing starts
             var startTime = DateTime.Now;
@@ -83,6 +84,5 @@ namespace Test.Performance
             // output the statistics to the console
             Console.WriteLine(rate.ToString());
         }
-
     }
 }

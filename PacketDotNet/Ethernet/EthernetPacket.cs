@@ -39,16 +39,12 @@ namespace PacketDotNet.Ethernet
     public class EthernetPacket : InternetLinkLayerPacket
     {
 #if DEBUG
-        private static readonly log4net.ILog Log =
- log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
-#pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
-#pragma warning restore 0169, 0649
+        private static readonly ILogInactive Log;
 #endif
-
         /// <value>
         ///     Payload packet, overridden to set the 'Type' field based on
         ///     the type of packet being used here if the PayloadPacket is being set

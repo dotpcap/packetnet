@@ -31,7 +31,7 @@ namespace Test.Misc
     public class ConstructingPackets
     {
         /// <summary>
-        /// Build a complete ethernet packet
+        ///     Build a complete ethernet packet
         /// </summary>
         [Test]
         public void BuildEthernetPacket()
@@ -44,16 +44,16 @@ namespace Test.Misc
             ipPacket.PayloadPacket = tcpPacket;
             ethernetPacket.PayloadPacket = ipPacket;
 
-            Console.WriteLine("random packet: {0}", ethernetPacket.ToString());
+            Console.WriteLine("random packet: {0}", ethernetPacket);
 
             // and get a byte array that represents the single packet
             var bytes = ethernetPacket.Bytes;
 
             // and re-parse that packet
             var newPacket = Packet.ParsePacket(LinkLayers.Ethernet,
-                                               bytes);
+                bytes);
 
-            Console.WriteLine("re-parsed random packet: {0}", newPacket.ToString());
+            Console.WriteLine("re-parsed random packet: {0}", newPacket);
         }
     }
 }

@@ -17,51 +17,60 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
+
 using System;
 
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// Alternative Checksum Date
-    ///  Used as an extension to Alternative Checksum Response when the
-    ///   checksum is longer than the standard 16bit TCP Checksum field
+    ///     Alternative Checksum Date
+    ///     Used as an extension to Alternative Checksum Response when the
+    ///     checksum is longer than the standard 16bit TCP Checksum field
     /// </summary>
     /// <remarks>
-    /// References:
-    ///  http://datatracker.ietf.org/doc/rfc1146/
+    ///     References:
+    ///     http://datatracker.ietf.org/doc/rfc1146/
     /// </remarks>
     public class AlternateChecksumData : Option
     {
+        #region Members
+
+        // the offset (in bytes) of the Data Field
+        private const Int32 DataFieldOffset = 2;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
-        /// Creates an Alternate Checksum Data Option
+        ///     Creates an Alternate Checksum Data Option
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="T:System.Byte[]"/>
+        ///     A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
-        public AlternateChecksumData(byte[] bytes, int offset, int length) :
+        public AlternateChecksumData(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
-        { }
+        {
+        }
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// The array of attached Checksum
+        ///     The array of attached Checksum
         /// </summary>
-        public byte[] Data
+        public Byte[] Data
         {
             get
             {
-                byte[] data = new byte[this.Length - DataFieldOffset];
+                Byte[] data = new Byte[this.Length - DataFieldOffset];
                 Array.Copy(this.Bytes, DataFieldOffset, data, 0, data.Length);
                 return data;
             }
@@ -72,22 +81,15 @@ namespace PacketDotNet.Tcp
         #region Methods
 
         /// <summary>
-        /// Returns the Option info as a string
+        ///     Returns the Option info as a string
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        ///     A <see cref="System.String" />
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return "[" + this.Kind.ToString() + ": Data=0x" + this.Data.ToString() + "]";
+            return $"[{this.Kind}: Data=0x{this.Data}]";
         }
-
-        #endregion
-
-        #region Members
-
-        // the offset (in bytes) of the Data Field
-        const int DataFieldOffset = 2;
 
         #endregion
     }

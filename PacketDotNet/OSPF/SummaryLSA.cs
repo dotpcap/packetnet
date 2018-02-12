@@ -7,108 +7,110 @@ using PacketDotNet.Utils.Conversion;
 namespace PacketDotNet.OSPF
 {
     /// <summary>
-    /// Summary-LSAs are the Type 3 and 4 LSAs.  These LSAs are originated
-    /// by area border routers. Summary-LSAs describe inter-area
-    /// destinations. Type 3 summary-LSAs are used when the destination is an IP network,
-    /// Type 4 - an AS boundary router.
+    ///     Summary-LSAs are the Type 3 and 4 LSAs.  These LSAs are originated
+    ///     by area border routers. Summary-LSAs describe inter-area
+    ///     destinations. Type 3 summary-LSAs are used when the destination is an IP network,
+    ///     Type 4 - an AS boundary router.
     /// </summary>
     public class SummaryLSA : LSA
     {
         /// <summary>
-        /// The type of the lsa.
+        ///     The type of the lsa.
         /// </summary>
-        public static readonly LSAType lsaType = LSAType.Summary;
+        public static readonly LSAType LSAType = LSAType.Summary;
 
         /// <summary>
-        /// Default constructor
+        ///     Default constructor
         /// </summary>
         public SummaryLSA()
         {
-            byte[] b = new byte[SummaryLSAFields.TOSMetricPosition];
-            this.header = new ByteArraySegment(b);
-            this.LSType = lsaType;
-            this.Length = (ushort)this.header.Bytes.Length;
+            Byte[] b = new Byte[SummaryLSAFields.TOSMetricPosition];
+            this.Header = new ByteArraySegment(b);
+            this.LSType = LSAType;
+            this.Length = (UInt16) this.Header.Bytes.Length;
         }
 
         /// <summary>
-        /// Constructs a Summary LSA with a list of TOS metrics
+        ///     Constructs a Summary LSA with a list of TOS metrics
         /// </summary>
         public SummaryLSA(List<TOSMetric> metrics)
         {
-            int length = SummaryLSAFields.TOSMetricPosition + metrics.Count * TOSMetric.TOSMetricLength;
-            int offset = SummaryLSAFields.TOSMetricPosition;
-            byte[] b = new byte[length];
+            Int32 length = SummaryLSAFields.TOSMetricPosition + metrics.Count * TOSMetric.TOSMetricLength;
+            Int32 offset = SummaryLSAFields.TOSMetricPosition;
+            Byte[] b = new Byte[length];
 
             foreach (TOSMetric m in metrics)
             {
-                Array.Copy((Array) m.Bytes, (int) 0, (Array) b, offset, (int) TOSMetric.TOSMetricLength);
+                Array.Copy(m.Bytes, 0, b, offset, TOSMetric.TOSMetricLength);
                 offset += TOSMetric.TOSMetricLength;
             }
 
-            this.header = new ByteArraySegment(b);
-            this.LSType = lsaType;
-            this.Length = (ushort)this.header.Bytes.Length;
+            this.Header = new ByteArraySegment(b);
+            this.LSType = LSAType;
+            this.Length = (UInt16) this.Header.Bytes.Length;
         }
 
         /// <summary>
-        /// Constructs a packet from bytes and offset and length
+        ///     Constructs a packet from bytes and offset and length
         /// </summary>
         /// <param name="packet">
-        /// A <see cref="System.Byte"/>
+        ///     A <see cref="System.Byte" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
-        public SummaryLSA(byte[] packet, int offset, int length) :
+        public SummaryLSA(Byte[] packet, Int32 offset, Int32 length) :
             base(packet, offset, length)
         {
-
         }
 
         /// <summary>
-        /// For Type 3 summary-LSAs, this indicates the destination
-        /// network's IP address mask. This field is not meaningful
-        /// and must be zero for Type 4 summary-LSAs.
+        ///     The cost of this route.  Expressed in the same units as the interface costs in the router-LSAs.
         /// </summary>
-        public IPAddress NetworkMask
+        public UInt32 Metric
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + SummaryLSAFields.NetworkMaskPosition);
-                return new IPAddress(val);
-            }
-            set
-            {
-                byte[] address = value.GetAddressBytes();
-                Array.Copy((Array) address, (int) 0,
-                    (Array) this.header.Bytes, (int) (this.header.Offset + SummaryLSAFields.NetworkMaskPosition),
-                    address.Length);
-            }
-        }
-
-        /// <summary>
-        /// The cost of this route.  Expressed in the same units as the interface costs in the router-LSAs.
-        /// </summary>
-        public uint Metric
-        {
-            get
-            {
-                var val = EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + SummaryLSAFields.MetricPosition);
+                var val = EndianBitConverter.Big.ToUInt32(this.Header.Bytes,
+                    this.Header.Offset + SummaryLSAFields.MetricPosition);
                 return val & 0x00FFFFFF;
             }
             set
             {
                 var theValue = value & 0x00FFFFFF;
-                EndianBitConverter.Big.CopyBytes(theValue, this.header.Bytes, this.header.Offset + SummaryLSAFields.MetricPosition);
+                EndianBitConverter.Big.CopyBytes(theValue, this.Header.Bytes,
+                    this.Header.Offset + SummaryLSAFields.MetricPosition);
             }
         }
 
         /// <summary>
-        /// Additional TOS-specific information  for backward compatibility
-        /// with previous versions of the OSPF specification
+        ///     For Type 3 summary-LSAs, this indicates the destination
+        ///     network's IP address mask. This field is not meaningful
+        ///     and must be zero for Type 4 summary-LSAs.
+        /// </summary>
+        public IPAddress NetworkMask
+        {
+            get
+            {
+                var val = EndianBitConverter.Little.ToUInt32(this.Header.Bytes,
+                    this.Header.Offset + SummaryLSAFields.NetworkMaskPosition);
+                return new IPAddress(val);
+            }
+            set
+            {
+                Byte[] address = value.GetAddressBytes();
+                Array.Copy(address, 0,
+                    this.Header.Bytes, this.Header.Offset + SummaryLSAFields.NetworkMaskPosition,
+                    address.Length);
+            }
+        }
+
+        /// <summary>
+        ///     Additional TOS-specific information  for backward compatibility
+        ///     with previous versions of the OSPF specification
         /// </summary>
         public List<TOSMetric> TOSMetrics
         {
@@ -121,18 +123,20 @@ namespace PacketDotNet.OSPF
                     throw new Exception("Malformed summary LSA - bad TOSMetrics size");
                 }
 
-                int tosCnt = (this.Length - SummaryLSAFields.TOSMetricPosition) / TOSMetric.TOSMetricLength;
+                Int32 tosCnt = (this.Length - SummaryLSAFields.TOSMetricPosition) / TOSMetric.TOSMetricLength;
 
-                for (int i = 0; i < tosCnt; i++)
+                for (Int32 i = 0; i < tosCnt; i++)
                 {
-                    var metric = EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + SummaryLSAFields.TOSMetricPosition + i * TOSMetric.TOSMetricLength);
+                    var metric = EndianBitConverter.Big.ToUInt32(this.Header.Bytes,
+                        this.Header.Offset + SummaryLSAFields.TOSMetricPosition + i * TOSMetric.TOSMetricLength);
                     TOSMetric m = new TOSMetric
                     {
-                        TOS = (byte)((metric & 0xFF000000) >> 24),
+                        TOS = (Byte) ((metric & 0xFF000000) >> 24),
                         Metric = metric & 0x00FFFFFF
                     };
                     ret.Add(m);
                 }
+
                 return ret;
             }
         }

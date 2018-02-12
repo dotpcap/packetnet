@@ -21,7 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet.OSPF
 {
     /// <summary>
-    /// The five different OSPF packet types
+    ///     The five different OSPF packet types
     /// </summary>
     public enum OSPFPacketType : byte
     {

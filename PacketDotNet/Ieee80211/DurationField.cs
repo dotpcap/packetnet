@@ -21,34 +21,33 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 
 namespace PacketDotNet.Ieee80211
+{
+    /// <summary>
+    ///     Duration field.
+    /// </summary>
+    public class DurationField
     {
         /// <summary>
-        /// Duration field.
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DurationField" /> class.
         /// </summary>
-        public class DurationField
+        public DurationField()
         {
-            /// <summary>
-            /// This is the raw Duration field
-            /// 
-            /// </summary>
-            public UInt16 Field { get; set; }
+        }
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DurationField"/> class.
-            /// </summary>
-            public DurationField()
-            {
-            }
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        /// <param name="field">
+        ///     A <see cref="ushort" />
+        /// </param>
+        public DurationField(UInt16 field)
+        {
+            this.Field = field;
+        }
 
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="field">
-            /// A <see cref="UInt16"/>
-            /// </param>
-            public DurationField(UInt16 field)
-            {
-                this.Field = field;
-            }
-        } 
+        /// <summary>
+        ///     This is the raw Duration field
+        /// </summary>
+        public UInt16 Field { get; set; }
     }
+}

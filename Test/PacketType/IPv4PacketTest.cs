@@ -24,7 +24,6 @@ using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
 using PacketDotNet;
 using PacketDotNet.IP;
-using PacketDotNet.MiscUtil.Utils;
 using PacketDotNet.Utils;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -35,98 +34,38 @@ namespace Test.PacketType
     public class IPv4PacketTest
     {
         [Test]
-        public void ConstructingFromValues()
-        {
-            var sourceAddress = RandomUtils.GetIPAddress(IpVersion.IPv4);
-            var destinationAddress = RandomUtils.GetIPAddress(IpVersion.IPv4);
-            var ip = new IPv4Packet(sourceAddress, destinationAddress);
-
-            Assert.AreEqual(sourceAddress, ip.SourceAddress);
-            Assert.AreEqual(destinationAddress, ip.DestinationAddress);
-
-            // make sure the version is what we expect
-            Assert.AreEqual(IPv4Packet.ipVersion, ip.Version);
-
-            // retrieve the bytes for this IPv4Packet and construct another IPv4 packet from
-            // these bytes
-            var bytes = ip.Bytes;
-            var ip2 = new IPv4Packet(new ByteArraySegment(bytes));
-
-            // compare some of the the values
-            //TODO: add more values here or implement an IPv4Packet equals method and use that here
-            Assert.AreEqual(ip.Version, ip2.Version);
-        }
-
-        [Test]
-        public void PrintString()
-        {
-            Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
-            dev.Open();
-            Console.WriteLine("Reading packet data");
-            var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-            Console.WriteLine("Parsing");
-            var ip = (IPv4Packet)p.Extract(typeof(IPv4Packet));
-
-            Console.WriteLine("Printing human readable string");
-            Console.WriteLine(ip.ToString());
-        }
-
-        [Test]
-        public void PrintVerboseString()
-        {
-            Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
-            dev.Open();
-            Console.WriteLine("Reading packet data");
-            var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-            Console.WriteLine("Parsing");
-            var ip = (IPv4Packet)p.Extract(typeof(IPv4Packet));
-
-            Console.WriteLine("Printing human readable string");
-            Console.WriteLine(ip.ToString(StringOutputType.Verbose));
-        }
-
-        [Test]
-        public void RandomPacket()
-        {
-            IPv4Packet.RandomPacket();
-        }
-        [Test]
         public void BinarySerialization()
         {
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
 
             RawCapture rawCapture;
-            bool foundipv4 = false;
+            Boolean foundipv4 = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var ipv4 = (IPv4Packet)p.Extract(typeof(IPv4Packet));
+                var ipv4 = (IPv4Packet) p.Extract(typeof(IPv4Packet));
                 if (ipv4 == null)
                 {
                     continue;
                 }
+
                 foundipv4 = true;
 
                 var memoryStream = new MemoryStream();
                 BinaryFormatter serializer = new BinaryFormatter();
                 serializer.Serialize(memoryStream, ipv4);
 
-                memoryStream.Seek (0, SeekOrigin.Begin);
+                memoryStream.Seek(0, SeekOrigin.Begin);
                 BinaryFormatter deserializer = new BinaryFormatter();
-                IPv4Packet fromFile = (IPv4Packet)deserializer.Deserialize(memoryStream);
+                IPv4Packet fromFile = (IPv4Packet) deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(ipv4.Bytes, fromFile.Bytes);
                 Assert.AreEqual(ipv4.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
                 Assert.AreEqual(ipv4.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
                 Assert.AreEqual(ipv4.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(ipv4.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
+                Assert.AreEqual(ipv4.BytesHighPerformance.NeedsCopyForActualBytes,
+                    fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(ipv4.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(ipv4.Color, fromFile.Color);
                 Assert.AreEqual(ipv4.Header, fromFile.Header);
@@ -161,6 +100,68 @@ namespace Test.PacketType
             dev.Close();
             Assert.IsTrue(foundipv4, "Capture file contained no ipv4 packets");
         }
-    
+
+        [Test]
+        public void ConstructingFromValues()
+        {
+            var sourceAddress = RandomUtils.GetIPAddress(IpVersion.IPv4);
+            var destinationAddress = RandomUtils.GetIPAddress(IpVersion.IPv4);
+            var ip = new IPv4Packet(sourceAddress, destinationAddress);
+
+            Assert.AreEqual(sourceAddress, ip.SourceAddress);
+            Assert.AreEqual(destinationAddress, ip.DestinationAddress);
+
+            // make sure the version is what we expect
+            Assert.AreEqual(IPv4Packet.IPVersion, ip.Version);
+
+            // retrieve the bytes for this IPv4Packet and construct another IPv4 packet from
+            // these bytes
+            var bytes = ip.Bytes;
+            var ip2 = new IPv4Packet(new ByteArraySegment(bytes));
+
+            // compare some of the the values
+            //TODO: add more values here or implement an IPv4Packet equals method and use that here
+            Assert.AreEqual(ip.Version, ip2.Version);
+        }
+
+        [Test]
+        public void PrintString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            dev.Open();
+            Console.WriteLine("Reading packet data");
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+            Console.WriteLine("Parsing");
+            var ip = (IPv4Packet) p.Extract(typeof(IPv4Packet));
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(ip.ToString());
+        }
+
+        [Test]
+        public void PrintVerboseString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            dev.Open();
+            Console.WriteLine("Reading packet data");
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+            Console.WriteLine("Parsing");
+            var ip = (IPv4Packet) p.Extract(typeof(IPv4Packet));
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(ip.ToString(StringOutputType.Verbose));
+        }
+
+        [Test]
+        public void RandomPacket()
+        {
+            IPv4Packet.RandomPacket();
+        }
     }
 }

@@ -18,53 +18,52 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
+using System;
+
 namespace PacketDotNet.Ieee80211
+{
+    /// <summary>
+    ///     As defined by Airpcap.h
+    ///     NOTE: PresentPosition may not be the only position present
+    ///     as this the field can be extended if the high bit is set
+    /// </summary>
+    public class RadioFields
     {
-        /// <summary>
-        /// As defined by Airpcap.h
-        ///
-        /// NOTE: PresentPosition may not be the only position present
-        /// as this the field can be extended if the high bit is set
-        /// </summary>
-        public class RadioFields
+        /// <summary>Default header length, assuming one present field entry</summary>
+        public static readonly Int32 DefaultHeaderLength;
+
+        /// <summary>Length of the length field</summary>
+        public static readonly Int32 LengthLength = 2;
+
+        /// <summary>Position of the length field</summary>
+        public static readonly Int32 LengthPosition;
+
+        /// <summary>Length of the pad field</summary>
+        public static readonly Int32 PadLength = 1;
+
+        /// <summary>Position of the padding field</summary>
+        public static readonly Int32 PadPosition;
+
+        /// <summary>Length of the first present field (others may follow)</summary>
+        public static readonly Int32 PresentLength = 4;
+
+        /// <summary>Position of the first present field</summary>
+        public static readonly Int32 PresentPosition;
+
+        /// <summary>Length of the version field</summary>
+        public static readonly Int32 VersionLength = 1;
+
+        /// <summary>Position of the version field</summary>
+        public static readonly Int32 VersionPosition = 0;
+
+        static RadioFields()
         {
-            /// <summary>Length of the version field</summary>
-            public readonly static int VersionLength = 1;
+            PadPosition = VersionPosition + VersionLength;
+            LengthPosition = PadPosition + PadLength;
+            PresentPosition = LengthPosition + LengthLength;
 
-            /// <summary>Length of the pad field</summary>
-            public readonly static int PadLength = 1;
-
-            /// <summary>Length of the length field</summary>
-            public readonly static int LengthLength = 2;
-
-            /// <summary>Length of the first present field (others may follow)</summary>
-            public readonly static int PresentLength = 4;
-
-            /// <summary>Position of the version field</summary>
-            public readonly static int VersionPosition = 0;
-
-            /// <summary>Position of the padding field</summary>
-            public readonly static int PadPosition;
-
-            /// <summary>Position of the length field</summary>
-            public readonly static int LengthPosition;
-
-            /// <summary>Position of the first present field</summary>
-            public readonly static int PresentPosition;
-
-            /// <summary>Default header length, assuming one present field entry</summary>
-            public readonly static int DefaultHeaderLength;
-
-            static RadioFields()
-            {
-                PadPosition = VersionPosition + VersionLength;
-                LengthPosition = PadPosition + PadLength;
-                PresentPosition = LengthPosition + LengthLength;
-
-                // default to the normal header size until the header length can be read
-                DefaultHeaderLength = PresentPosition + PresentLength;
-            }
-        } 
+            // default to the normal header size until the header length can be read
+            DefaultHeaderLength = PresentPosition + PresentLength;
+        }
     }
-
-
+}

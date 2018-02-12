@@ -1,85 +1,84 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
-    /// Abstract class for all PPI fields
+    ///     Abstract class for all PPI fields
     /// </summary>
     public abstract class PpiField
     {
-        #region Properties
-
-        /// <summary>Type of the field</summary>
-        public abstract PpiFieldType FieldType
-        {
-            get;
-        }
-   
-        /// <summary>
-        /// Gets the length of the field data.
-        /// </summary>
-        /// <value>
-        /// The length.
-        /// </value>
-        public abstract int Length { get; }
-            
-        /// <summary>
-        /// Gets the field bytes. This doesn't include the PPI field header.
-        /// </summary>
-        /// <value>
-        /// The bytes.
-        /// </value>
-        public abstract byte[] Bytes { get; }
-            
-        #endregion Properties
-
         #region Public Methods
 
         /// <summary>
-        /// Parse a PPI indicated by type, from a given BinaryReader
+        ///     Parse a PPI indicated by type, from a given BinaryReader
         /// </summary>
         /// <param name="fieldType">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <param name="br">
-        /// A <see cref="BinaryReader"/>
+        ///     A <see cref="BinaryReader" />
         /// </param>
         /// <param name="fieldLength">
-        /// The maximum number of bytes that the field to be parsed can encompass.
+        ///     The maximum number of bytes that the field to be parsed can encompass.
         /// </param>
         /// <returns>
-        /// A <see cref="PpiField"/>
+        ///     A <see cref="PpiField" />
         /// </returns>
-        public static PpiField Parse (int fieldType, BinaryReader br, ushort fieldLength)
+        public static PpiField Parse(Int32 fieldType, BinaryReader br, UInt16 fieldLength)
         {
-            var type = (PpiFieldType)fieldType;
+            var type = (PpiFieldType) fieldType;
             switch (type)
             {
                 case PpiFieldType.PpiReserved0:
-                    return new PpiUnknown (fieldType, br, fieldLength);
+                    return new PpiUnknown(fieldType, br, fieldLength);
                 case PpiFieldType.PpiReserved1:
-                    return new PpiUnknown (fieldType, br, fieldLength);
+                    return new PpiUnknown(fieldType, br, fieldLength);
                 case PpiFieldType.PpiCommon:
-                    return new PpiCommon (br);
+                    return new PpiCommon(br);
                 case PpiFieldType.PpiMacExtensions:
-                    return new PpiMacExtensions (br);
+                    return new PpiMacExtensions(br);
                 case PpiFieldType.PpiMacPhy:
-                    return new PpiMacPhy (br);
+                    return new PpiMacPhy(br);
                 case PpiFieldType.PpiSpectrum:
-                    return new PpiSpectrum (br);
+                    return new PpiSpectrum(br);
                 case PpiFieldType.PpiProcessInfo:
-                    return new PpiProcessInfo (br);
+                    return new PpiProcessInfo(br);
                 case PpiFieldType.PpiCaptureInfo:
-                    return new PpiCaptureInfo (br);
+                    return new PpiCaptureInfo(br);
                 case PpiFieldType.PpiAggregation:
-                    return new PpiAggregation (br);
+                    return new PpiAggregation(br);
                 case PpiFieldType.Ppi802_3:
-                    return new Ppi802_3 (br);
+                    return new Ppi802_3(br);
+                case PpiFieldType.PpiReservedAll:
                 default:
-                    return new PpiUnknown (fieldType, br, fieldLength);
+                    return new PpiUnknown(fieldType, br, fieldLength);
             }
         }
 
         #endregion Public Methods
+
+        #region Properties
+
+        /// <summary>Type of the field</summary>
+        public abstract PpiFieldType FieldType { get; }
+
+        /// <summary>
+        ///     Gets the length of the field data.
+        /// </summary>
+        /// <value>
+        ///     The length.
+        /// </value>
+        public abstract Int32 Length { get; }
+
+        /// <summary>
+        ///     Gets the field bytes. This doesn't include the PPI field header.
+        /// </summary>
+        /// <value>
+        ///     The bytes.
+        /// </value>
+        public abstract Byte[] Bytes { get; }
+
+        #endregion Properties
     }
 }

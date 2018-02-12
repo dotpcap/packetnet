@@ -23,66 +23,46 @@ using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Ethernet;
 using PacketDotNet.IP;
-using PacketDotNet.MiscUtil.Utils;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Conversion;
 
 namespace PacketDotNet.Ieee8021Q
 {
     /// <summary>
-    /// 802.1Q vlan packet
-    /// http://en.wikipedia.org/wiki/IEEE_802.1Q
+    ///     802.1Q vlan packet
+    ///     http://en.wikipedia.org/wiki/IEEE_802.1Q
     /// </summary>
     [Serializable]
     public class Ieee8021QPacket : InternetPacket
     {
-        /// <value>
-        /// Type of packet that this vlan packet encapsulates
-        /// </value>
-        public virtual EthernetPacketType Type
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        /// <param name="bas">
+        ///     A <see cref="ByteArraySegment" />
+        /// </param>
+        public Ieee8021QPacket(ByteArraySegment bas)
         {
-            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + Ieee8021QFields.TypePosition);
-
-            set
+            // set the header field, header field values are retrieved from this byte array
+            this.HeaderByteArraySegment = new ByteArraySegment(bas)
             {
-                Int16 val = (Int16)value;
-                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + Ieee8021QFields.TypePosition);
-            }
+                Length = Ieee8021QFields.HeaderLength
+            };
+
+            // parse the payload via an EthernetPacket method
+            this.PayloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(this.HeaderByteArraySegment, this.Type);
         }
 
-        /// <summary>
-        /// Gets or sets the priority control point.
-        /// </summary>
-        /// <value>
-        /// The priority control point.
-        /// </value>
-        public IeeeP8021PPriorities PriorityControlPoint
-        {
-            get
-            {
-                var tci = this.TagControlInformation;
-                tci >>= (16 - 3); // priority is the upper 3 bits
-                return (IeeeP8021PPriorities)tci;
-            }
-
-            set
-            {
-                var tci = this.TagControlInformation;
-
-                // mask the existing Priority off and then back in from value
-                ushort val = (ushort)value;
-                tci = (ushort)((tci & 0x1FFF) | ((val & 0x7) << (16 - 3)));
-                this.TagControlInformation = tci;
-            }
-        }
+        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override String Color => AnsiEscapeSequences.LightCyan;
 
         /// <summary>
-        /// Gets or sets a value indicating whether this instance canonical format indicator.
+        ///     Gets or sets a value indicating whether this instance canonical format indicator.
         /// </summary>
         /// <value>
-        /// <c>true</c> if the mac address is in non-canonical format <c>false</c> if otherwise.
+        ///     <c>true</c> if the mac address is in non-canonical format <c>false</c> if otherwise.
         /// </value>
-        public bool CanonicalFormatIndicator
+        public Boolean CanonicalFormatIndicator
         {
             get
             {
@@ -96,24 +76,66 @@ namespace PacketDotNet.Ieee8021Q
                 var tci = this.TagControlInformation;
 
                 // mask the existing CFI off and then back in from value
-                int val = ((value == true) ? 1 : 0);
-                tci = (ushort)((tci & 0xEFFF) | (val << 12));
+                Int32 val = (value ? 1 : 0);
+                tci = (UInt16) ((tci & 0xEFFF) | (val << 12));
                 this.TagControlInformation = tci;
             }
         }
- 
+
         /// <summary>
-        /// Gets or sets the VLAN identifier.
+        ///     Gets or sets the priority control point.
         /// </summary>
         /// <value>
-        /// The VLAN identifier.
+        ///     The priority control point.
         /// </value>
-        public ushort VLANIdentifier
+        public IeeeP8021PPriorities PriorityControlPoint
         {
             get
             {
                 var tci = this.TagControlInformation;
-                return (ushort)(tci & 0xFFF);
+                tci >>= (16 - 3); // priority is the upper 3 bits
+                return (IeeeP8021PPriorities) tci;
+            }
+
+            set
+            {
+                var tci = this.TagControlInformation;
+
+                // mask the existing Priority off and then back in from value
+                UInt16 val = (UInt16) value;
+                tci = (UInt16) ((tci & 0x1FFF) | ((val & 0x7) << (16 - 3)));
+                this.TagControlInformation = tci;
+            }
+        }
+
+        /// <value>
+        ///     Type of packet that this vlan packet encapsulates
+        /// </value>
+        public virtual EthernetPacketType Type
+        {
+            get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + Ieee8021QFields.TypePosition);
+
+            set
+            {
+                Int16 val = (Int16) value;
+                EndianBitConverter.Big.CopyBytes(val, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + Ieee8021QFields.TypePosition);
+            }
+        }
+
+        /// <summary>
+        ///     Gets or sets the VLAN identifier.
+        /// </summary>
+        /// <value>
+        ///     The VLAN identifier.
+        /// </value>
+        public UInt16 VLANIdentifier
+        {
+            get
+            {
+                var tci = this.TagControlInformation;
+                return (UInt16) (tci & 0xFFF);
             }
 
             set
@@ -121,88 +143,79 @@ namespace PacketDotNet.Ieee8021Q
                 var tci = this.TagControlInformation;
 
                 // mask the existing vlan id off
-                tci = (ushort)((tci & 0xF000) | (value & 0xFFF));
+                tci = (UInt16) ((tci & 0xF000) | (value & 0xFFF));
                 this.TagControlInformation = tci;
             }
         }
 
-        private ushort TagControlInformation
+        private UInt16 TagControlInformation
         {
-            get => (ushort)EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + Ieee8021QFields.TagControlInformationPosition);
+            get => (UInt16) EndianBitConverter.Big.ToInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + Ieee8021QFields.TagControlInformationPosition);
 
             set
             {
-                Int16 val = (Int16)value;
-                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + Ieee8021QFields.TagControlInformationPosition);
+                Int16 val = (Int16) value;
+                EndianBitConverter.Big.CopyBytes(val, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + Ieee8021QFields.TagControlInformationPosition);
             }
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public String Color => AnsiEscapeSequences.LightCyan;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
-        /// </param>
-        public Ieee8021QPacket(ByteArraySegment bas)
-        {
-            // set the header field, header field values are retrieved from this byte array
-            this.header = new ByteArraySegment(bas)
-            {
-                Length = Ieee8021QFields.HeaderLength
-            };
-
-            // parse the payload via an EthernetPacket method
-            this.payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(this.header, this.Type);
-        }
-
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
-            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
                 color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            switch (outputFormat)
             {
-                // build the output string
-                buffer.AppendFormat("{0}[Ieee8021QPacket: PriorityControlPoint={2}, CanonicalFormatIndicator={3}, Type={4}]{1}",
-                    color,
-                    colorEscape, this.PriorityControlPoint, this.CanonicalFormatIndicator, this.Type);
-            }
+                case StringOutputType.Normal:
+                case StringOutputType.Colored:
+                    // build the output string
+                    buffer.AppendFormat(
+                        "{0}[Ieee8021QPacket: PriorityControlPoint={2}, CanonicalFormatIndicator={3}, Type={4}]{1}",
+                        color,
+                        colorEscape, this.PriorityControlPoint, this.CanonicalFormatIndicator, this.Type);
+                    break;
+                case StringOutputType.Verbose:
+                case StringOutputType.VerboseColored:
+                    // collect the properties and their value
+                    Dictionary<String, String> properties = new Dictionary<String, String>
+                    {
+                        {
+                            "priority",
+                            this.PriorityControlPoint + " (0x" + this.PriorityControlPoint.ToString("x") + ")"
+                        },
+                        {"canonical format indicator", this.CanonicalFormatIndicator.ToString()},
+                        {"type", this.Type + " (0x" + this.Type.ToString("x") + ")"},
+                        {"VLANIdentifier", this.VLANIdentifier + " (0x" + this.VLANIdentifier.ToString("x") + ")"}
+                    };
 
-            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
-            {
-                // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
-                properties.Add("priority", this.PriorityControlPoint + " (0x" + this.PriorityControlPoint.ToString("x") + ")");
-                properties.Add("canonical format indicator", this.CanonicalFormatIndicator.ToString());
-                properties.Add("type", this.Type.ToString() + " (0x" + this.Type.ToString("x") + ")");
-                properties.Add ("VLANIdentifier", this.VLANIdentifier.ToString () + " (0x" + this.VLANIdentifier.ToString ("x") + ")");
+                    // calculate the padding needed to right-justify the property names
+                    Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
-                // calculate the padding needed to right-justify the property names
-                int padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                    // build the output string
+                    buffer.AppendLine("Ieee802.1Q:  ******* Ieee802.1Q - \"VLan tag\" - offset=? length=" +
+                                      this.TotalPacketLength);
+                    buffer.AppendLine("Ieee802.1Q:");
+                    foreach (var property in properties)
+                    {
+                        buffer.AppendLine("Ieee802.1Q: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    }
 
-                // build the output string
-                buffer.AppendLine("Ieee802.1Q:  ******* Ieee802.1Q - \"VLan tag\" - offset=? length=" + this.TotalPacketLength);
-                buffer.AppendLine("Ieee802.1Q:");
-                foreach (var property in properties)
-                {
-                    buffer.AppendLine("Ieee802.1Q: " + property.Key.PadLeft(padLength) + " = " + property.Value);
-                }
-                buffer.AppendLine("Ieee802.1Q:");
+                    buffer.AppendLine("Ieee802.1Q:");
+                    break;
             }
 
             // append the base string output
-            buffer.Append((string) base.ToString(outputFormat));
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
         }

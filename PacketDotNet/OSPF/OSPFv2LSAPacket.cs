@@ -6,128 +6,129 @@ using PacketDotNet.Utils;
 namespace PacketDotNet.OSPF
 {
     /// <summary>
-    /// Link State Acknowledgment Packets are OSPF packet type 5.  To make
-    /// the flooding of LSAs reliable, flooded LSAs are explicitly
-    /// acknowledged. See http://www.ietf.org/rfc/rfc2328.txt for details.
+    ///     Link State Acknowledgment Packets are OSPF packet type 5.  To make
+    ///     the flooding of LSAs reliable, flooded LSAs are explicitly
+    ///     acknowledged. See http://www.ietf.org/rfc/rfc2328.txt for details.
     /// </summary>
     public class OSPFv2LSAPacket : OSPFv2Packet
     {
         /// <value>
-        /// The packet type
+        ///     The packet type
         /// </value>
-        public static OSPFPacketType packetType = OSPFPacketType.LinkStateAcknowledgment;
+        public static OSPFPacketType PacketType = OSPFPacketType.LinkStateAcknowledgment;
 
         /// <summary>
-        /// Constructs an OSPFv2 Link State Acknowledge packet from ByteArraySegment
+        ///     Constructs an OSPFv2 Link State Acknowledge packet from ByteArraySegment
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
         public OSPFv2LSAPacket(ByteArraySegment bas)
         {
-            this.header = new ByteArraySegment(bas.Bytes);
+            this.HeaderByteArraySegment = new ByteArraySegment(bas.Bytes);
         }
 
         /// <summary>
-        /// Constructs an Link OSPFv2 State Acknowledge packet
+        ///     Constructs an Link OSPFv2 State Acknowledge packet
         /// </summary>
         public OSPFv2LSAPacket()
         {
-            byte[] b = new byte[OSPFv2Fields.LSAHeaderPosition];
-            Array.Copy((Array) this.header.Bytes, (Array) b, (int) this.header.Bytes.Length);
-            this.header = new ByteArraySegment(b, 0, OSPFv2Fields.LSAHeaderPosition);
-            this.Type = packetType;
+            Byte[] b = new Byte[OSPFv2Fields.LSAHeaderPosition];
+            Array.Copy(this.HeaderByteArraySegment.Bytes, b, this.HeaderByteArraySegment.Bytes.Length);
+            this.HeaderByteArraySegment = new ByteArraySegment(b, 0, OSPFv2Fields.LSAHeaderPosition);
+            this.Type = PacketType;
 
-            this.PacketLength = (ushort)this.header.Bytes.Length;
+            this.PacketLength = (UInt16) this.HeaderByteArraySegment.Bytes.Length;
         }
 
         /// <summary>
-        /// Constructs an OSPFv2 Link State Acknowledge packet with LSA headers
+        ///     Constructs an OSPFv2 Link State Acknowledge packet with LSA headers
         /// </summary>
         /// <param name="lsas">List of the LSA headers</param>
         public OSPFv2LSAPacket(List<LSA> lsas)
         {
-            int length = lsas.Count * OSPFv2Fields.LSAHeaderLength;
-            int offset = OSPFv2Fields.HeaderLength;
-            byte[] bytes = new byte[length + OSPFv2Fields.HeaderLength];
+            Int32 length = lsas.Count * OSPFv2Fields.LSAHeaderLength;
+            Int32 offset = OSPFv2Fields.HeaderLength;
+            Byte[] bytes = new Byte[length + OSPFv2Fields.HeaderLength];
 
-            Array.Copy((Array) this.header.Bytes, (Array) bytes, (int) this.header.Length);
-            for (int i = 0; i < lsas.Count; i++)
+            Array.Copy(this.HeaderByteArraySegment.Bytes, bytes, this.HeaderByteArraySegment.Length);
+            for (Int32 i = 0; i < lsas.Count; i++)
             {
-                Array.Copy((Array) lsas[i].Bytes, (int) 0, (Array) bytes, offset, (int) OSPFv2Fields.LSAHeaderLength); 
+                Array.Copy(lsas[i].Bytes, 0, bytes, offset, OSPFv2Fields.LSAHeaderLength);
                 offset += 20;
             }
 
-            this.header = new ByteArraySegment(bytes);
-            this.Type = packetType;
-            this.PacketLength = (ushort)this.header.Bytes.Length;
+            this.HeaderByteArraySegment = new ByteArraySegment(bytes);
+            this.Type = PacketType;
+            this.PacketLength = (UInt16) this.HeaderByteArraySegment.Bytes.Length;
         }
 
         /// <summary>
-        /// Constructs a packet from bytes and offset
+        ///     Constructs a packet from bytes and offset
         /// </summary>
-        /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// <param name="bytes">
+        ///     A <see cref="System.Byte" />
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
+        /// <param name="offset">
+        ///     A <see cref="System.Int32" />
         /// </param>
-        public OSPFv2LSAPacket(byte[] Bytes, int Offset) :
-            base(Bytes, Offset)
+        public OSPFv2LSAPacket(Byte[] bytes, Int32 offset) :
+            base(bytes, offset)
         {
-            this.Type = packetType;
+            this.Type = PacketType;
         }
 
         /// <summary>
-        /// List of LSA acknowledgements.
+        ///     List of LSA acknowledgements.
         /// </summary>
         public virtual List<LSA> LSAAcknowledge
         {
             get
             {
                 List<LSA> ret = new List<LSA>();
-                int bytesNeeded = this.PacketLength - OSPFv2Fields.LSAAckPosition;
+                Int32 bytesNeeded = this.PacketLength - OSPFv2Fields.LSAAckPosition;
 
                 if (bytesNeeded % OSPFv2Fields.LSAHeaderLength != 0)
                 {
                     throw new Exception("OSPFv2 LSA Packet - Invalid LSA headers count");
                 }
 
-                int offset = this.header.Offset + OSPFv2Fields.LSAAckPosition;
-                int headerCount = bytesNeeded / OSPFv2Fields.LSAHeaderLength;
+                Int32 offset = this.HeaderByteArraySegment.Offset + OSPFv2Fields.LSAAckPosition;
+                Int32 headerCount = bytesNeeded / OSPFv2Fields.LSAHeaderLength;
 
-                for (int i = 0; i < headerCount; i++)
+                for (Int32 i = 0; i < headerCount; i++)
                 {
-                    LSA l = new LSA(this.header.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
+                    LSA l = new LSA(this.HeaderByteArraySegment.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
                     ret.Add(l);
                     offset += OSPFv2Fields.LSAHeaderLength;
                 }
+
                 return ret;
             }
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="OSPFv2LSAPacket"/>.
+        ///     Returns a <see cref="System.String" /> that represents the current <see cref="OSPFv2LSAPacket" />.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="OSPFv2LSAPacket"/>.</returns>
-        public override string ToString()
+        /// <returns>A <see cref="System.String" /> that represents the current <see cref="OSPFv2LSAPacket" />.</returns>
+        public override String ToString()
         {
             StringBuilder packet = new StringBuilder();
-            packet.Append((string) base.ToString());
-            packet.AppendFormat((string) "#LSA{0} ", (object) this.LSAAcknowledge.Count);
+            packet.Append(base.ToString());
+            packet.AppendFormat("#LSA{0} ", this.LSAAcknowledge.Count);
             return packet.ToString();
         }
 
         /// <summary cref="Packet.ToString()">
-        /// Output the packet information in the specified format
-        ///  Normal - outputs the packet info to a single line
-        ///  Colored - outputs the packet info to a single line with coloring
-        ///  Verbose - outputs detailed info about the packet
-        ///  VerboseColored - outputs detailed info about the packet with coloring
+        ///     Output the packet information in the specified format
+        ///     Normal - outputs the packet info to a single line
+        ///     Colored - outputs the packet info to a single line with coloring
+        ///     Verbose - outputs detailed info about the packet
+        ///     VerboseColored - outputs detailed info about the packet with coloring
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             return this.ToString();
         }

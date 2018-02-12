@@ -1,76 +1,76 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
-    /// Radio tap flags
+    ///     Radio tap flags
     /// </summary>
     public class FlagsRadioTapField : RadioTapField
     {
-        /// <summary>Type of the field</summary>
-        public override RadioTapType FieldType => RadioTapType.Flags;
-
         /// <summary>
-        /// Gets the length of the field data.
-        /// </summary>
-        /// <value>
-        /// The length.
-        /// </value>
-        public override ushort Length => 1;
-
-        /// <summary>
-        /// Flags set
+        ///     Flags set
         /// </summary>
         public RadioTapFlags Flags;
-            
-        /// <summary>
-        /// Copies the field data to the destination buffer at the specified offset.
-        /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
-        {
-            dest[offset] = (byte) this.Flags;
-        }
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="br">
-        /// A <see cref="BinaryReader"/>
+        ///     A <see cref="BinaryReader" />
         /// </param>
         public FlagsRadioTapField(BinaryReader br)
         {
             var u8 = br.ReadByte();
-            this.Flags = (RadioTapFlags)u8;
+            this.Flags = (RadioTapFlags) u8;
         }
-   
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FlagsRadioTapField"/> class.
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FlagsRadioTapField" /> class.
         /// </summary>
         public FlagsRadioTapField()
         {
-             
         }
-            
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FlagsRadioTapField"/> class.
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FlagsRadioTapField" /> class.
         /// </summary>
-        /// <param name='Flags'>
-        /// Flags.
+        /// <param name='flags'>
+        ///     Flags.
         /// </param>
-        public FlagsRadioTapField(RadioTapFlags Flags)
+        public FlagsRadioTapField(RadioTapFlags flags)
         {
-            this.Flags = Flags;
+            this.Flags = flags;
         }
-            
+
+        /// <summary>Type of the field</summary>
+        public override RadioTapType FieldType => RadioTapType.Flags;
+
         /// <summary>
-        /// ToString() override
+        ///     Gets the length of the field data.
+        /// </summary>
+        /// <value>
+        ///     The length.
+        /// </value>
+        public override UInt16 Length => 1;
+
+        /// <summary>
+        ///     Copies the field data to the destination buffer at the specified offset.
+        /// </summary>
+        public override void CopyTo(Byte[] dest, Int32 offset)
+        {
+            dest[offset] = (Byte) this.Flags;
+        }
+
+        /// <summary>
+        ///     ToString() override
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        ///     A <see cref="System.String" />
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("Flags {0}", this.Flags);
+            return $"Flags {this.Flags}";
         }
     }
 }

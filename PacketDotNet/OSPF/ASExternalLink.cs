@@ -6,129 +6,142 @@ using PacketDotNet.Utils.Conversion;
 namespace PacketDotNet.OSPF
 {
     /// <summary>
-    /// Describes a particular external destination
+    ///     Describes a particular external destination
     /// </summary>
     public class ASExternalLink
     {
         /// <summary>
-        /// The length.
+        ///     The length.
         /// </summary>
-        public static readonly int Length = 12;
-        internal ByteArraySegment header;
+        public static readonly Int32 Length = 12;
+
+        internal ByteArraySegment Header;
 
         /// <summary>
-        /// Default constructor
+        ///     Default constructor
         /// </summary>
         public ASExternalLink()
         {
-            byte[] b = new byte[Length];
-            this.header = new ByteArraySegment(b);
+            Byte[] b = new Byte[Length];
+            this.Header = new ByteArraySegment(b);
         }
 
         /// <summary>
-        /// Constructs a packet from bytes and offset and length
+        ///     Constructs a packet from bytes and offset and length
         /// </summary>
         /// <param name="packet">
-        /// A <see cref="System.Byte"/>
+        ///     A <see cref="System.Byte" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
-        public ASExternalLink(byte[] packet, int offset, int length)
+        public ASExternalLink(Byte[] packet, Int32 offset, Int32 length)
         {
-            this.header = new ByteArraySegment(packet, offset, length);
+            this.Header = new ByteArraySegment(packet, offset, length);
         }
 
         /// <summary>
-        /// The type of external metric.  If bit E is set, the metric
-        /// specified is a Type 2 external metric.
+        ///     Bytes representation
         /// </summary>
-        public byte eBit
+        public Byte[] Bytes => this.Header.Bytes;
+
+        /// <summary>
+        ///     The type of external metric.  If bit E is set, the metric
+        ///     specified is a Type 2 external metric.
+        /// </summary>
+        public Byte EBit
         {
             get
             {
-                var val = EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + ASExternalLinkFields.TOSPosition);
-                return (byte)((val >> 31) & 0xFF);
+                var val = EndianBitConverter.Big.ToUInt32(this.Header.Bytes,
+                    this.Header.Offset + ASExternalLinkFields.TOSPosition);
+                return (Byte) ((val >> 31) & 0xFF);
             }
             set
             {
-                uint original = EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + ASExternalLinkFields.TOSPosition);
-                uint val = (uint)((value & 1) << 31) | original;
-                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + ASExternalLinkFields.TOSPosition);
+                UInt32 original = EndianBitConverter.Big.ToUInt32(this.Header.Bytes,
+                    this.Header.Offset + ASExternalLinkFields.TOSPosition);
+                UInt32 val = (UInt32) ((value & 1) << 31) | original;
+                EndianBitConverter.Big.CopyBytes(val, this.Header.Bytes,
+                    this.Header.Offset + ASExternalLinkFields.TOSPosition);
             }
         }
 
         /// <summary>
-        /// The Type of Service that the following fields concern.
+        ///     A 32-bit field attached to each external route.  This is not used by the OSPF protocol itself.
         /// </summary>
-        public byte TOS
+        public UInt32 ExternalRouteTag
         {
-            get
-            {
-                var val = EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + ASExternalLinkFields.TOSPosition);
-                return (byte)((val >> 24) & 0x7F);
-            }
-            set
-            {
-                uint original = EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + ASExternalLinkFields.TOSPosition);
-                var val = (byte)((value & 0x7F) << 24) | original;
-                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + ASExternalLinkFields.TOSPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt32(this.Header.Bytes,
+                this.Header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.Header.Bytes,
+                this.Header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
         }
 
         /// <summary>
-        /// The cost of this route.  Interpretation depends on the external
-        /// type indication (bit E above).
-        /// </summary>
-        public uint Metric
-        {
-            get
-            {
-                var val = EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + ASExternalLinkFields.TOSPosition);
-                return val & 0x00FFFFFF;
-            }
-            set
-            {
-                uint original = EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + ASExternalLinkFields.TOSPosition);
-                var val = value & 0x00FFFFFF | original;
-                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + ASExternalLinkFields.TOSPosition);
-            }
-        }
-
-        /// <summary>
-        /// Data traffic for the advertised destination will be forwarded to this address.
+        ///     Data traffic for the advertised destination will be forwarded to this address.
         /// </summary>
         public IPAddress ForwardingAddress
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + ASExternalLinkFields.ForwardingAddressPosition);
+                var val = EndianBitConverter.Little.ToUInt32(this.Header.Bytes,
+                    this.Header.Offset + ASExternalLinkFields.ForwardingAddressPosition);
                 return new IPAddress(val);
             }
             set
             {
-                byte[] address = value.GetAddressBytes();
-                Array.Copy((Array) address, (int) 0,
-                    (Array) this.header.Bytes, (int) (this.header.Offset + ASExternalLinkFields.ForwardingAddressPosition),
+                Byte[] address = value.GetAddressBytes();
+                Array.Copy(address, 0,
+                    this.Header.Bytes, this.Header.Offset + ASExternalLinkFields.ForwardingAddressPosition,
                     address.Length);
             }
         }
 
         /// <summary>
-        ///  A 32-bit field attached to each external route.  This is not used by the OSPF protocol itself.
+        ///     The cost of this route.  Interpretation depends on the external
+        ///     type indication (bit E above).
         /// </summary>
-        public uint ExternalRouteTag
+        public UInt32 Metric
         {
-            get => EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
+            get
+            {
+                var val = EndianBitConverter.Big.ToUInt32(this.Header.Bytes,
+                    this.Header.Offset + ASExternalLinkFields.TOSPosition);
+                return val & 0x00FFFFFF;
+            }
+            set
+            {
+                UInt32 original = EndianBitConverter.Big.ToUInt32(this.Header.Bytes,
+                    this.Header.Offset + ASExternalLinkFields.TOSPosition);
+                var val = value & 0x00FFFFFF | original;
+                EndianBitConverter.Big.CopyBytes(val, this.Header.Bytes,
+                    this.Header.Offset + ASExternalLinkFields.TOSPosition);
+            }
         }
 
         /// <summary>
-        /// Bytes representation
+        ///     The Type of Service that the following fields concern.
         /// </summary>
-        public byte[] Bytes => this.header.Bytes;
+        public Byte TOS
+        {
+            get
+            {
+                var val = EndianBitConverter.Big.ToUInt32(this.Header.Bytes,
+                    this.Header.Offset + ASExternalLinkFields.TOSPosition);
+                return (Byte) ((val >> 24) & 0x7F);
+            }
+            set
+            {
+                UInt32 original = EndianBitConverter.Big.ToUInt32(this.Header.Bytes,
+                    this.Header.Offset + ASExternalLinkFields.TOSPosition);
+                var val = (Byte) ((value & 0x7F) << 24) | original;
+                EndianBitConverter.Big.CopyBytes(val, this.Header.Bytes,
+                    this.Header.Offset + ASExternalLinkFields.TOSPosition);
+            }
+        }
     }
 }

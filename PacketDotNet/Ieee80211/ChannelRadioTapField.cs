@@ -25,48 +25,88 @@ using PacketDotNet.Utils.Conversion;
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
-    /// Channel field
+    ///     Channel field
     /// </summary>
     public class ChannelRadioTapField : RadioTapField
     {
-        /// <summary>Type of the field</summary>
-        public override RadioTapType FieldType => RadioTapType.Channel;
-
         /// <summary>
-        /// Gets the length of the field data.
-        /// </summary>
-        /// <value>
-        /// The length.
-        /// </value>
-        public override ushort Length => 4;
-
-        /// <summary>
-        /// Frequency in MHz
-        /// </summary>
-        public UInt16 FrequencyMHz { get; set; }
-
-        /// <summary>
-        /// Channel number derived from frequency
-        /// </summary>
-        public int Channel { get; set; }
-
-        /// <summary>
-        /// Channel flags
+        ///     Channel flags
         /// </summary>
         public RadioTapChannelFlags Flags;
 
         /// <summary>
-        /// Convert a frequency to a channel
+        ///     Constructor
         /// </summary>
-        /// <remarks>There is some overlap between the 802.11b/g channel numbers and the 802.11a channel numbers. This means that while a particular frequncy will only
-        /// ever map to single channel number the same channel number may be returned for more than one frequency. At present this affects channel numbers 8 and 12.</remarks>
+        /// <param name="br">
+        ///     A <see cref="BinaryReader" />
+        /// </param>
+        public ChannelRadioTapField(BinaryReader br)
+        {
+            this.FrequencyMHz = br.ReadUInt16();
+            this.Channel = ChannelFromFrequencyMHz(this.FrequencyMHz);
+            this.Flags = (RadioTapChannelFlags) br.ReadUInt16();
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ChannelRadioTapField" /> class.
+        /// </summary>
+        public ChannelRadioTapField()
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ChannelRadioTapField" /> class.
+        /// </summary>
+        /// <param name='frequencyMhz'>
+        ///     Tx/Rx Frequency in MHz.
+        /// </param>
+        /// <param name='flags'>
+        ///     Flags.
+        /// </param>
+        public ChannelRadioTapField(UInt16 frequencyMhz, RadioTapChannelFlags flags)
+        {
+            this.FrequencyMHz = this.FrequencyMHz;
+            this.Channel = ChannelFromFrequencyMHz(this.FrequencyMHz);
+            this.Flags = flags;
+        }
+
+        /// <summary>Type of the field</summary>
+        public override RadioTapType FieldType => RadioTapType.Channel;
+
+        /// <summary>
+        ///     Gets the length of the field data.
+        /// </summary>
+        /// <value>
+        ///     The length.
+        /// </value>
+        public override UInt16 Length => 4;
+
+        /// <summary>
+        ///     Channel number derived from frequency
+        /// </summary>
+        public Int32 Channel { get; set; }
+
+        /// <summary>
+        ///     Frequency in MHz
+        /// </summary>
+        public UInt16 FrequencyMHz { get; set; }
+
+        /// <summary>
+        ///     Convert a frequency to a channel
+        /// </summary>
+        /// <remarks>
+        ///     There is some overlap between the 802.11b/g channel numbers and the 802.11a channel numbers. This means that while
+        ///     a particular frequncy will only
+        ///     ever map to single channel number the same channel number may be returned for more than one frequency. At present
+        ///     this affects channel numbers 8 and 12.
+        /// </remarks>
         /// <param name="frequencyMHz">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </returns>
-        public static int ChannelFromFrequencyMHz(int frequencyMHz)
+        public static Int32 ChannelFromFrequencyMHz(Int32 frequencyMHz)
         {
             switch (frequencyMHz)
             {
@@ -178,60 +218,24 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary>
-        /// Copies the field data to the destination buffer at the specified offset.
+        ///     Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
             EndianBitConverter.Little.CopyBytes(this.FrequencyMHz, dest, offset);
             EndianBitConverter.Little.CopyBytes((UInt16) this.Flags, dest, offset + 2);
         }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="br">
-        /// A <see cref="BinaryReader"/>
-        /// </param>
-        public ChannelRadioTapField(BinaryReader br)
-        {
-            this.FrequencyMHz = br.ReadUInt16();
-            this.Channel = ChannelFromFrequencyMHz(this.FrequencyMHz);
-            this.Flags = (RadioTapChannelFlags) br.ReadUInt16();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ChannelRadioTapField"/> class.
-        /// </summary>
-        public ChannelRadioTapField()
-        {
-
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ChannelRadioTapField"/> class.
-        /// </summary>
-        /// <param name='FrequencyMhz'>
-        /// Tx/Rx Frequency in MHz.
-        /// </param>
-        /// <param name='Flags'>
-        /// Flags.
-        /// </param>
-        public ChannelRadioTapField(UInt16 FrequencyMhz, RadioTapChannelFlags Flags)
-        {
-            this.FrequencyMHz = this.FrequencyMHz;
-            this.Channel = ChannelFromFrequencyMHz(this.FrequencyMHz);
-            this.Flags = Flags;
-        }
-
-        /// <summary>
-        /// ToString() override
+        ///     ToString() override
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        ///     A <see cref="System.String" />
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("FrequencyMHz {0}, Channel {1}, Flags {2}", this.FrequencyMHz, this.Channel, this.Flags);
+            return String.Format("FrequencyMHz {0}, Channel {1}, Flags {2}", this.FrequencyMHz, this.Channel,
+                this.Flags);
         }
     }
 }

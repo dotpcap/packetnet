@@ -18,24 +18,27 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet
 {
     /// <summary>
-    /// The available types of strings that the ToString(StringOutputType) can handle.
+    ///     The available types of strings that the ToString(StringOutputType) can handle.
     /// </summary>
     public enum StringOutputType
     {
         /// <summary>
-        /// Outputs the packet info on a single line
+        ///     Outputs the packet info on a single line
         /// </summary>
         Normal,
+
         /// <summary>
-        /// Outputs the packet info on a single line with coloring
+        ///     Outputs the packet info on a single line with coloring
         /// </summary>
         Colored,
+
         /// <summary>
-        /// Outputs the detailed packet info
+        ///     Outputs the detailed packet info
         /// </summary>
         Verbose,
+
         /// <summary>
-        /// Outputs the detailed packet info with coloring
+        ///     Outputs the detailed packet info with coloring
         /// </summary>
         VerboseColored
     }

@@ -30,20 +30,19 @@ namespace Test.PacketType
         public class FrameControlFieldTest
         {
             [Test]
-            public void Test_Constructor_EncryptedDataFrame()
+            public void Test_Constructor_AckFrame()
             {
-                FrameControlField frameControl = new FrameControlField(0x0842);
+                FrameControlField frameControl = new FrameControlField(0xD410);
 
                 Assert.AreEqual(0x0, frameControl.ProtocolVersion);
-                Assert.AreEqual(FrameControlField.FrameTypes.Data, frameControl.Type);
-                Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
-                Assert.IsTrue(frameControl.FromDS);
-                Assert.IsTrue(frameControl.Protected);
-
+                Assert.AreEqual(FrameControlField.FrameTypes.Control, frameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlACK, frameControl.SubType);
+                Assert.IsFalse(frameControl.FromDS);
+                Assert.IsFalse(frameControl.Protected);
                 Assert.IsFalse(frameControl.ToDS);
                 Assert.IsFalse(frameControl.MoreFragments);
                 Assert.IsFalse(frameControl.Retry);
-                Assert.IsFalse(frameControl.PowerManagement);
+                Assert.IsTrue(frameControl.PowerManagement);
                 Assert.IsFalse(frameControl.MoreData);
                 Assert.IsFalse(frameControl.Order);
             }
@@ -85,20 +84,21 @@ namespace Test.PacketType
             }
 
             [Test]
-            public void Test_Constructor_AckFrame()
+            public void Test_Constructor_DataFrame()
             {
-                FrameControlField frameControl = new FrameControlField(0xD410);
+                FrameControlField frameControl = new FrameControlField(0x0801);
 
                 Assert.AreEqual(0x0, frameControl.ProtocolVersion);
-                Assert.AreEqual(FrameControlField.FrameTypes.Control, frameControl.Type);
-                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlACK, frameControl.SubType);
+                Assert.AreEqual(FrameControlField.FrameTypes.Data, frameControl.Type);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
+
+                Assert.IsTrue(frameControl.ToDS);
                 Assert.IsFalse(frameControl.FromDS);
-                Assert.IsFalse(frameControl.Protected);
-                Assert.IsFalse(frameControl.ToDS);
                 Assert.IsFalse(frameControl.MoreFragments);
                 Assert.IsFalse(frameControl.Retry);
-                Assert.IsTrue(frameControl.PowerManagement);
+                Assert.IsFalse(frameControl.PowerManagement);
                 Assert.IsFalse(frameControl.MoreData);
+                Assert.IsFalse(frameControl.Protected);
                 Assert.IsFalse(frameControl.Order);
             }
 
@@ -121,38 +121,77 @@ namespace Test.PacketType
             }
 
             [Test]
-            public void Test_Constructor_DataFrame()
+            public void Test_Constructor_EncryptedDataFrame()
             {
-                FrameControlField frameControl = new FrameControlField(0x0801);
+                FrameControlField frameControl = new FrameControlField(0x0842);
 
                 Assert.AreEqual(0x0, frameControl.ProtocolVersion);
                 Assert.AreEqual(FrameControlField.FrameTypes.Data, frameControl.Type);
                 Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
+                Assert.IsTrue(frameControl.FromDS);
+                Assert.IsTrue(frameControl.Protected);
 
-                Assert.IsTrue(frameControl.ToDS);
-                Assert.IsFalse(frameControl.FromDS);
+                Assert.IsFalse(frameControl.ToDS);
                 Assert.IsFalse(frameControl.MoreFragments);
                 Assert.IsFalse(frameControl.Retry);
                 Assert.IsFalse(frameControl.PowerManagement);
                 Assert.IsFalse(frameControl.MoreData);
-                Assert.IsFalse(frameControl.Protected);
                 Assert.IsFalse(frameControl.Order);
             }
 
             [Test]
-            public void Test_SetTypeProperty()
+            public void Test_SetFromDsProperty()
             {
                 FrameControlField frameControl = new FrameControlField
                 {
-                    SubType = FrameControlField.FrameSubTypes.Data
+                    FromDS = true
                 };
-                Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
 
-                frameControl.SubType = FrameControlField.FrameSubTypes.ManagementAuthentication;
-                Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementAuthentication, frameControl.SubType);
+                Assert.IsTrue(frameControl.FromDS);
+            }
 
-                frameControl.SubType = FrameControlField.FrameSubTypes.ControlACK;
-                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlACK, frameControl.SubType);
+            [Test]
+            public void Test_SetMoreDataProperty()
+            {
+                FrameControlField frameControl = new FrameControlField
+                {
+                    MoreData = true
+                };
+
+                Assert.IsTrue(frameControl.MoreData);
+            }
+
+            [Test]
+            public void Test_SetMoreFragmentsProperty()
+            {
+                FrameControlField frameControl = new FrameControlField
+                {
+                    MoreFragments = true
+                };
+
+                Assert.IsTrue(frameControl.MoreFragments);
+            }
+
+            [Test]
+            public void Test_SetOrderProperty()
+            {
+                FrameControlField frameControl = new FrameControlField
+                {
+                    Order = true
+                };
+
+                Assert.IsTrue(frameControl.Order);
+            }
+
+            [Test]
+            public void Test_SetPowerManagementProperty()
+            {
+                FrameControlField frameControl = new FrameControlField
+                {
+                    PowerManagement = true
+                };
+
+                Assert.IsTrue(frameControl.PowerManagement);
             }
 
             [Test]
@@ -175,46 +214,14 @@ namespace Test.PacketType
             }
 
             [Test]
-            [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Invalid protocol version value. Value must be in the range 0-3.")]
+            [ExpectedException(typeof(ArgumentException), ExpectedMessage =
+                "Invalid protocol version value. Value must be in the range 0-3.")]
             public void Test_SetProtocolVersionProperty_ValueTooLarge()
             {
                 FrameControlField frameControl = new FrameControlField
                 {
                     ProtocolVersion = 4
                 };
-            }
-
-            [Test]
-            public void Test_SetToDsProperty()
-            {
-                FrameControlField frameControl = new FrameControlField
-                {
-                    ToDS = true
-                };
-
-                Assert.IsTrue(frameControl.ToDS);
-            }
-
-            [Test]
-            public void Test_SetFromDsProperty()
-            {
-                FrameControlField frameControl = new FrameControlField
-                {
-                    FromDS = true
-                };
-
-                Assert.IsTrue(frameControl.FromDS);
-            }
-
-            [Test]
-            public void Test_SetMoreFragmentsProperty()
-            {
-                FrameControlField frameControl = new FrameControlField
-                {
-                    MoreFragments = true
-                };
-
-                Assert.IsTrue(frameControl.MoreFragments);
             }
 
             [Test]
@@ -229,25 +236,30 @@ namespace Test.PacketType
             }
 
             [Test]
-            public void Test_SetPowerManagementProperty()
+            public void Test_SetToDsProperty()
             {
                 FrameControlField frameControl = new FrameControlField
                 {
-                    PowerManagement = true
+                    ToDS = true
                 };
 
-                Assert.IsTrue(frameControl.PowerManagement);
+                Assert.IsTrue(frameControl.ToDS);
             }
 
             [Test]
-            public void Test_SetMoreDataProperty()
+            public void Test_SetTypeProperty()
             {
                 FrameControlField frameControl = new FrameControlField
                 {
-                    MoreData = true
+                    SubType = FrameControlField.FrameSubTypes.Data
                 };
+                Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
 
-                Assert.IsTrue(frameControl.MoreData);
+                frameControl.SubType = FrameControlField.FrameSubTypes.ManagementAuthentication;
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementAuthentication, frameControl.SubType);
+
+                frameControl.SubType = FrameControlField.FrameSubTypes.ControlACK;
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlACK, frameControl.SubType);
             }
 
             [Test]
@@ -260,17 +272,6 @@ namespace Test.PacketType
 
                 Assert.IsTrue(frameControl.Protected);
             }
-
-            [Test]
-            public void Test_SetOrderProperty()
-            {
-                FrameControlField frameControl = new FrameControlField
-                {
-                    Order = true
-                };
-
-                Assert.IsTrue(frameControl.Order);
-            }
-        } 
+        }
     }
 }

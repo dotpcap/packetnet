@@ -1,6 +1,7 @@
+using System;
+using System.IO;
 using NUnit.Framework;
 using PacketDotNet.Ieee80211;
-using System.IO;
 
 namespace Test.PacketType
 {
@@ -13,33 +14,34 @@ namespace Test.PacketType
             public void Test_Ppi802_3_Construction()
             {
                 Ppi802_3 field = new Ppi802_3(Ppi802_3.StandardFlags.FcsPresent,
-                                              Ppi802_3.ErrorFlags.InvalidFcs | Ppi802_3.ErrorFlags.SymbolError);
-                
+                    Ppi802_3.ErrorFlags.InvalidFcs | Ppi802_3.ErrorFlags.SymbolError);
+
                 Ppi802_3 recreatedField = new Ppi802_3(new BinaryReader(new MemoryStream(field.Bytes)));
-                
+
                 Assert.AreEqual(Ppi802_3.StandardFlags.FcsPresent, recreatedField.Flags);
-                Assert.AreEqual(Ppi802_3.ErrorFlags.InvalidFcs | Ppi802_3.ErrorFlags.SymbolError, recreatedField.Errors);
+                Assert.AreEqual(Ppi802_3.ErrorFlags.InvalidFcs | Ppi802_3.ErrorFlags.SymbolError,
+                    recreatedField.Errors);
             }
-            
+
             [Test]
             public void Test_PpiAggregation_Construction()
             {
                 PpiAggregation field = new PpiAggregation(22);
                 Assert.AreEqual(22, field.InterfaceId);
-                
+
                 PpiAggregation recreatedField = new PpiAggregation(new BinaryReader(new MemoryStream(field.Bytes)));
-                
+
                 Assert.AreEqual(22, recreatedField.InterfaceId);
             }
-            
+
             [Test]
             public void Test_PpiCaptureInfo_Construction()
             {
                 PpiCaptureInfo field = new PpiCaptureInfo();
-                
+
                 Assert.AreEqual(0, field.Bytes.Length);
             }
-            
+
             [Test]
             public void Test_PpiCommon_Construction()
             {
@@ -58,18 +60,21 @@ namespace Test.PacketType
 
                 var ms = new MemoryStream(field.Bytes);
                 PpiCommon recreatedField = new PpiCommon(new BinaryReader(ms));
-                
+
                 Assert.AreEqual(0x1234567812345678, recreatedField.TSFTimer);
-                Assert.AreEqual(PpiCommon.CommonFlags.FcsIncludedInFrame | PpiCommon.CommonFlags.TimerSynchFunctionInUse, recreatedField.Flags);
+                Assert.AreEqual(
+                    PpiCommon.CommonFlags.FcsIncludedInFrame | PpiCommon.CommonFlags.TimerSynchFunctionInUse,
+                    recreatedField.Flags);
                 Assert.AreEqual(2, recreatedField.Rate);
                 Assert.AreEqual(2142, recreatedField.ChannelFrequency);
-                Assert.AreEqual(RadioTapChannelFlags.Channel2Ghz | RadioTapChannelFlags.Passive, recreatedField.ChannelFlags);
+                Assert.AreEqual(RadioTapChannelFlags.Channel2Ghz | RadioTapChannelFlags.Passive,
+                    recreatedField.ChannelFlags);
                 Assert.AreEqual(0xAB, recreatedField.FhssHopset);
                 Assert.AreEqual(0xCD, recreatedField.FhssPattern);
                 Assert.AreEqual(-50, recreatedField.AntennaSignalPower);
                 Assert.AreEqual(25, recreatedField.AntennaSignalNoise);
             }
-            
+
             [Test]
             public void Test_PpiMacExtensions_Construction()
             {
@@ -82,12 +87,13 @@ namespace Test.PacketType
 
                 var ms = new MemoryStream(field.Bytes);
                 PpiMacExtensions recreatedField = new PpiMacExtensions(new BinaryReader(ms));
-                
-                Assert.AreEqual(PpiMacExtensionFlags.DuplicateRx | PpiMacExtensionFlags.HtIndicator, recreatedField.Flags);
+
+                Assert.AreEqual(PpiMacExtensionFlags.DuplicateRx | PpiMacExtensionFlags.HtIndicator,
+                    recreatedField.Flags);
                 Assert.AreEqual(0x12345678, field.AMpduId);
                 Assert.AreEqual(0xA, field.DelimiterCount);
             }
-            
+
             [Test]
             public void Test_PpiMacPhy_Construction()
             {
@@ -124,7 +130,7 @@ namespace Test.PacketType
 
                 var ms = new MemoryStream(field.Bytes);
                 PpiMacPhy recreatedField = new PpiMacPhy(new BinaryReader(ms));
-                
+
                 Assert.AreEqual(0x12345678, recreatedField.AMpduId);
                 Assert.AreEqual(0xAB, recreatedField.DelimiterCount);
                 Assert.AreEqual(0x1, recreatedField.ModulationCodingScheme);
@@ -139,7 +145,8 @@ namespace Test.PacketType
                 Assert.AreEqual(0xA, recreatedField.RssiAntenna2Ext);
                 Assert.AreEqual(0xB, recreatedField.RssiAntenna3Ext);
                 Assert.AreEqual(2142, recreatedField.ExtensionChannelFrequency);
-                Assert.AreEqual(RadioTapChannelFlags.Channel5Ghz | RadioTapChannelFlags.Passive, recreatedField.ExtensionChannelFlags);
+                Assert.AreEqual(RadioTapChannelFlags.Channel5Ghz | RadioTapChannelFlags.Passive,
+                    recreatedField.ExtensionChannelFlags);
                 Assert.AreEqual(0xC, recreatedField.DBmAntenna0SignalPower);
                 Assert.AreEqual(0xD, recreatedField.DBmAntenna0SignalNoise);
                 Assert.AreEqual(0xE, recreatedField.DBmAntenna1SignalPower);
@@ -153,7 +160,7 @@ namespace Test.PacketType
                 Assert.AreEqual(0xCCCCCCCC, recreatedField.ErrorVectorMagnitude2);
                 Assert.AreEqual(0xDDDDDDDD, recreatedField.ErrorVectorMagnitude3);
             }
-            
+
             [Test]
             public void Test_PpiProcessInfo_Construction()
             {
@@ -170,7 +177,7 @@ namespace Test.PacketType
 
                 var ms = new MemoryStream(field.Bytes);
                 PpiProcessInfo recreatedField = new PpiProcessInfo(new BinaryReader(ms));
-                
+
                 Assert.AreEqual(0x11223344, recreatedField.ProcessId);
                 Assert.AreEqual(0x55667788, recreatedField.ThreadId);
                 Assert.AreEqual("UnitTestProcess", recreatedField.ProcessPath);
@@ -178,20 +185,8 @@ namespace Test.PacketType
                 Assert.AreEqual("Hester the tester", recreatedField.UserName);
                 Assert.AreEqual(0x22446688, recreatedField.GroupId);
                 Assert.AreEqual("ProcessInfoTestGroup", recreatedField.GroupName);
-            }   
-            
-            [Test]
-            public void Test_PpiUnknown_Construction()
-            {
-                PpiUnknown field = new PpiUnknown(0xAA, new byte[]{0x1, 0x2, 0x3, 0x4});
-                
-                var ms = new MemoryStream(field.Bytes);
-                PpiUnknown recreatedField = new PpiUnknown(0xAA, new BinaryReader(ms), 4);
-                
-                Assert.AreEqual(0xAA, (int)recreatedField.FieldType);
-                Assert.AreEqual(new byte[]{0x1, 0x2, 0x3, 0x4}, recreatedField.Bytes);
             }
-            
+
             [Test]
             public void Test_PpiSpectrum_Construction()
             {
@@ -202,20 +197,31 @@ namespace Test.PacketType
                     AmplitudeOffset = 0x98765432,
                     AmplitudeResolution = 0x11223344,
                     MaximumRssi = 0xAABB,
-                    SamplesData = new byte[] { 0xCC, 0xDD, 0xEE, 0xFF }
+                    SamplesData = new Byte[] {0xCC, 0xDD, 0xEE, 0xFF}
                 };
 
                 var ms = new MemoryStream(field.Bytes);
                 PpiSpectrum recreatedField = new PpiSpectrum(new BinaryReader(ms));
-                
+
                 Assert.AreEqual(0x12345678, recreatedField.StartingFrequency);
                 Assert.AreEqual(0x24683579, recreatedField.Resolution);
                 Assert.AreEqual(0x98765432, recreatedField.AmplitudeOffset);
                 Assert.AreEqual(0x11223344, recreatedField.AmplitudeResolution);
                 Assert.AreEqual(0xAABB, recreatedField.MaximumRssi);
-                Assert.AreEqual(new byte[]{ 0xCC, 0xDD, 0xEE, 0xFF }, recreatedField.SamplesData);
+                Assert.AreEqual(new Byte[] {0xCC, 0xDD, 0xEE, 0xFF}, recreatedField.SamplesData);
             }
-        }       
-    }           
-}               
-                
+
+            [Test]
+            public void Test_PpiUnknown_Construction()
+            {
+                PpiUnknown field = new PpiUnknown(0xAA, new Byte[] {0x1, 0x2, 0x3, 0x4});
+
+                var ms = new MemoryStream(field.Bytes);
+                PpiUnknown recreatedField = new PpiUnknown(0xAA, new BinaryReader(ms), 4);
+
+                Assert.AreEqual(0xAA, (Int32) recreatedField.FieldType);
+                Assert.AreEqual(new Byte[] {0x1, 0x2, 0x3, 0x4}, recreatedField.Bytes);
+            }
+        }
+    }
+}

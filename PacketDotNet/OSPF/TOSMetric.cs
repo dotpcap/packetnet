@@ -1,40 +1,40 @@
+using System;
 using PacketDotNet.Utils.Conversion;
 
 namespace PacketDotNet.OSPF
 {
     /// <summary>
-    /// Additional TOS-specific information  for backward compatibility
-    /// with previous versions of the OSPF specification
+    ///     Additional TOS-specific information  for backward compatibility
+    ///     with previous versions of the OSPF specification
     /// </summary>
     public struct TOSMetric
     {
         ///<summary>The number of bytes a TOS metric occupy</summary>
-        public static readonly int TOSMetricLength = 4;
+        public static readonly Int32 TOSMetricLength = 4;
 
         /// <summary>
-        /// IP Type of Service that this metric refers to.
+        ///     IP Type of Service that this metric refers to.
         /// </summary>
-        public byte TOS;
+        public Byte TOS;
 
         /// <summary>
-        /// TOS-specific metric information.
+        ///     TOS-specific metric information.
         /// </summary>
-        public uint Metric;
+        public UInt32 Metric;
 
         /// <summary>
-        /// Gets the bytes that make up this packet.
+        ///     Gets the bytes that make up this packet.
         /// </summary>
         /// <value>Packet bytes</value>
-        public byte[] Bytes
+        public Byte[] Bytes
         {
             get
             {
-                byte[] b = new byte[TOSMetricLength];
-                EndianBitConverter.Big.CopyBytes((uint) this.Metric, b, 0);
+                Byte[] b = new Byte[TOSMetricLength];
+                EndianBitConverter.Big.CopyBytes(this.Metric, b, 0);
                 b[0] = this.TOS;
                 return b;
             }
         }
-
     }
 }

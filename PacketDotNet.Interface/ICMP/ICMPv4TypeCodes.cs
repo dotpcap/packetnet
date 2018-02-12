@@ -17,14 +17,19 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
+
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet.ICMP
 {
     /// <summary>
-    /// Code constants for ICMP message types.
-    /// From http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol#List_of_permitted_control_messages_.28incomplete_list.29
-    /// Note that these values represent the combined
-    /// type and code fields, where the type field is the upper byte
+    ///     Code constants for ICMP message types.
+    ///     From
+    ///     http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol#List_of_permitted_control_messages_.28incomplete_list.29
+    ///     Note that these values represent the combined
+    ///     type and code fields, where the type field is the upper byte
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum ICMPv4TypeCodes : ushort
     {
 #pragma warning disable 1591

@@ -19,12 +19,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Net.NetworkInformation;
 using NUnit.Framework;
-using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
-using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -34,103 +34,105 @@ namespace Test.PacketType
         public class BlockAcknowledgmentFrameTest
         {
             /// <summary>
-            /// Test that parsing a block acknowledgment frame yields the proper field values
+            ///     Test that parsing a block acknowledgment frame yields the proper field values
             /// </summary>
             [Test]
-            public void Test_Constructor ()
+            public void Test_Constructor()
             {
-                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_block_acknowledgment_frame.pcap");
-                dev.Open ();
-                var rawCapture = dev.GetNextPacket ();
-                dev.Close ();
+                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_block_acknowledgment_frame.pcap");
+                dev.Open();
+                var rawCapture = dev.GetNextPacket();
+                dev.Close();
 
-                Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
-                BlockAcknowledgmentFrame frame = (BlockAcknowledgmentFrame)p.PayloadPacket;
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                BlockAcknowledgmentFrame frame = (BlockAcknowledgmentFrame) p.PayloadPacket;
 
-                Assert.AreEqual (0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual (FrameControlField.FrameSubTypes.ControlBlockAcknowledgment, frame.FrameControl.SubType);
-                Assert.IsFalse (frame.FrameControl.ToDS);
-                Assert.IsFalse (frame.FrameControl.FromDS);
-                Assert.IsFalse (frame.FrameControl.MoreFragments);
-                Assert.IsFalse (frame.FrameControl.Retry);
-                Assert.IsFalse (frame.FrameControl.PowerManagement);
-                Assert.IsFalse (frame.FrameControl.MoreData);
-                Assert.IsFalse (frame.FrameControl.Protected);
-                Assert.IsFalse (frame.FrameControl.Order);
-                Assert.AreEqual (0, frame.Duration.Field); //this need expanding on in the future
-                Assert.AreEqual ("0024B2F8D706", frame.ReceiverAddress.ToString ().ToUpper ());
-                Assert.AreEqual ("7CC5376D16E7", frame.TransmitterAddress.ToString ().ToUpper ());
+                Assert.AreEqual(0, frame.FrameControl.ProtocolVersion);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlBlockAcknowledgment, frame.FrameControl.SubType);
+                Assert.IsFalse(frame.FrameControl.ToDS);
+                Assert.IsFalse(frame.FrameControl.FromDS);
+                Assert.IsFalse(frame.FrameControl.MoreFragments);
+                Assert.IsFalse(frame.FrameControl.Retry);
+                Assert.IsFalse(frame.FrameControl.PowerManagement);
+                Assert.IsFalse(frame.FrameControl.MoreData);
+                Assert.IsFalse(frame.FrameControl.Protected);
+                Assert.IsFalse(frame.FrameControl.Order);
+                Assert.AreEqual(0, frame.Duration.Field); //this need expanding on in the future
+                Assert.AreEqual("0024B2F8D706", frame.ReceiverAddress.ToString().ToUpper());
+                Assert.AreEqual("7CC5376D16E7", frame.TransmitterAddress.ToString().ToUpper());
 
-                Assert.AreEqual (BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed, frame.BlockAcknowledgmentControl.Policy);
-                Assert.IsFalse (frame.BlockAcknowledgmentControl.MultiTid);
-                Assert.IsTrue (frame.BlockAcknowledgmentControl.CompressedBitmap);
-                Assert.AreEqual (0, frame.BlockAcknowledgmentControl.Tid);
-                Assert.AreEqual (0, frame.BlockAckStartingSequenceControl);
-                Assert.AreEqual (8, frame.BlockAckBitmap.Length);
+                Assert.AreEqual(BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed,
+                    frame.BlockAcknowledgmentControl.Policy);
+                Assert.IsFalse(frame.BlockAcknowledgmentControl.MultiTid);
+                Assert.IsTrue(frame.BlockAcknowledgmentControl.CompressedBitmap);
+                Assert.AreEqual(0, frame.BlockAcknowledgmentControl.Tid);
+                Assert.AreEqual(0, frame.BlockAckStartingSequenceControl);
+                Assert.AreEqual(8, frame.BlockAckBitmap.Length);
 
-                Assert.AreEqual (0x9BB909C2, frame.FrameCheckSequence);
-                Assert.AreEqual (28, frame.FrameSize);
+                Assert.AreEqual(0x9BB909C2, frame.FrameCheckSequence);
+                Assert.AreEqual(28, frame.FrameSize);
             }
-            
+
             [Test]
-            public void Test_Constructor_ConstructWithValues ()
+            public void Test_Constructor_ConstructWithValues()
             {
-                Byte[] BlockAckBitmap = new Byte[]{0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8};
-                
-                BlockAcknowledgmentFrame frame = new BlockAcknowledgmentFrame (PhysicalAddress.Parse ("111111111111"),
-                                                                               PhysicalAddress.Parse ("222222222222"),
-                                                                               BlockAckBitmap);
-                
+                Byte[] blockAckBitmap = {0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8};
+
+                BlockAcknowledgmentFrame frame = new BlockAcknowledgmentFrame(PhysicalAddress.Parse("111111111111"),
+                    PhysicalAddress.Parse("222222222222"),
+                    blockAckBitmap);
+
                 frame.FrameControl.ToDS = false;
                 frame.FrameControl.FromDS = true;
                 frame.FrameControl.MoreFragments = true;
-                
+
                 frame.Duration.Field = 0x1234;
-                
+
                 frame.BlockAcknowledgmentControl.Policy = BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed;
                 frame.BlockAcknowledgmentControl.Tid = 0xF;
-                
+
                 frame.BlockAckStartingSequenceControl = 0x5678;
-                
-                frame.UpdateFrameCheckSequence ();
+
+                frame.UpdateFrameCheckSequence();
                 UInt32 fcs = frame.FrameCheckSequence;
-                
+
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
-                var bas = new ByteArraySegment (bytes);
+                var bas = new ByteArraySegment(bytes);
 
                 //create a new frame that should be identical to the original
-                BlockAcknowledgmentFrame recreatedFrame = MacFrame.ParsePacket (bas) as BlockAcknowledgmentFrame;
+                BlockAcknowledgmentFrame recreatedFrame = MacFrame.ParsePacket(bas) as BlockAcknowledgmentFrame;
                 recreatedFrame.UpdateFrameCheckSequence();
-                
-                Assert.AreEqual (FrameControlField.FrameSubTypes.ControlBlockAcknowledgment, recreatedFrame.FrameControl.SubType);
-                Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
-                Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
-                Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);
-                Assert.AreEqual (0x1234, recreatedFrame.Duration.Field);
-                Assert.AreEqual (BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed,
-                                 recreatedFrame.BlockAcknowledgmentControl.Policy);
-                
-                Assert.AreEqual (0xF, recreatedFrame.BlockAcknowledgmentControl.Tid);
-                Assert.IsTrue (recreatedFrame.BlockAcknowledgmentControl.CompressedBitmap);
-                Assert.AreEqual (0x5678, recreatedFrame.BlockAckStartingSequenceControl);
-                
-                Assert.AreEqual ("111111111111", recreatedFrame.TransmitterAddress.ToString ().ToUpper ());
-                Assert.AreEqual ("222222222222", recreatedFrame.ReceiverAddress.ToString ().ToUpper ());
-                
-                CollectionAssert.AreEqual (BlockAckBitmap, recreatedFrame.BlockAckBitmap);
-                
-                Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
+
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlBlockAcknowledgment,
+                    recreatedFrame.FrameControl.SubType);
+                Assert.IsFalse(recreatedFrame.FrameControl.ToDS);
+                Assert.IsTrue(recreatedFrame.FrameControl.FromDS);
+                Assert.IsTrue(recreatedFrame.FrameControl.MoreFragments);
+                Assert.AreEqual(0x1234, recreatedFrame.Duration.Field);
+                Assert.AreEqual(BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed,
+                    recreatedFrame.BlockAcknowledgmentControl.Policy);
+
+                Assert.AreEqual(0xF, recreatedFrame.BlockAcknowledgmentControl.Tid);
+                Assert.IsTrue(recreatedFrame.BlockAcknowledgmentControl.CompressedBitmap);
+                Assert.AreEqual(0x5678, recreatedFrame.BlockAckStartingSequenceControl);
+
+                Assert.AreEqual("111111111111", recreatedFrame.TransmitterAddress.ToString().ToUpper());
+                Assert.AreEqual("222222222222", recreatedFrame.ReceiverAddress.ToString().ToUpper());
+
+                CollectionAssert.AreEqual(blockAckBitmap, recreatedFrame.BlockAckBitmap);
+
+                Assert.AreEqual(fcs, recreatedFrame.FrameCheckSequence);
             }
-                
-			[Test]
-			public void Test_ConstructorWithCorruptBuffer ()
-			{
-				//buffer is way too short for frame. We are just checking it doesn't throw
-				byte[] corruptBuffer = new byte[]{0x01};
-				BlockAcknowledgmentFrame frame = new BlockAcknowledgmentFrame(new ByteArraySegment(corruptBuffer));
-				Assert.IsFalse(frame.FCSValid);
-			}
-        } 
+
+            [Test]
+            public void Test_ConstructorWithCorruptBuffer()
+            {
+                //buffer is way too short for frame. We are just checking it doesn't throw
+                Byte[] corruptBuffer = {0x01};
+                BlockAcknowledgmentFrame frame = new BlockAcknowledgmentFrame(new ByteArraySegment(corruptBuffer));
+                Assert.IsFalse(frame.FCSValid);
+            }
+        }
     }
 }

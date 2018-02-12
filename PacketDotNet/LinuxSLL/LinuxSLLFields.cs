@@ -18,69 +18,71 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
+using System;
+
 namespace PacketDotNet.LinuxSLL
 {
     /// <summary>
-    /// Lengths and offsets to the fields in the LinuxSLL packet
-    /// See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
+    ///     Lengths and offsets to the fields in the LinuxSLL packet
+    ///     See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
     /// </summary>
     public class LinuxSLLFields
     {
         /// <summary>
-        /// Length of the packet type field
+        ///     Length of the ethernet protocol field
         /// </summary>
-        public readonly static int PacketTypeLength = 2;
+        public static readonly Int32 EthernetProtocolTypeLength = 2;
 
         /// <summary>
-        /// Link layer address type
+        ///     Position of the ethernet protocol type field
         /// </summary>
-        public readonly static int LinkLayerAddressTypeLength = 2;
+        public static readonly Int32 EthernetProtocolTypePosition;
 
         /// <summary>
-        /// Link layer address length
+        ///     Link layer address length
         /// </summary>
-        public readonly static int LinkLayerAddressLengthLength = 2;
+        public static readonly Int32 LinkLayerAddressLengthLength = 2;
 
         /// <summary>
-        /// The link layer address field length
-        /// NOTE: the actual link layer address MAY be shorter than this
+        ///     Positino of the link layer address length field
         /// </summary>
-        public readonly static int LinkLayerAddressMaximumLength = 8;
+        public static readonly Int32 LinkLayerAddressLengthPosition;
 
         /// <summary>
-        /// Number of bytes in a SLL header
+        ///     The link layer address field length
+        ///     NOTE: the actual link layer address MAY be shorter than this
         /// </summary>
-        public readonly static int SLLHeaderLength = 16;
+        public static readonly Int32 LinkLayerAddressMaximumLength = 8;
 
         /// <summary>
-        /// Length of the ethernet protocol field
+        ///     Position of the link layer address field
         /// </summary>
-        public readonly static int EthernetProtocolTypeLength = 2;
+        public static readonly Int32 LinkLayerAddressPosition;
 
         /// <summary>
-        /// Position of the packet type field
+        ///     Link layer address type
         /// </summary>
-        public readonly static int PacketTypePosition = 0;
+        public static readonly Int32 LinkLayerAddressTypeLength = 2;
 
         /// <summary>
-        /// Position of the link layer address type field
+        ///     Position of the link layer address type field
         /// </summary>
-        public readonly static int LinkLayerAddressTypePosition;
+        public static readonly Int32 LinkLayerAddressTypePosition;
 
         /// <summary>
-        /// Positino of the link layer address length field
+        ///     Length of the packet type field
         /// </summary>
-        public readonly static int LinkLayerAddressLengthPosition;
+        public static readonly Int32 PacketTypeLength = 2;
 
         /// <summary>
-        /// Position of the link layer address field
+        ///     Position of the packet type field
         /// </summary>
-        public readonly static int LinkLayerAddressPosition;
+        public static readonly Int32 PacketTypePosition = 0;
 
         /// <summary>
-        /// Position of the ethernet protocol type field
+        ///     Number of bytes in a SLL header
         /// </summary>
-        public readonly static int EthernetProtocolTypePosition;
+        public static readonly Int32 SLLHeaderLength = 16;
 
         static LinuxSLLFields()
         {

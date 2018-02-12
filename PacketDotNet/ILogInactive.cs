@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 #if DEBUG
 #endif
@@ -37,214 +38,214 @@ namespace PacketDotNet
         }
 #endif
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void Debug (object message)
+        [Conditional("DEBUG")]
+        public void Debug(Object message)
         {
             throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void Debug (object message, Exception exception)
+        [Conditional("DEBUG")]
+        public void Debug(Object message, Exception exception)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void DebugFormat(string format, params object[] args)
+        [Conditional("DEBUG")]
+        public void DebugFormat(String format, params Object[] args)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void DebugFormat (IFormatProvider provider, string format, params object[] args)
+        [Conditional("DEBUG")]
+        public void DebugFormat(IFormatProvider provider, String format, params Object[] args)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void DebugFormat (string format, object arg0)
+        [Conditional("DEBUG")]
+        public void DebugFormat(String format, Object arg0)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void DebugFormat (string format, object arg0, object arg1)
+        [Conditional("DEBUG")]
+        public void DebugFormat(String format, Object arg0, Object arg1)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void DebugFormat (string format, object arg0, object arg1, object arg2)
+        [Conditional("DEBUG")]
+        public void DebugFormat(String format, Object arg0, Object arg1, Object arg2)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void Error (object message)
+        [Conditional("DEBUG")]
+        public void Error(Object message)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void Error (object message, Exception exception)
+        [Conditional("DEBUG")]
+        public void Error(Object message, Exception exception)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void ErrorFormat(string format, params object[] args)
+        [Conditional("DEBUG")]
+        public void ErrorFormat(String format, params Object[] args)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void ErrorFormat (IFormatProvider provider, string format, params object[] args)
+        [Conditional("DEBUG")]
+        public void ErrorFormat(IFormatProvider provider, String format, params Object[] args)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void ErrorFormat (string format, object arg0)
+        [Conditional("DEBUG")]
+        public void ErrorFormat(String format, Object arg0)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void ErrorFormat (string format, object arg0, object arg1)
+        [Conditional("DEBUG")]
+        public void ErrorFormat(String format, Object arg0, Object arg1)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void ErrorFormat (string format, object arg0, object arg1, object arg2)
+        [Conditional("DEBUG")]
+        public void ErrorFormat(String format, Object arg0, Object arg1, Object arg2)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void Fatal (object message)
+        [Conditional("DEBUG")]
+        public void Fatal(Object message)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void Fatal (object message, Exception exception)
+        [Conditional("DEBUG")]
+        public void Fatal(Object message, Exception exception)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void FatalFormat(string format, params object[] args)
+        [Conditional("DEBUG")]
+        public void FatalFormat(String format, params Object[] args)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void FatalFormat (IFormatProvider provider, string format, params object[] args)
+        [Conditional("DEBUG")]
+        public void FatalFormat(IFormatProvider provider, String format, params Object[] args)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void FatalFormat (string format, object arg0)
+        [Conditional("DEBUG")]
+        public void FatalFormat(String format, Object arg0)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void FatalFormat (string format, object arg0, object arg1)
+        [Conditional("DEBUG")]
+        public void FatalFormat(String format, Object arg0, Object arg1)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void FatalFormat (string format, object arg0, object arg1, object arg2)
+        [Conditional("DEBUG")]
+        public void FatalFormat(String format, Object arg0, Object arg1, Object arg2)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void Info (object message)
+        [Conditional("DEBUG")]
+        public void Info(Object message)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void Info (object message, Exception exception)
+        [Conditional("DEBUG")]
+        public void Info(Object message, Exception exception)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void InfoFormat(string format, params object[] args)
+        [Conditional("DEBUG")]
+        public void InfoFormat(String format, params Object[] args)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void InfoFormat (IFormatProvider provider, string format, params object[] args)
+        [Conditional("DEBUG")]
+        public void InfoFormat(IFormatProvider provider, String format, params Object[] args)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void InfoFormat (string format, object arg0)
+        [Conditional("DEBUG")]
+        public void InfoFormat(String format, Object arg0)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void InfoFormat (string format, object arg0, object arg1)
+        [Conditional("DEBUG")]
+        public void InfoFormat(String format, Object arg0, Object arg1)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void InfoFormat (string format, object arg0, object arg1, object arg2)
+        [Conditional("DEBUG")]
+        public void InfoFormat(String format, Object arg0, Object arg1, Object arg2)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void Warn (object message)
+        [Conditional("DEBUG")]
+        public void Warn(Object message)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void Warn (object message, Exception exception)
+        [Conditional("DEBUG")]
+        public void Warn(Object message, Exception exception)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void WarnFormat(string format, params object[] args)
+        [Conditional("DEBUG")]
+        public void WarnFormat(String format, params Object[] args)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void WarnFormat (IFormatProvider provider, string format, params object[] args)
+        [Conditional("DEBUG")]
+        public void WarnFormat(IFormatProvider provider, String format, params Object[] args)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void WarnFormat (string format, object arg0)
+        [Conditional("DEBUG")]
+        public void WarnFormat(String format, Object arg0)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void WarnFormat (string format, object arg0, object arg1)
+        [Conditional("DEBUG")]
+        public void WarnFormat(String format, Object arg0, Object arg1)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
-        [System.Diagnostics.ConditionalAttribute("DEBUG")]
-        public void WarnFormat (string format, object arg0, object arg1, object arg2)
+        [Conditional("DEBUG")]
+        public void WarnFormat(String format, Object arg0, Object arg1, Object arg2)
         {
-            throw new NotImplementedException ();
+            throw new NotImplementedException();
         }
 
         public static ILogInactive GetLogger(Type type)

@@ -1,89 +1,88 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
-    /// Fhss radio tap field
+    ///     Fhss radio tap field
     /// </summary>
     public class FhssRadioTapField : RadioTapField
     {
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        /// <param name="br">
+        ///     A <see cref="BinaryReader" />
+        /// </param>
+        public FhssRadioTapField(BinaryReader br)
+        {
+            var u16 = br.ReadUInt16();
+
+            this.ChannelHoppingSet = (Byte) (u16 & 0xff);
+            this.Pattern = (Byte) ((u16 >> 8) & 0xff);
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FhssRadioTapField" /> class.
+        /// </summary>
+        public FhssRadioTapField()
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FhssRadioTapField" /> class.
+        /// </summary>
+        /// <param name='channelHoppingSet'>
+        ///     Channel hopping set.
+        /// </param>
+        /// <param name='pattern'>
+        ///     Channel hopping pattern.
+        /// </param>
+        public FhssRadioTapField(Byte channelHoppingSet, Byte pattern)
+        {
+            this.ChannelHoppingSet = channelHoppingSet;
+            this.Pattern = pattern;
+        }
+
         /// <summary>Type of the field</summary>
         public override RadioTapType FieldType => RadioTapType.Fhss;
 
         /// <summary>
-        /// Gets the length of the field data.
+        ///     Gets the length of the field data.
         /// </summary>
         /// <value>
-        /// The length.
+        ///     The length.
         /// </value>
-        public override ushort Length => 2;
+        public override UInt16 Length => 2;
 
         /// <summary>
-        /// Hop set
+        ///     Hop set
         /// </summary>
-        public byte ChannelHoppingSet { get; set; }
+        public Byte ChannelHoppingSet { get; set; }
 
         /// <summary>
-        /// Hop pattern
+        ///     Hop pattern
         /// </summary>
-        public byte Pattern { get; set; }
-            
+        public Byte Pattern { get; set; }
+
         /// <summary>
-        /// Copies the field data to the destination buffer at the specified offset.
+        ///     Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
             dest[offset] = this.ChannelHoppingSet;
             dest[offset + 1] = this.Pattern;
         }
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="br">
-        /// A <see cref="BinaryReader"/>
-        /// </param>
-        public FhssRadioTapField(BinaryReader br)
-        {
-            var u16 = br.ReadUInt16();
-
-            this.ChannelHoppingSet = (byte)(u16 & 0xff);
-            this.Pattern = (byte)((u16 >> 8) & 0xff);
-        }
-   
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FhssRadioTapField"/> class.
-        /// </summary>
-        public FhssRadioTapField()
-        {
-             
-        }
-            
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FhssRadioTapField"/> class.
-        /// </summary>
-        /// <param name='ChannelHoppingSet'>
-        /// Channel hopping set.
-        /// </param>
-        /// <param name='Pattern'>
-        /// Channel hopping pattern.
-        /// </param>
-        public FhssRadioTapField(byte ChannelHoppingSet, byte Pattern)
-        {
-            this.ChannelHoppingSet = ChannelHoppingSet;
-            this.Pattern = Pattern;
-        }
-            
-        /// <summary>
-        /// ToString() override
+        ///     ToString() override
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        ///     A <see cref="System.String" />
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("ChannelHoppingSet {0}, Pattern {1}",
-                this.ChannelHoppingSet, this.Pattern);
+            return $"ChannelHoppingSet {this.ChannelHoppingSet}, Pattern {this.Pattern}";
         }
     }
 }

@@ -18,13 +18,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using SharpPcap.LibPcap;
+using System;
+using System.Net.NetworkInformation;
+using NUnit.Framework;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
-using NUnit.Framework;
-using SharpPcap;
-using System.Net.NetworkInformation;
 using PacketDotNet.Utils.Conversion;
+using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -33,51 +34,28 @@ namespace Test.PacketType
         [TestFixture]
         public class MacFrameTest
         {
-            public MacFrameTest ()
-            {
-            }
-
             /// <summary>
-            /// Test that the MacFrame.FCSValid property is working correctly
+            ///     Test that the MacFrame.FCSValid property is working correctly
             /// </summary>
             [Test]
-            public void FCSTest ()
+            public void FCSTest()
             {
-                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_association_request_frame.pcap");
-                dev.Open ();
-                var rawCapture = dev.GetNextPacket ();
-                dev.Close ();
+                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_association_request_frame.pcap");
+                dev.Open();
+                var rawCapture = dev.GetNextPacket();
+                dev.Close();
 
                 // check that the fcs can be calculated correctly
-                Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
-                AssociationRequestFrame frame = (AssociationRequestFrame)p.PayloadPacket;
-                Assert.AreEqual (0xde82c216, frame.FrameCheckSequence, "FCS mismatch");
-                Assert.IsTrue (frame.FCSValid);
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                AssociationRequestFrame frame = (AssociationRequestFrame) p.PayloadPacket;
+                Assert.AreEqual(0xde82c216, frame.FrameCheckSequence, "FCS mismatch");
+                Assert.IsTrue(frame.FCSValid);
 
                 // adjust the fcs of the packet and check that the FCSValid property returns false
                 frame.FrameCheckSequence = 0x1;
-                Assert.IsFalse (frame.FCSValid);                
+                Assert.IsFalse(frame.FCSValid);
             }
-            
-            [Test]
-            public void Test_NoFCS ()
-            {
-                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_beacon_no_fcs.pcap");
-                
-                dev.Open ();
-                
 
-                RawCapture rawCapture;
-                while ((rawCapture = dev.GetNextPacket ()) != null)
-                {
-                    Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
-                    Assert.IsNotNull (p.PayloadPacket);
-                }
-
-                // check that the fcs can be calculated correctly
-                dev.Close ();
-            }
-            
             [Test]
             public void Test_AppendFcs_Raw80211WithFcs()
             {
@@ -85,16 +63,16 @@ namespace Test.PacketType
                 dev.Open();
                 var rawCapture = dev.GetNextPacket();
                 dev.Close();
-                
+
                 //For this test we are just going to ignore the radio packet that precedes the data frame
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 MacFrame macFrame = p as MacFrame;
-                
+
                 //When its raw 802.11 we cant tell if there is an FCS there so even though
                 //there is we still expect AppendFcs to be false.
                 Assert.IsFalse(macFrame.AppendFcs);
             }
-            
+
             [Test]
             public void Test_AppendFcs_Raw80211WithoutFcs()
             {
@@ -102,13 +80,13 @@ namespace Test.PacketType
                 dev.Open();
                 var rawCapture = dev.GetNextPacket();
                 dev.Close();
-                
+
                 //For this test we are just going to ignore the radio packet that precedes the data frame
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 MacFrame macFrame = p as MacFrame;
                 Assert.IsFalse(macFrame.AppendFcs);
             }
-            
+
             [Test]
             public void Test_Bytes_ConstructedPacketWithFcsIncluded()
             {
@@ -119,25 +97,24 @@ namespace Test.PacketType
                 dataFrame.BssId = PhysicalAddress.Parse("AABBCCDDEEFF");
                 dataFrame.SourceAddress = PhysicalAddress.Parse("AABBCCDDEEFF");
                 dataFrame.DestinationAddress = PhysicalAddress.Parse("112233445566");
-                dataFrame.PayloadData = new byte[]{0x1, 0x2, 0x3, 0x4};
-                
+                dataFrame.PayloadData = new Byte[] {0x1, 0x2, 0x3, 0x4};
+
                 //Force it to recalculate the FCS and include it when serialised
                 dataFrame.UpdateFrameCheckSequence();
                 dataFrame.AppendFcs = true;
                 Assert.IsTrue(dataFrame.FCSValid);
-                
+
                 var expectedLength = dataFrame.FrameSize + dataFrame.PayloadData.Length + 4;
-                
-                byte[] frameBytes = dataFrame.Bytes;
-                
+
+                Byte[] frameBytes = dataFrame.Bytes;
+
                 Assert.AreEqual(expectedLength, frameBytes.Length);
                 Assert.AreEqual(dataFrame.FrameCheckSequence.ToString("X"),
-                                EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4).ToString("X"));
+                    EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4).ToString("X"));
                 Assert.AreEqual(dataFrame.FrameCheckSequence,
-                                EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4));
-                
+                    EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4));
             }
-            
+
             [Test]
             public void Test_Bytes_ConstructedPacketWithFcsNotIncluded()
             {
@@ -148,20 +125,20 @@ namespace Test.PacketType
                 dataFrame.BssId = PhysicalAddress.Parse("AABBCCDDEEFF");
                 dataFrame.SourceAddress = PhysicalAddress.Parse("AABBCCDDEEFF");
                 dataFrame.DestinationAddress = PhysicalAddress.Parse("112233445566");
-                dataFrame.PayloadData = new byte[]{0x01, 0x02, 0x03, 0x04};
-                
+                dataFrame.PayloadData = new Byte[] {0x01, 0x02, 0x03, 0x04};
+
                 //Force it to recalculate the FCS but don't include it when serialised
                 dataFrame.UpdateFrameCheckSequence();
                 dataFrame.AppendFcs = false;
-                
+
                 var expectedLength = dataFrame.FrameSize + dataFrame.PayloadData.Length;
                 var frameBytes = dataFrame.Bytes;
-                
+
                 Assert.AreEqual(expectedLength, frameBytes.Length);
                 //Check that we get last four bytes of data at the end rather than the FCS
                 Assert.AreEqual(0x01020304, EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4));
             }
-            
+
             [Test]
             public void Test_Bytes_ParsedPacketWithFcsIncluded()
             {
@@ -169,20 +146,20 @@ namespace Test.PacketType
                 dev.Open();
                 var rawCapture = dev.GetNextPacket();
                 dev.Close();
-                
+
                 //For this test we are just going to ignore the radio packet that precedes the data frame
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                
-                DataDataFrame frame = (DataDataFrame)p.PayloadPacket;
+
+                DataDataFrame frame = (DataDataFrame) p.PayloadPacket;
                 frame.AppendFcs = true;
-                
+
                 var frameBytes = frame.Bytes;
                 var expectedLength = frame.FrameSize + frame.PayloadData.Length + 4;
                 Assert.AreEqual(expectedLength, frameBytes.Length);
                 Assert.AreEqual(frame.FrameCheckSequence,
-                                EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4));
+                    EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4));
             }
-            
+
             [Test]
             public void Test_Bytes_ParsedPacketWithFcsNotIncluded()
             {
@@ -190,22 +167,40 @@ namespace Test.PacketType
                 dev.Open();
                 var rawCapture = dev.GetNextPacket();
                 dev.Close();
-                
+
                 //For this test we are just going to ignore the radio packet that precedes the data frame
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                
-                DataDataFrame frame = (DataDataFrame)p.PayloadPacket;
+
+                DataDataFrame frame = (DataDataFrame) p.PayloadPacket;
                 frame.AppendFcs = false;
-                
+
                 var frameBytes = frame.Bytes;
                 var expectedLength = frame.FrameSize + frame.PayloadData.Length;
                 Assert.AreEqual(expectedLength, frameBytes.Length);
-                
-                
+
+
                 Assert.AreEqual(EndianBitConverter.Big.ToUInt32(frame.PayloadData, frame.PayloadData.Length - 4),
-                                EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4));
+                    EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4));
+            }
+
+            [Test]
+            public void Test_NoFCS()
+            {
+                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_beacon_no_fcs.pcap");
+
+                dev.Open();
+
+
+                RawCapture rawCapture;
+                while ((rawCapture = dev.GetNextPacket()) != null)
+                {
+                    Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                    Assert.IsNotNull(p.PayloadPacket);
+                }
+
+                // check that the fcs can be calculated correctly
+                dev.Close();
             }
         }
     }
 }
-

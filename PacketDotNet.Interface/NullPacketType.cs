@@ -18,32 +18,39 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 *  Copyright 2017 Chris Morgan <chmorgan@gmail.com>
 */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet
 {
     /// <summary>
-    /// Code constants for link layer null packet payload types.
-    /// See http://www.tcpdump.org/linktypes.html
+    ///     Code constants for link layer null packet payload types.
+    ///     See http://www.tcpdump.org/linktypes.html
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum NullPacketType : ushort
     {
         /// <summary>
-        /// Internet Protocol, Version 4 (IPv4)
+        ///     Internet Protocol, Version 4 (IPv4)
         /// </summary>
         IpV4 = 2,
+
         /// <summary>
-        /// Internet Protocol, Version 6 (IPv6)
+        ///     Internet Protocol, Version 6 (IPv6)
         /// </summary>
         IpV6 = 24,
+
         /// <summary>
-        /// Internet Protocol, Version 6 (IPv6)
+        ///     Internet Protocol, Version 6 (IPv6)
         /// </summary>
         IpV6_28 = 28,
+
         /// <summary>
-        /// Internet Protocol, Version 6 (IPv6)
+        ///     Internet Protocol, Version 6 (IPv6)
         /// </summary>
         IpV6_30 = 30,
+
         /// <summary>
-        /// IPX
+        ///     IPX
         /// </summary>
         IPX = 23
     }

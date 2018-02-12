@@ -18,26 +18,30 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet
 {
-    /// <summary> Link-layer type codes.
-    /// <p>
-    /// Taken from libpcap/bpf/net/bpf.h and pcap/net/bpf.h.
-    /// </p>
-    /// <p>
-    /// The link-layer type is used to determine what data-structure the
-    /// IP protocol bits will be encapsulated inside of.
-    /// </p>
-    /// <p>
-    /// On a 10/100mbps network, packets are encapsulated inside of ethernet.
-    /// 14-byte ethernet headers which contain MAC addresses and an ethernet type
-    /// field.
-    /// </p>
-    /// <p>
-    /// On ethernet over ppp, the link-layer type is raw, and packets
-    /// are not encapsulated in any ethernet header.
-    /// </p>
+    /// <summary>
+    ///     Link-layer type codes.
+    ///     <p>
+    ///         Taken from libpcap/bpf/net/bpf.h and pcap/net/bpf.h.
+    ///     </p>
+    ///     <p>
+    ///         The link-layer type is used to determine what data-structure the
+    ///         IP protocol bits will be encapsulated inside of.
+    ///     </p>
+    ///     <p>
+    ///         On a 10/100mbps network, packets are encapsulated inside of ethernet.
+    ///         14-byte ethernet headers which contain MAC addresses and an ethernet type
+    ///         field.
+    ///     </p>
+    ///     <p>
+    ///         On ethernet over ppp, the link-layer type is raw, and packets
+    ///         are not encapsulated in any ethernet header.
+    ///     </p>
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum LinkLayers : byte
     {
         /// <summary> no link-layer encapsulation </summary>
@@ -104,17 +108,17 @@ namespace PacketDotNet
         LinuxSLL = 113,
 
         /// <summary>
-        /// Header for 802.11 plus a number of bits of link-layer information
-        /// including radio information, used by some recent BSD drivers as
-        /// well as the madwifi Atheros driver for Linux.
+        ///     Header for 802.11 plus a number of bits of link-layer information
+        ///     including radio information, used by some recent BSD drivers as
+        ///     well as the madwifi Atheros driver for Linux.
         /// </summary>
         Ieee80211_Radio = 127,
 
         /// <summary>
-        /// Per Packet Information encapsulated packets.
-        /// DLT_ requested by Gianluca Varenni &lt;gianluca.varenni@cacetech.com&gt;.
-        /// See http://www.cacetech.com/documents/PPI%20Header%20format%201.0.7.pdf
+        ///     Per Packet Information encapsulated packets.
+        ///     DLT_ requested by Gianluca Varenni &lt;gianluca.varenni@cacetech.com&gt;.
+        ///     See http://www.cacetech.com/documents/PPI%20Header%20format%201.0.7.pdf
         /// </summary>
-        PerPacketInformation = 192,
+        PerPacketInformation = 192
     }
 }

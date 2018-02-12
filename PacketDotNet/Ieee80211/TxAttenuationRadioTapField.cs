@@ -5,76 +5,75 @@ using PacketDotNet.Utils.Conversion;
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
-    /// Transmit power expressed as unitless distance from max
-    /// power set at factory calibration.  0 is max power.
-    /// Monotonically nondecreasing with lower power levels.
+    ///     Transmit power expressed as unitless distance from max
+    ///     power set at factory calibration.  0 is max power.
+    ///     Monotonically nondecreasing with lower power levels.
     /// </summary>
     public class TxAttenuationRadioTapField : RadioTapField
     {
+        /// <summary>
+        ///     Constructor
+        /// </summary>
+        /// <param name="br">
+        ///     A <see cref="BinaryReader" />
+        /// </param>
+        public TxAttenuationRadioTapField(BinaryReader br)
+        {
+            this.TxPower = -br.ReadUInt16();
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.TxAttenuationRadioTapField" /> class.
+        /// </summary>
+        public TxAttenuationRadioTapField()
+        {
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.TxAttenuationRadioTapField" /> class.
+        /// </summary>
+        /// <param name='txPower'>
+        ///     Transmit power expressed as unitless distance from max power set at factory calibration. 0 is max power.
+        /// </param>
+        public TxAttenuationRadioTapField(Int32 txPower)
+        {
+            this.TxPower = txPower;
+        }
+
         /// <summary>Type of the field</summary>
         public override RadioTapType FieldType => RadioTapType.TxAttenuation;
 
         /// <summary>
-        /// Gets the length of the field data.
+        ///     Gets the length of the field data.
         /// </summary>
         /// <value>
-        /// The length.
+        ///     The length.
         /// </value>
-        public override ushort Length => 2;
+        public override UInt16 Length => 2;
 
         /// <summary>
-        /// Transmit power
+        ///     Transmit power
         /// </summary>
-        public int TxPower { get; set; }
-   
+        public Int32 TxPower { get; set; }
+
         /// <summary>
-        /// Copies the field data to the destination buffer at the specified offset.
+        ///     Copies the field data to the destination buffer at the specified offset.
         /// </summary>
-        public override void CopyTo(byte[] dest, int offset)
+        public override void CopyTo(Byte[] dest, Int32 offset)
         {
             UInt16 absValue = (UInt16) Math.Abs(this.TxPower);
             EndianBitConverter.Little.CopyBytes(absValue, dest, offset);
         }
-            
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="br">
-        /// A <see cref="BinaryReader"/>
-        /// </param>
-        public TxAttenuationRadioTapField(BinaryReader br)
-        {
-            this.TxPower = -(int)br.ReadUInt16();
-        }
-            
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.TxAttenuationRadioTapField"/> class.
-        /// </summary>
-        public TxAttenuationRadioTapField()
-        {
-             
-        }
-            
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.TxAttenuationRadioTapField"/> class.
-        /// </summary>
-        /// <param name='TxPower'>
-        /// Transmit power expressed as unitless distance from max power set at factory calibration. 0 is max power.
-        /// </param>
-        public TxAttenuationRadioTapField (int TxPower)
-        {
-            this.TxPower = TxPower;
-        }
 
         /// <summary>
-        /// ToString() override
+        ///     ToString() override
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        ///     A <see cref="System.String" />
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return string.Format("TxPower {0}", this.TxPower);
+            return $"TxPower {this.TxPower}";
         }
     }
 }

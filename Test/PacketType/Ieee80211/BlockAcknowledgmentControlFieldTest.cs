@@ -29,21 +29,17 @@ namespace Test.PacketType
         public class BlockAcknowledgmentControlFieldTest
         {
             [Test]
-            public void Test_SetPolicyProperty ()
+            public void Test_SetCompressedBitmapProperty()
             {
                 BlockAcknowledgmentControlField blockAckControl = new BlockAcknowledgmentControlField
                 {
-                    Policy = BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed
+                    CompressedBitmap = true
                 };
-                Assert.AreEqual (BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed, blockAckControl.Policy);
-                
-                blockAckControl.Policy = BlockAcknowledgmentControlField.AcknowledgementPolicy.Immediate;
-                Assert.AreEqual (BlockAcknowledgmentControlField.AcknowledgementPolicy.Immediate, blockAckControl.Policy);
-                
+                Assert.IsTrue(blockAckControl.CompressedBitmap);
             }
-            
+
             [Test]
-            public void Test_SetMultiTidProperty ()
+            public void Test_SetMultiTidProperty()
             {
                 BlockAcknowledgmentControlField blockAckControl = new BlockAcknowledgmentControlField
                 {
@@ -51,27 +47,30 @@ namespace Test.PacketType
                 };
                 Assert.IsTrue(blockAckControl.MultiTid);
             }
-            
+
             [Test]
-            public void Test_SetCompressedBitmapProperty ()
+            public void Test_SetPolicyProperty()
             {
                 BlockAcknowledgmentControlField blockAckControl = new BlockAcknowledgmentControlField
                 {
-                    CompressedBitmap = true
+                    Policy = BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed
                 };
-                Assert.IsTrue (blockAckControl.CompressedBitmap);
+                Assert.AreEqual(BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed, blockAckControl.Policy);
+
+                blockAckControl.Policy = BlockAcknowledgmentControlField.AcknowledgementPolicy.Immediate;
+                Assert.AreEqual(BlockAcknowledgmentControlField.AcknowledgementPolicy.Immediate,
+                    blockAckControl.Policy);
             }
-            
+
             [Test]
-            public void Test_SetTidProperty ()
+            public void Test_SetTidProperty()
             {
                 BlockAcknowledgmentControlField blockAckControl = new BlockAcknowledgmentControlField
                 {
                     Tid = 0xF
                 };
-                Assert.AreEqual (0xF, blockAckControl.Tid);
+                Assert.AreEqual(0xF, blockAckControl.Tid);
             }
         }
     }
 }
-

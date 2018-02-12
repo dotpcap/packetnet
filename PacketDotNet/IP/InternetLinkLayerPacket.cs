@@ -25,62 +25,56 @@ using PacketDotNet.PPP;
 namespace PacketDotNet.IP
 {
     /// <summary>
-    /// Internet Link layer packet
-    /// See http://en.wikipedia.org/wiki/Link_Layer
+    ///     Internet Link layer packet
+    ///     See http://en.wikipedia.org/wiki/Link_Layer
     /// </summary>
     [Serializable]
     public class InternetLinkLayerPacket : Packet
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public InternetLinkLayerPacket()
-        {}
-
-        /// <summary>
-        /// Look for the innermost payload. This method is useful because
-        /// while some packets are LinuxSSL->IpPacket or
-        /// EthernetPacket->IpPacket, there are some packets that are
-        /// EthernetPacket->PPPoEPacket->PPPPacket->IpPacket, and for these cases
-        /// we really want to get to the IpPacket
+        ///     Look for the innermost payload. This method is useful because
+        ///     while some packets are LinuxSSL->IpPacket or
+        ///     EthernetPacket->IpPacket, there are some packets that are
+        ///     EthernetPacket->PPPoEPacket->PPPPacket->IpPacket, and for these cases
+        ///     we really want to get to the IpPacket
         /// </summary>
         /// <returns>
-        /// A <see cref="Packet"/>
+        ///     A <see cref="Packet" />
         /// </returns>
         public static Packet GetInnerPayload(InternetLinkLayerPacket packet)
         {
             // is this an ethernet packet?
-            if(packet is EthernetPacket)
+            if (packet is EthernetPacket)
             {
-                log.Debug("packet is EthernetPacket");
+                Log.Debug("packet is EthernetPacket");
 
                 var thePayload = packet.PayloadPacket;
 
                 // is this packets payload a PPPoEPacket? If so,
                 // the PPPoEPacket payload should be a PPPPacket and we want
                 // the payload of the PPPPpacket
-                if(thePayload is PPPoEPacket)
+                if (thePayload is PPPoEPacket)
                 {
-                    log.Debug("thePayload is PPPoEPacket");
+                    Log.Debug("thePayload is PPPoEPacket");
                     return thePayload.PayloadPacket.PayloadPacket;
                 }
 
                 return thePayload;
-            } else
-            {
-                log.Debug("else");
-                return packet.PayloadPacket;
             }
+
+            Log.Debug("else");
+            return packet.PayloadPacket;
         }
     }
 }

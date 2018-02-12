@@ -1,32 +1,45 @@
+using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
-    /// Abstract class for all radio tap fields
+    ///     Abstract class for all radio tap fields
     /// </summary>
     public abstract class RadioTapField
     {
         /// <summary>Type of the field</summary>
-        public abstract RadioTapType FieldType
-        { get; }
+        public abstract RadioTapType FieldType { get; }
 
         /// <summary>
-        /// Parse a radio tap field, indicated by bitIndex, from a given BinaryReader
+        ///     Gets the length of the field data.
+        /// </summary>
+        /// <value>
+        ///     The length.
+        /// </value>
+        public abstract UInt16 Length { get; }
+
+        /// <summary>
+        ///     Copies the field data to the destination buffer at the specified offset.
+        /// </summary>
+        public abstract void CopyTo(Byte[] dest, Int32 offset);
+
+        /// <summary>
+        ///     Parse a radio tap field, indicated by bitIndex, from a given BinaryReader
         /// </summary>
         /// <param name="bitIndex">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <param name="br">
-        /// A <see cref="BinaryReader"/>
+        ///     A <see cref="BinaryReader" />
         /// </param>
         /// <returns>
-        /// A <see cref="RadioTapField"/>
+        ///     A <see cref="RadioTapField" />
         /// </returns>
-        public static RadioTapField Parse(int bitIndex, BinaryReader br)
+        public static RadioTapField Parse(Int32 bitIndex, BinaryReader br)
         {
-            var Type = (RadioTapType)bitIndex;
-            switch (Type)
+            var type = (RadioTapType) bitIndex;
+            switch (type)
             {
                 case RadioTapType.Flags:
                     return new FlagsRadioTapField(br);
@@ -63,18 +76,5 @@ namespace PacketDotNet.Ieee80211
                     return null;
             }
         }
-            
-        /// <summary>
-        /// Gets the length of the field data.
-        /// </summary>
-        /// <value>
-        /// The length.
-        /// </value>
-        public abstract ushort Length {get;}
-            
-        /// <summary>
-        /// Copies the field data to the destination buffer at the specified offset.
-        /// </summary>
-        public abstract void CopyTo(byte[] dest, int offset);
-    };
+    }
 }

@@ -23,8 +23,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet.IP
 {
     /// <summary>
-    /// Indicates the protocol encapsulated by the PPP packet
-    /// See http://www.iana.org/assignments/ppp-numbers
+    ///     Indicates the protocol encapsulated by the PPP packet
+    ///     See http://www.iana.org/assignments/ppp-numbers
     /// </summary>
     public enum RawIPPacketProtocol : ushort
     {
@@ -32,7 +32,6 @@ namespace PacketDotNet.IP
         IPv4 = 4,
 
         /// <summary> IPv6 </summary>
-        IPv6 = 6,
+        IPv6 = 6
     }
 }
-

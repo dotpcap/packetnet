@@ -19,15 +19,18 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet.ARP
 {
     /// <summary>
-    /// The possible ARP operation values
+    ///     The possible ARP operation values
     /// </summary>
     /// <remarks>
-    /// References:
-    ///  - http://www.networksorcery.com/enp/default1101.htm
+    ///     References:
+    ///     - http://www.networksorcery.com/enp/default1101.htm
     /// </remarks>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum ARPOperation : ushort
     {
         /// <summary>Request</summary>

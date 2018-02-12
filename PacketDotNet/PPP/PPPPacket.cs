@@ -22,103 +22,105 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.IP;
-using PacketDotNet.MiscUtil.Utils;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Conversion;
 
 namespace PacketDotNet.PPP
 {
     /// <summary>
-    /// PPP packet
-    /// See http://en.wikipedia.org/wiki/Point-to-Point_Protocol
+    ///     PPP packet
+    ///     See http://en.wikipedia.org/wiki/Point-to-Point_Protocol
     /// </summary>
     [Serializable]
     public class PPPPacket : Packet
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
         /// <summary>
-        /// See http://www.iana.org/assignments/ppp-numbers
+        ///     See http://www.iana.org/assignments/ppp-numbers
         /// </summary>
         public PPPProtocol Protocol
         {
-            get => (PPPProtocol)EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + PPPFields.ProtocolPosition);
+            get => (PPPProtocol) EndianBitConverter.Big.ToUInt16(this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + PPPFields.ProtocolPosition);
 
             set
             {
-                var val = (UInt16)value;
-                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + PPPFields.ProtocolPosition);
+                var val = (UInt16) value;
+                EndianBitConverter.Big.CopyBytes(val, this.HeaderByteArraySegment.Bytes,
+                    this.HeaderByteArraySegment.Offset + PPPFields.ProtocolPosition);
             }
         }
 
         /// <summary>
-        /// Construct a new PPPPacket from source and destination mac addresses
+        ///     Construct a new PPPPacket from source and destination mac addresses
         /// </summary>
-        public PPPPacket(PPPoECode Code,
-                     UInt16 SessionId)
+        public PPPPacket(PPPoECode code,
+            UInt16 sessionId)
         {
-            log.Debug("");
+            Log.Debug("");
 
             // allocate memory for this packet
-            int offset = 0;
-            int length = PPPFields.HeaderLength;
-            var headerBytes = new byte[length];
-            this.header = new ByteArraySegment(headerBytes, offset, length);
+            Int32 offset = 0;
+            Int32 length = PPPFields.HeaderLength;
+            var headerBytes = new Byte[length];
+            this.HeaderByteArraySegment = new ByteArraySegment(headerBytes, offset, length);
 
             // setup some typical values and default values
             this.Protocol = PPPProtocol.Padding;
         }
 
         /// <summary>
-        /// Constructor
+        ///     Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        ///     A <see cref="ByteArraySegment" />
         /// </param>
         public PPPPacket(ByteArraySegment bas)
         {
-            log.Debug("");
+            Log.Debug("");
 
             // slice off the header portion as our header
-            this.header = new ByteArraySegment(bas)
+            this.HeaderByteArraySegment = new ByteArraySegment(bas)
             {
                 Length = PPPFields.HeaderLength
             };
 
             // parse the encapsulated bytes
-            this.payloadPacketOrData = ParseEncapsulatedBytes(this.header, this.Protocol);
+            this.PayloadPacketOrData = ParseEncapsulatedBytes(this.HeaderByteArraySegment, this.Protocol);
         }
 
-        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
-                                                                        PPPProtocol Protocol)
+        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment header,
+            PPPProtocol protocol)
         {
             // slice off the payload
-            var payload = Header.EncapsulatedBytes();
+            var payload = header.EncapsulatedBytes();
 
-            log.DebugFormat("payload: {0}", payload);
+            Log.DebugFormat("payload: {0}", payload);
 
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
-            switch(Protocol)
+            switch (protocol)
             {
-            case PPPProtocol.IPv4:
-                payloadPacketOrData.ThePacket = new IPv4Packet(payload);
-                break;
-            case PPPProtocol.IPv6:
-                payloadPacketOrData.ThePacket = new IPv6Packet(payload);
-                break;
-            default:
-                //Probably a control packet, lets just add it to the data
-                payloadPacketOrData.TheByteArraySegment = payload;
-                break;
+                case PPPProtocol.IPv4:
+                    payloadPacketOrData.ThePacket = new IPv4Packet(payload);
+                    break;
+                case PPPProtocol.IPv6:
+                    payloadPacketOrData.ThePacket = new IPv6Packet(payload);
+                    break;
+                default:
+                    //Probably a control packet, lets just add it to the data
+                    payloadPacketOrData.TheByteArraySegment = payload;
+                    break;
             }
 
             return payloadPacketOrData;
@@ -128,56 +130,62 @@ namespace PacketDotNet.PPP
         public override String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
-            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
                 color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            switch (outputFormat)
             {
-                // build the output string
-                buffer.AppendFormat("{0}[PPPPacket: Protocol={2}]{1}",
-                    color,
-                    colorEscape, this.Protocol);
-            }
+                case StringOutputType.Normal:
+                case StringOutputType.Colored:
+                    // build the output string
+                    buffer.AppendFormat("{0}[PPPPacket: Protocol={2}]{1}",
+                        color,
+                        colorEscape, this.Protocol);
+                    break;
+                case StringOutputType.Verbose:
+                case StringOutputType.VerboseColored:
+                    // collect the properties and their value
+                    Dictionary<String, String> properties = new Dictionary<String, String>
+                    {
+                        {"protocol", this.Protocol + " (0x" + this.Protocol.ToString("x") + ")"}
+                    };
 
-            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
-            {
-                // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
-                properties.Add("protocol", this.Protocol.ToString() + " (0x" + this.Protocol.ToString("x") + ")");
+                    // calculate the padding needed to right-justify the property names
+                    Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
-                // calculate the padding needed to right-justify the property names
-                int padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                    // build the output string
+                    buffer.AppendLine("PPP:  ******* PPP - \"Point-to-Point Protocol\" - offset=? length=" +
+                                      this.TotalPacketLength);
+                    buffer.AppendLine("PPP:");
+                    foreach (var property in properties)
+                    {
+                        buffer.AppendLine("PPP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    }
 
-                // build the output string
-                buffer.AppendLine("PPP:  ******* PPP - \"Point-to-Point Protocol\" - offset=? length=" + this.TotalPacketLength);
-                buffer.AppendLine("PPP:");
-                foreach(var property in properties)
-                {
-                    buffer.AppendLine("PPP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
-                }
-                buffer.AppendLine("PPP:");
+                    buffer.AppendLine("PPP:");
+                    break;
             }
 
             // append the base output
-            buffer.Append((string) base.ToString(outputFormat));
+            buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
         }
 
         /// <summary>
-        /// Generate a random PPPoEPacket
+        ///     Generate a random PPPoEPacket
         /// </summary>
         /// <returns>
-        /// A <see cref="PPPoEPacket"/>
+        ///     A <see cref="PPPoEPacket" />
         /// </returns>
         public static PPPoEPacket RandomPacket()
         {
@@ -185,4 +193,3 @@ namespace PacketDotNet.PPP
         }
     }
 }
-

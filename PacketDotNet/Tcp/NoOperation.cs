@@ -17,61 +17,60 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
+
 using System;
 
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// No Operation Option
-    ///  Used in the TCP Options field to pad the length to the next 32 byte boundary
+    ///     No Operation Option
+    ///     Used in the TCP Options field to pad the length to the next 32 byte boundary
     /// </summary>
     /// <remarks>
-    /// References:
-    ///  http://datatracker.ietf.org/doc/rfc793/
+    ///     References:
+    ///     http://datatracker.ietf.org/doc/rfc793/
     /// </remarks>
     public class NoOperation : Option
     {
+        #region Members
+
+        /// <summary>
+        ///     The length (in bytes) of the NoOperation option
+        /// </summary>
+        internal const Int32 OptionLength = 1;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
-        /// Creates a No Operation Option
+        ///     Creates a No Operation Option
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="T:System.Byte[]"/>
+        ///     A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
-        public NoOperation(byte[] bytes, int offset, int length) :
+        public NoOperation(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
-        { }
+        {
+        }
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// The length of the NoOperation field
-        ///  Returns 1 as opposed to returning the length field because
-        ///  the NoOperation option is only 1 byte long and doesn't
-        ///  contain a length field
+        ///     The length of the NoOperation field
+        ///     Returns 1 as opposed to returning the length field because
+        ///     the NoOperation option is only 1 byte long and doesn't
+        ///     contain a length field
         /// </summary>
-        public override byte Length
-        {
-            get { return NoOperation.OptionLength; }
-        }
-
-        #endregion
-
-        #region Members
-
-        /// <summary>
-        /// The length (in bytes) of the NoOperation option
-        /// </summary>
-        internal const int OptionLength = 1;
+        public override Byte Length => OptionLength;
 
         #endregion
     }

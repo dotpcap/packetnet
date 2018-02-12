@@ -19,14 +19,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.IO;
 using System.Net;
+using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
+using PacketDotNet;
+using PacketDotNet.IGMP;
 using SharpPcap;
 using SharpPcap.LibPcap;
-using PacketDotNet;
-using PacketDotNet.Utils;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Test.PacketType
 {
@@ -34,110 +34,38 @@ namespace Test.PacketType
     public class IGMPv2PacketTest
     {
         [Test]
-        public void Parsing()
-        {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/IGMP dataset.pcap");
-            dev.Open();
-
-            RawCapture rawCapture;
-
-            int packetIndex = 0;
-            while((rawCapture = dev.GetNextPacket()) != null)
-            {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                Assert.IsNotNull(p);
-
-                var igmp = (IGMPv2Packet)p.Extract (typeof(IGMPv2Packet));
-                Assert.IsNotNull(p);
-
-                if(packetIndex == 0)
-                {
-                    Assert.AreEqual(igmp.Type, IGMPMessageType.MembershipQuery);
-                    Assert.AreEqual(igmp.MaxResponseTime, 100);
-                    Assert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new byte[2] { 0xEE, 0x9B }, 0));
-                    Assert.AreEqual(igmp.GroupAddress, IPAddress.Parse("0.0.0.0"));
-                }
-
-                if(packetIndex == 1)
-                {
-                    Assert.AreEqual(igmp.Type, IGMPMessageType.MembershipReportIGMPv2);
-                    Assert.AreEqual(igmp.MaxResponseTime, 0.0);
-                    Assert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new byte[2] { 0x08, 0xC3 }, 0));
-                    Assert.AreEqual(igmp.GroupAddress, IPAddress.Parse("224.0.1.60"));
-                }
-
-                if(packetIndex > 1)
-                    break;
-
-                packetIndex++;
-            }
-            dev.Close();
-        }
-
-         [Test]
-        public void PrintString()
-        {
-            Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/IGMP dataset.pcap");
-            dev.Open();
-            Console.WriteLine("Reading packet data");
-            var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-            Console.WriteLine("Parsing");
-            var igmpV2 = (IGMPv2Packet)p.Extract (typeof(IGMPv2Packet));
-
-            Console.WriteLine("Printing human readable string");
-            Console.WriteLine(igmpV2.ToString());
-        }
-
-        [Test]
-        public void PrintVerboseString()
-        {
-            Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/IGMP dataset.pcap");
-            dev.Open();
-            Console.WriteLine("Reading packet data");
-            var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-            Console.WriteLine("Parsing");
-            var igmpV2 = (IGMPv2Packet)p.Extract (typeof(IGMPv2Packet));
-
-            Console.WriteLine("Printing human readable string");
-            Console.WriteLine(igmpV2.ToString(StringOutputType.Verbose));
-        }
-        [Test]
         public void BinarySerialization()
         {
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/IGMP dataset.pcap");
             dev.Open();
 
             RawCapture rawCapture;
-            bool foundigmp = false;
+            Boolean foundigmp = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var igmp = (IGMPv2Packet)p.Extract(typeof(IGMPv2Packet));
+                var igmp = (IGMPv2Packet) p.Extract(typeof(IGMPv2Packet));
                 if (igmp == null)
                 {
                     continue;
                 }
+
                 foundigmp = true;
 
                 var memoryStream = new MemoryStream();
                 BinaryFormatter serializer = new BinaryFormatter();
                 serializer.Serialize(memoryStream, igmp);
 
-                memoryStream.Seek (0, SeekOrigin.Begin);
+                memoryStream.Seek(0, SeekOrigin.Begin);
                 BinaryFormatter deserializer = new BinaryFormatter();
-                IGMPv2Packet fromFile = (IGMPv2Packet)deserializer.Deserialize(memoryStream);
+                IGMPv2Packet fromFile = (IGMPv2Packet) deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(igmp.Bytes, fromFile.Bytes);
                 Assert.AreEqual(igmp.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
                 Assert.AreEqual(igmp.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
                 Assert.AreEqual(igmp.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(igmp.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
+                Assert.AreEqual(igmp.BytesHighPerformance.NeedsCopyForActualBytes,
+                    fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(igmp.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(igmp.Checksum, fromFile.Checksum);
                 Assert.AreEqual(igmp.Color, fromFile.Color);
@@ -160,8 +88,83 @@ namespace Test.PacketType
             }
 
             dev.Close();
-            Assert.IsTrue (foundigmp, "Capture file contained no igmp packets");
+            Assert.IsTrue(foundigmp, "Capture file contained no igmp packets");
         }
-    
+
+        [Test]
+        public void Parsing()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/IGMP dataset.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+
+            Int32 packetIndex = 0;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                Assert.IsNotNull(p);
+
+                var igmp = (IGMPv2Packet) p.Extract(typeof(IGMPv2Packet));
+                Assert.IsNotNull(p);
+
+                if (packetIndex == 0)
+                {
+                    Assert.AreEqual(igmp.Type, IGMPMessageType.MembershipQuery);
+                    Assert.AreEqual(igmp.MaxResponseTime, 100);
+                    Assert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new Byte[2] {0xEE, 0x9B}, 0));
+                    Assert.AreEqual(igmp.GroupAddress, IPAddress.Parse("0.0.0.0"));
+                }
+
+                if (packetIndex == 1)
+                {
+                    Assert.AreEqual(igmp.Type, IGMPMessageType.MembershipReportIGMPv2);
+                    Assert.AreEqual(igmp.MaxResponseTime, 0.0);
+                    Assert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new Byte[2] {0x08, 0xC3}, 0));
+                    Assert.AreEqual(igmp.GroupAddress, IPAddress.Parse("224.0.1.60"));
+                }
+
+                if (packetIndex > 1)
+                    break;
+
+                packetIndex++;
+            }
+
+            dev.Close();
+        }
+
+        [Test]
+        public void PrintString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/IGMP dataset.pcap");
+            dev.Open();
+            Console.WriteLine("Reading packet data");
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+            Console.WriteLine("Parsing");
+            var igmpV2 = (IGMPv2Packet) p.Extract(typeof(IGMPv2Packet));
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(igmpV2.ToString());
+        }
+
+        [Test]
+        public void PrintVerboseString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/IGMP dataset.pcap");
+            dev.Open();
+            Console.WriteLine("Reading packet data");
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+            Console.WriteLine("Parsing");
+            var igmpV2 = (IGMPv2Packet) p.Extract(typeof(IGMPv2Packet));
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(igmpV2.ToString(StringOutputType.Verbose));
+        }
     }
 }

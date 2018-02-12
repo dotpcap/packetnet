@@ -18,109 +18,111 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
-using System.Net;
 using System.Net.NetworkInformation;
+using System.Text;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// A Chassis ID TLV
+    ///     A Chassis ID TLV
     /// </summary>
     [Serializable]
     public class ChassisID : TLV
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
         /// <summary>
-        /// Length of the sub type field in bytes
+        ///     Length of the sub type field in bytes
         /// </summary>
-        private const int SubTypeLength = 1;
+        private const Int32 SubTypeLength = 1;
 
         #region Constructors
 
         /// <summary>
-        /// Creates a Chassis ID TLV by parsing a byte[]
+        ///     Creates a Chassis ID TLV by parsing a byte[]
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The Chassis ID TLV's offset from the
-        /// origin of the LLDP
+        ///     The Chassis ID TLV's offset from the
+        ///     origin of the LLDP
         /// </param>
-        public ChassisID(byte[] bytes, int offset) :
+        public ChassisID(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {
-            log.Debug("");
+            Log.Debug("");
         }
 
         /// <summary>
-        /// Creates a Chassis ID TLV and sets it value
+        ///     Creates a Chassis ID TLV and sets it value
         /// </summary>
         /// <param name="subType">
-        /// The ChassisID subtype
+        ///     The ChassisID subtype
         /// </param>
         /// <param name="subTypeValue">
-        /// The subtype's value
+        ///     The subtype's value
         /// </param>
-        public ChassisID(ChassisSubTypes subType, object subTypeValue)
+        public ChassisID(ChassisSubTypes subType, Object subTypeValue)
         {
-            log.DebugFormat("subType {0}", subType);
+            Log.DebugFormat("subType {0}", subType);
 
-            EmptyTLVDataInit();
+            this.EmptyTLVDataInit();
 
-            Type = TLVTypes.ChassisID;
+            this.Type = TLVTypes.ChassisID;
 
-            SubType = subType;
+            this.SubType = subType;
 
             // method will resize the tlv
-            SubTypeValue = subTypeValue;
+            this.SubTypeValue = subTypeValue;
         }
 
         /// <summary>
-        /// Create a ChassisID given a mac address
+        ///     Create a ChassisID given a mac address
         /// </summary>
-        /// <param name="MACAddress">
-        /// A <see cref="PhysicalAddress"/>
+        /// <param name="macAddress">
+        ///     A <see cref="PhysicalAddress" />
         /// </param>
-        public ChassisID(PhysicalAddress MACAddress)
+        public ChassisID(PhysicalAddress macAddress)
         {
-            log.DebugFormat("MACAddress {0}", MACAddress.ToString());
+            Log.DebugFormat("MACAddress {0}", macAddress.ToString());
 
-            EmptyTLVDataInit();
+            this.EmptyTLVDataInit();
 
-            Type = TLVTypes.ChassisID;
-            SubType = ChassisSubTypes.MACAddress;
+            this.Type = TLVTypes.ChassisID;
+            this.SubType = ChassisSubTypes.MACAddress;
 
-            SubTypeValue = MACAddress;
+            this.SubTypeValue = macAddress;
         }
 
         /// <summary>
-        /// Create a ChassisID given an interface name
-        /// http://tools.ietf.org/search/rfc2863 page 38
+        ///     Create a ChassisID given an interface name
+        ///     http://tools.ietf.org/search/rfc2863 page 38
         /// </summary>
-        /// <param name="InterfaceName">
-        /// A <see cref="System.String"/>
+        /// <param name="interfaceName">
+        ///     A <see cref="System.String" />
         /// </param>
-        public ChassisID(string InterfaceName)
+        public ChassisID(String interfaceName)
         {
-            log.DebugFormat("InterfaceName {0}", InterfaceName);
+            Log.DebugFormat("InterfaceName {0}", interfaceName);
 
-            EmptyTLVDataInit();
+            this.EmptyTLVDataInit();
 
-            Type = TLVTypes.ChassisID;
-            SubType = ChassisSubTypes.InterfaceName;
+            this.Type = TLVTypes.ChassisID;
+            this.SubType = ChassisSubTypes.InterfaceName;
 
-            SetSubTypeValue(InterfaceName);
+            this.SetSubTypeValue(interfaceName);
         }
 
         #endregion
@@ -128,106 +130,99 @@ namespace PacketDotNet.LLDP
         #region Properties
 
         /// <value>
-        /// The type of the TLV subtype
+        ///     The type of the TLV subtype
         /// </value>
         public ChassisSubTypes SubType
         {
-            get
-            {
-                return (ChassisSubTypes)tlvData.Bytes[ValueOffset];
-            }
+            get => (ChassisSubTypes) this.TLVData.Bytes[this.ValueOffset];
 
-            set
-            {
-                // set the subtype
-                tlvData.Bytes[ValueOffset] = (byte)value;
-            }
+            set => this.TLVData.Bytes[this.ValueOffset] = (Byte) value;
         }
 
         /// <value>
-        /// The TLV subtype value
+        ///     The TLV subtype value
         /// </value>
-        public object SubTypeValue
+        public Object SubTypeValue
         {
-            get { return GetSubTypeValue(); }
-            set { SetSubTypeValue(value); }
+            get => this.GetSubTypeValue();
+            set => this.SetSubTypeValue(value);
         }
 
         /// <summary>
-        /// If SubType is ChassisComponent
+        ///     If SubType is ChassisComponent
         /// </summary>
-        public byte[] ChassisComponent
+        public Byte[] ChassisComponent
         {
-            get { return (byte[])GetSubTypeValue(); }
+            get => (Byte[]) this.GetSubTypeValue();
             set
             {
-                SubType = ChassisSubTypes.ChassisComponent;
-                SetSubTypeValue(value);
+                this.SubType = ChassisSubTypes.ChassisComponent;
+                this.SetSubTypeValue(value);
             }
         }
 
         /// <summary>
-        /// If SubType is InterfaceName the interface name
+        ///     If SubType is InterfaceName the interface name
         /// </summary>
-        public string InterfaceName
+        public String InterfaceName
         {
-            get { return (string)GetSubTypeValue(); }
+            get => (String) this.GetSubTypeValue();
             set
             {
-                SubType = ChassisSubTypes.InterfaceName;
-                SetSubTypeValue(value);
+                this.SubType = ChassisSubTypes.InterfaceName;
+                this.SetSubTypeValue(value);
             }
         }
 
         /// <summary>
-        /// If SubType is MACAddress the mac address
+        ///     If SubType is MACAddress the mac address
         /// </summary>
         public PhysicalAddress MACAddress
         {
-            get { return (PhysicalAddress)GetSubTypeValue(); }
+            get => (PhysicalAddress) this.GetSubTypeValue();
             set
             {
-                SubType = ChassisSubTypes.MACAddress;
-                SetSubTypeValue(value);
+                this.SubType = ChassisSubTypes.MACAddress;
+                this.SetSubTypeValue(value);
             }
         }
 
         /// <summary>
-        /// If SubType is NetworkAddress the network address
+        ///     If SubType is NetworkAddress the network address
         /// </summary>
-        public LLDP.NetworkAddress NetworkAddress
+        public NetworkAddress NetworkAddress
         {
-            get { return (LLDP.NetworkAddress)GetSubTypeValue(); }
+            get => (NetworkAddress) this.GetSubTypeValue();
             set
             {
-                SubType = ChassisSubTypes.NetworkAddress;
-                SetSubTypeValue(value);
+                this.SubType = ChassisSubTypes.NetworkAddress;
+                this.SetSubTypeValue(value);
             }
         }
 
         /// <summary>
-        /// If SubType is PortComponent
+        ///     If SubType is PortComponent
         /// </summary>
-        public byte[] PortComponent
+        public Byte[] PortComponent
         {
-            get { return (byte[])GetSubTypeValue(); }
+            get => (Byte[]) this.GetSubTypeValue();
             set
             {
-                SubType = ChassisSubTypes.PortComponent;
-                SetSubTypeValue(value);
+                this.SubType = ChassisSubTypes.PortComponent;
+                this.SetSubTypeValue(value);
             }
         }
 
         /// <summary>
-        /// If SubType is InterfaceAlias
+        ///     If SubType is InterfaceAlias
         /// </summary>
-        public byte[] InterfaceAlias
+        public Byte[] InterfaceAlias
         {
-            get { return (byte[])GetSubTypeValue(); }
+            get => (Byte[]) this.GetSubTypeValue();
             set
             {
-                SubType = ChassisSubTypes.InterfaceAlias;
-                SetSubTypeValue(value);
+                this.SubType = ChassisSubTypes.InterfaceAlias;
+                this.SetSubTypeValue(value);
             }
         }
 
@@ -236,135 +231,135 @@ namespace PacketDotNet.LLDP
         #region Methods
 
         /// <summary>
-        /// Helper method to reduce duplication in type specific constructors
+        ///     Helper method to reduce duplication in type specific constructors
         /// </summary>
         private void EmptyTLVDataInit()
         {
             var length = TLVTypeLength.TypeLengthLength + SubTypeLength;
-            var bytes = new byte[length];
-            int offset = 0;
-            tlvData = new ByteArraySegment(bytes, offset, length);
+            var bytes = new Byte[length];
+            Int32 offset = 0;
+            this.TLVData = new ByteArraySegment(bytes, offset, length);
         }
 
-        private object GetSubTypeValue()
+        private Object GetSubTypeValue()
         {
-            byte[] val;
-            int dataOffset = ValueOffset + SubTypeLength;
-            int dataLength = Length - SubTypeLength;
+            Byte[] val;
+            Int32 dataOffset = this.ValueOffset + SubTypeLength;
+            Int32 dataLength = this.Length - SubTypeLength;
 
-            switch (SubType)
+            switch (this.SubType)
             {
                 case ChassisSubTypes.ChassisComponent:
                 case ChassisSubTypes.InterfaceAlias:
                 case ChassisSubTypes.LocallyAssigned:
                 case ChassisSubTypes.PortComponent:
-                    val = new byte[dataLength];
-                    Array.Copy(tlvData.Bytes, dataOffset,
-                               val, 0,
-                               dataLength);
+                    val = new Byte[dataLength];
+                    Array.Copy(this.TLVData.Bytes, dataOffset,
+                        val, 0,
+                        dataLength);
                     return val;
                 case ChassisSubTypes.NetworkAddress:
-                    return new NetworkAddress(tlvData.Bytes,
-                                              dataOffset,
-                                              dataLength);
+                    return new NetworkAddress(this.TLVData.Bytes,
+                        dataOffset,
+                        dataLength);
                 case ChassisSubTypes.MACAddress:
-                    val = new byte[dataLength];
-                    Array.Copy(tlvData.Bytes, dataOffset,
-                               val, 0,
-                               dataLength);
+                    val = new Byte[dataLength];
+                    Array.Copy(this.TLVData.Bytes, dataOffset,
+                        val, 0,
+                        dataLength);
                     return new PhysicalAddress(val);
                 case ChassisSubTypes.InterfaceName:
-                    return System.Text.ASCIIEncoding.ASCII.GetString(tlvData.Bytes, dataOffset, dataLength);
+                    return Encoding.ASCII.GetString(this.TLVData.Bytes, dataOffset, dataLength);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        private void SetSubTypeValue(object val)
+        private void SetSubTypeValue(Object val)
         {
-            byte[] valBytes;
+            Byte[] valBytes;
 
             // make sure we have the correct type
-            switch (SubType)
+            switch (this.SubType)
             {
                 case ChassisSubTypes.ChassisComponent:
                 case ChassisSubTypes.InterfaceAlias:
                 case ChassisSubTypes.LocallyAssigned:
                 case ChassisSubTypes.PortComponent:
-                    if(!(val is byte[]))
+                    if (!(val is Byte[]))
                     {
                         throw new ArgumentOutOfRangeException("expected byte[] for type");
                     }
 
-                    valBytes = (byte[])val;
+                    valBytes = (Byte[]) val;
 
-                    SetSubTypeValue(valBytes);
+                    this.SetSubTypeValue(valBytes);
                     break;
                 case ChassisSubTypes.NetworkAddress:
-                    if(!(val is NetworkAddress))
+                    if (!(val is NetworkAddress))
                     {
                         throw new ArgumentOutOfRangeException("expected NetworkAddress instance for NetworkAddress");
                     }
 
-                    valBytes = ((NetworkAddress)val).Bytes;
+                    valBytes = ((NetworkAddress) val).Bytes;
 
-                    SetSubTypeValue(valBytes);
+                    this.SetSubTypeValue(valBytes);
                     break;
                 case ChassisSubTypes.InterfaceName:
-                    if(!(val is string))
+                    if (!(val is String))
                     {
                         throw new ArgumentOutOfRangeException("expected string for InterfaceName");
                     }
 
-                    var interfaceName = (string)val;
+                    var interfaceName = (String) val;
 
-                    valBytes = System.Text.ASCIIEncoding.ASCII.GetBytes(interfaceName);
+                    valBytes = Encoding.ASCII.GetBytes(interfaceName);
 
-                    SetSubTypeValue(valBytes);
+                    this.SetSubTypeValue(valBytes);
                     break;
                 case ChassisSubTypes.MACAddress:
-                    if(!(val is PhysicalAddress))
+                    if (!(val is PhysicalAddress))
                     {
                         throw new ArgumentOutOfRangeException("expected PhysicalAddress for MACAddress");
                     }
 
-                    var physicalAddress = (PhysicalAddress)val;
+                    var physicalAddress = (PhysicalAddress) val;
 
-                    SetSubTypeValue(physicalAddress.GetAddressBytes());
+                    this.SetSubTypeValue(physicalAddress.GetAddressBytes());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        private void SetSubTypeValue(byte[] subTypeValue)
+        private void SetSubTypeValue(Byte[] subTypeValue)
         {
             // is the length different than the current length?
-            if(subTypeValue.Length != Length)
+            if (subTypeValue.Length != this.Length)
             {
                 var headerLength = TLVTypeLength.TypeLengthLength + SubTypeLength;
-                var newTlvMemory = new byte[headerLength + subTypeValue.Length];
+                var newTlvMemory = new Byte[headerLength + subTypeValue.Length];
 
                 // copy the header data over
-                Array.Copy(tlvData.Bytes, tlvData.Offset, newTlvMemory, 0, headerLength);
+                Array.Copy(this.TLVData.Bytes, this.TLVData.Offset, newTlvMemory, 0, headerLength);
 
                 // update the tlv memory pointer, offset and length
-                tlvData = new ByteArraySegment(newTlvMemory, 0, newTlvMemory.Length);
+                this.TLVData = new ByteArraySegment(newTlvMemory, 0, newTlvMemory.Length);
             }
 
-            Array.Copy(subTypeValue, 0, tlvData.Bytes, ValueOffset + SubTypeLength,
-                       subTypeValue.Length);
+            Array.Copy(subTypeValue, 0, this.TLVData.Bytes, this.ValueOffset + SubTypeLength,
+                subTypeValue.Length);
         }
 
         /// <summary>
-        /// Convert this Chassis ID TLV to a string.
+        ///     Convert this Chassis ID TLV to a string.
         /// </summary>
         /// <returns>
-        /// A human readable string
+        ///     A human readable string
         /// </returns>
-        public override string ToString ()
+        public override String ToString()
         {
-            return string.Format("[ChassisID: SubType={0}, SubTypeValue={1}]", SubType, SubTypeValue);
+            return String.Format("[ChassisID: SubType={0}, SubTypeValue={1}]", this.SubType, this.SubTypeValue);
         }
 
         #endregion

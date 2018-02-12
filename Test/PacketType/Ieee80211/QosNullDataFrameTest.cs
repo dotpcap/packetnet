@@ -19,15 +19,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using SharpPcap.LibPcap;
-using PacketDotNet;
-using PacketDotNet.Utils;
-using PacketDotNet.Ieee80211;
 using System.Net.NetworkInformation;
+using NUnit.Framework;
+using PacketDotNet;
+using PacketDotNet.Ieee80211;
+using PacketDotNet.Utils;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -37,7 +34,7 @@ namespace Test.PacketType
         public class QosNullDataFrameTest
         {
             /// <summary>
-            /// Test that parsing a QOS null data frame yields the proper field values
+            ///     Test that parsing a QOS null data frame yields the proper field values
             /// </summary>
             [Test]
             public void Test_Constructor()
@@ -48,7 +45,7 @@ namespace Test.PacketType
                 dev.Close();
 
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                QosNullDataFrame frame = (QosNullDataFrame)p.PayloadPacket;
+                QosNullDataFrame frame = (QosNullDataFrame) p.PayloadPacket;
 
                 Assert.AreEqual(0, frame.FrameControl.ProtocolVersion);
                 Assert.AreEqual(FrameControlField.FrameSubTypes.QosNullData, frame.FrameControl.SubType);
@@ -70,66 +67,66 @@ namespace Test.PacketType
                 Assert.AreEqual(0xDBF2B119, frame.FrameCheckSequence);
                 Assert.AreEqual(26, frame.FrameSize);
             }
-            
-            
+
+
             [Test]
-            public void Test_Constructor_ConstructWithValues ()
+            public void Test_Constructor_ConstructWithValues()
             {
-                QosNullDataFrame frame = new QosNullDataFrame ();
-                
+                QosNullDataFrame frame = new QosNullDataFrame();
+
                 frame.FrameControl.ToDS = false;
                 frame.FrameControl.FromDS = true;
                 frame.FrameControl.MoreFragments = true;
-                
+
                 frame.SequenceControl.SequenceNumber = 0x89;
                 frame.SequenceControl.FragmentNumber = 0x1;
-                
+
                 frame.Duration.Field = 0x1234;
-                
+
                 frame.QosControl = 0x9876;
-                
-                frame.DestinationAddress = PhysicalAddress.Parse ("111111111111");
-                frame.SourceAddress = PhysicalAddress.Parse ("222222222222");
-                frame.BssId = PhysicalAddress.Parse ("333333333333");
-                
-                frame.PayloadData = new byte[]{0x01, 0x02, 0x03, 0x04, 0x05};
-                
-                frame.AppendFcs= true;
-                frame.UpdateFrameCheckSequence ();
+
+                frame.DestinationAddress = PhysicalAddress.Parse("111111111111");
+                frame.SourceAddress = PhysicalAddress.Parse("222222222222");
+                frame.BssId = PhysicalAddress.Parse("333333333333");
+
+                frame.PayloadData = new Byte[] {0x01, 0x02, 0x03, 0x04, 0x05};
+
+                frame.AppendFcs = true;
+                frame.UpdateFrameCheckSequence();
                 UInt32 fcs = frame.FrameCheckSequence;
-                
+
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
-                var bas = new ByteArraySegment (bytes);
-                
+                var bas = new ByteArraySegment(bytes);
+
                 //create a new frame that should be identical to the original
-                QosNullDataFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as QosNullDataFrame;
-                
-                Assert.AreEqual (FrameControlField.FrameSubTypes.QosNullData, recreatedFrame.FrameControl.SubType);
-                Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
-                Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
-                Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);
-                
-                Assert.AreEqual (0x89, recreatedFrame.SequenceControl.SequenceNumber);
-                Assert.AreEqual (0x1, recreatedFrame.SequenceControl.FragmentNumber);
-                
-                Assert.AreEqual (0x9876, recreatedFrame.QosControl);
-                
-                Assert.AreEqual ("111111111111", recreatedFrame.DestinationAddress.ToString ().ToUpper ());
-                Assert.AreEqual ("222222222222", recreatedFrame.SourceAddress.ToString ().ToUpper ());
-                Assert.AreEqual ("333333333333", recreatedFrame.BssId.ToString ().ToUpper ());
-                
-                Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
+                QosNullDataFrame recreatedFrame = MacFrame.ParsePacketWithFcs(bas) as QosNullDataFrame;
+
+                Assert.AreEqual(FrameControlField.FrameSubTypes.QosNullData, recreatedFrame.FrameControl.SubType);
+                Assert.IsFalse(recreatedFrame.FrameControl.ToDS);
+                Assert.IsTrue(recreatedFrame.FrameControl.FromDS);
+                Assert.IsTrue(recreatedFrame.FrameControl.MoreFragments);
+
+                Assert.AreEqual(0x89, recreatedFrame.SequenceControl.SequenceNumber);
+                Assert.AreEqual(0x1, recreatedFrame.SequenceControl.FragmentNumber);
+
+                Assert.AreEqual(0x9876, recreatedFrame.QosControl);
+
+                Assert.AreEqual("111111111111", recreatedFrame.DestinationAddress.ToString().ToUpper());
+                Assert.AreEqual("222222222222", recreatedFrame.SourceAddress.ToString().ToUpper());
+                Assert.AreEqual("333333333333", recreatedFrame.BssId.ToString().ToUpper());
+
+                Assert.AreEqual(fcs, recreatedFrame.FrameCheckSequence);
             }
-			
-			[Test]
-			public void Test_ConstructorWithCorruptBuffer ()
-			{
-				//buffer is way too short for frame. We are just checking it doesn't throw
-				byte[] corruptBuffer = new byte[]{0x01};
-				QosNullDataFrame frame = new QosNullDataFrame(new ByteArraySegment(corruptBuffer));
-				Assert.IsFalse(frame.FCSValid);
-			}
-        } 
+
+            [Test]
+            public void Test_ConstructorWithCorruptBuffer()
+            {
+                //buffer is way too short for frame. We are just checking it doesn't throw
+                Byte[] corruptBuffer = {0x01};
+                QosNullDataFrame frame = new QosNullDataFrame(new ByteArraySegment(corruptBuffer));
+                Assert.IsFalse(frame.FCSValid);
+            }
+        }
     }
 }

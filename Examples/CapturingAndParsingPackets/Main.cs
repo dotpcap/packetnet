@@ -1,25 +1,26 @@
 using System;
-using SharpPcap;
 using PacketDotNet;
+using SharpPcap;
+using Version = SharpPcap.Version;
 
 namespace CapturingAndParsingPackets
 {
-    class MainClass
+    internal class MainClass
     {
         // used to stop the capture loop
-        private static bool stopCapturing = false;
+        private static Boolean _stopCapturing;
 
-        public static void Main(string[] args)
+        public static void Main(String[] args)
         {
             // Print SharpPcap version
-            string ver = SharpPcap.Version.VersionString;
+            String ver = Version.VersionString;
             Console.WriteLine("PacketDotNet example using SharpPcap {0}", ver);
 
             // Retrieve the device list
             var devices = CaptureDeviceList.Instance;
 
             // If no devices were found print an error
-            if(devices.Count < 1)
+            if (devices.Count < 1)
             {
                 Console.WriteLine("No devices were found on this machine");
                 return;
@@ -30,10 +31,10 @@ namespace CapturingAndParsingPackets
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine();
 
-            int i = 0;
+            Int32 i = 0;
 
             // Print out the devices
-            foreach(var dev in devices)
+            foreach (var dev in devices)
             {
                 /* Description */
                 Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
@@ -42,7 +43,7 @@ namespace CapturingAndParsingPackets
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to capture: ");
-            i = int.Parse( Console.ReadLine() );
+            i = Int32.Parse(Console.ReadLine());
 
             // Register a cancle handler that lets us break out of our capture loop
             Console.CancelKeyPress += HandleCancelKeyPress;
@@ -50,21 +51,21 @@ namespace CapturingAndParsingPackets
             var device = devices[i];
 
             // Open the device for capturing
-            int readTimeoutMilliseconds = 1000;
+            Int32 readTimeoutMilliseconds = 1000;
             device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
 
             Console.WriteLine();
             Console.WriteLine("-- Listening on {0}, hit 'ctrl-c' to stop...",
                 device.Name);
 
-            while(stopCapturing == false)
+            while (_stopCapturing == false)
             {
                 var rawCapture = device.GetNextPacket();
 
                 // null packets can be returned in the case where
                 // the GetNextRawPacket() timed out, we should just attempt
                 // to retrieve another packet by looping the while() again
-                if(rawCapture == null)
+                if (rawCapture == null)
                 {
                     // go back to the start of the while()
                     continue;
@@ -86,10 +87,10 @@ namespace CapturingAndParsingPackets
             device.Close();
         }
 
-        static void HandleCancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        private static void HandleCancelKeyPress(Object sender, ConsoleCancelEventArgs e)
         {
             Console.WriteLine("-- Stopping capture");
-            stopCapturing = true;
+            _stopCapturing = true;
 
             // tell the handler that we are taking care of shutting down, don't
             // shut us down after we return because we need to do just a little

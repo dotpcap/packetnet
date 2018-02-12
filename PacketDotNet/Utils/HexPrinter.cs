@@ -22,33 +22,33 @@ using System.Text;
 namespace PacketDotNet.Utils
 {
     /// <summary>
-    /// Helper class that prints out an array of hex values
+    ///     Helper class that prints out an array of hex values
     /// </summary>
     public class HexPrinter
     {
         /// <summary>
-        /// Create a string that contains the hex values of byte[] Byte in
-        /// text form
+        ///     Create a string that contains the hex values of byte[] Byte in
+        ///     text form
         /// </summary>
         /// <param name="Byte">
-        /// A <see cref="System.Byte"/>
+        ///     A <see cref="System.Byte" />
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
+        /// <param name="offset">
+        ///     A <see cref="System.Int32" />
         /// </param>
-        /// <param name="Length">
-        /// A <see cref="System.Int32"/>
+        /// <param name="length">
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.String"/>
+        ///     A <see cref="System.String" />
         /// </returns>
-        public static string GetString(byte[] Byte,
-                                       int Offset,
-                                       int Length)
+        public static String GetString(Byte[] Byte,
+            Int32 offset,
+            Int32 length)
         {
             StringBuilder sb = new StringBuilder();
 
-            for(int i = Offset; i < Offset + Length; i++)
+            for (Int32 i = offset; i < offset + length; i++)
             {
                 sb.AppendFormat("[{0:x2}]", Byte[i]);
             }
@@ -57,23 +57,24 @@ namespace PacketDotNet.Utils
         }
 
         /// <summary>
-        /// Creates a string from a Physical address in the format "xx:xx:xx:xx:xx:xx"
+        ///     Creates a string from a Physical address in the format "xx:xx:xx:xx:xx:xx"
         /// </summary>
         /// <param name="address">
-        /// A <see cref="PhysicalAddress"/>
+        ///     A <see cref="PhysicalAddress" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.String"/>
+        ///     A <see cref="System.String" />
         /// </returns>
-        public static string PrintMACAddress(PhysicalAddress address)
+        public static String PrintMACAddress(PhysicalAddress address)
         {
-            byte[] bytes = address.GetAddressBytes();
-            string output = "";
+            Byte[] bytes = address.GetAddressBytes();
+            String output = "";
 
-            for(int i = 0; i < bytes.Length; i++)
+            for (Int32 i = 0; i < bytes.Length; i++)
             {
                 output += bytes[i].ToString("x").PadLeft(2, '0') + ":";
             }
+
             return output.TrimEnd(':');
         }
     }

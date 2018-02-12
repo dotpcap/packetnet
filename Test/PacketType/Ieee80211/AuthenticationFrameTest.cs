@@ -19,15 +19,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net.NetworkInformation;
 using NUnit.Framework;
-using SharpPcap.LibPcap;
-using PacketDotNet.Utils;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
-using System.Net.NetworkInformation;
+using PacketDotNet.Utils;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -37,7 +34,7 @@ namespace Test.PacketType
         public class AuthenticationFrameTest
         {
             /// <summary>
-            /// Test that parsing a authentication frame yields the proper field values
+            ///     Test that parsing a authentication frame yields the proper field values
             /// </summary>
             [Test]
             public void Test_Constructor()
@@ -48,7 +45,7 @@ namespace Test.PacketType
                 dev.Close();
 
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                AuthenticationFrame frame = (AuthenticationFrame)p.PayloadPacket;
+                AuthenticationFrame frame = (AuthenticationFrame) p.PayloadPacket;
 
                 Assert.AreEqual(0, frame.FrameControl.ProtocolVersion);
                 Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementAuthentication, frame.FrameControl.SubType);
@@ -75,112 +72,114 @@ namespace Test.PacketType
                 Assert.AreEqual(30, frame.FrameSize);
             }
 
-            /// <summary>
-            /// Test that parsing a authentication frame with information elements yields the proper field values
-            /// </summary>
             [Test]
-            public void Test_Constructor_WithInformationElements ()
+            public void Test_Constructor_ConstructWithValues()
             {
-                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_authentication_frame_with_ie.pcap");
-                dev.Open ();
-                var rawCapture = dev.GetNextPacket ();
-                dev.Close ();
+                InformationElement ssidInfoElement = new InformationElement(
+                    InformationElement.ElementId.ServiceSetIdentity,
+                    new Byte[] {0x68, 0x65, 0x6c, 0x6c, 0x6f});
+                InformationElement vendorElement = new InformationElement(InformationElement.ElementId.VendorSpecific,
+                    new Byte[] {0x01, 0x02, 0x03, 0x04, 0x05});
 
-                Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
-                AuthenticationFrame frame = (AuthenticationFrame)p.PayloadPacket;
 
-                Assert.AreEqual (0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementAuthentication, frame.FrameControl.SubType);
-                Assert.IsFalse (frame.FrameControl.ToDS);
-                Assert.IsFalse (frame.FrameControl.FromDS);
-                Assert.IsFalse (frame.FrameControl.MoreFragments);
-                Assert.IsFalse (frame.FrameControl.Retry);
-                Assert.IsFalse (frame.FrameControl.PowerManagement);
-                Assert.IsFalse (frame.FrameControl.MoreData);
-                Assert.IsFalse (frame.FrameControl.Protected);
-                Assert.IsFalse (frame.FrameControl.Order);
-                Assert.AreEqual (314, frame.Duration.Field); //this need expanding on in the future
-                Assert.AreEqual ("00173FB72C29", frame.DestinationAddress.ToString ().ToUpper ());
-                Assert.AreEqual ("0024B2F8D706", frame.SourceAddress.ToString ().ToUpper ());
-                Assert.AreEqual ("0024B2F8D706", frame.BssId.ToString ().ToUpper ());
-                Assert.AreEqual (0, frame.SequenceControl.FragmentNumber);
-                Assert.AreEqual (957, frame.SequenceControl.SequenceNumber);
+                AuthenticationFrame frame = new AuthenticationFrame(PhysicalAddress.Parse("111111111111"),
+                    PhysicalAddress.Parse("222222222222"),
+                    PhysicalAddress.Parse("333333333333"),
+                    new InformationElementList {ssidInfoElement, vendorElement});
 
-                Assert.AreEqual (0, frame.AuthenticationAlgorithmNumber);
-                Assert.AreEqual (2, frame.AuthenticationAlgorithmTransactionSequenceNumber);
-                Assert.AreEqual (AuthenticationStatusCode.Success, frame.StatusCode);
-                Assert.AreEqual (InformationElement.ElementId.VendorSpecific, frame.InformationElements [0].Id);
-                Assert.AreEqual (9, frame.InformationElements [0].ValueLength);
-
-                Assert.AreEqual (0x5B12F62C, frame.FrameCheckSequence);
-                Assert.AreEqual (41, frame.FrameSize);
-            }
-            
-            [Test]
-            public void Test_Constructor_ConstructWithValues ()
-            {
-                InformationElement ssidInfoElement = new InformationElement (InformationElement.ElementId.ServiceSetIdentity, 
-                                                                           new Byte[] { 0x68, 0x65, 0x6c, 0x6c, 0x6f });
-                InformationElement vendorElement = new InformationElement (InformationElement.ElementId.VendorSpecific,
-                                                                           new Byte[] {0x01, 0x02, 0x03, 0x04, 0x05});
-                
-                
-                AuthenticationFrame frame = new AuthenticationFrame (PhysicalAddress.Parse ("111111111111"),
-                                                                     PhysicalAddress.Parse ("222222222222"),
-                                                                     PhysicalAddress.Parse ("333333333333"),
-                                                                     new InformationElementList (){ssidInfoElement, vendorElement});
-                
                 frame.FrameControl.ToDS = false;
                 frame.FrameControl.FromDS = true;
                 frame.FrameControl.MoreFragments = true;
-                
+
                 frame.Duration.Field = 0x1234;
-                
+
                 frame.SequenceControl.SequenceNumber = 0x77;
                 frame.SequenceControl.FragmentNumber = 0x1;
-                
+
                 frame.AuthenticationAlgorithmNumber = 0x4444;
                 frame.AuthenticationAlgorithmTransactionSequenceNumber = 0x5555;
                 frame.StatusCode = AuthenticationStatusCode.Success;
-                
-                frame.UpdateFrameCheckSequence ();
+
+                frame.UpdateFrameCheckSequence();
                 UInt32 fcs = frame.FrameCheckSequence;
-                
+
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
-                var bas = new ByteArraySegment (bytes);
+                var bas = new ByteArraySegment(bytes);
 
                 //create a new frame that should be identical to the original
-                AuthenticationFrame recreatedFrame = MacFrame.ParsePacket (bas) as AuthenticationFrame;
+                AuthenticationFrame recreatedFrame = MacFrame.ParsePacket(bas) as AuthenticationFrame;
                 recreatedFrame.UpdateFrameCheckSequence();
-                
-                Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementAuthentication, recreatedFrame.FrameControl.SubType);
-                Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
-                Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
-                Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);
-                
-                Assert.AreEqual (0x77, recreatedFrame.SequenceControl.SequenceNumber);
-                Assert.AreEqual (0x1, recreatedFrame.SequenceControl.FragmentNumber);
-                
-                Assert.AreEqual (0x4444, recreatedFrame.AuthenticationAlgorithmNumber);
-                Assert.AreEqual (0x5555, recreatedFrame.AuthenticationAlgorithmTransactionSequenceNumber);
-                Assert.AreEqual (AuthenticationStatusCode.Success, recreatedFrame.StatusCode);
-                
-                Assert.AreEqual ("111111111111", recreatedFrame.SourceAddress.ToString ().ToUpper ());
-                Assert.AreEqual ("222222222222", recreatedFrame.DestinationAddress.ToString ().ToUpper ());
-                Assert.AreEqual ("333333333333", recreatedFrame.BssId.ToString ().ToUpper ());
-                
-                Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
+
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementAuthentication,
+                    recreatedFrame.FrameControl.SubType);
+                Assert.IsFalse(recreatedFrame.FrameControl.ToDS);
+                Assert.IsTrue(recreatedFrame.FrameControl.FromDS);
+                Assert.IsTrue(recreatedFrame.FrameControl.MoreFragments);
+
+                Assert.AreEqual(0x77, recreatedFrame.SequenceControl.SequenceNumber);
+                Assert.AreEqual(0x1, recreatedFrame.SequenceControl.FragmentNumber);
+
+                Assert.AreEqual(0x4444, recreatedFrame.AuthenticationAlgorithmNumber);
+                Assert.AreEqual(0x5555, recreatedFrame.AuthenticationAlgorithmTransactionSequenceNumber);
+                Assert.AreEqual(AuthenticationStatusCode.Success, recreatedFrame.StatusCode);
+
+                Assert.AreEqual("111111111111", recreatedFrame.SourceAddress.ToString().ToUpper());
+                Assert.AreEqual("222222222222", recreatedFrame.DestinationAddress.ToString().ToUpper());
+                Assert.AreEqual("333333333333", recreatedFrame.BssId.ToString().ToUpper());
+
+                Assert.AreEqual(fcs, recreatedFrame.FrameCheckSequence);
             }
-			
-			[Test]
-			public void Test_ConstructorWithCorruptBuffer ()
-			{
-				//buffer is way too short for frame. We are just checking it doesn't throw
-				byte[] corruptBuffer = new byte[]{0x01};
-				AuthenticationFrame frame = new AuthenticationFrame(new ByteArraySegment(corruptBuffer));
-				Assert.IsFalse(frame.FCSValid);
-			}
-        } 
+
+            /// <summary>
+            ///     Test that parsing a authentication frame with information elements yields the proper field values
+            /// </summary>
+            [Test]
+            public void Test_Constructor_WithInformationElements()
+            {
+                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_authentication_frame_with_ie.pcap");
+                dev.Open();
+                var rawCapture = dev.GetNextPacket();
+                dev.Close();
+
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                AuthenticationFrame frame = (AuthenticationFrame) p.PayloadPacket;
+
+                Assert.AreEqual(0, frame.FrameControl.ProtocolVersion);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementAuthentication, frame.FrameControl.SubType);
+                Assert.IsFalse(frame.FrameControl.ToDS);
+                Assert.IsFalse(frame.FrameControl.FromDS);
+                Assert.IsFalse(frame.FrameControl.MoreFragments);
+                Assert.IsFalse(frame.FrameControl.Retry);
+                Assert.IsFalse(frame.FrameControl.PowerManagement);
+                Assert.IsFalse(frame.FrameControl.MoreData);
+                Assert.IsFalse(frame.FrameControl.Protected);
+                Assert.IsFalse(frame.FrameControl.Order);
+                Assert.AreEqual(314, frame.Duration.Field); //this need expanding on in the future
+                Assert.AreEqual("00173FB72C29", frame.DestinationAddress.ToString().ToUpper());
+                Assert.AreEqual("0024B2F8D706", frame.SourceAddress.ToString().ToUpper());
+                Assert.AreEqual("0024B2F8D706", frame.BssId.ToString().ToUpper());
+                Assert.AreEqual(0, frame.SequenceControl.FragmentNumber);
+                Assert.AreEqual(957, frame.SequenceControl.SequenceNumber);
+
+                Assert.AreEqual(0, frame.AuthenticationAlgorithmNumber);
+                Assert.AreEqual(2, frame.AuthenticationAlgorithmTransactionSequenceNumber);
+                Assert.AreEqual(AuthenticationStatusCode.Success, frame.StatusCode);
+                Assert.AreEqual(InformationElement.ElementId.VendorSpecific, frame.InformationElements[0].Id);
+                Assert.AreEqual(9, frame.InformationElements[0].ValueLength);
+
+                Assert.AreEqual(0x5B12F62C, frame.FrameCheckSequence);
+                Assert.AreEqual(41, frame.FrameSize);
+            }
+
+            [Test]
+            public void Test_ConstructorWithCorruptBuffer()
+            {
+                //buffer is way too short for frame. We are just checking it doesn't throw
+                Byte[] corruptBuffer = {0x01};
+                AuthenticationFrame frame = new AuthenticationFrame(new ByteArraySegment(corruptBuffer));
+                Assert.IsFalse(frame.FCSValid);
+            }
+        }
     }
 }

@@ -18,13 +18,15 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
+using System.Text;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// Base class for several TLV types that all contain strings
+    ///     Base class for several TLV types that all contain strings
     /// </summary>
     [Serializable]
     public class StringTLV : TLV
@@ -32,35 +34,36 @@ namespace PacketDotNet.LLDP
         #region Constructors
 
         /// <summary>
-        /// Creates a String TLV
+        ///     Creates a String TLV
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The Port Description TLV's offset from the
-        /// origin of the LLDP
+        ///     The Port Description TLV's offset from the
+        ///     origin of the LLDP
         /// </param>
-        public StringTLV(byte[] bytes, int offset) :
+        public StringTLV(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
-        {}
+        {
+        }
 
         /// <summary>
-        /// Create from a type and string value
+        ///     Create from a type and string value
         /// </summary>
         /// <param name="tlvType">
-        /// A <see cref="TLVTypes"/>
+        ///     A <see cref="TLVTypes" />
         /// </param>
-        /// <param name="StringValue">
-        /// A <see cref="System.String"/>
+        /// <param name="stringValue">
+        ///     A <see cref="System.String" />
         /// </param>
-        public StringTLV(TLVTypes tlvType, string StringValue)
+        public StringTLV(TLVTypes tlvType, String stringValue)
         {
-            var bytes = new byte[TLVTypeLength.TypeLengthLength];
+            var bytes = new Byte[TLVTypeLength.TypeLengthLength];
             var offset = 0;
-            tlvData = new ByteArraySegment(bytes, offset, bytes.Length);
+            this.TLVData = new ByteArraySegment(bytes, offset, bytes.Length);
 
-            Type = tlvType;
-            this.StringValue = StringValue;
+            this.Type = tlvType;
+            this.StringValue = stringValue;
         }
 
         #endregion
@@ -68,53 +71,48 @@ namespace PacketDotNet.LLDP
         #region Properties
 
         /// <value>
-        /// A textual Description of the port
+        ///     A textual Description of the port
         /// </value>
-        public string StringValue
+        public String StringValue
         {
-            get
-            {
-                return System.Text.ASCIIEncoding.ASCII.GetString(tlvData.Bytes,
-                                                                 ValueOffset,
-                                                                 Length);
-            }
+            get => Encoding.ASCII.GetString(this.TLVData.Bytes, this.ValueOffset, this.Length);
 
             set
             {
-                var bytes = System.Text.ASCIIEncoding.ASCII.GetBytes(value);
+                var bytes = Encoding.ASCII.GetBytes(value);
                 var length = TLVTypeLength.TypeLengthLength + bytes.Length;
 
                 // is the tlv the correct size?
-                if(tlvData.Length != length)
+                if (this.TLVData.Length != length)
                 {
                     // allocate new memory for this tlv
-                    var newTLVBytes = new byte[length];
+                    var newTLVBytes = new Byte[length];
                     var offset = 0;
 
                     // copy header over
-                    Array.Copy(tlvData.Bytes, tlvData.Offset,
-                               newTLVBytes, 0,
-                               TLVTypeLength.TypeLengthLength);
+                    Array.Copy(this.TLVData.Bytes, this.TLVData.Offset,
+                        newTLVBytes, 0,
+                        TLVTypeLength.TypeLengthLength);
 
-                    tlvData = new ByteArraySegment(newTLVBytes, offset, length);
+                    this.TLVData = new ByteArraySegment(newTLVBytes, offset, length);
                 }
 
                 // set the description
                 Array.Copy(bytes, 0,
-                           tlvData.Bytes, ValueOffset,
-                           bytes.Length);
+                    this.TLVData.Bytes, this.ValueOffset,
+                    bytes.Length);
             }
         }
 
         /// <summary>
-        /// Convert this Port Description TLV to a string.
+        ///     Convert this Port Description TLV to a string.
         /// </summary>
         /// <returns>
-        /// A human readable string
+        ///     A human readable string
         /// </returns>
-        public override string ToString ()
+        public override String ToString()
         {
-            return string.Format("[{0}: Description={1}]", Type, StringValue);
+            return $"[{this.Type}: Description={this.StringValue}]";
         }
 
         #endregion

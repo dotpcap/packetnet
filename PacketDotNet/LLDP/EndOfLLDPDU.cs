@@ -18,11 +18,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
+using PacketDotNet.Utils;
+
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// An End Of LLDPDU TLV
+    ///     An End Of LLDPDU TLV
     /// </summary>
     [Serializable]
     public class EndOfLLDPDU : TLV
@@ -30,45 +33,45 @@ namespace PacketDotNet.LLDP
         #region Constructors
 
         /// <summary>
-        /// Parses bytes into an End Of LLDPDU TLV
+        ///     Parses bytes into an End Of LLDPDU TLV
         /// </summary>
         /// <param name="bytes">
-        /// TLV bytes
+        ///     TLV bytes
         /// </param>
         /// <param name="offset">
-        /// The End Of LLDPDU TLV's offset from the
-        /// origin of the LLDP
+        ///     The End Of LLDPDU TLV's offset from the
+        ///     origin of the LLDP
         /// </param>
-        public EndOfLLDPDU(byte[] bytes, int offset) :
+        public EndOfLLDPDU(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {
-            Type = 0;
-            Length = 0;
+            this.Type = 0;
+            this.Length = 0;
         }
 
         /// <summary>
-        /// Creates an End Of LLDPDU TLV
+        ///     Creates an End Of LLDPDU TLV
         /// </summary>
         public EndOfLLDPDU()
         {
-            var bytes = new byte[TLVTypeLength.TypeLengthLength];
+            var bytes = new Byte[TLVTypeLength.TypeLengthLength];
             var offset = 0;
             var length = bytes.Length;
-            tlvData = new PacketDotNet.Utils.ByteArraySegment(bytes, offset, length);
+            this.TLVData = new ByteArraySegment(bytes, offset, length);
 
-            Type = 0;
-            Length = 0;
+            this.Type = 0;
+            this.Length = 0;
         }
 
         /// <summary>
-        /// Convert this TTL TLV to a string.
+        ///     Convert this TTL TLV to a string.
         /// </summary>
         /// <returns>
-        /// A human readable string
+        ///     A human readable string
         /// </returns>
-        public override string ToString ()
+        public override String ToString()
         {
-            return string.Format("[EndOfLLDPDU]");
+            return "[EndOfLLDPDU]";
         }
 
         #endregion

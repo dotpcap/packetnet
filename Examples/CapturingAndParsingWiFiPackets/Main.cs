@@ -1,24 +1,23 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using SharpPcap;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
+using SharpPcap;
 using SharpPcap.AirPcap;
+using Version = SharpPcap.Version;
 
 namespace CapturingAndParsingWiFiPackets
 {
-    class MainClass
+    internal class MainClass
     {
         // used to stop the capture loop
-        private static bool stopCapturing = false;
+        private static Boolean _stopCapturing;
 
-        public static void Main (string[] args)
+        public static void Main(String[] args)
         {
             // Print SharpPcap version
-            string ver = SharpPcap.Version.VersionString;
-            Console.WriteLine ("PacketDotNet example using SharpPcap {0}", ver);
+            String ver = Version.VersionString;
+            Console.WriteLine("PacketDotNet example using SharpPcap {0}", ver);
 
             // Retrieve the device list
             var devices = AirPcapDeviceList.Instance;
@@ -26,28 +25,28 @@ namespace CapturingAndParsingWiFiPackets
             // If no devices were found print an error
             if (devices.Count < 1)
             {
-                Console.WriteLine ("No devices were found on this machine");
+                Console.WriteLine("No devices were found on this machine");
                 return;
             }
 
-            Console.WriteLine ();
-            Console.WriteLine ("The following devices are available on this machine:");
-            Console.WriteLine ("----------------------------------------------------");
-            Console.WriteLine ();
+            Console.WriteLine();
+            Console.WriteLine("The following devices are available on this machine:");
+            Console.WriteLine("----------------------------------------------------");
+            Console.WriteLine();
 
-            int i = 0;
+            Int32 i = 0;
 
             // Print out the devices
             foreach (var dev in devices)
             {
                 /* Description */
-                Console.WriteLine ("{0}) {1} {2}", i, dev.Name, dev.Description);
+                Console.WriteLine("{0}) {1} {2}", i, dev.Name, dev.Description);
                 i++;
             }
 
-            Console.WriteLine ();
-            Console.Write ("-- Please choose a device to capture: ");
-            i = int.Parse (Console.ReadLine ());
+            Console.WriteLine();
+            Console.Write("-- Please choose a device to capture: ");
+            i = Int32.Parse(Console.ReadLine());
 
             // Register a cancle handler that lets us break out of our capture loop
             // since we currently need to synchronously receive packets in order to get
@@ -56,20 +55,20 @@ namespace CapturingAndParsingWiFiPackets
             // use a PcapDevice.OnPacketArrival handler
             Console.CancelKeyPress += HandleCancelKeyPress;
 
-            var device = (AirPcapDevice)devices [i];
+            var device = (AirPcapDevice) devices[i];
 
             // Open the device for capturing
-            int readTimeoutMilliseconds = 1000;
-            device.Open (DeviceMode.Promiscuous, readTimeoutMilliseconds);
+            Int32 readTimeoutMilliseconds = 1000;
+            device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
             device.FcsValidation = AirPcapValidationType.ACCEPT_CORRECT_FRAMES;
 
-            Console.WriteLine ();
-            Console.WriteLine ("-- Listening on {0}, hit 'ctrl-c' to stop...",
+            Console.WriteLine();
+            Console.WriteLine("-- Listening on {0}, hit 'ctrl-c' to stop...",
                 device.Name);
 
-            while (stopCapturing == false)
+            while (_stopCapturing == false)
             {
-                var rawCapture = device.GetNextPacket ();
+                var rawCapture = device.GetNextPacket();
 
                 // null packets can be returned in the case where
                 // the GetNextRawPacket() timed out, we should just attempt
@@ -82,30 +81,32 @@ namespace CapturingAndParsingWiFiPackets
 
                 // use PacketDotNet to parse this packet and print out
                 // its high level information
-                Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
-                MacFrame macFrame = (MacFrame)p.PayloadPacket;
-                if ((macFrame != null) && 
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                MacFrame macFrame = (MacFrame) p.PayloadPacket;
+                if ((macFrame != null) &&
                     (macFrame.FrameControl.SubType == FrameControlField.FrameSubTypes.ManagementBeacon))
                 {
-                    BeaconFrame beaconFrame = (BeaconFrame)macFrame;
-                    var ie = beaconFrame.InformationElements.FindFirstById(InformationElement.ElementId.ServiceSetIdentity);
-                    Console.WriteLine ("Network: {0}, Access Point Address: {1}", Encoding.UTF8.GetString (ie.Value), beaconFrame.SourceAddress);       
+                    BeaconFrame beaconFrame = (BeaconFrame) macFrame;
+                    var ie = beaconFrame.InformationElements.FindFirstById(InformationElement.ElementId
+                        .ServiceSetIdentity);
+                    Console.WriteLine("Network: {0}, Access Point Address: {1}", Encoding.UTF8.GetString(ie.Value),
+                        beaconFrame.SourceAddress);
                 }
             }
 
-            Console.WriteLine ("-- Capture stopped");
+            Console.WriteLine("-- Capture stopped");
 
             // Print out the device statistics
-            Console.WriteLine (device.Statistics.ToString ());
+            Console.WriteLine(device.Statistics.ToString());
 
             // Close the pcap device
-            device.Close ();
+            device.Close();
         }
 
-        static void HandleCancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        private static void HandleCancelKeyPress(Object sender, ConsoleCancelEventArgs e)
         {
             Console.WriteLine("-- Stopping capture");
-            stopCapturing = true;
+            _stopCapturing = true;
 
             // tell the handler that we are taking care of shutting down, don't
             // shut us down after we return because we need to do just a little

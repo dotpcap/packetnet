@@ -19,159 +19,148 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using PacketDotNet.Utils;
 using System.Net.NetworkInformation;
+using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    #region Action Category Enums
+
+    //The following enums define the category and type of action. At present these are 
+    //not handled and parsed but they are left here for future reference as tracking them down 
+    //was not that easy
+
+    //enum ActionCategory
+    //{
+    //    SpectrumManagement = 0x0,
+    //    Qos = 0x1,
+    //    Dls = 0x2,
+    //    BlockAck = 0x3,
+    //    VendorSpecific = 0x127
+    //}
+
+    //enum SpectrumManagementAction
+    //{
+    //    MeasurementRequest = 0x0,
+    //    MeasurementReport = 0x1,
+    //    TpcRequest = 0x2,
+    //    TpcReport = 0x3,
+    //    ChannelSwitchAnnouncement = 0x4
+    //}
+
+    //enum QosAction
+    //{
+    //    TrafficSpecificationRequest = 0x0,
+    //    TrafficSpecificationResponse = 0x1,
+    //    TrafficSpecificationDelete = 0x2,
+    //    Schedule = 0x3
+    //}
+
+    //enum DlsAction
+    //{
+    //    DlsRequest = 0x0,
+    //    DlsResponse = 0x1,
+    //    DlsTeardown = 0x2
+    //}
+
+    //enum BlockAcknowledgmentActions
+    //{
+    //    BlockAcknowledgmentRequest = 0x0,
+    //    BlockAcknowledgmentResponse = 0x1,
+    //    BlockAcknowledgmentDelete = 0x2
+    //}
+
+    #endregion
+
+    /// <summary>
+    ///     Format of an 802.11 management action frame. These frames are used by the 802.11e (QoS) and 802.11n standards to
+    ///     request actions of stations.
+    /// </summary>
+    public class ActionFrame : ManagementFrame
     {
-        #region Action Category Enums
-
-
-        //The following enums define the category and type of action. At present these are 
-        //not handled and parsed but they are left here for future reference as tracking them down 
-        //was not that easy
-
-        //enum ActionCategory
-        //{
-        //    SpectrumManagement = 0x0,
-        //    Qos = 0x1,
-        //    Dls = 0x2,
-        //    BlockAck = 0x3,
-        //    VendorSpecific = 0x127
-        //}
-
-        //enum SpectrumManagementAction
-        //{
-        //    MeasurementRequest = 0x0,
-        //    MeasurementReport = 0x1,
-        //    TpcRequest = 0x2,
-        //    TpcReport = 0x3,
-        //    ChannelSwitchAnnouncement = 0x4
-        //}
-
-        //enum QosAction
-        //{
-        //    TrafficSpecificationRequest = 0x0,
-        //    TrafficSpecificationResponse = 0x1,
-        //    TrafficSpecificationDelete = 0x2,
-        //    Schedule = 0x3
-        //}
-
-        //enum DlsAction
-        //{
-        //    DlsRequest = 0x0,
-        //    DlsResponse = 0x1,
-        //    DlsTeardown = 0x2
-        //}
-
-        //enum BlockAcknowledgmentActions
-        //{
-        //    BlockAcknowledgmentRequest = 0x0,
-        //    BlockAcknowledgmentResponse = 0x1,
-        //    BlockAcknowledgmentDelete = 0x2
-        //}
-
-        #endregion
-
         /// <summary>
-        /// Format of an 802.11 management action frame. These frames are used by the 802.11e (QoS) and 802.11n standards to request actions of stations.
+        ///     Constructor
         /// </summary>
-        public class ActionFrame : ManagementFrame
+        /// <param name="bas">
+        ///     A <see cref="ByteArraySegment" />
+        /// </param>
+        public ActionFrame(ByteArraySegment bas)
         {
-            /// <summary>
-            /// Gets the size of the frame in bytes
-            /// </summary>
-            /// <value>
-            /// The size of the frame.
-            /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength);
-                }
-            }
+            this.HeaderByteArraySegment = new ByteArraySegment(bas);
 
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public ActionFrame (ByteArraySegment bas)
-            {
-                header = new ByteArraySegment (bas);
+            this.FrameControl = new FrameControlField(this.FrameControlBytes);
+            this.Duration = new DurationField(this.DurationBytes);
+            this.DestinationAddress = this.GetAddress(0);
+            this.SourceAddress = this.GetAddress(1);
+            this.BssId = this.GetAddress(2);
+            this.SequenceControl = new SequenceControlField(this.SequenceControlBytes);
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                DestinationAddress = GetAddress (0);
-                SourceAddress = GetAddress (1);
-                BssId = GetAddress (2);
-                SequenceControl = new SequenceControlField (SequenceControlBytes);
-
-                header.Length = FrameSize; 
-                var availablePayloadLength = GetAvailablePayloadLength();
-				if(availablePayloadLength > 0)
-				{
-					payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (availablePayloadLength);
-				}
-            }
-            
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ActionFrame"/> class.
-            /// </summary>
-            /// <param name='SourceAddress'>
-            /// Source address.
-            /// </param>
-            /// <param name='DestinationAddress'>
-            /// Destination address.
-            /// </param>
-            /// <param name='BssId'>
-            /// Bss identifier.
-            /// </param>
-            public ActionFrame (PhysicalAddress SourceAddress,
-                                PhysicalAddress DestinationAddress,
-                                PhysicalAddress BssId)
+            this.HeaderByteArraySegment.Length = this.FrameSize;
+            var availablePayloadLength = this.GetAvailablePayloadLength();
+            if (availablePayloadLength > 0)
             {
-                this.FrameControl = new FrameControlField ();
-                this.Duration = new DurationField ();
-                this.DestinationAddress = DestinationAddress;
-                this.SourceAddress = SourceAddress;
-                this.BssId = BssId;
-                this.SequenceControl = new SequenceControlField ();
-                
-                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementAction;
+                this.PayloadPacketOrData.TheByteArraySegment =
+                    this.HeaderByteArraySegment.EncapsulatedBytes(availablePayloadLength);
             }
-   
-            /// <summary>
-            /// Writes the current packet properties to the backing ByteArraySegment.
-            /// </summary>
-            public override void UpdateCalculatedValues ()
-            {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
-                {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
-                }
-                
-                this.FrameControlBytes = this.FrameControl.Field;
-                this.DurationBytes = this.Duration.Field;
-                SetAddress (0, DestinationAddress);
-                SetAddress (1, SourceAddress);
-                SetAddress (2, BssId);
-                this.SequenceControlBytes = this.SequenceControl.Field;
-                
-            }
-            
         }
 
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ActionFrame" /> class.
+        /// </summary>
+        /// <param name='sourceAddress'>
+        ///     Source address.
+        /// </param>
+        /// <param name='destinationAddress'>
+        ///     Destination address.
+        /// </param>
+        /// <param name='bssId'>
+        ///     Bss identifier.
+        /// </param>
+        public ActionFrame(PhysicalAddress sourceAddress,
+            PhysicalAddress destinationAddress,
+            PhysicalAddress bssId)
+        {
+            this.FrameControl = new FrameControlField();
+            this.Duration = new DurationField();
+            this.DestinationAddress = destinationAddress;
+            this.SourceAddress = sourceAddress;
+            this.BssId = bssId;
+            this.SequenceControl = new SequenceControlField();
+
+            this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementAction;
+        }
+
+        /// <summary>
+        ///     Gets the size of the frame in bytes
+        /// </summary>
+        /// <value>
+        ///     The size of the frame.
+        /// </value>
+        public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                            MacFields.DurationIDLength +
+                                            (MacFields.AddressLength * 3) +
+                                            MacFields.SequenceControlLength);
+
+        /// <summary>
+        ///     Writes the current packet properties to the backing ByteArraySegment.
+        /// </summary>
+        public override void UpdateCalculatedValues()
+        {
+            if ((this.HeaderByteArraySegment == null) ||
+                (this.HeaderByteArraySegment.Length >
+                 (this.HeaderByteArraySegment.BytesLength - this.HeaderByteArraySegment.Offset)) ||
+                (this.HeaderByteArraySegment.Length < this.FrameSize))
+            {
+                this.HeaderByteArraySegment = new ByteArraySegment(new Byte[this.FrameSize]);
+            }
+
+            this.FrameControlBytes = this.FrameControl.Field;
+            this.DurationBytes = this.Duration.Field;
+            this.SetAddress(0, this.DestinationAddress);
+            this.SetAddress(1, this.SourceAddress);
+            this.SetAddress(2, this.BssId);
+            this.SequenceControlBytes = this.SequenceControl.Field;
+        }
     }
 }

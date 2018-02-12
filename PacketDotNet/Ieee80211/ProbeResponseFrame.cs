@@ -19,260 +19,238 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using PacketDotNet.Utils;
-using MiscUtil.Conversion;
 using System.Net.NetworkInformation;
+using PacketDotNet.Utils;
+using PacketDotNet.Utils.Conversion;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    ///     Probe response frames are sent by Access Points in response to probe requests by stations.
+    ///     An access point may respond to a probe request if it hosts a network with parameters compatible with those
+    ///     requested by the station.
+    /// </summary>
+    public class ProbeResponseFrame : ManagementFrame
     {
         /// <summary>
-        /// Probe response frames are sent by Access Points in response to probe requests by stations.
-        /// An access point may respond to a probe request if it hosts a network with parameters compatible with those
-        /// requested by the station.
+        ///     Constructor
         /// </summary>
-        public class ProbeResponseFrame : ManagementFrame
+        /// <param name="bas">
+        ///     A <see cref="ByteArraySegment" />
+        /// </param>
+        public ProbeResponseFrame(ByteArraySegment bas)
         {
-            private class ProbeResponseFields
+            this.HeaderByteArraySegment = new ByteArraySegment(bas);
+
+            this.FrameControl = new FrameControlField(this.FrameControlBytes);
+            this.Duration = new DurationField(this.DurationBytes);
+            this.DestinationAddress = this.GetAddress(0);
+            this.SourceAddress = this.GetAddress(1);
+            this.BssId = this.GetAddress(2);
+            this.SequenceControl = new SequenceControlField(this.SequenceControlBytes);
+            this.Timestamp = this.TimestampBytes;
+            this.BeaconInterval = this.BeaconIntervalBytes;
+            this.CapabilityInformation = new CapabilityInformationField(this.CapabilityInformationBytes);
+
+            if (bas.Length > ProbeResponseFields.InformationElement1Position)
             {
-                public readonly static int TimestampLength = 8;
-                public readonly static int BeaconIntervalLength = 2;
-                public readonly static int CapabilityInformationLength = 2;
+                //create a segment that just refers to the info element section
+                ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
+                    (bas.Offset + ProbeResponseFields.InformationElement1Position),
+                    (bas.Length - ProbeResponseFields.InformationElement1Position));
 
-                public readonly static int TimestampPosition;
-                public readonly static int BeaconIntervalPosition;
-                public readonly static int CapabilityInformationPosition;
-                public readonly static int InformationElement1Position;
-
-                static ProbeResponseFields()
-                {
-                    TimestampPosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
-                    BeaconIntervalPosition = TimestampPosition + TimestampLength;
-                    CapabilityInformationPosition = BeaconIntervalPosition + BeaconIntervalLength;
-                    InformationElement1Position = CapabilityInformationPosition + CapabilityInformationLength;
-                }
+                this.InformationElements = new InformationElementList(infoElementsSegment);
             }
-   
-            /// <summary>
-            /// Gets or sets the timestamp. The timestamp is used by a station to ensure that it
-            /// is using the most up to date parameters for the network.
-            /// </summary>
-            /// <value>
-            /// The timestamp.
-            /// </value>
-            public UInt64 Timestamp {get;set;}
-                
-            private UInt64 TimestampBytes
+            else
             {
-                get
-                {
-					if(header.Length >= (ProbeResponseFields.TimestampPosition + ProbeResponseFields.TimestampLength))
-					{
-						return EndianBitConverter.Little.ToUInt64(header.Bytes, header.Offset + ProbeResponseFields.TimestampPosition);
-					}
-					else
-					{
-						return 0;
-					}
-                }
-
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + ProbeResponseFields.TimestampPosition);
-                }
+                this.InformationElements = new InformationElementList();
             }
 
-            /// <summary>
-            /// Gets or sets the beacon interval. This is the minimum time between beacon frames from the access point.
-            /// </summary>
-            /// <value>
-            /// The beacon interval.
-            /// </value>
-            public UInt16 BeaconInterval { get; set; }
-            
-            private UInt16 BeaconIntervalBytes
+            //cant set length until after we have handled the information elements
+            //as they vary in length
+            this.HeaderByteArraySegment.Length = this.FrameSize;
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ProbeResponseFrame" /> class.
+        /// </summary>
+        /// <param name='sourceAddress'>
+        ///     Source address.
+        /// </param>
+        /// <param name='destinationAddress'>
+        ///     Destination address.
+        /// </param>
+        /// <param name='bssId'>
+        ///     Bss identifier (Mac address of the access point).
+        /// </param>
+        /// <param name='informationElements'>
+        ///     Information elements.
+        /// </param>
+        public ProbeResponseFrame(PhysicalAddress sourceAddress,
+            PhysicalAddress destinationAddress,
+            PhysicalAddress bssId,
+            InformationElementList informationElements)
+        {
+            this.FrameControl = new FrameControlField();
+            this.Duration = new DurationField();
+            this.DestinationAddress = destinationAddress;
+            this.SourceAddress = sourceAddress;
+            this.BssId = bssId;
+            this.SequenceControl = new SequenceControlField();
+            this.CapabilityInformation = new CapabilityInformationField();
+            this.InformationElements = new InformationElementList(informationElements);
+
+            this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementProbeResponse;
+        }
+
+        /// <summary>
+        ///     Length of the frame header.
+        ///     This does not include the FCS, it represents only the header bytes that would
+        ///     would preceed any payload.
+        /// </summary>
+        public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                            MacFields.DurationIDLength +
+                                            (MacFields.AddressLength * 3) +
+                                            MacFields.SequenceControlLength +
+                                            ProbeResponseFields.TimestampLength +
+                                            ProbeResponseFields.BeaconIntervalLength +
+                                            ProbeResponseFields.CapabilityInformationLength +
+                                            this.InformationElements.Length);
+
+        /// <summary>
+        ///     Gets or sets the beacon interval. This is the minimum time between beacon frames from the access point.
+        /// </summary>
+        /// <value>
+        ///     The beacon interval.
+        /// </value>
+        public UInt16 BeaconInterval { get; set; }
+
+        /// <summary>
+        ///     Get or set the capability information field that defines the capabilities of the network.
+        /// </summary>
+        public CapabilityInformationField CapabilityInformation { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the information elements included in the frame.
+        /// </summary>
+        /// <value>
+        ///     The information elements.
+        /// </value>
+        public InformationElementList InformationElements { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the timestamp. The timestamp is used by a station to ensure that it
+        ///     is using the most up to date parameters for the network.
+        /// </summary>
+        /// <value>
+        ///     The timestamp.
+        /// </value>
+        public UInt64 Timestamp { get; set; }
+
+        private UInt16 BeaconIntervalBytes
+        {
+            get
             {
-                get
+                if (this.HeaderByteArraySegment.Length >=
+                    (ProbeResponseFields.BeaconIntervalPosition + ProbeResponseFields.BeaconIntervalLength))
                 {
-					if(header.Length >= (ProbeResponseFields.BeaconIntervalPosition + ProbeResponseFields.BeaconIntervalLength))
-					{
-						return EndianBitConverter.Little.ToUInt16(header.Bytes, header.Offset + ProbeResponseFields.BeaconIntervalPosition);
-					}
-					else
-					{
-						return 0;
-					}
+                    return EndianBitConverter.Little.ToUInt16(this.HeaderByteArraySegment.Bytes,
+                        this.HeaderByteArraySegment.Offset + ProbeResponseFields.BeaconIntervalPosition);
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + ProbeResponseFields.BeaconIntervalPosition);
-                }
+                return 0;
             }
 
-            /// <summary>
-            /// Frame control bytes are the first two bytes of the frame
-            /// </summary>
-            private UInt16 CapabilityInformationBytes
+            set => EndianBitConverter.Little.CopyBytes(value, this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + ProbeResponseFields.BeaconIntervalPosition);
+        }
+
+        /// <summary>
+        ///     Frame control bytes are the first two bytes of the frame
+        /// </summary>
+        private UInt16 CapabilityInformationBytes
+        {
+            get
             {
-                get
+                if (this.HeaderByteArraySegment.Length >=
+                    (ProbeResponseFields.CapabilityInformationPosition +
+                     ProbeResponseFields.CapabilityInformationLength))
                 {
-					if(header.Length >= 
-					   (ProbeResponseFields.CapabilityInformationPosition + ProbeResponseFields.CapabilityInformationLength))
-					{
-						return EndianBitConverter.Little.ToUInt16(header.Bytes,
-						                                          header.Offset + ProbeResponseFields.CapabilityInformationPosition);
-					}
-					else
-					{
-						return 0;
-					}
+                    return EndianBitConverter.Little.ToUInt16(this.HeaderByteArraySegment.Bytes,
+                        this.HeaderByteArraySegment.Offset + ProbeResponseFields.CapabilityInformationPosition);
                 }
 
-                set
+                return 0;
+            }
+
+            set => EndianBitConverter.Little.CopyBytes(value, this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + ProbeResponseFields.CapabilityInformationPosition);
+        }
+
+        private UInt64 TimestampBytes
+        {
+            get
+            {
+                if (this.HeaderByteArraySegment.Length >=
+                    (ProbeResponseFields.TimestampPosition + ProbeResponseFields.TimestampLength))
                 {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + ProbeResponseFields.CapabilityInformationPosition);
+                    return EndianBitConverter.Little.ToUInt64(this.HeaderByteArraySegment.Bytes,
+                        this.HeaderByteArraySegment.Offset + ProbeResponseFields.TimestampPosition);
                 }
+
+                return 0;
             }
-   
-            /// <summary>
-            /// Get or set the capability information field that defines the capabilities of the network.
-            /// </summary>
-            public CapabilityInformationField CapabilityInformation {get; set;}
 
-            /// <summary>
-            /// Gets or sets the information elements included in the frame.
-            /// </summary>
-            /// <value>
-            /// The information elements.
-            /// </value>
-            public InformationElementList InformationElements { get; set; }
+            set => EndianBitConverter.Little.CopyBytes(value, this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + ProbeResponseFields.TimestampPosition);
+        }
 
-            /// <summary>
-            /// Length of the frame header.
-            /// 
-            /// This does not include the FCS, it represents only the header bytes that would
-            /// would preceed any payload.
-            /// </summary>
-            public override int FrameSize
+        /// <summary>
+        ///     Writes the current packet properties to the backing ByteArraySegment.
+        /// </summary>
+        public override void UpdateCalculatedValues()
+        {
+            if ((this.HeaderByteArraySegment == null) ||
+                (this.HeaderByteArraySegment.Length >
+                 (this.HeaderByteArraySegment.BytesLength - this.HeaderByteArraySegment.Offset)) ||
+                (this.HeaderByteArraySegment.Length < this.FrameSize))
             {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        ProbeResponseFields.TimestampLength +
-                        ProbeResponseFields.BeaconIntervalLength +
-                        ProbeResponseFields.CapabilityInformationLength +
-                        InformationElements.Length);
-                }
+                this.HeaderByteArraySegment = new ByteArraySegment(new Byte[this.FrameSize]);
             }
 
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public ProbeResponseFrame (ByteArraySegment bas)
+            this.FrameControlBytes = this.FrameControl.Field;
+            this.DurationBytes = this.Duration.Field;
+            this.SetAddress(0, this.DestinationAddress);
+            this.SetAddress(1, this.SourceAddress);
+            this.SetAddress(2, this.BssId);
+            this.SequenceControlBytes = this.SequenceControl.Field;
+            this.CapabilityInformationBytes = this.CapabilityInformation.Field;
+
+            //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
+            this.InformationElements.CopyTo(this.HeaderByteArraySegment,
+                this.HeaderByteArraySegment.Offset + ProbeResponseFields.InformationElement1Position);
+
+            this.HeaderByteArraySegment.Length = this.FrameSize;
+        }
+
+        private class ProbeResponseFields
+        {
+            public static readonly Int32 BeaconIntervalLength = 2;
+            public static readonly Int32 BeaconIntervalPosition;
+            public static readonly Int32 CapabilityInformationLength = 2;
+            public static readonly Int32 CapabilityInformationPosition;
+            public static readonly Int32 InformationElement1Position;
+            public static readonly Int32 TimestampLength = 8;
+
+            public static readonly Int32 TimestampPosition;
+
+            static ProbeResponseFields()
             {
-                header = new ByteArraySegment (bas);
-
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                DestinationAddress = GetAddress (0);
-                SourceAddress = GetAddress (1);
-                BssId = GetAddress (2);
-                SequenceControl = new SequenceControlField (SequenceControlBytes);
-                Timestamp = TimestampBytes;
-                BeaconInterval = BeaconIntervalBytes;
-                CapabilityInformation = new CapabilityInformationField (CapabilityInformationBytes);
-				
-				if(bas.Length > ProbeResponseFields.InformationElement1Position)
-				{
-                	//create a segment that just refers to the info element section
-                	ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
-                    	(bas.Offset + ProbeResponseFields.InformationElement1Position),
-                    	(bas.Length - ProbeResponseFields.InformationElement1Position));
-
-                	InformationElements = new InformationElementList (infoElementsSegment);
-				}
-				else
-				{
-					InformationElements = new InformationElementList();
-				}
-                //cant set length until after we have handled the information elements
-                //as they vary in length
-                header.Length = FrameSize;
+                TimestampPosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
+                BeaconIntervalPosition = TimestampPosition + TimestampLength;
+                CapabilityInformationPosition = BeaconIntervalPosition + BeaconIntervalLength;
+                InformationElement1Position = CapabilityInformationPosition + CapabilityInformationLength;
             }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ProbeResponseFrame"/> class.
-            /// </summary>
-            /// <param name='SourceAddress'>
-            /// Source address.
-            /// </param>
-            /// <param name='DestinationAddress'>
-            /// Destination address.
-            /// </param>
-            /// <param name='BssId'>
-            /// Bss identifier (Mac address of the access point).
-            /// </param>
-            /// <param name='InformationElements'>
-            /// Information elements.
-            /// </param>
-            public ProbeResponseFrame (PhysicalAddress SourceAddress,
-                                       PhysicalAddress DestinationAddress,
-                                       PhysicalAddress BssId,
-                                       InformationElementList InformationElements)
-            {
-                this.FrameControl = new FrameControlField ();
-                this.Duration = new DurationField ();
-                this.DestinationAddress = DestinationAddress;
-                this.SourceAddress = SourceAddress;
-                this.BssId = BssId;
-                this.SequenceControl = new SequenceControlField ();
-                this.CapabilityInformation = new CapabilityInformationField ();
-                this.InformationElements = new InformationElementList (InformationElements);
-                
-                this.FrameControl.SubType = PacketDotNet.Ieee80211.FrameControlField.FrameSubTypes.ManagementProbeResponse;
-            }
-            
-            /// <summary>
-            /// Writes the current packet properties to the backing ByteArraySegment.
-            /// </summary>
-            public override void UpdateCalculatedValues ()
-            {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
-                {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
-                }
-                
-                this.FrameControlBytes = this.FrameControl.Field;
-                this.DurationBytes = this.Duration.Field;
-                SetAddress (0, DestinationAddress);
-                SetAddress (1, SourceAddress);
-                SetAddress (2, BssId);
-                this.SequenceControlBytes = this.SequenceControl.Field;
-                this.CapabilityInformationBytes = this.CapabilityInformation.Field;
-                
-                //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
-                this.InformationElements.CopyTo (header, header.Offset + ProbeResponseFields.InformationElement1Position);
-                
-                header.Length = FrameSize;
-            }
-
-        } 
+        }
     }
 }

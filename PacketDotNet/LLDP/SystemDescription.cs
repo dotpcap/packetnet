@@ -18,54 +18,55 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
-using System.Text;
 
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// A System Description TLV
+    ///     A System Description TLV
     /// </summary>
     [Serializable]
     public class SystemDescription : StringTLV
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
         #region Constructors
 
         /// <summary>
-        /// Creates a System Description TLV
+        ///     Creates a System Description TLV
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The System Description TLV's offset from the
-        /// origin of the LLDP
+        ///     The System Description TLV's offset from the
+        ///     origin of the LLDP
         /// </param>
-        public SystemDescription(byte[] bytes, int offset) :
+        public SystemDescription(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {
-            log.Debug("");
+            Log.Debug("");
         }
 
         /// <summary>
-        /// Creates a System Description TLV and sets it value
+        ///     Creates a System Description TLV and sets it value
         /// </summary>
         /// <param name="description">
-        /// A textual Description of the system
+        ///     A textual Description of the system
         /// </param>
-        public SystemDescription(string description) : base(TLVTypes.SystemDescription,
-                                                            description)
+        public SystemDescription(String description) : base(TLVTypes.SystemDescription,
+            description)
         {
-            log.Debug("");
+            Log.Debug("");
         }
 
         #endregion
@@ -73,12 +74,12 @@ namespace PacketDotNet.LLDP
         #region Properties
 
         /// <value>
-        /// A textual Description of the system
+        ///     A textual Description of the system
         /// </value>
-        public string Description
+        public String Description
         {
-            get { return StringValue; }
-            set { StringValue = value; }
+            get => this.StringValue;
+            set => this.StringValue = value;
         }
 
         #endregion

@@ -17,29 +17,28 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2017 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    internal class LogicalLinkControlFields
     {
-        class LogicalLinkControlFields
+        public static readonly Int32 ControlOrganizationLength = 4;
+        public static readonly Int32 SsapLength = 1;
+        public static readonly Int32 DsapLength = 1;
+        public static readonly Int32 DsapPosition = 0;
+        public static readonly Int32 SsapPosition = DsapPosition + DsapLength;
+        public static readonly Int32 ControlOrganizationPosition = SsapPosition + SsapLength;
+
+
+        public static readonly Int32 TypeLength = 2;
+        public static readonly Int32 TypePosition = ControlOrganizationPosition + ControlOrganizationLength;
+        public static readonly Int32 HeaderLength = TypePosition + TypeLength;
+
+
+        static LogicalLinkControlFields()
         {
-            public readonly static int DsapLength = 1;
-            public readonly static int SsapLength = 1;
-            public readonly static int ControlOrganizationLength = 4;
-            public readonly static int TypeLength = 2;
-
-            public readonly static int DsapPosition = 0;
-            public readonly static int SsapPosition = DsapPosition + DsapLength;
-            public readonly static int ControlOrganizationPosition = SsapPosition + SsapLength;
-            public readonly static int TypePosition = ControlOrganizationPosition + ControlOrganizationLength;
-
-            public readonly static int HeaderLength = TypePosition + TypeLength;
-
-            static LogicalLinkControlFields()
-            {
-            }
         }
     }
 }

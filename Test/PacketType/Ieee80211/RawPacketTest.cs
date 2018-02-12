@@ -18,10 +18,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
 using NUnit.Framework;
-using SharpPcap.LibPcap;
 using PacketDotNet;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -31,32 +30,30 @@ namespace Test.PacketType
         public class RawPacketTest
         {
             [Test]
-            public void ReadingRawPacketWithFcs ()
+            public void ReadingRawPacketWithFcs()
             {
-                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_raw_with_fcs.pcap");
-                dev.Open ();
-                var rawCapture = dev.GetNextPacket ();
-                dev.Close ();
+                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_raw_with_fcs.pcap");
+                dev.Open();
+                var rawCapture = dev.GetNextPacket();
+                dev.Close();
 
-                Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
-                Assert.IsNotNull (p);
-              
+                Assert.IsNotNull(p);
             }
-            
+
             [Test]
-            public void ReadingRawPacketWithoutFcs ()
+            public void ReadingRawPacketWithoutFcs()
             {
-                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_raw_without_fcs.pcap");
-                dev.Open ();
-                var rawCapture = dev.GetNextPacket ();
-                dev.Close ();
+                var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_raw_without_fcs.pcap");
+                dev.Open();
+                var rawCapture = dev.GetNextPacket();
+                dev.Close();
 
-                Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
+                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
-                Assert.IsNotNull (p);
-              
+                Assert.IsNotNull(p);
             }
-        } 
+        }
     }
 }

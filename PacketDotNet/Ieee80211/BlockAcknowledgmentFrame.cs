@@ -19,285 +19,261 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
-using MiscUtil.Conversion;
+using PacketDotNet.Utils.Conversion;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    ///     Format of the 802.11 block acknowledgment frame.
+    ///     http://en.wikipedia.org/wiki/Block_acknowledgement
+    /// </summary>
+    public class BlockAcknowledgmentFrame : MacFrame
     {
+        private Byte[] _blockAckBitmap;
+
         /// <summary>
-        /// Format of the 802.11 block acknowledgment frame.
-        /// http://en.wikipedia.org/wiki/Block_acknowledgement
+        ///     Constructor
         /// </summary>
-        public class BlockAcknowledgmentFrame : MacFrame
+        /// <param name="bas">
+        ///     A <see cref="ByteArraySegment" />
+        /// </param>
+        public BlockAcknowledgmentFrame(ByteArraySegment bas)
         {
-            private class BlockAcknowledgmentField
+            this.HeaderByteArraySegment = new ByteArraySegment(bas);
+
+            this.FrameControl = new FrameControlField(this.FrameControlBytes);
+            this.Duration = new DurationField(this.DurationBytes);
+            this.ReceiverAddress = this.GetAddress(0);
+            this.TransmitterAddress = this.GetAddress(1);
+            this.BlockAcknowledgmentControl = new BlockAcknowledgmentControlField(this.BlockAckRequestControlBytes);
+            this.BlockAckStartingSequenceControl = this.BlockAckStartingSequenceControlBytes;
+            this.BlockAckBitmap = this.BlockAckBitmapBytes;
+            this.HeaderByteArraySegment.Length = this.FrameSize;
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentFrame" /> class.
+        /// </summary>
+        /// <param name='transmitterAddress'>
+        ///     Transmitter address.
+        /// </param>
+        /// <param name='receiverAddress'>
+        ///     Receiver address.
+        /// </param>
+        /// <param name='blockAckBitmap'>
+        ///     The Block ack bitmap signalling the receive status of the MSDUs.
+        /// </param>
+        public BlockAcknowledgmentFrame(PhysicalAddress transmitterAddress,
+            PhysicalAddress receiverAddress,
+            Byte[] blockAckBitmap)
+        {
+            this.FrameControl = new FrameControlField();
+            this.Duration = new DurationField();
+            this.ReceiverAddress = receiverAddress;
+            this.TransmitterAddress = transmitterAddress;
+            this.BlockAcknowledgmentControl = new BlockAcknowledgmentControlField();
+            this.BlockAckBitmap = blockAckBitmap;
+
+            this.FrameControl.SubType = FrameControlField.FrameSubTypes.ControlBlockAcknowledgment;
+        }
+
+
+        /// <summary>
+        ///     Length of the frame
+        /// </summary>
+        public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                            MacFields.DurationIDLength +
+                                            (MacFields.AddressLength * 2) +
+                                            BlockAcknowledgmentField.BlockAckRequestControlLength +
+                                            BlockAcknowledgmentField.BlockAckStartingSequenceControlLength +
+                                            this.GetBitmapLength());
+
+        /// <summary>
+        ///     Gets or sets the block ack bitmap used to indicate the receive status of the MPDUs.
+        /// </summary>
+        /// <value>
+        ///     The block ack bitmap.
+        /// </value>
+        /// <exception cref='ArgumentException'>
+        ///     Is thrown when the bitmap is of an incorrect lenght. The bitmap must be either 8 or 64 btyes longs depending on
+        ///     whether or not
+        ///     it is compressed.
+        /// </exception>
+        public Byte[] BlockAckBitmap
+        {
+            get => this._blockAckBitmap;
+
+            set
             {
-                public readonly static int BlockAckRequestControlLength = 2;
-                public readonly static int BlockAckStartingSequenceControlLength = 2;
-
-                public readonly static int BlockAckRequestControlPosition;
-                public readonly static int BlockAckStartingSequenceControlPosition;
-                public readonly static int BlockAckBitmapPosition;
-
-                static BlockAcknowledgmentField()
+                if (value.Length == 8)
                 {
-                    BlockAckRequestControlPosition = MacFields.DurationIDPosition + MacFields.DurationIDLength + (2 * MacFields.AddressLength);
-                    BlockAckStartingSequenceControlPosition = BlockAckRequestControlPosition + BlockAckRequestControlLength;
-                    BlockAckBitmapPosition = BlockAckStartingSequenceControlPosition + BlockAckStartingSequenceControlLength;
+                    this.BlockAcknowledgmentControl.CompressedBitmap = true;
                 }
-            }
-
-            /// <summary>
-            /// Receiver address
-            /// </summary>
-            public PhysicalAddress ReceiverAddress {get; set;}
-
-            /// <summary>
-            /// Transmitter address
-            /// </summary>
-            public PhysicalAddress TransmitterAddress { get; set; }
-
-            /// <summary>
-            /// Gets or sets the block ack request control bytes.
-            /// </summary>
-            /// <value>
-            /// The block ack request control bytes.
-            /// </value>
-            private UInt16 BlockAckRequestControlBytes
-            {
-                get
+                else if (value.Length == 64)
                 {
-					if(header.Length >= 
-					   (BlockAcknowledgmentField.BlockAckRequestControlPosition + BlockAcknowledgmentField.BlockAckRequestControlLength))
-					{
-						return EndianBitConverter.Little.ToUInt16(header.Bytes,
-						                                          header.Offset + BlockAcknowledgmentField.BlockAckRequestControlPosition);
-					}
-					else
-					{
-						return 0;
-					}
+                    this.BlockAcknowledgmentControl.CompressedBitmap = false;
                 }
-
-                set
+                else
                 {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + BlockAcknowledgmentField.BlockAckRequestControlPosition);
-                }
-            }
-
-            /// <summary>
-            /// Block acknowledgment control field
-            /// </summary>
-            public BlockAcknowledgmentControlField BlockAcknowledgmentControl
-            {
-                get;
-                set;
-            }
-   
-            /// <summary>
-            /// Gets or sets the block ack starting sequence control.
-            /// </summary>
-            /// <value>
-            /// The block ack starting sequence control.
-            /// </value>
-            public UInt16 BlockAckStartingSequenceControl {get; set;}
-            
-            private UInt16 BlockAckStartingSequenceControlBytes
-            {
-                get
-                {
-					if(header.Length >= 
-					   (BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition + BlockAcknowledgmentField.BlockAckStartingSequenceControlLength))
-					{
-						return EndianBitConverter.Little.ToUInt16 (header.Bytes,
-						                                           header.Offset + BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
-					}
-					else
-					{
-						return 0;
-					}
+                    throw new ArgumentException("Invalid BlockAckBitmap size. Must be either 8 or 64 bytes long.");
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes (value,
-                        header.Bytes,
-                        header.Offset + BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
-                }
+                this._blockAckBitmap = value;
             }
-   
-            private byte[] blockAckBitmap;
-            /// <summary>
-            /// Gets or sets the block ack bitmap used to indicate the receive status of the MPDUs.
-            /// </summary>
-            /// <value>
-            /// The block ack bitmap.
-            /// </value>
-            /// <exception cref='ArgumentException'>
-            /// Is thrown when the bitmap is of an incorrect lenght. The bitmap must be either 8 or 64 btyes longs depending on whether or not
-            /// it is compressed.
-            /// </exception>
-            public Byte[] BlockAckBitmap
+        }
+
+        /// <summary>
+        ///     Block acknowledgment control field
+        /// </summary>
+        public BlockAcknowledgmentControlField BlockAcknowledgmentControl { get; set; }
+
+        /// <summary>
+        ///     Gets or sets the block ack starting sequence control.
+        /// </summary>
+        /// <value>
+        ///     The block ack starting sequence control.
+        /// </value>
+        public UInt16 BlockAckStartingSequenceControl { get; set; }
+
+        /// <summary>
+        ///     Receiver address
+        /// </summary>
+        public PhysicalAddress ReceiverAddress { get; set; }
+
+        /// <summary>
+        ///     Transmitter address
+        /// </summary>
+        public PhysicalAddress TransmitterAddress { get; set; }
+
+        private Byte[] BlockAckBitmapBytes
+        {
+            get
             {
-                get
+                Byte[] bitmap = new Byte[this.GetBitmapLength()];
+                if (this.HeaderByteArraySegment.Length >=
+                    (BlockAcknowledgmentField.BlockAckBitmapPosition + this.GetBitmapLength()))
                 {
-                    return blockAckBitmap;
+                    Array.Copy(this.HeaderByteArraySegment.Bytes,
+                        (BlockAcknowledgmentField.BlockAckBitmapPosition),
+                        bitmap,
+                        0, this.GetBitmapLength());
                 }
-                
-                set
-                {
-                    if (value.Length == 8)
-                    {
-                        BlockAcknowledgmentControl.CompressedBitmap = true;
-                    }
-                    else if (value.Length == 64)
-                    {
-                        BlockAcknowledgmentControl.CompressedBitmap = false;
-                    }
-                    else
-                    {
-                        throw new ArgumentException ("Invalid BlockAckBitmap size. Must be either 8 or 64 bytes long.");
-                    }
-                    
-                    blockAckBitmap = value;
-                }
-            }
-            
-            private Byte[] BlockAckBitmapBytes
-            {
-                get
-                {
-					Byte[] bitmap = new Byte[GetBitmapLength ()];
-					if(header.Length >= (BlockAcknowledgmentField.BlockAckBitmapPosition + GetBitmapLength()))
-					{
-						Array.Copy (header.Bytes,
-						            (BlockAcknowledgmentField.BlockAckBitmapPosition),
-						            bitmap,
-						            0,
-						            GetBitmapLength ());
-					}
-					return bitmap;
-                }
-                
-                set
-                {
-                    Array.Copy (BlockAckBitmap,
-                                0,
-                                header.Bytes,
-                                BlockAcknowledgmentField.BlockAckBitmapPosition,
-                                GetBitmapLength());
-                }
+
+                return bitmap;
             }
 
+            set => Array.Copy(this.BlockAckBitmap,
+                0, this.HeaderByteArraySegment.Bytes,
+                BlockAcknowledgmentField.BlockAckBitmapPosition, this.GetBitmapLength());
+        }
 
-            /// <summary>
-            /// Length of the frame
-            /// </summary>
-            override public int FrameSize
+        /// <summary>
+        ///     Gets or sets the block ack request control bytes.
+        /// </summary>
+        /// <value>
+        ///     The block ack request control bytes.
+        /// </value>
+        private UInt16 BlockAckRequestControlBytes
+        {
+            get
             {
-                get
+                if (this.HeaderByteArraySegment.Length >=
+                    (BlockAcknowledgmentField.BlockAckRequestControlPosition +
+                     BlockAcknowledgmentField.BlockAckRequestControlLength))
                 {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 2) +
-                        BlockAcknowledgmentField.BlockAckRequestControlLength +
-                        BlockAcknowledgmentField.BlockAckStartingSequenceControlLength +
-                        GetBitmapLength());
+                    return EndianBitConverter.Little.ToUInt16(this.HeaderByteArraySegment.Bytes,
+                        this.HeaderByteArraySegment.Offset + BlockAcknowledgmentField.BlockAckRequestControlPosition);
                 }
+
+                return 0;
             }
 
+            set => EndianBitConverter.Little.CopyBytes(value, this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + BlockAcknowledgmentField.BlockAckRequestControlPosition);
+        }
 
-            private int GetBitmapLength()
+        private UInt16 BlockAckStartingSequenceControlBytes
+        {
+            get
             {
-                return BlockAcknowledgmentControl.CompressedBitmap ? 8 : 64;
-            }
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public BlockAcknowledgmentFrame (ByteArraySegment bas)
-            {
-                header = new ByteArraySegment (bas);
-
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                ReceiverAddress = GetAddress (0);
-                TransmitterAddress = GetAddress (1);
-                BlockAcknowledgmentControl = new BlockAcknowledgmentControlField (BlockAckRequestControlBytes);
-                BlockAckStartingSequenceControl = BlockAckStartingSequenceControlBytes;
-                BlockAckBitmap = BlockAckBitmapBytes;
-                header.Length = FrameSize;
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentFrame"/> class.
-            /// </summary>
-            /// <param name='TransmitterAddress'>
-            /// Transmitter address.
-            /// </param>
-            /// <param name='ReceiverAddress'>
-            /// Receiver address.
-            /// </param>
-            /// <param name='BlockAckBitmap'>
-            /// The Block ack bitmap signalling the receive status of the MSDUs.
-            /// </param>
-            public BlockAcknowledgmentFrame (PhysicalAddress TransmitterAddress,
-                                             PhysicalAddress ReceiverAddress,
-                                             Byte[] BlockAckBitmap)
-            {
-                this.FrameControl = new FrameControlField ();
-                this.Duration = new DurationField ();
-                this.ReceiverAddress = ReceiverAddress;
-                this.TransmitterAddress = TransmitterAddress;
-                this.BlockAcknowledgmentControl = new BlockAcknowledgmentControlField ();
-                this.BlockAckBitmap = BlockAckBitmap;
-
-                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ControlBlockAcknowledgment;
-            }
-            
-            /// <summary>
-            /// Writes the current packet properties to the backing ByteArraySegment.
-            /// </summary>
-            public override void UpdateCalculatedValues ()
-            {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if (this.HeaderByteArraySegment.Length >=
+                    (BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition +
+                     BlockAcknowledgmentField.BlockAckStartingSequenceControlLength))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    return EndianBitConverter.Little.ToUInt16(this.HeaderByteArraySegment.Bytes,
+                        this.HeaderByteArraySegment.Offset +
+                        BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
                 }
-                
-                this.FrameControlBytes = this.FrameControl.Field;
-                this.DurationBytes = this.Duration.Field;
-                SetAddress (0, ReceiverAddress);
-                SetAddress (1, TransmitterAddress);
-                
-                this.BlockAckRequestControlBytes = this.BlockAcknowledgmentControl.Field;
-                this.BlockAckStartingSequenceControlBytes = this.BlockAckStartingSequenceControl;
-                BlockAckBitmapBytes = BlockAckBitmap;
-                
-                header.Length = FrameSize;
+
+                return 0;
             }
-            
-            /// <summary>
-            /// Returns a string with a description of the addresses used in the packet.
-            /// This is used as a compoent of the string returned by ToString().
-            /// </summary>
-            /// <returns>
-            /// The address string.
-            /// </returns>
-            protected override String GetAddressString()
+
+            set => EndianBitConverter.Little.CopyBytes(value, this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
+        }
+
+        /// <summary>
+        ///     Writes the current packet properties to the backing ByteArraySegment.
+        /// </summary>
+        public override void UpdateCalculatedValues()
+        {
+            if ((this.HeaderByteArraySegment == null) ||
+                (this.HeaderByteArraySegment.Length >
+                 (this.HeaderByteArraySegment.BytesLength - this.HeaderByteArraySegment.Offset)) ||
+                (this.HeaderByteArraySegment.Length < this.FrameSize))
             {
-                return String.Format("RA {0} TA {1}", ReceiverAddress, TransmitterAddress);
+                this.HeaderByteArraySegment = new ByteArraySegment(new Byte[this.FrameSize]);
             }
-        } 
+
+            this.FrameControlBytes = this.FrameControl.Field;
+            this.DurationBytes = this.Duration.Field;
+            this.SetAddress(0, this.ReceiverAddress);
+            this.SetAddress(1, this.TransmitterAddress);
+
+            this.BlockAckRequestControlBytes = this.BlockAcknowledgmentControl.Field;
+            this.BlockAckStartingSequenceControlBytes = this.BlockAckStartingSequenceControl;
+            this.BlockAckBitmapBytes = this.BlockAckBitmap;
+
+            this.HeaderByteArraySegment.Length = this.FrameSize;
+        }
+
+        /// <summary>
+        ///     Returns a string with a description of the addresses used in the packet.
+        ///     This is used as a compoent of the string returned by ToString().
+        /// </summary>
+        /// <returns>
+        ///     The address string.
+        /// </returns>
+        protected override String GetAddressString()
+        {
+            return String.Format("RA {0} TA {1}", this.ReceiverAddress, this.TransmitterAddress);
+        }
+
+
+        private Int32 GetBitmapLength()
+        {
+            return this.BlockAcknowledgmentControl.CompressedBitmap ? 8 : 64;
+        }
+
+        private class BlockAcknowledgmentField
+        {
+            public static readonly Int32 BlockAckBitmapPosition;
+            public static readonly Int32 BlockAckRequestControlLength = 2;
+
+            public static readonly Int32 BlockAckRequestControlPosition;
+            public static readonly Int32 BlockAckStartingSequenceControlLength = 2;
+            public static readonly Int32 BlockAckStartingSequenceControlPosition;
+
+            static BlockAcknowledgmentField()
+            {
+                BlockAckRequestControlPosition = MacFields.DurationIDPosition + MacFields.DurationIDLength +
+                                                 (2 * MacFields.AddressLength);
+                BlockAckStartingSequenceControlPosition = BlockAckRequestControlPosition + BlockAckRequestControlLength;
+                BlockAckBitmapPosition =
+                    BlockAckStartingSequenceControlPosition + BlockAckStartingSequenceControlLength;
+            }
+        }
     }
 }

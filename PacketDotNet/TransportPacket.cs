@@ -14,118 +14,112 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
+using PacketDotNet.IP;
 using PacketDotNet.Utils;
-using MiscUtil.Conversion;
 
 namespace PacketDotNet
 {
     /// <summary>
-    /// Transport layer packet
+    ///     Transport layer packet
     /// </summary>
     [Serializable]
     public abstract class TransportPacket : Packet
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public TransportPacket()
-        {
-        }
 
         /// <value>
-        /// The Checksum version
+        ///     The Checksum version
         /// </value>
-        public abstract ushort Checksum
-        {
-            get;
-            set;
-        }
+        public abstract UInt16 Checksum { get; set; }
 
         /// <summary>
-        /// Calculates the transport layer checksum, either for the
-        /// tcp or udp packet
+        ///     Calculates the transport layer checksum, either for the
+        ///     tcp or udp packet
         /// </summary>
-        /// <param name="option"><see cref="TransportPacket.TransportChecksumOption"/></param>
+        /// <param name="option">
+        ///     <see cref="TransportPacket.TransportChecksumOption" />
+        /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </returns>
-        internal int CalculateChecksum(TransportChecksumOption option)
+        internal Int32 CalculateChecksum(TransportChecksumOption option)
         {
             // save the checksum field value so it can be restored, altering the checksum is not
             // an intended side effect of this method
-            var originalChecksum = Checksum;
+            var originalChecksum = this.Checksum;
 
             // reset the checksum field (checksum is calculated when this field is
             // zeroed)
-            Checksum = 0;
+            this.Checksum = 0;
 
             // copy the tcp section with data
-            byte[] dataToChecksum = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
+            Byte[] dataToChecksum = ((IpPacket) this.ParentPacket).PayloadPacket.Bytes;
 
-             if (option == TransportChecksumOption.AttachPseudoIPHeader)
-                dataToChecksum = ((IpPacket)ParentPacket).AttachPseudoIPHeader(dataToChecksum);
+            if (option == TransportChecksumOption.AttachPseudoIPHeader)
+                dataToChecksum = ((IpPacket) this.ParentPacket).AttachPseudoIPHeader(dataToChecksum);
 
             // calculate the one's complement sum of the tcp header
-            int cs = ChecksumUtils.OnesComplementSum(dataToChecksum);
+            Int32 cs = ChecksumUtils.OnesComplementSum(dataToChecksum);
 
             // restore the checksum field value
-            Checksum = originalChecksum;
+            this.Checksum = originalChecksum;
 
             return cs;
         }
 
         /// <summary>
-        /// Determine if the transport layer checksum is valid
+        ///     Determine if the transport layer checksum is valid
         /// </summary>
         /// <param name="option">
-        /// A <see cref="TransportChecksumOption"/>
+        ///     A <see cref="TransportChecksumOption" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Boolean"/>
+        ///     A <see cref="System.Boolean" />
         /// </returns>
-        public virtual bool IsValidChecksum(TransportChecksumOption option)
+        public virtual Boolean IsValidChecksum(TransportChecksumOption option)
         {
-            var upperLayer = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
+            var upperLayer = ((IpPacket) this.ParentPacket).PayloadPacket.Bytes;
 
-            log.DebugFormat("option: {0}, upperLayer.Length {1}",
-                            option, upperLayer.Length);
+            Log.DebugFormat("option: {0}, upperLayer.Length {1}",
+                option, upperLayer.Length);
 
             if (option == TransportChecksumOption.AttachPseudoIPHeader)
-                upperLayer = ((IpPacket)ParentPacket).AttachPseudoIPHeader(upperLayer);
+                upperLayer = ((IpPacket) this.ParentPacket).AttachPseudoIPHeader(upperLayer);
 
             var onesSum = ChecksumUtils.OnesSum(upperLayer);
-            const int expectedOnesSum = 0xffff;
-            log.DebugFormat("onesSum {0} expected {1}",
-                            onesSum,
-                            expectedOnesSum);
+            const Int32 expectedOnesSum = 0xffff;
+            Log.DebugFormat("onesSum {0} expected {1}",
+                onesSum,
+                expectedOnesSum);
 
             return (onesSum == expectedOnesSum);
         }
 
         /// <summary>
-        /// Options for use when creating a transport layer checksum
+        ///     Options for use when creating a transport layer checksum
         /// </summary>
         public enum TransportChecksumOption
         {
             /// <summary>
-            /// No extra options
+            ///     No extra options
             /// </summary>
             None,
 
             /// <summary>
-            /// Attach a pseudo IP header to the transport data being checksummed
+            ///     Attach a pseudo IP header to the transport data being checksummed
             /// </summary>
-            AttachPseudoIPHeader,
+            AttachPseudoIPHeader
         }
     }
 }

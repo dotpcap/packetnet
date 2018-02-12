@@ -22,72 +22,70 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
+using System.Net;
 
 namespace PacketDotNet.Utils
 {
     /// <summary>
-    /// Computes the one's sum on a byte array.
-    /// Based TCP/IP Illustrated Vol. 2(1995) by Gary R. Wright and W. Richard
-    /// Stevens. Page 236. And on http://www.cs.utk.edu/~cs594np/unp/checksum.html
+    ///     Computes the one's sum on a byte array.
+    ///     Based TCP/IP Illustrated Vol. 2(1995) by Gary R. Wright and W. Richard
+    ///     Stevens. Page 236. And on http://www.cs.utk.edu/~cs594np/unp/checksum.html
     /// </summary>
-
     /*
     * taken from TCP/IP Illustrated Vol. 2(1995) by Gary R. Wright and W.
     * Richard Stevens. Page 236
     */
-    public sealed class ChecksumUtils
+    public static class ChecksumUtils
     {
-        private ChecksumUtils() { }
-
         /// <summary>
-        /// Computes the one's complement sum on a byte array
+        ///     Computes the one's complement sum on a byte array
         /// </summary>
-        public static int OnesComplementSum(byte[] bytes)
+        public static Int32 OnesComplementSum(Byte[] bytes)
         {
             //just complement the one's sum
             return OnesComplementSum(bytes, 0, bytes.Length);
         }
 
         /// <summary>
-        /// Computes the one's complement sum on a byte array
+        ///     Computes the one's complement sum on a byte array
         /// </summary>
-        public static int OnesComplementSum(byte[] bytes, int start, int len)
+        public static Int32 OnesComplementSum(Byte[] bytes, Int32 start, Int32 len)
         {
             //just complement the one's sum
             return (~OnesSum(bytes, start, len)) & 0xFFFF;
         }
 
         /// <summary>
-        /// Compute a ones sum of a byte array
+        ///     Compute a ones sum of a byte array
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="System.Byte"/>
+        ///     A <see cref="System.Byte" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </returns>
-        public static int OnesSum(byte[] bytes)
+        public static Int32 OnesSum(Byte[] bytes)
         {
             return OnesSum(bytes, 0, bytes.Length);
         }
 
         /// <summary>
-        /// 16 bit sum of all values
-        /// http://en.wikipedia.org/wiki/Signed_number_representations#Ones.27_complement
+        ///     16 bit sum of all values
+        ///     http://en.wikipedia.org/wiki/Signed_number_representations#Ones.27_complement
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="System.Byte"/>
+        ///     A <see cref="System.Byte" />
         /// </param>
         /// <param name="start">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <param name="len">
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        ///     A <see cref="System.Int32" />
         /// </returns>
-        public static int OnesSum(byte[] bytes, int start, int len)
+        public static Int32 OnesSum(Byte[] bytes, Int32 start, Int32 len)
         {
             MemoryStream memStream = new MemoryStream(bytes, start, len);
             BinaryReader br = new BinaryReader(memStream);
@@ -95,9 +93,9 @@ namespace PacketDotNet.Utils
 
             UInt16 val;
 
-            while (memStream.Position < memStream.Length -1)
+            while (memStream.Position < memStream.Length - 1)
             {
-                val = (UInt16)System.Net.IPAddress.NetworkToHostOrder(br.ReadInt16());
+                val = (UInt16) IPAddress.NetworkToHostOrder(br.ReadInt16());
                 sum += val;
             }
 
@@ -108,7 +106,7 @@ namespace PacketDotNet.Utils
             }
 
             // fold the sum into 16 bits
-            while((sum >> 16) != 0)
+            while ((sum >> 16) != 0)
             {
                 sum = (sum & 0xffff) + (sum >> 16);
             }

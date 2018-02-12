@@ -20,48 +20,19 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
+using PacketDotNet;
+using PacketDotNet.ARP;
+using PacketDotNet.LinuxSLL;
+using PacketDotNet.Tcp;
+using PacketDotNet.Udp;
 using SharpPcap;
 using SharpPcap.LibPcap;
-using PacketDotNet;
 
 namespace Test.PacketType
 {
     [TestFixture]
     public class LinuxCookedCaptureTest
     {
-        private void VerifyPacket0(Packet p)
-        {
-            // expect an arp packet
-            var arpPacket = (ARPPacket)p.Extract(typeof(ARPPacket));
-            Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
-
-            // validate some of the LinuxSSLPacket fields
-            var l = (LinuxSLLPacket)p;
-            Assert.AreEqual(6, l.LinkLayerAddressLength, "Address length");
-            Assert.AreEqual(1, l.LinkLayerAddressType);
-            Assert.AreEqual(LinuxSLLType.PacketSentToUs, l.Type);
-
-            // validate some of the arp fields
-            Assert.AreEqual("192.168.1.1",
-                            arpPacket.SenderProtocolAddress.ToString(),
-                            "Arp SenderProtocolAddress");
-            Assert.AreEqual("192.168.1.102",
-                            arpPacket.TargetProtocolAddress.ToString(),
-                            "Arp TargetProtocolAddress");
-        }
-
-        private void VerifyPacket1(Packet p)
-        {
-            // expect a udp packet
-            Assert.IsNotNull((UdpPacket)p.Extract(typeof(UdpPacket)), "expected a udp packet");
-        }
-
-        private void VerifyPacket2(Packet p)
-        {
-            // expecting a tcp packet
-            Assert.IsNotNull((TcpPacket)p.Extract(typeof(TcpPacket)), "expected a tcp packet");
-        }
-
         [Test]
         public void CookedCaptureTest()
         {
@@ -69,24 +40,24 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            int packetIndex = 0;
-            while((rawCapture = dev.GetNextPacket()) != null)
+            Int32 packetIndex = 0;
+            while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                switch(packetIndex)
+                switch (packetIndex)
                 {
-                case 0:
-                    VerifyPacket0(p);
-                    break;
-                case 1:
-                    VerifyPacket1(p);
-                    break;
-                case 2:
-                    VerifyPacket2(p);
-                    break;
-                default:
-                    Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
-                    break;
+                    case 0:
+                        this.VerifyPacket0(p);
+                        break;
+                    case 1:
+                        this.VerifyPacket1(p);
+                        break;
+                    case 2:
+                        this.VerifyPacket2(p);
+                        break;
+                    default:
+                        Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
+                        break;
                 }
 
                 packetIndex++;
@@ -106,7 +77,7 @@ namespace Test.PacketType
             Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var l = (LinuxSLLPacket)p;
+            var l = (LinuxSLLPacket) p;
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(l.ToString());
@@ -123,10 +94,43 @@ namespace Test.PacketType
             Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var l = (LinuxSLLPacket)p;
+            var l = (LinuxSLLPacket) p;
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(l.ToString(StringOutputType.Verbose));
+        }
+
+        private void VerifyPacket0(Packet p)
+        {
+            // expect an arp packet
+            var arpPacket = (ARPPacket) p.Extract(typeof(ARPPacket));
+            Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
+
+            // validate some of the LinuxSSLPacket fields
+            var l = (LinuxSLLPacket) p;
+            Assert.AreEqual(6, l.LinkLayerAddressLength, "Address length");
+            Assert.AreEqual(1, l.LinkLayerAddressType);
+            Assert.AreEqual(LinuxSLLType.PacketSentToUs, l.Type);
+
+            // validate some of the arp fields
+            Assert.AreEqual("192.168.1.1",
+                arpPacket.SenderProtocolAddress.ToString(),
+                "Arp SenderProtocolAddress");
+            Assert.AreEqual("192.168.1.102",
+                arpPacket.TargetProtocolAddress.ToString(),
+                "Arp TargetProtocolAddress");
+        }
+
+        private void VerifyPacket1(Packet p)
+        {
+            // expect a udp packet
+            Assert.IsNotNull((UdpPacket) p.Extract(typeof(UdpPacket)), "expected a udp packet");
+        }
+
+        private void VerifyPacket2(Packet p)
+        {
+            // expecting a tcp packet
+            Assert.IsNotNull((TcpPacket) p.Extract(typeof(TcpPacket)), "expected a tcp packet");
         }
     }
 }

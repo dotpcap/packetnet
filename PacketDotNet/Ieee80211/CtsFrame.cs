@@ -19,98 +19,88 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using PacketDotNet.Utils;
 using System.Net.NetworkInformation;
+using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    ///     Format of a CTS frame
+    /// </summary>
+    public class CtsFrame : MacFrame
     {
         /// <summary>
-        /// Format of a CTS frame
+        ///     Constructor
         /// </summary>
-        public class CtsFrame : MacFrame
+        /// <param name="bas">
+        ///     A <see cref="ByteArraySegment" />
+        /// </param>
+        public CtsFrame(ByteArraySegment bas)
         {
-            /// <summary>
-            /// Receiver address
-            /// </summary>
-            public PhysicalAddress ReceiverAddress {get; set;}
+            this.HeaderByteArraySegment = new ByteArraySegment(bas);
 
-            /// <summary>
-            /// Length of the frame
-            /// </summary>
-            override public int FrameSize
+            this.FrameControl = new FrameControlField(this.FrameControlBytes);
+            this.Duration = new DurationField(this.DurationBytes);
+            this.ReceiverAddress = this.GetAddress(0);
+
+            this.HeaderByteArraySegment.Length = this.FrameSize;
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.CtsFrame" /> class.
+        /// </summary>
+        /// <param name='receiverAddress'>
+        ///     Receiver address.
+        /// </param>
+        public CtsFrame(PhysicalAddress receiverAddress)
+        {
+            this.FrameControl = new FrameControlField();
+            this.Duration = new DurationField();
+            this.ReceiverAddress = receiverAddress;
+
+            this.FrameControl.SubType = FrameControlField.FrameSubTypes.ControlCTS;
+        }
+
+        /// <summary>
+        ///     Length of the frame
+        /// </summary>
+        public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                            MacFields.DurationIDLength +
+                                            MacFields.AddressLength);
+
+        /// <summary>
+        ///     Receiver address
+        /// </summary>
+        public PhysicalAddress ReceiverAddress { get; set; }
+
+        /// <summary>
+        ///     Writes the current packet properties to the backing ByteArraySegment.
+        /// </summary>
+        public override void UpdateCalculatedValues()
+        {
+            if ((this.HeaderByteArraySegment == null) ||
+                (this.HeaderByteArraySegment.Length >
+                 (this.HeaderByteArraySegment.BytesLength - this.HeaderByteArraySegment.Offset)) ||
+                (this.HeaderByteArraySegment.Length < this.FrameSize))
             {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        MacFields.AddressLength);
-                }
+                this.HeaderByteArraySegment = new ByteArraySegment(new Byte[this.FrameSize]);
             }
 
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public CtsFrame (ByteArraySegment bas)
-            {
-                header = new ByteArraySegment (bas);
+            this.FrameControlBytes = this.FrameControl.Field;
+            this.DurationBytes = this.Duration.Field;
+            this.SetAddress(0, this.ReceiverAddress);
+        }
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                ReceiverAddress = GetAddress(0);
-				
-				header.Length = FrameSize;
-            }
-			
-			/// <summary>
-			/// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.CtsFrame"/> class.
-			/// </summary>
-			/// <param name='ReceiverAddress'>
-			/// Receiver address.
-			/// </param>
-			public CtsFrame (PhysicalAddress ReceiverAddress)
-			{
-				this.FrameControl = new FrameControlField ();
-                this.Duration = new DurationField ();
-				this.ReceiverAddress = ReceiverAddress;
-				
-                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ControlCTS;
-			}
-			
-			/// <summary>
-            /// Writes the current packet properties to the backing ByteArraySegment.
-            /// </summary>
-            public override void UpdateCalculatedValues ()
-            {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
-                {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
-                }
-                
-                this.FrameControlBytes = this.FrameControl.Field;
-                this.DurationBytes = this.Duration.Field;
-                SetAddress (0, ReceiverAddress);
-            }
-            
-            /// <summary>
-            /// Returns a string with a description of the addresses used in the packet.
-            /// This is used as a compoent of the string returned by ToString().
-            /// </summary>
-            /// <returns>
-            /// The address string.
-            /// </returns>
-            protected override String GetAddressString()
-            {
-                return String.Format("RA {0}", ReceiverAddress);
-            }
-        } 
+        /// <summary>
+        ///     Returns a string with a description of the addresses used in the packet.
+        ///     This is used as a compoent of the string returned by ToString().
+        /// </summary>
+        /// <returns>
+        ///     The address string.
+        /// </returns>
+        protected override String GetAddressString()
+        {
+            return $"RA {this.ReceiverAddress}";
+        }
     }
-
 }

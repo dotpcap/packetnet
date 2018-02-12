@@ -18,57 +18,58 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
-using MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Conversion;
 
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// A System Capabilities TLV
-    ///
-    /// [TLVTypeLength - 2 bytes][System Capabilities - 2 bytes][Enabled Capabilities - 2 bytes]
+    ///     A System Capabilities TLV
+    ///     [TLVTypeLength - 2 bytes][System Capabilities - 2 bytes][Enabled Capabilities - 2 bytes]
     /// </summary>
     [Serializable]
     public class SystemCapabilities : TLV
     {
-        private const int SystemCapabilitiesLength = 2;
-        private const int EnabledCapabilitiesLength = 2;
+        private const Int32 EnabledCapabilitiesLength = 2;
+        private const Int32 SystemCapabilitiesLength = 2;
 
         #region Constructors
 
         /// <summary>
-        /// Creates a System Capabilities TLV
+        ///     Creates a System Capabilities TLV
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The System Capabilities TLV's offset from the
-        /// origin of the LLDP
+        ///     The System Capabilities TLV's offset from the
+        ///     origin of the LLDP
         /// </param>
-        public SystemCapabilities(byte[] bytes, int offset) :
+        public SystemCapabilities(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
-        {}
+        {
+        }
 
         /// <summary>
-        /// Creates a System Capabilities TLV and sets the value
+        ///     Creates a System Capabilities TLV and sets the value
         /// </summary>
         /// <param name="capabilities">
-        /// A bitmap containing the available System Capabilities
+        ///     A bitmap containing the available System Capabilities
         /// </param>
         /// <param name="enabled">
-        /// A bitmap containing the enabled System Capabilities
+        ///     A bitmap containing the enabled System Capabilities
         /// </param>
-        public SystemCapabilities(ushort capabilities, ushort enabled)
+        public SystemCapabilities(UInt16 capabilities, UInt16 enabled)
         {
             var length = TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength + EnabledCapabilitiesLength;
-            var bytes = new byte[length];
+            var bytes = new Byte[length];
             var offset = 0;
-            tlvData = new ByteArraySegment(bytes, offset, length);
+            this.TLVData = new ByteArraySegment(bytes, offset, length);
 
-            Type = TLVTypes.SystemCapabilities;
-            Capabilities = capabilities;
-            Enabled = enabled;
+            this.Type = TLVTypes.SystemCapabilities;
+            this.Capabilities = capabilities;
+            this.Enabled = enabled;
         }
 
         #endregion
@@ -76,43 +77,26 @@ namespace PacketDotNet.LLDP
         #region Properties
 
         /// <value>
-        /// A bitmap containing the available System Capabilities
+        ///     A bitmap containing the available System Capabilities
         /// </value>
-        public ushort Capabilities
+        public UInt16 Capabilities
         {
-            get
-            {
-                // get the capabilities
-                return BigEndianBitConverter.Big.ToUInt16(tlvData.Bytes,
-                                                          tlvData.Offset + TLVTypeLength.TypeLengthLength);
-            }
-            set
-            {
-                // set the capabilities
-                EndianBitConverter.Big.CopyBytes(value,
-                                                 tlvData.Bytes,
-                                                 tlvData.Offset + TLVTypeLength.TypeLengthLength);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.TLVData.Bytes,
+                this.TLVData.Offset + TLVTypeLength.TypeLengthLength);
+            set => EndianBitConverter.Big.CopyBytes(value, this.TLVData.Bytes,
+                this.TLVData.Offset + TLVTypeLength.TypeLengthLength);
         }
 
         /// <value>
-        /// A bitmap containing the Enabled System Capabilities
+        ///     A bitmap containing the Enabled System Capabilities
         /// </value>
-        public ushort Enabled
+        public UInt16 Enabled
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(tlvData.Bytes,
-                                                       tlvData.Offset + TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.TLVData.Bytes,
+                this.TLVData.Offset + TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength);
 
-            set
-            {
-                // Add the length of the previous field, the SystemCapabilities field, to get
-                // to the location of the EnabledCapabilities
-                EndianBitConverter.Big.CopyBytes(value, tlvData.Bytes,
-                                                 ValueOffset + SystemCapabilitiesLength);
-            }
+            set => EndianBitConverter.Big.CopyBytes(value, this.TLVData.Bytes,
+                this.ValueOffset + SystemCapabilitiesLength);
         }
 
         #endregion
@@ -120,58 +104,54 @@ namespace PacketDotNet.LLDP
         #region Methods
 
         /// <summary>
-        /// Checks whether the system is capable of a certain function
+        ///     Checks whether the system is capable of a certain function
         /// </summary>
         /// <param name="capability">
-        /// The capability being checked
+        ///     The capability being checked
         /// </param>
         /// <returns>
-        /// Whether or not the system is capable of the function being tested
+        ///     Whether or not the system is capable of the function being tested
         /// </returns>
-        public bool IsCapable(CapabilityOptions capability)
+        public Boolean IsCapable(CapabilityOptions capability)
         {
-            ushort mask = (ushort)capability;
-            if ((Capabilities & mask) != 0)
+            UInt16 mask = (UInt16) capability;
+            if ((this.Capabilities & mask) != 0)
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         /// <summary>
-        /// Checks whether the specified function has been enabled on the system
+        ///     Checks whether the specified function has been enabled on the system
         /// </summary>
         /// <param name="capability">
-        /// The capability being checked
+        ///     The capability being checked
         /// </param>
         /// <returns>
-        /// Whether or not the specified function is enabled
+        ///     Whether or not the specified function is enabled
         /// </returns>
-        public bool IsEnabled(CapabilityOptions capability)
+        public Boolean IsEnabled(CapabilityOptions capability)
         {
-            ushort mask = (ushort)capability;
-            if ((Enabled & mask) != 0)
+            UInt16 mask = (UInt16) capability;
+            if ((this.Enabled & mask) != 0)
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         /// <summary>
-        /// Convert this System Capabilities TLV to a string.
+        ///     Convert this System Capabilities TLV to a string.
         /// </summary>
         /// <returns>
-        /// A human readable string
+        ///     A human readable string
         /// </returns>
-        public override string ToString ()
+        public override String ToString()
         {
-            return string.Format("[SystemCapabilities: Capabilities={0}, Enabled={1}]", Capabilities, Enabled);
+            return $"[SystemCapabilities: Capabilities={this.Capabilities}, Enabled={this.Enabled}]";
         }
 
         #endregion

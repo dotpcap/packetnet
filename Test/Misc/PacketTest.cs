@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
-using PacketDotNet;
+using PacketDotNet.Tcp;
 
 namespace Test.Misc
 {
@@ -30,16 +30,18 @@ namespace Test.Misc
         [Test]
         public void TestSettingPayloadData()
         {
-            byte[] data = new byte[10];
-            for(int i = 0; i < data.Length; i++)
+            Byte[] data = new Byte[10];
+            for (Int32 i = 0; i < data.Length; i++)
             {
-                data[i] = (byte)i;
+                data[i] = (Byte) i;
             }
 
             // NOTE: we use TcpPacket because it has a simple constructor. We can't
             //       create a Packet() instance because Packet is an abstract class
-            var p = new TcpPacket(10, 10);
-            p.PayloadData = data;
+            var p = new TcpPacket(10, 10)
+            {
+                PayloadData = data
+            };
         }
     }
 }

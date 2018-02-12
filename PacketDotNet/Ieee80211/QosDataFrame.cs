@@ -18,162 +18,157 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  * Copyright 2017 Chris Morgan <chmorgan@gmail.com>
  */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MiscUtil.Conversion;
-using PacketDotNet.Utils;
 
-namespace PacketDotNet
+using System;
+using PacketDotNet.Utils;
+using PacketDotNet.Utils.Conversion;
+
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    ///     Qos data frames are like regualr data frames except they contain a quality of service
+    ///     field as defined in the 802.11e standard.
+    /// </summary>
+    public class QosDataFrame : DataFrame
     {
-        /// <summary>
-        /// Qos data frames are like regualr data frames except they contain a quality of service 
-        /// field as defined in the 802.11e standard.
-        /// </summary>
-        public class QosDataFrame : DataFrame
-        {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log =
+ log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
         // NOTE: No need to warn about lack of use, the compiler won't
         //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
-            private class QosDataField
+        private class QosDataField
+        {
+            public static readonly Int32 QosControlLength = 2;
+
+            public static readonly Int32 QosControlPosition;
+
+            static QosDataField()
             {
-                public readonly static int QosControlLength = 2;
-
-                public readonly static int QosControlPosition;
-
-                static QosDataField()
-                {
-                    QosControlPosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
-                }
+                QosControlPosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
             }
-   
-            /// <summary>
-            /// Gets or sets the qos control field.
-            /// </summary>
-            /// <value>
-            /// The qos control field.
-            /// </value>
-            public UInt16 QosControl { get; set; }
+        }
 
-            private UInt16 QosControlBytes
+        /// <summary>
+        ///     Gets or sets the qos control field.
+        /// </summary>
+        /// <value>
+        ///     The qos control field.
+        /// </value>
+        public UInt16 QosControl { get; set; }
+
+        private UInt16 QosControlBytes
+        {
+            get
             {
-                get
+                if (this.HeaderByteArraySegment.Length >=
+                    (QosDataField.QosControlPosition + QosDataField.QosControlLength))
                 {
-					if(header.Length >= (QosDataField.QosControlPosition + QosDataField.QosControlLength))
-					{
-						return EndianBitConverter.Little.ToUInt16(header.Bytes,
-						                                          header.Offset + QosDataField.QosControlPosition);
-					}
-					else
-					{
-						return 0;
-					}
+                    return EndianBitConverter.Little.ToUInt16(this.HeaderByteArraySegment.Bytes,
+                        this.HeaderByteArraySegment.Offset + QosDataField.QosControlPosition);
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + QosDataField.QosControlPosition);
-                }
+                return 0;
             }
 
-            /// <summary>
-            /// Length of the frame header.
-            /// 
-            /// This does not include the FCS, it represents only the header bytes that would
-            /// would preceed any payload.
-            /// </summary>
-            public override int FrameSize
-            {
-                get
-                {
-                    //if we are in WDS mode then there are 4 addresses (normally it is just 3)
-                    int numOfAddressFields = (FrameControl.ToDS && FrameControl.FromDS) ? 4 : 3;
+            set => EndianBitConverter.Little.CopyBytes(value, this.HeaderByteArraySegment.Bytes,
+                this.HeaderByteArraySegment.Offset + QosDataField.QosControlPosition);
+        }
 
-                    return (MacFields.FrameControlLength +
+        /// <summary>
+        ///     Length of the frame header.
+        ///     This does not include the FCS, it represents only the header bytes that would
+        ///     would preceed any payload.
+        /// </summary>
+        public override Int32 FrameSize
+        {
+            get
+            {
+                //if we are in WDS mode then there are 4 addresses (normally it is just 3)
+                Int32 numOfAddressFields = (this.FrameControl.ToDS && this.FrameControl.FromDS) ? 4 : 3;
+
+                return (MacFields.FrameControlLength +
                         MacFields.DurationIDLength +
                         (MacFields.AddressLength * numOfAddressFields) +
                         MacFields.SequenceControlLength +
                         QosDataField.QosControlLength);
-                }
             }
+        }
 
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.QosDataFrame"/> class.
-            /// </summary>
-            /// <param name='bas'>
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public QosDataFrame (ByteArraySegment bas)
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.QosDataFrame" /> class.
+        /// </summary>
+        /// <param name='bas'>
+        ///     A <see cref="ByteArraySegment" />
+        /// </param>
+        public QosDataFrame(ByteArraySegment bas)
+        {
+            Log.Debug("");
+
+            this.HeaderByteArraySegment = new ByteArraySegment(bas);
+
+            this.FrameControl = new FrameControlField(this.FrameControlBytes);
+            this.Duration = new DurationField(this.DurationBytes);
+            this.SequenceControl = new SequenceControlField(this.SequenceControlBytes);
+            this.QosControl = this.QosControlBytes;
+            this.ReadAddresses();
+
+            this.HeaderByteArraySegment.Length = this.FrameSize;
+            var availablePayloadLength = this.GetAvailablePayloadLength();
+            if (availablePayloadLength > 0)
             {
-                log.Debug("");
-
-                header = new ByteArraySegment (bas);
-
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                SequenceControl = new SequenceControlField (SequenceControlBytes);
-                QosControl = QosControlBytes;
-                ReadAddresses ();
-                
-                header.Length = FrameSize;
-                var availablePayloadLength = GetAvailablePayloadLength();
-                if(availablePayloadLength > 0)
-				{
-                    // if data is protected we have no visibility into it, otherwise it is a LLC packet and we
-                    // should parse it
-                    if (FrameControl.Protected)
-                    {
-                        payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes(availablePayloadLength);
-                    }
-                    else
-                    {
-                        payloadPacketOrData.ThePacket = new LogicalLinkControl(header.EncapsulatedBytes());
-                    }
-				}
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.QosDataFrame"/> class.
-            /// </summary>
-            public QosDataFrame ()
-            {
-                this.FrameControl = new FrameControlField ();
-                this.Duration = new DurationField ();
-                this.SequenceControl = new SequenceControlField ();
-                AssignDefaultAddresses ();
-                
-                FrameControl.SubType = FrameControlField.FrameSubTypes.QosData;
-            }
-            
-            /// <summary>
-            /// Writes the current packet properties to the backing ByteArraySegment.
-            /// </summary>
-            public override void UpdateCalculatedValues ()
-            {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                // if data is protected we have no visibility into it, otherwise it is a LLC packet and we
+                // should parse it
+                if (this.FrameControl.Protected)
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    this.PayloadPacketOrData.TheByteArraySegment =
+                        this.HeaderByteArraySegment.EncapsulatedBytes(availablePayloadLength);
                 }
-                
-                this.FrameControlBytes = this.FrameControl.Field;
-                this.DurationBytes = this.Duration.Field;
-                this.SequenceControlBytes = this.SequenceControl.Field;
-                this.QosControlBytes = this.QosControl;
-                WriteAddressBytes ();
+                else
+                {
+                    this.PayloadPacketOrData.ThePacket =
+                        new LogicalLinkControl(this.HeaderByteArraySegment.EncapsulatedBytes());
+                }
             }
-        } 
+        }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.QosDataFrame" /> class.
+        /// </summary>
+        public QosDataFrame()
+        {
+            this.FrameControl = new FrameControlField();
+            this.Duration = new DurationField();
+            this.SequenceControl = new SequenceControlField();
+            this.AssignDefaultAddresses();
+
+            this.FrameControl.SubType = FrameControlField.FrameSubTypes.QosData;
+        }
+
+        /// <summary>
+        ///     Writes the current packet properties to the backing ByteArraySegment.
+        /// </summary>
+        public override void UpdateCalculatedValues()
+        {
+            if ((this.HeaderByteArraySegment == null) ||
+                (this.HeaderByteArraySegment.Length >
+                 (this.HeaderByteArraySegment.BytesLength - this.HeaderByteArraySegment.Offset)) ||
+                (this.HeaderByteArraySegment.Length < this.FrameSize))
+            {
+                this.HeaderByteArraySegment = new ByteArraySegment(new Byte[this.FrameSize]);
+            }
+
+            this.FrameControlBytes = this.FrameControl.Field;
+            this.DurationBytes = this.Duration.Field;
+            this.SequenceControlBytes = this.SequenceControl.Field;
+            this.QosControlBytes = this.QosControl;
+            this.WriteAddressBytes();
+        }
     }
 }

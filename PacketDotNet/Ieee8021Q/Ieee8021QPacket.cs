@@ -41,10 +41,7 @@ namespace PacketDotNet.Ieee8021Q
         /// </value>
         public virtual EthernetPacketType Type
         {
-            get
-            {
-                return (EthernetPacketType)EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + Ieee8021QFields.TypePosition);
-            }
+            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + Ieee8021QFields.TypePosition);
 
             set
             {
@@ -131,10 +128,7 @@ namespace PacketDotNet.Ieee8021Q
 
         private ushort TagControlInformation
         {
-            get
-            {
-                return (ushort)EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + Ieee8021QFields.TagControlInformationPosition);
-            }
+            get => (ushort)EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + Ieee8021QFields.TagControlInformationPosition);
 
             set
             {
@@ -144,13 +138,7 @@ namespace PacketDotNet.Ieee8021Q
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.LightCyan;
-            }
-        }
+        override public String Color => AnsiEscapeSequences.LightCyan;
 
         /// <summary>
         /// Constructor

@@ -151,17 +151,14 @@ namespace PacketDotNet
         /// </summary>
         public virtual Packet ParentPacket
         {
-            get { return this.parentPacket; }
-            set { this.parentPacket = value; }
+            get => this.parentPacket;
+            set => this.parentPacket = value;
         }
 
         /// <value>
         /// Returns a
         /// </value>
-        public virtual byte[] Header
-        {
-            get { return this.header.ActualBytes(); }
-        }
+        public virtual byte[] Header => this.header.ActualBytes();
 
         /// <summary>
         /// Packet that this packet carries if one is present.
@@ -170,7 +167,7 @@ namespace PacketDotNet
         /// </summary>
         public virtual Packet PayloadPacket
         {
-            get { return this.payloadPacketOrData.ThePacket; }
+            get => this.payloadPacketOrData.ThePacket;
             set
             {
                 if (this == value)
@@ -494,12 +491,6 @@ namespace PacketDotNet
         /// <value>
         /// Color used when generating the text description of a packet
         /// </value>
-        public virtual String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.Black;
-            }
-        }
+        public virtual String Color => AnsiEscapeSequences.Black;
     }
 }

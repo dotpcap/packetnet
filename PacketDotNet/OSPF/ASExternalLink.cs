@@ -122,25 +122,13 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public uint ExternalRouteTag
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
         }
 
         /// <summary>
         /// Bytes representation
         /// </summary>
-        public byte[] Bytes
-        {
-            get
-            {
-                return this.header.Bytes;
-            }
-        }
+        public byte[] Bytes => this.header.Bytes;
     }
 }

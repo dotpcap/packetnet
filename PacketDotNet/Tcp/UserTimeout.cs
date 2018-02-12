@@ -70,16 +70,11 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The User Timeout
         /// </summary>
-        public ushort Timeout
-        {
-            get { return (ushort)((int) this.Values & TimeoutMask); }
-        }
+        public ushort Timeout => (ushort)((int) this.Values & TimeoutMask);
 
         // a convenient property to grab the value fields for further processing
-        private ushort Values
-        {
-            get { return EndianBitConverter.Big.ToUInt16(this.Bytes, ValuesFieldOffset); }
-        }
+        private ushort Values => EndianBitConverter.Big.ToUInt16(this.Bytes, ValuesFieldOffset);
+
         #endregion
 
         #region Methods

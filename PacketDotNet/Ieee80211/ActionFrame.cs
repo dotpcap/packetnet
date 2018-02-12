@@ -84,16 +84,10 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength);
-                }
-            }
+            public override int FrameSize => (MacFields.FrameControlLength +
+                                              MacFields.DurationIDLength +
+                                              (MacFields.AddressLength * 3) +
+                                              MacFields.SequenceControlLength);
 
             /// <summary>
             /// Constructor

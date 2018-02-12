@@ -45,15 +45,9 @@ namespace PacketDotNet.PPP
 
         private byte VersionType
         {
-            get
-            {
-                return this.header.Bytes[this.header.Offset + PPPoEFields.VersionTypePosition];
-            }
+            get => this.header.Bytes[this.header.Offset + PPPoEFields.VersionTypePosition];
 
-            set
-            {
-                this.header.Bytes[this.header.Offset + PPPoEFields.VersionTypePosition] = value;
-            }
+            set => this.header.Bytes[this.header.Offset + PPPoEFields.VersionTypePosition] = value;
         }
 
         /// <summary>
@@ -62,10 +56,7 @@ namespace PacketDotNet.PPP
         /// FIXME: This currently outputs the wrong version number
         public byte Version
         {
-            get
-            {
-                return (byte)((this.VersionType >> 4) & 0xF0);
-            }
+            get => (byte)((this.VersionType >> 4) & 0xF0);
 
             set
             {
@@ -83,10 +74,7 @@ namespace PacketDotNet.PPP
         /// </summary>
         public byte Type
         {
-            get
-            {
-                return (byte)((this.VersionType) & 0x0F);
-            }
+            get => (byte)((this.VersionType) & 0x0F);
 
             set
             {
@@ -105,10 +93,7 @@ namespace PacketDotNet.PPP
         /// FIXME: This currently outputs the wrong code
         public PPPoECode Code
         {
-            get
-            {
-                return (PPPoECode)EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + PPPoEFields.CodePosition);
-            }
+            get => (PPPoECode)EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + PPPoEFields.CodePosition);
 
             set
             {
@@ -122,10 +107,7 @@ namespace PacketDotNet.PPP
         /// </summary>
         public UInt16 SessionId
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + PPPoEFields.SessionIdPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + PPPoEFields.SessionIdPosition);
 
             set
             {
@@ -139,10 +121,7 @@ namespace PacketDotNet.PPP
         /// </summary>
         public UInt16 Length
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + PPPoEFields.LengthPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + PPPoEFields.LengthPosition);
 
             set
             {
@@ -212,13 +191,7 @@ namespace PacketDotNet.PPP
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.DarkGray;
-            }
-        }
+        public override String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)

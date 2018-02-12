@@ -76,14 +76,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public ushort LSAge
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + LSAFields.LSAgePosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.LSAgePosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + LSAFields.LSAgePosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.LSAgePosition);
         }
 
         /// <summary>
@@ -91,14 +85,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public byte Options
         {
-            get
-            {
-                return this.header.Bytes[this.header.Offset + LSAFields.OptionsPosition];
-            }
-            set
-            {
-                this.header.Bytes[this.header.Offset + LSAFields.OptionsPosition] = value;
-            }
+            get => this.header.Bytes[this.header.Offset + LSAFields.OptionsPosition];
+            set => this.header.Bytes[this.header.Offset + LSAFields.OptionsPosition] = value;
         }
 
         ///<summary>
@@ -106,14 +94,8 @@ namespace PacketDotNet.OSPF
         ///</summary>
         public LSAType LSType
         {
-            get
-            {
-                return (LSAType) this.header.Bytes[this.header.Offset + LSAFields.LSTypePosition];
-            }
-            set
-            {
-                this.header.Bytes[this.header.Offset + LSAFields.LSTypePosition] = (byte)value;
-            }
+            get => (LSAType) this.header.Bytes[this.header.Offset + LSAFields.LSTypePosition];
+            set => this.header.Bytes[this.header.Offset + LSAFields.LSTypePosition] = (byte)value;
         }
 
         /// <summary>
@@ -164,14 +146,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public uint LSSequenceNumber
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + LSAFields.LSSequenceNumberPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.LSSequenceNumberPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + LSAFields.LSSequenceNumberPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.LSSequenceNumberPosition);
         }
 
         /// <summary>
@@ -180,14 +156,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public ushort Checksum
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + LSAFields.ChecksumPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.ChecksumPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + LSAFields.ChecksumPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.ChecksumPosition);
         }
 
         /// <summary>
@@ -196,14 +166,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public ushort Length
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + LSAFields.PacketLengthPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.PacketLengthPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + LSAFields.PacketLengthPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + LSAFields.PacketLengthPosition);
         }
 
         /// <summary>
@@ -221,13 +185,6 @@ namespace PacketDotNet.OSPF
         /// Gets the bytes.
         /// </summary>
         /// <value>The bytes.</value>
-        public virtual byte[] Bytes
-        {
-            get
-            {
-                return this.header.ActualBytes();
-            }
-        }
-
+        public virtual byte[] Bytes => this.header.ActualBytes();
     }
 }

@@ -12,19 +12,16 @@ namespace PacketDotNet.Ieee80211
         #region Properties
 
         /// <summary>Type of the field</summary>
-        public override PpiFieldType FieldType
-        {
-            get { return PpiFieldType.PpiAggregation;}
-        }
-            
+        public override PpiFieldType FieldType => PpiFieldType.PpiAggregation;
+
         /// <summary>
         /// Gets the length of the field data.
         /// </summary>
         /// <value>
         /// The length.
         /// </value>
-        public override int Length { get {return 4; } }
-   
+        public override int Length => 4;
+
         /// <summary>
         /// Zero-based index of the physical interface the packet was captured from.
         /// </summary>
@@ -39,14 +36,8 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public override byte[] Bytes
-        {
-            get
-            {
-                return BitConverter.GetBytes(this.InterfaceId);
-            }
-        }
-            
+        public override byte[] Bytes => BitConverter.GetBytes(this.InterfaceId);
+
         #endregion Properties
 
         #region Constructors

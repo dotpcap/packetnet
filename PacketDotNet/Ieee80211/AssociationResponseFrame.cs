@@ -68,10 +68,7 @@ namespace PacketDotNet.Ieee80211
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + AssociationResponseFields.CapabilityInformationPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + AssociationResponseFields.CapabilityInformationPosition);
             }
 
             /// <summary>
@@ -104,10 +101,7 @@ namespace PacketDotNet.Ieee80211
                     }
                 }
                 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes ((UInt16)value, this.header.Bytes, this.header.Offset + AssociationResponseFields.StatusCodePosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes ((UInt16)value, this.header.Bytes, this.header.Offset + AssociationResponseFields.StatusCodePosition);
             }
 
             /// <summary>
@@ -151,19 +145,13 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        AssociationResponseFields.CapabilityInformationLength +
-                        AssociationResponseFields.StatusCodeLength +
-                        AssociationResponseFields.AssociationIdLength + this.InformationElements.Length);
-                }
-            }
+            public override int FrameSize => (MacFields.FrameControlLength +
+                                              MacFields.DurationIDLength +
+                                              (MacFields.AddressLength * 3) +
+                                              MacFields.SequenceControlLength +
+                                              AssociationResponseFields.CapabilityInformationLength +
+                                              AssociationResponseFields.StatusCodeLength +
+                                              AssociationResponseFields.AssociationIdLength + this.InformationElements.Length);
 
 
             /// <summary>

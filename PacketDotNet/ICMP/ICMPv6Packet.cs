@@ -60,24 +60,15 @@ namespace PacketDotNet.ICMP
                     throw new ArgumentOutOfRangeException("Type of \"" + val + "\" is not defined in ICMPv6Types");
             }
 
-            set
-            {
-                this.header.Bytes[this.header.Offset + ICMPv6Fields.TypePosition] = (byte)value;
-            }
+            set => this.header.Bytes[this.header.Offset + ICMPv6Fields.TypePosition] = (byte)value;
         }
 
         /// <summary> Fetch the ICMP code </summary>
         virtual public byte Code
         {
-            get
-            {
-                return this.header.Bytes[this.header.Offset + ICMPv6Fields.CodePosition];
-            }
+            get => this.header.Bytes[this.header.Offset + ICMPv6Fields.CodePosition];
 
-            set
-            {
-                this.header.Bytes[this.header.Offset + ICMPv6Fields.CodePosition] = (byte)value;
-            }
+            set => this.header.Bytes[this.header.Offset + ICMPv6Fields.CodePosition] = (byte)value;
         }
 
         /// <value>
@@ -85,10 +76,7 @@ namespace PacketDotNet.ICMP
         /// </value>
         public ushort Checksum
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + ICMPv6Fields.ChecksumPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + ICMPv6Fields.ChecksumPosition);
 
             set
             {
@@ -160,13 +148,7 @@ namespace PacketDotNet.ICMP
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.LightBlue;
-            }
-        }
+        override public String Color => AnsiEscapeSequences.LightBlue;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)

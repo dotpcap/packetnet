@@ -233,14 +233,8 @@ namespace PacketDotNet.Ieee80211
             /// </value>
             public ElementId Id
             { 
-                get
-                {
-                    return (ElementId) this.bytes.Bytes [this.bytes.Offset + ElementIdPosition];
-                }
-                set
-                {
-                    this.bytes.Bytes [this.bytes.Offset + ElementIdPosition] = (byte)value;
-                }
+                get => (ElementId) this.bytes.Bytes [this.bytes.Offset + ElementIdPosition];
+                set => this.bytes.Bytes [this.bytes.Offset + ElementIdPosition] = (byte)value;
             }
 
             /// <summary>
@@ -249,32 +243,16 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The length.
             /// </value>
-            public int ValueLength
-            {
-                get
-                {
-                    return Math.Min((this.bytes.Length - ElementValuePosition), this.bytes.Bytes [this.bytes.Offset + ElementLengthPosition]);
-                }
-                //no set Length method as we dont want to allow a mismatch between
-                //the length field and the actual length of the value
-            }
-            
+            public int ValueLength => Math.Min((this.bytes.Length - ElementValuePosition), this.bytes.Bytes [this.bytes.Offset + ElementLengthPosition]);
+
             /// <summary>
             /// Gets the length of the element including the Id and Length field
             /// </summary>
             /// <value>
             /// The length of the element.
             /// </value>
-            public byte ElementLength
-            {
-                get
-                {
-                    return (byte)(ElementIdLength + ElementLengthLength + this.ValueLength);
-                }
-                //no set Length method as we dont want to allow a mismatch between
-                //the length field and the actual length of the value
-            }
-   
+            public byte ElementLength => (byte)(ElementIdLength + ElementLengthLength + this.ValueLength);
+
             /// <summary>
             /// Gets or sets the value of the element
             /// </summary>
@@ -323,13 +301,7 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The bytes.
             /// </value>
-            public Byte[] Bytes
-            {
-                get
-                {
-                    return this.bytes.ActualBytes();
-                }
-            }
+            public Byte[] Bytes => this.bytes.ActualBytes();
 
             /// <summary>
             /// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="PacketDotNet.Ieee80211.InformationElement"/>.

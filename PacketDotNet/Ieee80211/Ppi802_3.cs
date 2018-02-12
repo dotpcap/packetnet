@@ -70,19 +70,16 @@ namespace PacketDotNet.Ieee80211
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.Ppi802_3; }
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.Ppi802_3;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override int Length { get {return 8; } }
-            
+            public override int Length => 8;
+
             /// <summary>
             /// Gets or sets the standard 802.2 flags.
             /// </summary>

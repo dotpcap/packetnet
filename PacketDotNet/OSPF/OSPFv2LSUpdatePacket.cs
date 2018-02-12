@@ -92,14 +92,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public virtual uint LSANumber
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + OSPFv2Fields.LSANumberPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.LSANumberPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + OSPFv2Fields.LSANumberPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.LSANumberPosition);
         }
 
         /// <summary>

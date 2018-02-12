@@ -87,27 +87,24 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public int Length
         {
-            get { return this.TypeLength.Length; }
+            get => this.TypeLength.Length;
 
             // Length set property is internal because the tlv length is
             // automatically set based on the length of the tlv value
-            internal set { this.TypeLength.Length = value; }
+            internal set => this.TypeLength.Length = value;
         }
 
         /// <summary>
         /// Total length of the TLV, including the length of the Type and Length fields
         /// </summary>
-        public int TotalLength
-        {
-            get { return this.tlvData.Length; }
-        }
+        public int TotalLength => this.tlvData.Length;
 
         /// <summary>
         /// Tlv type
         /// </summary>
         public TLVTypes Type
         {
-            get { return this.TypeLength.Type; }
+            get => this.TypeLength.Type;
 
             set
             {
@@ -119,21 +116,12 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Offset to the value bytes of the TLV
         /// </summary>
-        internal int ValueOffset
-        {
-            get { return this.tlvData.Offset + TLVTypeLength.TypeLengthLength; }
-        }
+        internal int ValueOffset => this.tlvData.Offset + TLVTypeLength.TypeLengthLength;
 
         /// <summary>
         /// Return a byte[] that contains the tlv
         /// </summary>
-        public virtual byte[] Bytes
-        {
-            get
-            {
-                return this.tlvData.ActualBytes();
-            }
-        }
+        public virtual byte[] Bytes => this.tlvData.ActualBytes();
 
         #endregion
 
@@ -149,7 +137,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         internal ByteArraySegment tlvData
         {
-            get { return this._tlvData; }
+            get => this._tlvData;
 
             set
             {

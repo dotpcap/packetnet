@@ -55,10 +55,7 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The Checksum
         /// </summary>
-        public ChecksumAlgorighmType Checksum
-        {
-            get { return (ChecksumAlgorighmType) this.Bytes[ChecksumFieldOffset]; }
-        }
+        public ChecksumAlgorighmType Checksum => (ChecksumAlgorighmType) this.Bytes[ChecksumFieldOffset];
 
         #endregion
 

@@ -10,16 +10,16 @@ namespace PacketDotNet.Ieee80211
     public class RxFlagsRadioTapField : RadioTapField
     {
         /// <summary>Type of the field</summary>
-        public override RadioTapType FieldType { get { return RadioTapType.RxFlags; } }
-            
+        public override RadioTapType FieldType => RadioTapType.RxFlags;
+
         /// <summary>
         /// Gets the length of the field data.
         /// </summary>
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length { get { return 2; } }
-            
+        public override ushort Length => 2;
+
         /// <summary>
         /// Gets or sets a value indicating whether the frame failed the PLCP CRC check.
         /// </summary>

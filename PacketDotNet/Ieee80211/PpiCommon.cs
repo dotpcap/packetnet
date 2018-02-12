@@ -36,19 +36,16 @@ namespace PacketDotNet.Ieee80211
         #region Properties
 
         /// <summary>Type of the field</summary>
-        public override PpiFieldType FieldType
-        {
-            get { return PpiFieldType.PpiCommon;}
-        }
-            
+        public override PpiFieldType FieldType => PpiFieldType.PpiCommon;
+
         /// <summary>
         /// Gets the length of the field data.
         /// </summary>
         /// <value>
         /// The length.
         /// </value>
-        public override int Length { get { return 20; } }
-            
+        public override int Length => 20;
+
         /// <summary>
         /// Radiotap-formatted channel flags.
         /// </summary>

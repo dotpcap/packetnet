@@ -11,18 +11,16 @@ namespace PacketDotNet.Ieee80211
         #region Properties
 
         /// <summary>Type of the field</summary>
-        public override PpiFieldType FieldType
-        {
-            get { return PpiFieldType.PpiSpectrum;}
-        }
-            
+        public override PpiFieldType FieldType => PpiFieldType.PpiSpectrum;
+
         /// <summary>
         /// Gets the length of the field data.
         /// </summary>
         /// <value>
         /// The length.
         /// </value>
-        public override int Length { get { return 20 + this.SamplesData.Length; } }
+        public override int Length => 20 + this.SamplesData.Length;
+
         /// <summary>
         /// Gets or sets the starting frequency in kHz.
         /// </summary>

@@ -71,13 +71,7 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Number of bytes in the NetworkAddress
         /// </summary>
-        internal int Length
-        {
-            get
-            {
-                return AddressFamilyLength + this.Address.GetAddressBytes().Length;
-            }
-        }
+        internal int Length => AddressFamilyLength + this.Address.GetAddressBytes().Length;
 
         internal byte[] Bytes
         {
@@ -98,8 +92,8 @@ namespace PacketDotNet.LLDP
         /// <summary>The format of the Network Address</summary>
         public AddressFamily AddressFamily
         {
-            get { return (AddressFamily) this.data.Bytes[this.data.Offset]; }
-            set { this.data.Bytes[this.data.Offset] = (byte)value; }
+            get => (AddressFamily) this.data.Bytes[this.data.Offset];
+            set => this.data.Bytes[this.data.Offset] = (byte)value;
         }
 
         private static int LengthFromAddressFamily(AddressFamily addressFamily)

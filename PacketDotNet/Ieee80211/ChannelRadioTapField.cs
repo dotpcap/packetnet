@@ -30,10 +30,7 @@ namespace PacketDotNet.Ieee80211
     public class ChannelRadioTapField : RadioTapField
     {
         /// <summary>Type of the field</summary>
-        public override RadioTapType FieldType
-        {
-            get { return RadioTapType.Channel; }
-        }
+        public override RadioTapType FieldType => RadioTapType.Channel;
 
         /// <summary>
         /// Gets the length of the field data.
@@ -41,10 +38,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length
-        {
-            get { return 4; }
-        }
+        public override ushort Length => 4;
 
         /// <summary>
         /// Frequency in MHz

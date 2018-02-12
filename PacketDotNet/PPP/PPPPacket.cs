@@ -50,10 +50,7 @@ namespace PacketDotNet.PPP
         /// </summary>
         public PPPProtocol Protocol
         {
-            get
-            {
-                return (PPPProtocol)EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + PPPFields.ProtocolPosition);
-            }
+            get => (PPPProtocol)EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + PPPFields.ProtocolPosition);
 
             set
             {
@@ -128,13 +125,7 @@ namespace PacketDotNet.PPP
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.DarkGray;
-            }
-        }
+        public override String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)

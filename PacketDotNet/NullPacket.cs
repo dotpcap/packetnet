@@ -47,10 +47,7 @@ namespace PacketDotNet
         /// </summary>
         public NullPacketType Protocol
         {
-            get
-            {
-                return (NullPacketType)EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + NullFields.ProtocolPosition);
-            }
+            get => (NullPacketType)EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + NullFields.ProtocolPosition);
 
             set
             {
@@ -125,13 +122,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.LightPurple;
-            }
-        }
+        public override String Color => AnsiEscapeSequences.LightPurple;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)

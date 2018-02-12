@@ -12,11 +12,8 @@ namespace PacketDotNet.Ieee80211
         #region Properties
 
         /// <summary>Type of the field</summary>
-        public override PpiFieldType FieldType
-        {
-            get { return PpiFieldType.PpiProcessInfo;}
-        }
-            
+        public override PpiFieldType FieldType => PpiFieldType.PpiProcessInfo;
+
         /// <summary>
         /// Gets the length of the field data.
         /// </summary>

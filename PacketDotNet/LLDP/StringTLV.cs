@@ -73,10 +73,7 @@ namespace PacketDotNet.LLDP
         /// </value>
         public string StringValue
         {
-            get
-            {
-                return System.Text.Encoding.ASCII.GetString(this.tlvData.Bytes, this.ValueOffset, this.Length);
-            }
+            get => System.Text.Encoding.ASCII.GetString(this.tlvData.Bytes, this.ValueOffset, this.Length);
 
             set
             {

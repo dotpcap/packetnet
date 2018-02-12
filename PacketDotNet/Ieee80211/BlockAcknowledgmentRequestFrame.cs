@@ -74,10 +74,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + BlockAckRequestField.BlockAckRequestControlPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + BlockAckRequestField.BlockAckRequestControlPosition);
             }
 
             /// <summary>
@@ -120,27 +117,18 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + BlockAckRequestField.BlockAckStartingSequenceControlPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + BlockAckRequestField.BlockAckStartingSequenceControlPosition);
             }
 
 
             /// <summary>
             /// Length of the frame
             /// </summary>
-            override public int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 2) +
-                        BlockAckRequestField.BlockAckRequestControlLength +
-                        BlockAckRequestField.BlockAckStartingSequenceControlLength);
-                }
-            }
+            override public int FrameSize => (MacFields.FrameControlLength +
+                                              MacFields.DurationIDLength +
+                                              (MacFields.AddressLength * 2) +
+                                              BlockAckRequestField.BlockAckRequestControlLength +
+                                              BlockAckRequestField.BlockAckStartingSequenceControlLength);
 
             /// <summary>
             /// Constructor

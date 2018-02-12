@@ -35,15 +35,9 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public bool IsEss
             {
-                get
-                {
-                    return this.GetBitFieldValue(0);
-                }
+                get => this.GetBitFieldValue(0);
 
-                set
-                {
-                    this.SetBitFieldValue(0, value);
-                }
+                set => this.SetBitFieldValue(0, value);
             }
 
             /// <summary>
@@ -53,15 +47,9 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public bool IsIbss
             {
-                get
-                {
-                    return this.GetBitFieldValue(1);
-                }
+                get => this.GetBitFieldValue(1);
 
-                set
-                {
-                    this.SetBitFieldValue(1, value);
-                }
+                set => this.SetBitFieldValue(1, value);
             }
 
             /// <summary>
@@ -73,15 +61,9 @@ namespace PacketDotNet.Ieee80211
             /// </value>
             public bool CfPollable
             {
-                get
-                {
-                    return this.GetBitFieldValue(2);
-                }
+                get => this.GetBitFieldValue(2);
 
-                set
-                {
-                    this.SetBitFieldValue(2, value);
-                }
+                set => this.SetBitFieldValue(2, value);
             }
 
             /// <summary>
@@ -93,15 +75,9 @@ namespace PacketDotNet.Ieee80211
             /// </value>
             public bool CfPollRequest
             {
-                get
-                {
-                    return this.GetBitFieldValue(3);
-                }
+                get => this.GetBitFieldValue(3);
 
-                set
-                {
-                    this.SetBitFieldValue(3, value);
-                }
+                set => this.SetBitFieldValue(3, value);
             }
 
             /// <summary>
@@ -113,15 +89,9 @@ namespace PacketDotNet.Ieee80211
             /// </value>
             public bool Privacy
             {
-                get
-                {
-                    return this.GetBitFieldValue(4);
-                }
+                get => this.GetBitFieldValue(4);
 
-                set
-                {
-                    this.SetBitFieldValue(4, value);
-                }
+                set => this.SetBitFieldValue(4, value);
             }
 
             /// <summary>
@@ -133,15 +103,9 @@ namespace PacketDotNet.Ieee80211
             /// </value>
             public bool ShortPreamble
             {
-                get
-                {
-                    return this.GetBitFieldValue(5);
-                }
+                get => this.GetBitFieldValue(5);
 
-                set
-                {
-                    this.SetBitFieldValue(5, value);
-                }
+                set => this.SetBitFieldValue(5, value);
             }
 
             /// <summary>
@@ -153,15 +117,9 @@ namespace PacketDotNet.Ieee80211
             /// </value>
             public bool Pbcc
             {
-                get
-                {
-                    return this.GetBitFieldValue(6);
-                }
+                get => this.GetBitFieldValue(6);
 
-                set
-                {
-                    this.SetBitFieldValue(6, value);
-                }
+                set => this.SetBitFieldValue(6, value);
             }
 
             /// <summary>
@@ -173,15 +131,9 @@ namespace PacketDotNet.Ieee80211
             /// </value>
             public bool ChannelAgility
             {
-                get
-                {
-                    return this.GetBitFieldValue(7);
-                }
+                get => this.GetBitFieldValue(7);
 
-                set
-                {
-                    this.SetBitFieldValue(7, value);
-                }
+                set => this.SetBitFieldValue(7, value);
             }
 
             /// <summary>
@@ -193,15 +145,9 @@ namespace PacketDotNet.Ieee80211
             /// </value>
             public bool ShortTimeSlot
             {
-                get
-                {
-                    return this.GetBitFieldValue(10);
-                }
+                get => this.GetBitFieldValue(10);
 
-                set
-                {
-                    this.SetBitFieldValue(10, value);
-                }
+                set => this.SetBitFieldValue(10, value);
             }
 
             /// <summary>
@@ -213,15 +159,9 @@ namespace PacketDotNet.Ieee80211
             /// </value>
             public bool DssOfdm
             {
-                get
-                {
-                    return this.GetBitFieldValue(13);
-                }
+                get => this.GetBitFieldValue(13);
 
-                set
-                {
-                    this.SetBitFieldValue(13, value);
-                }
+                set => this.SetBitFieldValue(13, value);
             }
 
             /// <summary>

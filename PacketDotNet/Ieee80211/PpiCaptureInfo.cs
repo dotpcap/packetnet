@@ -11,32 +11,23 @@ namespace PacketDotNet.Ieee80211
         #region Properties
 
         /// <summary>Type of the field</summary>
-        public override PpiFieldType FieldType
-        {
-            get { return PpiFieldType.PpiCaptureInfo;}
-        }
-            
+        public override PpiFieldType FieldType => PpiFieldType.PpiCaptureInfo;
+
         /// <summary>
         /// Gets the length of the field data.
         /// </summary>
         /// <value>
         /// The length.
         /// </value>
-        public override int Length { get { return 0; } }
-            
+        public override int Length => 0;
+
         /// <summary>
         /// Gets the field bytes. This doesn't include the PPI field header.
         /// </summary>
         /// <value>
         /// The bytes.
         /// </value>
-        public override byte[] Bytes
-        {
-            get
-            {
-                return new byte[0];
-            }
-        }
+        public override byte[] Bytes => new byte[0];
 
         #endregion Properties
 

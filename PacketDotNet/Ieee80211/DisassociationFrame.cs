@@ -64,10 +64,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
                 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes ((UInt16)value, this.header.Bytes, this.header.Offset + DisassociationFields.ReasonCodePosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes ((UInt16)value, this.header.Bytes, this.header.Offset + DisassociationFields.ReasonCodePosition);
             }
 
             /// <summary>
@@ -76,17 +73,11 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        DisassociationFields.ReasonCodeLength);
-                }
-            }
+            public override int FrameSize => (MacFields.FrameControlLength +
+                                              MacFields.DurationIDLength +
+                                              (MacFields.AddressLength * 3) +
+                                              MacFields.SequenceControlLength +
+                                              DisassociationFields.ReasonCodeLength);
 
             /// <summary>
             /// Constructor

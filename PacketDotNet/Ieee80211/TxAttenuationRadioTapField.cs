@@ -12,16 +12,16 @@ namespace PacketDotNet.Ieee80211
     public class TxAttenuationRadioTapField : RadioTapField
     {
         /// <summary>Type of the field</summary>
-        public override RadioTapType FieldType { get { return RadioTapType.TxAttenuation; } }
-   
+        public override RadioTapType FieldType => RadioTapType.TxAttenuation;
+
         /// <summary>
         /// Gets the length of the field data.
         /// </summary>
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length { get { return 2; } }
-            
+        public override ushort Length => 2;
+
         /// <summary>
         /// Transmit power
         /// </summary>

@@ -73,10 +73,7 @@ namespace PacketDotNet.ICMP
         /// </value>
         public ushort Checksum
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + ICMPv4Fields.ChecksumPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + ICMPv4Fields.ChecksumPosition);
 
             set
             {
@@ -90,10 +87,7 @@ namespace PacketDotNet.ICMP
         /// </summary>
         public ushort ID
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + ICMPv4Fields.IDPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + ICMPv4Fields.IDPosition);
 
             set
             {
@@ -107,15 +101,9 @@ namespace PacketDotNet.ICMP
         /// </summary>
         public ushort Sequence
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + ICMPv4Fields.SequencePosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + ICMPv4Fields.SequencePosition);
 
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + ICMPv4Fields.SequencePosition);
-            }
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + ICMPv4Fields.SequencePosition);
         }
 
         /// <summary>
@@ -123,15 +111,9 @@ namespace PacketDotNet.ICMP
         /// </summary>
         public byte[] Data
         {
-            get
-            {
-                return this.payloadPacketOrData.TheByteArraySegment.ActualBytes();
-            }
+            get => this.payloadPacketOrData.TheByteArraySegment.ActualBytes();
 
-            set
-            {
-                this.payloadPacketOrData.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
-            }
+            set => this.payloadPacketOrData.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
         }
 
         /// <summary>
@@ -172,13 +154,7 @@ namespace PacketDotNet.ICMP
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.LightBlue;
-            }
-        }
+        override public String Color => AnsiEscapeSequences.LightBlue;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)

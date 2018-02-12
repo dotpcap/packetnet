@@ -109,10 +109,7 @@ namespace PacketDotNet.LLDP
                 return oui;
             }
 
-            set
-            {
-                Array.Copy(value, 0, this.tlvData.Bytes, this.ValueOffset, OUILength);
-            }
+            set => Array.Copy(value, 0, this.tlvData.Bytes, this.ValueOffset, OUILength);
         }
 
         /// <summary>
@@ -120,14 +117,8 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public int OrganizationDefinedSubType
         {
-            get
-            {
-                return this.tlvData.Bytes[this.ValueOffset + OUILength];
-            }
-            set
-            {
-                this.tlvData.Bytes[this.ValueOffset + OUILength] = (byte)value;
-            }
+            get => this.tlvData.Bytes[this.ValueOffset + OUILength];
+            set => this.tlvData.Bytes[this.ValueOffset + OUILength] = (byte)value;
         }
 
         /// <summary>

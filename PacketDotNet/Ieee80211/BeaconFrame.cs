@@ -77,10 +77,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + BeaconFields.TimestampPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + BeaconFields.TimestampPosition);
             }
 
             /// <summary>
@@ -104,10 +101,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + BeaconFields.BeaconIntervalPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + BeaconFields.BeaconIntervalPosition);
             }
 
             /// <summary>
@@ -127,10 +121,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + BeaconFields.CapabilityInformationPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + BeaconFields.CapabilityInformationPosition);
             }
 
             /// <summary>
@@ -148,19 +139,13 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        BeaconFields.TimestampLength +
-                        BeaconFields.BeaconIntervalLength +
-                        BeaconFields.CapabilityInformationLength + this.InformationElements.Length);
-                }
-            }
+            public override int FrameSize => (MacFields.FrameControlLength +
+                                              MacFields.DurationIDLength +
+                                              (MacFields.AddressLength * 3) +
+                                              MacFields.SequenceControlLength +
+                                              BeaconFields.TimestampLength +
+                                              BeaconFields.BeaconIntervalLength +
+                                              BeaconFields.CapabilityInformationLength + this.InformationElements.Length);
 
             /// <summary>
             /// The information elements included in the frame

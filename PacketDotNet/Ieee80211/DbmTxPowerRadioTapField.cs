@@ -10,16 +10,16 @@ namespace PacketDotNet.Ieee80211
     public class DbmTxPowerRadioTapField : RadioTapField
     {
         /// <summary>Type of the field</summary>
-        public override RadioTapType FieldType { get { return RadioTapType.DbmTxPower; } }
-            
+        public override RadioTapType FieldType => RadioTapType.DbmTxPower;
+
         /// <summary>
         /// Gets the length of the field data.
         /// </summary>
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length { get { return 1; } }
-            
+        public override ushort Length => 1;
+
         /// <summary>
         /// Tx power in dBm
         /// </summary>

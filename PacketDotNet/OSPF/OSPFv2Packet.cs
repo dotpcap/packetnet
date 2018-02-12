@@ -78,15 +78,9 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public OSPFVersion Version
         {
-            get
-            {
-                return (OSPFVersion) this.header.Bytes[this.header.Offset + OSPFv2Fields.VersionPosition];
-            }
+            get => (OSPFVersion) this.header.Bytes[this.header.Offset + OSPFv2Fields.VersionPosition];
 
-            set
-            {
-                this.header.Bytes[this.header.Offset + OSPFv2Fields.VersionPosition] = (byte)value;
-            }
+            set => this.header.Bytes[this.header.Offset + OSPFv2Fields.VersionPosition] = (byte)value;
         }
 
         /// <summary>
@@ -103,10 +97,7 @@ namespace PacketDotNet.OSPF
                 else
                     throw new NotImplementedException("No such OSPF packet type " + val);
             }
-            set
-            {
-                this.header.Bytes[this.header.Offset + OSPFv2Fields.TypePosition] = (byte)value;
-            }
+            set => this.header.Bytes[this.header.Offset + OSPFv2Fields.TypePosition] = (byte)value;
         }
 
         /// <summary>
@@ -114,14 +105,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public virtual ushort PacketLength
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + OSPFv2Fields.PacketLengthPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.PacketLengthPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + OSPFv2Fields.PacketLengthPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.PacketLengthPosition);
         }
 
         /// <summary>
@@ -168,14 +153,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public virtual ushort Checksum
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + OSPFv2Fields.ChecksumPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.ChecksumPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + OSPFv2Fields.ChecksumPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.ChecksumPosition);
         }
 
         /// <summary>
@@ -183,14 +162,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public virtual ushort AuType
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + OSPFv2Fields.AuTypePosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.AuTypePosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + OSPFv2Fields.AuTypePosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.AuTypePosition);
         }
 
         ///<summary>
@@ -198,14 +171,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public virtual ulong Authentication
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt64(this.header.Bytes, this.header.Offset + OSPFv2Fields.AuthorizationPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.AuthorizationPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt64(this.header.Bytes, this.header.Offset + OSPFv2Fields.AuthorizationPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.AuthorizationPosition);
         }
 
         /// <summary>

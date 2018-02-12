@@ -63,10 +63,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + QosNullDataField.QosControlPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + QosNullDataField.QosControlPosition);
             }
 
             /// <summary>

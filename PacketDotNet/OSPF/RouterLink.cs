@@ -106,14 +106,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public byte Type
         {
-            get
-            {
-                return this.header.Bytes[this.header.Offset + RouterLinkFields.TypePosition];
-            }
-            set
-            {
-                this.header.Bytes[this.header.Offset + RouterLinkFields.TypePosition] = value;
-            }
+            get => this.header.Bytes[this.header.Offset + RouterLinkFields.TypePosition];
+            set => this.header.Bytes[this.header.Offset + RouterLinkFields.TypePosition] = value;
         }
 
         /// <summary>
@@ -122,14 +116,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public byte TOSNumber
         {
-            get
-            {
-                return this.header.Bytes[this.header.Offset + RouterLinkFields.TOSNumberPosition];
-            }
-            set
-            {
-                this.header.Bytes[this.header.Offset + RouterLinkFields.TOSNumberPosition] = value;
-            }
+            get => this.header.Bytes[this.header.Offset + RouterLinkFields.TOSNumberPosition];
+            set => this.header.Bytes[this.header.Offset + RouterLinkFields.TOSNumberPosition] = value;
         }
 
         /// <summary>
@@ -137,14 +125,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public ushort Metric
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + RouterLinkFields.MetricPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + RouterLinkFields.MetricPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + RouterLinkFields.MetricPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + RouterLinkFields.MetricPosition);
         }
 
         /// <summary>
@@ -173,12 +155,6 @@ namespace PacketDotNet.OSPF
         /// <summary>
         /// bytes representation
         /// </summary>
-        public byte[] Bytes
-        {
-            get
-            {
-                return this.header.Bytes;
-            }
-        }
+        public byte[] Bytes => this.header.Bytes;
     }
 }

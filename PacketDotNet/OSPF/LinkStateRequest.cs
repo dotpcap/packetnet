@@ -48,14 +48,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public LSAType LSType
         {
-            get
-            {
-                return (LSAType)EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + LinkStateRequestFields.LSTypePosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes((UInt32)value, this.header.Bytes, this.header.Offset + LinkStateRequestFields.LSTypePosition);
-            }
+            get => (LSAType)EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + LinkStateRequestFields.LSTypePosition);
+            set => EndianBitConverter.Big.CopyBytes((UInt32)value, this.header.Bytes, this.header.Offset + LinkStateRequestFields.LSTypePosition);
         }
 
         /// <summary>
@@ -101,12 +95,6 @@ namespace PacketDotNet.OSPF
         /// Gets the bytes.
         /// </summary>
         /// <value>The bytes.</value>
-        public virtual byte[] Bytes
-        {
-            get
-            {
-                return this.header.ActualBytes();
-            }
-        }
+        public virtual byte[] Bytes => this.header.ActualBytes();
     }
 }

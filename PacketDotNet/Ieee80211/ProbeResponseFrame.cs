@@ -75,10 +75,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + ProbeResponseFields.TimestampPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + ProbeResponseFields.TimestampPosition);
             }
 
             /// <summary>
@@ -103,10 +100,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + ProbeResponseFields.BeaconIntervalPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + ProbeResponseFields.BeaconIntervalPosition);
             }
 
             /// <summary>
@@ -127,10 +121,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + ProbeResponseFields.CapabilityInformationPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + ProbeResponseFields.CapabilityInformationPosition);
             }
    
             /// <summary>
@@ -152,19 +143,13 @@ namespace PacketDotNet.Ieee80211
             /// This does not include the FCS, it represents only the header bytes that would
             /// would preceed any payload.
             /// </summary>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        ProbeResponseFields.TimestampLength +
-                        ProbeResponseFields.BeaconIntervalLength +
-                        ProbeResponseFields.CapabilityInformationLength + this.InformationElements.Length);
-                }
-            }
+            public override int FrameSize => (MacFields.FrameControlLength +
+                                              MacFields.DurationIDLength +
+                                              (MacFields.AddressLength * 3) +
+                                              MacFields.SequenceControlLength +
+                                              ProbeResponseFields.TimestampLength +
+                                              ProbeResponseFields.BeaconIntervalLength +
+                                              ProbeResponseFields.CapabilityInformationLength + this.InformationElements.Length);
 
             /// <summary>
             /// Constructor

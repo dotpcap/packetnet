@@ -33,52 +33,17 @@ namespace PacketDotNet.L2TP
     public class L2TPPacket : Packet
     {
 
-        virtual public bool DataMessage
-        {
-            get
-            {
-                return 8 == (this.header.Bytes[this.header.Offset] & 0x8);
-            }
-        }
-        virtual public bool HasLength
-        {
-            get
-            {
-                return 4 == (this.header.Bytes[this.header.Offset] & 0x4);
-            }
-        }
+        virtual public bool DataMessage => 8 == (this.header.Bytes[this.header.Offset] & 0x8);
 
-        virtual public bool HasSequence
-        {
-            get
-            {
-                return 2 == (this.header.Bytes[this.header.Offset] & 0x2);
-            }
-        }
+        virtual public bool HasLength => 4 == (this.header.Bytes[this.header.Offset] & 0x4);
 
-        virtual public bool HasOffset
-        {
-            get
-            {
-                return 2 == (this.header.Bytes[this.header.Offset] & 0x2);
-            }
-        }
+        virtual public bool HasSequence => 2 == (this.header.Bytes[this.header.Offset] & 0x2);
 
-        virtual public bool IsPriority
-        {
-            get
-            {
-                return 2 == (this.header.Bytes[this.header.Offset] & 0x2);
-            }
-        }
+        virtual public bool HasOffset => 2 == (this.header.Bytes[this.header.Offset] & 0x2);
 
-        virtual public int Version
-        {
-            get
-            {
-                return (this.header.Bytes[this.header.Offset + 1] & 0x7);
-            }
-        }
+        virtual public bool IsPriority => 2 == (this.header.Bytes[this.header.Offset] & 0x2);
+
+        virtual public int Version => (this.header.Bytes[this.header.Offset + 1] & 0x7);
 
         virtual public int TunnelID
         {
@@ -105,14 +70,7 @@ namespace PacketDotNet.L2TP
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.DarkGray;
-            }
-
-        }
+        override public String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary>
         /// Constructor

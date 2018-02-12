@@ -40,10 +40,7 @@ namespace PacketDotNet.Utils
         /// </value>
         public ByteArraySegment TheByteArraySegment
         {
-            get
-            {
-                return this.theByteArraySegment;
-            }
+            get => this.theByteArraySegment;
 
             set
             {
@@ -62,10 +59,7 @@ namespace PacketDotNet.Utils
         /// </value>
         public Packet ThePacket
         {
-            get
-            {
-                return this.thePacket;
-            }
+            get => this.thePacket;
 
             set
             {

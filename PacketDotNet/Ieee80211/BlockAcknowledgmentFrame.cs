@@ -79,10 +79,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + BlockAcknowledgmentField.BlockAckRequestControlPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + BlockAcknowledgmentField.BlockAckRequestControlPosition);
             }
 
             /// <summary>
@@ -117,10 +114,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes (value, this.header.Bytes, this.header.Offset + BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes (value, this.header.Bytes, this.header.Offset + BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
             }
    
             private byte[] blockAckBitmap;
@@ -136,11 +130,8 @@ namespace PacketDotNet.Ieee80211
             /// </exception>
             public Byte[] BlockAckBitmap
             {
-                get
-                {
-                    return this.blockAckBitmap;
-                }
-                
+                get => this.blockAckBitmap;
+
                 set
                 {
                     if (value.Length == 8)
@@ -175,29 +166,20 @@ namespace PacketDotNet.Ieee80211
 					return bitmap;
                 }
                 
-                set
-                {
-                    Array.Copy (this.BlockAckBitmap,
-                                0, this.header.Bytes,
-                                BlockAcknowledgmentField.BlockAckBitmapPosition, this.GetBitmapLength());
-                }
+                set => Array.Copy (this.BlockAckBitmap,
+                    0, this.header.Bytes,
+                    BlockAcknowledgmentField.BlockAckBitmapPosition, this.GetBitmapLength());
             }
 
 
             /// <summary>
             /// Length of the frame
             /// </summary>
-            override public int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 2) +
-                        BlockAcknowledgmentField.BlockAckRequestControlLength +
-                        BlockAcknowledgmentField.BlockAckStartingSequenceControlLength + this.GetBitmapLength());
-                }
-            }
+            override public int FrameSize => (MacFields.FrameControlLength +
+                                              MacFields.DurationIDLength +
+                                              (MacFields.AddressLength * 2) +
+                                              BlockAcknowledgmentField.BlockAckRequestControlLength +
+                                              BlockAcknowledgmentField.BlockAckStartingSequenceControlLength + this.GetBitmapLength());
 
 
             private int GetBitmapLength()

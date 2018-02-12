@@ -70,10 +70,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + ReassociationRequestFields.CapabilityInformationPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + ReassociationRequestFields.CapabilityInformationPosition);
             }
 
             /// <summary>
@@ -114,10 +111,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + ReassociationRequestFields.ListenIntervalPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + ReassociationRequestFields.ListenIntervalPosition);
             }
 
             /// <summary>
@@ -127,15 +121,9 @@ namespace PacketDotNet.Ieee80211
             
             private PhysicalAddress CurrentAccessPointAddressBytes
             {
-                get
-                {
-					return this.GetAddressByOffset(this.header.Offset + ReassociationRequestFields.CurrentAccessPointPosition);
-                }
+                get => this.GetAddressByOffset(this.header.Offset + ReassociationRequestFields.CurrentAccessPointPosition);
 
-                set
-                {
-                    this.SetAddressByOffset(this.header.Offset + ReassociationRequestFields.CurrentAccessPointPosition, value);
-                }
+                set => this.SetAddressByOffset(this.header.Offset + ReassociationRequestFields.CurrentAccessPointPosition, value);
             }
 
             /// <summary>
@@ -152,19 +140,13 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        ReassociationRequestFields.CapabilityInformationLength +
-                        ReassociationRequestFields.ListenIntervalLength +
-                        MacFields.AddressLength + this.InformationElements.Length);
-                }
-            }
+            public override int FrameSize => (MacFields.FrameControlLength +
+                                              MacFields.DurationIDLength +
+                                              (MacFields.AddressLength * 3) +
+                                              MacFields.SequenceControlLength +
+                                              ReassociationRequestFields.CapabilityInformationLength +
+                                              ReassociationRequestFields.ListenIntervalLength +
+                                              MacFields.AddressLength + this.InformationElements.Length);
 
 
             /// <summary>

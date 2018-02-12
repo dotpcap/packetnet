@@ -84,10 +84,7 @@ namespace PacketDotNet.OSPF
                 byte flags = (byte)((this.header.Bytes[this.header.Offset + RouterLSAFields.RouterOptionsPosition] >> 2) & 1);
                 return flags;
             }
-            set
-            {
-                this.header.Bytes[this.header.Offset + RouterLSAFields.RouterOptionsPosition] |= (byte)((value & 1) << 2);
-            }
+            set => this.header.Bytes[this.header.Offset + RouterLSAFields.RouterOptionsPosition] |= (byte)((value & 1) << 2);
         }
 
         /// <summary>
@@ -100,10 +97,7 @@ namespace PacketDotNet.OSPF
                 byte flags = (byte)((this.header.Bytes[this.header.Offset + RouterLSAFields.RouterOptionsPosition] >> 1) & 1);
                 return flags;
             }
-            set
-            {
-                this.header.Bytes[this.header.Offset + RouterLSAFields.RouterOptionsPosition] |= (byte)((value & 1) << 1);
-            }
+            set => this.header.Bytes[this.header.Offset + RouterLSAFields.RouterOptionsPosition] |= (byte)((value & 1) << 1);
         }
 
         /// <summary>
@@ -116,10 +110,7 @@ namespace PacketDotNet.OSPF
                 byte flags = (byte)(this.header.Bytes[this.header.Offset + RouterLSAFields.RouterOptionsPosition] & 1);
                 return flags;
             }
-            set
-            {
-                this.header.Bytes[this.header.Offset + RouterLSAFields.RouterOptionsPosition] |= (byte)(value & 1);
-            }
+            set => this.header.Bytes[this.header.Offset + RouterLSAFields.RouterOptionsPosition] |= (byte)(value & 1);
         }
 
         /// <summary>
@@ -127,15 +118,9 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public ushort LinkNumber
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes,this.header.Offset + RouterLSAFields.LinkNumberPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes,this.header.Offset + RouterLSAFields.LinkNumberPosition);
 
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + RouterLSAFields.LinkNumberPosition);
-            }
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + RouterLSAFields.LinkNumberPosition);
         }
 
         /// <summary>

@@ -24,10 +24,7 @@ namespace PacketDotNet.Utils.Conversion
         /// <summary>
         /// Indicates the byte order ("endianess") in which data is converted using this class.
         /// </summary>
-        public sealed override Endianness Endianness
-        {
-            get { return Endianness.LittleEndian; }
-        }
+        public sealed override Endianness Endianness => Endianness.LittleEndian;
 
         /// <summary>
         /// Copies the specified number of bytes from value to buffer, starting at index.

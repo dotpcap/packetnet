@@ -69,10 +69,7 @@ namespace PacketDotNet.Ieee80211
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes (value, this.header.Bytes, this.header.Offset + AuthenticationFields.AuthAlgorithmNumPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes (value, this.header.Bytes, this.header.Offset + AuthenticationFields.AuthAlgorithmNumPosition);
             }
 
             /// <summary>
@@ -95,10 +92,7 @@ namespace PacketDotNet.Ieee80211
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes (value, this.header.Bytes, this.header.Offset + AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes (value, this.header.Bytes, this.header.Offset + AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition);
             }
 
             /// <summary>
@@ -122,10 +116,7 @@ namespace PacketDotNet.Ieee80211
 					}
                 }
                 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes ((UInt16)value, this.header.Bytes, this.header.Offset + AuthenticationFields.StatusCodePosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes ((UInt16)value, this.header.Bytes, this.header.Offset + AuthenticationFields.StatusCodePosition);
             }
 
             /// <summary>
@@ -139,19 +130,13 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        AuthenticationFields.AuthAlgorithmNumLength +
-                        AuthenticationFields.AuthAlgorithmTransactionSequenceNumLength +
-                        AuthenticationFields.StatusCodeLength + this.InformationElements.Length);
-                }
-            }
+            public override int FrameSize => (MacFields.FrameControlLength +
+                                              MacFields.DurationIDLength +
+                                              (MacFields.AddressLength * 3) +
+                                              MacFields.SequenceControlLength +
+                                              AuthenticationFields.AuthAlgorithmNumLength +
+                                              AuthenticationFields.AuthAlgorithmTransactionSequenceNumLength +
+                                              AuthenticationFields.StatusCodeLength + this.InformationElements.Length);
 
 
             /// <summary>

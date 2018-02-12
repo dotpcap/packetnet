@@ -118,14 +118,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public virtual ushort HelloInterval
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + OSPFv2Fields.HelloIntervalPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.HelloIntervalPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + OSPFv2Fields.HelloIntervalPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.HelloIntervalPosition);
         }
 
         /// <summary>
@@ -133,14 +127,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public virtual byte HelloOptions
         {
-            get
-            {
-                return this.header.Bytes[this.header.Offset + OSPFv2Fields.HelloOptionsPosition];
-            }
-            set
-            {
-                this.header.Bytes[this.header.Offset + OSPFv2Fields.HelloOptionsPosition] = value;
-            }
+            get => this.header.Bytes[this.header.Offset + OSPFv2Fields.HelloOptionsPosition];
+            set => this.header.Bytes[this.header.Offset + OSPFv2Fields.HelloOptionsPosition] = value;
         }
 
         /// <summary>
@@ -148,14 +136,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public virtual byte RtrPriority
         {
-            get
-            {
-                return this.header.Bytes[this.header.Offset + OSPFv2Fields.RtrPriorityPosition];
-            }
-            set
-            {
-                this.header.Bytes[this.header.Offset + OSPFv2Fields.RtrPriorityPosition] = value;
-            }
+            get => this.header.Bytes[this.header.Offset + OSPFv2Fields.RtrPriorityPosition];
+            set => this.header.Bytes[this.header.Offset + OSPFv2Fields.RtrPriorityPosition] = value;
         }
 
 
@@ -164,14 +146,8 @@ namespace PacketDotNet.OSPF
         /// </summary>
         public virtual uint RouterDeadInterval
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + OSPFv2Fields.RouterDeadIntervalPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.RouterDeadIntervalPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + OSPFv2Fields.RouterDeadIntervalPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + OSPFv2Fields.RouterDeadIntervalPosition);
         }
 
         /// <summary>

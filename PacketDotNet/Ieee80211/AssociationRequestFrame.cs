@@ -64,10 +64,7 @@ namespace PacketDotNet.Ieee80211 {
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + AssociationRequestFields.CapabilityInformationPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + AssociationRequestFields.CapabilityInformationPosition);
             }
 
             /// <summary>
@@ -104,10 +101,7 @@ namespace PacketDotNet.Ieee80211 {
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + AssociationRequestFields.ListenIntervalPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + AssociationRequestFields.ListenIntervalPosition);
             }
    
             /// <summary>
@@ -124,18 +118,12 @@ namespace PacketDotNet.Ieee80211 {
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        AssociationRequestFields.CapabilityInformationLength +
-                        AssociationRequestFields.ListenIntervalLength + this.InformationElements.Length);
-                }
-            }
+            public override int FrameSize => (MacFields.FrameControlLength +
+                                              MacFields.DurationIDLength +
+                                              (MacFields.AddressLength * 3) +
+                                              MacFields.SequenceControlLength +
+                                              AssociationRequestFields.CapabilityInformationLength +
+                                              AssociationRequestFields.ListenIntervalLength + this.InformationElements.Length);
 
 
             /// <summary>

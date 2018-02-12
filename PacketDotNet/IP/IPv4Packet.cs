@@ -82,10 +82,7 @@ namespace PacketDotNet.IP
         /// <summary> Get the IP version code.</summary>
         public override IpVersion Version
         {
-            get
-            {
-                return (IpVersion)((this.header.Bytes[this.header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] >> 4) & 0x0F);
-            }
+            get => (IpVersion)((this.header.Bytes[this.header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] >> 4) & 0x0F);
 
             set
             {
@@ -105,15 +102,9 @@ namespace PacketDotNet.IP
         /// </value>
         public override ushort PayloadLength
         {
-            get
-            {
-                return (ushort)(this.TotalLength - (this.HeaderLength * 4));
-            }
+            get => (ushort)(this.TotalLength - (this.HeaderLength * 4));
 
-            set
-            {
-                this.TotalLength = value + (this.HeaderLength * 4);
-            }
+            set => this.TotalLength = value + (this.HeaderLength * 4);
         }
 
         /// <summary>
@@ -125,10 +116,7 @@ namespace PacketDotNet.IP
         /// </param>
         public override int HeaderLength
         {
-            get
-            {
-                return (this.header.Bytes[this.header.Offset + IPv4Fields.VersionAndHeaderLengthPosition]) & 0x0F;
-            }
+            get => (this.header.Bytes[this.header.Offset + IPv4Fields.VersionAndHeaderLengthPosition]) & 0x0F;
 
             set
             {
@@ -150,15 +138,9 @@ namespace PacketDotNet.IP
         /// </summary>
         virtual public ushort Id
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + IPv4Fields.IdPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + IPv4Fields.IdPosition);
 
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + IPv4Fields.IdPosition);
-            }
+            set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset + IPv4Fields.IdPosition);
         }
 
         /// <summary>
@@ -191,10 +173,7 @@ namespace PacketDotNet.IP
         /// <summary> Fetch the IP address of the host where the packet originated from.</summary>
         public override System.Net.IPAddress SourceAddress
         {
-            get
-            {
-                return GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork, this.header.Offset + IPv4Fields.SourcePosition, this.header.Bytes);
-            }
+            get => GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork, this.header.Offset + IPv4Fields.SourcePosition, this.header.Bytes);
 
             set
             {
@@ -208,10 +187,7 @@ namespace PacketDotNet.IP
         /// <summary> Fetch the IP address of the host where the packet is destined.</summary>
         public override System.Net.IPAddress DestinationAddress
         {
-            get
-            {
-                return GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork, this.header.Offset + IPv4Fields.DestinationPosition, this.header.Bytes);
-            }
+            get => GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork, this.header.Offset + IPv4Fields.DestinationPosition, this.header.Bytes);
 
             set
             {
@@ -225,10 +201,7 @@ namespace PacketDotNet.IP
         /// <summary> Fetch the header checksum.</summary>
         virtual public ushort Checksum
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + IPv4Fields.ChecksumPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + IPv4Fields.ChecksumPosition);
 
             set
             {
@@ -238,14 +211,7 @@ namespace PacketDotNet.IP
         }
 
         /// <summary> Check if the IP packet is valid, checksum-wise.</summary>
-        virtual public bool ValidChecksum
-        {
-            get
-            {
-                return this.ValidIPChecksum;
-            }
-
-        }
+        virtual public bool ValidChecksum => this.ValidIPChecksum;
 
         /// <summary>
         /// Check if the IP packet header is valid, checksum-wise.
@@ -281,26 +247,14 @@ namespace PacketDotNet.IP
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.White;
-            }
-        }
+        override public String Color => AnsiEscapeSequences.White;
 
         /// <summary> Fetch the type of service. </summary>
         public int DifferentiatedServices
         {
-            get
-            {
-                return this.header.Bytes[this.header.Offset + IPv4Fields.DifferentiatedServicesPosition];
-            }
+            get => this.header.Bytes[this.header.Offset + IPv4Fields.DifferentiatedServicesPosition];
 
-            set
-            {
-                this.header.Bytes[this.header.Offset + IPv4Fields.DifferentiatedServicesPosition] = (byte)value;
-            }
+            set => this.header.Bytes[this.header.Offset + IPv4Fields.DifferentiatedServicesPosition] = (byte)value;
         }
 
         /// <value>
@@ -309,8 +263,8 @@ namespace PacketDotNet.IP
         /// </value>
         public int TypeOfService
         {
-            get { return this.DifferentiatedServices; }
-            set { this.DifferentiatedServices = value; }
+            get => this.DifferentiatedServices;
+            set => this.DifferentiatedServices = value;
         }
 
         /// <value>
@@ -318,10 +272,7 @@ namespace PacketDotNet.IP
         /// </value>
         public override int TotalLength
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + IPv4Fields.TotalLengthPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + IPv4Fields.TotalLengthPosition);
 
             set
             {
@@ -363,15 +314,9 @@ namespace PacketDotNet.IP
         /// </summary>
         public override int TimeToLive
         {
-            get
-            {
-                return this.header.Bytes[this.header.Offset + IPv4Fields.TtlPosition];
-            }
+            get => this.header.Bytes[this.header.Offset + IPv4Fields.TtlPosition];
 
-            set
-            {
-                this.header.Bytes[this.header.Offset + IPv4Fields.TtlPosition] = (byte)value;
-            }
+            set => this.header.Bytes[this.header.Offset + IPv4Fields.TtlPosition] = (byte)value;
         }
 
         /// <summary> Fetch the code indicating the type of protocol embedded in the IP</summary>
@@ -379,15 +324,9 @@ namespace PacketDotNet.IP
         /// </seealso>
         public override IPProtocolType Protocol
         {
-            get
-            {
-                return (IPProtocolType) this.header.Bytes[this.header.Offset + IPv4Fields.ProtocolPosition];
-            }
+            get => (IPProtocolType) this.header.Bytes[this.header.Offset + IPv4Fields.ProtocolPosition];
 
-            set
-            {
-                this.header.Bytes[this.header.Offset + IPv4Fields.ProtocolPosition] = (byte)value;
-            }
+            set => this.header.Bytes[this.header.Offset + IPv4Fields.ProtocolPosition] = (byte)value;
         }
 
         /// <summary>

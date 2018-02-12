@@ -58,10 +58,7 @@ namespace PacketDotNet.Tcp
         ///  The multiplier is equal to 1 left-shifted by the ScaleFactor
         ///  So a scale factor of 7 would equal 1 &lt;&lt; 7 = 128
         /// </summary>
-        public byte ScaleFactor
-        {
-            get { return this.Bytes[ScaleFactorFieldOffset]; }
-        }
+        public byte ScaleFactor => this.Bytes[ScaleFactorFieldOffset];
 
         #endregion
 

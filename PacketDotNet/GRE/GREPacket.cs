@@ -34,74 +34,26 @@ namespace PacketDotNet.GRE
     public class GREPacket : Packet
     {
 
-        virtual public bool HasCheckSum
-        {
-            get
-            {
-                return 8 == (this.header.Bytes[this.header.Offset + 1] & 0x8);
-            }
-        }
-        virtual public bool HasReserved
-        {
-            get
-            {
-                return 4 == (this.header.Bytes[this.header.Offset + 1] & 0x4);
-            }
-        }
+        virtual public bool HasCheckSum => 8 == (this.header.Bytes[this.header.Offset + 1] & 0x8);
 
-        virtual public bool HasKey
-        {
-            get
-            {
-                return 2 == (this.header.Bytes[this.header.Offset + 1] & 0x2);
-            }
-        }
-        virtual public bool HasSequence
-        {
-            get
-            {
-                return 1 == (this.header.Bytes[this.header.Offset + 1] & 0x1);
-            }
-        }
+        virtual public bool HasReserved => 4 == (this.header.Bytes[this.header.Offset + 1] & 0x4);
+
+        virtual public bool HasKey => 2 == (this.header.Bytes[this.header.Offset + 1] & 0x2);
+
+        virtual public bool HasSequence => 1 == (this.header.Bytes[this.header.Offset + 1] & 0x1);
 
 
-        virtual public int Version
-        {
-            get
-            {
-                return (this.header.Bytes[2] & 0x7);
-            }
-        }
+        virtual public int Version => (this.header.Bytes[2] & 0x7);
 
-        virtual public EthernetPacketType Protocol
-        {
-            get
-            {
-                return (EthernetPacketType) EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + GREFields.FlagsLength);
-            }
-        }
+        virtual public EthernetPacketType Protocol => (EthernetPacketType) EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + GREFields.FlagsLength);
 
 
         /// <summary> Fetch the GRE header checksum.</summary>
-        virtual public short Checksum
-        {
-            get
-            {
-                return BitConverter.ToInt16(this.header.Bytes, this.header.Offset + GREFields.ChecksumPosition);
-            }
+        virtual public short Checksum => BitConverter.ToInt16(this.header.Bytes, this.header.Offset + GREFields.ChecksumPosition);
 
-        }
-        
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.DarkGray;
-            }
-
-        }
+        override public String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary>
         /// Constructor

@@ -10,17 +10,17 @@ namespace PacketDotNet.Ieee80211
     public class LockQualityRadioTapField : RadioTapField
     {
         /// <summary>Type of the field</summary>
-        public override RadioTapType FieldType { get { return RadioTapType.LockQuality; } }
-   
-            
+        public override RadioTapType FieldType => RadioTapType.LockQuality;
+
+
         /// <summary>
         /// Gets the length of the field data.
         /// </summary>
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length { get { return 2; } }
-            
+        public override ushort Length => 2;
+
         /// <summary>
         /// Signal quality
         /// </summary>

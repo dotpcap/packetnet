@@ -13,23 +13,24 @@ namespace PacketDotNet.Ieee80211
         #region Properties
 
         /// <summary>Type of the field</summary>
-        public override PpiFieldType FieldType{ get { return this.fieldType; } } 
-            
+        public override PpiFieldType FieldType => this.fieldType;
+
         /// <summary>
         /// Gets the length of the field data.
         /// </summary>
         /// <value>
         /// The length.
         /// </value>
-        public override int Length { get { return this.Bytes.Length; } }
-   
+        public override int Length => this.Bytes.Length;
+
         /// <summary>
         /// Gets the field bytes. This doesn't include the PPI field header.
         /// </summary>
         /// <value>
         /// The bytes.
         /// </value>
-        public override byte[] Bytes { get { return this.UnknownBytes; } }
+        public override byte[] Bytes => this.UnknownBytes;
+
         /// <summary>
         /// Gets or sets the field data.
         /// </summary>

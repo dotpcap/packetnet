@@ -42,10 +42,7 @@ namespace PacketDotNet.LinuxSLL
         /// </value>
         public LinuxSLLType Type
         {
-            get
-            {
-                return (LinuxSLLType)EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + LinuxSLLFields.PacketTypePosition);
-            }
+            get => (LinuxSLLType)EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + LinuxSLLFields.PacketTypePosition);
 
             set
             {
@@ -59,10 +56,7 @@ namespace PacketDotNet.LinuxSLL
         /// </value>
         public int LinkLayerAddressType
         {
-            get
-            {
-                return EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
-            }
+            get => EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
 
             set
             {
@@ -76,10 +70,7 @@ namespace PacketDotNet.LinuxSLL
         /// </value>
         public int LinkLayerAddressLength
         {
-            get
-            {
-                return EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
-            }
+            get => EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
 
             set
             {
@@ -126,10 +117,7 @@ namespace PacketDotNet.LinuxSLL
         /// </value>
         public EthernetPacketType EthernetProtocolType
         {
-            get
-            {
-                return (EthernetPacketType)EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
-            }
+            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
 
             set
             {

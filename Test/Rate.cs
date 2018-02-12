@@ -22,13 +22,7 @@ namespace Test
         /// <value>
         /// Returns the rate in terms of events per second
         /// </value>
-        public double RatePerSecond
-        {
-            get
-            {
-                return ((Double) this.EventCount / (Double) this.Elapsed.Ticks) * TimeSpan.TicksPerSecond;
-            }
-        }
+        public double RatePerSecond => ((Double) this.EventCount / (Double) this.Elapsed.Ticks) * TimeSpan.TicksPerSecond;
 
         public override string ToString ()
         {

@@ -95,15 +95,8 @@ namespace PacketDotNet.LLDP
         /// </value>
         public ushort Seconds
         {
-            get
-            {
-                // get the seconds
-                return EndianBitConverter.Big.ToUInt16(this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength);
+            set => EndianBitConverter.Big.CopyBytes(value, this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength);
         }
 
         /// <summary>

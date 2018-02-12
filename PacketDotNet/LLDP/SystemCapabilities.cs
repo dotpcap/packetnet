@@ -80,16 +80,8 @@ namespace PacketDotNet.LLDP
         /// </value>
         public ushort Capabilities
         {
-            get
-            {
-                // get the capabilities
-                return EndianBitConverter.Big.ToUInt16(this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength);
-            }
-            set
-            {
-                // set the capabilities
-                EndianBitConverter.Big.CopyBytes(value, this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength);
+            set => EndianBitConverter.Big.CopyBytes(value, this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength);
         }
 
         /// <value>
@@ -97,17 +89,9 @@ namespace PacketDotNet.LLDP
         /// </value>
         public ushort Enabled
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength);
 
-            set
-            {
-                // Add the length of the previous field, the SystemCapabilities field, to get
-                // to the location of the EnabledCapabilities
-                EndianBitConverter.Big.CopyBytes(value, this.tlvData.Bytes, this.ValueOffset + SystemCapabilitiesLength);
-            }
+            set => EndianBitConverter.Big.CopyBytes(value, this.tlvData.Bytes, this.ValueOffset + SystemCapabilitiesLength);
         }
 
         #endregion

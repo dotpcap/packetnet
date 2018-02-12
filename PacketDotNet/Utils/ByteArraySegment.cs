@@ -58,7 +58,7 @@ namespace PacketDotNet.Utils
         /// </value>
         public int Length
         {
-            get { return this.length; }
+            get => this.length;
             set
             {
                 // check for invalid values

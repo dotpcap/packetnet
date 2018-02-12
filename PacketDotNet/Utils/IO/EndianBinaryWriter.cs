@@ -74,28 +74,20 @@ namespace PacketDotNet.Utils.IO
         /// <summary>
         /// The bit converter used to write values to the stream
         /// </summary>
-        public EndianBitConverter BitConverter
-        {
-            get { return this.bitConverter; }
-        }
+        public EndianBitConverter BitConverter => this.bitConverter;
 
         Encoding encoding;
         /// <summary>
         /// The encoding used to write strings
         /// </summary>
-        public Encoding Encoding
-        {
-            get { return this.encoding; }
-        }
+        public Encoding Encoding => this.encoding;
 
         Stream stream;
         /// <summary>
         /// Gets the underlying stream of the EndianBinaryWriter.
         /// </summary>
-        public Stream BaseStream
-        {
-            get { return this.stream; }
-        }
+        public Stream BaseStream => this.stream;
+
         #endregion
 
         #region Public methods

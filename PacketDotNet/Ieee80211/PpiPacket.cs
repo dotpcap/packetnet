@@ -76,15 +76,9 @@ namespace PacketDotNet.Ieee80211
             
             private UInt16 LengthBytes
             {
-                get
-                {
-                    return EndianBitConverter.Little.ToUInt16 (this.header.Bytes, this.header.Offset + PpiHeaderFields.LengthPosition);
-                }
+                get => EndianBitConverter.Little.ToUInt16 (this.header.Bytes, this.header.Offset + PpiHeaderFields.LengthPosition);
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes (value, this.header.Bytes, this.header.Offset + PpiHeaderFields.LengthPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes (value, this.header.Bytes, this.header.Offset + PpiHeaderFields.LengthPosition);
             }
 
             
@@ -97,15 +91,9 @@ namespace PacketDotNet.Ieee80211
             
             private byte VersionBytes
             {
-                get
-                {
-                    return this.header.Bytes [this.header.Offset + PpiHeaderFields.VersionPosition];
-                }
+                get => this.header.Bytes [this.header.Offset + PpiHeaderFields.VersionPosition];
 
-                set
-                {
-                    this.header.Bytes [this.header.Offset + PpiHeaderFields.VersionPosition] = value;
-                }
+                set => this.header.Bytes [this.header.Offset + PpiHeaderFields.VersionPosition] = value;
             }
             
             /// <summary>
@@ -118,15 +106,9 @@ namespace PacketDotNet.Ieee80211
             
             private HeaderFlags FlagsBytes
             {
-                get
-                {
-                    return (HeaderFlags) this.header.Bytes[this.header.Offset + PpiHeaderFields.FlagsPosition];
-                }
-                
-                set
-                {
-                    this.header.Bytes[this.header.Offset + PpiHeaderFields.FlagsPosition] = (byte) value;
-                }
+                get => (HeaderFlags) this.header.Bytes[this.header.Offset + PpiHeaderFields.FlagsPosition];
+
+                set => this.header.Bytes[this.header.Offset + PpiHeaderFields.FlagsPosition] = (byte) value;
             }
             
             /// <summary>
@@ -140,15 +122,9 @@ namespace PacketDotNet.Ieee80211
             
             private LinkLayers LinkTypeBytes
             {
-                get
-                {
-                    return (LinkLayers) EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + PpiHeaderFields.DataLinkTypePosition);
-                }
-                
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes((uint) this.LinkType, this.header.Bytes, this.header.Offset + PpiHeaderFields.DataLinkTypePosition);
-                }
+                get => (LinkLayers) EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + PpiHeaderFields.DataLinkTypePosition);
+
+                set => EndianBitConverter.Little.CopyBytes((uint) this.LinkType, this.header.Bytes, this.header.Offset + PpiHeaderFields.DataLinkTypePosition);
             }
             
             /// <summary>
@@ -157,21 +133,16 @@ namespace PacketDotNet.Ieee80211
             /// <value>
             /// The number of fields.
             /// </value>
-            public int Count { get { return this.PpiFields.Count; } } 
+            public int Count => this.PpiFields.Count;
+
             /// <summary>
             /// Gets the <see cref="PacketDotNet.Ieee80211.PpiPacket"/> at the specified index.
             /// </summary>
             /// <param name='index'>
             /// Index.
             /// </param>
-            public PpiField this[int index]
-            {
-                get
-                {
-                    return this.PpiFields[index];
-                }
-            }
-            
+            public PpiField this[int index] => this.PpiFields[index];
+
             private List<PpiField> PpiFields { get; set; }
 
         #endregion Properties

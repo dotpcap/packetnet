@@ -139,8 +139,8 @@ namespace PacketDotNet.LLDP
         /// </value>
         public int AddressLength
         {
-            get { return (int) this.tlvData.Bytes[this.ValueOffset]; }
-            internal set { this.tlvData.Bytes[this.ValueOffset] = (byte)value; }
+            get => (int) this.tlvData.Bytes[this.ValueOffset];
+            internal set => this.tlvData.Bytes[this.ValueOffset] = (byte)value;
         }
 
         /// <value>
@@ -148,10 +148,7 @@ namespace PacketDotNet.LLDP
         ///
         /// Forward to the MgmtAddress instance
         /// </value>
-        public AddressFamily AddressSubType
-        {
-            get { return this.MgmtAddress.AddressFamily; }
-        }
+        public AddressFamily AddressSubType => this.MgmtAddress.AddressFamily;
 
         /// <value>
         /// The Management Address
@@ -215,79 +212,43 @@ namespace PacketDotNet.LLDP
         /// </value>
         public InterfaceNumbering InterfaceSubType
         {
-            get
-            {
-                return (InterfaceNumbering) this.tlvData.Bytes[this.ValueOffset + MgmtAddressLengthLength + this.MgmtAddress.Length];
-            }
+            get => (InterfaceNumbering) this.tlvData.Bytes[this.ValueOffset + MgmtAddressLengthLength + this.MgmtAddress.Length];
 
-            set
-            {
-                this.tlvData.Bytes[this.ValueOffset + MgmtAddressLengthLength + this.MgmtAddress.Length] = (byte)value;
-            }
+            set => this.tlvData.Bytes[this.ValueOffset + MgmtAddressLengthLength + this.MgmtAddress.Length] = (byte)value;
         }
 
-        private int InterfaceNumberOffset
-        {
-            get
-            {
-                return this.ValueOffset + MgmtAddressLengthLength + this.AddressLength + InterfaceNumberSubTypeLength;
-            }
-        }
+        private int InterfaceNumberOffset => this.ValueOffset + MgmtAddressLengthLength + this.AddressLength + InterfaceNumberSubTypeLength;
 
         /// <value>
         /// Interface Number
         /// </value>
         public uint InterfaceNumber
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt32(this.tlvData.Bytes, this.InterfaceNumberOffset);
-            }
+            get => EndianBitConverter.Big.ToUInt32(this.tlvData.Bytes, this.InterfaceNumberOffset);
 
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, this.tlvData.Bytes, this.InterfaceNumberOffset);
-            }
+            set => EndianBitConverter.Big.CopyBytes(value, this.tlvData.Bytes, this.InterfaceNumberOffset);
         }
 
-        private int ObjIdLengthOffset
-        {
-            get
-            {
-                return this.InterfaceNumberOffset + InterfaceNumberLength;
-            }
-        }
+        private int ObjIdLengthOffset => this.InterfaceNumberOffset + InterfaceNumberLength;
 
         /// <value>
         /// Object ID Length
         /// </value>
         public byte ObjIdLength
         {
-            get
-            {
-                return this.tlvData.Bytes[this.ObjIdLengthOffset];
-            }
+            get => this.tlvData.Bytes[this.ObjIdLengthOffset];
 
-            internal set
-            {
-                this.tlvData.Bytes[this.ObjIdLengthOffset] = value;
-            }
+            internal set => this.tlvData.Bytes[this.ObjIdLengthOffset] = value;
         }
 
-        private int ObjectIdentifierOffset
-        {
-            get { return this.ObjIdLengthOffset + ObjectIdentifierLengthLength; }
-        }
+        private int ObjectIdentifierOffset => this.ObjIdLengthOffset + ObjectIdentifierLengthLength;
 
         /// <value>
         /// Object ID
         /// </value>
         public string ObjectIdentifier
         {
-            get
-            {
-                return Encoding.UTF8.GetString(this.tlvData.Bytes, this.ObjectIdentifierOffset, this.ObjIdLength);
-            }
+            get => Encoding.UTF8.GetString(this.tlvData.Bytes, this.ObjectIdentifierOffset, this.ObjIdLength);
 
             set
             {

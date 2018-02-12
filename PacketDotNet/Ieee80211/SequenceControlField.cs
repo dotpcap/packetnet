@@ -43,10 +43,7 @@ namespace PacketDotNet.Ieee80211
             /// </value>
             public short SequenceNumber
             {
-                get
-                {
-                    return (short)(this.Field >> 4);
-                }
+                get => (short)(this.Field >> 4);
 
                 set
                 {
@@ -64,10 +61,7 @@ namespace PacketDotNet.Ieee80211
             /// </value>
             public byte FragmentNumber
             {
-                get
-                {
-                    return (byte)(this.Field & 0x000F);
-                }
+                get => (byte)(this.Field & 0x000F);
 
                 set
                 {

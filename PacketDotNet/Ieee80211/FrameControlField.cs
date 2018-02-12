@@ -34,10 +34,7 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public byte ProtocolVersion
             {
-                get
-                {
-                    return (byte)((this.Field >> 0x8) & 0x3);
-                }
+                get => (byte)((this.Field >> 0x8) & 0x3);
 
                 set
                 {
@@ -318,10 +315,7 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public bool ToDS
             {
-                get
-                {
-                    return ((this.Field & 0x1) == 1) ? true : false;
-                }
+                get => ((this.Field & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -341,10 +335,7 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public bool FromDS
             {
-                get
-                {
-                    return (((this.Field >> 1) & 0x1) == 1) ? true : false;
-                }
+                get => (((this.Field >> 1) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -365,10 +356,7 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public bool MoreFragments
             {
-                get
-                {
-                    return (((this.Field >> 2) & 0x1) == 1) ? true : false;
-                }
+                get => (((this.Field >> 2) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -389,10 +377,7 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public bool Retry
             {
-                get
-                {
-                    return (((this.Field >> 3) & 0x1) == 1) ? true : false;
-                }
+                get => (((this.Field >> 3) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -412,10 +397,7 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public bool PowerManagement
             {
-                get
-                {
-                    return (((this.Field >> 4) & 0x1) == 1) ? true : false;
-                }
+                get => (((this.Field >> 4) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -435,10 +417,7 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public bool MoreData
             {
-                get
-                {
-                    return (((this.Field >> 5) & 0x1) == 1) ? true : false;
-                }
+                get => (((this.Field >> 5) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -459,8 +438,8 @@ namespace PacketDotNet.Ieee80211
             [ObsoleteAttribute("This property is obsolete. Use Protected instead.", false)]
             public bool Wep
             {
-                get { return this.Protected; }
-                set { this.Protected = value; }
+                get => this.Protected;
+                set => this.Protected = value;
             }
 
             /// <summary>
@@ -468,10 +447,7 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public bool Protected
             {
-                get
-                {
-                    return (((this.Field >> 6) & 0x1) == 1) ? true : false;
-                }
+                get => (((this.Field >> 6) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -492,10 +468,7 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public bool Order
             {
-                get
-                {
-                    return (((this.Field >> 0x7) & 0x1) == 1) ? true : false;
-                }
+                get => (((this.Field >> 0x7) & 0x1) == 1) ? true : false;
 
                 set
                 {

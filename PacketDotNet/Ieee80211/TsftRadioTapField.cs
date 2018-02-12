@@ -10,16 +10,16 @@ namespace PacketDotNet.Ieee80211
     public class TsftRadioTapField : RadioTapField
     {
         /// <summary>Type of the field</summary>
-        public override RadioTapType FieldType { get { return RadioTapType.Tsft; } }
-   
+        public override RadioTapType FieldType => RadioTapType.Tsft;
+
         /// <summary>
         /// Gets the length of the field data.
         /// </summary>
         /// <value>
         /// The length.
         /// </value>
-        public override ushort Length { get { return 8; } }
-            
+        public override ushort Length => 8;
+
         /// <summary>
         /// Timestamp in microseconds
         /// </summary>

@@ -47,11 +47,8 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public AcknowledgementPolicy Policy
             {
-                get
-                {
-                    return (AcknowledgementPolicy)(this.Field & 0x1);
-                }
-                
+                get => (AcknowledgementPolicy)(this.Field & 0x1);
+
                 set
                 {
                     if (value == AcknowledgementPolicy.Immediate)
@@ -70,11 +67,8 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public bool MultiTid
             {
-                get
-                {
-                    return (((this.Field >> 1) & 0x1) == 1) ? true : false;
-                }
-                
+                get => (((this.Field >> 1) & 0x1) == 1) ? true : false;
+
                 set
                 {
                     if (value)
@@ -95,11 +89,8 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public bool CompressedBitmap
             {
-                get
-                {
-                    return (((this.Field >> 2) & 0x1) == 1) ? true : false;
-                }
-                
+                get => (((this.Field >> 2) & 0x1) == 1) ? true : false;
+
                 set
                 {
                     if (value)
@@ -118,11 +109,8 @@ namespace PacketDotNet.Ieee80211
             /// </summary>
             public byte Tid
             {
-                get
-                {
-                    return (byte)(this.Field >> 12);
-                }
-                
+                get => (byte)(this.Field >> 12);
+
                 set
                 {
                     this.Field &= 0x0FFF;

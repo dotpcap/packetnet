@@ -32,20 +32,15 @@ namespace PacketDotNet.Utils.Conversion
         /// Returns a little-endian bit converter instance. The same instance is
         /// always returned.
         /// </summary>
-        public static LittleEndianBitConverter Little
-        {
-            get { return little; }
-        }
+        public static LittleEndianBitConverter Little => little;
 
         static BigEndianBitConverter big = new BigEndianBitConverter();
         /// <summary>
         /// Returns a big-endian bit converter instance. The same instance is
         /// always returned.
         /// </summary>
-        public static BigEndianBitConverter Big
-        {
-            get { return big; }
-        }
+        public static BigEndianBitConverter Big => big;
+
         #endregion
 
         #region Double/primitive conversions
@@ -678,18 +673,12 @@ namespace PacketDotNet.Utils.Conversion
             /// <summary>
             /// Returns the value of the instance as an integer.
             /// </summary>
-            internal int AsInt32
-            {
-                get { return this.i; }
-            }
+            internal int AsInt32 => this.i;
 
             /// <summary>
             /// Returns the value of the instance as a floating point number.
             /// </summary>
-            internal float AsSingle
-            {
-                get { return this.f; }
-            }
+            internal float AsSingle => this.f;
         }
         #endregion
     }

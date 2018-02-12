@@ -11,19 +11,16 @@ namespace PacketDotNet.Ieee80211
         #region Properties
 
         /// <summary>Type of the field</summary>
-        public override PpiFieldType FieldType
-        {
-            get { return PpiFieldType.PpiMacPhy;}
-        }
-            
+        public override PpiFieldType FieldType => PpiFieldType.PpiMacPhy;
+
         /// <summary>
         /// Gets the length of the field data.
         /// </summary>
         /// <value>
         /// The length.
         /// </value>
-        public override int Length { get { return 48; } }
-            
+        public override int Length => 48;
+
         /// <summary>
         /// Gets or sets the 802.11n MAC extension flags.
         /// </summary>

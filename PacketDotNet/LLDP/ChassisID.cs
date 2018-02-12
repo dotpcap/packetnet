@@ -131,16 +131,9 @@ namespace PacketDotNet.LLDP
         /// </value>
         public ChassisSubTypes SubType
         {
-            get
-            {
-                return (ChassisSubTypes) this.tlvData.Bytes[this.ValueOffset];
-            }
+            get => (ChassisSubTypes) this.tlvData.Bytes[this.ValueOffset];
 
-            set
-            {
-                // set the subtype
-                this.tlvData.Bytes[this.ValueOffset] = (byte)value;
-            }
+            set => this.tlvData.Bytes[this.ValueOffset] = (byte)value;
         }
 
         /// <value>
@@ -148,8 +141,8 @@ namespace PacketDotNet.LLDP
         /// </value>
         public object SubTypeValue
         {
-            get { return this.GetSubTypeValue(); }
-            set { this.SetSubTypeValue(value); }
+            get => this.GetSubTypeValue();
+            set => this.SetSubTypeValue(value);
         }
 
         /// <summary>
@@ -157,7 +150,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public byte[] ChassisComponent
         {
-            get { return (byte[]) this.GetSubTypeValue(); }
+            get => (byte[]) this.GetSubTypeValue();
             set
             {
                 this.SubType = ChassisSubTypes.ChassisComponent;
@@ -170,7 +163,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public string InterfaceName
         {
-            get { return (string) this.GetSubTypeValue(); }
+            get => (string) this.GetSubTypeValue();
             set
             {
                 this.SubType = ChassisSubTypes.InterfaceName;
@@ -183,7 +176,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public PhysicalAddress MACAddress
         {
-            get { return (PhysicalAddress) this.GetSubTypeValue(); }
+            get => (PhysicalAddress) this.GetSubTypeValue();
             set
             {
                 this.SubType = ChassisSubTypes.MACAddress;
@@ -196,7 +189,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public NetworkAddress NetworkAddress
         {
-            get { return (NetworkAddress) this.GetSubTypeValue(); }
+            get => (NetworkAddress) this.GetSubTypeValue();
             set
             {
                 this.SubType = ChassisSubTypes.NetworkAddress;
@@ -209,7 +202,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public byte[] PortComponent
         {
-            get { return (byte[]) this.GetSubTypeValue(); }
+            get => (byte[]) this.GetSubTypeValue();
             set
             {
                 this.SubType = ChassisSubTypes.PortComponent;
@@ -222,7 +215,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public byte[] InterfaceAlias
         {
-            get { return (byte[]) this.GetSubTypeValue(); }
+            get => (byte[]) this.GetSubTypeValue();
             set
             {
                 this.SubType = ChassisSubTypes.InterfaceAlias;

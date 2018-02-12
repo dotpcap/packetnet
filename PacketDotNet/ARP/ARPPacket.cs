@@ -324,8 +324,10 @@ namespace PacketDotNet.ARP
         /// </param>
         public ARPPacket(ByteArraySegment bas)
         {
-            header = new ByteArraySegment(bas);
-            header.Length = ARPFields.HeaderLength;
+            header = new ByteArraySegment(bas)
+            {
+                Length = ARPFields.HeaderLength
+            };
 
             // NOTE: no need to set the payloadPacketOrData field, arp packets have
             //       no payload

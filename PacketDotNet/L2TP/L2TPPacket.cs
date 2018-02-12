@@ -123,9 +123,10 @@ namespace PacketDotNet.L2TP
         public L2TPPacket(ByteArraySegment bas, Packet ParentPacket)
         {
             // slice off the header portion
-            header = new ByteArraySegment(bas);
-
-            header.Length = L2TPFields.HeaderLength;
+            header = new ByteArraySegment(bas)
+            {
+                Length = L2TPFields.HeaderLength
+            };
             if (HasLength)
                 header.Length += L2TPFields.LengthsLength;
             if (HasSequence)
@@ -136,8 +137,10 @@ namespace PacketDotNet.L2TP
             var payload = header.EncapsulatedBytes();
             try
             {
-                this.PayloadPacket = new PPPPacket(payload);
-                this.PayloadPacket.ParentPacket = this;
+                this.PayloadPacket = new PPPPacket(payload)
+                {
+                    ParentPacket = this
+                };
             } catch (Exception)
             {
                 //it's not a PPP packet, just attach the data

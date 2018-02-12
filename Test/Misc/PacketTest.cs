@@ -37,8 +37,10 @@ namespace Test.Misc
 
             // NOTE: we use TcpPacket because it has a simple constructor. We can't
             //       create a Packet() instance because Packet is an abstract class
-            var p = new TcpPacket(10, 10);
-            p.PayloadData = data;
+            var p = new TcpPacket(10, 10)
+            {
+                PayloadData = data
+            };
         }
     }
 }

@@ -90,8 +90,10 @@ namespace PacketDotNet
             log.Debug("");
 
             // slice off the header portion as our header
-            header = new ByteArraySegment(bas);
-            header.Length = NullFields.HeaderLength;
+            header = new ByteArraySegment(bas)
+            {
+                Length = NullFields.HeaderLength
+            };
 
             // parse the encapsulated bytes
             payloadPacketOrData = ParseEncapsulatedBytes(header, Protocol);

@@ -93,8 +93,10 @@ namespace Test.PacketType
                 dataBytes[i] = (byte)i;
             }
 
-            var udpPacket = new UdpPacket(sourcePort, destinationPort);
-            udpPacket.PayloadData = dataBytes;
+            var udpPacket = new UdpPacket(sourcePort, destinationPort)
+            {
+                PayloadData = dataBytes
+            };
 
             // retrieve the bytes, this should cause UdpPacket.Length to be updated
             var packetBytes = udpPacket.Bytes;

@@ -102,8 +102,10 @@ namespace PacketDotNet
             if(WakeOnLanPacket.IsValid(bas))
             {
                 // set the header field, header field values are retrieved from this byte array
-                header = new ByteArraySegment(bas);
-                header.Length = Bytes.Length;
+                header = new ByteArraySegment(bas)
+                {
+                    Length = Bytes.Length
+                };
             }
         }
 

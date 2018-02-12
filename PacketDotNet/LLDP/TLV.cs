@@ -69,10 +69,12 @@ namespace PacketDotNet.LLDP
 
             // set the tlvData assuming we have at least the bytes required for the
             // type/length fields
-            tlvData =  new ByteArraySegment(bytes, offset, TypeLength.Length + TLVTypeLength.TypeLengthLength);
+            tlvData = new ByteArraySegment(bytes, offset, TypeLength.Length + TLVTypeLength.TypeLengthLength)
+            {
 
-            // retrieve the actual length
-            tlvData.Length = TypeLength.Length + TLVTypeLength.TypeLengthLength;
+                // retrieve the actual length
+                Length = TypeLength.Length + TLVTypeLength.TypeLengthLength
+            };
         }
 
         #endregion
@@ -154,10 +156,12 @@ namespace PacketDotNet.LLDP
                 _tlvData = value;
 
                 // create a new TypeLength that points at the new ByteArrayAndOffset
-                TypeLength = new TLVTypeLength(value);
+                TypeLength = new TLVTypeLength(value)
+                {
 
-                // update the length based upon the length of the ByteArrayAndOffset
-                TypeLength.Length = value.Length - TLVTypeLength.TypeLengthLength;
+                    // update the length based upon the length of the ByteArrayAndOffset
+                    Length = value.Length - TLVTypeLength.TypeLengthLength
+                };
             }
         }
 

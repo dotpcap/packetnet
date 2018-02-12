@@ -43,17 +43,19 @@ namespace Test.PacketType
             [Test]
             public void Test_PpiCommon_Construction()
             {
-                PpiCommon field = new PpiCommon();
-                field.TSFTimer = 0x1234567812345678;
-                field.Flags = PpiCommon.CommonFlags.FcsIncludedInFrame | PpiCommon.CommonFlags.TimerSynchFunctionInUse;
-                field.Rate = 2;
-                field.ChannelFrequency = 2142;
-                field.ChannelFlags = RadioTapChannelFlags.Channel2Ghz | RadioTapChannelFlags.Passive;
-                field.FhssHopset = 0xAB;
-                field.FhssPattern = 0xCD;
-                field.AntennaSignalPower = -50;
-                field.AntennaSignalNoise = 25;
-                
+                PpiCommon field = new PpiCommon
+                {
+                    TSFTimer = 0x1234567812345678,
+                    Flags = PpiCommon.CommonFlags.FcsIncludedInFrame | PpiCommon.CommonFlags.TimerSynchFunctionInUse,
+                    Rate = 2,
+                    ChannelFrequency = 2142,
+                    ChannelFlags = RadioTapChannelFlags.Channel2Ghz | RadioTapChannelFlags.Passive,
+                    FhssHopset = 0xAB,
+                    FhssPattern = 0xCD,
+                    AntennaSignalPower = -50,
+                    AntennaSignalNoise = 25
+                };
+
                 var ms = new MemoryStream(field.Bytes);
                 PpiCommon recreatedField = new PpiCommon(new BinaryReader(ms));
                 
@@ -71,11 +73,13 @@ namespace Test.PacketType
             [Test]
             public void Test_PpiMacExtensions_Construction()
             {
-                PpiMacExtensions field = new PpiMacExtensions();
-                field.Flags = PpiMacExtensionFlags.DuplicateRx | PpiMacExtensionFlags.HtIndicator;
-                field.AMpduId = 0x12345678;
-                field.DelimiterCount = 0xA;
-                
+                PpiMacExtensions field = new PpiMacExtensions
+                {
+                    Flags = PpiMacExtensionFlags.DuplicateRx | PpiMacExtensionFlags.HtIndicator,
+                    AMpduId = 0x12345678,
+                    DelimiterCount = 0xA
+                };
+
                 var ms = new MemoryStream(field.Bytes);
                 PpiMacExtensions recreatedField = new PpiMacExtensions(new BinaryReader(ms));
                 
@@ -87,36 +91,37 @@ namespace Test.PacketType
             [Test]
             public void Test_PpiMacPhy_Construction()
             {
-                PpiMacPhy field = new PpiMacPhy();
-                
-                field.AMpduId = 0x12345678;
-                field.DelimiterCount = 0xAB;
-                field.ModulationCodingScheme = 0x1;
-                field.SpatialStreamCount = 0x2;
-                field.RssiCombined = 0x3;
-                field.RssiAntenna0Control = 0x4;
-                field.RssiAntenna1Control = 0x5;
-                field.RssiAntenna2Control = 0x6;
-                field.RssiAntenna3Control = 0x7;
-                field.RssiAntenna0Ext = 0x8;
-                field.RssiAntenna1Ext = 0x9;
-                field.RssiAntenna2Ext = 0xA;
-                field.RssiAntenna3Ext = 0xB;
-                field.ExtensionChannelFrequency = 2142;
-                field.ExtensionChannelFlags = RadioTapChannelFlags.Channel5Ghz | RadioTapChannelFlags.Passive;
-                field.DBmAntenna0SignalPower = 0xC;
-                field.DBmAntenna0SignalNoise = 0xD;
-                field.DBmAntenna1SignalPower = 0xE;
-                field.DBmAntenna1SignalNoise = 0xF;
-                field.DBmAntenna2SignalPower = 0x1;
-                field.DBmAntenna2SignalNoise = 0x2;
-                field.DBmAntenna3SignalPower = 0x3;
-                field.DBmAntenna3SignalNoise = 0x4;
-                field.ErrorVectorMagnitude0 = 0xAAAAAAAA;
-                field.ErrorVectorMagnitude1 = 0xBBBBBBBB;
-                field.ErrorVectorMagnitude2 = 0xCCCCCCCC;
-                field.ErrorVectorMagnitude3 = 0xDDDDDDDD;
-                
+                PpiMacPhy field = new PpiMacPhy
+                {
+                    AMpduId = 0x12345678,
+                    DelimiterCount = 0xAB,
+                    ModulationCodingScheme = 0x1,
+                    SpatialStreamCount = 0x2,
+                    RssiCombined = 0x3,
+                    RssiAntenna0Control = 0x4,
+                    RssiAntenna1Control = 0x5,
+                    RssiAntenna2Control = 0x6,
+                    RssiAntenna3Control = 0x7,
+                    RssiAntenna0Ext = 0x8,
+                    RssiAntenna1Ext = 0x9,
+                    RssiAntenna2Ext = 0xA,
+                    RssiAntenna3Ext = 0xB,
+                    ExtensionChannelFrequency = 2142,
+                    ExtensionChannelFlags = RadioTapChannelFlags.Channel5Ghz | RadioTapChannelFlags.Passive,
+                    DBmAntenna0SignalPower = 0xC,
+                    DBmAntenna0SignalNoise = 0xD,
+                    DBmAntenna1SignalPower = 0xE,
+                    DBmAntenna1SignalNoise = 0xF,
+                    DBmAntenna2SignalPower = 0x1,
+                    DBmAntenna2SignalNoise = 0x2,
+                    DBmAntenna3SignalPower = 0x3,
+                    DBmAntenna3SignalNoise = 0x4,
+                    ErrorVectorMagnitude0 = 0xAAAAAAAA,
+                    ErrorVectorMagnitude1 = 0xBBBBBBBB,
+                    ErrorVectorMagnitude2 = 0xCCCCCCCC,
+                    ErrorVectorMagnitude3 = 0xDDDDDDDD
+                };
+
                 var ms = new MemoryStream(field.Bytes);
                 PpiMacPhy recreatedField = new PpiMacPhy(new BinaryReader(ms));
                 
@@ -152,16 +157,17 @@ namespace Test.PacketType
             [Test]
             public void Test_PpiProcessInfo_Construction()
             {
-                PpiProcessInfo field = new PpiProcessInfo();
-                
-                field.ProcessId = 0x11223344;
-                field.ThreadId = 0x55667788;
-                field.ProcessPath = "UnitTestProcess";
-                field.UserId = 0x99887766;
-                field.UserName = "Hester the tester";
-                field.GroupId = 0x22446688;
-                field.GroupName = "ProcessInfoTestGroup";
-                
+                PpiProcessInfo field = new PpiProcessInfo
+                {
+                    ProcessId = 0x11223344,
+                    ThreadId = 0x55667788,
+                    ProcessPath = "UnitTestProcess",
+                    UserId = 0x99887766,
+                    UserName = "Hester the tester",
+                    GroupId = 0x22446688,
+                    GroupName = "ProcessInfoTestGroup"
+                };
+
                 var ms = new MemoryStream(field.Bytes);
                 PpiProcessInfo recreatedField = new PpiProcessInfo(new BinaryReader(ms));
                 
@@ -189,15 +195,16 @@ namespace Test.PacketType
             [Test]
             public void Test_PpiSpectrum_Construction()
             {
-                PpiSpectrum field = new PpiSpectrum();
-                
-                field.StartingFrequency = 0x12345678;
-                field.Resolution = 0x24683579;
-                field.AmplitudeOffset = 0x98765432;
-                field.AmplitudeResolution = 0x11223344;
-                field.MaximumRssi = 0xAABB;
-                field.SamplesData = new byte[]{ 0xCC, 0xDD, 0xEE, 0xFF };
-                
+                PpiSpectrum field = new PpiSpectrum
+                {
+                    StartingFrequency = 0x12345678,
+                    Resolution = 0x24683579,
+                    AmplitudeOffset = 0x98765432,
+                    AmplitudeResolution = 0x11223344,
+                    MaximumRssi = 0xAABB,
+                    SamplesData = new byte[] { 0xCC, 0xDD, 0xEE, 0xFF }
+                };
+
                 var ms = new MemoryStream(field.Bytes);
                 PpiSpectrum recreatedField = new PpiSpectrum(new BinaryReader(ms));
                 

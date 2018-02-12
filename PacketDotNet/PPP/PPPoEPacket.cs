@@ -195,8 +195,10 @@ namespace PacketDotNet.PPP
             log.Debug("");
 
             // slice off the header portion
-            header = new ByteArraySegment(bas);
-            header.Length = PPPoEFields.HeaderLength;
+            header = new ByteArraySegment(bas)
+            {
+                Length = PPPoEFields.HeaderLength
+            };
 
             // parse the encapsulated bytes
             payloadPacketOrData = ParseEncapsulatedBytes(header);
@@ -208,10 +210,12 @@ namespace PacketDotNet.PPP
             var payload = Header.EncapsulatedBytes();
             log.DebugFormat("payload {0}", payload.ToString());
 
-            var payloadPacketOrData = new PacketOrByteArraySegment();
+            var payloadPacketOrData = new PacketOrByteArraySegment
+            {
 
-            // we assume that we have a PPPPacket as the payload
-            payloadPacketOrData.ThePacket = new PPPPacket(payload);
+                // we assume that we have a PPPPacket as the payload
+                ThePacket = new PPPPacket(payload)
+            };
 
             return payloadPacketOrData;
         }

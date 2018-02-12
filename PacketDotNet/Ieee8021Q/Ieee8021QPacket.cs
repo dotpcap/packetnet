@@ -167,8 +167,10 @@ namespace PacketDotNet.Ieee8021Q
         public Ieee8021QPacket(ByteArraySegment bas)
         {
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(bas);
-            header.Length = Ieee8021QFields.HeaderLength;
+            header = new ByteArraySegment(bas)
+            {
+                Length = Ieee8021QFields.HeaderLength
+            };
 
             // parse the payload via an EthernetPacket method
             payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(header,

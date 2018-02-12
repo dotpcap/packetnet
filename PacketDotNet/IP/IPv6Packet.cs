@@ -337,8 +337,10 @@ namespace PacketDotNet.IP
             log.Debug(bas.ToString());
 
             // slice off the header
-            header = new ByteArraySegment(bas);
-            header.Length = IPv6Packet.HeaderMinimumLength;
+            header = new ByteArraySegment(bas)
+            {
+                Length = IPv6Packet.HeaderMinimumLength
+            };
 
             // set the actual length, we need to do this because we need to set
             // header to something valid above before we can retrieve the PayloadLength

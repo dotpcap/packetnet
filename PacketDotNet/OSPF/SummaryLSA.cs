@@ -126,9 +126,11 @@ namespace PacketDotNet.OSPF
                 for (int i = 0; i < tosCnt; i++)
                 {
                     var metric = EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + SummaryLSAFields.TOSMetricPosition + i * TOSMetric.TOSMetricLength);
-                    TOSMetric m = new TOSMetric();
-                    m.TOS = (byte)((metric & 0xFF000000) >> 24);
-                    m.Metric = metric & 0x00FFFFFF;
+                    TOSMetric m = new TOSMetric
+                    {
+                        TOS = (byte)((metric & 0xFF000000) >> 24),
+                        Metric = metric & 0x00FFFFFF
+                    };
                     ret.Add(m);
                 }
                 return ret;

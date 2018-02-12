@@ -157,12 +157,14 @@ namespace PacketDotNet.Ieee80211
             /// <param name="bas">Bas.</param>
             public LogicalLinkControl(ByteArraySegment bas)
             {
-                // set the header field, header field values are retrieved from this byte array
-                header = new ByteArraySegment(bas);
-                header.Length = LogicalLinkControlFields.HeaderLength;
+            // set the header field, header field values are retrieved from this byte array
+            header = new ByteArraySegment(bas)
+            {
+                Length = LogicalLinkControlFields.HeaderLength
+            };
 
-                // parse the payload via an EthernetPacket method
-                payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(header,
+            // parse the payload via an EthernetPacket method
+            payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(header,
                                                                             Type);
             }
         }

@@ -94,8 +94,10 @@ namespace PacketDotNet.PPP
             log.Debug("");
 
             // slice off the header portion as our header
-            header = new ByteArraySegment(bas);
-            header.Length = PPPFields.HeaderLength;
+            header = new ByteArraySegment(bas)
+            {
+                Length = PPPFields.HeaderLength
+            };
 
             // parse the encapsulated bytes
             payloadPacketOrData = ParseEncapsulatedBytes(header, Protocol);

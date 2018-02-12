@@ -131,10 +131,12 @@ namespace PacketDotNet.Ieee80211
             {
                 log.Debug ("");
 
-                // slice off the header portion
-                header = new ByteArraySegment (bas);
-                header.Length = RadioFields.DefaultHeaderLength;
-                Version = VersionBytes;
+            // slice off the header portion
+            header = new ByteArraySegment(bas)
+            {
+                Length = RadioFields.DefaultHeaderLength
+            };
+            Version = VersionBytes;
                 Length = LengthBytes;
                 
                 // update the header size based on the headers packet length

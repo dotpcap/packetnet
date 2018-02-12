@@ -373,15 +373,19 @@ namespace PacketDotNet.Tcp
             log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(bas);
+            header = new ByteArraySegment(bas)
+            {
 
-            // NOTE: we update the Length field AFTER the header field because
-            // we need the header to be valid to retrieve the value of DataOffset
-            header.Length = DataOffset * 4;
+                // NOTE: we update the Length field AFTER the header field because
+                // we need the header to be valid to retrieve the value of DataOffset
+                Length = DataOffset * 4
+            };
 
             // store the payload bytes
-            payloadPacketOrData = new PacketOrByteArraySegment();
-            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
+            payloadPacketOrData = new PacketOrByteArraySegment
+            {
+                TheByteArraySegment = header.EncapsulatedBytes()
+            };
         }
 
         /// <summary>

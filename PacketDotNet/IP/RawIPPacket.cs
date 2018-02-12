@@ -56,8 +56,10 @@ namespace PacketDotNet.IP
             var firstNibble = bas.Bytes[0] >> 4;
             Protocol = (RawIPPacketProtocol)firstNibble;
 
-            header = new ByteArraySegment(bas);
-            header.Length = 0;
+            header = new ByteArraySegment(bas)
+            {
+                Length = 0
+            };
 
             // parse the encapsulated bytes
             payloadPacketOrData = new PacketOrByteArraySegment();

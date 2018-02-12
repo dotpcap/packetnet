@@ -123,18 +123,22 @@ namespace Test.PacketType
                 
                 expectedLength += flagsField.Length;
                 Assert.AreEqual(expectedLength, p.Length);
-                
+
                 //We will add the noise field before the signal field. This is not the order required
                 //for radiotap and so will test that the fields are correctly reordered when written
-                DbAntennaNoiseRadioTapField dbAntennaNoiseField = new DbAntennaNoiseRadioTapField();
-                dbAntennaNoiseField.AntennaNoisedB = 33;
+                DbAntennaNoiseRadioTapField dbAntennaNoiseField = new DbAntennaNoiseRadioTapField
+                {
+                    AntennaNoisedB = 33
+                };
                 p.Add(dbAntennaNoiseField);
                 
                 expectedLength += dbAntennaNoiseField.Length;
                 Assert.AreEqual(expectedLength, p.Length);
-                
-                DbAntennaSignalRadioTapField dbAntennaSignalField = new DbAntennaSignalRadioTapField();
-                dbAntennaSignalField.SignalStrengthdB = 44;
+
+                DbAntennaSignalRadioTapField dbAntennaSignalField = new DbAntennaSignalRadioTapField
+                {
+                    SignalStrengthdB = 44
+                };
                 p.Add(dbAntennaSignalField);
                 
                 expectedLength += dbAntennaSignalField.Length;

@@ -127,20 +127,24 @@ namespace Test.PacketType
             public void ConstructPacketWithMultipleFields()
             {
                 PpiPacket packet = new PpiPacket();
-                
-                PpiCommon commonField = new PpiCommon();
-                commonField.ChannelFrequency = 2142;
-                commonField.AntennaSignalPower = 50;
-                commonField.AntennaSignalNoise = 25;
+
+                PpiCommon commonField = new PpiCommon
+                {
+                    ChannelFrequency = 2142,
+                    AntennaSignalPower = 50,
+                    AntennaSignalNoise = 25
+                };
                 packet.Add(commonField);
                 
                 Assert.AreEqual(32, packet.Length);
-                
-                PpiProcessInfo processInfoField = new PpiProcessInfo();
-                processInfoField.UserId = 0x1111;
-                processInfoField.UserName = "Hester the tester";
-                processInfoField.GroupId = 0x2222;
-                processInfoField.GroupName = "Test Group";
+
+                PpiProcessInfo processInfoField = new PpiProcessInfo
+                {
+                    UserId = 0x1111,
+                    UserName = "Hester the tester",
+                    GroupId = 0x2222,
+                    GroupName = "Test Group"
+                };
                 packet.Add(processInfoField);
                 
                 Assert.AreEqual(82, packet.Length);
@@ -177,20 +181,24 @@ namespace Test.PacketType
             {
                 PpiPacket packet = new PpiPacket();
                 packet.Flags |= PpiPacket.HeaderFlags.Alignment32Bit;
-                
-                PpiCommon commonField = new PpiCommon();
-                commonField.ChannelFrequency = 2142;
-                commonField.AntennaSignalPower = 50;
-                commonField.AntennaSignalNoise = 25;
+
+                PpiCommon commonField = new PpiCommon
+                {
+                    ChannelFrequency = 2142,
+                    AntennaSignalPower = 50,
+                    AntennaSignalNoise = 25
+                };
                 packet.Add(commonField);
                 
                 Assert.AreEqual(32, packet.Length);
-                
-                PpiProcessInfo processInfoField = new PpiProcessInfo();
-                processInfoField.UserId = 0x1111;
-                processInfoField.UserName = "Hester the tester";
-                processInfoField.GroupId = 0x2222;
-                processInfoField.GroupName = "Test Group";
+
+                PpiProcessInfo processInfoField = new PpiProcessInfo
+                {
+                    UserId = 0x1111,
+                    UserName = "Hester the tester",
+                    GroupId = 0x2222,
+                    GroupName = "Test Group"
+                };
                 packet.Add(processInfoField);
                 
                 Assert.AreEqual(84, packet.Length);

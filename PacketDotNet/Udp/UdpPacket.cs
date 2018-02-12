@@ -203,8 +203,10 @@ namespace PacketDotNet.Udp
             log.DebugFormat("bas {0}", bas.ToString());
 
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(bas);
-            header.Length = UdpFields.HeaderLength;
+            header = new ByteArraySegment(bas)
+            {
+                Length = UdpFields.HeaderLength
+            };
 
             payloadPacketOrData = new PacketOrByteArraySegment();
 

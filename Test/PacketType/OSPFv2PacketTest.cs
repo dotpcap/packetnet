@@ -610,14 +610,15 @@ namespace Test.PacketType
         public void TestHelloConstruction()
         {
             //test ctor 1
-            OSPFv2HelloPacket p = new OSPFv2HelloPacket(System.Net.IPAddress.Parse("255.255.255.0"), 2, 2);
+            OSPFv2HelloPacket p = new OSPFv2HelloPacket(System.Net.IPAddress.Parse("255.255.255.0"), 2, 2)
+            {
+                RouterID = System.Net.IPAddress.Parse("192.168.255.255"),
+                AreaID = System.Net.IPAddress.Parse("192.168.255.252"),
 
-            p.RouterID = System.Net.IPAddress.Parse("192.168.255.255");
-            p.AreaID = System.Net.IPAddress.Parse("192.168.255.252");
-
-            p.HelloOptions = 0x02;
-            p.DesignatedRouterID = System.Net.IPAddress.Parse("192.168.1.1");
-            p.BackupRouterID = System.Net.IPAddress.Parse("10.1.1.2");
+                HelloOptions = 0x02,
+                DesignatedRouterID = System.Net.IPAddress.Parse("192.168.1.1"),
+                BackupRouterID = System.Net.IPAddress.Parse("10.1.1.2")
+            };
 
             Assert.AreEqual(OSPFVersion.OSPFv2, p.Version);
             Assert.AreEqual(OSPFPacketType.Hello, p.Type);
@@ -668,10 +669,12 @@ namespace Test.PacketType
         public void TestDDConstruction()
         {
             //test ctor 1
-            OSPFv2DDPacket d = new OSPFv2DDPacket();
-            d.InterfaceMTU = 1500;
-            d.DDSequence = 1098361214;
-            d.DBDescriptionOptions = 0x02;
+            OSPFv2DDPacket d = new OSPFv2DDPacket
+            {
+                InterfaceMTU = 1500,
+                DDSequence = 1098361214,
+                DBDescriptionOptions = 0x02
+            };
 
             Assert.AreEqual(OSPFPacketType.DatabaseDescription, d.Type);
             Assert.AreEqual(1098361214, d.DDSequence);
@@ -690,37 +693,45 @@ namespace Test.PacketType
             //test ctor 2
             List<LSA> lsas = new List<LSA>();
 
-            LSA l = new LSA();
-            l.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.3");
-            l.LinkStateID = System.Net.IPAddress.Parse("192.168.170.3");
-            l.LSAge = 1;
-            l.LSSequenceNumber = 0x80000001;
-            l.LSType = LSAType.Router;
-            l.Options = 0x02;
+            LSA l = new LSA
+            {
+                AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.3"),
+                LinkStateID = System.Net.IPAddress.Parse("192.168.170.3"),
+                LSAge = 1,
+                LSSequenceNumber = 0x80000001,
+                LSType = LSAType.Router,
+                Options = 0x02
+            };
             lsas.Add(l);
 
-            l = new LSA();
-            l.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2");
-            l.LinkStateID = System.Net.IPAddress.Parse("80.212.16.0");
-            l.LSAge = 2;
-            l.LSSequenceNumber = 0x80000001;
-            l.LSType = LSAType.ASExternal;
-            l.Options = 0x02;
+            l = new LSA
+            {
+                AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2"),
+                LinkStateID = System.Net.IPAddress.Parse("80.212.16.0"),
+                LSAge = 2,
+                LSSequenceNumber = 0x80000001,
+                LSType = LSAType.ASExternal,
+                Options = 0x02
+            };
             lsas.Add(l);
 
-            l = new LSA();
-            l.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2");
-            l.LinkStateID = System.Net.IPAddress.Parse("148.121.171.0");
-            l.LSAge = 2;
-            l.LSSequenceNumber = 0x80000001;
-            l.LSType = LSAType.ASExternal;
-            l.Options = 0x02;
+            l = new LSA
+            {
+                AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2"),
+                LinkStateID = System.Net.IPAddress.Parse("148.121.171.0"),
+                LSAge = 2,
+                LSSequenceNumber = 0x80000001,
+                LSType = LSAType.ASExternal,
+                Options = 0x02
+            };
             lsas.Add(l);
 
-            OSPFv2DDPacket ddl = new OSPFv2DDPacket(lsas);
-            ddl.InterfaceMTU = 1400;
-            ddl.DDSequence = 123456789;
-            ddl.DBDescriptionOptions = 0x03;
+            OSPFv2DDPacket ddl = new OSPFv2DDPacket(lsas)
+            {
+                InterfaceMTU = 1400,
+                DDSequence = 123456789,
+                DBDescriptionOptions = 0x03
+            };
 
             Assert.AreEqual(OSPFPacketType.DatabaseDescription, ddl.Type);
             Assert.AreEqual(123456789, ddl.DDSequence);
@@ -755,10 +766,11 @@ namespace Test.PacketType
         public void TestLSRConstruction()
         {
             //test ctor 1
-            OSPFv2LSRequestPacket p = new OSPFv2LSRequestPacket();
-
-            p.RouterID = System.Net.IPAddress.Parse("192.168.255.255");
-            p.AreaID = System.Net.IPAddress.Parse("192.168.255.252");
+            OSPFv2LSRequestPacket p = new OSPFv2LSRequestPacket
+            {
+                RouterID = System.Net.IPAddress.Parse("192.168.255.255"),
+                AreaID = System.Net.IPAddress.Parse("192.168.255.252")
+            };
 
             Assert.AreEqual(OSPFVersion.OSPFv2, p.Version);
             Assert.AreEqual(OSPFPacketType.LinkStateRequest, p.Type);
@@ -779,28 +791,35 @@ namespace Test.PacketType
             //test ctor 2
             List<LinkStateRequest> lsrs = new List<LinkStateRequest>();
 
-            LinkStateRequest r = new LinkStateRequest();
-            r.LSType = LSAType.Router;
-            r.LinkStateID = System.Net.IPAddress.Parse("192.168.170.3");
-            r.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.3");
+            LinkStateRequest r = new LinkStateRequest
+            {
+                LSType = LSAType.Router,
+                LinkStateID = System.Net.IPAddress.Parse("192.168.170.3"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.3")
+            };
             lsrs.Add(r);
 
-            r = new LinkStateRequest();
-            r.LSType = LSAType.ASExternal;
-            r.LinkStateID = System.Net.IPAddress.Parse("80.212.16.0");
-            r.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2");
+            r = new LinkStateRequest
+            {
+                LSType = LSAType.ASExternal,
+                LinkStateID = System.Net.IPAddress.Parse("80.212.16.0"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2")
+            };
             lsrs.Add(r);
 
-            r = new LinkStateRequest();
-            r.LSType = LSAType.Network;
-            r.LinkStateID = System.Net.IPAddress.Parse("148.121.171.0");
-            r.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2");
+            r = new LinkStateRequest
+            {
+                LSType = LSAType.Network,
+                LinkStateID = System.Net.IPAddress.Parse("148.121.171.0"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2")
+            };
             lsrs.Add(r);
 
-            OSPFv2LSRequestPacket lp2 = new OSPFv2LSRequestPacket(lsrs);
-
-            lp2.RouterID = System.Net.IPAddress.Parse("10.0.1.255");
-            lp2.AreaID = System.Net.IPAddress.Parse("10.0.2.252");
+            OSPFv2LSRequestPacket lp2 = new OSPFv2LSRequestPacket(lsrs)
+            {
+                RouterID = System.Net.IPAddress.Parse("10.0.1.255"),
+                AreaID = System.Net.IPAddress.Parse("10.0.2.252")
+            };
 
             Assert.AreEqual(OSPFVersion.OSPFv2, lp2.Version);
             Assert.AreEqual(OSPFPacketType.LinkStateRequest, lp2.Type);
@@ -825,17 +844,18 @@ namespace Test.PacketType
         public void TestRouterLSAConstruction()
         {
             //ctor 1
-            RouterLSA rl = new RouterLSA();
-
-            rl.LSAge = 333;
-            rl.Options = 0x20;
-            rl.LinkStateID = System.Net.IPAddress.Parse("1.1.1.1");
-            rl.AdvertisingRouter = System.Net.IPAddress.Parse("2.2.2.2");
-            rl.LSSequenceNumber = 0x80000001;
-            rl.Checksum = 0xaaaa;
-            rl.vBit = 1;
-            rl.eBit = 0;
-            rl.bBit = 1;
+            RouterLSA rl = new RouterLSA
+            {
+                LSAge = 333,
+                Options = 0x20,
+                LinkStateID = System.Net.IPAddress.Parse("1.1.1.1"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("2.2.2.2"),
+                LSSequenceNumber = 0x80000001,
+                Checksum = 0xaaaa,
+                vBit = 1,
+                eBit = 0,
+                bBit = 1
+            };
 
 
             Assert.AreEqual(333, rl.LSAge);
@@ -853,34 +873,39 @@ namespace Test.PacketType
 
             List<RouterLink> rlist = new List<RouterLink>();
 
-            RouterLink rlink = new RouterLink();
-            rlink.Type = 3;
-            rlink.LinkID = System.Net.IPAddress.Parse("192.168.20.0");
-            rlink.LinkData = System.Net.IPAddress.Parse("255.255.255.0");
-            rlink.TOSNumber = 0;
-            rlink.Metric = 10;
+            RouterLink rlink = new RouterLink
+            {
+                Type = 3,
+                LinkID = System.Net.IPAddress.Parse("192.168.20.0"),
+                LinkData = System.Net.IPAddress.Parse("255.255.255.0"),
+                TOSNumber = 0,
+                Metric = 10
+            };
             rlist.Add(rlink);
 
-            rlink = new RouterLink();
-            rlink.Type = 2;
-            rlink.LinkID = System.Net.IPAddress.Parse("10.0.20.2");
-            rlink.LinkData = System.Net.IPAddress.Parse("10.0.20.2");
-            rlink.TOSNumber = 0;
-            rlink.Metric = 10;
+            rlink = new RouterLink
+            {
+                Type = 2,
+                LinkID = System.Net.IPAddress.Parse("10.0.20.2"),
+                LinkData = System.Net.IPAddress.Parse("10.0.20.2"),
+                TOSNumber = 0,
+                Metric = 10
+            };
             rlist.Add(rlink);
 
             //ctor 2
-            rl = new RouterLSA(rlist);
-
-            rl.LSAge = 446;
-            rl.Options = 0x22;
-            rl.LinkStateID = System.Net.IPAddress.Parse("5.5.5.5");
-            rl.AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5");
-            rl.LSSequenceNumber = 0x80000004;
-            rl.Checksum = 0x7caa;
-            rl.vBit = 0;
-            rl.eBit = 0;
-            rl.bBit = 0;
+            rl = new RouterLSA(rlist)
+            {
+                LSAge = 446,
+                Options = 0x22,
+                LinkStateID = System.Net.IPAddress.Parse("5.5.5.5"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5"),
+                LSSequenceNumber = 0x80000004,
+                Checksum = 0x7caa,
+                vBit = 0,
+                eBit = 0,
+                bBit = 0
+            };
 
             Assert.AreEqual(446, rl.LSAge);
             Assert.AreEqual(0x22, rl.Options);
@@ -916,16 +941,17 @@ namespace Test.PacketType
         public void TestNetworkLSACreation()
         {
             //ctor 1
-            NetworkLSA nl = new NetworkLSA();
-
-            nl.LSAge = 333;
-            nl.Options = 0x20;
-            nl.LSType = LSAType.Network;
-            nl.LinkStateID = System.Net.IPAddress.Parse("1.1.1.1");
-            nl.AdvertisingRouter = System.Net.IPAddress.Parse("2.2.2.2");
-            nl.LSSequenceNumber = 0x8000000F;
-            nl.Checksum = 0xdede;
-            nl.NetworkMask = System.Net.IPAddress.Parse("255.255.255.252");
+            NetworkLSA nl = new NetworkLSA
+            {
+                LSAge = 333,
+                Options = 0x20,
+                LSType = LSAType.Network,
+                LinkStateID = System.Net.IPAddress.Parse("1.1.1.1"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("2.2.2.2"),
+                LSSequenceNumber = 0x8000000F,
+                Checksum = 0xdede,
+                NetworkMask = System.Net.IPAddress.Parse("255.255.255.252")
+            };
 
             Assert.AreEqual(333, nl.LSAge);
             Assert.AreEqual(0x20, nl.Options);
@@ -942,16 +968,17 @@ namespace Test.PacketType
             rtrs.Add(System.Net.IPAddress.Parse("5.5.5.5"));
             rtrs.Add(System.Net.IPAddress.Parse("4.4.4.4"));
 
-            nl = new NetworkLSA(rtrs);
-
-            nl.LSAge = 446;
-            nl.Options = 0x22;
-            nl.LSType = LSAType.Network;
-            nl.LinkStateID = System.Net.IPAddress.Parse("10.0.20.2");
-            nl.AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5");
-            nl.LSSequenceNumber = 0x80000001;
-            nl.Checksum = 0xf6ed;
-            nl.NetworkMask = System.Net.IPAddress.Parse("255.255.255.252");
+            nl = new NetworkLSA(rtrs)
+            {
+                LSAge = 446,
+                Options = 0x22,
+                LSType = LSAType.Network,
+                LinkStateID = System.Net.IPAddress.Parse("10.0.20.2"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5"),
+                LSSequenceNumber = 0x80000001,
+                Checksum = 0xf6ed,
+                NetworkMask = System.Net.IPAddress.Parse("255.255.255.252")
+            };
 
             Assert.AreEqual(446, nl.LSAge);
             Assert.AreEqual(0x22, nl.Options);
@@ -970,17 +997,18 @@ namespace Test.PacketType
         public void TestSummaryLSAConstruction()
         {
             //ctor 1
-            SummaryLSA sl = new SummaryLSA();
-
-            sl.LSAge = 22;
-            sl.Options = 0x20;
-            sl.LSType = LSAType.Summary;
-            sl.LinkStateID = System.Net.IPAddress.Parse("1.1.1.1");
-            sl.AdvertisingRouter = System.Net.IPAddress.Parse("4.4.4.4");
-            sl.LSSequenceNumber = 0x8000000F;
-            sl.Checksum = 0xdddd;
-            sl.NetworkMask = System.Net.IPAddress.Parse("255.255.255.0");
-            sl.Metric = 10;
+            SummaryLSA sl = new SummaryLSA
+            {
+                LSAge = 22,
+                Options = 0x20,
+                LSType = LSAType.Summary,
+                LinkStateID = System.Net.IPAddress.Parse("1.1.1.1"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("4.4.4.4"),
+                LSSequenceNumber = 0x8000000F,
+                Checksum = 0xdddd,
+                NetworkMask = System.Net.IPAddress.Parse("255.255.255.0"),
+                Metric = 10
+            };
 
             Assert.AreEqual(22, sl.LSAge);
             Assert.AreEqual(0x20, sl.Options);
@@ -996,28 +1024,33 @@ namespace Test.PacketType
 
             List<TOSMetric> tms = new List<TOSMetric>();
 
-            TOSMetric tm = new TOSMetric();
-            tm.TOS = 1;
-            tm.Metric = 11;
+            TOSMetric tm = new TOSMetric
+            {
+                TOS = 1,
+                Metric = 11
+            };
             tms.Add(tm);
 
-            tm = new TOSMetric();
-            tm.TOS = 2;
-            tm.Metric = 22;
+            tm = new TOSMetric
+            {
+                TOS = 2,
+                Metric = 22
+            };
             tms.Add(tm);
 
             //ctor 2
-            sl = new SummaryLSA(tms);
-
-            sl.LSAge = 11;
-            sl.Options = 0x22;
-            sl.LSType = LSAType.Summary;
-            sl.LinkStateID = System.Net.IPAddress.Parse("192.168.10.0");
-            sl.AdvertisingRouter = System.Net.IPAddress.Parse("4.4.4.4");
-            sl.LSSequenceNumber = 0x80000001;
-            sl.Checksum = 0x1e7d;
-            sl.NetworkMask = System.Net.IPAddress.Parse("255.255.255.0");
-            sl.Metric = 30;
+            sl = new SummaryLSA(tms)
+            {
+                LSAge = 11,
+                Options = 0x22,
+                LSType = LSAType.Summary,
+                LinkStateID = System.Net.IPAddress.Parse("192.168.10.0"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("4.4.4.4"),
+                LSSequenceNumber = 0x80000001,
+                Checksum = 0x1e7d,
+                NetworkMask = System.Net.IPAddress.Parse("255.255.255.0"),
+                Metric = 30
+            };
 
             Assert.AreEqual(11, sl.LSAge);
             Assert.AreEqual(0x22, sl.Options);
@@ -1041,16 +1074,17 @@ namespace Test.PacketType
         public void TestASExternalLSAConstruction()
         {
             //ctor 1
-            ASExternalLSA al = new ASExternalLSA();
-
-            al.LSAge = 90;
-            al.Options = 0x22;
-            al.LSType = LSAType.ASExternal;
-            al.LinkStateID = System.Net.IPAddress.Parse("1.1.1.1");
-            al.AdvertisingRouter = System.Net.IPAddress.Parse("3.3.3.3");
-            al.LSSequenceNumber = 0x8000000F;
-            al.Checksum = 0x3333;
-            al.NetworkMask = System.Net.IPAddress.Parse("255.255.255.252");
+            ASExternalLSA al = new ASExternalLSA
+            {
+                LSAge = 90,
+                Options = 0x22,
+                LSType = LSAType.ASExternal,
+                LinkStateID = System.Net.IPAddress.Parse("1.1.1.1"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("3.3.3.3"),
+                LSSequenceNumber = 0x8000000F,
+                Checksum = 0x3333,
+                NetworkMask = System.Net.IPAddress.Parse("255.255.255.252")
+            };
 
             Assert.AreEqual(90, al.LSAge);
             Assert.AreEqual(0x22, al.Options);
@@ -1065,26 +1099,29 @@ namespace Test.PacketType
 
 
             //ctor 2;
-            ASExternalLink aslink = new ASExternalLink();
-            aslink.eBit = 1;
-            aslink.Metric = 100;
-            aslink.ExternalRouteTag = 0;
-            aslink.TOS = 0;
-            aslink.ForwardingAddress = System.Net.IPAddress.Parse("0.0.0.0");
+            ASExternalLink aslink = new ASExternalLink
+            {
+                eBit = 1,
+                Metric = 100,
+                ExternalRouteTag = 0,
+                TOS = 0,
+                ForwardingAddress = System.Net.IPAddress.Parse("0.0.0.0")
+            };
 
             List<ASExternalLink> links = new List<ASExternalLink>();
             links.Add(aslink);
 
-            al = new ASExternalLSA(links);
-
-            al.LSAge = 197;
-            al.Options = 0x20;
-            al.LSType = LSAType.ASExternal;
-            al.LinkStateID = System.Net.IPAddress.Parse("172.16.2.0");
-            al.AdvertisingRouter = System.Net.IPAddress.Parse("2.2.2.2");
-            al.LSSequenceNumber = 0x80000001;
-            al.Checksum = 0x3356;
-            al.NetworkMask = System.Net.IPAddress.Parse("255.255.255.0");
+            al = new ASExternalLSA(links)
+            {
+                LSAge = 197,
+                Options = 0x20,
+                LSType = LSAType.ASExternal,
+                LinkStateID = System.Net.IPAddress.Parse("172.16.2.0"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("2.2.2.2"),
+                LSSequenceNumber = 0x80000001,
+                Checksum = 0x3356,
+                NetworkMask = System.Net.IPAddress.Parse("255.255.255.0")
+            };
 
 
             Assert.AreEqual(197, al.LSAge);
@@ -1115,10 +1152,11 @@ namespace Test.PacketType
             ASExternalLSA al;
 
             //test ctor 1
-            OSPFv2LSUpdatePacket p = new OSPFv2LSUpdatePacket();
-
-            p.RouterID = System.Net.IPAddress.Parse("192.168.255.255");
-            p.AreaID = System.Net.IPAddress.Parse("192.168.255.252");
+            OSPFv2LSUpdatePacket p = new OSPFv2LSUpdatePacket
+            {
+                RouterID = System.Net.IPAddress.Parse("192.168.255.255"),
+                AreaID = System.Net.IPAddress.Parse("192.168.255.252")
+            };
 
             Assert.AreEqual(OSPFVersion.OSPFv2, p.Version);
             Assert.AreEqual(OSPFPacketType.LinkStateUpdate, p.Type);
@@ -1143,95 +1181,109 @@ namespace Test.PacketType
             //add routerer LSA
             List<RouterLink> rlist = new List<RouterLink>();
 
-            RouterLink rlink = new RouterLink();
-            rlink.Type = 3;
-            rlink.LinkID = System.Net.IPAddress.Parse("192.168.20.0");
-            rlink.LinkData = System.Net.IPAddress.Parse("255.255.255.0");
-            rlink.TOSNumber = 0;
-            rlink.Metric = 10;
+            RouterLink rlink = new RouterLink
+            {
+                Type = 3,
+                LinkID = System.Net.IPAddress.Parse("192.168.20.0"),
+                LinkData = System.Net.IPAddress.Parse("255.255.255.0"),
+                TOSNumber = 0,
+                Metric = 10
+            };
             rlist.Add(rlink);
 
-            rlink = new RouterLink();
-            rlink.Type = 2;
-            rlink.LinkID = System.Net.IPAddress.Parse("10.0.20.2");
-            rlink.LinkData = System.Net.IPAddress.Parse("10.0.20.2");
-            rlink.TOSNumber = 0;
-            rlink.Metric = 10;
+            rlink = new RouterLink
+            {
+                Type = 2,
+                LinkID = System.Net.IPAddress.Parse("10.0.20.2"),
+                LinkData = System.Net.IPAddress.Parse("10.0.20.2"),
+                TOSNumber = 0,
+                Metric = 10
+            };
             rlist.Add(rlink);
-            rl = new RouterLSA(rlist);
-
-            rl.LSAge = 446;
-            rl.Options = 0x22;
-            rl.LinkStateID = System.Net.IPAddress.Parse("5.5.5.5");
-            rl.AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5");
-            rl.LSSequenceNumber = 0x80000004;
-            rl.Checksum = 0x7caa;
-            rl.vBit = 0;
-            rl.eBit = 0;
-            rl.bBit = 0;
+            rl = new RouterLSA(rlist)
+            {
+                LSAge = 446,
+                Options = 0x22,
+                LinkStateID = System.Net.IPAddress.Parse("5.5.5.5"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5"),
+                LSSequenceNumber = 0x80000004,
+                Checksum = 0x7caa,
+                vBit = 0,
+                eBit = 0,
+                bBit = 0
+            };
 
             //add network lsa
             List<System.Net.IPAddress> rtrs = new List<System.Net.IPAddress>();
             rtrs.Add(System.Net.IPAddress.Parse("5.5.5.5"));
             rtrs.Add(System.Net.IPAddress.Parse("4.4.4.4"));
 
-            nl = new NetworkLSA(rtrs);
-
-            nl.LSAge = 446;
-            nl.Options = 0x22;
-            nl.LSType = LSAType.Network;
-            nl.LinkStateID = System.Net.IPAddress.Parse("10.0.20.2");
-            nl.AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5");
-            nl.LSSequenceNumber = 0x80000001;
-            nl.Checksum = 0xf6ed;
-            nl.NetworkMask = System.Net.IPAddress.Parse("255.255.255.252");
+            nl = new NetworkLSA(rtrs)
+            {
+                LSAge = 446,
+                Options = 0x22,
+                LSType = LSAType.Network,
+                LinkStateID = System.Net.IPAddress.Parse("10.0.20.2"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5"),
+                LSSequenceNumber = 0x80000001,
+                Checksum = 0xf6ed,
+                NetworkMask = System.Net.IPAddress.Parse("255.255.255.252")
+            };
 
             //add summary lsa
             List<TOSMetric> tms = new List<TOSMetric>();
 
-            TOSMetric tm = new TOSMetric();
-            tm.TOS = 1;
-            tm.Metric = 11;
+            TOSMetric tm = new TOSMetric
+            {
+                TOS = 1,
+                Metric = 11
+            };
             tms.Add(tm);
 
-            tm = new TOSMetric();
-            tm.TOS = 2;
-            tm.Metric = 22;
+            tm = new TOSMetric
+            {
+                TOS = 2,
+                Metric = 22
+            };
             tms.Add(tm);
 
-            sl = new SummaryLSA(tms);
-
-            sl.LSAge = 11;
-            sl.Options = 0x22;
-            sl.LSType = LSAType.Summary;
-            sl.LinkStateID = System.Net.IPAddress.Parse("192.168.10.0");
-            sl.AdvertisingRouter = System.Net.IPAddress.Parse("4.4.4.4");
-            sl.LSSequenceNumber = 0x80000001;
-            sl.Checksum = 0x1e7d;
-            sl.NetworkMask = System.Net.IPAddress.Parse("255.255.255.0");
-            sl.Metric = 30;
+            sl = new SummaryLSA(tms)
+            {
+                LSAge = 11,
+                Options = 0x22,
+                LSType = LSAType.Summary,
+                LinkStateID = System.Net.IPAddress.Parse("192.168.10.0"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("4.4.4.4"),
+                LSSequenceNumber = 0x80000001,
+                Checksum = 0x1e7d,
+                NetworkMask = System.Net.IPAddress.Parse("255.255.255.0"),
+                Metric = 30
+            };
 
             //add AS External LSA
-            ASExternalLink aslink = new ASExternalLink();
-            aslink.eBit = 1;
-            aslink.Metric = 100;
-            aslink.ExternalRouteTag = 0;
-            aslink.TOS = 0;
-            aslink.ForwardingAddress = System.Net.IPAddress.Parse("0.0.0.0");
+            ASExternalLink aslink = new ASExternalLink
+            {
+                eBit = 1,
+                Metric = 100,
+                ExternalRouteTag = 0,
+                TOS = 0,
+                ForwardingAddress = System.Net.IPAddress.Parse("0.0.0.0")
+            };
 
             List<ASExternalLink> links = new List<ASExternalLink>();
             links.Add(aslink);
 
-            al = new ASExternalLSA(links);
-
-            al.LSAge = 197;
-            al.Options = 0x20;
-            al.LSType = LSAType.ASExternal;
-            al.LinkStateID = System.Net.IPAddress.Parse("172.16.2.0");
-            al.AdvertisingRouter = System.Net.IPAddress.Parse("2.2.2.2");
-            al.LSSequenceNumber = 0x80000001;
-            al.Checksum = 0x3356;
-            al.NetworkMask = System.Net.IPAddress.Parse("255.255.255.0");
+            al = new ASExternalLSA(links)
+            {
+                LSAge = 197,
+                Options = 0x20,
+                LSType = LSAType.ASExternal,
+                LinkStateID = System.Net.IPAddress.Parse("172.16.2.0"),
+                AdvertisingRouter = System.Net.IPAddress.Parse("2.2.2.2"),
+                LSSequenceNumber = 0x80000001,
+                Checksum = 0x3356,
+                NetworkMask = System.Net.IPAddress.Parse("255.255.255.0")
+            };
 
             //put them all together in a list
             List<LSA> lsas = new List<LSA>();
@@ -1240,10 +1292,11 @@ namespace Test.PacketType
             lsas.Add(sl);
             lsas.Add(al);
 
-            p = new OSPFv2LSUpdatePacket(lsas);
-
-            p.RouterID = System.Net.IPAddress.Parse("192.168.255.255");
-            p.AreaID = System.Net.IPAddress.Parse("192.168.255.252");
+            p = new OSPFv2LSUpdatePacket(lsas)
+            {
+                RouterID = System.Net.IPAddress.Parse("192.168.255.255"),
+                AreaID = System.Net.IPAddress.Parse("192.168.255.252")
+            };
 
             Assert.AreEqual(OSPFVersion.OSPFv2, p.Version);
             Assert.AreEqual(OSPFPacketType.LinkStateUpdate, p.Type);
@@ -1353,32 +1406,37 @@ namespace Test.PacketType
 
             //test ctor 2
             List<LSA> lsas = new List<LSA>();
-            LSA l = new LSA();
-
-            l.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.3");
-            l.LinkStateID = System.Net.IPAddress.Parse("192.168.170.3");
-            l.LSAge = 1;
-            l.LSSequenceNumber = 0x80000001;
-            l.LSType = LSAType.Router;
-            l.Options = 0x02;
+            LSA l = new LSA
+            {
+                AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.3"),
+                LinkStateID = System.Net.IPAddress.Parse("192.168.170.3"),
+                LSAge = 1,
+                LSSequenceNumber = 0x80000001,
+                LSType = LSAType.Router,
+                Options = 0x02
+            };
             lsas.Add(l);
 
-            l = new LSA();
-            l.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2");
-            l.LinkStateID = System.Net.IPAddress.Parse("80.212.16.0");
-            l.LSAge = 2;
-            l.LSSequenceNumber = 0x80000001;
-            l.LSType = LSAType.ASExternal;
-            l.Options = 0x02;
+            l = new LSA
+            {
+                AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2"),
+                LinkStateID = System.Net.IPAddress.Parse("80.212.16.0"),
+                LSAge = 2,
+                LSSequenceNumber = 0x80000001,
+                LSType = LSAType.ASExternal,
+                Options = 0x02
+            };
             lsas.Add(l);
 
-            l = new LSA();
-            l.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2");
-            l.LinkStateID = System.Net.IPAddress.Parse("148.121.171.0");
-            l.LSAge = 2;
-            l.LSSequenceNumber = 0x80000001;
-            l.LSType = LSAType.ASExternal;
-            l.Options = 0x02;
+            l = new LSA
+            {
+                AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2"),
+                LinkStateID = System.Net.IPAddress.Parse("148.121.171.0"),
+                LSAge = 2,
+                LSSequenceNumber = 0x80000001,
+                LSType = LSAType.ASExternal,
+                Options = 0x02
+            };
             lsas.Add(l);
 
             OSPFv2LSAPacket p3 = new OSPFv2LSAPacket(lsas);

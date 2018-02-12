@@ -114,9 +114,10 @@ namespace PacketDotNet.GRE
         public GREPacket(ByteArraySegment bas, Packet ParentPacket)
         {
             // slice off the header portion
-            header = new ByteArraySegment(bas);
-
-            header.Length = GREFields.FlagsLength + GREFields.ProtocolLength;
+            header = new ByteArraySegment(bas)
+            {
+                Length = GREFields.FlagsLength + GREFields.ProtocolLength
+            };
             if (HasCheckSum)
                 header.Length += GREFields.ChecksumLength;
             if (HasReserved)

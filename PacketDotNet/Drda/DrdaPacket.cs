@@ -84,8 +84,10 @@ namespace PacketDotNet.Drda
             header = new ByteArraySegment(bas);
 
             // store the payload bytes
-            payloadPacketOrData = new PacketOrByteArraySegment();
-            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
+            payloadPacketOrData = new PacketOrByteArraySegment
+            {
+                TheByteArraySegment = header.EncapsulatedBytes()
+            };
         }
 
         /// <summary>

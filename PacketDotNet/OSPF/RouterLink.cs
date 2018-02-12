@@ -159,9 +159,11 @@ namespace PacketDotNet.OSPF
                 for (int i = 0; i < this.TOSNumber; i++)
                 {
                     var metric = EndianBitConverter.Big.ToUInt32(this.header.Bytes, this.header.Offset + RouterLinkFields.AdditionalMetricsPosition + i * TOSMetric.TOSMetricLength);
-                    TOSMetric m = new TOSMetric();
-                    m.TOS = (byte)((metric & 0xFF000000) >> 3);
-                    m.Metric = metric & 0x00FFFFFF;
+                    TOSMetric m = new TOSMetric
+                    {
+                        TOS = (byte)((metric & 0xFF000000) >> 3),
+                        Metric = metric & 0x00FFFFFF
+                    };
                     metrics.Add(m);
                 }
                 return metrics;

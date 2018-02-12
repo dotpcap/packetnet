@@ -27,16 +27,20 @@ namespace Test.PacketType
             [Test]
             public void Test_SequenceNumberProperty()
             {
-                SequenceControlField field = new SequenceControlField(0xFFFF);
-                field.SequenceNumber = 2712;
+                SequenceControlField field = new SequenceControlField(0xFFFF)
+                {
+                    SequenceNumber = 2712
+                };
                 Assert.AreEqual(2712, field.SequenceNumber);
             }
             
             [Test]
             public void Test_FragmentNumberProperty()
             {
-                SequenceControlField field = new SequenceControlField(0xFF);
-                field.FragmentNumber = 10;
+                SequenceControlField field = new SequenceControlField(0xFF)
+                {
+                    FragmentNumber = 10
+                };
                 Assert.AreEqual(10, field.FragmentNumber);
             }
         }

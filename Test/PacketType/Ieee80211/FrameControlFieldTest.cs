@@ -142,9 +142,10 @@ namespace Test.PacketType
             [Test]
             public void Test_SetTypeProperty()
             {
-                FrameControlField frameControl = new FrameControlField();
-
-                frameControl.SubType = FrameControlField.FrameSubTypes.Data;
+                FrameControlField frameControl = new FrameControlField
+                {
+                    SubType = FrameControlField.FrameSubTypes.Data
+                };
                 Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
 
                 frameControl.SubType = FrameControlField.FrameSubTypes.ManagementAuthentication;
@@ -157,9 +158,10 @@ namespace Test.PacketType
             [Test]
             public void Test_SetProtocolVersionProperty()
             {
-                FrameControlField frameControl = new FrameControlField();
-
-                frameControl.ProtocolVersion = 3;
+                FrameControlField frameControl = new FrameControlField
+                {
+                    ProtocolVersion = 3
+                };
                 Assert.AreEqual(3, frameControl.ProtocolVersion);
 
                 frameControl.ProtocolVersion = 2;
@@ -176,16 +178,19 @@ namespace Test.PacketType
             [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Invalid protocol version value. Value must be in the range 0-3.")]
             public void Test_SetProtocolVersionProperty_ValueTooLarge()
             {
-                FrameControlField frameControl = new FrameControlField();
-
-                frameControl.ProtocolVersion = 4;
+                FrameControlField frameControl = new FrameControlField
+                {
+                    ProtocolVersion = 4
+                };
             }
 
             [Test]
             public void Test_SetToDsProperty()
             {
-                FrameControlField frameControl = new FrameControlField();
-                frameControl.ToDS = true;
+                FrameControlField frameControl = new FrameControlField
+                {
+                    ToDS = true
+                };
 
                 Assert.IsTrue(frameControl.ToDS);
             }
@@ -193,8 +198,10 @@ namespace Test.PacketType
             [Test]
             public void Test_SetFromDsProperty()
             {
-                FrameControlField frameControl = new FrameControlField();
-                frameControl.FromDS = true;
+                FrameControlField frameControl = new FrameControlField
+                {
+                    FromDS = true
+                };
 
                 Assert.IsTrue(frameControl.FromDS);
             }
@@ -202,8 +209,10 @@ namespace Test.PacketType
             [Test]
             public void Test_SetMoreFragmentsProperty()
             {
-                FrameControlField frameControl = new FrameControlField();
-                frameControl.MoreFragments = true;
+                FrameControlField frameControl = new FrameControlField
+                {
+                    MoreFragments = true
+                };
 
                 Assert.IsTrue(frameControl.MoreFragments);
             }
@@ -211,8 +220,10 @@ namespace Test.PacketType
             [Test]
             public void Test_SetRetryProperty()
             {
-                FrameControlField frameControl = new FrameControlField();
-                frameControl.Retry = true;
+                FrameControlField frameControl = new FrameControlField
+                {
+                    Retry = true
+                };
 
                 Assert.IsTrue(frameControl.Retry);
             }
@@ -220,8 +231,10 @@ namespace Test.PacketType
             [Test]
             public void Test_SetPowerManagementProperty()
             {
-                FrameControlField frameControl = new FrameControlField();
-                frameControl.PowerManagement = true;
+                FrameControlField frameControl = new FrameControlField
+                {
+                    PowerManagement = true
+                };
 
                 Assert.IsTrue(frameControl.PowerManagement);
             }
@@ -229,8 +242,10 @@ namespace Test.PacketType
             [Test]
             public void Test_SetMoreDataProperty()
             {
-                FrameControlField frameControl = new FrameControlField();
-                frameControl.MoreData = true;
+                FrameControlField frameControl = new FrameControlField
+                {
+                    MoreData = true
+                };
 
                 Assert.IsTrue(frameControl.MoreData);
             }
@@ -238,8 +253,10 @@ namespace Test.PacketType
             [Test]
             public void Test_SetWepProperty()
             {
-                FrameControlField frameControl = new FrameControlField();
-                frameControl.Protected = true;
+                FrameControlField frameControl = new FrameControlField
+                {
+                    Protected = true
+                };
 
                 Assert.IsTrue(frameControl.Protected);
             }
@@ -247,8 +264,10 @@ namespace Test.PacketType
             [Test]
             public void Test_SetOrderProperty()
             {
-                FrameControlField frameControl = new FrameControlField();
-                frameControl.Order = true;
+                FrameControlField frameControl = new FrameControlField
+                {
+                    Order = true
+                };
 
                 Assert.IsTrue(frameControl.Order);
             }

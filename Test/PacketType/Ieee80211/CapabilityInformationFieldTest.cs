@@ -32,8 +32,10 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_SetIsEssProperty()
         {
-            CapabilityInformationField capabilityField = new CapabilityInformationField();
-            capabilityField.IsEss = true;
+            CapabilityInformationField capabilityField = new CapabilityInformationField
+            {
+                IsEss = true
+            };
 
             Assert.IsTrue(capabilityField.IsEss);
         }
@@ -48,8 +50,10 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_SetIsIbssProperty()
         {
-            CapabilityInformationField capabilityField = new CapabilityInformationField();
-            capabilityField.IsIbss = true;
+            CapabilityInformationField capabilityField = new CapabilityInformationField
+            {
+                IsIbss = true
+            };
 
             Assert.IsTrue(capabilityField.IsIbss);
         }
@@ -64,8 +68,10 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_SetCfPollableProperty()
         {
-            CapabilityInformationField capabilityField = new CapabilityInformationField();
-            capabilityField.CfPollable = true;
+            CapabilityInformationField capabilityField = new CapabilityInformationField
+            {
+                CfPollable = true
+            };
 
             Assert.IsTrue(capabilityField.CfPollable);
         }
@@ -80,8 +86,10 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_SetCfPollRequestProperty()
         {
-            CapabilityInformationField capabilityField = new CapabilityInformationField();
-            capabilityField.CfPollRequest = true;
+            CapabilityInformationField capabilityField = new CapabilityInformationField
+            {
+                CfPollRequest = true
+            };
 
             Assert.IsTrue(capabilityField.CfPollRequest);
         }
@@ -97,8 +105,10 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_SetPrivacyProperty()
         {
-            CapabilityInformationField capabilityField = new CapabilityInformationField();
-            capabilityField.Privacy = true;
+            CapabilityInformationField capabilityField = new CapabilityInformationField
+            {
+                Privacy = true
+            };
 
             Assert.IsTrue(capabilityField.Privacy);
         }
@@ -113,8 +123,10 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_SetShortPreambleProperty()
         {
-            CapabilityInformationField capabilityField = new CapabilityInformationField();
-            capabilityField.ShortPreamble = true;
+            CapabilityInformationField capabilityField = new CapabilityInformationField
+            {
+                ShortPreamble = true
+            };
 
             Assert.IsTrue(capabilityField.ShortPreamble);
         }
@@ -129,8 +141,10 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_SetPbccProperty()
         {
-            CapabilityInformationField capabilityField = new CapabilityInformationField();
-            capabilityField.Pbcc = true;
+            CapabilityInformationField capabilityField = new CapabilityInformationField
+            {
+                Pbcc = true
+            };
 
             Assert.IsTrue(capabilityField.Pbcc);
         }
@@ -145,8 +159,10 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_SetChannelAgilityProperty()
         {
-            CapabilityInformationField capabilityField = new CapabilityInformationField();
-            capabilityField.ChannelAgility = true;
+            CapabilityInformationField capabilityField = new CapabilityInformationField
+            {
+                ChannelAgility = true
+            };
 
             Assert.IsTrue(capabilityField.ChannelAgility);
         }
@@ -161,8 +177,10 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_SetShortTimeslotProperty()
         {
-            CapabilityInformationField capabilityField = new CapabilityInformationField();
-            capabilityField.ShortTimeSlot = true;
+            CapabilityInformationField capabilityField = new CapabilityInformationField
+            {
+                ShortTimeSlot = true
+            };
 
             Assert.IsTrue(capabilityField.ShortTimeSlot);
         }
@@ -177,8 +195,10 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_SetDssOfdmProperty()
         {
-            CapabilityInformationField capabilityField = new CapabilityInformationField();
-            capabilityField.DssOfdm = true;
+            CapabilityInformationField capabilityField = new CapabilityInformationField
+            {
+                DssOfdm = true
+            };
 
             Assert.IsTrue(capabilityField.DssOfdm);
         }

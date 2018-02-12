@@ -194,8 +194,10 @@ namespace PacketDotNet.Ethernet
             log.Debug("");
 
             // slice off the header portion
-            header = new ByteArraySegment(bas);
-            header.Length = EthernetFields.HeaderLength;
+            header = new ByteArraySegment(bas)
+            {
+                Length = EthernetFields.HeaderLength
+            };
 
             // parse the encapsulated bytes
             payloadPacketOrData = ParseEncapsulatedBytes(header, Type);

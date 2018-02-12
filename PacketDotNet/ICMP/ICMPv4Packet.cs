@@ -156,12 +156,16 @@ namespace PacketDotNet.ICMP
         {
             log.Debug("");
 
-            header = new ByteArraySegment(bas);
-            header.Length = ICMPv4Fields.HeaderLength;
+            header = new ByteArraySegment(bas)
+            {
+                Length = ICMPv4Fields.HeaderLength
+            };
 
             // store the payload bytes
-            payloadPacketOrData = new PacketOrByteArraySegment();
-            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
+            payloadPacketOrData = new PacketOrByteArraySegment
+            {
+                TheByteArraySegment = header.EncapsulatedBytes()
+            };
         }
 
         /// <summary>

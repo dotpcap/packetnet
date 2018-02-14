@@ -55,9 +55,9 @@ namespace PacketDotNet
             
             private Byte VersionBytes
             {
-                get => header.Bytes[header.Offset + RadioFields.VersionPosition];
+                get => this.header.Bytes[this.header.Offset + RadioFields.VersionPosition];
 
-                set => header.Bytes[header.Offset + RadioFields.VersionPosition] = value;
+                set => this.header.Bytes[this.header.Offset + RadioFields.VersionPosition] = value;
             }
 
             /// <summary>
@@ -68,12 +68,9 @@ namespace PacketDotNet
             
             private UInt16 LengthBytes
             {
-                get => EndianBitConverter.Little.ToUInt16(header.Bytes,
-                    header.Offset + RadioFields.LengthPosition);
+                get => EndianBitConverter.Little.ToUInt16(this.header.Bytes, this.header.Offset + RadioFields.LengthPosition);
 
-                set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + RadioFields.LengthPosition);
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + RadioFields.LengthPosition);
             }
 
             /// <summary>
@@ -90,15 +87,13 @@ namespace PacketDotNet
                 // the highest bit indicates whether other bitmask fields follow
                 // the current field
                 var bitmaskFields = new List<UInt32>();
-                UInt32 bitmask = EndianBitConverter.Little.ToUInt32(header.Bytes,
-                                                                    header.Offset + RadioFields.PresentPosition);
+                UInt32 bitmask = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + RadioFields.PresentPosition);
                 bitmaskFields.Add(bitmask);
                 Int32 bitmaskOffsetInBytes = 4;
                 while ((bitmask & (1 << 31)) == 1)
                 {
                     // retrieve the next field
-                    bitmask = EndianBitConverter.Little.ToUInt32(header.Bytes,
-                                                                 header.Offset + RadioFields.PresentPosition + bitmaskOffsetInBytes);
+                    bitmask = EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + RadioFields.PresentPosition + bitmaskOffsetInBytes);
                     bitmaskFields.Add(bitmask);
                     bitmaskOffsetInBytes += 4;
                 }
@@ -111,9 +106,9 @@ namespace PacketDotNet
             /// </summary>
             public RadioPacket()
             {
-                Present = new UInt32[1];
-                RadioTapFields = new SortedDictionary<RadioTapType, RadioTapField>();
-                Length = (UInt16)RadioFields.DefaultHeaderLength;
+                this.Present = new UInt32[1];
+                this.RadioTapFields = new SortedDictionary<RadioTapType, RadioTapField>();
+                this.Length = (UInt16)RadioFields.DefaultHeaderLength;
             }
             
             internal RadioPacket (ByteArraySegment bas)
@@ -121,20 +116,20 @@ namespace PacketDotNet
                 log.Debug ("");
 
                 // slice off the header portion
-                header = new ByteArraySegment (bas);
-                header.Length = RadioFields.DefaultHeaderLength;
-                Version = VersionBytes;
-                Length = LengthBytes;
+                this.header = new ByteArraySegment (bas);
+                this.header.Length = RadioFields.DefaultHeaderLength;
+                this.Version = this.VersionBytes;
+                this.Length = this.LengthBytes;
                 
                 // update the header size based on the headers packet length
-                header.Length = Length;
-                Present = ReadPresentFields();
-                RadioTapFields = ReadRadioTapFields();
+                this.header.Length = this.Length;
+                this.Present = this.ReadPresentFields();
+                this.RadioTapFields = this.ReadRadioTapFields();
     
                 //Before we attempt to parse the payload we need to work out if 
                 //the FCS was valid and if it will be present at the end of the frame
                 FlagsRadioTapField flagsField = this[RadioTapType.Flags] as FlagsRadioTapField;
-		        payloadPacketOrData = ParseEncapsulatedBytes(header.EncapsulatedBytes(), flagsField);
+                this.payloadPacketOrData = ParseEncapsulatedBytes(this.header.EncapsulatedBytes(), flagsField);
             }
 
             /// <summary cref="Packet.ToString(StringOutputType)" />
@@ -146,7 +141,7 @@ namespace PacketDotNet
 
                 if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
                 {
-                    color = Color;
+                    color = this.Color;
                     colorEscape = AnsiEscapeSequences.Reset;
                 }
 
@@ -155,19 +150,16 @@ namespace PacketDotNet
                     // build the output string
                     buffer.AppendFormat("{0}[Ieee80211RadioPacket: Version={2}, Length={3}, Present[0]=0x{4:x}]{1}",
                         color,
-                        colorEscape,
-                        Version,
-                        Length,
-                        Present[0]);
+                        colorEscape, this.Version, this.Length, this.Present[0]);
                 }
 
                 if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
                 {
                     // collect the properties and their value
                     Dictionary<String, String> properties = new Dictionary<String, String>();
-                    properties.Add("version", Version.ToString());
-                    properties.Add("length", Length.ToString());
-                    properties.Add("present", " (0x" + Present[0].ToString("x") + ")");
+                    properties.Add("version", this.Version.ToString());
+                    properties.Add("length", this.Length.ToString());
+                    properties.Add("present", " (0x" + this.Present[0].ToString("x") + ")");
 
                     var radioTapFields = this.RadioTapFields;
 
@@ -178,7 +170,7 @@ namespace PacketDotNet
                     }
 
                     // calculate the padding needed to right-justify the property names
-                    Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                    Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                     // build the output string
                     buffer.AppendLine("Ieee80211RadioPacket");
@@ -203,22 +195,24 @@ namespace PacketDotNet
             /// </param>
             public void Add(RadioTapField field)
             {
-                RadioTapFields[field.FieldType] = field;
-                Length += field.Length;
+                this.RadioTapFields[field.FieldType] = field;
+                this.Length += field.Length;
                 var presenceBit = (Int32)field.FieldType;
                 var presenceField = (presenceBit / 32);
-                if(Present.Length <= presenceField)
+                if(this.Present.Length <= presenceField)
                 {
                     var newPresentFields = new UInt32[presenceField];
-                    Array.Copy(Present, newPresentFields, Present.Length);
+                    Array.Copy(this.Present, newPresentFields, this.Present.Length);
                     //set bit 31 to true for every present field except the last one
                     for(Int32 i = 0; i < newPresentFields.Length - 1; i++)
                     {
                         newPresentFields[i] |= 0x80000000;
                     }
-                    Present = newPresentFields;
+
+                    this.Present = newPresentFields;
                 }
-                Present[presenceField] |= (UInt32)(1 << presenceBit);
+
+                this.Present[presenceField] |= (UInt32)(1 << presenceBit);
             }
             
             /// <summary>
@@ -230,13 +224,13 @@ namespace PacketDotNet
             public void Remove(RadioTapType fieldType)
             {
                 RadioTapField field;
-                if(RadioTapFields.TryGetValue(fieldType, out field))
+                if(this.RadioTapFields.TryGetValue(fieldType, out field))
                 {
-                    RadioTapFields.Remove(fieldType);
-                    Length -= field.Length;
+                    this.RadioTapFields.Remove(fieldType);
+                    this.Length -= field.Length;
                     var presenceBit = (Int32)field.FieldType;
                     var presenceField = (presenceBit / 32);
-                    Present[presenceField] &= (UInt32)~(1 << presenceBit);
+                    this.Present[presenceField] &= (UInt32)~(1 << presenceBit);
                 }
             }
             
@@ -249,7 +243,7 @@ namespace PacketDotNet
             /// <returns><c>true</c> if the packet contains a field of the specified type; otherwise, <c>false</c>.</returns>
             public Boolean Contains(RadioTapType fieldType)
             {
-                return RadioTapFields.ContainsKey(fieldType);
+                return this.RadioTapFields.ContainsKey(fieldType);
             }
             
             /// <summary>
@@ -264,7 +258,7 @@ namespace PacketDotNet
                 get
                 {
                     RadioTapField field;
-                    RadioTapFields.TryGetValue(type, out field);
+                    this.RadioTapFields.TryGetValue(type, out field);
                     return field;
                 }
             }
@@ -278,19 +272,19 @@ namespace PacketDotNet
             
             private SortedDictionary<RadioTapType, RadioTapField> ReadRadioTapFields()
             {
-                var bitmasks = Present;
+                var bitmasks = this.Present;
 
                 var retval = new SortedDictionary<RadioTapType, RadioTapField>();
 
                 Int32 bitIndex = 0;
 
                 // create a binary reader that points to the memory immediately after the bitmasks
-                var offset = header.Offset +
+                var offset = this.header.Offset +
                              RadioFields.PresentPosition +
                              (bitmasks.Length) * Marshal.SizeOf (typeof(UInt32));
-                var br = new BinaryReader (new MemoryStream (header.Bytes,
+                var br = new BinaryReader (new MemoryStream (this.header.Bytes,
                                                            offset,
-                                                           (Int32)(Length - offset)));
+                                                           (Int32)(this.Length - offset)));
 
                 // now go through each of the bitmask fields looking at the least significant
                 // bit first to retrieve each field
@@ -333,7 +327,7 @@ namespace PacketDotNet
                 
                 //this will read the rest of the bytes. We pass in max value because we dont know how
                 //much there is but this will ensure we get up to the end of the buffer
-                UnhandledFieldBytes = br.ReadBytes(UInt16.MaxValue);
+                this.UnhandledFieldBytes = br.ReadBytes(UInt16.MaxValue);
 
                 return retval;
             }
@@ -344,33 +338,31 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                if ((header == null) || (header.Length < Length))
+                if ((this.header == null) || (this.header.Length < this.Length))
                 {
                     //the backing buffer isnt big enough to accommodate the info elements so we need to resize it
-                    header = new ByteArraySegment (new Byte[Length]);
+                    this.header = new ByteArraySegment (new Byte[this.Length]);
                 }
-                
-                VersionBytes = Version;
-                LengthBytes = Length;
+
+                this.VersionBytes = this.Version;
+                this.LengthBytes = this.Length;
                 var index = RadioFields.PresentPosition;
-                foreach(var presentField in Present)
+                foreach(var presentField in this.Present)
                 {
-                    EndianBitConverter.Little.CopyBytes(presentField,
-                                                        header.Bytes,
-                                                        header.Offset + index);
+                    EndianBitConverter.Little.CopyBytes(presentField, this.header.Bytes, this.header.Offset + index);
                     index += RadioFields.PresentLength;
                 }
                 
-                foreach(var field in RadioTapFields)
+                foreach(var field in this.RadioTapFields)
                 {
                     //then copy the field data to the appropriate index
-                    field.Value.CopyTo(header.Bytes, header.Offset + index);
+                    field.Value.CopyTo(this.header.Bytes, this.header.Offset + index);
                     index += field.Value.Length;
                 }
                 
-                if((UnhandledFieldBytes != null) && (UnhandledFieldBytes.Length > 0))
+                if((this.UnhandledFieldBytes != null) && (this.UnhandledFieldBytes.Length > 0))
                 {
-                    Array.Copy(UnhandledFieldBytes, 0, header.Bytes, header.Offset + index, UnhandledFieldBytes.Length);
+                    Array.Copy(this.UnhandledFieldBytes, 0, this.header.Bytes, this.header.Offset + index, this.UnhandledFieldBytes.Length);
                 }
             }
 

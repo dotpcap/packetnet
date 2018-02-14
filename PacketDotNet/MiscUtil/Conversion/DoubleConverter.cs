@@ -106,10 +106,9 @@ namespace MiscUtil.Conversion
             internal ArbitraryDecimal (Int64 x)
             {
                 String tmp = x.ToString(CultureInfo.InvariantCulture);
-                digits = new Byte[tmp.Length];
-                for (Int32 i=0; i < tmp.Length; i++)
-                    digits[i] = (Byte) (tmp[i]-'0');
-                Normalize();
+                this.digits = new Byte[tmp.Length];
+                for (Int32 i=0; i < tmp.Length; i++) this.digits[i] = (Byte) (tmp[i]-'0');
+                this.Normalize();
             }
 
             /// <summary>
@@ -118,22 +117,23 @@ namespace MiscUtil.Conversion
             /// </summary>
             internal void MultiplyBy(Int32 amount)
             {
-                Byte[] result = new Byte[digits.Length+1];
-                for (Int32 i=digits.Length-1; i >= 0; i--)
+                Byte[] result = new Byte[this.digits.Length+1];
+                for (Int32 i= this.digits.Length-1; i >= 0; i--)
                 {
-                    Int32 resultDigit = digits[i]*amount+result[i+1];
+                    Int32 resultDigit = this.digits[i]*amount+result[i+1];
                     result[i]=(Byte)(resultDigit/10);
                     result[i+1]=(Byte)(resultDigit%10);
                 }
                 if (result[0] != 0)
                 {
-                    digits=result;
+                    this.digits=result;
                 }
                 else
                 {
-                    Array.Copy (result, 1, digits, 0, digits.Length);
+                    Array.Copy (result, 1, this.digits, 0, this.digits.Length);
                 }
-                Normalize();
+
+                this.Normalize();
             }
 
             /// <summary>
@@ -144,7 +144,7 @@ namespace MiscUtil.Conversion
             /// </summary>
             internal void Shift (Int32 amount)
             {
-                decimalPoint += amount;
+                this.decimalPoint += amount;
             }
 
             /// <summary>
@@ -153,23 +153,23 @@ namespace MiscUtil.Conversion
             internal void Normalize()
             {
                 Int32 first;
-                for (first=0; first < digits.Length; first++)
-                    if (digits[first]!=0)
+                for (first=0; first < this.digits.Length; first++)
+                    if (this.digits[first]!=0)
                         break;
                 Int32 last;
-                for (last=digits.Length-1; last >= 0; last--)
-                    if (digits[last]!=0)
+                for (last= this.digits.Length-1; last >= 0; last--)
+                    if (this.digits[last]!=0)
                         break;
 
-                if (first==0 && last==digits.Length-1)
+                if (first==0 && last== this.digits.Length-1)
                     return;
 
                 Byte[] tmp = new Byte[last-first+1];
                 for (Int32 i=0; i < tmp.Length; i++)
-                    tmp[i]=digits[i+first];
+                    tmp[i]= this.digits[i+first];
 
-                decimalPoint -= digits.Length-(last+1);
-                digits=tmp;
+                this.decimalPoint -= this.digits.Length-(last+1);
+                this.digits=tmp;
             }
 
             /// <summary>
@@ -177,30 +177,30 @@ namespace MiscUtil.Conversion
             /// </summary>
             public override String ToString()
             {
-                Char[] digitString = new Char[digits.Length];
-                for (Int32 i=0; i < digits.Length; i++)
-                    digitString[i] = (Char)(digits[i]+'0');
+                Char[] digitString = new Char[this.digits.Length];
+                for (Int32 i=0; i < this.digits.Length; i++)
+                    digitString[i] = (Char)(this.digits[i]+'0');
 
                 // Simplest case - nothing after the decimal point,
                 // and last real digit is non-zero, eg value=35
-                if (decimalPoint==0)
+                if (this.decimalPoint==0)
                 {
                     return new String (digitString);
                 }
 
                 // Fairly simple case - nothing after the decimal
                 // point, but some 0s to add, eg value=350
-                if (decimalPoint < 0)
+                if (this.decimalPoint < 0)
                 {
                     return new String (digitString)+
-                        new String ('0', -decimalPoint);
+                        new String ('0', -this.decimalPoint);
                 }
 
                 // Nothing before the decimal point, eg 0.035
-                if (decimalPoint >= digitString.Length)
+                if (this.decimalPoint >= digitString.Length)
                 {
                     return "0."+
-                        new String ('0',(decimalPoint-digitString.Length))+
+                        new String ('0',(this.decimalPoint-digitString.Length))+
                         new String (digitString);
                 }
 
@@ -208,11 +208,10 @@ namespace MiscUtil.Conversion
                 // before the decimal point, part comes after it,
                 // eg 3.5
                 return new String (digitString, 0,
-                    digitString.Length-decimalPoint)+
+                    digitString.Length- this.decimalPoint)+
                     "."+
                     new String (digitString,
-                    digitString.Length-decimalPoint,
-                    decimalPoint);
+                    digitString.Length- this.decimalPoint, this.decimalPoint);
             }
         }
     }

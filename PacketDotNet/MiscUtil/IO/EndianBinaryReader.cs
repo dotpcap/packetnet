@@ -80,7 +80,7 @@ namespace MiscUtil.IO
 
             if (encoding is UnicodeEncoding)
             {
-                minBytesPerChar = 2;
+                this.minBytesPerChar = 2;
             }
         }
         #endregion
@@ -90,19 +90,19 @@ namespace MiscUtil.IO
         /// <summary>
         /// The bit converter used to read values from the stream
         /// </summary>
-        public EndianBitConverter BitConverter => bitConverter;
+        public EndianBitConverter BitConverter => this.bitConverter;
 
         Encoding encoding;
         /// <summary>
         /// The encoding used to read strings
         /// </summary>
-        public Encoding Encoding => encoding;
+        public Encoding Encoding => this.encoding;
 
         Stream stream;
         /// <summary>
         /// Gets the underlying stream of the EndianBinaryReader.
         /// </summary>
-        public Stream BaseStream => stream;
+        public Stream BaseStream => this.stream;
 
         #endregion
 
@@ -112,7 +112,7 @@ namespace MiscUtil.IO
         /// </summary>
         public void Close()
         {
-            Dispose();
+            this.Dispose();
         }
 
         /// <summary>
@@ -122,8 +122,8 @@ namespace MiscUtil.IO
         /// <param name="origin">Origin of seek operation.</param>
         public void Seek (Int32 offset, SeekOrigin origin)
         {
-            CheckDisposed();
-            stream.Seek (offset, origin);
+            this.CheckDisposed();
+            this.stream.Seek (offset, origin);
         }
 
         /// <summary>
@@ -132,8 +132,8 @@ namespace MiscUtil.IO
         /// <returns>The byte read</returns>
         public Byte ReadByte()
         {
-            ReadInternal(buffer, 1);
-            return buffer[0];
+            this.ReadInternal(this.buffer, 1);
+            return this.buffer[0];
         }
 
         /// <summary>
@@ -142,8 +142,8 @@ namespace MiscUtil.IO
         /// <returns>The byte read</returns>
         public SByte ReadSByte()
         {
-            ReadInternal(buffer, 1);
-            return unchecked((SByte)buffer[0]);
+            this.ReadInternal(this.buffer, 1);
+            return unchecked((SByte) this.buffer[0]);
         }
 
         /// <summary>
@@ -152,8 +152,8 @@ namespace MiscUtil.IO
         /// <returns>The boolean read</returns>
         public Boolean ReadBoolean()
         {
-            ReadInternal(buffer, 1);
-            return bitConverter.ToBoolean(buffer, 0);
+            this.ReadInternal(this.buffer, 1);
+            return this.bitConverter.ToBoolean(this.buffer, 0);
         }
 
         /// <summary>
@@ -163,8 +163,8 @@ namespace MiscUtil.IO
         /// <returns>The 16-bit integer read</returns>
         public Int16 ReadInt16()
         {
-            ReadInternal(buffer, 2);
-            return bitConverter.ToInt16(buffer, 0);
+            this.ReadInternal(this.buffer, 2);
+            return this.bitConverter.ToInt16(this.buffer, 0);
         }
 
         /// <summary>
@@ -174,8 +174,8 @@ namespace MiscUtil.IO
         /// <returns>The 32-bit integer read</returns>
         public Int32 ReadInt32()
         {
-            ReadInternal(buffer, 4);
-            return bitConverter.ToInt32(buffer, 0);
+            this.ReadInternal(this.buffer, 4);
+            return this.bitConverter.ToInt32(this.buffer, 0);
         }
 
         /// <summary>
@@ -185,8 +185,8 @@ namespace MiscUtil.IO
         /// <returns>The 64-bit integer read</returns>
         public Int64 ReadInt64()
         {
-            ReadInternal(buffer, 8);
-            return bitConverter.ToInt64(buffer, 0);
+            this.ReadInternal(this.buffer, 8);
+            return this.bitConverter.ToInt64(this.buffer, 0);
         }
 
         /// <summary>
@@ -196,8 +196,8 @@ namespace MiscUtil.IO
         /// <returns>The 16-bit unsigned integer read</returns>
         public UInt16 ReadUInt16()
         {
-            ReadInternal(buffer, 2);
-            return bitConverter.ToUInt16(buffer, 0);
+            this.ReadInternal(this.buffer, 2);
+            return this.bitConverter.ToUInt16(this.buffer, 0);
         }
 
         /// <summary>
@@ -207,8 +207,8 @@ namespace MiscUtil.IO
         /// <returns>The 32-bit unsigned integer read</returns>
         public UInt32 ReadUInt32()
         {
-            ReadInternal(buffer, 4);
-            return bitConverter.ToUInt32(buffer, 0);
+            this.ReadInternal(this.buffer, 4);
+            return this.bitConverter.ToUInt32(this.buffer, 0);
         }
 
         /// <summary>
@@ -218,8 +218,8 @@ namespace MiscUtil.IO
         /// <returns>The 64-bit unsigned integer read</returns>
         public UInt64 ReadUInt64()
         {
-            ReadInternal(buffer, 8);
-            return bitConverter.ToUInt64(buffer, 0);
+            this.ReadInternal(this.buffer, 8);
+            return this.bitConverter.ToUInt64(this.buffer, 0);
         }
 
         /// <summary>
@@ -229,8 +229,8 @@ namespace MiscUtil.IO
         /// <returns>The floating point value read</returns>
         public Single ReadSingle()
         {
-            ReadInternal(buffer, 4);
-            return bitConverter.ToSingle(buffer, 0);
+            this.ReadInternal(this.buffer, 4);
+            return this.bitConverter.ToSingle(this.buffer, 0);
         }
 
         /// <summary>
@@ -240,8 +240,8 @@ namespace MiscUtil.IO
         /// <returns>The floating point value read</returns>
         public Double ReadDouble()
         {
-            ReadInternal(buffer, 8);
-            return bitConverter.ToDouble(buffer, 0);
+            this.ReadInternal(this.buffer, 8);
+            return this.bitConverter.ToDouble(this.buffer, 0);
         }
 
         /// <summary>
@@ -251,8 +251,8 @@ namespace MiscUtil.IO
         /// <returns>The decimal value read</returns>
         public Decimal ReadDecimal()
         {
-            ReadInternal(buffer, 16);
-            return bitConverter.ToDecimal(buffer, 0);
+            this.ReadInternal(this.buffer, 16);
+            return this.bitConverter.ToDecimal(this.buffer, 0);
         }
 
         /// <summary>
@@ -263,14 +263,14 @@ namespace MiscUtil.IO
         /// <returns>The character read, or -1 for end of stream.</returns>
         public Int32 Read()
         {
-            Int32 charsRead = Read(charBuffer, 0, 1);
+            Int32 charsRead = this.Read(this.charBuffer, 0, 1);
             if (charsRead==0)
             {
                 return -1;
             }
             else
             {
-                return charBuffer[0];
+                return this.charBuffer[0];
             }
         }
 
@@ -286,8 +286,8 @@ namespace MiscUtil.IO
         /// </returns>
         public Int32 Read(Char[] data, Int32 index, Int32 count)
         {
-            CheckDisposed();
-            if (buffer==null)
+            this.CheckDisposed();
+            if (this.buffer==null)
             {
                 throw new ArgumentNullException("buffer");
             }
@@ -310,9 +310,9 @@ namespace MiscUtil.IO
 
             // Use the normal buffer if we're only reading a small amount, otherwise
             // use at most 4K at a time.
-            Byte[] byteBuffer = buffer;
+            Byte[] byteBuffer = this.buffer;
 
-            if (byteBuffer.Length < count*minBytesPerChar)
+            if (byteBuffer.Length < count* this.minBytesPerChar)
             {
                 byteBuffer = new Byte[4096];
             }
@@ -323,25 +323,25 @@ namespace MiscUtil.IO
                 // First time through we know we haven't previously read any data
                 if (firstTime)
                 {
-                    amountToRead = count*minBytesPerChar;
+                    amountToRead = count* this.minBytesPerChar;
                     firstTime=false;
                 }
                 // After that we can only assume we need to fully read "chars left -1" characters
                 // and a single byte of the character we may be in the middle of
                 else
                 {
-                    amountToRead = ((count-read-1)*minBytesPerChar)+1;
+                    amountToRead = ((count-read-1)* this.minBytesPerChar)+1;
                 }
                 if (amountToRead > byteBuffer.Length)
                 {
                     amountToRead = byteBuffer.Length;
                 }
-                Int32 bytesRead = TryReadInternal(byteBuffer, amountToRead);
+                Int32 bytesRead = this.TryReadInternal(byteBuffer, amountToRead);
                 if (bytesRead==0)
                 {
                     return read;
                 }
-                Int32 decoded = decoder.GetChars(byteBuffer, 0, bytesRead, data, index);
+                Int32 decoded = this.decoder.GetChars(byteBuffer, 0, bytesRead, data, index);
                 read += decoded;
                 index += decoded;
             }
@@ -360,7 +360,7 @@ namespace MiscUtil.IO
         /// </returns>
         public Int32 Read(Byte[] buffer, Int32 index, Int32 count)
         {
-            CheckDisposed();
+            this.CheckDisposed();
             if (buffer==null)
             {
                 throw new ArgumentNullException("buffer");
@@ -381,7 +381,7 @@ namespace MiscUtil.IO
             Int32 read=0;
             while (count > 0)
             {
-                Int32 block = stream.Read(buffer, index, count);
+                Int32 block = this.stream.Read(buffer, index, count);
                 if (block==0)
                 {
                     return read;
@@ -402,7 +402,7 @@ namespace MiscUtil.IO
         /// <returns>The bytes read</returns>
         public Byte[] ReadBytes(Int32 count)
         {
-            CheckDisposed();
+            this.CheckDisposed();
             if (count < 0)
             {
                 throw new ArgumentOutOfRangeException("count");
@@ -411,7 +411,7 @@ namespace MiscUtil.IO
             Int32 index=0;
             while (index < count)
             {
-                Int32 read = stream.Read(ret, index, count-index);
+                Int32 read = this.stream.Read(ret, index, count-index);
                 // Stream has finished half way through. That's fine, return what we've got.
                 if (read==0)
                 {
@@ -434,7 +434,7 @@ namespace MiscUtil.IO
         public Byte[] ReadBytesOrThrow(Int32 count)
         {
             Byte[] ret = new Byte[count];
-            ReadInternal(ret, count);
+            this.ReadInternal(ret, count);
             return ret;
         }
 
@@ -447,12 +447,12 @@ namespace MiscUtil.IO
         /// <returns>The 7-bit encoded integer read from the stream.</returns>
         public Int32 Read7BitEncodedInt()
         {
-            CheckDisposed();
+            this.CheckDisposed();
 
             Int32 ret=0;
             for (Int32 shift = 0; shift < 35; shift+=7)
             {
-                Int32 b = stream.ReadByte();
+                Int32 b = this.stream.ReadByte();
                 if (b==-1)
                 {
                     throw new EndOfStreamException();
@@ -476,12 +476,12 @@ namespace MiscUtil.IO
         /// <returns>The 7-bit encoded integer read from the stream.</returns>
         public Int32 ReadBigEndian7BitEncodedInt()
         {
-            CheckDisposed();
+            this.CheckDisposed();
 
             Int32 ret=0;
             for (Int32 i=0; i < 5; i++)
             {
-                Int32 b = stream.ReadByte();
+                Int32 b = this.stream.ReadByte();
                 if (b==-1)
                 {
                     throw new EndOfStreamException();
@@ -505,11 +505,11 @@ namespace MiscUtil.IO
         /// <returns>The string read from the stream.</returns>
         public String ReadString()
         {
-            Int32 bytesToRead = Read7BitEncodedInt();
+            Int32 bytesToRead = this.Read7BitEncodedInt();
 
             Byte[] data = new Byte[bytesToRead];
-            ReadInternal(data, bytesToRead);
-            return encoding.GetString(data, 0, data.Length);
+            this.ReadInternal(data, bytesToRead);
+            return this.encoding.GetString(data, 0, data.Length);
         }
 
         #endregion
@@ -520,7 +520,7 @@ namespace MiscUtil.IO
         /// </summary>
         void CheckDisposed()
         {
-            if (disposed)
+            if (this.disposed)
             {
                 throw new ObjectDisposedException("EndianBinaryReader");
             }
@@ -534,11 +534,11 @@ namespace MiscUtil.IO
         /// <param name="size">Number of bytes to read</param>
         void ReadInternal (Byte[] data, Int32 size)
         {
-            CheckDisposed();
+            this.CheckDisposed();
             Int32 index=0;
             while (index < size)
             {
-                Int32 read = stream.Read(data, index, size-index);
+                Int32 read = this.stream.Read(data, index, size-index);
                 if (read==0)
                 {
                     throw new EndOfStreamException
@@ -559,11 +559,11 @@ namespace MiscUtil.IO
         /// <returns>Number of bytes actually read</returns>
         Int32 TryReadInternal (Byte[] data, Int32 size)
         {
-            CheckDisposed();
+            this.CheckDisposed();
             Int32 index=0;
             while (index < size)
             {
-                Int32 read = stream.Read(data, index, size-index);
+                Int32 read = this.stream.Read(data, index, size-index);
                 if (read==0)
                 {
                     return index;
@@ -580,10 +580,10 @@ namespace MiscUtil.IO
         /// </summary>
         public void Dispose()
         {
-            if (!disposed)
+            if (!this.disposed)
             {
-                disposed = true;
-                ((IDisposable)stream).Dispose();
+                this.disposed = true;
+                ((IDisposable) this.stream).Dispose();
             }
         }
         #endregion

@@ -58,7 +58,7 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The Checksum
         /// </summary>
-        public ChecksumAlgorighmType Checksum => (ChecksumAlgorighmType)Bytes[ChecksumFieldOffset];
+        public ChecksumAlgorighmType Checksum => (ChecksumAlgorighmType) this.Bytes[ChecksumFieldOffset];
 
         #endregion
 
@@ -72,7 +72,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override String ToString()
         {
-            return "[" + Kind.ToString() + ": ChecksumType=" + Checksum.ToString() + "]";
+            return "[" + this.Kind.ToString() + ": ChecksumType=" + this.Checksum.ToString() + "]";
         }
 
         #endregion

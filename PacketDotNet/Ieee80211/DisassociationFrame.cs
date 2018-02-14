@@ -59,10 +59,9 @@ namespace PacketDotNet
             {
                 get
                 {
-					if(header.Length >= (DisassociationFields.ReasonCodePosition + DisassociationFields.ReasonCodeLength))
+					if(this.header.Length >= (DisassociationFields.ReasonCodePosition + DisassociationFields.ReasonCodeLength))
 					{
-						return (ReasonCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
-						                                                       header.Offset + DisassociationFields.ReasonCodePosition);
+						return (ReasonCode)EndianBitConverter.Little.ToUInt16 (this.header.Bytes, this.header.Offset + DisassociationFields.ReasonCodePosition);
 					}
 					else
 					{
@@ -70,9 +69,7 @@ namespace PacketDotNet
 					}
                 }
                 
-                set => EndianBitConverter.Little.CopyBytes ((UInt16)value,
-                    header.Bytes,
-                    header.Offset + DisassociationFields.ReasonCodePosition);
+                set => EndianBitConverter.Little.CopyBytes ((UInt16)value, this.header.Bytes, this.header.Offset + DisassociationFields.ReasonCodePosition);
             }
 
             /// <summary>
@@ -95,17 +92,17 @@ namespace PacketDotNet
             /// </param>
             public DisassociationFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                this.header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                DestinationAddress = GetAddress (0);
-                SourceAddress = GetAddress (1);
-                BssId = GetAddress (2);
-                SequenceControl = new SequenceControlField (SequenceControlBytes);
-                Reason = ReasonBytes;
-                
-                header.Length = FrameSize;
+                this.FrameControl = new FrameControlField (this.FrameControlBytes);
+                this.Duration = new DurationField (this.DurationBytes);
+                this.DestinationAddress = this.GetAddress (0);
+                this.SourceAddress = this.GetAddress (1);
+                this.BssId = this.GetAddress (2);
+                this.SequenceControl = new SequenceControlField (this.SequenceControlBytes);
+                this.Reason = this.ReasonBytes;
+
+                this.header.Length = this.FrameSize;
             }
             
             /// <summary>
@@ -139,20 +136,20 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((this.header == null) || (this.header.Length > (this.header.BytesLength - this.header.Offset)) || (this.header.Length < this.FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    this.header = new ByteArraySegment (new Byte[this.FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
                 this.DurationBytes = this.Duration.Field;
-                SetAddress (0, DestinationAddress);
-                SetAddress (1, SourceAddress);
-                SetAddress (2, BssId);
+                this.SetAddress (0, this.DestinationAddress);
+                this.SetAddress (1, this.SourceAddress);
+                this.SetAddress (2, this.BssId);
                 this.SequenceControlBytes = this.SequenceControl.Field;
                 this.ReasonBytes = this.Reason;
-                
-                header.Length = FrameSize;
+
+                this.header.Length = this.FrameSize;
             }
         } 
     }

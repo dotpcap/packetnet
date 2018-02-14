@@ -74,7 +74,7 @@ namespace PacketDotNet.LLDP
             get
             {
                 // get the type
-                UInt16 typeAndLength = TypeAndLength;
+                UInt16 typeAndLength = this.TypeAndLength;
                 // remove the length info
                 return (TLVTypes)(typeAndLength >> LengthBits);
             }
@@ -86,9 +86,9 @@ namespace PacketDotNet.LLDP
                 // shift type into the type position
                 var type = (UInt16)((UInt16)value << LengthBits);
                 // save the old length
-                UInt16 length = (UInt16)(LengthMask & TypeAndLength);
+                UInt16 length = (UInt16)(LengthMask & this.TypeAndLength);
                 // set the type
-                TypeAndLength = (UInt16)(type | length);
+                this.TypeAndLength = (UInt16)(type | length);
             }
         }
 
@@ -102,7 +102,7 @@ namespace PacketDotNet.LLDP
             get
             {
                 // get the length
-                UInt16 typeAndLength = TypeAndLength;
+                UInt16 typeAndLength = this.TypeAndLength;
                 // remove the type info
                 return LengthMask & typeAndLength;
             }
@@ -113,13 +113,13 @@ namespace PacketDotNet.LLDP
             {
                 log.DebugFormat("value {0}", value);
 
-                if(value < 0) { throw new System.ArgumentOutOfRangeException("Length", "Length must be a positive value"); }
+                if(value < 0) { throw new ArgumentOutOfRangeException("Length", "Length must be a positive value"); }
                 if(value > MaximumTLVLength) { throw new ArgumentOutOfRangeException("Length", "The maximum value for a TLV length is 511"); }
 
                 // save the old type
-                UInt16 type = (UInt16)(TypeMask & TypeAndLength);
+                UInt16 type = (UInt16)(TypeMask & this.TypeAndLength);
                 // set the length
-                TypeAndLength = (UInt16)(type | value);
+                this.TypeAndLength = (UInt16)(type | value);
             }
         }
 
@@ -128,9 +128,9 @@ namespace PacketDotNet.LLDP
         /// </value>
         private UInt16 TypeAndLength
         {
-            get => EndianBitConverter.Big.ToUInt16(byteArraySegment.Bytes, byteArraySegment.Offset);
+            get => EndianBitConverter.Big.ToUInt16(this.byteArraySegment.Bytes, this.byteArraySegment.Offset);
 
-            set => EndianBitConverter.Big.CopyBytes(value, byteArraySegment.Bytes, byteArraySegment.Offset);
+            set => EndianBitConverter.Big.CopyBytes(value, this.byteArraySegment.Bytes, this.byteArraySegment.Offset);
         }
     }
 }

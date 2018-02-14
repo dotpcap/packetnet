@@ -111,8 +111,8 @@ namespace PacketDotNet
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
-                    writer.Write((UInt32)Flags);
-                    writer.Write((UInt32)Errors);
+                    writer.Write((UInt32) this.Flags);
+                    writer.Write((UInt32) this.Errors);
                     return ms.ToArray();
                 }
             }
@@ -133,8 +133,8 @@ namespace PacketDotNet
             /// </param>
             public Ppi802_3(BinaryReader br)
             {
-                Flags = (StandardFlags) br.ReadUInt32();
-                Errors = (ErrorFlags) br.ReadUInt32();
+                this.Flags = (StandardFlags) br.ReadUInt32();
+                this.Errors = (ErrorFlags) br.ReadUInt32();
             }
             
             /// <summary>
@@ -196,7 +196,7 @@ namespace PacketDotNet
             /// <value>
             /// The bytes.
             /// </value>
-            public override Byte[] Bytes => BitConverter.GetBytes(InterfaceId);
+            public override Byte[] Bytes => BitConverter.GetBytes(this.InterfaceId);
 
             #endregion Properties
 
@@ -215,7 +215,7 @@ namespace PacketDotNet
             /// </param>
             public PpiAggregation (BinaryReader br)
             {
-                InterfaceId = br.ReadUInt32();
+                this.InterfaceId = br.ReadUInt32();
             }
    
             /// <summary>
@@ -422,15 +422,15 @@ namespace PacketDotNet
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
                     
-                    writer.Write(TSFTimer);
-                    writer.Write((UInt16)Flags);
-                    writer.Write((UInt16)(Rate * 2));
-                    writer.Write(ChannelFrequency);
-                    writer.Write((UInt16)ChannelFlags);
-                    writer.Write(FhssHopset);
-                    writer.Write(FhssPattern);
-                    writer.Write(AntennaSignalPower);
-                    writer.Write(AntennaSignalNoise);
+                    writer.Write(this.TSFTimer);
+                    writer.Write((UInt16) this.Flags);
+                    writer.Write((UInt16)(this.Rate * 2));
+                    writer.Write(this.ChannelFrequency);
+                    writer.Write((UInt16) this.ChannelFlags);
+                    writer.Write(this.FhssHopset);
+                    writer.Write(this.FhssPattern);
+                    writer.Write(this.AntennaSignalPower);
+                    writer.Write(this.AntennaSignalNoise);
                     
                     return ms.ToArray();
                 }
@@ -453,15 +453,15 @@ namespace PacketDotNet
             /// </param>
             public PpiCommon (BinaryReader br)
             {
-                TSFTimer = br.ReadUInt64 ();
-                Flags = (CommonFlags)br.ReadUInt16 ();
-                Rate = 0.5f * br.ReadUInt16 ();
-                ChannelFrequency = br.ReadUInt16 ();
-                ChannelFlags = (RadioTapChannelFlags) br.ReadUInt16 ();
-                FhssHopset = br.ReadByte ();
-                FhssPattern = br.ReadByte ();
-                AntennaSignalPower = br.ReadSByte();
-                AntennaSignalNoise = br.ReadSByte();
+                this.TSFTimer = br.ReadUInt64 ();
+                this.Flags = (CommonFlags)br.ReadUInt16 ();
+                this.Rate = 0.5f * br.ReadUInt16 ();
+                this.ChannelFrequency = br.ReadUInt16 ();
+                this.ChannelFlags = (RadioTapChannelFlags) br.ReadUInt16 ();
+                this.FhssHopset = br.ReadByte ();
+                this.FhssPattern = br.ReadByte ();
+                this.AntennaSignalPower = br.ReadSByte();
+                this.AntennaSignalNoise = br.ReadSByte();
             }
    
             /// <summary>
@@ -470,8 +470,8 @@ namespace PacketDotNet
             /// </summary>
             public PpiCommon ()
             {
-                AntennaSignalPower = -128;
-                AntennaSignalNoise = -128;
+                this.AntennaSignalPower = -128;
+                this.AntennaSignalNoise = -128;
             }
             
         #endregion Constructors
@@ -650,9 +650,9 @@ namespace PacketDotNet
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
                     
-                    writer.Write((UInt32) Flags);
-                    writer.Write(AMpduId);
-                    writer.Write(DelimiterCount);
+                    writer.Write((UInt32) this.Flags);
+                    writer.Write(this.AMpduId);
+                    writer.Write(this.DelimiterCount);
                     writer.Write(new Byte[3]);
                     
                     return ms.ToArray();
@@ -676,9 +676,9 @@ namespace PacketDotNet
             /// </param>
             public PpiMacExtensions (BinaryReader br)
             {
-                Flags = (PpiMacExtensionFlags) br.ReadUInt32();
-                AMpduId = br.ReadUInt32();
-                DelimiterCount = br.ReadByte();
+                this.Flags = (PpiMacExtensionFlags) br.ReadUInt32();
+                this.AMpduId = br.ReadUInt32();
+                this.DelimiterCount = br.ReadByte();
             }
             
             /// <summary>
@@ -922,33 +922,33 @@ namespace PacketDotNet
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
                     
-                    writer.Write(AMpduId);
-                    writer.Write(DelimiterCount);
-                    writer.Write(ModulationCodingScheme);
-                    writer.Write(SpatialStreamCount);
-                    writer.Write(RssiCombined);
-                    writer.Write(RssiAntenna0Control);
-                    writer.Write(RssiAntenna1Control);
-                    writer.Write(RssiAntenna2Control);
-                    writer.Write(RssiAntenna3Control);
-                    writer.Write(RssiAntenna0Ext);
-                    writer.Write(RssiAntenna1Ext);
-                    writer.Write(RssiAntenna2Ext);
-                    writer.Write(RssiAntenna3Ext);
-                    writer.Write(ExtensionChannelFrequency);
-                    writer.Write((UInt16)ExtensionChannelFlags);
-                    writer.Write(DBmAntenna0SignalPower);
-                    writer.Write(DBmAntenna0SignalNoise);
-                    writer.Write(DBmAntenna1SignalPower);
-                    writer.Write(DBmAntenna1SignalNoise);
-                    writer.Write(DBmAntenna2SignalPower);
-                    writer.Write(DBmAntenna2SignalNoise);
-                    writer.Write(DBmAntenna3SignalPower);
-                    writer.Write(DBmAntenna3SignalNoise);
-                    writer.Write(ErrorVectorMagnitude0);
-                    writer.Write(ErrorVectorMagnitude1);
-                    writer.Write(ErrorVectorMagnitude2);
-                    writer.Write(ErrorVectorMagnitude3);
+                    writer.Write(this.AMpduId);
+                    writer.Write(this.DelimiterCount);
+                    writer.Write(this.ModulationCodingScheme);
+                    writer.Write(this.SpatialStreamCount);
+                    writer.Write(this.RssiCombined);
+                    writer.Write(this.RssiAntenna0Control);
+                    writer.Write(this.RssiAntenna1Control);
+                    writer.Write(this.RssiAntenna2Control);
+                    writer.Write(this.RssiAntenna3Control);
+                    writer.Write(this.RssiAntenna0Ext);
+                    writer.Write(this.RssiAntenna1Ext);
+                    writer.Write(this.RssiAntenna2Ext);
+                    writer.Write(this.RssiAntenna3Ext);
+                    writer.Write(this.ExtensionChannelFrequency);
+                    writer.Write((UInt16) this.ExtensionChannelFlags);
+                    writer.Write(this.DBmAntenna0SignalPower);
+                    writer.Write(this.DBmAntenna0SignalNoise);
+                    writer.Write(this.DBmAntenna1SignalPower);
+                    writer.Write(this.DBmAntenna1SignalNoise);
+                    writer.Write(this.DBmAntenna2SignalPower);
+                    writer.Write(this.DBmAntenna2SignalNoise);
+                    writer.Write(this.DBmAntenna3SignalPower);
+                    writer.Write(this.DBmAntenna3SignalNoise);
+                    writer.Write(this.ErrorVectorMagnitude0);
+                    writer.Write(this.ErrorVectorMagnitude1);
+                    writer.Write(this.ErrorVectorMagnitude2);
+                    writer.Write(this.ErrorVectorMagnitude3);
                     
                     return ms.ToArray();
                 }
@@ -970,33 +970,33 @@ namespace PacketDotNet
             /// </param>
             public PpiMacPhy (BinaryReader br)
             {
-                AMpduId = br.ReadUInt32();
-                DelimiterCount = br.ReadByte();
-                ModulationCodingScheme = br.ReadByte();
-                SpatialStreamCount = br.ReadByte();
-                RssiCombined = br.ReadByte();
-                RssiAntenna0Control = br.ReadByte();
-                RssiAntenna1Control = br.ReadByte();
-                RssiAntenna2Control = br.ReadByte();
-                RssiAntenna3Control = br.ReadByte();
-                RssiAntenna0Ext = br.ReadByte();
-                RssiAntenna1Ext = br.ReadByte();
-                RssiAntenna2Ext = br.ReadByte();
-                RssiAntenna3Ext = br.ReadByte();
-                ExtensionChannelFrequency = br.ReadUInt16();
-                ExtensionChannelFlags = (RadioTapChannelFlags) br.ReadUInt16();
-                DBmAntenna0SignalPower = br.ReadByte();
-                DBmAntenna0SignalNoise = br.ReadByte();
-                DBmAntenna1SignalPower = br.ReadByte();
-                DBmAntenna1SignalNoise = br.ReadByte();
-                DBmAntenna2SignalPower = br.ReadByte();
-                DBmAntenna2SignalNoise = br.ReadByte();
-                DBmAntenna3SignalPower = br.ReadByte();
-                DBmAntenna3SignalNoise = br.ReadByte();
-                ErrorVectorMagnitude0 = br.ReadUInt32();
-                ErrorVectorMagnitude1 = br.ReadUInt32();
-                ErrorVectorMagnitude2 = br.ReadUInt32();
-                ErrorVectorMagnitude3 = br.ReadUInt32();
+                this.AMpduId = br.ReadUInt32();
+                this.DelimiterCount = br.ReadByte();
+                this.ModulationCodingScheme = br.ReadByte();
+                this.SpatialStreamCount = br.ReadByte();
+                this.RssiCombined = br.ReadByte();
+                this.RssiAntenna0Control = br.ReadByte();
+                this.RssiAntenna1Control = br.ReadByte();
+                this.RssiAntenna2Control = br.ReadByte();
+                this.RssiAntenna3Control = br.ReadByte();
+                this.RssiAntenna0Ext = br.ReadByte();
+                this.RssiAntenna1Ext = br.ReadByte();
+                this.RssiAntenna2Ext = br.ReadByte();
+                this.RssiAntenna3Ext = br.ReadByte();
+                this.ExtensionChannelFrequency = br.ReadUInt16();
+                this.ExtensionChannelFlags = (RadioTapChannelFlags) br.ReadUInt16();
+                this.DBmAntenna0SignalPower = br.ReadByte();
+                this.DBmAntenna0SignalNoise = br.ReadByte();
+                this.DBmAntenna1SignalPower = br.ReadByte();
+                this.DBmAntenna1SignalNoise = br.ReadByte();
+                this.DBmAntenna2SignalPower = br.ReadByte();
+                this.DBmAntenna2SignalNoise = br.ReadByte();
+                this.DBmAntenna3SignalPower = br.ReadByte();
+                this.DBmAntenna3SignalNoise = br.ReadByte();
+                this.ErrorVectorMagnitude0 = br.ReadUInt32();
+                this.ErrorVectorMagnitude1 = br.ReadUInt32();
+                this.ErrorVectorMagnitude2 = br.ReadUInt32();
+                this.ErrorVectorMagnitude3 = br.ReadUInt32();
             }
             
             /// <summary>
@@ -1030,9 +1030,9 @@ namespace PacketDotNet
             {
                 get
                 {
-                    var processLength = (String.IsNullOrEmpty(ProcessPath)) ? 0 : Encoding.UTF8.GetByteCount(ProcessPath);
-                    var userLength = (String.IsNullOrEmpty(UserName)) ? 0 : Encoding.UTF8.GetByteCount(UserName);
-                    var groupLength = (String.IsNullOrEmpty(GroupName)) ? 0 : Encoding.UTF8.GetByteCount(GroupName);
+                    var processLength = (String.IsNullOrEmpty(this.ProcessPath)) ? 0 : Encoding.UTF8.GetByteCount(this.ProcessPath);
+                    var userLength = (String.IsNullOrEmpty(this.UserName)) ? 0 : Encoding.UTF8.GetByteCount(this.UserName);
+                    var groupLength = (String.IsNullOrEmpty(this.GroupName)) ? 0 : Encoding.UTF8.GetByteCount(this.GroupName);
                     return 19 + processLength + userLength + groupLength;
                 }
             }
@@ -1100,22 +1100,22 @@ namespace PacketDotNet
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
                     
-                    writer.Write(ProcessId);
-                    writer.Write(ThreadId);
+                    writer.Write(this.ProcessId);
+                    writer.Write(this.ThreadId);
                     
-                    var pathBytes = Encoding.UTF8.GetBytes(ProcessPath ?? String.Empty);
+                    var pathBytes = Encoding.UTF8.GetBytes(this.ProcessPath ?? String.Empty);
                     writer.Write((Byte)pathBytes.Length);
                     writer.Write(pathBytes);
                     
-                    writer.Write(UserId);
+                    writer.Write(this.UserId);
                     
-                    var userBytes = Encoding.UTF8.GetBytes(UserName ?? String.Empty);
+                    var userBytes = Encoding.UTF8.GetBytes(this.UserName ?? String.Empty);
                     writer.Write((Byte)userBytes.Length);
                     writer.Write(userBytes);
                     
-                    writer.Write(GroupId);
+                    writer.Write(this.GroupId);
                     
-                    var groupBytes = Encoding.UTF8.GetBytes(GroupName ?? String.Empty);
+                    var groupBytes = Encoding.UTF8.GetBytes(this.GroupName ?? String.Empty);
                     writer.Write((Byte)groupBytes.Length);
                     writer.Write(groupBytes);
                         
@@ -1139,22 +1139,21 @@ namespace PacketDotNet
             /// </param>
             public PpiProcessInfo (BinaryReader br)
             {
-                
-                ProcessId = br.ReadUInt32();
-                ThreadId = br.ReadUInt32();
+                this.ProcessId = br.ReadUInt32();
+                this.ThreadId = br.ReadUInt32();
                 
                 var pathLength = br.ReadByte();
-                ProcessPath = Encoding.UTF8.GetString(br.ReadBytes(pathLength));
-                
-                UserId = br.ReadUInt32();
+                this.ProcessPath = Encoding.UTF8.GetString(br.ReadBytes(pathLength));
+
+                this.UserId = br.ReadUInt32();
                 
                 var userLength = br.ReadByte();
-                UserName = Encoding.UTF8.GetString(br.ReadBytes(userLength));
-                
-                GroupId = br.ReadUInt32();
+                this.UserName = Encoding.UTF8.GetString(br.ReadBytes(userLength));
+
+                this.GroupId = br.ReadUInt32();
                 
                 var groupLength = br.ReadByte();
-                GroupName = Encoding.UTF8.GetString(br.ReadBytes(groupLength));
+                this.GroupName = Encoding.UTF8.GetString(br.ReadBytes(groupLength));
             }
             
             /// <summary>
@@ -1179,7 +1178,7 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType => fieldType;
+            public override PpiFieldType FieldType => this.fieldType;
 
             /// <summary>
             /// Gets the length of the field data.
@@ -1187,7 +1186,7 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override Int32 Length => Bytes.Length;
+            public override Int32 Length => this.Bytes.Length;
 
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
@@ -1195,7 +1194,7 @@ namespace PacketDotNet
             /// <value>
             /// The bytes.
             /// </value>
-            public override Byte[] Bytes => UnknownBytes;
+            public override Byte[] Bytes => this.UnknownBytes;
 
             /// <summary>
             /// Gets or sets the field data.
@@ -1227,8 +1226,8 @@ namespace PacketDotNet
             /// </param>
             public PpiUnknown (Int32 typeNumber, BinaryReader br, Int32 length)
             {
-                fieldType = (PpiFieldType) typeNumber;
-                UnknownBytes = br.ReadBytes(length);
+                this.fieldType = (PpiFieldType) typeNumber;
+                this.UnknownBytes = br.ReadBytes(length);
             }
    
             /// <summary>
@@ -1239,7 +1238,7 @@ namespace PacketDotNet
             /// </param>
             public PpiUnknown (Int32 typeNumber)
             {
-                fieldType = (PpiFieldType)typeNumber;
+                this.fieldType = (PpiFieldType)typeNumber;
             }
             /// <summary>
             /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiUnknown"/> class.
@@ -1252,7 +1251,7 @@ namespace PacketDotNet
             /// </param>
             public PpiUnknown (Int32 typeNumber, Byte[] UnknownBytes)
             {
-                fieldType = (PpiFieldType)typeNumber;
+                this.fieldType = (PpiFieldType)typeNumber;
                 this.UnknownBytes = UnknownBytes;
             }
             
@@ -1276,7 +1275,7 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override Int32 Length => 20 + SamplesData.Length;
+            public override Int32 Length => 20 + this.SamplesData.Length;
 
             /// <summary>
             /// Gets or sets the starting frequency in kHz.
@@ -1334,13 +1333,13 @@ namespace PacketDotNet
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
                     
-                    writer.Write(StartingFrequency);
-                    writer.Write(Resolution);
-                    writer.Write(AmplitudeOffset);
-                    writer.Write(AmplitudeResolution);
-                    writer.Write(MaximumRssi);
-                    writer.Write((UInt16) SamplesData.Length);
-                    writer.Write(SamplesData);
+                    writer.Write(this.StartingFrequency);
+                    writer.Write(this.Resolution);
+                    writer.Write(this.AmplitudeOffset);
+                    writer.Write(this.AmplitudeResolution);
+                    writer.Write(this.MaximumRssi);
+                    writer.Write((UInt16) this.SamplesData.Length);
+                    writer.Write(this.SamplesData);
                     
                     return ms.ToArray();
                 }    
@@ -1362,13 +1361,13 @@ namespace PacketDotNet
             /// </param>
             public PpiSpectrum (BinaryReader br)
             {
-                StartingFrequency = br.ReadUInt32();
-                Resolution = br.ReadUInt32();
-                AmplitudeOffset = br.ReadUInt32();
-                AmplitudeResolution = br.ReadUInt32();
-                MaximumRssi = br.ReadUInt16();
+                this.StartingFrequency = br.ReadUInt32();
+                this.Resolution = br.ReadUInt32();
+                this.AmplitudeOffset = br.ReadUInt32();
+                this.AmplitudeResolution = br.ReadUInt32();
+                this.MaximumRssi = br.ReadUInt16();
                 var samplesLength = br.ReadUInt16();
-                SamplesData = br.ReadBytes(samplesLength);
+                this.SamplesData = br.ReadBytes(samplesLength);
             }
             
             /// <summary>

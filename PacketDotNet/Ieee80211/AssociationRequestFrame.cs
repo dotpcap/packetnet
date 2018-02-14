@@ -59,11 +59,10 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if(header.Length >= 
+                    if(this.header.Length >= 
                         (AssociationRequestFields.CapabilityInformationPosition + AssociationRequestFields.CapabilityInformationLength))
                     {
-                        return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                                  header.Offset + AssociationRequestFields.CapabilityInformationPosition);
+                        return EndianBitConverter.Little.ToUInt16(this.header.Bytes, this.header.Offset + AssociationRequestFields.CapabilityInformationPosition);
                     }
                     else
                     {
@@ -71,9 +70,7 @@ namespace PacketDotNet
                     }
                 }
 
-                set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + AssociationRequestFields.CapabilityInformationPosition);
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + AssociationRequestFields.CapabilityInformationPosition);
             }
 
             /// <summary>
@@ -100,10 +97,9 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if(header.Length >= (AssociationRequestFields.ListenIntervalPosition + AssociationRequestFields.ListenIntervalLength))
+                    if(this.header.Length >= (AssociationRequestFields.ListenIntervalPosition + AssociationRequestFields.ListenIntervalLength))
                     {
-                        return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                                  header.Offset + AssociationRequestFields.ListenIntervalPosition);
+                        return EndianBitConverter.Little.ToUInt16(this.header.Bytes, this.header.Offset + AssociationRequestFields.ListenIntervalPosition);
                     }
                     else
                     {
@@ -111,9 +107,7 @@ namespace PacketDotNet
                     }
                 }
 
-                set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + AssociationRequestFields.ListenIntervalPosition);
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + AssociationRequestFields.ListenIntervalPosition);
             }
    
             /// <summary>
@@ -135,8 +129,7 @@ namespace PacketDotNet
                                                 (MacFields.AddressLength * 3) +
                                                 MacFields.SequenceControlLength +
                                                 AssociationRequestFields.CapabilityInformationLength +
-                                                AssociationRequestFields.ListenIntervalLength +
-                                                InformationElements.Length);
+                                                AssociationRequestFields.ListenIntervalLength + this.InformationElements.Length);
 
 
             /// <summary>
@@ -147,17 +140,17 @@ namespace PacketDotNet
             /// </param>
             public AssociationRequestFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                this.header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                DestinationAddress = GetAddress (0);
-                SourceAddress = GetAddress (1);
-                BssId = GetAddress (2);
-                SequenceControl = new SequenceControlField (SequenceControlBytes);
+                this.FrameControl = new FrameControlField (this.FrameControlBytes);
+                this.Duration = new DurationField (this.DurationBytes);
+                this.DestinationAddress = this.GetAddress (0);
+                this.SourceAddress = this.GetAddress (1);
+                this.BssId = this.GetAddress (2);
+                this.SequenceControl = new SequenceControlField (this.SequenceControlBytes);
 
-                CapabilityInformation = new CapabilityInformationField (CapabilityInformationBytes);
-                ListenInterval = ListenIntervalBytes;
+                this.CapabilityInformation = new CapabilityInformationField (this.CapabilityInformationBytes);
+                this.ListenInterval = this.ListenIntervalBytes;
 				
 				if(bas.Length > AssociationRequestFields.InformationElement1Position)
 				{
@@ -165,17 +158,17 @@ namespace PacketDotNet
                 	ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
                     	(bas.Offset + AssociationRequestFields.InformationElement1Position),
                     	(bas.Length - AssociationRequestFields.InformationElement1Position));
-				
-					InformationElements = new InformationElementList (infoElementsSegment);
+
+				    this.InformationElements = new InformationElementList (infoElementsSegment);
 				}
 				else
 				{
-					InformationElements = new InformationElementList();
+				    this.InformationElements = new InformationElementList();
 				}
 
                 //cant set length until after we have handled the information elements
                 //as they vary in length
-                header.Length = FrameSize;
+                this.header.Length = this.FrameSize;
             }
             
             /// <summary>
@@ -215,23 +208,23 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((this.header == null) || (this.header.Length > (this.header.BytesLength - this.header.Offset)) || (this.header.Length < this.FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    this.header = new ByteArraySegment (new Byte[this.FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
                 this.DurationBytes = this.Duration.Field;
-                SetAddress (0, DestinationAddress);
-                SetAddress (1, SourceAddress);
-                SetAddress (2, BssId);
+                this.SetAddress (0, this.DestinationAddress);
+                this.SetAddress (1, this.SourceAddress);
+                this.SetAddress (2, this.BssId);
                 this.SequenceControlBytes = this.SequenceControl.Field;
                 this.CapabilityInformationBytes = this.CapabilityInformation.Field;
                 
                 //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
-                this.InformationElements.CopyTo (header, header.Offset + AssociationRequestFields.InformationElement1Position);
-                
-                header.Length = FrameSize;
+                this.InformationElements.CopyTo (this.header, this.header.Offset + AssociationRequestFields.InformationElement1Position);
+
+                this.header.Length = this.FrameSize;
             }
             
         } 

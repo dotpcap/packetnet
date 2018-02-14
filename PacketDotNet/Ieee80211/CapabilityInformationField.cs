@@ -40,9 +40,9 @@ namespace PacketDotNet
             /// </summary>
             public Boolean IsEss
             {
-                get => GetBitFieldValue(0);
+                get => this.GetBitFieldValue(0);
 
-                set => SetBitFieldValue(0, value);
+                set => this.SetBitFieldValue(0, value);
             }
 
             /// <summary>
@@ -52,9 +52,9 @@ namespace PacketDotNet
             /// </summary>
             public Boolean IsIbss
             {
-                get => GetBitFieldValue(1);
+                get => this.GetBitFieldValue(1);
 
-                set => SetBitFieldValue(1, value);
+                set => this.SetBitFieldValue(1, value);
             }
 
             /// <summary>
@@ -66,9 +66,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean CfPollable
             {
-                get => GetBitFieldValue(2);
+                get => this.GetBitFieldValue(2);
 
-                set => SetBitFieldValue(2, value);
+                set => this.SetBitFieldValue(2, value);
             }
 
             /// <summary>
@@ -80,9 +80,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean CfPollRequest
             {
-                get => GetBitFieldValue(3);
+                get => this.GetBitFieldValue(3);
 
-                set => SetBitFieldValue(3, value);
+                set => this.SetBitFieldValue(3, value);
             }
 
             /// <summary>
@@ -94,9 +94,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean Privacy
             {
-                get => GetBitFieldValue(4);
+                get => this.GetBitFieldValue(4);
 
-                set => SetBitFieldValue(4, value);
+                set => this.SetBitFieldValue(4, value);
             }
 
             /// <summary>
@@ -108,9 +108,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean ShortPreamble
             {
-                get => GetBitFieldValue(5);
+                get => this.GetBitFieldValue(5);
 
-                set => SetBitFieldValue(5, value);
+                set => this.SetBitFieldValue(5, value);
             }
 
             /// <summary>
@@ -122,9 +122,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean Pbcc
             {
-                get => GetBitFieldValue(6);
+                get => this.GetBitFieldValue(6);
 
-                set => SetBitFieldValue(6, value);
+                set => this.SetBitFieldValue(6, value);
             }
 
             /// <summary>
@@ -136,9 +136,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean ChannelAgility
             {
-                get => GetBitFieldValue(7);
+                get => this.GetBitFieldValue(7);
 
-                set => SetBitFieldValue(7, value);
+                set => this.SetBitFieldValue(7, value);
             }
 
             /// <summary>
@@ -150,9 +150,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean ShortTimeSlot
             {
-                get => GetBitFieldValue(10);
+                get => this.GetBitFieldValue(10);
 
-                set => SetBitFieldValue(10, value);
+                set => this.SetBitFieldValue(10, value);
             }
 
             /// <summary>
@@ -164,9 +164,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean DssOfdm
             {
-                get => GetBitFieldValue(13);
+                get => this.GetBitFieldValue(13);
 
-                set => SetBitFieldValue(13, value);
+                set => this.SetBitFieldValue(13, value);
             }
 
             /// <summary>
@@ -175,18 +175,18 @@ namespace PacketDotNet
             /// <param name="index">0 indexed position of the bit</param>
             private Boolean GetBitFieldValue(UInt16 index)
             {
-                return (((Field >> index) & 0x1) == 1) ? true : false;
+                return (((this.Field >> index) & 0x1) == 1) ? true : false;
             }
 
             private void SetBitFieldValue(UInt16 index, Boolean value)
             {
                 if (value)
                 {
-                    Field |= unchecked((UInt16)(1 << index));
+                    this.Field |= unchecked((UInt16)(1 << index));
                 }
                 else
                 {
-                    Field &= unchecked((UInt16)~(1 << index));
+                    this.Field &= unchecked((UInt16)~(1 << index));
                 }
             }
 

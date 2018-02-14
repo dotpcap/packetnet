@@ -184,8 +184,8 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                EndianBitConverter.Little.CopyBytes(FrequencyMHz, dest, offset);
-                EndianBitConverter.Little.CopyBytes((UInt16)Flags, dest, offset + 2);
+                EndianBitConverter.Little.CopyBytes(this.FrequencyMHz, dest, offset);
+                EndianBitConverter.Little.CopyBytes((UInt16) this.Flags, dest, offset + 2);
             }
 
             /// <summary>
@@ -196,9 +196,9 @@ namespace PacketDotNet
             /// </param>
             public ChannelRadioTapField(BinaryReader br)
             {
-                FrequencyMHz = br.ReadUInt16();
-                Channel = ChannelFromFrequencyMHz(FrequencyMHz);
-                Flags = (RadioTapChannelFlags)br.ReadUInt16();
+                this.FrequencyMHz = br.ReadUInt16();
+                this.Channel = ChannelFromFrequencyMHz(this.FrequencyMHz);
+                this.Flags = (RadioTapChannelFlags)br.ReadUInt16();
             }
             
             /// <summary>
@@ -220,8 +220,8 @@ namespace PacketDotNet
             /// </param>
             public ChannelRadioTapField(UInt16 FrequencyMhz, RadioTapChannelFlags Flags)
             {
-                this.FrequencyMHz = FrequencyMHz;
-                this.Channel = ChannelFromFrequencyMHz(FrequencyMHz);
+                this.FrequencyMHz = this.FrequencyMHz;
+                this.Channel = ChannelFromFrequencyMHz(this.FrequencyMHz);
                 this.Flags = Flags;
             }
 
@@ -233,8 +233,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("FrequencyMHz {0}, Channel {1}, Flags {2}",
-                                     FrequencyMHz, Channel, Flags);
+                return String.Format("FrequencyMHz {0}, Channel {1}, Flags {2}", this.FrequencyMHz, this.Channel, this.Flags);
             }
         }
 
@@ -269,8 +268,8 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = ChannelHoppingSet;
-                dest[offset + 1] = Pattern;
+                dest[offset] = this.ChannelHoppingSet;
+                dest[offset + 1] = this.Pattern;
             }
 
             /// <summary>
@@ -283,8 +282,8 @@ namespace PacketDotNet
             {
                 var u16 = br.ReadUInt16();
 
-                ChannelHoppingSet = (Byte)(u16 & 0xff);
-                Pattern = (Byte)((u16 >> 8) & 0xff);
+                this.ChannelHoppingSet = (Byte)(u16 & 0xff);
+                this.Pattern = (Byte)((u16 >> 8) & 0xff);
             }
    
             /// <summary>
@@ -318,8 +317,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("ChannelHoppingSet {0}, Pattern {1}",
-                                     ChannelHoppingSet, Pattern);
+                return String.Format("ChannelHoppingSet {0}, Pattern {1}", this.ChannelHoppingSet, this.Pattern);
             }
         }
 
@@ -349,7 +347,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = (Byte) Flags;
+                dest[offset] = (Byte) this.Flags;
             }
 
             /// <summary>
@@ -361,7 +359,7 @@ namespace PacketDotNet
             public FlagsRadioTapField(BinaryReader br)
             {
                 var u8 = br.ReadByte();
-                Flags = (RadioTapFlags)u8;
+                this.Flags = (RadioTapFlags)u8;
             }
    
             /// <summary>
@@ -391,7 +389,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("Flags {0}", Flags);
+                return String.Format("Flags {0}", this.Flags);
             }
         }
 
@@ -421,7 +419,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = (Byte) (RateMbps / 0.5);
+                dest[offset] = (Byte) (this.RateMbps / 0.5);
             }
 
             /// <summary>
@@ -433,7 +431,7 @@ namespace PacketDotNet
             public RateRadioTapField(BinaryReader br)
             {
                 var u8 = br.ReadByte();
-                RateMbps = (0.5 * (u8 & 0x7f));
+                this.RateMbps = (0.5 * (u8 & 0x7f));
             }
             
             /// <summary>
@@ -463,7 +461,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("RateMbps {0}", RateMbps);
+                return String.Format("RateMbps {0}", this.RateMbps);
             }
         }
 
@@ -493,7 +491,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = SignalStrengthdB;
+                dest[offset] = this.SignalStrengthdB;
             }
 
             /// <summary>
@@ -504,7 +502,7 @@ namespace PacketDotNet
             /// </param>
             public DbAntennaSignalRadioTapField(BinaryReader br)
             {
-                SignalStrengthdB = br.ReadByte();
+                this.SignalStrengthdB = br.ReadByte();
             }
             
             /// <summary>
@@ -534,7 +532,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("SignalStrengthdB {0}", SignalStrengthdB);
+                return String.Format("SignalStrengthdB {0}", this.SignalStrengthdB);
             }
         }
 
@@ -564,7 +562,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = AntennaNoisedB;
+                dest[offset] = this.AntennaNoisedB;
             }
 
             /// <summary>
@@ -575,7 +573,7 @@ namespace PacketDotNet
             /// </param>
             public DbAntennaNoiseRadioTapField(BinaryReader br)
             {
-                AntennaNoisedB = br.ReadByte();
+                this.AntennaNoisedB = br.ReadByte();
             }
             
             /// <summary>
@@ -605,7 +603,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("AntennaNoisedB {0}", AntennaNoisedB);
+                return String.Format("AntennaNoisedB {0}", this.AntennaNoisedB);
             }
         }
 
@@ -635,7 +633,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = Antenna;
+                dest[offset] = this.Antenna;
             }
 
             /// <summary>
@@ -646,7 +644,7 @@ namespace PacketDotNet
             /// </param>
             public AntennaRadioTapField(BinaryReader br)
             {
-                Antenna = br.ReadByte();
+                this.Antenna = br.ReadByte();
             }
    
             /// <summary>
@@ -676,7 +674,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("Antenna {0}", Antenna);
+                return String.Format("Antenna {0}", this.Antenna);
             }
         }
 
@@ -706,7 +704,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = (Byte)AntennaSignalDbm;
+                dest[offset] = (Byte) this.AntennaSignalDbm;
             }
 
             /// <summary>
@@ -717,7 +715,7 @@ namespace PacketDotNet
             /// </param>
             public DbmAntennaSignalRadioTapField(BinaryReader br)
             {
-                AntennaSignalDbm = br.ReadSByte();
+                this.AntennaSignalDbm = br.ReadSByte();
             }
             
             /// <summary>
@@ -747,7 +745,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("AntennaSignalDbm {0}", AntennaSignalDbm);
+                return String.Format("AntennaSignalDbm {0}", this.AntennaSignalDbm);
             }
         }
 
@@ -777,7 +775,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = (Byte)AntennaNoisedBm;
+                dest[offset] = (Byte) this.AntennaNoisedBm;
             }
 
             /// <summary>
@@ -788,7 +786,7 @@ namespace PacketDotNet
             /// </param>
             public DbmAntennaNoiseRadioTapField(BinaryReader br)
             {
-                AntennaNoisedBm = br.ReadSByte();
+                this.AntennaNoisedBm = br.ReadSByte();
             }
             
             /// <summary>
@@ -818,7 +816,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("AntennaNoisedBm {0}", AntennaNoisedBm);
+                return String.Format("AntennaNoisedBm {0}", this.AntennaNoisedBm);
             }
         }
 
@@ -849,7 +847,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                EndianBitConverter.Little.CopyBytes(SignalQuality, dest, offset);
+                EndianBitConverter.Little.CopyBytes(this.SignalQuality, dest, offset);
             }
             
             /// <summary>
@@ -860,7 +858,7 @@ namespace PacketDotNet
             /// </param>
             public LockQualityRadioTapField(BinaryReader br)
             {
-                SignalQuality = br.ReadUInt16();
+                this.SignalQuality = br.ReadUInt16();
             }
             
             /// <summary>
@@ -890,7 +888,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("SignalQuality {0}", SignalQuality);
+                return String.Format("SignalQuality {0}", this.SignalQuality);
             }
         }
 
@@ -920,7 +918,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                EndianBitConverter.Little.CopyBytes(TimestampUsec, dest, offset);
+                EndianBitConverter.Little.CopyBytes(this.TimestampUsec, dest, offset);
             }
 
             /// <summary>
@@ -931,7 +929,7 @@ namespace PacketDotNet
             /// </param>
             public TsftRadioTapField(BinaryReader br)
             {
-                TimestampUsec = br.ReadUInt64();
+                this.TimestampUsec = br.ReadUInt64();
             }
             
             /// <summary>
@@ -961,7 +959,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("TimestampUsec {0}", TimestampUsec);
+                return String.Format("TimestampUsec {0}", this.TimestampUsec);
             }
         }
 
@@ -994,7 +992,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                UInt16 flags = (UInt16)((PlcpCrcCheckFailed) ? 0x2 : 0x0);
+                UInt16 flags = (UInt16)((this.PlcpCrcCheckFailed) ? 0x2 : 0x0);
                 EndianBitConverter.Little.CopyBytes(flags, dest, offset);
             }
 
@@ -1007,7 +1005,7 @@ namespace PacketDotNet
             public RxFlagsRadioTapField(BinaryReader br)
             {
                 UInt16 flags = br.ReadUInt16();
-                PlcpCrcCheckFailed = ((flags & 0x2) == 0x2);
+                this.PlcpCrcCheckFailed = ((flags & 0x2) == 0x2);
             }
             
             /// <summary>
@@ -1037,7 +1035,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("PlcpCrcCheckFailed {0}", PlcpCrcCheckFailed);
+                return String.Format("PlcpCrcCheckFailed {0}", this.PlcpCrcCheckFailed);
             }
         }
         
@@ -1070,7 +1068,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                UInt16 absValue = (UInt16) Math.Abs(TxPower);
+                UInt16 absValue = (UInt16) Math.Abs(this.TxPower);
                 EndianBitConverter.Little.CopyBytes(absValue, dest, offset);
             }
             
@@ -1082,7 +1080,7 @@ namespace PacketDotNet
             /// </param>
             public TxAttenuationRadioTapField(BinaryReader br)
             {
-                TxPower = -(Int32)br.ReadUInt16();
+                this.TxPower = -(Int32)br.ReadUInt16();
             }
             
             /// <summary>
@@ -1112,7 +1110,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("TxPower {0}", TxPower);
+                return String.Format("TxPower {0}", this.TxPower);
             }
         }
 
@@ -1144,7 +1142,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                UInt16 absValue = (UInt16) Math.Abs(TxPowerdB);
+                UInt16 absValue = (UInt16) Math.Abs(this.TxPowerdB);
                 EndianBitConverter.Little.CopyBytes(absValue, dest, offset);
             }
             
@@ -1156,7 +1154,7 @@ namespace PacketDotNet
             /// </param>
             public DbTxAttenuationRadioTapField(BinaryReader br)
             {
-                TxPowerdB = -(Int32)br.ReadUInt16();
+                this.TxPowerdB = -(Int32)br.ReadUInt16();
             }
             
             /// <summary>
@@ -1186,7 +1184,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("TxPowerdB {0}", TxPowerdB);
+                return String.Format("TxPowerdB {0}", this.TxPowerdB);
             }
         }
 
@@ -1218,7 +1216,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = (Byte)TxPowerdBm;
+                dest[offset] = (Byte) this.TxPowerdBm;
             }
             
             /// <summary>
@@ -1229,7 +1227,7 @@ namespace PacketDotNet
             /// </param>
             public DbmTxPowerRadioTapField(BinaryReader br)
             {
-                TxPowerdBm = br.ReadSByte();
+                this.TxPowerdBm = br.ReadSByte();
             }
             
             /// <summary>
@@ -1259,7 +1257,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("TxPowerdBm {0}", TxPowerdBm);
+                return String.Format("TxPowerdBm {0}", this.TxPowerdBm);
             }
         }
 

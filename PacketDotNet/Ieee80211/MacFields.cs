@@ -50,7 +50,7 @@ namespace PacketDotNet
             {
                 DurationIDPosition = FrameControlPosition + FrameControlLength;
                 Address1Position = DurationIDPosition + DurationIDLength;
-                SequenceControlPosition = MacFields.Address1Position + (MacFields.AddressLength * 3);
+                SequenceControlPosition = Address1Position + (AddressLength * 3);
             }
         } 
     }

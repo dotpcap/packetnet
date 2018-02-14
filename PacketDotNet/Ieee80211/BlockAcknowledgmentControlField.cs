@@ -52,17 +52,17 @@ namespace PacketDotNet
             /// </summary>
             public AcknowledgementPolicy Policy
             {
-                get => (AcknowledgementPolicy)(Field & 0x1);
+                get => (AcknowledgementPolicy)(this.Field & 0x1);
 
                 set
                 {
                     if (value == AcknowledgementPolicy.Immediate)
                     {
-                        Field |= 0x1;
+                        this.Field |= 0x1;
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(0x1));
+                        this.Field &= unchecked((UInt16)~(0x1));
                     }
                 }
             }
@@ -72,17 +72,17 @@ namespace PacketDotNet
             /// </summary>
             public Boolean MultiTid
             {
-                get => (((Field >> 1) & 0x1) == 1) ? true : false;
+                get => (((this.Field >> 1) & 0x1) == 1) ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x1);
+                        this.Field |= (1 << 0x1);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x1));
+                        this.Field &= unchecked((UInt16)~(1 << 0x1));
                     }
                 }
             }
@@ -94,17 +94,17 @@ namespace PacketDotNet
             /// </summary>
             public Boolean CompressedBitmap
             {
-                get => (((Field >> 2) & 0x1) == 1) ? true : false;
+                get => (((this.Field >> 2) & 0x1) == 1) ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x2);
+                        this.Field |= (1 << 0x2);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x2));
+                        this.Field &= unchecked((UInt16)~(1 << 0x2));
                     }
                 }
             }
@@ -114,12 +114,12 @@ namespace PacketDotNet
             /// </summary>
             public Byte Tid
             {
-                get => (Byte)(Field >> 12);
+                get => (Byte)(this.Field >> 12);
 
                 set
                 {
-                    Field &= 0x0FFF;
-                    Field |= (UInt16)(value << 12);
+                    this.Field &= 0x0FFF;
+                    this.Field |= (UInt16)(value << 12);
                 }
             }
 
@@ -147,7 +147,7 @@ namespace PacketDotNet
             /// </param>
             public BlockAcknowledgmentControlField(UInt16 field)
             {
-                Field = field;
+                this.Field = field;
             }
         } 
     }

@@ -45,7 +45,7 @@ namespace PacketDotNet
             
             private Int32 GetOffsetForAddress(Int32 addressIndex)
             {
-                Int32 offset = header.Offset;
+                Int32 offset = this.header.Offset;
 
                 offset += MacFields.Address1Position + MacFields.AddressLength * addressIndex;
 
@@ -64,10 +64,9 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if(header.Length >= (MacFields.FrameControlPosition + MacFields.FrameControlLength))
+                    if(this.header.Length >= (MacFields.FrameControlPosition + MacFields.FrameControlLength))
                     {
-                        return EndianBitConverter.Big.ToUInt16 (header.Bytes,
-                                                                header.Offset);
+                        return EndianBitConverter.Big.ToUInt16 (this.header.Bytes, this.header.Offset);
                     }
                     else
                     {
@@ -75,9 +74,7 @@ namespace PacketDotNet
                     }
                 }
 
-                set => EndianBitConverter.Big.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset);
+                set => EndianBitConverter.Big.CopyBytes(value, this.header.Bytes, this.header.Offset);
             }
 
             /// <summary>
@@ -96,10 +93,9 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if(header.Length >= (MacFields.DurationIDPosition + MacFields.DurationIDLength))
+                    if(this.header.Length >= (MacFields.DurationIDPosition + MacFields.DurationIDLength))
                     {
-                        return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                                  header.Offset + MacFields.DurationIDPosition);
+                        return EndianBitConverter.Little.ToUInt16(this.header.Bytes, this.header.Offset + MacFields.DurationIDPosition);
                     }
                     else
                     {
@@ -107,9 +103,7 @@ namespace PacketDotNet
                     }
                 }
 
-                set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + MacFields.DurationIDPosition);
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + MacFields.DurationIDPosition);
             }
    
             /// <summary>
@@ -130,8 +124,8 @@ namespace PacketDotNet
             /// <param name="address"></param>
             protected void SetAddress(Int32 addressIndex, PhysicalAddress address)
             {
-                var offset = GetOffsetForAddress(addressIndex);
-                SetAddressByOffset(offset, address);
+                var offset = this.GetOffsetForAddress(addressIndex);
+                this.SetAddressByOffset(offset, address);
             }
    
             
@@ -161,12 +155,12 @@ namespace PacketDotNet
 				// using the offset, set the address
                 if (hwAddress.Length != MacFields.AddressLength)
                 {
-                    throw new System.InvalidOperationException("address length " + hwAddress.Length
+                    throw new InvalidOperationException("address length " + hwAddress.Length
                                                                + " not equal to the expected length of "
                                                                + MacFields.AddressLength);
                 }
 
-                Array.Copy(hwAddress, 0, header.Bytes, offset,
+                Array.Copy(hwAddress, 0, this.header.Bytes, offset,
                            hwAddress.Length);
             }
    
@@ -181,8 +175,8 @@ namespace PacketDotNet
             /// </param>
             protected PhysicalAddress GetAddress(Int32 addressIndex)
             {
-                var offset = GetOffsetForAddress(addressIndex);
-                return GetAddressByOffset(offset);
+                var offset = this.GetOffsetForAddress(addressIndex);
+                return this.GetAddressByOffset(offset);
             }
    
             /// <summary>
@@ -196,10 +190,10 @@ namespace PacketDotNet
             /// </param>
             protected PhysicalAddress GetAddressByOffset(Int32 offset)
             {
-				if((header.Offset + header.Length) >= (offset + MacFields.AddressLength))
+				if((this.header.Offset + this.header.Length) >= (offset + MacFields.AddressLength))
 				{
         	        Byte[] hwAddress = new Byte[MacFields.AddressLength];
-            	    Array.Copy(header.Bytes, offset,
+            	    Array.Copy(this.header.Bytes, offset,
                 	           hwAddress, 0, hwAddress.Length);
                 	return new PhysicalAddress(hwAddress);
 				}
@@ -220,9 +214,9 @@ namespace PacketDotNet
             /// <remarks>After calling this method the FCS will be valud regardless of what the packet contains.</remarks>
             public void UpdateFrameCheckSequence ()
             {
-                var bytes = Bytes;
-                var length = (AppendFcs) ? bytes.Length - 4 : bytes.Length;
-                FrameCheckSequence = (UInt32) Crc32.Compute(Bytes, 0, length);
+                var bytes = this.Bytes;
+                var length = (this.AppendFcs) ? bytes.Length - 4 : bytes.Length;
+                this.FrameCheckSequence = (UInt32) Crc32.Compute(this.Bytes, 0, length);
             }
 
             /// <summary>
@@ -245,7 +239,7 @@ namespace PacketDotNet
             /// </value>
 			protected Int32 GetAvailablePayloadLength()
 			{
-				Int32 payloadLength = header.BytesLength - (header.Offset + FrameSize);
+				Int32 payloadLength = this.header.BytesLength - (this.header.Offset + this.FrameSize);
 				return (payloadLength > 0) ? payloadLength : 0;
 			}
 			
@@ -491,9 +485,9 @@ namespace PacketDotNet
             {
                 get
                 {
-                    var packetBytes = Bytes;
-                    var packetLength = (AppendFcs) ? packetBytes.Length - MacFields.FrameCheckSequenceLength : packetBytes.Length;
-                    return PerformFcsCheck(packetBytes, 0, packetLength, FrameCheckSequence);
+                    var packetBytes = this.Bytes;
+                    var packetLength = (this.AppendFcs) ? packetBytes.Length - MacFields.FrameCheckSequenceLength : packetBytes.Length;
+                    return PerformFcsCheck(packetBytes, 0, packetLength, this.FrameCheckSequence);
                 }
             }
             
@@ -519,29 +513,26 @@ namespace PacketDotNet
                     log.Debug("");
     
                     // ensure calculated values are properly updated
-                    RecursivelyUpdateCalculatedValues();
+                    this.RecursivelyUpdateCalculatedValues();
     
                     // if we share memory with all of our sub packets we can take a
                     // higher performance path to retrieve the bytes
-                    var totalPacketLength = TotalPacketLength;
-                    if(SharesMemoryWithSubPackets &&
-                       ((!AppendFcs) || (header.Bytes.Length >= (header.Offset + totalPacketLength + MacFields.FrameCheckSequenceLength))))
+                    var totalPacketLength = this.TotalPacketLength;
+                    if(this.SharesMemoryWithSubPackets &&
+                       ((!this.AppendFcs) || (this.header.Bytes.Length >= (this.header.Offset + totalPacketLength + MacFields.FrameCheckSequenceLength))))
                     {
                         var packetLength = totalPacketLength;
-                        if(AppendFcs)
+                        if(this.AppendFcs)
                         {
                             packetLength += MacFields.FrameCheckSequenceLength;
                             //We need to update the FCS field because this couldn't be done during 
                             //RecursivelyUpdateCalculatedValues because we didn't know where it would be
-                            EndianBitConverter.Big.CopyBytes(FrameCheckSequence,
-                                                                header.Bytes,
-                                                                header.Offset + totalPacketLength);
+                            EndianBitConverter.Big.CopyBytes(this.FrameCheckSequence, this.header.Bytes, this.header.Offset + totalPacketLength);
                         }
                         
                         // The high performance path that is often taken because it is called on
                         // packets that have not had their header, or any of their sub packets, resized
-                        var newByteArraySegment = new ByteArraySegment(header.Bytes,
-                                                                       header.Offset,
+                        var newByteArraySegment = new ByteArraySegment(this.header.Bytes, this.header.Offset,
                                                                        packetLength);
                         log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}",
                                         newByteArraySegment.ToString());
@@ -555,14 +546,14 @@ namespace PacketDotNet
                         // TODO: not sure if this is a performance gain or if
                         //       the compiler is smart enough to not call the get accessor for Header
                         //       twice, once when retrieving the header and again when retrieving the Length
-                        var theHeader = Header;
+                        var theHeader = this.Header;
                         ms.Write(theHeader, 0, theHeader.Length);
-    
-                        payloadPacketOrData.AppendToMemoryStream(ms);
+
+                        this.payloadPacketOrData.AppendToMemoryStream(ms);
                         
-                        if(AppendFcs)
+                        if(this.AppendFcs)
                         {     
-                            var fcsBuffer = EndianBitConverter.Big.GetBytes(FrameCheckSequence);
+                            var fcsBuffer = EndianBitConverter.Big.GetBytes(this.FrameCheckSequence);
                             ms.Write(fcsBuffer, 0, fcsBuffer.Length);
                         }
     
@@ -582,10 +573,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format ("802.11 MacFrame: [{0}], {1} FCS {2}",
-                                      FrameControl.ToString(),
-                                      GetAddressString(),
-                                      FrameCheckSequence);
+                return String.Format ("802.11 MacFrame: [{0}], {1} FCS {2}", this.FrameControl.ToString(), this.GetAddressString(), this.FrameCheckSequence);
             }
             
             /// <summary>

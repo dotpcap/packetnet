@@ -63,8 +63,8 @@ namespace PacketDotNet.Tcp
         {
             get
             {
-                Byte[] data = new Byte[Length - MD5DigestFieldOffset];
-                Array.Copy(Bytes, MD5DigestFieldOffset, data, 0, data.Length);
+                Byte[] data = new Byte[this.Length - MD5DigestFieldOffset];
+                Array.Copy(this.Bytes, MD5DigestFieldOffset, data, 0, data.Length);
                 return data;
             }
         }
@@ -81,7 +81,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override String ToString()
         {
-            return "[" + Kind.ToString() + ": MD5Digest=0x" + MD5Digest.ToString() + "]";
+            return "[" + this.Kind.ToString() + ": MD5Digest=0x" + this.MD5Digest.ToString() + "]";
         }
 
         #endregion

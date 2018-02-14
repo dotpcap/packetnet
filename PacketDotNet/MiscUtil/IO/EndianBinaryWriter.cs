@@ -74,19 +74,19 @@ namespace MiscUtil.IO
         /// <summary>
         /// The bit converter used to write values to the stream
         /// </summary>
-        public EndianBitConverter BitConverter => bitConverter;
+        public EndianBitConverter BitConverter => this.bitConverter;
 
         Encoding encoding;
         /// <summary>
         /// The encoding used to write strings
         /// </summary>
-        public Encoding Encoding => encoding;
+        public Encoding Encoding => this.encoding;
 
         Stream stream;
         /// <summary>
         /// Gets the underlying stream of the EndianBinaryWriter.
         /// </summary>
-        public Stream BaseStream => stream;
+        public Stream BaseStream => this.stream;
 
         #endregion
 
@@ -96,7 +96,7 @@ namespace MiscUtil.IO
         /// </summary>
         public void Close()
         {
-            Dispose();
+            this.Dispose();
         }
 
         /// <summary>
@@ -104,8 +104,8 @@ namespace MiscUtil.IO
         /// </summary>
         public void Flush()
         {
-            CheckDisposed();
-            stream.Flush();
+            this.CheckDisposed();
+            this.stream.Flush();
         }
 
         /// <summary>
@@ -115,8 +115,8 @@ namespace MiscUtil.IO
         /// <param name="origin">Origin of seek operation.</param>
         public void Seek (Int32 offset, SeekOrigin origin)
         {
-            CheckDisposed();
-            stream.Seek (offset, origin);
+            this.CheckDisposed();
+            this.stream.Seek (offset, origin);
         }
 
         /// <summary>
@@ -125,8 +125,8 @@ namespace MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write (Boolean value)
         {
-            bitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 1);
+            this.bitConverter.CopyBytes(value, this.buffer, 0);
+            this.WriteInternal(this.buffer, 1);
         }
 
         /// <summary>
@@ -136,8 +136,8 @@ namespace MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write (Int16 value)
         {
-            bitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 2);
+            this.bitConverter.CopyBytes(value, this.buffer, 0);
+            this.WriteInternal(this.buffer, 2);
         }
 
         /// <summary>
@@ -147,8 +147,8 @@ namespace MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write (Int32 value)
         {
-            bitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 4);
+            this.bitConverter.CopyBytes(value, this.buffer, 0);
+            this.WriteInternal(this.buffer, 4);
         }
 
         /// <summary>
@@ -158,8 +158,8 @@ namespace MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write (Int64 value)
         {
-            bitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 8);
+            this.bitConverter.CopyBytes(value, this.buffer, 0);
+            this.WriteInternal(this.buffer, 8);
         }
 
         /// <summary>
@@ -169,8 +169,8 @@ namespace MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write (UInt16 value)
         {
-            bitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 2);
+            this.bitConverter.CopyBytes(value, this.buffer, 0);
+            this.WriteInternal(this.buffer, 2);
         }
 
         /// <summary>
@@ -180,8 +180,8 @@ namespace MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write (UInt32 value)
         {
-            bitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 4);
+            this.bitConverter.CopyBytes(value, this.buffer, 0);
+            this.WriteInternal(this.buffer, 4);
         }
 
         /// <summary>
@@ -191,8 +191,8 @@ namespace MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write (UInt64 value)
         {
-            bitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 8);
+            this.bitConverter.CopyBytes(value, this.buffer, 0);
+            this.WriteInternal(this.buffer, 8);
         }
 
         /// <summary>
@@ -202,8 +202,8 @@ namespace MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write (Single value)
         {
-            bitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 4);
+            this.bitConverter.CopyBytes(value, this.buffer, 0);
+            this.WriteInternal(this.buffer, 4);
         }
 
         /// <summary>
@@ -213,8 +213,8 @@ namespace MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write (Double value)
         {
-            bitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 8);
+            this.bitConverter.CopyBytes(value, this.buffer, 0);
+            this.WriteInternal(this.buffer, 8);
         }
 
         /// <summary>
@@ -224,8 +224,8 @@ namespace MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write (Decimal value)
         {
-            bitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 16);
+            this.bitConverter.CopyBytes(value, this.buffer, 0);
+            this.WriteInternal(this.buffer, 16);
         }
 
         /// <summary>
@@ -234,8 +234,8 @@ namespace MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write (Byte value)
         {
-            buffer[0] = value;
-            WriteInternal(buffer, 1);
+            this.buffer[0] = value;
+            this.WriteInternal(this.buffer, 1);
         }
 
         /// <summary>
@@ -244,8 +244,8 @@ namespace MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write (SByte value)
         {
-            buffer[0] = unchecked((Byte)value);
-            WriteInternal(buffer, 1);
+            this.buffer[0] = unchecked((Byte)value);
+            this.WriteInternal(this.buffer, 1);
         }
 
         /// <summary>
@@ -256,9 +256,10 @@ namespace MiscUtil.IO
         {
             if (value == null)
             {
-                throw (new System.ArgumentNullException("value"));
+                throw (new ArgumentNullException("value"));
             }
-            WriteInternal(value, value.Length);
+
+            this.WriteInternal(value, value.Length);
         }
 
         /// <summary>
@@ -269,8 +270,8 @@ namespace MiscUtil.IO
         /// <param name="count">The number of bytes to write</param>
         public void Write (Byte[] value, Int32 offset, Int32 count)
         {
-            CheckDisposed();
-            stream.Write(value, offset, count);
+            this.CheckDisposed();
+            this.stream.Write(value, offset, count);
         }
 
         /// <summary>
@@ -279,8 +280,8 @@ namespace MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write(Char value)
         {
-            charBuffer[0] = value;
-            Write(charBuffer);
+            this.charBuffer[0] = value;
+            this.Write(this.charBuffer);
         }
 
         /// <summary>
@@ -293,9 +294,10 @@ namespace MiscUtil.IO
             {
                 throw new ArgumentNullException("value");
             }
-            CheckDisposed();
-            Byte[] data = Encoding.GetBytes(value, 0, value.Length);
-            WriteInternal(data, data.Length);
+
+            this.CheckDisposed();
+            Byte[] data = this.Encoding.GetBytes(value, 0, value.Length);
+            this.WriteInternal(data, data.Length);
         }
 
         /// <summary>
@@ -309,10 +311,11 @@ namespace MiscUtil.IO
             {
                 throw new ArgumentNullException("value");
             }
-            CheckDisposed();
-            Byte[] data = Encoding.GetBytes(value);
-            Write7BitEncodedInt(data.Length);
-            WriteInternal(data, data.Length);
+
+            this.CheckDisposed();
+            Byte[] data = this.Encoding.GetBytes(value);
+            this.Write7BitEncodedInt(data.Length);
+            this.WriteInternal(data, data.Length);
         }
 
         /// <summary>
@@ -323,7 +326,7 @@ namespace MiscUtil.IO
         /// <param name="value">The 7-bit encoded integer to write to the stream</param>
         public void Write7BitEncodedInt(Int32 value)
         {
-            CheckDisposed();
+            this.CheckDisposed();
             if (value < 0)
             {
                 throw new ArgumentOutOfRangeException("value", "Value must be greater than or equal to 0.");
@@ -331,12 +334,13 @@ namespace MiscUtil.IO
             Int32 index=0;
             while (value >= 128)
             {
-                buffer[index++]= (Byte)((value&0x7f) | 0x80);
+                this.buffer[index++]= (Byte)((value&0x7f) | 0x80);
                 value = value >> 7;
                 index++;
             }
-            buffer[index++]=(Byte)value;
-            stream.Write(buffer, 0, index);
+
+            this.buffer[index++]=(Byte)value;
+            this.stream.Write(this.buffer, 0, index);
         }
 
         #endregion
@@ -347,7 +351,7 @@ namespace MiscUtil.IO
         /// </summary>
         void CheckDisposed()
         {
-            if (disposed)
+            if (this.disposed)
             {
                 throw new ObjectDisposedException("EndianBinaryWriter");
             }
@@ -361,8 +365,8 @@ namespace MiscUtil.IO
         /// <param name="length">The number of bytes to write</param>
         void WriteInternal (Byte[] bytes, Int32 length)
         {
-            CheckDisposed();
-            stream.Write(bytes, 0, length);
+            this.CheckDisposed();
+            this.stream.Write(bytes, 0, length);
         }
         #endregion
 
@@ -372,11 +376,11 @@ namespace MiscUtil.IO
         /// </summary>
         public void Dispose()
         {
-            if (!disposed)
+            if (!this.disposed)
             {
-                Flush();
-                disposed = true;
-                ((IDisposable)stream).Dispose();
+                this.Flush();
+                this.disposed = true;
+                ((IDisposable) this.stream).Dispose();
             }
         }
         #endregion

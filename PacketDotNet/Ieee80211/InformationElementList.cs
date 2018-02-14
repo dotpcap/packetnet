@@ -109,7 +109,7 @@ namespace PacketDotNet
             {
                 get
                 {
-                    var bytes = new Byte[Length];
+                    var bytes = new Byte[this.Length];
                     Int32 index = 0;
                     foreach (var ie in this)
                     {

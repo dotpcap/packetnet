@@ -63,23 +63,23 @@ namespace PacketDotNet
         {
             // save the checksum field value so it can be restored, altering the checksum is not
             // an intended side effect of this method
-            var originalChecksum = Checksum;
+            var originalChecksum = this.Checksum;
 
             // reset the checksum field (checksum is calculated when this field is
             // zeroed)
-            Checksum = 0;
+            this.Checksum = 0;
 
             // copy the tcp section with data
-            Byte[] dataToChecksum = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
+            Byte[] dataToChecksum = ((IpPacket) this.ParentPacket).PayloadPacket.Bytes;
 
              if (option == TransportChecksumOption.AttachPseudoIPHeader)
-                dataToChecksum = ((IpPacket)ParentPacket).AttachPseudoIPHeader(dataToChecksum);
+                dataToChecksum = ((IpPacket) this.ParentPacket).AttachPseudoIPHeader(dataToChecksum);
 
             // calculate the one's complement sum of the tcp header
             Int32 cs = ChecksumUtils.OnesComplementSum(dataToChecksum);
 
             // restore the checksum field value
-            Checksum = originalChecksum;
+            this.Checksum = originalChecksum;
 
             return cs;
         }
@@ -95,13 +95,13 @@ namespace PacketDotNet
         /// </returns>
         public virtual Boolean IsValidChecksum(TransportChecksumOption option)
         {
-            var upperLayer = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
+            var upperLayer = ((IpPacket) this.ParentPacket).PayloadPacket.Bytes;
 
             log.DebugFormat("option: {0}, upperLayer.Length {1}",
                             option, upperLayer.Length);
 
             if (option == TransportChecksumOption.AttachPseudoIPHeader)
-                upperLayer = ((IpPacket)ParentPacket).AttachPseudoIPHeader(upperLayer);
+                upperLayer = ((IpPacket) this.ParentPacket).AttachPseudoIPHeader(upperLayer);
 
             var onesSum = ChecksumUtils.OnesSum(upperLayer);
             const Int32 expectedOnesSum = 0xffff;

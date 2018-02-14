@@ -63,7 +63,7 @@ namespace PacketDotNet.Tcp
         {
             get
             {
-                Int32 granularity = ((Int32)Values >> 15);
+                Int32 granularity = ((Int32) this.Values >> 15);
                 return (granularity != 0);
             }
         }
@@ -71,10 +71,10 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The User Timeout
         /// </summary>
-        public UInt16 Timeout => (UInt16)((Int32)Values & TimeoutMask);
+        public UInt16 Timeout => (UInt16)((Int32) this.Values & TimeoutMask);
 
         // a convenient property to grab the value fields for further processing
-        private UInt16 Values => EndianBitConverter.Big.ToUInt16(Bytes, ValuesFieldOffset);
+        private UInt16 Values => EndianBitConverter.Big.ToUInt16(this.Bytes, ValuesFieldOffset);
 
         #endregion
 
@@ -88,7 +88,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override String ToString()
         {
-            return "[" + Kind.ToString() + ": Granularity=" + (Granularity ? "minutes" : "seconds") + " Timeout=" + Timeout + "]";
+            return "[" + this.Kind.ToString() + ": Granularity=" + (this.Granularity ? "minutes" : "seconds") + " Timeout=" + this.Timeout + "]";
         }
 
         #endregion

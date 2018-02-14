@@ -63,28 +63,28 @@ namespace PacketDotNet
                             index, item.GetType(), item.Type);
 
             // if this is the first item and it isn't an End TLV we should add the end tlv
-            if((Count == 0) && (item.Type != TLVTypes.EndOfLLDPU))
+            if((this.Count == 0) && (item.Type != TLVTypes.EndOfLLDPU))
             {
                 log.Debug("Inserting EndOfLLDPDU");
                 base.InsertItem(0, new EndOfLLDPDU());
-            } else if(Count != 0)
+            } else if(this.Count != 0)
             {
                 // if the user is adding their own End tlv we should replace ours
                 // with theirs
                 if(item.Type == TLVTypes.EndOfLLDPU)
                 {
                     log.DebugFormat("Replacing {0} with user provided {1}, Type {2}",
-                                    this[Count - 1].GetType(),
+                                    this[this.Count - 1].GetType(),
                                     item.GetType(),
                                     item.Type);
-                    SetItem(Count - 1, item);
+                    this.SetItem(this.Count - 1, item);
                     return;
                 }
             }
 
             // if we have no items insert the first item wherever
             // if we have items insert the item befor the last item as the last item is a EndOfLLDPDU
-            Int32 insertPosition = (Count == 0) ? 0 : Count - 1;
+            Int32 insertPosition = (this.Count == 0) ? 0 : this.Count - 1;
 
             log.DebugFormat("Inserting item at position {0}", insertPosition);
 

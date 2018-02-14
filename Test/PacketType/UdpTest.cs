@@ -242,7 +242,7 @@ namespace Test.PacketType
             Boolean foundudpPacket = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = PacketDotNet.Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
                 var udpPacket = (UdpPacket)p.Extract(typeof(UdpPacket));
                 if (udpPacket == null)

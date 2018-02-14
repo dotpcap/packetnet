@@ -116,18 +116,18 @@ namespace PacketDotNet.LLDP
                          ObjectIdentifierLengthLength;
             var bytes = new Byte[length];
             var offset = 0;
-            tlvData = new ByteArraySegment(bytes, offset, length);
+            this.tlvData = new ByteArraySegment(bytes, offset, length);
 
             // The lengths are both zero until the values are set
-            AddressLength = 0;
-            ObjIdLength = 0;
+            this.AddressLength = 0;
+            this.ObjIdLength = 0;
 
-            Type = TLVTypes.ManagementAddress;
+            this.Type = TLVTypes.ManagementAddress;
 
-            MgmtAddress = managementAddress;
-            InterfaceSubType = interfaceSubType;
-            InterfaceNumber = ifNumber;
-            ObjectIdentifier = oid;
+            this.MgmtAddress = managementAddress;
+            this.InterfaceSubType = interfaceSubType;
+            this.InterfaceNumber = ifNumber;
+            this.ObjectIdentifier = oid;
         }
 
         #endregion
@@ -139,8 +139,8 @@ namespace PacketDotNet.LLDP
         /// </value>
         public Int32 AddressLength
         {
-            get => (Int32)tlvData.Bytes[ValueOffset];
-            internal set => tlvData.Bytes[ValueOffset] = (Byte)value;
+            get => (Int32) this.tlvData.Bytes[this.ValueOffset];
+            internal set => this.tlvData.Bytes[this.ValueOffset] = (Byte)value;
         }
 
         /// <value>
@@ -148,7 +148,7 @@ namespace PacketDotNet.LLDP
         ///
         /// Forward to the MgmtAddress instance
         /// </value>
-        public AddressFamily AddressSubType => MgmtAddress.AddressFamily;
+        public AddressFamily AddressSubType => this.MgmtAddress.AddressFamily;
 
         /// <value>
         /// The Management Address
@@ -157,9 +157,9 @@ namespace PacketDotNet.LLDP
         {
             get
             {
-                Int32 offset = ValueOffset + MgmtAddressLengthLength;
+                Int32 offset = this.ValueOffset + MgmtAddressLengthLength;
 
-                return new NetworkAddress(tlvData.Bytes, offset, AddressLength);
+                return new NetworkAddress(this.tlvData.Bytes, offset, this.AddressLength);
             }
 
             set
@@ -168,43 +168,41 @@ namespace PacketDotNet.LLDP
                 var valueBytes = value.Bytes;
 
                 // is the new address the same size as the old address?
-                if(AddressLength != valueLength)
+                if(this.AddressLength != valueLength)
                 {
                     // need to resize the tlv and shift data fields down
                     var newLength = TLVTypeLength.TypeLengthLength + MgmtAddressLengthLength +
                                     valueLength +
                                     InterfaceNumberSubTypeLength +
                                     InterfaceNumberLength +
-                                    ObjectIdentifierLengthLength +
-                                    ObjIdLength;
+                                    ObjectIdentifierLengthLength + this.ObjIdLength;
 
                     var newBytes = new Byte[newLength];
 
                     Int32 headerLength = TLVTypeLength.TypeLengthLength + MgmtAddressLengthLength;
-                    Int32 oldStartOfAfterData = ValueOffset + MgmtAddressLengthLength + AddressLength;
+                    Int32 oldStartOfAfterData = this.ValueOffset + MgmtAddressLengthLength + this.AddressLength;
                     Int32 newStartOfAfterData = TLVTypeLength.TypeLengthLength + MgmtAddressLengthLength + value.Length;
-                    Int32 afterDataLength = InterfaceNumberSubTypeLength + InterfaceNumberLength + ObjectIdentifierLengthLength + ObjIdLength;
+                    Int32 afterDataLength = InterfaceNumberSubTypeLength + InterfaceNumberLength + ObjectIdentifierLengthLength + this.ObjIdLength;
 
                     // copy the data before the mgmt address
-                    Array.Copy(tlvData.Bytes, tlvData.Offset,
+                    Array.Copy(this.tlvData.Bytes, this.tlvData.Offset,
                                newBytes, 0,
                                headerLength);
 
                     // copy the data over after the mgmt address over
-                    Array.Copy(tlvData.Bytes, oldStartOfAfterData,
+                    Array.Copy(this.tlvData.Bytes, oldStartOfAfterData,
                                newBytes, newStartOfAfterData,
                                afterDataLength);
 
                     var offset = 0;
-                    tlvData = new ByteArraySegment(newBytes, offset, newLength);
+                    this.tlvData = new ByteArraySegment(newBytes, offset, newLength);
 
                     // update the address length field
-                    AddressLength = valueLength;
+                    this.AddressLength = valueLength;
                 }
 
                 // copy the new address into the appropriate position in the byte[]
-                Array.Copy(valueBytes, 0,
-                           tlvData.Bytes, ValueOffset + MgmtAddressLengthLength,
+                Array.Copy(valueBytes, 0, this.tlvData.Bytes, this.ValueOffset + MgmtAddressLengthLength,
                            valueLength);
             }
         }
@@ -214,63 +212,58 @@ namespace PacketDotNet.LLDP
         /// </value>
         public InterfaceNumbering InterfaceSubType
         {
-            get => (InterfaceNumbering)tlvData.Bytes[ValueOffset + MgmtAddressLengthLength + MgmtAddress.Length];
+            get => (InterfaceNumbering) this.tlvData.Bytes[this.ValueOffset + MgmtAddressLengthLength + this.MgmtAddress.Length];
 
-            set => tlvData.Bytes[ValueOffset + MgmtAddressLengthLength + MgmtAddress.Length] = (Byte)value;
+            set => this.tlvData.Bytes[this.ValueOffset + MgmtAddressLengthLength + this.MgmtAddress.Length] = (Byte)value;
         }
 
-        private Int32 InterfaceNumberOffset => ValueOffset + MgmtAddressLengthLength + AddressLength + InterfaceNumberSubTypeLength;
+        private Int32 InterfaceNumberOffset => this.ValueOffset + MgmtAddressLengthLength + this.AddressLength + InterfaceNumberSubTypeLength;
 
         /// <value>
         /// Interface Number
         /// </value>
         public UInt32 InterfaceNumber
         {
-            get => EndianBitConverter.Big.ToUInt32(tlvData.Bytes,
-                InterfaceNumberOffset);
+            get => EndianBitConverter.Big.ToUInt32(this.tlvData.Bytes, this.InterfaceNumberOffset);
 
-            set => EndianBitConverter.Big.CopyBytes(value,
-                tlvData.Bytes,
-                InterfaceNumberOffset);
+            set => EndianBitConverter.Big.CopyBytes(value, this.tlvData.Bytes, this.InterfaceNumberOffset);
         }
 
-        private Int32 ObjIdLengthOffset => InterfaceNumberOffset + InterfaceNumberLength;
+        private Int32 ObjIdLengthOffset => this.InterfaceNumberOffset + InterfaceNumberLength;
 
         /// <value>
         /// Object ID Length
         /// </value>
         public Byte ObjIdLength
         {
-            get => tlvData.Bytes[ObjIdLengthOffset];
+            get => this.tlvData.Bytes[this.ObjIdLengthOffset];
 
-            internal set => tlvData.Bytes[ObjIdLengthOffset] = value;
+            internal set => this.tlvData.Bytes[this.ObjIdLengthOffset] = value;
         }
 
-        private Int32 ObjectIdentifierOffset => ObjIdLengthOffset + ObjectIdentifierLengthLength;
+        private Int32 ObjectIdentifierOffset => this.ObjIdLengthOffset + ObjectIdentifierLengthLength;
 
         /// <value>
         /// Object ID
         /// </value>
         public String ObjectIdentifier
         {
-            get => UTF8Encoding.UTF8.GetString(tlvData.Bytes, ObjectIdentifierOffset,
-                ObjIdLength);
+            get => Encoding.UTF8.GetString(this.tlvData.Bytes, this.ObjectIdentifierOffset, this.ObjIdLength);
 
             set
             {
-                Byte[] oid = UTF8Encoding.UTF8.GetBytes(value);
+                Byte[] oid = Encoding.UTF8.GetBytes(value);
 
                 // check for out-of-range sizes
                 if(oid.Length > maxObjectIdentifierLength)
                 {
-                    throw new System.ArgumentOutOfRangeException("ObjectIdentifier", "length > maxObjectIdentifierLength of " + maxObjectIdentifierLength);
+                    throw new ArgumentOutOfRangeException("ObjectIdentifier", "length > maxObjectIdentifierLength of " + maxObjectIdentifierLength);
                 }
 
                 // does the object identifier length match the existing one?
-                if(ObjIdLength != oid.Length)
+                if(this.ObjIdLength != oid.Length)
                 {
-                    var oldLength = TLVTypeLength.TypeLengthLength + MgmtAddressLengthLength +
-                                    AddressLength +
+                    var oldLength = TLVTypeLength.TypeLengthLength + MgmtAddressLengthLength + this.AddressLength +
                                     InterfaceNumberSubTypeLength + InterfaceNumberLength +
                                     ObjectIdentifierLengthLength;
                     var newLength = oldLength + oid.Length;
@@ -278,19 +271,18 @@ namespace PacketDotNet.LLDP
                     var newBytes = new Byte[newLength];
 
                     // copy the original bytes over
-                    Array.Copy(tlvData.Bytes, tlvData.Offset,
+                    Array.Copy(this.tlvData.Bytes, this.tlvData.Offset,
                                newBytes, 0,
                                oldLength);
 
                     var offset = 0;
-                    tlvData = new ByteArraySegment(newBytes, offset, newLength);
+                    this.tlvData = new ByteArraySegment(newBytes, offset, newLength);
 
                     // update the length
-                    ObjIdLength = (Byte)value.Length;
+                    this.ObjIdLength = (Byte)value.Length;
                 }
 
-                Array.Copy(oid, 0,
-                           tlvData.Bytes, ObjectIdentifierOffset,
+                Array.Copy(oid, 0, this.tlvData.Bytes, this.ObjectIdentifierOffset,
                            oid.Length);
             }
         }
@@ -303,7 +295,7 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public override String ToString ()
         {
-            return String.Format("[ManagementAddress: AddressLength={0}, AddressSubType={1}, MgmtAddress={2}, InterfaceSubType={3}, InterfaceNumber={4}, ObjIdLength={5}, ObjectIdentifier={6}]", AddressLength, AddressSubType, MgmtAddress, InterfaceSubType, InterfaceNumber, ObjIdLength, ObjectIdentifier);
+            return String.Format("[ManagementAddress: AddressLength={0}, AddressSubType={1}, MgmtAddress={2}, InterfaceSubType={3}, InterfaceNumber={4}, ObjIdLength={5}, ObjectIdentifier={6}]", this.AddressLength, this.AddressSubType, this.MgmtAddress, this.InterfaceSubType, this.InterfaceNumber, this.ObjIdLength, this.ObjectIdentifier);
         }
 
         #endregion

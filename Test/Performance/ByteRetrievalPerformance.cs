@@ -49,7 +49,7 @@ namespace Test.Performance
         [Test]
         public void TestOptimalByteRetrieval()
         {
-            var ethernetPacket = BuildNonContiguousEthernetPacket();
+            var ethernetPacket = this.BuildNonContiguousEthernetPacket();
 
             // now extract a contiguous series of bytes
             var contiguousBytes = ethernetPacket.Bytes;
@@ -65,7 +65,7 @@ namespace Test.Performance
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to improve performance
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             // now benchmark retrieving the byte[] for several seconds
             var startTime = DateTime.Now;
@@ -102,7 +102,7 @@ namespace Test.Performance
         [Test]
         public void TestSubOptimalByteRetrieval()
         {
-            var ethernetPacket = BuildNonContiguousEthernetPacket();
+            var ethernetPacket = this.BuildNonContiguousEthernetPacket();
 
             Byte[] lastByteArray = null;
 
@@ -110,7 +110,7 @@ namespace Test.Performance
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to improve performance
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             // now benchmark retrieving the byte[] for several seconds
             var startTime = DateTime.Now;

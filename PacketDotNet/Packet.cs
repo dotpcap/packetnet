@@ -71,14 +71,14 @@ namespace PacketDotNet
             get
             {
                 Int32 totalLength = 0;
-                totalLength += header.Length;
+                totalLength += this.header.Length;
 
-                if(payloadPacketOrData.Type == PayloadType.Bytes)
+                if(this.payloadPacketOrData.Type == PayloadType.Bytes)
                 {
-                    totalLength += payloadPacketOrData.TheByteArraySegment.Length;
-                } else if(payloadPacketOrData.Type == PayloadType.Packet)
+                    totalLength += this.payloadPacketOrData.TheByteArraySegment.Length;
+                } else if(this.payloadPacketOrData.Type == PayloadType.Packet)
                 {
-                    totalLength += payloadPacketOrData.ThePacket.TotalPacketLength;
+                    totalLength += this.payloadPacketOrData.ThePacket.TotalPacketLength;
                 }
 
                 return totalLength;
@@ -101,13 +101,13 @@ namespace PacketDotNet
             {
                 log.Debug("");
 
-                switch(payloadPacketOrData.Type)
+                switch(this.payloadPacketOrData.Type)
                 {
                 case PayloadType.Bytes:
                     // is the byte array payload the same byte[] and does the offset indicate
                     // that the bytes are contiguous?
-                    if((header.Bytes == payloadPacketOrData.TheByteArraySegment.Bytes) &&
-                       ((header.Offset + header.Length) == payloadPacketOrData.TheByteArraySegment.Offset))
+                    if((this.header.Bytes == this.payloadPacketOrData.TheByteArraySegment.Bytes) &&
+                       ((this.header.Offset + this.header.Length) == this.payloadPacketOrData.TheByteArraySegment.Offset))
                     {
                         log.Debug("PayloadType.Bytes returning true");
                         return true;
@@ -119,11 +119,11 @@ namespace PacketDotNet
                 case PayloadType.Packet:
                     // is the byte array payload the same as the payload packet header and does
                     // the offset indicate that the bytes are contiguous?
-                    if((header.Bytes == payloadPacketOrData.ThePacket.header.Bytes) &&
-                       ((header.Offset + header.Length) == payloadPacketOrData.ThePacket.header.Offset))
+                    if((this.header.Bytes == this.payloadPacketOrData.ThePacket.header.Bytes) &&
+                       ((this.header.Offset + this.header.Length) == this.payloadPacketOrData.ThePacket.header.Offset))
                     {
                         // and does the sub packet share memory with its sub packets?
-                        var retval = payloadPacketOrData.ThePacket.SharesMemoryWithSubPackets;
+                        var retval = this.payloadPacketOrData.ThePacket.SharesMemoryWithSubPackets;
                         log.DebugFormat("PayloadType.Packet retval {0}", retval);
                         return retval;
                     } else
@@ -137,7 +137,7 @@ namespace PacketDotNet
                     log.Debug("PayloadType.None, returning true");
                     return true;
                 default:
-                    throw new System.NotImplementedException();
+                    throw new NotImplementedException();
                 }
             }
         }
@@ -147,8 +147,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual Packet ParentPacket
         {
-            get => parentPacket;
-            set => parentPacket = value;
+            get => this.parentPacket;
+            set => this.parentPacket = value;
         }
 
         /// <value>
@@ -163,14 +163,14 @@ namespace PacketDotNet
         /// </summary>
         public virtual Packet PayloadPacket
         {
-            get => payloadPacketOrData.ThePacket;
+            get => this.payloadPacketOrData.ThePacket;
             set
             {
                 if (this == value)
                     throw new InvalidOperationException("A packet cannot have itself as its payload.");
 
-                payloadPacketOrData.ThePacket = value;
-                payloadPacketOrData.ThePacket.ParentPacket = this;
+                this.payloadPacketOrData.ThePacket = value;
+                this.payloadPacketOrData.ThePacket.ParentPacket = this;
             }
         }
 
@@ -183,13 +183,13 @@ namespace PacketDotNet
         {
             get
             {
-                if(payloadPacketOrData.TheByteArraySegment == null)
+                if(this.payloadPacketOrData.TheByteArraySegment == null)
                 {
                     log.Debug("returning null");
                     return null;
                 } else
                 {
-                    var retval = payloadPacketOrData.TheByteArraySegment.ActualBytes();
+                    var retval = this.payloadPacketOrData.TheByteArraySegment.ActualBytes();
                     log.DebugFormat("retval.Length: {0}", retval.Length);
                     return retval;
                 }
@@ -199,7 +199,7 @@ namespace PacketDotNet
             {
                 log.DebugFormat("value.Length {0}", value.Length);
 
-                payloadPacketOrData.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
+                this.payloadPacketOrData.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
             }
         }
 
@@ -214,7 +214,7 @@ namespace PacketDotNet
                 log.Debug("");
 
                 // Retrieve the byte array container
-                var ba = BytesHighPerformance;
+                var ba = this.BytesHighPerformance;
 
                 // ActualBytes() will copy bytes if necessary but will avoid a copy in the
                 // case where our offset is zero and the byte[] length matches the
@@ -235,17 +235,15 @@ namespace PacketDotNet
                 log.Debug("");
 
                 // ensure calculated values are properly updated
-                RecursivelyUpdateCalculatedValues();
+                this.RecursivelyUpdateCalculatedValues();
 
                 // if we share memory with all of our sub packets we can take a
                 // higher performance path to retrieve the bytes
-                if(SharesMemoryWithSubPackets)
+                if(this.SharesMemoryWithSubPackets)
                 {
                     // The high performance path that is often taken because it is called on
                     // packets that have not had their header, or any of their sub packets, resized
-                    var newByteArraySegment = new ByteArraySegment(header.Bytes,
-                                                                   header.Offset,
-                                                                   header.BytesLength - header.Offset);
+                    var newByteArraySegment = new ByteArraySegment(this.header.Bytes, this.header.Offset, this.header.BytesLength - this.header.Offset);
                     log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}",
                                     newByteArraySegment.ToString());
                     return newByteArraySegment;
@@ -258,10 +256,10 @@ namespace PacketDotNet
                     // TODO: not sure if this is a performance gain or if
                     //       the compiler is smart enough to not call the get accessor for Header
                     //       twice, once when retrieving the header and again when retrieving the Length
-                    var theHeader = Header;
+                    var theHeader = this.Header;
                     ms.Write(theHeader, 0, theHeader.Length);
 
-                    payloadPacketOrData.AppendToMemoryStream(ms);
+                    this.payloadPacketOrData.AppendToMemoryStream(ms);
 
                     var newBytes = ms.ToArray();
 
@@ -324,7 +322,7 @@ namespace PacketDotNet
                 p = new RawIPPacket(bas);
                 break;
             default:
-                throw new System.NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");
+                throw new NotImplementedException("LinkLayer of " + LinkLayer + " is not implemented");
             }
 
             return p;
@@ -337,12 +335,12 @@ namespace PacketDotNet
         protected void RecursivelyUpdateCalculatedValues()
         {
             // call the possibly overridden method
-            UpdateCalculatedValues();
+            this.UpdateCalculatedValues();
 
             // if the packet contains another packet, call its
-            if(payloadPacketOrData.Type == PayloadType.Packet)
+            if(this.payloadPacketOrData.Type == PayloadType.Packet)
             {
-                payloadPacketOrData.ThePacket.RecursivelyUpdateCalculatedValues();
+                this.payloadPacketOrData.ThePacket.RecursivelyUpdateCalculatedValues();
             }
         }
 
@@ -358,9 +356,9 @@ namespace PacketDotNet
         { }
 
         /// <summary>Output this packet as a readable string</summary>
-        public override System.String ToString()
+        public override String ToString()
         {
-            return ToString(StringOutputType.Normal);
+            return this.ToString(StringOutputType.Normal);
         }
 
         /// <summary cref="Packet.ToString()">
@@ -376,9 +374,9 @@ namespace PacketDotNet
         /// </param>
         public virtual String ToString(StringOutputType outputFormat)
         {
-            if(payloadPacketOrData.Type == PayloadType.Packet)
+            if(this.payloadPacketOrData.Type == PayloadType.Packet)
             {
-                return payloadPacketOrData.ThePacket.ToString(outputFormat);
+                return this.payloadPacketOrData.ThePacket.ToString(outputFormat);
             } else
             {
                 return String.Empty;
@@ -396,7 +394,7 @@ namespace PacketDotNet
         /// </returns>
         public String PrintHex()
         {
-            Byte[] data = BytesHighPerformance.Bytes;
+            Byte[] data = this.BytesHighPerformance.Bytes;
             var buffer = new StringBuilder();
             String segmentNumber = "";
             String bytes = "";
@@ -467,7 +465,7 @@ namespace PacketDotNet
         /// <param name='type'>
         /// Type.
         /// </param>
-        public Packet Extract(System.Type type)
+        public Packet Extract(Type type)
         {
             var p = this;
 
@@ -489,6 +487,6 @@ namespace PacketDotNet
         /// <value>
         /// Color used when generating the text description of a packet
         /// </value>
-        public virtual System.String Color => AnsiEscapeSequences.Black;
+        public virtual String Color => AnsiEscapeSequences.Black;
     }
 }

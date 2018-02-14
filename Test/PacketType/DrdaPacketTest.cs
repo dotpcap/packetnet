@@ -45,7 +45,7 @@ namespace Test.PacketType
         [SetUp]
         public void Init()
         {
-            if (packetsLoaded)
+            if (this.packetsLoaded)
                 return;
             RawCapture raw;
             Int32 packetIndex = 0;
@@ -63,25 +63,25 @@ namespace Test.PacketType
                         switch (ddm.CodePoint)
                         {
                             case DrdaCodepointType.EXCSAT:
-                                excsatPacket = ddm;
+                                this.excsatPacket = ddm;
                                 break;
                             case DrdaCodepointType.ACCRDB:
-                                accrdbPacket = ddm;
+                                this.accrdbPacket = ddm;
                                 break;
                             case DrdaCodepointType.SECCHK:
-                                secchkPacket = ddm;
+                                this.secchkPacket = ddm;
                                 break;
                             case DrdaCodepointType.ACCRDBRM:
-                                accrdbrmPacket = ddm;
+                                this.accrdbrmPacket = ddm;
                                 break;
                             case DrdaCodepointType.SQLSTT:
-                                sqlsttPackets.Add(ddm);
+                                this.sqlsttPackets.Add(ddm);
                                 break;
                             case DrdaCodepointType.PRPSQLSTT:
-                                prpsqlsttPacket = ddm;
+                                this.prpsqlsttPacket = ddm;
                                 break;
                             case DrdaCodepointType.SQLATTR:
-                                sqlattrPacket = ddm;
+                                this.sqlattrPacket = ddm;
                                 break;
                             //Still have SQLCARD and QRYDTA decode work to do
                             default: /* do nothing */break;
@@ -91,16 +91,16 @@ namespace Test.PacketType
                 packetIndex++;
             }
             dev.Close();
-            packetsLoaded = true;
+            this.packetsLoaded = true;
         }
 
         [Test]
         public void TestExcsatPacket()
         {
-            Assert.IsNotNull(excsatPacket);
-            Assert.IsNotNull(excsatPacket.Parameters);
-            Assert.AreEqual(DrdaCodepointType.EXCSAT, excsatPacket.CodePoint);
-            foreach (var parameter in excsatPacket.Parameters)
+            Assert.IsNotNull(this.excsatPacket);
+            Assert.IsNotNull(this.excsatPacket.Parameters);
+            Assert.AreEqual(DrdaCodepointType.EXCSAT, this.excsatPacket.CodePoint);
+            foreach (var parameter in this.excsatPacket.Parameters)
             {
                 switch (parameter.DrdaCodepoint)
                 {
@@ -124,10 +124,10 @@ namespace Test.PacketType
         [Test]
         public void TestAccrdbPacket()
         {
-            Assert.IsNotNull(accrdbPacket);
-            Assert.IsNotNull(accrdbPacket.Parameters);
-            Assert.AreEqual(DrdaCodepointType.ACCRDB, accrdbPacket.CodePoint);
-            foreach (var parameter in accrdbPacket.Parameters)
+            Assert.IsNotNull(this.accrdbPacket);
+            Assert.IsNotNull(this.accrdbPacket.Parameters);
+            Assert.AreEqual(DrdaCodepointType.ACCRDB, this.accrdbPacket.CodePoint);
+            foreach (var parameter in this.accrdbPacket.Parameters)
             {
                 switch (parameter.DrdaCodepoint)
                 {
@@ -148,10 +148,10 @@ namespace Test.PacketType
         [Test]
         public void TestSecchkPacket()
         {
-            Assert.IsNotNull(secchkPacket);
-            Assert.IsNotNull(secchkPacket.Parameters);
-            Assert.AreEqual(DrdaCodepointType.SECCHK, secchkPacket.CodePoint);
-            foreach (var parameter in accrdbPacket.Parameters)
+            Assert.IsNotNull(this.secchkPacket);
+            Assert.IsNotNull(this.secchkPacket.Parameters);
+            Assert.AreEqual(DrdaCodepointType.SECCHK, this.secchkPacket.CodePoint);
+            foreach (var parameter in this.accrdbPacket.Parameters)
             {
                 switch (parameter.DrdaCodepoint)
                 {
@@ -173,7 +173,7 @@ namespace Test.PacketType
         public void TestSqlsttPacket()
         {
             Int32 packetIndex = 0;
-            foreach (var packet in sqlsttPackets)
+            foreach (var packet in this.sqlsttPackets)
             {
                 Assert.IsNotNull(packet);
                 Assert.IsNotNull(packet.Parameters);
@@ -192,12 +192,12 @@ namespace Test.PacketType
         [Test]
         public void TestSqlattrPacket()
         {
-            Assert.IsNotNull(sqlattrPacket);
-            Assert.IsNotNull(sqlattrPacket.Parameters);
-            Assert.AreEqual(DrdaCodepointType.SQLATTR, sqlattrPacket.CodePoint);
-            if (sqlattrPacket.Parameters[0].DrdaCodepoint == DrdaCodepointType.DATA)
+            Assert.IsNotNull(this.sqlattrPacket);
+            Assert.IsNotNull(this.sqlattrPacket.Parameters);
+            Assert.AreEqual(DrdaCodepointType.SQLATTR, this.sqlattrPacket.CodePoint);
+            if (this.sqlattrPacket.Parameters[0].DrdaCodepoint == DrdaCodepointType.DATA)
             {
-                Assert.AreEqual("FOR READ ONLY", sqlattrPacket.Parameters[0].Data);
+                Assert.AreEqual("FOR READ ONLY", this.sqlattrPacket.Parameters[0].Data);
             }
         }
 

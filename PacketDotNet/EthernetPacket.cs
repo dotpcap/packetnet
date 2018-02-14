@@ -57,25 +57,25 @@ namespace PacketDotNet
                 // set Type based on the type of the payload
                 if(value is IPv4Packet)
                 {
-                    Type = EthernetPacketType.IpV4;
+                    this.Type = EthernetPacketType.IpV4;
                 } else if(value is IPv6Packet)
                 {
-                    Type = EthernetPacketType.IpV6;
+                    this.Type = EthernetPacketType.IpV6;
                 } else if(value is ARPPacket)
                 {
-                    Type = EthernetPacketType.Arp;
+                    this.Type = EthernetPacketType.Arp;
                 }
                 else if(value is LLDPPacket)
                 {
-                    Type = EthernetPacketType.LLDP;
+                    this.Type = EthernetPacketType.LLDP;
                 }
                 else if(value is PPPoEPacket)
                 {
-                    Type = EthernetPacketType.PointToPointProtocolOverEthernetSessionStage;
+                    this.Type = EthernetPacketType.PointToPointProtocolOverEthernetSessionStage;
                 }
                 else // NOTE: new types should be inserted here
                 {
-                    Type = EthernetPacketType.None;
+                    this.Type = EthernetPacketType.None;
                 }
             }
         }
@@ -86,7 +86,7 @@ namespace PacketDotNet
             get
             {
                 Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
-                Array.Copy(header.Bytes, header.Offset + EthernetFields.SourceMacPosition,
+                Array.Copy(this.header.Bytes, this.header.Offset + EthernetFields.SourceMacPosition,
                            hwAddress, 0, hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
@@ -96,12 +96,12 @@ namespace PacketDotNet
                 Byte[] hwAddress = value.GetAddressBytes();
                 if(hwAddress.Length != EthernetFields.MacAddressLength)
                 {
-                    throw new System.InvalidOperationException("address length " + hwAddress.Length
+                    throw new InvalidOperationException("address length " + hwAddress.Length
                                                                + " not equal to the expected length of "
                                                                + EthernetFields.MacAddressLength);
                 }
 
-                Array.Copy(hwAddress, 0, header.Bytes, header.Offset + EthernetFields.SourceMacPosition,
+                Array.Copy(hwAddress, 0, this.header.Bytes, this.header.Offset + EthernetFields.SourceMacPosition,
                            hwAddress.Length);
             }
         }
@@ -112,7 +112,7 @@ namespace PacketDotNet
             get
             {
                 Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
-                Array.Copy(header.Bytes, header.Offset + EthernetFields.DestinationMacPosition,
+                Array.Copy(this.header.Bytes, this.header.Offset + EthernetFields.DestinationMacPosition,
                            hwAddress, 0, hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
@@ -122,12 +122,12 @@ namespace PacketDotNet
                 Byte[] hwAddress = value.GetAddressBytes();
                 if(hwAddress.Length != EthernetFields.MacAddressLength)
                 {
-                    throw new System.InvalidOperationException("address length " + hwAddress.Length
+                    throw new InvalidOperationException("address length " + hwAddress.Length
                                                                + " not equal to the expected length of "
                                                                + EthernetFields.MacAddressLength);
                 }
 
-                Array.Copy(hwAddress, 0, header.Bytes, header.Offset + EthernetFields.DestinationMacPosition,
+                Array.Copy(hwAddress, 0, this.header.Bytes, this.header.Offset + EthernetFields.DestinationMacPosition,
                            hwAddress.Length);
             }
         }
@@ -137,15 +137,12 @@ namespace PacketDotNet
         /// </value>
         public virtual EthernetPacketType Type
         {
-            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
-                header.Offset + EthernetFields.TypePosition);
+            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + EthernetFields.TypePosition);
 
             set
             {
                 Int16 val = (Int16)value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + EthernetFields.TypePosition);
+                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + EthernetFields.TypePosition);
             }
         }
 
@@ -162,7 +159,7 @@ namespace PacketDotNet
             Int32 offset = 0;
             Int32 length = EthernetFields.HeaderLength;
             var headerBytes = new Byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            this.header = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
             this.SourceHwAddress = SourceHwAddress;
@@ -181,11 +178,11 @@ namespace PacketDotNet
             log.Debug("");
 
             // slice off the header portion
-            header = new ByteArraySegment(bas);
-            header.Length = EthernetFields.HeaderLength;
+            this.header = new ByteArraySegment(bas);
+            this.header.Length = EthernetFields.HeaderLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = ParseEncapsulatedBytes(header, Type);
+            this.payloadPacketOrData = ParseEncapsulatedBytes(this.header, this.Type);
         }
 
         /// <summary>
@@ -243,7 +240,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color => AnsiEscapeSequences.DarkGray;
+        public override String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override String ToString(StringOutputType outputFormat)
@@ -254,7 +251,7 @@ namespace PacketDotNet
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
-                color = Color;
+                color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
@@ -264,24 +261,23 @@ namespace PacketDotNet
                 buffer.AppendFormat("{0}[EthernetPacket: SourceHwAddress={2}, DestinationHwAddress={3}, Type={4}]{1}",
                     color,
                     colorEscape,
-                    HexPrinter.PrintMACAddress(SourceHwAddress),
-                    HexPrinter.PrintMACAddress(DestinationHwAddress),
-                    Type.ToString());
+                    HexPrinter.PrintMACAddress(this.SourceHwAddress),
+                    HexPrinter.PrintMACAddress(this.DestinationHwAddress), this.Type.ToString());
             }
 
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
                 Dictionary<String,String> properties = new Dictionary<String,String>();
-                properties.Add("destination", HexPrinter.PrintMACAddress(DestinationHwAddress));
-                properties.Add("source", HexPrinter.PrintMACAddress(SourceHwAddress));
-                properties.Add("type", Type.ToString() + " (0x" + Type.ToString("x") + ")");
+                properties.Add("destination", HexPrinter.PrintMACAddress(this.DestinationHwAddress));
+                properties.Add("source", HexPrinter.PrintMACAddress(this.SourceHwAddress));
+                properties.Add("type", this.Type.ToString() + " (0x" + this.Type.ToString("x") + ")");
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
-                buffer.AppendLine("Eth:  ******* Ethernet - \"Ethernet\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("Eth:  ******* Ethernet - \"Ethernet\" - offset=? length=" + this.TotalPacketLength);
                 buffer.AppendLine("Eth:");
                 foreach(var property in properties)
                 {

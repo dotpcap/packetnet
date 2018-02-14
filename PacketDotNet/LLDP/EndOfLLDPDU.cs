@@ -42,8 +42,8 @@ namespace PacketDotNet.LLDP
         public EndOfLLDPDU(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {
-            Type = 0;
-            Length = 0;
+            this.Type = 0;
+            this.Length = 0;
         }
 
         /// <summary>
@@ -54,10 +54,10 @@ namespace PacketDotNet.LLDP
             var bytes = new Byte[TLVTypeLength.TypeLengthLength];
             var offset = 0;
             var length = bytes.Length;
-            tlvData = new PacketDotNet.Utils.ByteArraySegment(bytes, offset, length);
+            this.tlvData = new Utils.ByteArraySegment(bytes, offset, length);
 
-            Type = 0;
-            Length = 0;
+            this.Type = 0;
+            this.Length = 0;
         }
 
         /// <summary>

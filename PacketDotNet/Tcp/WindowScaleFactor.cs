@@ -61,7 +61,7 @@ namespace PacketDotNet.Tcp
         ///  The multiplier is equal to 1 left-shifted by the ScaleFactor
         ///  So a scale factor of 7 would equal 1 &lt;&lt; 7 = 128
         /// </summary>
-        public Byte ScaleFactor => Bytes[ScaleFactorFieldOffset];
+        public Byte ScaleFactor => this.Bytes[ScaleFactorFieldOffset];
 
         #endregion
 
@@ -76,7 +76,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override String ToString()
         {
-            return "[" + Kind.ToString() + ": ScaleFactor=" + ScaleFactor.ToString() + " (multiply by " + (1 << ScaleFactor).ToString() + ")]";
+            return "[" + this.Kind.ToString() + ": ScaleFactor=" + this.ScaleFactor.ToString() + " (multiply by " + (1 << this.ScaleFactor).ToString() + ")]";
         }
 
         #endregion

@@ -61,12 +61,12 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The Timestamp value
         /// </summary>
-        public UInt32 Value => EndianBitConverter.Big.ToUInt32(Bytes, ValueFieldOffset);
+        public UInt32 Value => EndianBitConverter.Big.ToUInt32(this.Bytes, ValueFieldOffset);
 
         /// <summary>
         /// The Echo Reply
         /// </summary>
-        public UInt32 EchoReply => EndianBitConverter.Big.ToUInt32(Bytes, EchoReplyFieldOffset);
+        public UInt32 EchoReply => EndianBitConverter.Big.ToUInt32(this.Bytes, EchoReplyFieldOffset);
 
         #endregion
 
@@ -80,7 +80,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override String ToString()
         {
-            return "[" + Kind.ToString() + ": Value=" + Value.ToString() + " EchoReply=" + EchoReply.ToString() + "]";
+            return "[" + this.Kind.ToString() + ": Value=" + this.Value.ToString() + " EchoReply=" + this.EchoReply.ToString() + "]";
         }
 
         #endregion

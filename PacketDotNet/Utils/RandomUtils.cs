@@ -35,7 +35,7 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="System.Net.IPAddress"/>
         /// </returns>
-        public static System.Net.IPAddress GetIPAddress(IpVersion version)
+        public static IPAddress GetIPAddress(IpVersion version)
         {
             var rnd = new Random();
             Byte[] randomAddressBytes;
@@ -50,10 +50,10 @@ namespace PacketDotNet.Utils
                 rnd.NextBytes(randomAddressBytes);
             } else
             {
-                throw new System.InvalidOperationException("Unknown version of " + version);
+                throw new InvalidOperationException("Unknown version of " + version);
             }
 
-            return new System.Net.IPAddress(randomAddressBytes);
+            return new IPAddress(randomAddressBytes);
         }
 
         /// <summary>

@@ -59,7 +59,7 @@ namespace Test.PacketType
 
             // check that the message matches
             String expectedString = "abcdefghijklmnopqrstuvwabcdefghi";
-            Byte[] expectedData = System.Text.ASCIIEncoding.ASCII.GetBytes(expectedString);
+            Byte[] expectedData = System.Text.Encoding.ASCII.GetBytes(expectedString);
             Assert.AreEqual(expectedData, icmp.Data);
         }
 

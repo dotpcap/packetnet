@@ -60,14 +60,14 @@ namespace PacketDotNet
             /// </param>
             public RtsFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                this.header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                ReceiverAddress = GetAddress (0);
-                TransmitterAddress = GetAddress(1);
-				
-				header.Length = FrameSize;
+                this.FrameControl = new FrameControlField (this.FrameControlBytes);
+                this.Duration = new DurationField (this.DurationBytes);
+                this.ReceiverAddress = this.GetAddress (0);
+                this.TransmitterAddress = this.GetAddress(1);
+
+                this.header.Length = this.FrameSize;
             }
    
             /// <summary>
@@ -79,9 +79,7 @@ namespace PacketDotNet
             /// </returns>
             protected override String GetAddressString()
             {
-                return String.Format("RA {0} TA {1}",
-                                     ReceiverAddress, 
-                                     TransmitterAddress);
+                return String.Format("RA {0} TA {1}", this.ReceiverAddress, this.TransmitterAddress);
             }
         } 
     }

@@ -206,7 +206,7 @@ namespace Test.PacketType
             Boolean foundtcpPacket = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = PacketDotNet.Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
                 var tcpPacket = (TcpPacket)p.Extract(typeof(TcpPacket));
                 if (tcpPacket == null)

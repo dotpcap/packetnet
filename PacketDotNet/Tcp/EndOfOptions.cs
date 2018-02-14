@@ -59,7 +59,7 @@ namespace PacketDotNet.Tcp
         ///  the EndOfOptions option is only 1 byte long and doesn't
         ///  contain a length field
         /// </summary>
-        public override Byte Length => EndOfOptions.OptionLength;
+        public override Byte Length => OptionLength;
 
         #endregion
 

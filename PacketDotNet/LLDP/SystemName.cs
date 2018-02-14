@@ -63,8 +63,8 @@ namespace PacketDotNet.LLDP
         /// </value>
         public String Name
         {
-            get => StringValue;
-            set => StringValue = value;
+            get => this.StringValue;
+            set => this.StringValue = value;
         }
 
         #endregion

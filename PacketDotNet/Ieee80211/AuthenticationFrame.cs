@@ -63,11 +63,10 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if(header.Length >= 
+                    if(this.header.Length >= 
                        (AuthenticationFields.AuthAlgorithmNumPosition + AuthenticationFields.AuthAlgorithmNumLength))
                     {
-                        return EndianBitConverter.Little.ToUInt16 (header.Bytes,
-                                                                   header.Offset + AuthenticationFields.AuthAlgorithmNumPosition);
+                        return EndianBitConverter.Little.ToUInt16 (this.header.Bytes, this.header.Offset + AuthenticationFields.AuthAlgorithmNumPosition);
                     }
                     else
                     {
@@ -75,9 +74,7 @@ namespace PacketDotNet
                     }
                 }
 
-                set => EndianBitConverter.Little.CopyBytes (value,
-                    header.Bytes,
-                    header.Offset + AuthenticationFields.AuthAlgorithmNumPosition);
+                set => EndianBitConverter.Little.CopyBytes (value, this.header.Bytes, this.header.Offset + AuthenticationFields.AuthAlgorithmNumPosition);
             }
 
             /// <summary>
@@ -89,11 +86,10 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if(header.Length >= 
+                    if(this.header.Length >= 
                        (AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition + AuthenticationFields.AuthAlgorithmTransactionSequenceNumLength))
                     {
-                        return EndianBitConverter.Little.ToUInt16 (header.Bytes,
-                                                                   header.Offset + AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition);
+                        return EndianBitConverter.Little.ToUInt16 (this.header.Bytes, this.header.Offset + AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition);
                     }
                     else
                     {
@@ -101,9 +97,7 @@ namespace PacketDotNet
                     }
                 }
 
-                set => EndianBitConverter.Little.CopyBytes (value,
-                    header.Bytes,
-                    header.Offset + AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition);
+                set => EndianBitConverter.Little.CopyBytes (value, this.header.Bytes, this.header.Offset + AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition);
             }
 
             /// <summary>
@@ -115,10 +109,9 @@ namespace PacketDotNet
             {
                 get
                 {
-					if(header.Length >= (AuthenticationFields.StatusCodePosition + AuthenticationFields.StatusCodeLength))
+					if(this.header.Length >= (AuthenticationFields.StatusCodePosition + AuthenticationFields.StatusCodeLength))
 					{
-						return (AuthenticationStatusCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
-						                                                                     header.Offset + AuthenticationFields.StatusCodePosition);
+						return (AuthenticationStatusCode)EndianBitConverter.Little.ToUInt16 (this.header.Bytes, this.header.Offset + AuthenticationFields.StatusCodePosition);
 					}
 					else
 					{
@@ -128,9 +121,7 @@ namespace PacketDotNet
 					}
                 }
                 
-                set => EndianBitConverter.Little.CopyBytes ((UInt16)value,
-                    header.Bytes,
-                    header.Offset + AuthenticationFields.StatusCodePosition);
+                set => EndianBitConverter.Little.CopyBytes ((UInt16)value, this.header.Bytes, this.header.Offset + AuthenticationFields.StatusCodePosition);
             }
 
             /// <summary>
@@ -150,8 +141,7 @@ namespace PacketDotNet
                                                 MacFields.SequenceControlLength +
                                                 AuthenticationFields.AuthAlgorithmNumLength +
                                                 AuthenticationFields.AuthAlgorithmTransactionSequenceNumLength +
-                                                AuthenticationFields.StatusCodeLength +
-                                                InformationElements.Length);
+                                                AuthenticationFields.StatusCodeLength + this.InformationElements.Length);
 
 
             /// <summary>
@@ -162,16 +152,16 @@ namespace PacketDotNet
             /// </param>
             public AuthenticationFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                this.header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                DestinationAddress = GetAddress (0);
-                SourceAddress = GetAddress (1);
-                BssId = GetAddress (2);
-                SequenceControl = new SequenceControlField (SequenceControlBytes);
-                AuthenticationAlgorithmNumber = AuthenticationAlgorithmNumberBytes;
-                AuthenticationAlgorithmTransactionSequenceNumber = AuthenticationAlgorithmTransactionSequenceNumberBytes;
+                this.FrameControl = new FrameControlField (this.FrameControlBytes);
+                this.Duration = new DurationField (this.DurationBytes);
+                this.DestinationAddress = this.GetAddress (0);
+                this.SourceAddress = this.GetAddress (1);
+                this.BssId = this.GetAddress (2);
+                this.SequenceControl = new SequenceControlField (this.SequenceControlBytes);
+                this.AuthenticationAlgorithmNumber = this.AuthenticationAlgorithmNumberBytes;
+                this.AuthenticationAlgorithmTransactionSequenceNumber = this.AuthenticationAlgorithmTransactionSequenceNumberBytes;
                 
 				if(bas.Length > AuthenticationFields.InformationElement1Position)
 				{
@@ -179,18 +169,18 @@ namespace PacketDotNet
                 	ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
                    		(bas.Offset + AuthenticationFields.InformationElement1Position),
                     	(bas.Length - AuthenticationFields.InformationElement1Position));
-					
-					InformationElements = new InformationElementList (infoElementsSegment);
+
+				    this.InformationElements = new InformationElementList (infoElementsSegment);
 				}
 				else
 				{
-					InformationElements = new InformationElementList();
+				    this.InformationElements = new InformationElementList();
 				}
 				
 
                 //cant set length until after we have handled the information elements
                 //as they vary in length
-                header.Length = FrameSize;
+                this.header.Length = this.FrameSize;
             }
             
             /// <summary>
@@ -229,24 +219,24 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((this.header == null) || (this.header.Length > (this.header.BytesLength - this.header.Offset)) || (this.header.Length < this.FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    this.header = new ByteArraySegment (new Byte[this.FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
                 this.DurationBytes = this.Duration.Field;
-                SetAddress (0, DestinationAddress);
-                SetAddress (1, SourceAddress);
-                SetAddress (2, BssId);
+                this.SetAddress (0, this.DestinationAddress);
+                this.SetAddress (1, this.SourceAddress);
+                this.SetAddress (2, this.BssId);
                 this.SequenceControlBytes = this.SequenceControl.Field;
                 this.AuthenticationAlgorithmNumberBytes = this.AuthenticationAlgorithmNumber;
                 this.AuthenticationAlgorithmTransactionSequenceNumberBytes = this.AuthenticationAlgorithmTransactionSequenceNumber;
                 this.StatusCodeBytes = this.StatusCode;
                 //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
-                this.InformationElements.CopyTo (header, header.Offset + AuthenticationFields.InformationElement1Position);
-                
-                header.Length = FrameSize;
+                this.InformationElements.CopyTo (this.header, this.header.Offset + AuthenticationFields.InformationElement1Position);
+
+                this.header.Length = this.FrameSize;
             }
 
         } 

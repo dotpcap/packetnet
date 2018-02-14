@@ -8,11 +8,11 @@ namespace Test
     public class Rate
     {
         private TimeSpan Elapsed;
-        private string EventType;
-        private int EventCount;
+        private String EventType;
+        private Int32 EventCount;
 
         public Rate(DateTime Start, DateTime End,
-                    int EventCount, string EventType)
+                    Int32 EventCount, String EventType)
         {
             Elapsed = End - Start;
             this.EventCount = EventCount;
@@ -22,7 +22,7 @@ namespace Test
         /// <value>
         /// Returns the rate in terms of events per second
         /// </value>
-        public double RatePerSecond
+        public Double RatePerSecond
         {
             get
             {
@@ -30,7 +30,7 @@ namespace Test
             }
         }
 
-        public override string ToString ()
+        public override String ToString ()
         {
             return String.Format(" {0,10} {1} at a rate of {2,12} / second ({3} seconds elapsed)",
                                  EventCount,

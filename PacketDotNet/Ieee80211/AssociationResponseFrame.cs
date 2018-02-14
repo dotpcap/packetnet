@@ -37,14 +37,14 @@ namespace PacketDotNet
         {
             private class AssociationResponseFields
             {
-                public readonly static int CapabilityInformationLength = 2;
-                public readonly static int StatusCodeLength = 2;
-                public readonly static int AssociationIdLength = 2;
+                public readonly static Int32 CapabilityInformationLength = 2;
+                public readonly static Int32 StatusCodeLength = 2;
+                public readonly static Int32 AssociationIdLength = 2;
 
-                public readonly static int CapabilityInformationPosition;
-                public readonly static int StatusCodePosition;
-                public readonly static int AssociationIdPosition;
-                public readonly static int InformationElement1Position;
+                public readonly static Int32 CapabilityInformationPosition;
+                public readonly static Int32 StatusCodePosition;
+                public readonly static Int32 AssociationIdPosition;
+                public readonly static Int32 InformationElement1Position;
 
                 static AssociationResponseFields()
                 {
@@ -164,7 +164,7 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
+            public override Int32 FrameSize
             {
                 get
                 {

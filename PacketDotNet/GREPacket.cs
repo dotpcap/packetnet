@@ -32,14 +32,14 @@ namespace PacketDotNet
     public class GREPacket : Packet
     {
 
-        virtual public bool HasCheckSum
+        virtual public Boolean HasCheckSum
         {
             get
             {
                 return 8 == (header.Bytes[header.Offset + 1] & 0x8);
             }
         }
-        virtual public bool HasReserved
+        virtual public Boolean HasReserved
         {
             get
             {
@@ -47,14 +47,14 @@ namespace PacketDotNet
             }
         }
 
-        virtual public bool HasKey
+        virtual public Boolean HasKey
         {
             get
             {
                 return 2 == (header.Bytes[header.Offset + 1] & 0x2);
             }
         }
-        virtual public bool HasSequence
+        virtual public Boolean HasSequence
         {
             get
             {
@@ -63,7 +63,7 @@ namespace PacketDotNet
         }
 
 
-        virtual public int Version
+        virtual public Int32 Version
         {
             get
             {
@@ -82,7 +82,7 @@ namespace PacketDotNet
 
 
         /// <summary> Fetch the GRE header checksum.</summary>
-        virtual public short Checksum
+        virtual public Int16 Checksum
         {
             get
             {
@@ -131,11 +131,11 @@ namespace PacketDotNet
         
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
             
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
@@ -156,7 +156,7 @@ namespace PacketDotNet
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
+                Dictionary<String,String> properties = new Dictionary<String,String>();
                 properties.Add("Protocol ", Protocol + " (0x" + Protocol.ToString("x") + ")");
             }
 

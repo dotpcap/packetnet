@@ -46,7 +46,7 @@ namespace PacketDotNet
         /// <summary>
         /// The Length field
         /// </summary>
-        public ushort Length
+        public UInt16 Length
         {
             get
             {
@@ -57,7 +57,7 @@ namespace PacketDotNet
         /// <summary>
         /// The Magic field
         /// </summary>
-        public byte Magic
+        public Byte Magic
         {
             get
             {
@@ -68,7 +68,7 @@ namespace PacketDotNet
         /// <summary>
         /// The Format field
         /// </summary>
-        public byte Format
+        public Byte Format
         {
             get
             {
@@ -79,7 +79,7 @@ namespace PacketDotNet
         /// <summary>
         /// The CorrelId field
         /// </summary>
-        public ushort CorrelId
+        public UInt16 CorrelId
         {
             get
             {
@@ -90,7 +90,7 @@ namespace PacketDotNet
         /// <summary>
         /// The Length2 field
         /// </summary>
-        public ushort Length2
+        public UInt16 Length2
         {
             get
             {
@@ -124,7 +124,7 @@ namespace PacketDotNet
                 var ddmTotalLength = this.Length;
                 while (offset < header.Offset+ ddmTotalLength)
                 {
-                    int length = BigEndianBitConverter.Big.ToUInt16(header.Bytes, offset);
+                    Int32 length = BigEndianBitConverter.Big.ToUInt16(header.Bytes, offset);
                     if (length == 0)
                     {
                         length = header.Offset + ddmTotalLength - offset;
@@ -183,11 +183,11 @@ namespace PacketDotNet
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {

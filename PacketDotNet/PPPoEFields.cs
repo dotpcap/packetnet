@@ -28,33 +28,33 @@ namespace PacketDotNet
     public class PPPoEFields
     {
         /// <summary> Size in bytes of the version/type field </summary>
-        public readonly static int VersionTypeLength = 1;
+        public readonly static Int32 VersionTypeLength = 1;
 
         /// <summary> Size in bytes of the code field </summary>
-        public readonly static int CodeLength = 1;
+        public readonly static Int32 CodeLength = 1;
 
         /// <summary> Size in bytes of the SessionId field </summary>
-        public readonly static int SessionIdLength = 2;
+        public readonly static Int32 SessionIdLength = 2;
 
         /// <summary> Size in bytes of the Length field </summary>
-        public readonly static int LengthLength = 2;
+        public readonly static Int32 LengthLength = 2;
 
         /// <summary> Offset from the start of the header to the version/type field </summary>
-        public readonly static int VersionTypePosition = 0;
+        public readonly static Int32 VersionTypePosition = 0;
 
         /// <summary> Offset from the start of the header to the Code field </summary>
-        public readonly static int CodePosition;
+        public readonly static Int32 CodePosition;
 
         /// <summary> Offset from the start of the header to the SessionId field </summary>
-        public readonly static int SessionIdPosition;
+        public readonly static Int32 SessionIdPosition;
 
         /// <summary> Offset from the start of the header to the Length field </summary>
-        public readonly static int LengthPosition;
+        public readonly static Int32 LengthPosition;
 
         /// <summary>
         /// Length of the overall PPPoe header
         /// </summary>
-        public readonly static int HeaderLength;
+        public readonly static Int32 HeaderLength;
 
         static PPPoEFields()
         {

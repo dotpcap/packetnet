@@ -50,7 +50,7 @@ namespace PacketDotNet.LLDP
         /// The System Description TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public SystemDescription(byte[] bytes, int offset) :
+        public SystemDescription(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {
             log.Debug("");
@@ -62,7 +62,7 @@ namespace PacketDotNet.LLDP
         /// <param name="description">
         /// A textual Description of the system
         /// </param>
-        public SystemDescription(string description) : base(TLVTypes.SystemDescription,
+        public SystemDescription(String description) : base(TLVTypes.SystemDescription,
                                                             description)
         {
             log.Debug("");
@@ -75,7 +75,7 @@ namespace PacketDotNet.LLDP
         /// <value>
         /// A textual Description of the system
         /// </value>
-        public string Description
+        public String Description
         {
             get { return StringValue; }
             set { StringValue = value; }

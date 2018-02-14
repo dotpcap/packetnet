@@ -40,13 +40,13 @@ namespace PacketDotNet
         {
             private class ReassociationRequestFields
             {
-                public readonly static int CapabilityInformationLength = 2;
-                public readonly static int ListenIntervalLength = 2;
+                public readonly static Int32 CapabilityInformationLength = 2;
+                public readonly static Int32 ListenIntervalLength = 2;
 
-                public readonly static int CapabilityInformationPosition;
-                public readonly static int ListenIntervalPosition;
-                public readonly static int CurrentAccessPointPosition;
-                public readonly static int InformationElement1Position;
+                public readonly static Int32 CapabilityInformationPosition;
+                public readonly static Int32 ListenIntervalPosition;
+                public readonly static Int32 CurrentAccessPointPosition;
+                public readonly static Int32 InformationElement1Position;
 
                 static ReassociationRequestFields()
                 {
@@ -163,7 +163,7 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
+            public override Int32 FrameSize
             {
                 get
                 {

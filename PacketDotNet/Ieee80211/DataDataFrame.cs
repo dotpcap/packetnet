@@ -39,12 +39,12 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
+            public override Int32 FrameSize
             {
                 get
                 {
                     //if we are in WDS mode then there are 4 addresses (normally it is just 3)
-                    int numOfAddressFields = (FrameControl.ToDS && FrameControl.FromDS) ? 4 : 3;
+                    Int32 numOfAddressFields = (FrameControl.ToDS && FrameControl.FromDS) ? 4 : 3;
 
                     return (MacFields.FrameControlLength +
                         MacFields.DurationIDLength +

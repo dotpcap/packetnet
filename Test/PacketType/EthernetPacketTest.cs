@@ -170,7 +170,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            int packetIndex = 0;
+            Int32 packetIndex = 0;
             while((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType,
@@ -210,15 +210,15 @@ namespace Test.PacketType
         public void EthernetConstructorFromMacAddresses()
         {
             var srcHwAddressBytes = new Byte[EthernetFields.MacAddressLength];
-            for(int i = 0; i < srcHwAddressBytes.Length; i++)
+            for(Int32 i = 0; i < srcHwAddressBytes.Length; i++)
             {
-                srcHwAddressBytes[i] = (byte)i;
+                srcHwAddressBytes[i] = (Byte)i;
             }
 
             var dstHwAddressBytes = new Byte[EthernetFields.MacAddressLength];
-            for(int i = 0; i < dstHwAddressBytes.Length; i++)
+            for(Int32 i = 0; i < dstHwAddressBytes.Length; i++)
             {
-                dstHwAddressBytes[i] = (byte)(dstHwAddressBytes.Length - i);
+                dstHwAddressBytes[i] = (Byte)(dstHwAddressBytes.Length - i);
             }
 
             var srcHwAddress = new PhysicalAddress(srcHwAddressBytes);
@@ -227,7 +227,7 @@ namespace Test.PacketType
                                                     dstHwAddress,
                                                     EthernetPacketType.None);
 
-            int expectedLength = 14;
+            Int32 expectedLength = 14;
             Assert.AreEqual(expectedLength, ethernetPacket.Bytes.Length);
             //TODO: improve this here
             Console.WriteLine("ethernetPacket.ToString() {0}",
@@ -303,7 +303,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            bool foundEthernet = false;
+            Boolean foundEthernet = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var ethernetPacket = new EthernetPacket(new ByteArraySegment(rawCapture.Data));

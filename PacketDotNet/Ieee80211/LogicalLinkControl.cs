@@ -48,7 +48,7 @@ namespace PacketDotNet
             /// Gets or sets the destination service access point.
             /// </summary>
             /// <value>The dsap.</value>
-            public byte DSAP
+            public Byte DSAP
             {
                 get
                 {
@@ -65,7 +65,7 @@ namespace PacketDotNet
             /// Gets or sets the source service access point.
             /// </summary>
             /// <value>The ssap.</value>
-            public byte SSAP
+            public Byte SSAP
             {
                 get
                 {
@@ -103,11 +103,11 @@ namespace PacketDotNet
             /// Gets or sets the control.
             /// </summary>
             /// <value>The control.</value>
-            public byte Control
+            public Byte Control
             {
                 get
                 {
-                    return (byte)((ControlOrganizationCode >> 24) & 0xFF);
+                    return (Byte)((ControlOrganizationCode >> 24) & 0xFF);
                 }
 
                 set
@@ -124,7 +124,7 @@ namespace PacketDotNet
             {
                 get
                 {
-                    return (byte)((ControlOrganizationCode & 0x00FFFFFF));
+                    return (Byte)((ControlOrganizationCode & 0x00FFFFFF));
                 }
 
                 set

@@ -35,13 +35,13 @@ namespace Test.Misc
 
         private class FileAndPacketIndexes
         {
-            public string Filename;
-            public List<int> PacketIndexes;
-            public List<string> PacketDescription;
+            public String Filename;
+            public List<Int32> PacketIndexes;
+            public List<String> PacketDescription;
 
-            public FileAndPacketIndexes(string Filename,
-                                        List<int> PacketIndexes,
-                                        List<string> PacketDescription)
+            public FileAndPacketIndexes(String Filename,
+                                        List<Int32> PacketIndexes,
+                                        List<String> PacketDescription)
             {
                 this.Filename = Filename;
                 this.PacketIndexes = PacketIndexes;
@@ -68,46 +68,46 @@ namespace Test.Misc
 
             // ethernet arp request and response
             fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "arp_request_response.pcap",
-                                                              new List<int>(new int[] {0, 1}),
-                                                              new List<string>(new string[] { "ethernet arp request",
+                                                              new List<Int32>(new Int32[] {0, 1}),
+                                                              new List<String>(new String[] { "ethernet arp request",
                                                                                               "ethernet arp response"})));
 
             // linux cooked capture, ipv4, tcp
             fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "LinuxCookedCapture.pcap",
-                                                              new List<int>(new int[] {2}),
-                                                              new List<string>(new string[] { "linux cooked capture, ipv4, tcp"})));
+                                                              new List<Int32>(new Int32[] {2}),
+                                                              new List<String>(new String[] { "linux cooked capture, ipv4, tcp"})));
 
             // ethernet, ipv6, icmpv6
             fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "ipv6_icmpv6_packet.pcap",
-                                                              new List<int>(new int[] {0}),
-                                                              new List<string>(new string[] { "ethernet, ipv6, icmpv6"})));
+                                                              new List<Int32>(new Int32[] {0}),
+                                                              new List<String>(new String[] { "ethernet, ipv6, icmpv6"})));
 
             // ethernet, PPPoE, PPP, ipv4, udp
             fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "PPPoEPPP.pcap",
-                                                              new List<int>(new int[] {1}),
-                                                              new List<string>(new string[] { "ethernet, PPPoE, PPP, ipv4, udp"})));
+                                                              new List<Int32>(new Int32[] {1}),
+                                                              new List<String>(new String[] { "ethernet, PPPoE, PPP, ipv4, udp"})));
 
             expectedTotalPackets = 5;
         }
 
-        private static int fileAndPacketIndex;
+        private static Int32 fileAndPacketIndex;
 
         /// <summary>
         /// Index into FileAndPacketIndexes.PacketIndex
         /// </summary>
-        private static int currentPacketIndex;
+        private static Int32 currentPacketIndex;
 
-        private static string currentPacketDescription;
+        private static String currentPacketDescription;
 
-        private static string packetFileName;
-        private static int indexIntoPacketFile;
+        private static String packetFileName;
+        private static Int32 indexIntoPacketFile;
 
         private static FileAndPacketIndexes currentFAPI;
 
         private static SharpPcap.LibPcap.CaptureFileReaderDevice captureFileReader;
 
-        private static int totalPacketsReturned;
-        private static int expectedTotalPackets;
+        private static Int32 totalPacketsReturned;
+        private static Int32 expectedTotalPackets;
 
         private static Packet GetNextPacket()
         {

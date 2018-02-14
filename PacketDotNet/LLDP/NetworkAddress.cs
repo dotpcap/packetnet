@@ -31,7 +31,7 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Length of AddressFamily field in bytes
         /// </summary>
-        internal const int AddressFamilyLength = 1;
+        internal const Int32 AddressFamilyLength = 1;
 
         internal ByteArraySegment data;
 
@@ -60,7 +60,7 @@ namespace PacketDotNet.LLDP
         /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public NetworkAddress(byte[] bytes, int offset, int length)
+        public NetworkAddress(Byte[] bytes, Int32 offset, Int32 length)
         {
             data = new ByteArraySegment(bytes, offset, length);
         }
@@ -70,7 +70,7 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Number of bytes in the NetworkAddress
         /// </summary>
-        internal int Length
+        internal Int32 Length
         {
             get
             {
@@ -78,13 +78,13 @@ namespace PacketDotNet.LLDP
             }
         }
 
-        internal byte[] Bytes
+        internal Byte[] Bytes
         {
             get
             {
                 var addressBytes = Address.GetAddressBytes();
-                var data = new byte[AddressFamilyLength + addressBytes.Length];
-                data[0] = (byte)AddressFamily;
+                var data = new Byte[AddressFamilyLength + addressBytes.Length];
+                data[0] = (Byte)AddressFamily;
                 Array.Copy(addressBytes, 0,
                            data, AddressFamilyLength,
                            addressBytes.Length);
@@ -98,12 +98,12 @@ namespace PacketDotNet.LLDP
         public LLDP.AddressFamily AddressFamily
         {
             get { return (LLDP.AddressFamily)data.Bytes[data.Offset]; }
-            set { data.Bytes[data.Offset] = (byte)value; }
+            set { data.Bytes[data.Offset] = (Byte)value; }
         }
 
-        private static int LengthFromAddressFamily(LLDP.AddressFamily addressFamily)
+        private static Int32 LengthFromAddressFamily(LLDP.AddressFamily addressFamily)
         {
-            int length;
+            Int32 length;
 
             if(addressFamily == LLDP.AddressFamily.IPv4)
                 length = IPv4Fields.AddressLength;
@@ -132,7 +132,7 @@ namespace PacketDotNet.LLDP
             get
             {
                 var length = LengthFromAddressFamily(AddressFamily);
-                var bytes = new byte[length];
+                var bytes = new Byte[length];
                 Array.Copy(data.Bytes, data.Offset + AddressFamilyLength,
                            bytes, 0,
                            bytes.Length);
@@ -148,7 +148,7 @@ namespace PacketDotNet.LLDP
 
                 if((data == null) || data.Length != length)
                 {
-                    var bytes = new byte[length];
+                    var bytes = new Byte[length];
                     var offset = 0;
 
                     // allocate enough memory for the new Address
@@ -173,7 +173,7 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A <see cref="System.Boolean"/>
         /// </returns>
-        public override bool Equals (object obj)
+        public override Boolean Equals (Object obj)
         {
             // Check for null values and compare run-time types.
             if (obj == null || GetType() != obj.GetType())
@@ -196,7 +196,7 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        public override int GetHashCode ()
+        public override Int32 GetHashCode ()
         {
             return AddressFamily.GetHashCode() + Address.GetHashCode();
         }
@@ -207,9 +207,9 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString ()
+        public override String ToString ()
         {
-            return string.Format("[NetworkAddress: AddressFamily={0}, Address={1}]",
+            return String.Format("[NetworkAddress: AddressFamily={0}, Address={1}]",
                                  AddressFamily, Address);
         }
 

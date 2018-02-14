@@ -42,7 +42,7 @@ namespace PacketDotNet.Utils
         /// <summary>
         /// Computes the one's complement sum on a byte array
         /// </summary>
-        public static int OnesComplementSum(byte[] bytes)
+        public static Int32 OnesComplementSum(Byte[] bytes)
         {
             //just complement the one's sum
             return OnesComplementSum(bytes, 0, bytes.Length);
@@ -51,7 +51,7 @@ namespace PacketDotNet.Utils
         /// <summary>
         /// Computes the one's complement sum on a byte array
         /// </summary>
-        public static int OnesComplementSum(byte[] bytes, int start, int len)
+        public static Int32 OnesComplementSum(Byte[] bytes, Int32 start, Int32 len)
         {
             //just complement the one's sum
             return (~OnesSum(bytes, start, len)) & 0xFFFF;
@@ -66,7 +66,7 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        public static int OnesSum(byte[] bytes)
+        public static Int32 OnesSum(Byte[] bytes)
         {
             return OnesSum(bytes, 0, bytes.Length);
         }
@@ -87,7 +87,7 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        public static int OnesSum(byte[] bytes, int start, int len)
+        public static Int32 OnesSum(Byte[] bytes, Int32 start, Int32 len)
         {
             MemoryStream memStream = new MemoryStream(bytes, start, len);
             BinaryReader br = new BinaryReader(memStream);

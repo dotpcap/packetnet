@@ -44,12 +44,12 @@ namespace PacketDotNet
 
             set
             {
-                header.Bytes[header.Offset + IGMPv2Fields.TypePosition] = (byte)value;
+                header.Bytes[header.Offset + IGMPv2Fields.TypePosition] = (Byte)value;
             }
         }
 
         /// <summary> Fetch the IGMP max response time.</summary>
-        virtual public byte MaxResponseTime
+        virtual public Byte MaxResponseTime
         {
             get
             {
@@ -63,7 +63,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the IGMP header checksum.</summary>
-        virtual public short Checksum
+        virtual public Int16 Checksum
         {
             get
             {
@@ -73,7 +73,7 @@ namespace PacketDotNet
 
             set
             {
-                byte[] theValue = BitConverter.GetBytes(value);
+                Byte[] theValue = BitConverter.GetBytes(value);
                 Array.Copy(theValue, 0, header.Bytes, (header.Offset + IGMPv2Fields.ChecksumPosition), 2);
             }
         }
@@ -133,11 +133,11 @@ namespace PacketDotNet
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -159,7 +159,7 @@ namespace PacketDotNet
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
+                Dictionary<String,String> properties = new Dictionary<String,String>();
                 properties.Add("type", Type + " (0x" + Type.ToString("x") + ")");
                 properties.Add("max response time", String.Format("{0:0.0}", MaxResponseTime / 10) + " sec (0x" + MaxResponseTime.ToString("x") + ")");
                 // TODO: Implement checksum validation for IGMPv2
@@ -167,7 +167,7 @@ namespace PacketDotNet
                 properties.Add("group address", GroupAddress.ToString());
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("IGMP:  ******* IGMPv2 - \"Internet Group Management Protocol (Version 2)\" - offset=? length=" + TotalPacketLength);

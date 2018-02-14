@@ -27,7 +27,7 @@ namespace MiscUtil.Conversion
     /// </summary>
     public class StringConverter
     {
-		static int[] e2aTable = new int[256]
+		static Int32[] e2aTable = new Int32[256]
         {
         				 0, 1, 2, 3,156, 9,134,127,151,141,142, 11, 12, 13, 14, 15,
         				16, 17, 18, 19,157,133, 8,135, 24, 25,146,143, 28, 29, 30, 31,
@@ -55,12 +55,12 @@ namespace MiscUtil.Conversion
 		/// <param name="offset">offset</param>
 		/// <param name="length">length</param>
 		/// <returns></returns>
-		public static string EbcdicToAscii(byte[] data, int offset, int length)
+		public static String EbcdicToAscii(Byte[] data, Int32 offset, Int32 length)
         {
             var stringBuilder = new StringBuilder();
             try
             {
-                for (int i = offset; i < data.Length && i - offset < length; i++)
+                for (Int32 i = offset; i < data.Length && i - offset < length; i++)
                 {
                     //0x00 Means blank, packet do have lots blank,ignore it
                     if (data[i] == 0x00)

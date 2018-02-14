@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of PacketDotNet
 
 PacketDotNet is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
-﻿using System;
+ using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Text;
@@ -88,7 +88,7 @@ namespace PacketDotNet
         {
             get
             {
-                byte[] hwAddress = new byte[EthernetFields.MacAddressLength];
+                Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
                 Array.Copy(header.Bytes, header.Offset + EthernetFields.SourceMacPosition,
                            hwAddress, 0, hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
@@ -96,7 +96,7 @@ namespace PacketDotNet
 
             set
             {
-                byte[] hwAddress = value.GetAddressBytes();
+                Byte[] hwAddress = value.GetAddressBytes();
                 if(hwAddress.Length != EthernetFields.MacAddressLength)
                 {
                     throw new System.InvalidOperationException("address length " + hwAddress.Length
@@ -114,7 +114,7 @@ namespace PacketDotNet
         {
             get
             {
-                byte[] hwAddress = new byte[EthernetFields.MacAddressLength];
+                Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
                 Array.Copy(header.Bytes, header.Offset + EthernetFields.DestinationMacPosition,
                            hwAddress, 0, hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
@@ -122,7 +122,7 @@ namespace PacketDotNet
 
             set
             {
-                byte[] hwAddress = value.GetAddressBytes();
+                Byte[] hwAddress = value.GetAddressBytes();
                 if(hwAddress.Length != EthernetFields.MacAddressLength)
                 {
                     throw new System.InvalidOperationException("address length " + hwAddress.Length
@@ -165,9 +165,9 @@ namespace PacketDotNet
             log.Debug("");
 
             // allocate memory for this packet
-            int offset = 0;
-            int length = EthernetFields.HeaderLength;
-            var headerBytes = new byte[length];
+            Int32 offset = 0;
+            Int32 length = EthernetFields.HeaderLength;
+            var headerBytes = new Byte[length];
             header = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
@@ -258,11 +258,11 @@ namespace PacketDotNet
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -284,13 +284,13 @@ namespace PacketDotNet
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
+                Dictionary<String,String> properties = new Dictionary<String,String>();
                 properties.Add("destination", HexPrinter.PrintMACAddress(DestinationHwAddress));
                 properties.Add("source", HexPrinter.PrintMACAddress(SourceHwAddress));
                 properties.Add("type", Type.ToString() + " (0x" + Type.ToString("x") + ")");
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Eth:  ******* Ethernet - \"Ethernet\" - offset=? length=" + TotalPacketLength);
@@ -319,8 +319,8 @@ namespace PacketDotNet
         {
             var rnd = new Random();
 
-            byte[] srcPhysicalAddress = new byte[EthernetFields.MacAddressLength];
-            byte[] dstPhysicalAddress = new byte[EthernetFields.MacAddressLength];
+            Byte[] srcPhysicalAddress = new Byte[EthernetFields.MacAddressLength];
+            Byte[] dstPhysicalAddress = new Byte[EthernetFields.MacAddressLength];
 
             rnd.NextBytes(srcPhysicalAddress);
             rnd.NextBytes(dstPhysicalAddress);

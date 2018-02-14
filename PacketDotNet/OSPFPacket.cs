@@ -35,9 +35,9 @@ namespace PacketDotNet
         /// <param name="payload">The bytes from which the packet is conctructed</param>
         /// <param name="offset">The offset of this packet from the parent packet</param>
         /// <returns>an OSPF packet</returns>
-        public static OSPFPacket ConstructOSPFPacket(byte[] payload, int offset)
+        public static OSPFPacket ConstructOSPFPacket(Byte[] payload, Int32 offset)
         {
-            byte v = payload[offset + OSPFv2Fields.VersionPosition];
+            Byte v = payload[offset + OSPFv2Fields.VersionPosition];
 
             if (!Enum.IsDefined(typeof(OSPFVersion), v))
             {
@@ -57,7 +57,7 @@ namespace PacketDotNet
             }
         }
 
-        private static OSPFv2Packet ConstructV2Packet(byte[] payload, int offset)
+        private static OSPFv2Packet ConstructV2Packet(Byte[] payload, Int32 offset)
         {
             OSPFv2Packet p;
             OSPFPacketType type = (OSPFPacketType)payload[offset + OSPFv2Fields.TypePosition];
@@ -86,7 +86,7 @@ namespace PacketDotNet
             return p;
         }
 
-        private static OSPFPacket ConstructV3Packet(byte[] payload, int offset)
+        private static OSPFPacket ConstructV3Packet(Byte[] payload, Int32 offset)
         {
             throw new NotImplementedException("OSPFv3 is not supported yet");
         }

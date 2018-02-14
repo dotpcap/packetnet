@@ -34,15 +34,15 @@ namespace PacketDotNet
         public class ChannelRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.Channel; } }
-            
+            public override RadioTapType FieldType => RadioTapType.Channel;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 4; } }
+            public override UInt16 Length => 4;
 
             /// <summary>
             /// Frequency in MHz
@@ -244,16 +244,16 @@ namespace PacketDotNet
         public class FhssRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.Fhss; } }
-   
+            public override RadioTapType FieldType => RadioTapType.Fhss;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 2; } }
-            
+            public override UInt16 Length => 2;
+
             /// <summary>
             /// Hop set
             /// </summary>
@@ -329,16 +329,16 @@ namespace PacketDotNet
         public class FlagsRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.Flags; } }
-   
+            public override RadioTapType FieldType => RadioTapType.Flags;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 1; } }
-            
+            public override UInt16 Length => 1;
+
             /// <summary>
             /// Flags set
             /// </summary>
@@ -401,16 +401,16 @@ namespace PacketDotNet
         public class RateRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.Rate; } }
-   
+            public override RadioTapType FieldType => RadioTapType.Rate;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 1; } }
-            
+            public override UInt16 Length => 1;
+
             /// <summary>
             /// Rate in Mbps
             /// </summary>
@@ -473,16 +473,16 @@ namespace PacketDotNet
         public class DbAntennaSignalRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.DbAntennaSignal; } }
-   
+            public override RadioTapType FieldType => RadioTapType.DbAntennaSignal;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 1; } }
-            
+            public override UInt16 Length => 1;
+
             /// <summary>
             /// Signal strength in dB
             /// </summary>
@@ -544,16 +544,16 @@ namespace PacketDotNet
         public class DbAntennaNoiseRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.DbAntennaNoise; } }
-   
+            public override RadioTapType FieldType => RadioTapType.DbAntennaNoise;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 1; } }
-            
+            public override UInt16 Length => 1;
+
             /// <summary>
             /// Antenna noise in dB
             /// </summary>
@@ -615,16 +615,16 @@ namespace PacketDotNet
         public class AntennaRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.Antenna; } }
-   
+            public override RadioTapType FieldType => RadioTapType.Antenna;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 1; } }
-            
+            public override UInt16 Length => 1;
+
             /// <summary>
             /// Antenna number
             /// </summary>
@@ -686,16 +686,16 @@ namespace PacketDotNet
         public class DbmAntennaSignalRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.DbmAntennaSignal; } }
-   
+            public override RadioTapType FieldType => RadioTapType.DbmAntennaSignal;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 1; } }
-            
+            public override UInt16 Length => 1;
+
             /// <summary>
             /// Antenna signal in dBm
             /// </summary>
@@ -757,16 +757,16 @@ namespace PacketDotNet
         public class DbmAntennaNoiseRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.DbmAntennaNoise; } }
-   
+            public override RadioTapType FieldType => RadioTapType.DbmAntennaNoise;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 1; } }
-            
+            public override UInt16 Length => 1;
+
             /// <summary>
             /// Antenna noise in dBm
             /// </summary>
@@ -828,17 +828,17 @@ namespace PacketDotNet
         public class LockQualityRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.LockQuality; } }
-   
-            
+            public override RadioTapType FieldType => RadioTapType.LockQuality;
+
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 2; } }
-            
+            public override UInt16 Length => 2;
+
             /// <summary>
             /// Signal quality
             /// </summary>
@@ -900,16 +900,16 @@ namespace PacketDotNet
         public class TsftRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.Tsft; } }
-   
+            public override RadioTapType FieldType => RadioTapType.Tsft;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 8; } }
-            
+            public override UInt16 Length => 8;
+
             /// <summary>
             /// Timestamp in microseconds
             /// </summary>
@@ -971,16 +971,16 @@ namespace PacketDotNet
         public class RxFlagsRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.RxFlags; } }
-            
+            public override RadioTapType FieldType => RadioTapType.RxFlags;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 2; } }
-            
+            public override UInt16 Length => 2;
+
             /// <summary>
             /// Gets or sets a value indicating whether the frame failed the PLCP CRC check.
             /// </summary>
@@ -1050,16 +1050,16 @@ namespace PacketDotNet
         public class TxAttenuationRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.TxAttenuation; } }
-   
+            public override RadioTapType FieldType => RadioTapType.TxAttenuation;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 2; } }
-            
+            public override UInt16 Length => 2;
+
             /// <summary>
             /// Transmit power
             /// </summary>
@@ -1124,16 +1124,16 @@ namespace PacketDotNet
         public class DbTxAttenuationRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.DbTxAttenuation; } }
-   
+            public override RadioTapType FieldType => RadioTapType.DbTxAttenuation;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 2; } }
-            
+            public override UInt16 Length => 2;
+
             /// <summary>
             /// Transmit power 
             /// </summary>
@@ -1198,16 +1198,16 @@ namespace PacketDotNet
         public class DbmTxPowerRadioTapField : RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType { get { return RadioTapType.DbmTxPower; } }
-            
+            public override RadioTapType FieldType => RadioTapType.DbmTxPower;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override UInt16 Length { get { return 1; } }
-            
+            public override UInt16 Length => 1;
+
             /// <summary>
             /// Tx power in dBm
             /// </summary>

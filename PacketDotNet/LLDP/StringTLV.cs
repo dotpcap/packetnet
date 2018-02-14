@@ -72,12 +72,9 @@ namespace PacketDotNet.LLDP
         /// </value>
         public String StringValue
         {
-            get
-            {
-                return System.Text.ASCIIEncoding.ASCII.GetString(tlvData.Bytes,
-                                                                 ValueOffset,
-                                                                 Length);
-            }
+            get => System.Text.ASCIIEncoding.ASCII.GetString(tlvData.Bytes,
+                ValueOffset,
+                Length);
 
             set
             {

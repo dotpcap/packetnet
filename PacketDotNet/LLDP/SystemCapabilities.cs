@@ -80,19 +80,11 @@ namespace PacketDotNet.LLDP
         /// </value>
         public UInt16 Capabilities
         {
-            get
-            {
-                // get the capabilities
-                return BigEndianBitConverter.Big.ToUInt16(tlvData.Bytes,
-                                                          tlvData.Offset + TLVTypeLength.TypeLengthLength);
-            }
-            set
-            {
-                // set the capabilities
-                EndianBitConverter.Big.CopyBytes(value,
-                                                 tlvData.Bytes,
-                                                 tlvData.Offset + TLVTypeLength.TypeLengthLength);
-            }
+            get => BigEndianBitConverter.Big.ToUInt16(tlvData.Bytes,
+                tlvData.Offset + TLVTypeLength.TypeLengthLength);
+            set => EndianBitConverter.Big.CopyBytes(value,
+                tlvData.Bytes,
+                tlvData.Offset + TLVTypeLength.TypeLengthLength);
         }
 
         /// <value>
@@ -100,19 +92,11 @@ namespace PacketDotNet.LLDP
         /// </value>
         public UInt16 Enabled
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(tlvData.Bytes,
-                                                       tlvData.Offset + TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength);
-            }
+            get => EndianBitConverter.Big.ToUInt16(tlvData.Bytes,
+                tlvData.Offset + TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength);
 
-            set
-            {
-                // Add the length of the previous field, the SystemCapabilities field, to get
-                // to the location of the EnabledCapabilities
-                EndianBitConverter.Big.CopyBytes(value, tlvData.Bytes,
-                                                 ValueOffset + SystemCapabilitiesLength);
-            }
+            set => EndianBitConverter.Big.CopyBytes(value, tlvData.Bytes,
+                ValueOffset + SystemCapabilitiesLength);
         }
 
         #endregion

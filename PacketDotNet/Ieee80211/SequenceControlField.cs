@@ -48,10 +48,7 @@ namespace PacketDotNet
             /// </value>
             public Int16 SequenceNumber
             {
-                get
-                {
-                    return (Int16)(Field >> 4);
-                }
+                get => (Int16)(Field >> 4);
 
                 set
                 {
@@ -69,10 +66,7 @@ namespace PacketDotNet
             /// </value>
             public Byte FragmentNumber
             {
-                get
-                {
-                    return (Byte)(Field & 0x000F);
-                }
+                get => (Byte)(Field & 0x000F);
 
                 set
                 {

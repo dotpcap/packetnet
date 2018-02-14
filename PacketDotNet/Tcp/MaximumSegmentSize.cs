@@ -59,10 +59,7 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The Maximum Segment Size
         /// </summary>
-        public UInt16 Value
-        {
-            get { return EndianBitConverter.Big.ToUInt16(Bytes, ValueFieldOffset); }
-        }
+        public UInt16 Value => EndianBitConverter.Big.ToUInt16(Bytes, ValueFieldOffset);
 
         #endregion
 

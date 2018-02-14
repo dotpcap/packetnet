@@ -75,12 +75,9 @@ namespace PacketDotNet
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Big.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset);
-                }
+                set => EndianBitConverter.Big.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset);
             }
 
             /// <summary>
@@ -110,12 +107,9 @@ namespace PacketDotNet
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + MacFields.DurationIDPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + MacFields.DurationIDPosition);
             }
    
             /// <summary>

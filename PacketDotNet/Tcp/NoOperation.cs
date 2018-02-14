@@ -59,10 +59,7 @@ namespace PacketDotNet.Tcp
         ///  the NoOperation option is only 1 byte long and doesn't
         ///  contain a length field
         /// </summary>
-        public override Byte Length
-        {
-            get { return NoOperation.OptionLength; }
-        }
+        public override Byte Length => NoOperation.OptionLength;
 
         #endregion
 

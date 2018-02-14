@@ -55,15 +55,9 @@ namespace PacketDotNet
             
             private Byte VersionBytes
             {
-                get
-                {
-                    return header.Bytes[header.Offset + RadioFields.VersionPosition];
-                }
+                get => header.Bytes[header.Offset + RadioFields.VersionPosition];
 
-                set
-                {
-                    header.Bytes[header.Offset + RadioFields.VersionPosition] = value;
-                }
+                set => header.Bytes[header.Offset + RadioFields.VersionPosition] = value;
             }
 
             /// <summary>
@@ -74,18 +68,12 @@ namespace PacketDotNet
             
             private UInt16 LengthBytes
             {
-                get
-                {
-                    return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                              header.Offset + RadioFields.LengthPosition);
-                }
+                get => EndianBitConverter.Little.ToUInt16(header.Bytes,
+                    header.Offset + RadioFields.LengthPosition);
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                        header.Bytes,
-                                                        header.Offset + RadioFields.LengthPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + RadioFields.LengthPosition);
             }
 
             /// <summary>

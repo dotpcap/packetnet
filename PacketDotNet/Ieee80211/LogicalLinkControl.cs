@@ -50,15 +50,9 @@ namespace PacketDotNet
             /// <value>The dsap.</value>
             public Byte DSAP
             {
-                get
-                {
-                    return header.Bytes[header.Offset + LogicalLinkControlFields.DsapPosition];
-                }
+                get => header.Bytes[header.Offset + LogicalLinkControlFields.DsapPosition];
 
-                set
-                {
-                    header.Bytes[header.Offset + LogicalLinkControlFields.DsapPosition] = value;
-                }
+                set => header.Bytes[header.Offset + LogicalLinkControlFields.DsapPosition] = value;
             }
 
             /// <summary>
@@ -67,15 +61,9 @@ namespace PacketDotNet
             /// <value>The ssap.</value>
             public Byte SSAP
             {
-                get
-                {
-                    return header.Bytes[header.Offset + LogicalLinkControlFields.SsapPosition];
-                }
+                get => header.Bytes[header.Offset + LogicalLinkControlFields.SsapPosition];
 
-                set
-                {
-                    header.Bytes[header.Offset + LogicalLinkControlFields.SsapPosition] = value;
-                }
+                set => header.Bytes[header.Offset + LogicalLinkControlFields.SsapPosition] = value;
             }
 
             /// <summary>
@@ -84,11 +72,8 @@ namespace PacketDotNet
             /// <value>The control organization code.</value>
             protected UInt32 ControlOrganizationCode
             {
-                get
-                {
-                    return EndianBitConverter.Big.ToUInt32(header.Bytes,
-                                                           header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
-                }
+                get => EndianBitConverter.Big.ToUInt32(header.Bytes,
+                    header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
 
                 set
                 {
@@ -105,15 +90,9 @@ namespace PacketDotNet
             /// <value>The control.</value>
             public Byte Control
             {
-                get
-                {
-                    return (Byte)((ControlOrganizationCode >> 24) & 0xFF);
-                }
+                get => (Byte)((ControlOrganizationCode >> 24) & 0xFF);
 
-                set
-                {
-                    throw new NotImplementedException("Control setter not implemented");
-                }
+                set => throw new NotImplementedException("Control setter not implemented");
             }
 
             /// <summary>
@@ -122,15 +101,9 @@ namespace PacketDotNet
             /// <value>The organization code.</value>
             public UInt32 OrganizationCode
             {
-                get
-                {
-                    return (Byte)((ControlOrganizationCode & 0x00FFFFFF));
-                }
+                get => (Byte)((ControlOrganizationCode & 0x00FFFFFF));
 
-                set
-                {
-                    throw new NotImplementedException("OrganizationCode setter not implemented");
-                }
+                set => throw new NotImplementedException("OrganizationCode setter not implemented");
             }
 
             /// <summary>
@@ -139,11 +112,8 @@ namespace PacketDotNet
             /// <value>The type.</value>
             public EthernetPacketType Type
             {
-                get
-                {
-                    return (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                                              header.Offset + LogicalLinkControlFields.TypePosition);
-                }
+                get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
+                    header.Offset + LogicalLinkControlFields.TypePosition);
 
                 set
                 {

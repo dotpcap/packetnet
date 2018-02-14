@@ -38,10 +38,7 @@ namespace PacketDotNet
             /// </summary>
             public Byte ProtocolVersion
             {
-                get
-                {
-                    return (Byte)((Field >> 0x8) & 0x3);
-                }
+                get => (Byte)((Field >> 0x8) & 0x3);
 
                 set
                 {
@@ -322,10 +319,7 @@ namespace PacketDotNet
             /// </summary>
             public Boolean ToDS
             {
-                get
-                {
-                    return ((Field & 0x1) == 1) ? true : false;
-                }
+                get => ((Field & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -345,10 +339,7 @@ namespace PacketDotNet
             /// </summary>
             public Boolean FromDS
             {
-                get
-                {
-                    return (((Field >> 1) & 0x1) == 1) ? true : false;
-                }
+                get => (((Field >> 1) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -369,10 +360,7 @@ namespace PacketDotNet
             /// </summary>
             public Boolean MoreFragments
             {
-                get
-                {
-                    return (((Field >> 2) & 0x1) == 1) ? true : false;
-                }
+                get => (((Field >> 2) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -393,10 +381,7 @@ namespace PacketDotNet
             /// </summary>
             public Boolean Retry
             {
-                get
-                {
-                    return (((Field >> 3) & 0x1) == 1) ? true : false;
-                }
+                get => (((Field >> 3) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -416,10 +401,7 @@ namespace PacketDotNet
             /// </summary>
             public Boolean PowerManagement
             {
-                get
-                {
-                    return (((Field >> 4) & 0x1) == 1) ? true : false;
-                }
+                get => (((Field >> 4) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -439,10 +421,7 @@ namespace PacketDotNet
             /// </summary>
             public Boolean MoreData
             {
-                get
-                {
-                    return (((Field >> 5) & 0x1) == 1) ? true : false;
-                }
+                get => (((Field >> 5) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -463,8 +442,8 @@ namespace PacketDotNet
             [ObsoleteAttribute("This property is obsolete. Use Protected instead.", false)]
             public Boolean Wep
             {
-                get { return Protected; }
-                set { Protected = value; }
+                get => Protected;
+                set => Protected = value;
             }
 
             /// <summary>
@@ -472,10 +451,7 @@ namespace PacketDotNet
             /// </summary>
             public Boolean Protected
             {
-                get
-                {
-                    return (((Field >> 6) & 0x1) == 1) ? true : false;
-                }
+                get => (((Field >> 6) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -496,10 +472,7 @@ namespace PacketDotNet
             /// </summary>
             public Boolean Order
             {
-                get
-                {
-                    return (((Field >> 0x7) & 0x1) == 1) ? true : false;
-                }
+                get => (((Field >> 0x7) & 0x1) == 1) ? true : false;
 
                 set
                 {

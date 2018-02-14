@@ -77,8 +77,8 @@ namespace PacketDotNet.LLDP
         /// </value>
         public String Description
         {
-            get { return StringValue; }
-            set { StringValue = value; }
+            get => StringValue;
+            set => StringValue = value;
         }
 
         #endregion

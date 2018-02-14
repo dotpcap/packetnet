@@ -41,10 +41,7 @@ namespace PacketDotNet
         /// </value>
         public ByteArraySegment TheByteArraySegment
         {
-            get
-            {
-                return theByteArraySegment;
-            }
+            get => theByteArraySegment;
 
             set
             {
@@ -63,10 +60,7 @@ namespace PacketDotNet
         /// </value>
         public Packet ThePacket
         {
-            get
-            {
-                return thePacket;
-            }
+            get => thePacket;
 
             set
             {

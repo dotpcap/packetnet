@@ -166,12 +166,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes (value,
-                                                     header.Bytes,
-                                                     (header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
-                }
+                set => EndianBitConverter.Little.CopyBytes (value,
+                    header.Bytes,
+                    (header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
             }
 
             /// <summary>

@@ -76,12 +76,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + ReassociationRequestFields.CapabilityInformationPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + ReassociationRequestFields.CapabilityInformationPosition);
             }
 
             /// <summary>
@@ -123,12 +120,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + ReassociationRequestFields.ListenIntervalPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + ReassociationRequestFields.ListenIntervalPosition);
             }
 
             /// <summary>
@@ -138,15 +132,9 @@ namespace PacketDotNet
             
             private PhysicalAddress CurrentAccessPointAddressBytes
             {
-                get
-                {
-					return GetAddressByOffset(header.Offset + ReassociationRequestFields.CurrentAccessPointPosition);
-                }
+                get => GetAddressByOffset(header.Offset + ReassociationRequestFields.CurrentAccessPointPosition);
 
-                set
-                {
-                    SetAddressByOffset(header.Offset + ReassociationRequestFields.CurrentAccessPointPosition, value);
-                }
+                set => SetAddressByOffset(header.Offset + ReassociationRequestFields.CurrentAccessPointPosition, value);
             }
 
             /// <summary>
@@ -163,20 +151,14 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override Int32 FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        ReassociationRequestFields.CapabilityInformationLength +
-                        ReassociationRequestFields.ListenIntervalLength +
-                        MacFields.AddressLength +
-                        InformationElements.Length);
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 3) +
+                                                MacFields.SequenceControlLength +
+                                                ReassociationRequestFields.CapabilityInformationLength +
+                                                ReassociationRequestFields.ListenIntervalLength +
+                                                MacFields.AddressLength +
+                                                InformationElements.Length);
 
 
             /// <summary>

@@ -46,68 +46,32 @@ namespace PacketDotNet
         /// <summary>
         /// The Length field
         /// </summary>
-        public UInt16 Length
-        {
-            get
-            {
-                return BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.LengthPosition);
-            }
-        }
+        public UInt16 Length => BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.LengthPosition);
 
         /// <summary>
         /// The Magic field
         /// </summary>
-        public Byte Magic
-        {
-            get
-            {
-                return header.Bytes[header.Offset + DrdaDDMFields.MagicPosition];
-            }
-        }
+        public Byte Magic => header.Bytes[header.Offset + DrdaDDMFields.MagicPosition];
 
         /// <summary>
         /// The Format field
         /// </summary>
-        public Byte Format
-        {
-            get
-            {
-                return header.Bytes[header.Offset + DrdaDDMFields.FormatPosition];
-            }
-        }
+        public Byte Format => header.Bytes[header.Offset + DrdaDDMFields.FormatPosition];
 
         /// <summary>
         /// The CorrelId field
         /// </summary>
-        public UInt16 CorrelId
-        {
-            get
-            {
-                return BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.CorrelIdPosition);
-            }
-        }
+        public UInt16 CorrelId => BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.CorrelIdPosition);
 
         /// <summary>
         /// The Length2 field
         /// </summary>
-        public UInt16 Length2
-        {
-            get
-            {
-                return BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.Length2Position);
-            }
-        }
+        public UInt16 Length2 => BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.Length2Position);
 
         /// <summary>
         /// The Code Point field
         /// </summary>
-        public DrdaCodepointType CodePoint
-        {
-            get
-            {
-                return (DrdaCodepointType)BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.CodePointPosition);
-            }
-        }
+        public DrdaCodepointType CodePoint => (DrdaCodepointType)BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.CodePointPosition);
 
         private List<DrdaDDMParameter> paramters;
 

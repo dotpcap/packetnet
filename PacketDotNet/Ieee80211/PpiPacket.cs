@@ -80,18 +80,12 @@ namespace PacketDotNet
             
             private UInt16 LengthBytes
             {
-                get
-                {
-                    return EndianBitConverter.Little.ToUInt16 (header.Bytes,
-                                                          header.Offset + PpiHeaderFields.LengthPosition);
-                }
+                get => EndianBitConverter.Little.ToUInt16 (header.Bytes,
+                    header.Offset + PpiHeaderFields.LengthPosition);
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes (value,
-                                                    header.Bytes,
-                                                    header.Offset + PpiHeaderFields.LengthPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes (value,
+                    header.Bytes,
+                    header.Offset + PpiHeaderFields.LengthPosition);
             }
 
             
@@ -104,15 +98,9 @@ namespace PacketDotNet
             
             private Byte VersionBytes
             {
-                get
-                {
-                    return header.Bytes [header.Offset + PpiHeaderFields.VersionPosition];
-                }
+                get => header.Bytes [header.Offset + PpiHeaderFields.VersionPosition];
 
-                set
-                {
-                    header.Bytes [header.Offset + PpiHeaderFields.VersionPosition] = value;
-                }
+                set => header.Bytes [header.Offset + PpiHeaderFields.VersionPosition] = value;
             }
             
             /// <summary>
@@ -125,15 +113,9 @@ namespace PacketDotNet
             
             private HeaderFlags FlagsBytes
             {
-                get
-                {
-                    return (HeaderFlags)header.Bytes[header.Offset + PpiHeaderFields.FlagsPosition];
-                }
-                
-                set
-                {
-                    header.Bytes[header.Offset + PpiHeaderFields.FlagsPosition] = (Byte) value;
-                }
+                get => (HeaderFlags)header.Bytes[header.Offset + PpiHeaderFields.FlagsPosition];
+
+                set => header.Bytes[header.Offset + PpiHeaderFields.FlagsPosition] = (Byte) value;
             }
             
             /// <summary>
@@ -147,18 +129,12 @@ namespace PacketDotNet
             
             private LinkLayers LinkTypeBytes
             {
-                get
-                {
-                    return (LinkLayers) EndianBitConverter.Little.ToUInt32(header.Bytes,
-                                                                           header.Offset + PpiHeaderFields.DataLinkTypePosition);
-                }
-                
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes((UInt32)LinkType,
-                                                     header.Bytes,
-                                                     header.Offset + PpiHeaderFields.DataLinkTypePosition);
-                }
+                get => (LinkLayers) EndianBitConverter.Little.ToUInt32(header.Bytes,
+                    header.Offset + PpiHeaderFields.DataLinkTypePosition);
+
+                set => EndianBitConverter.Little.CopyBytes((UInt32)LinkType,
+                    header.Bytes,
+                    header.Offset + PpiHeaderFields.DataLinkTypePosition);
             }
             
             /// <summary>
@@ -167,21 +143,16 @@ namespace PacketDotNet
             /// <value>
             /// The number of fields.
             /// </value>
-            public Int32 Count { get { return PpiFields.Count; } } 
+            public Int32 Count => PpiFields.Count;
+
             /// <summary>
             /// Gets the <see cref="PacketDotNet.Ieee80211.PpiPacket"/> at the specified index.
             /// </summary>
             /// <param name='index'>
             /// Index.
             /// </param>
-            public PpiField this[Int32 index]
-            {
-                get
-                {
-                    return PpiFields[index];
-                }
-            }
-            
+            public PpiField this[Int32 index] => PpiFields[index];
+
             private List<PpiField> PpiFields { get; set; }
 
         #endregion Properties

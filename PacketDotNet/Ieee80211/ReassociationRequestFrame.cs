@@ -40,13 +40,13 @@ namespace PacketDotNet
         {
             private class ReassociationRequestFields
             {
-                public readonly static int CapabilityInformationLength = 2;
-                public readonly static int ListenIntervalLength = 2;
+                public static readonly Int32 CapabilityInformationLength = 2;
+                public static readonly Int32 ListenIntervalLength = 2;
 
-                public readonly static int CapabilityInformationPosition;
-                public readonly static int ListenIntervalPosition;
-                public readonly static int CurrentAccessPointPosition;
-                public readonly static int InformationElement1Position;
+                public static readonly Int32 CapabilityInformationPosition;
+                public static readonly Int32 ListenIntervalPosition;
+                public static readonly Int32 CurrentAccessPointPosition;
+                public static readonly Int32 InformationElement1Position;
 
                 static ReassociationRequestFields()
                 {
@@ -76,12 +76,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + ReassociationRequestFields.CapabilityInformationPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + ReassociationRequestFields.CapabilityInformationPosition);
             }
 
             /// <summary>
@@ -123,12 +120,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + ReassociationRequestFields.ListenIntervalPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + ReassociationRequestFields.ListenIntervalPosition);
             }
 
             /// <summary>
@@ -138,15 +132,9 @@ namespace PacketDotNet
             
             private PhysicalAddress CurrentAccessPointAddressBytes
             {
-                get
-                {
-					return GetAddressByOffset(header.Offset + ReassociationRequestFields.CurrentAccessPointPosition);
-                }
+                get => GetAddressByOffset(header.Offset + ReassociationRequestFields.CurrentAccessPointPosition);
 
-                set
-                {
-                    SetAddressByOffset(header.Offset + ReassociationRequestFields.CurrentAccessPointPosition, value);
-                }
+                set => SetAddressByOffset(header.Offset + ReassociationRequestFields.CurrentAccessPointPosition, value);
             }
 
             /// <summary>
@@ -163,20 +151,14 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        ReassociationRequestFields.CapabilityInformationLength +
-                        ReassociationRequestFields.ListenIntervalLength +
-                        MacFields.AddressLength +
-                        InformationElements.Length);
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 3) +
+                                                MacFields.SequenceControlLength +
+                                                ReassociationRequestFields.CapabilityInformationLength +
+                                                ReassociationRequestFields.ListenIntervalLength +
+                                                MacFields.AddressLength +
+                                                InformationElements.Length);
 
 
             /// <summary>

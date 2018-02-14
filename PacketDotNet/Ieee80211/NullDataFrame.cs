@@ -40,12 +40,12 @@ namespace PacketDotNet
             /// This does not include the FCS, it represents only the header bytes that would
             /// would preceed any payload.
             /// </summary>
-            public override int FrameSize
+            public override Int32 FrameSize
             {
                 get
                 {
                     //if we are in WDS mode then there are 4 addresses (normally it is just 3)
-                    int numOfAddressFields = (FrameControl.ToDS && FrameControl.FromDS) ? 4 : 3;
+                    Int32 numOfAddressFields = (FrameControl.ToDS && FrameControl.FromDS) ? 4 : 3;
 
                     return (MacFields.FrameControlLength +
                         MacFields.DurationIDLength +

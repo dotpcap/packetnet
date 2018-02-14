@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of PacketDotNet
 
 PacketDotNet is free software: you can redistribute it and/or modify
@@ -18,7 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
-﻿using System;
+ using System;
 using System.IO;
 using System.Text;
 using PacketDotNet.Utils;
@@ -66,11 +66,11 @@ namespace PacketDotNet
         /// <value>
         /// The total length of the packet.
         /// </value>
-        protected int TotalPacketLength
+        protected Int32 TotalPacketLength
         {
             get
             {
-                int totalLength = 0;
+                Int32 totalLength = 0;
                 totalLength += header.Length;
 
                 if(payloadPacketOrData.Type == PayloadType.Bytes)
@@ -95,7 +95,7 @@ namespace PacketDotNet
         /// are the same instance and the offsets indicate that the bytes
         /// are contiguous
         /// </value>
-        protected bool SharesMemoryWithSubPackets
+        protected Boolean SharesMemoryWithSubPackets
         {
             get
             {
@@ -147,17 +147,14 @@ namespace PacketDotNet
         /// </summary>
         public virtual Packet ParentPacket
         {
-            get { return parentPacket; }
-            set { parentPacket = value; }
+            get => parentPacket;
+            set => parentPacket = value;
         }
 
         /// <value>
         /// Returns a
         /// </value>
-        public virtual byte[] Header
-        {
-            get { return this.header.ActualBytes(); }
-        }
+        public virtual Byte[] Header => this.header.ActualBytes();
 
         /// <summary>
         /// Packet that this packet carries if one is present.
@@ -166,7 +163,7 @@ namespace PacketDotNet
         /// </summary>
         public virtual Packet PayloadPacket
         {
-            get { return payloadPacketOrData.ThePacket; }
+            get => payloadPacketOrData.ThePacket;
             set
             {
                 if (this == value)
@@ -182,7 +179,7 @@ namespace PacketDotNet
         /// Note that the packet MAY have a null PayloadData but a
         /// non-null PayloadPacket
         /// </summary>
-        public byte[] PayloadData
+        public Byte[] PayloadData
         {
             get
             {
@@ -210,7 +207,7 @@ namespace PacketDotNet
         /// byte[] containing this packet and its payload
         /// NOTE: Use 'public virtual ByteArraySegment BytesHighPerformance' for highest performance
         /// </summary>
-        public virtual byte[] Bytes
+        public virtual Byte[] Bytes
         {
             get
             {
@@ -293,7 +290,7 @@ namespace PacketDotNet
         /// A <see cref="Packet"/>
         /// </returns>
         public static Packet ParsePacket(LinkLayers LinkLayer,
-                                         byte[] PacketData)
+                                         Byte[] PacketData)
         {
             Packet p;
             var bas = new ByteArraySegment(PacketData);
@@ -377,7 +374,7 @@ namespace PacketDotNet
         /// <param name="outputFormat">
         /// <see cref="StringOutputType" />
         /// </param>
-        public virtual string ToString(StringOutputType outputFormat)
+        public virtual String ToString(StringOutputType outputFormat)
         {
             if(payloadPacketOrData.Type == PayloadType.Packet)
             {
@@ -397,20 +394,20 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public string PrintHex()
+        public String PrintHex()
         {
-            byte[] data = BytesHighPerformance.Bytes;
+            Byte[] data = BytesHighPerformance.Bytes;
             var buffer = new StringBuilder();
-            string segmentNumber = "";
-            string bytes = "";
-            string ascii = "";
+            String segmentNumber = "";
+            String bytes = "";
+            String ascii = "";
 
             buffer.AppendLine("Data:  ******* Raw Hex Output - length=" + data.Length + " bytes");
             buffer.AppendLine("Data: Segment:                   Bytes:                              Ascii:");
             buffer.AppendLine("Data: --------------------------------------------------------------------------");
 
             // parse the raw data
-            for(int i = 1; i <= data.Length; i++)
+            for(Int32 i = 1; i <= data.Length; i++)
             {
                 // add the current byte to the bytes hex string
                 bytes += (data[i-1].ToString("x")).PadLeft(2, '0') + " ";
@@ -422,7 +419,7 @@ namespace PacketDotNet
                 }
                 else
                 {
-                    ascii += Encoding.ASCII.GetString(new byte[1] { data[i-1] });
+                    ascii += Encoding.ASCII.GetString(new Byte[1] { data[i-1] });
                 }
 
                 // add an additional space to split the bytes into
@@ -492,12 +489,6 @@ namespace PacketDotNet
         /// <value>
         /// Color used when generating the text description of a packet
         /// </value>
-        public virtual System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.Black;
-            }
-        }
+        public virtual System.String Color => AnsiEscapeSequences.Black;
     }
 }

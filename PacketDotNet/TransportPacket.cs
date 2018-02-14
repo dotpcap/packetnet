@@ -45,7 +45,7 @@ namespace PacketDotNet
         /// <value>
         /// The Checksum version
         /// </value>
-        public abstract ushort Checksum
+        public abstract UInt16 Checksum
         {
             get;
             set;
@@ -59,7 +59,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        internal int CalculateChecksum(TransportChecksumOption option)
+        internal Int32 CalculateChecksum(TransportChecksumOption option)
         {
             // save the checksum field value so it can be restored, altering the checksum is not
             // an intended side effect of this method
@@ -70,13 +70,13 @@ namespace PacketDotNet
             Checksum = 0;
 
             // copy the tcp section with data
-            byte[] dataToChecksum = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
+            Byte[] dataToChecksum = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
 
              if (option == TransportChecksumOption.AttachPseudoIPHeader)
                 dataToChecksum = ((IpPacket)ParentPacket).AttachPseudoIPHeader(dataToChecksum);
 
             // calculate the one's complement sum of the tcp header
-            int cs = ChecksumUtils.OnesComplementSum(dataToChecksum);
+            Int32 cs = ChecksumUtils.OnesComplementSum(dataToChecksum);
 
             // restore the checksum field value
             Checksum = originalChecksum;
@@ -93,7 +93,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Boolean"/>
         /// </returns>
-        public virtual bool IsValidChecksum(TransportChecksumOption option)
+        public virtual Boolean IsValidChecksum(TransportChecksumOption option)
         {
             var upperLayer = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
 
@@ -104,7 +104,7 @@ namespace PacketDotNet
                 upperLayer = ((IpPacket)ParentPacket).AttachPseudoIPHeader(upperLayer);
 
             var onesSum = ChecksumUtils.OnesSum(upperLayer);
-            const int expectedOnesSum = 0xffff;
+            const Int32 expectedOnesSum = 0xffff;
             log.DebugFormat("onesSum {0} expected {1}",
                             onesSum,
                             expectedOnesSum);

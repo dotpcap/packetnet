@@ -57,7 +57,7 @@ namespace PacketDotNet
         /// <param name="item">
         /// A <see cref="TLV"/>
         /// </param>
-        protected override void InsertItem (int index, TLV item)
+        protected override void InsertItem (Int32 index, TLV item)
         {
             log.DebugFormat("index {0}, TLV.GetType {1}, TLV.Type {2}",
                             index, item.GetType(), item.Type);
@@ -84,7 +84,7 @@ namespace PacketDotNet
 
             // if we have no items insert the first item wherever
             // if we have items insert the item befor the last item as the last item is a EndOfLLDPDU
-            int insertPosition = (Count == 0) ? 0 : Count - 1;
+            Int32 insertPosition = (Count == 0) ? 0 : Count - 1;
 
             log.DebugFormat("Inserting item at position {0}", insertPosition);
 

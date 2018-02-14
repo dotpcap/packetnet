@@ -36,12 +36,9 @@ namespace PacketDotNet
             /// <summary>
             /// Protocol version
             /// </summary>
-            public byte ProtocolVersion
+            public Byte ProtocolVersion
             {
-                get
-                {
-                    return (byte)((Field >> 0x8) & 0x3);
-                }
+                get => (Byte)((Field >> 0x8) & 0x3);
 
                 set
                 {
@@ -285,8 +282,8 @@ namespace PacketDotNet
             {
                 get
                 {
-                    int typeAndSubtype = (Field >> 8); //get rid of the flags
-                    int type = ((typeAndSubtype & 0xC) >> 2);
+                    Int32 typeAndSubtype = (Field >> 8); //get rid of the flags
+                    Int32 type = ((typeAndSubtype & 0xC) >> 2);
                     return (FrameTypes)type;
                 }
             }
@@ -299,15 +296,15 @@ namespace PacketDotNet
             {
                 get
                 {
-                    int typeAndSubtype = (Field >> 8); //get rid of the flags
-                    int type = (((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4));
+                    Int32 typeAndSubtype = (Field >> 8); //get rid of the flags
+                    Int32 type = (((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4));
                     return (FrameSubTypes)type;
                 }
 
                 set
                 {
-                    uint val = (uint)value;
-                    uint typeAndSubtype = ((val & 0x0F) << 4) | ((val >> 4) << 2);
+                    UInt32 val = (UInt32)value;
+                    UInt32 typeAndSubtype = ((val & 0x0F) << 4) | ((val >> 4) << 2);
                     //shift it into the right position in the field
                     typeAndSubtype = typeAndSubtype << 0x8;
                     //Unset all the bits related to the type and subtype
@@ -320,12 +317,9 @@ namespace PacketDotNet
             /// <summary>
             /// Is set to 1 when the frame is sent to Distribution System (DS)
             /// </summary>
-            public bool ToDS
+            public Boolean ToDS
             {
-                get
-                {
-                    return ((Field & 0x1) == 1) ? true : false;
-                }
+                get => ((Field & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -343,12 +337,9 @@ namespace PacketDotNet
             /// <summary>
             /// Is set to 1 when the frame is received from the Distribution System (DS)
             /// </summary>
-            public bool FromDS
+            public Boolean FromDS
             {
-                get
-                {
-                    return (((Field >> 1) & 0x1) == 1) ? true : false;
-                }
+                get => (((Field >> 1) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -367,12 +358,9 @@ namespace PacketDotNet
             /// More Fragment is set to 1 when there are more fragments belonging to the same
             /// frame following the current fragment
             /// </summary>
-            public bool MoreFragments
+            public Boolean MoreFragments
             {
-                get
-                {
-                    return (((Field >> 2) & 0x1) == 1) ? true : false;
-                }
+                get => (((Field >> 2) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -391,12 +379,9 @@ namespace PacketDotNet
             /// Indicates that this fragment is a retransmission of a previously transmitted fragment.
             /// (For receiver to recognize duplicate transmissions of frames)
             /// </summary>
-            public bool Retry
+            public Boolean Retry
             {
-                get
-                {
-                    return (((Field >> 3) & 0x1) == 1) ? true : false;
-                }
+                get => (((Field >> 3) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -414,12 +399,9 @@ namespace PacketDotNet
             /// <summary>
             ///  Indicates the power management mode that the station will be in after the transmission of the frame
             /// </summary>
-            public bool PowerManagement
+            public Boolean PowerManagement
             {
-                get
-                {
-                    return (((Field >> 4) & 0x1) == 1) ? true : false;
-                }
+                get => (((Field >> 4) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -437,12 +419,9 @@ namespace PacketDotNet
             /// <summary>
             /// Indicates that there are more frames buffered for this station
             /// </summary>
-            public bool MoreData
+            public Boolean MoreData
             {
-                get
-                {
-                    return (((Field >> 5) & 0x1) == 1) ? true : false;
-                }
+                get => (((Field >> 5) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -461,21 +440,18 @@ namespace PacketDotNet
             /// Indicates that the frame body is encrypted according to the WEP (wired equivalent privacy) algorithm
             /// </summary>
             [ObsoleteAttribute("This property is obsolete. Use Protected instead.", false)]
-            public bool Wep
+            public Boolean Wep
             {
-                get { return Protected; }
-                set { Protected = value; }
+                get => Protected;
+                set => Protected = value;
             }
 
             /// <summary>
             /// Indicates whether the frame body is encrypted with one of several encryption standards
             /// </summary>
-            public bool Protected
+            public Boolean Protected
             {
-                get
-                {
-                    return (((Field >> 6) & 0x1) == 1) ? true : false;
-                }
+                get => (((Field >> 6) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -494,12 +470,9 @@ namespace PacketDotNet
             /// Bit is set when the "strict ordering" delivery method is employed. Frames and
             /// fragments are not always sent in order as it causes a transmission performance penalty.
             /// </summary>
-            public bool Order
+            public Boolean Order
             {
-                get
-                {
-                    return (((Field >> 0x7) & 0x1) == 1) ? true : false;
-                }
+                get => (((Field >> 0x7) & 0x1) == 1) ? true : false;
 
                 set
                 {
@@ -547,7 +520,7 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.Ieee80211.FrameControlField"/>.
             /// </returns>
-            public override string ToString ()
+            public override String ToString ()
             {
                 var flags = new List<String>();
                 

@@ -37,12 +37,12 @@ namespace PacketDotNet
         {
             private class AssociationRequestFields
             {
-                public readonly static int CapabilityInformationLength = 2;
-                public readonly static int ListenIntervalLength = 2;
+                public static readonly Int32 CapabilityInformationLength = 2;
+                public static readonly Int32 ListenIntervalLength = 2;
 
-                public readonly static int CapabilityInformationPosition;
-                public readonly static int ListenIntervalPosition;
-                public readonly static int InformationElement1Position;
+                public static readonly Int32 CapabilityInformationPosition;
+                public static readonly Int32 ListenIntervalPosition;
+                public static readonly Int32 InformationElement1Position;
 
                 static AssociationRequestFields()
                 {
@@ -71,12 +71,9 @@ namespace PacketDotNet
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                        header.Bytes,
-                        header.Offset + AssociationRequestFields.CapabilityInformationPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + AssociationRequestFields.CapabilityInformationPosition);
             }
 
             /// <summary>
@@ -114,12 +111,9 @@ namespace PacketDotNet
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                        header.Bytes,
-                        header.Offset + AssociationRequestFields.ListenIntervalPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + AssociationRequestFields.ListenIntervalPosition);
             }
    
             /// <summary>
@@ -136,19 +130,13 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        AssociationRequestFields.CapabilityInformationLength +
-                        AssociationRequestFields.ListenIntervalLength +
-                        InformationElements.Length);
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 3) +
+                                                MacFields.SequenceControlLength +
+                                                AssociationRequestFields.CapabilityInformationLength +
+                                                AssociationRequestFields.ListenIntervalLength +
+                                                InformationElements.Length);
 
 
             /// <summary>

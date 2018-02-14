@@ -37,14 +37,14 @@ namespace PacketDotNet
         {
             private class AssociationResponseFields
             {
-                public readonly static int CapabilityInformationLength = 2;
-                public readonly static int StatusCodeLength = 2;
-                public readonly static int AssociationIdLength = 2;
+                public static readonly Int32 CapabilityInformationLength = 2;
+                public static readonly Int32 StatusCodeLength = 2;
+                public static readonly Int32 AssociationIdLength = 2;
 
-                public readonly static int CapabilityInformationPosition;
-                public readonly static int StatusCodePosition;
-                public readonly static int AssociationIdPosition;
-                public readonly static int InformationElement1Position;
+                public static readonly Int32 CapabilityInformationPosition;
+                public static readonly Int32 StatusCodePosition;
+                public static readonly Int32 AssociationIdPosition;
+                public static readonly Int32 InformationElement1Position;
 
                 static AssociationResponseFields()
                 {
@@ -74,12 +74,9 @@ namespace PacketDotNet
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + AssociationResponseFields.CapabilityInformationPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + AssociationResponseFields.CapabilityInformationPosition);
             }
 
             /// <summary>
@@ -113,12 +110,9 @@ namespace PacketDotNet
                     }
                 }
                 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes ((UInt16)value,
-                        header.Bytes,
-                        header.Offset + AssociationResponseFields.StatusCodePosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes ((UInt16)value,
+                    header.Bytes,
+                    header.Offset + AssociationResponseFields.StatusCodePosition);
             }
 
             /// <summary>
@@ -164,20 +158,14 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        AssociationResponseFields.CapabilityInformationLength +
-                        AssociationResponseFields.StatusCodeLength +
-                        AssociationResponseFields.AssociationIdLength +
-                        InformationElements.Length);
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 3) +
+                                                MacFields.SequenceControlLength +
+                                                AssociationResponseFields.CapabilityInformationLength +
+                                                AssociationResponseFields.StatusCodeLength +
+                                                AssociationResponseFields.AssociationIdLength +
+                                                InformationElements.Length);
 
 
             /// <summary>

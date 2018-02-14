@@ -36,9 +36,9 @@ namespace PacketDotNet
         {
             private class QosNullDataField
             {
-                public readonly static int QosControlLength = 2;
+                public static readonly Int32 QosControlLength = 2;
 
-                public readonly static int QosControlPosition;
+                public static readonly Int32 QosControlPosition;
 
                 static QosNullDataField()
                 {
@@ -69,12 +69,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + QosNullDataField.QosControlPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + QosNullDataField.QosControlPosition);
             }
 
             /// <summary>
@@ -83,12 +80,12 @@ namespace PacketDotNet
             /// This does not include the FCS, it represents only the header bytes that would
             /// would preceed any payload.
             /// </summary>
-            public override int FrameSize
+            public override Int32 FrameSize
             {
                 get
                 {
                     //if we are in WDS mode then there are 4 addresses (normally it is just 3)
-                    int numOfAddressFields = (FrameControl.ToDS && FrameControl.FromDS) ? 4 : 3;
+                    Int32 numOfAddressFields = (FrameControl.ToDS && FrameControl.FromDS) ? 4 : 3;
 
                     return (MacFields.FrameControlLength +
                         MacFields.DurationIDLength +

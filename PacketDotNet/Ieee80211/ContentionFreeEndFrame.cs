@@ -47,15 +47,9 @@ namespace PacketDotNet
             /// <summary>
             /// Length of the frame
             /// </summary>
-            override public int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 2));
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 2));
 
             /// <summary>
             /// Constructor

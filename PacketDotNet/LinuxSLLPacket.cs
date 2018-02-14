@@ -38,11 +38,8 @@ namespace PacketDotNet
         /// </value>
         public LinuxSLLType Type
         {
-            get
-            {
-                return (LinuxSLLType)EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + LinuxSLLFields.PacketTypePosition);
-            }
+            get => (LinuxSLLType)EndianBitConverter.Big.ToInt16(header.Bytes,
+                header.Offset + LinuxSLLFields.PacketTypePosition);
 
             set
             {
@@ -56,13 +53,10 @@ namespace PacketDotNet
         /// <value>
         /// The
         /// </value>
-        public int LinkLayerAddressType
+        public Int32 LinkLayerAddressType
         {
-            get
-            {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
-            }
+            get => EndianBitConverter.Big.ToInt16(header.Bytes,
+                header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
 
             set
             {
@@ -76,13 +70,10 @@ namespace PacketDotNet
         /// <value>
         /// Number of bytes in the link layer address of the sender of the packet
         /// </value>
-        public int LinkLayerAddressLength
+        public Int32 LinkLayerAddressLength
         {
-            get
-            {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
-            }
+            get => EndianBitConverter.Big.ToInt16(header.Bytes,
+                header.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
 
             set
             {
@@ -102,7 +93,7 @@ namespace PacketDotNet
         /// <value>
         /// Link layer header bytes, maximum of 8 bytes
         /// </value>
-        public byte[] LinkLayerAddress
+        public Byte[] LinkLayerAddress
         {
             get
             {
@@ -131,11 +122,8 @@ namespace PacketDotNet
         /// </value>
         public EthernetPacketType EthernetProtocolType
         {
-            get
-            {
-                return (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
-            }
+            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
+                header.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
 
             set
             {
@@ -163,11 +151,11 @@ namespace PacketDotNet
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString (StringOutputType outputFormat)
+        public override String ToString (StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -191,8 +179,8 @@ namespace PacketDotNet
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
-                properties.Add("type", Type.ToString() + " (" + ((int)Type).ToString() + ")");
+                Dictionary<String,String> properties = new Dictionary<String,String>();
+                properties.Add("type", Type.ToString() + " (" + ((Int32)Type).ToString() + ")");
                 properties.Add("link layer address type", LinkLayerAddressType.ToString());
                 properties.Add("link layer address length", LinkLayerAddressLength.ToString());
                 properties.Add("source", BitConverter.ToString(LinkLayerAddress));
@@ -200,7 +188,7 @@ namespace PacketDotNet
 
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("LCC:  ******* LinuxSLL - \"Linux Cooked Capture\" - offset=? length=" + TotalPacketLength);

@@ -37,11 +37,11 @@ namespace PacketDotNet
         {
             private class BlockAckRequestField
             {
-                public readonly static int BlockAckRequestControlLength = 2;
-                public readonly static int BlockAckStartingSequenceControlLength = 2;
+                public static readonly Int32 BlockAckRequestControlLength = 2;
+                public static readonly Int32 BlockAckStartingSequenceControlLength = 2;
 
-                public readonly static int BlockAckRequestControlPosition;
-                public readonly static int BlockAckStartingSequenceControlPosition;
+                public static readonly Int32 BlockAckRequestControlPosition;
+                public static readonly Int32 BlockAckStartingSequenceControlPosition;
 
                 static BlockAckRequestField()
                 {
@@ -80,12 +80,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + BlockAckRequestField.BlockAckRequestControlPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + BlockAckRequestField.BlockAckRequestControlPosition);
             }
 
             /// <summary>
@@ -129,29 +126,20 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                        header.Bytes,
-                        header.Offset + BlockAckRequestField.BlockAckStartingSequenceControlPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + BlockAckRequestField.BlockAckStartingSequenceControlPosition);
             }
 
 
             /// <summary>
             /// Length of the frame
             /// </summary>
-            override public int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 2) +
-                        BlockAckRequestField.BlockAckRequestControlLength +
-                        BlockAckRequestField.BlockAckStartingSequenceControlLength);
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 2) +
+                                                BlockAckRequestField.BlockAckRequestControlLength +
+                                                BlockAckRequestField.BlockAckStartingSequenceControlLength);
 
             /// <summary>
             /// Constructor

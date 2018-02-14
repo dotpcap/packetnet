@@ -37,11 +37,8 @@ namespace PacketDotNet
         /// </value>
         public virtual EthernetPacketType Type
         {
-            get
-            {
-                return (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                                          header.Offset + Ieee8021QFields.TypePosition);
-            }
+            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
+                header.Offset + Ieee8021QFields.TypePosition);
 
             set
             {
@@ -72,8 +69,8 @@ namespace PacketDotNet
                 var tci = TagControlInformation;
 
                 // mask the existing Priority off and then back in from value
-                ushort val = (ushort)value;
-                tci = (ushort)((tci & 0x1FFF) | ((val & 0x7) << (16 - 3)));
+                UInt16 val = (UInt16)value;
+                tci = (UInt16)((tci & 0x1FFF) | ((val & 0x7) << (16 - 3)));
                 TagControlInformation = tci;
             }
         }
@@ -84,7 +81,7 @@ namespace PacketDotNet
         /// <value>
         /// <c>true</c> if the mac address is in non-canonical format <c>false</c> if otherwise.
         /// </value>
-        public bool CanonicalFormatIndicator
+        public Boolean CanonicalFormatIndicator
         {
             get
             {
@@ -98,8 +95,8 @@ namespace PacketDotNet
                 var tci = TagControlInformation;
 
                 // mask the existing CFI off and then back in from value
-                int val = ((value == true) ? 1 : 0);
-                tci = (ushort)((tci & 0xEFFF) | (val << 12));
+                Int32 val = ((value == true) ? 1 : 0);
+                tci = (UInt16)((tci & 0xEFFF) | (val << 12));
                 TagControlInformation = tci;
             }
         }
@@ -110,12 +107,12 @@ namespace PacketDotNet
         /// <value>
         /// The VLAN identifier.
         /// </value>
-        public ushort VLANIdentifier
+        public UInt16 VLANIdentifier
         {
             get
             {
                 var tci = TagControlInformation;
-                return (ushort)(tci & 0xFFF);
+                return (UInt16)(tci & 0xFFF);
             }
 
             set
@@ -123,18 +120,15 @@ namespace PacketDotNet
                 var tci = TagControlInformation;
 
                 // mask the existing vlan id off
-                tci = (ushort)((tci & 0xF000) | (value & 0xFFF));
+                tci = (UInt16)((tci & 0xF000) | (value & 0xFFF));
                 TagControlInformation = tci;
             }
         }
 
-        private ushort TagControlInformation
+        private UInt16 TagControlInformation
         {
-            get
-            {
-                return (ushort)EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                              header.Offset + Ieee8021QFields.TagControlInformationPosition);
-            }
+            get => (UInt16)EndianBitConverter.Big.ToInt16(header.Bytes,
+                header.Offset + Ieee8021QFields.TagControlInformationPosition);
 
             set
             {
@@ -146,13 +140,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.LightCyan;
-            }
-        }
+        public override System.String Color => AnsiEscapeSequences.LightCyan;
 
         /// <summary>
         /// Constructor
@@ -172,11 +160,11 @@ namespace PacketDotNet
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -198,14 +186,14 @@ namespace PacketDotNet
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
+                Dictionary<String,String> properties = new Dictionary<String,String>();
                 properties.Add("priority", PriorityControlPoint + " (0x" + PriorityControlPoint.ToString("x") + ")");
                 properties.Add("canonical format indicator", CanonicalFormatIndicator.ToString());
                 properties.Add("type", Type.ToString() + " (0x" + Type.ToString("x") + ")");
                 properties.Add ("VLANIdentifier", VLANIdentifier.ToString () + " (0x" + VLANIdentifier.ToString ("x") + ")");
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Ieee802.1Q:  ******* Ieee802.1Q - \"VLan tag\" - offset=? length=" + TotalPacketLength);

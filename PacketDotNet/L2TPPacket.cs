@@ -32,54 +32,19 @@ namespace PacketDotNet
     public class L2TPPacket : Packet
     {
 
-        virtual public bool DataMessage
-        {
-            get
-            {
-                return 8 == (header.Bytes[header.Offset] & 0x8);
-            }
-        }
-        virtual public bool HasLength
-        {
-            get
-            {
-                return 4 == (header.Bytes[header.Offset] & 0x4);
-            }
-        }
+        public virtual Boolean DataMessage => 8 == (header.Bytes[header.Offset] & 0x8);
 
-        virtual public bool HasSequence
-        {
-            get
-            {
-                return 2 == (header.Bytes[header.Offset] & 0x2);
-            }
-        }
+        public virtual Boolean HasLength => 4 == (header.Bytes[header.Offset] & 0x4);
 
-        virtual public bool HasOffset
-        {
-            get
-            {
-                return 2 == (header.Bytes[header.Offset] & 0x2);
-            }
-        }
+        public virtual Boolean HasSequence => 2 == (header.Bytes[header.Offset] & 0x2);
 
-        virtual public bool IsPriority
-        {
-            get
-            {
-                return 2 == (header.Bytes[header.Offset] & 0x2);
-            }
-        }
+        public virtual Boolean HasOffset => 2 == (header.Bytes[header.Offset] & 0x2);
 
-        virtual public int Version
-        {
-            get
-            {
-                return (header.Bytes[header.Offset + 1] & 0x7);
-            }
-        }
+        public virtual Boolean IsPriority => 2 == (header.Bytes[header.Offset] & 0x2);
 
-        virtual public int TunnelID
+        public virtual Int32 Version => (header.Bytes[header.Offset + 1] & 0x7);
+
+        public virtual Int32 TunnelID
         {
             get
             {
@@ -91,7 +56,7 @@ namespace PacketDotNet
             }
         }
 
-        virtual public int SessionID
+        public virtual Int32 SessionID
         {
             get
             {
@@ -104,14 +69,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.DarkGray;
-            }
-
-        }
+        public override System.String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary>
         /// Constructor
@@ -147,11 +105,11 @@ namespace PacketDotNet
 
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
             
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)

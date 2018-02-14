@@ -42,14 +42,14 @@ namespace PacketDotNet
 
             private class BeaconFields
             {
-                public readonly static int TimestampLength = 8;
-                public readonly static int BeaconIntervalLength = 2;
-                public readonly static int CapabilityInformationLength = 2;
+                public static readonly Int32 TimestampLength = 8;
+                public static readonly Int32 BeaconIntervalLength = 2;
+                public static readonly Int32 CapabilityInformationLength = 2;
 
-                public readonly static int TimestampPosition;
-                public readonly static int BeaconIntervalPosition;
-                public readonly static int CapabilityInformationPosition;
-                public readonly static int InformationElement1Position;
+                public static readonly Int32 TimestampPosition;
+                public static readonly Int32 BeaconIntervalPosition;
+                public static readonly Int32 CapabilityInformationPosition;
+                public static readonly Int32 InformationElement1Position;
 
                 static BeaconFields ()
                 {
@@ -82,12 +82,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + BeaconFields.TimestampPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + BeaconFields.TimestampPosition);
             }
 
             /// <summary>
@@ -111,12 +108,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + BeaconFields.BeaconIntervalPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + BeaconFields.BeaconIntervalPosition);
             }
 
             /// <summary>
@@ -137,12 +131,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + BeaconFields.CapabilityInformationPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + BeaconFields.CapabilityInformationPosition);
             }
 
             /// <summary>
@@ -160,20 +151,14 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        BeaconFields.TimestampLength +
-                        BeaconFields.BeaconIntervalLength +
-                        BeaconFields.CapabilityInformationLength +
-                        InformationElements.Length);
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 3) +
+                                                MacFields.SequenceControlLength +
+                                                BeaconFields.TimestampLength +
+                                                BeaconFields.BeaconIntervalLength +
+                                                BeaconFields.CapabilityInformationLength +
+                                                InformationElements.Length);
 
             /// <summary>
             /// The information elements included in the frame

@@ -32,76 +32,28 @@ namespace PacketDotNet
     public class GREPacket : Packet
     {
 
-        virtual public bool HasCheckSum
-        {
-            get
-            {
-                return 8 == (header.Bytes[header.Offset + 1] & 0x8);
-            }
-        }
-        virtual public bool HasReserved
-        {
-            get
-            {
-                return 4 == (header.Bytes[header.Offset + 1] & 0x4);
-            }
-        }
+        public virtual Boolean HasCheckSum => 8 == (header.Bytes[header.Offset + 1] & 0x8);
 
-        virtual public bool HasKey
-        {
-            get
-            {
-                return 2 == (header.Bytes[header.Offset + 1] & 0x2);
-            }
-        }
-        virtual public bool HasSequence
-        {
-            get
-            {
-                return 1 == (header.Bytes[header.Offset + 1] & 0x1);
-            }
-        }
+        public virtual Boolean HasReserved => 4 == (header.Bytes[header.Offset + 1] & 0x4);
+
+        public virtual Boolean HasKey => 2 == (header.Bytes[header.Offset + 1] & 0x2);
+
+        public virtual Boolean HasSequence => 1 == (header.Bytes[header.Offset + 1] & 0x1);
 
 
-        virtual public int Version
-        {
-            get
-            {
-                return (header.Bytes[2] & 0x7);
-            }
-        }
+        public virtual Int32 Version => (header.Bytes[2] & 0x7);
 
-        virtual public EthernetPacketType Protocol
-        {
-            get
-            {
-                return (EthernetPacketType) EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                          header.Offset + GREFields.FlagsLength);
-            }
-        }
+        public virtual EthernetPacketType Protocol => (EthernetPacketType) EndianBitConverter.Big.ToUInt16(header.Bytes,
+            header.Offset + GREFields.FlagsLength);
 
 
         /// <summary> Fetch the GRE header checksum.</summary>
-        virtual public short Checksum
-        {
-            get
-            {
-                return BitConverter.ToInt16(header.Bytes,
-                                                      header.Offset + GREFields.ChecksumPosition);
-            }
+        public virtual Int16 Checksum => BitConverter.ToInt16(header.Bytes,
+            header.Offset + GREFields.ChecksumPosition);
 
-        }
-        
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.DarkGray;
-            }
-
-        }
+        public override System.String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary>
         /// Constructor
@@ -131,11 +83,11 @@ namespace PacketDotNet
         
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
             
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
@@ -156,7 +108,7 @@ namespace PacketDotNet
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
+                Dictionary<String,String> properties = new Dictionary<String,String>();
                 properties.Add("Protocol ", Protocol + " (0x" + Protocol.ToString("x") + ")");
             }
 

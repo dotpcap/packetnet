@@ -39,14 +39,14 @@ namespace PacketDotNet
         {
             private class ProbeResponseFields
             {
-                public readonly static int TimestampLength = 8;
-                public readonly static int BeaconIntervalLength = 2;
-                public readonly static int CapabilityInformationLength = 2;
+                public static readonly Int32 TimestampLength = 8;
+                public static readonly Int32 BeaconIntervalLength = 2;
+                public static readonly Int32 CapabilityInformationLength = 2;
 
-                public readonly static int TimestampPosition;
-                public readonly static int BeaconIntervalPosition;
-                public readonly static int CapabilityInformationPosition;
-                public readonly static int InformationElement1Position;
+                public static readonly Int32 TimestampPosition;
+                public static readonly Int32 BeaconIntervalPosition;
+                public static readonly Int32 CapabilityInformationPosition;
+                public static readonly Int32 InformationElement1Position;
 
                 static ProbeResponseFields()
                 {
@@ -80,12 +80,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + ProbeResponseFields.TimestampPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + ProbeResponseFields.TimestampPosition);
             }
 
             /// <summary>
@@ -110,12 +107,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + ProbeResponseFields.BeaconIntervalPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + ProbeResponseFields.BeaconIntervalPosition);
             }
 
             /// <summary>
@@ -137,12 +131,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + ProbeResponseFields.CapabilityInformationPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + ProbeResponseFields.CapabilityInformationPosition);
             }
    
             /// <summary>
@@ -164,20 +155,14 @@ namespace PacketDotNet
             /// This does not include the FCS, it represents only the header bytes that would
             /// would preceed any payload.
             /// </summary>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        ProbeResponseFields.TimestampLength +
-                        ProbeResponseFields.BeaconIntervalLength +
-                        ProbeResponseFields.CapabilityInformationLength +
-                        InformationElements.Length);
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 3) +
+                                                MacFields.SequenceControlLength +
+                                                ProbeResponseFields.TimestampLength +
+                                                ProbeResponseFields.BeaconIntervalLength +
+                                                ProbeResponseFields.CapabilityInformationLength +
+                                                InformationElements.Length);
 
             /// <summary>
             /// Constructor

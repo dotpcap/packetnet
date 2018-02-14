@@ -47,11 +47,8 @@ namespace PacketDotNet
         /// </summary>
         public PPPProtocol Protocol
         {
-            get
-            {
-                return (PPPProtocol)EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                      header.Offset + PPPFields.ProtocolPosition);
-            }
+            get => (PPPProtocol)EndianBitConverter.Big.ToUInt16(header.Bytes,
+                header.Offset + PPPFields.ProtocolPosition);
 
             set
             {
@@ -71,9 +68,9 @@ namespace PacketDotNet
             log.Debug("");
 
             // allocate memory for this packet
-            int offset = 0;
-            int length = PPPFields.HeaderLength;
-            var headerBytes = new byte[length];
+            Int32 offset = 0;
+            Int32 length = PPPFields.HeaderLength;
+            var headerBytes = new Byte[length];
             header = new ByteArraySegment(headerBytes, offset, length);
 
             // setup some typical values and default values
@@ -126,20 +123,14 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.DarkGray;
-            }
-        }
+        public override System.String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -159,11 +150,11 @@ namespace PacketDotNet
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
+                Dictionary<String,String> properties = new Dictionary<String,String>();
                 properties.Add("protocol", Protocol.ToString() + " (0x" + Protocol.ToString("x") + ")");
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("PPP:  ******* PPP - \"Point-to-Point Protocol\" - offset=? length=" + TotalPacketLength);

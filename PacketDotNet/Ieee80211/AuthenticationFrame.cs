@@ -37,13 +37,13 @@ namespace PacketDotNet
         {
             private class AuthenticationFields
             {
-                public readonly static int AuthAlgorithmNumLength = 2;
-                public readonly static int AuthAlgorithmTransactionSequenceNumLength = 2;
-                public readonly static int StatusCodeLength = 2;
-                public readonly static int AuthAlgorithmNumPosition;
-                public readonly static int AuthAlgorithmTransactionSequenceNumPosition;
-                public readonly static int StatusCodePosition;
-                public readonly static int InformationElement1Position;
+                public static readonly Int32 AuthAlgorithmNumLength = 2;
+                public static readonly Int32 AuthAlgorithmTransactionSequenceNumLength = 2;
+                public static readonly Int32 StatusCodeLength = 2;
+                public static readonly Int32 AuthAlgorithmNumPosition;
+                public static readonly Int32 AuthAlgorithmTransactionSequenceNumPosition;
+                public static readonly Int32 StatusCodePosition;
+                public static readonly Int32 InformationElement1Position;
 
                 static AuthenticationFields ()
                 {
@@ -75,12 +75,9 @@ namespace PacketDotNet
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes (value,
-                                                     header.Bytes,
-                                                     header.Offset + AuthenticationFields.AuthAlgorithmNumPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes (value,
+                    header.Bytes,
+                    header.Offset + AuthenticationFields.AuthAlgorithmNumPosition);
             }
 
             /// <summary>
@@ -104,12 +101,9 @@ namespace PacketDotNet
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes (value,
-                                                     header.Bytes,
-                                                     header.Offset + AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes (value,
+                    header.Bytes,
+                    header.Offset + AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition);
             }
 
             /// <summary>
@@ -134,12 +128,9 @@ namespace PacketDotNet
 					}
                 }
                 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes ((UInt16)value,
-                        header.Bytes,
-                        header.Offset + AuthenticationFields.StatusCodePosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes ((UInt16)value,
+                    header.Bytes,
+                    header.Offset + AuthenticationFields.StatusCodePosition);
             }
 
             /// <summary>
@@ -153,20 +144,14 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        AuthenticationFields.AuthAlgorithmNumLength +
-                        AuthenticationFields.AuthAlgorithmTransactionSequenceNumLength +
-                        AuthenticationFields.StatusCodeLength +
-                        InformationElements.Length);
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 3) +
+                                                MacFields.SequenceControlLength +
+                                                AuthenticationFields.AuthAlgorithmNumLength +
+                                                AuthenticationFields.AuthAlgorithmTransactionSequenceNumLength +
+                                                AuthenticationFields.StatusCodeLength +
+                                                InformationElements.Length);
 
 
             /// <summary>

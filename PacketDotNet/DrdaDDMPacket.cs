@@ -46,68 +46,32 @@ namespace PacketDotNet
         /// <summary>
         /// The Length field
         /// </summary>
-        public ushort Length
-        {
-            get
-            {
-                return BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.LengthPosition);
-            }
-        }
+        public UInt16 Length => BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.LengthPosition);
 
         /// <summary>
         /// The Magic field
         /// </summary>
-        public byte Magic
-        {
-            get
-            {
-                return header.Bytes[header.Offset + DrdaDDMFields.MagicPosition];
-            }
-        }
+        public Byte Magic => header.Bytes[header.Offset + DrdaDDMFields.MagicPosition];
 
         /// <summary>
         /// The Format field
         /// </summary>
-        public byte Format
-        {
-            get
-            {
-                return header.Bytes[header.Offset + DrdaDDMFields.FormatPosition];
-            }
-        }
+        public Byte Format => header.Bytes[header.Offset + DrdaDDMFields.FormatPosition];
 
         /// <summary>
         /// The CorrelId field
         /// </summary>
-        public ushort CorrelId
-        {
-            get
-            {
-                return BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.CorrelIdPosition);
-            }
-        }
+        public UInt16 CorrelId => BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.CorrelIdPosition);
 
         /// <summary>
         /// The Length2 field
         /// </summary>
-        public ushort Length2
-        {
-            get
-            {
-                return BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.Length2Position);
-            }
-        }
+        public UInt16 Length2 => BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.Length2Position);
 
         /// <summary>
         /// The Code Point field
         /// </summary>
-        public DrdaCodepointType CodePoint
-        {
-            get
-            {
-                return (DrdaCodepointType)BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.CodePointPosition);
-            }
-        }
+        public DrdaCodepointType CodePoint => (DrdaCodepointType)BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.CodePointPosition);
 
         private List<DrdaDDMParameter> paramters;
 
@@ -124,7 +88,7 @@ namespace PacketDotNet
                 var ddmTotalLength = this.Length;
                 while (offset < header.Offset+ ddmTotalLength)
                 {
-                    int length = BigEndianBitConverter.Big.ToUInt16(header.Bytes, offset);
+                    Int32 length = BigEndianBitConverter.Big.ToUInt16(header.Bytes, offset);
                     if (length == 0)
                     {
                         length = header.Offset + ddmTotalLength - offset;
@@ -183,11 +147,11 @@ namespace PacketDotNet
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {

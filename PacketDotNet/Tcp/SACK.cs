@@ -50,7 +50,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public SACK(byte[] bytes, int offset, int length) :
+        public SACK(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
         { }
 
@@ -61,14 +61,14 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// Contains an array of SACK (Selective Ack) Blocks
         /// </summary>
-        public ushort[] SACKBlocks
+        public UInt16[] SACKBlocks
         {
             get
             {
-                int numOfBlocks = (Length - SACKBlocksFieldOffset) / BlockLength;
-                ushort[] blocks = new ushort[numOfBlocks];
-                int offset = 0;
-                for(int i = 0; i < numOfBlocks; i++)
+                Int32 numOfBlocks = (Length - SACKBlocksFieldOffset) / BlockLength;
+                UInt16[] blocks = new UInt16[numOfBlocks];
+                Int32 offset = 0;
+                for(Int32 i = 0; i < numOfBlocks; i++)
                 {
                     offset = SACKBlocksFieldOffset + (i * BlockLength);
                     blocks[i] = EndianBitConverter.Big.ToUInt16(Bytes, offset);
@@ -87,11 +87,11 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            string output = "[" + Kind.ToString() + ": ";
+            String output = "[" + Kind.ToString() + ": ";
 
-            for(int i = 0; i < SACKBlocks.Length; i++)
+            for(Int32 i = 0; i < SACKBlocks.Length; i++)
             {
                 output += "Block" + i + "=" + SACKBlocks[i].ToString() + " ";
             }
@@ -107,10 +107,10 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the length (in bytes) of a SACK block
-        const int BlockLength = 2;
+        const Int32 BlockLength = 2;
 
         // the offset (in bytes) of the ScaleFactor Field
-        const int SACKBlocksFieldOffset = 2;
+        const Int32 SACKBlocksFieldOffset = 2;
 
        #endregion
     }

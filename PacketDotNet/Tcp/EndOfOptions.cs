@@ -45,7 +45,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public EndOfOptions(byte[] bytes, int offset, int length) :
+        public EndOfOptions(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
         { }
 
@@ -59,10 +59,7 @@ namespace PacketDotNet.Tcp
         ///  the EndOfOptions option is only 1 byte long and doesn't
         ///  contain a length field
         /// </summary>
-        public override byte Length
-        {
-            get { return EndOfOptions.OptionLength; }
-        }
+        public override Byte Length => EndOfOptions.OptionLength;
 
         #endregion
 
@@ -71,7 +68,7 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The length (in bytes) of the EndOfOptions option
         /// </summary>
-        internal const int OptionLength = 1;
+        internal const Int32 OptionLength = 1;
 
         #endregion
     }

@@ -36,7 +36,7 @@ namespace PacketDotNet
         {
             private class ProbeRequestFields
             {
-                public readonly static int InformationElement1Position;
+                public static readonly Int32 InformationElement1Position;
 
                 static ProbeRequestFields()
                 {
@@ -50,18 +50,12 @@ namespace PacketDotNet
             /// This does not include the FCS, it represents only the header bytes that would
             /// would preceed any payload.
             /// </summary>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        InformationElements.Length);
-                }
-            }
-   
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 3) +
+                                                MacFields.SequenceControlLength +
+                                                InformationElements.Length);
+
             /// <summary>
             /// Gets or sets the information elements included in the frame.
             /// </summary>

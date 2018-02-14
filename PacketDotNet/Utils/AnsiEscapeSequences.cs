@@ -64,14 +64,14 @@ namespace PacketDotNet.Utils
         public readonly static String LightGrayBackground;
 #pragma warning restore 1591
 
-        private static string BuildValue(string ColorCode)
+        private static String BuildValue(String ColorCode)
         {
             return EscapeBegin + ColorCode + EscapeEnd;
         }
 
         static AnsiEscapeSequences()
         {
-            EscapeBegin = "" + (char) 27 + "[";
+            EscapeBegin = "" + (Char) 27 + "[";
             Reset = BuildValue("0");
             Bold = BuildValue("0;1");
             Underline = BuildValue("0;4");

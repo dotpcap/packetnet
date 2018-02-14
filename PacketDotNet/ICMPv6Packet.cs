@@ -59,12 +59,12 @@ namespace PacketDotNet
 
             set
             {
-                header.Bytes[header.Offset + ICMPv6Fields.TypePosition] = (byte)value;
+                header.Bytes[header.Offset + ICMPv6Fields.TypePosition] = (Byte)value;
             }
         }
 
         /// <summary> Fetch the ICMP code </summary>
-        virtual public byte Code
+        virtual public Byte Code
         {
             get
             {
@@ -73,14 +73,14 @@ namespace PacketDotNet
 
             set
             {
-                header.Bytes[header.Offset + ICMPv6Fields.CodePosition] = (byte)value;
+                header.Bytes[header.Offset + ICMPv6Fields.CodePosition] = (Byte)value;
             }
         }
 
         /// <value>
         /// Checksum value
         /// </value>
-        public ushort Checksum
+        public UInt16 Checksum
         {
             get
             {
@@ -129,7 +129,7 @@ namespace PacketDotNet
         /// Used to prevent a recursive stack overflow
         /// when recalculating in UpdateCalculatedValues()
         /// </summary>
-        private bool skipUpdating = false;
+        private Boolean skipUpdating = false;
 
         /// <summary>
         /// Recalculate the checksum
@@ -153,7 +153,7 @@ namespace PacketDotNet
             var bytesToChecksum = ipv6Parent.AttachPseudoIPHeader(originalBytes);
 
             // calculate the one's complement sum of the tcp header
-            Checksum = (ushort)ChecksumUtils.OnesComplementSum(bytesToChecksum);
+            Checksum = (UInt16)ChecksumUtils.OnesComplementSum(bytesToChecksum);
 
             // clear the skip variable
             skipUpdating = false;
@@ -169,11 +169,11 @@ namespace PacketDotNet
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -194,15 +194,15 @@ namespace PacketDotNet
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
-                properties.Add("type", Type.ToString() + " (" + (int)Type + ")");
+                Dictionary<String,String> properties = new Dictionary<String,String>();
+                properties.Add("type", Type.ToString() + " (" + (Int32)Type + ")");
                 properties.Add("code", Code.ToString());
                 // TODO: Implement a checksum verification for ICMPv6
                 properties.Add("checksum", "0x" + Checksum.ToString("x"));
                 // TODO: Implement ICMPv6 Option fields here?
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("ICMP:  ******* ICMPv6 - \"Internet Control Message Protocol (Version 6)\"- offset=? length=" + TotalPacketLength);

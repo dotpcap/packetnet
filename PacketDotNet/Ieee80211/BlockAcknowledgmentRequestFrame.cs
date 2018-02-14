@@ -37,11 +37,11 @@ namespace PacketDotNet
         {
             private class BlockAckRequestField
             {
-                public readonly static int BlockAckRequestControlLength = 2;
-                public readonly static int BlockAckStartingSequenceControlLength = 2;
+                public readonly static Int32 BlockAckRequestControlLength = 2;
+                public readonly static Int32 BlockAckStartingSequenceControlLength = 2;
 
-                public readonly static int BlockAckRequestControlPosition;
-                public readonly static int BlockAckStartingSequenceControlPosition;
+                public readonly static Int32 BlockAckRequestControlPosition;
+                public readonly static Int32 BlockAckStartingSequenceControlPosition;
 
                 static BlockAckRequestField()
                 {
@@ -141,7 +141,7 @@ namespace PacketDotNet
             /// <summary>
             /// Length of the frame
             /// </summary>
-            override public int FrameSize
+            override public Int32 FrameSize
             {
                 get
                 {

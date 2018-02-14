@@ -38,12 +38,12 @@ namespace PacketDotNet
         {
             private class BlockAcknowledgmentField
             {
-                public readonly static int BlockAckRequestControlLength = 2;
-                public readonly static int BlockAckStartingSequenceControlLength = 2;
+                public readonly static Int32 BlockAckRequestControlLength = 2;
+                public readonly static Int32 BlockAckStartingSequenceControlLength = 2;
 
-                public readonly static int BlockAckRequestControlPosition;
-                public readonly static int BlockAckStartingSequenceControlPosition;
-                public readonly static int BlockAckBitmapPosition;
+                public readonly static Int32 BlockAckRequestControlPosition;
+                public readonly static Int32 BlockAckStartingSequenceControlPosition;
+                public readonly static Int32 BlockAckBitmapPosition;
 
                 static BlockAcknowledgmentField()
                 {
@@ -134,7 +134,7 @@ namespace PacketDotNet
                 }
             }
    
-            private byte[] blockAckBitmap;
+            private Byte[] blockAckBitmap;
             /// <summary>
             /// Gets or sets the block ack bitmap used to indicate the receive status of the MPDUs.
             /// </summary>
@@ -201,7 +201,7 @@ namespace PacketDotNet
             /// <summary>
             /// Length of the frame
             /// </summary>
-            override public int FrameSize
+            override public Int32 FrameSize
             {
                 get
                 {
@@ -215,7 +215,7 @@ namespace PacketDotNet
             }
 
 
-            private int GetBitmapLength()
+            private Int32 GetBitmapLength()
             {
                 return BlockAcknowledgmentControl.CompressedBitmap ? 8 : 64;
             }

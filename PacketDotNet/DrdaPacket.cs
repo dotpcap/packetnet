@@ -58,10 +58,10 @@ namespace PacketDotNet
                     ddmList = new List<DrdaDDMPacket>();
                 }
                 if (ddmList.Count > 0) return this.ddmList;
-                int startOffset = header.Offset;
+                Int32 startOffset = header.Offset;
                 while (startOffset < header.BytesLength)
                 {
-                    ushort length = BigEndianBitConverter.Big.ToUInt16(header.Bytes, startOffset);
+                    UInt16 length = BigEndianBitConverter.Big.ToUInt16(header.Bytes, startOffset);
                     if (startOffset + length <= header.BytesLength)
                     {
                         var ddmBas = new ByteArraySegment(header.Bytes, startOffset, length);
@@ -107,7 +107,7 @@ namespace PacketDotNet
         /// </summary>
         /// <param name="outputFormat"></param>
         /// <returns></returns>
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             return base.ToString(outputFormat);
         }

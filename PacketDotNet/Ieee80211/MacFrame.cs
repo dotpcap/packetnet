@@ -43,9 +43,9 @@ namespace PacketDotNet
 #endif
    
             
-            private int GetOffsetForAddress(int addressIndex)
+            private Int32 GetOffsetForAddress(Int32 addressIndex)
             {
-                int offset = header.Offset;
+                Int32 offset = header.Offset;
 
                 offset += MacFields.Address1Position + MacFields.AddressLength * addressIndex;
 
@@ -134,7 +134,7 @@ namespace PacketDotNet
             /// the type of frame. There are between 1 and 4 address fields in MAC frames</remarks>
             /// <param name="addressIndex">Zero based address to look up</param>
             /// <param name="address"></param>
-            protected void SetAddress(int addressIndex, PhysicalAddress address)
+            protected void SetAddress(Int32 addressIndex, PhysicalAddress address)
             {
                 var offset = GetOffsetForAddress(addressIndex);
                 SetAddressByOffset(offset, address);
@@ -151,13 +151,13 @@ namespace PacketDotNet
             /// <param name='address'>
             /// Address.
             /// </param>
-            protected void SetAddressByOffset(int offset, PhysicalAddress address)
+            protected void SetAddressByOffset(Int32 offset, PhysicalAddress address)
             {
-				byte[] hwAddress = null;
+				Byte[] hwAddress = null;
 				//We will replace no address with a MAC of all zer
 				if(address == PhysicalAddress.None)
 				{
-					hwAddress = new byte[]{0, 0, 0, 0, 0, 0};
+					hwAddress = new Byte[]{0, 0, 0, 0, 0, 0};
 				}
 				else
 				{
@@ -185,7 +185,7 @@ namespace PacketDotNet
             /// <param name='addressIndex'>
             /// Address index.
             /// </param>
-            protected PhysicalAddress GetAddress(int addressIndex)
+            protected PhysicalAddress GetAddress(Int32 addressIndex)
             {
                 var offset = GetOffsetForAddress(addressIndex);
                 return GetAddressByOffset(offset);
@@ -200,11 +200,11 @@ namespace PacketDotNet
             /// <param name='offset'>
             /// The offset into the packet buffer at which to start parsing the address.
             /// </param>
-            protected PhysicalAddress GetAddressByOffset(int offset)
+            protected PhysicalAddress GetAddressByOffset(Int32 offset)
             {
 				if((header.Offset + header.Length) >= (offset + MacFields.AddressLength))
 				{
-        	        byte[] hwAddress = new byte[MacFields.AddressLength];
+        	        Byte[] hwAddress = new Byte[MacFields.AddressLength];
             	    Array.Copy(header.Bytes, offset,
                 	           hwAddress, 0, hwAddress.Length);
                 	return new PhysicalAddress(hwAddress);
@@ -228,7 +228,7 @@ namespace PacketDotNet
             {
                 var bytes = Bytes;
                 var length = (AppendFcs) ? bytes.Length - 4 : bytes.Length;
-                FrameCheckSequence = (uint) Crc32.Compute(Bytes, 0, length);
+                FrameCheckSequence = (UInt32) Crc32.Compute(Bytes, 0, length);
             }
 
             /// <summary>
@@ -237,7 +237,7 @@ namespace PacketDotNet
             /// This does not include the FCS, it represents only the header bytes that would
             /// would preceed any payload.
             /// </summary>
-            public abstract int FrameSize { get; }
+            public abstract Int32 FrameSize { get; }
             
             /// <summary>
             /// Returns the number of bytes of payload data currently available in
@@ -249,9 +249,9 @@ namespace PacketDotNet
             /// <value>
             /// The number of bytes of space available after the header for payload data.
             /// </value>
-			protected int GetAvailablePayloadLength()
+			protected Int32 GetAvailablePayloadLength()
 			{
-				int payloadLength = header.BytesLength - (header.Offset + FrameSize);
+				Int32 payloadLength = header.BytesLength - (header.Offset + FrameSize);
 				return (payloadLength > 0) ? payloadLength : 0;
 			}
 			
@@ -480,10 +480,10 @@ namespace PacketDotNet
             /// <remarks>This method can be used to check the validity of a packet before attempting to parse it with either 
             /// <see cref="MacFrame.ParsePacket"/> or <see cref="MacFrame.ParsePacketWithFcs"/>. Attempting to parse a corrupted buffer
             /// using these methods could cause unexpected exceptions.</remarks>
-            public static bool PerformFcsCheck (Byte[] data, int offset, int length, UInt32 fcs)
+            public static Boolean PerformFcsCheck (Byte[] data, Int32 offset, Int32 length, UInt32 fcs)
             {
                 // Cast to uint for proper comparison to FrameCheckSequence
-                var check = (uint)Crc32.Compute(data, offset, length);
+                var check = (UInt32)Crc32.Compute(data, offset, length);
                 return check == fcs;
             }
 
@@ -493,7 +493,7 @@ namespace PacketDotNet
             /// <returns>
             /// The valid.
             /// </returns>
-            public bool FCSValid
+            public Boolean FCSValid
             {
                 get
                 {
@@ -510,7 +510,7 @@ namespace PacketDotNet
             /// <value>
             /// <c>true</c> if append FCS should be appended; otherwise, <c>false</c>.
             /// </value>
-            public bool AppendFcs { get; set; }
+            public Boolean AppendFcs { get; set; }
             
             
             /// <value>
@@ -588,7 +588,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return string.Format ("802.11 MacFrame: [{0}], {1} FCS {2}",
+                return String.Format ("802.11 MacFrame: [{0}], {1} FCS {2}",
                                       FrameControl.ToString(),
                                       GetAddressString(),
                                       FrameCheckSequence);

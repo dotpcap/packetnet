@@ -44,14 +44,14 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Length in bytes of the tlv type and length fields
         /// </summary>
-        public const int TypeLengthLength = 2;
+        public const Int32 TypeLengthLength = 2;
 
-        private const int TypeBits = 7;
-        private const int TypeMask = 0xFE00;
-        private const int LengthBits = 9;
-        private const int LengthMask = 0x1FF;
+        private const Int32 TypeBits = 7;
+        private const Int32 TypeMask = 0xFE00;
+        private const Int32 LengthBits = 9;
+        private const Int32 LengthMask = 0x1FF;
 
-        private const int MaximumTLVLength = 511;
+        private const Int32 MaximumTLVLength = 511;
 
         private ByteArraySegment byteArraySegment;
 
@@ -74,7 +74,7 @@ namespace PacketDotNet.LLDP
             get
             {
                 // get the type
-                ushort typeAndLength = TypeAndLength;
+                UInt16 typeAndLength = TypeAndLength;
                 // remove the length info
                 return (TLVTypes)(typeAndLength >> LengthBits);
             }
@@ -84,11 +84,11 @@ namespace PacketDotNet.LLDP
                 log.DebugFormat("value of {0}", value);
 
                 // shift type into the type position
-                var type = (ushort)((ushort)value << LengthBits);
+                var type = (UInt16)((UInt16)value << LengthBits);
                 // save the old length
-                ushort length = (ushort)(LengthMask & TypeAndLength);
+                UInt16 length = (UInt16)(LengthMask & TypeAndLength);
                 // set the type
-                TypeAndLength = (ushort)(type | length);
+                TypeAndLength = (UInt16)(type | length);
             }
         }
 
@@ -97,12 +97,12 @@ namespace PacketDotNet.LLDP
         /// NOTE: Value is the length of the TLV Value only, does not include the length
         ///       of the type and length fields
         /// </value>
-        public int Length
+        public Int32 Length
         {
             get
             {
                 // get the length
-                ushort typeAndLength = TypeAndLength;
+                UInt16 typeAndLength = TypeAndLength;
                 // remove the type info
                 return LengthMask & typeAndLength;
             }
@@ -117,16 +117,16 @@ namespace PacketDotNet.LLDP
                 if(value > MaximumTLVLength) { throw new ArgumentOutOfRangeException("Length", "The maximum value for a TLV length is 511"); }
 
                 // save the old type
-                ushort type = (ushort)(TypeMask & TypeAndLength);
+                UInt16 type = (UInt16)(TypeMask & TypeAndLength);
                 // set the length
-                TypeAndLength = (ushort)(type | value);
+                TypeAndLength = (UInt16)(type | value);
             }
         }
 
         /// <value>
         /// A unsigned short representing the concatenated Type and Length
         /// </value>
-        private ushort TypeAndLength
+        private UInt16 TypeAndLength
         {
             get
             {

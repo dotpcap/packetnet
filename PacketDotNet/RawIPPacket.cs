@@ -84,11 +84,11 @@ namespace PacketDotNet
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -108,11 +108,11 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string, string> properties = new Dictionary<string, string>();
+                Dictionary<String, String> properties = new Dictionary<String, String>();
                 properties.Add("protocol", Protocol.ToString() + " (0x" + Protocol.ToString("x") + ")");
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Raw:  ******* Raw - \"Raw IP Packet\" - offset=? length=" + TotalPacketLength);

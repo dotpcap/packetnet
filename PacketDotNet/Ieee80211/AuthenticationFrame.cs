@@ -37,13 +37,13 @@ namespace PacketDotNet
         {
             private class AuthenticationFields
             {
-                public readonly static int AuthAlgorithmNumLength = 2;
-                public readonly static int AuthAlgorithmTransactionSequenceNumLength = 2;
-                public readonly static int StatusCodeLength = 2;
-                public readonly static int AuthAlgorithmNumPosition;
-                public readonly static int AuthAlgorithmTransactionSequenceNumPosition;
-                public readonly static int StatusCodePosition;
-                public readonly static int InformationElement1Position;
+                public readonly static Int32 AuthAlgorithmNumLength = 2;
+                public readonly static Int32 AuthAlgorithmTransactionSequenceNumLength = 2;
+                public readonly static Int32 StatusCodeLength = 2;
+                public readonly static Int32 AuthAlgorithmNumPosition;
+                public readonly static Int32 AuthAlgorithmTransactionSequenceNumPosition;
+                public readonly static Int32 StatusCodePosition;
+                public readonly static Int32 InformationElement1Position;
 
                 static AuthenticationFields ()
                 {
@@ -153,7 +153,7 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
+            public override Int32 FrameSize
             {
                 get
                 {

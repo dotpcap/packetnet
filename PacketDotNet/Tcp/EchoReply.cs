@@ -46,7 +46,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public EchoReply(byte[] bytes, int offset, int length):
+        public EchoReply(Byte[] bytes, Int32 offset, Int32 length):
             base(bytes, offset, length)
         {
             throw new NotSupportedException("Obsolete: The Echo Option has been deprecated.");

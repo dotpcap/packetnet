@@ -73,7 +73,7 @@ namespace PacketDotNet
             /// <summary>
             /// True if the acknowledgement can ack multi traffic ids
             /// </summary>
-            public bool MultiTid
+            public Boolean MultiTid
             {
                 get
                 {
@@ -98,7 +98,7 @@ namespace PacketDotNet
             /// 
             /// Newer standards used a compressed bitmap reducing its size
             /// </summary>
-            public bool CompressedBitmap
+            public Boolean CompressedBitmap
             {
                 get
                 {
@@ -121,11 +121,11 @@ namespace PacketDotNet
             /// <summary>
             /// The traffic id being ack'd
             /// </summary>
-            public byte Tid
+            public Byte Tid
             {
                 get
                 {
-                    return (byte)(Field >> 12);
+                    return (Byte)(Field >> 12);
                 }
                 
                 set

@@ -37,9 +37,9 @@ namespace PacketDotNet
         {
             private class DisassociationFields
             {
-                public readonly static int ReasonCodeLength = 2;
+                public readonly static Int32 ReasonCodeLength = 2;
 
-                public readonly static int ReasonCodePosition;
+                public readonly static Int32 ReasonCodePosition;
 
                 static DisassociationFields()
                 {
@@ -84,7 +84,7 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
+            public override Int32 FrameSize
             {
                 get
                 {

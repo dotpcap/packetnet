@@ -41,7 +41,7 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        private byte VersionType
+        private Byte VersionType
         {
             get
             {
@@ -58,11 +58,11 @@ namespace PacketDotNet
         /// PPPoe version, must be 0x1 according to RFC
         /// </summary>
         /// FIXME: This currently outputs the wrong version number
-        public byte Version
+        public Byte Version
         {
             get
             {
-                return (byte)((VersionType >> 4) & 0xF0);
+                return (Byte)((VersionType >> 4) & 0xF0);
             }
 
             set
@@ -70,7 +70,7 @@ namespace PacketDotNet
                 var versionType = VersionType;
 
                 // mask the new value in
-                versionType = (byte)((versionType & 0x0F) | ((value << 4) & 0xF0));
+                versionType = (Byte)((versionType & 0x0F) | ((value << 4) & 0xF0));
 
                 VersionType = versionType;
             }
@@ -79,11 +79,11 @@ namespace PacketDotNet
         /// <summary>
         /// Type, must be 0x1 according to RFC
         /// </summary>
-        public byte Type
+        public Byte Type
         {
             get
             {
-                return (byte)((VersionType) & 0x0F);
+                return (Byte)((VersionType) & 0x0F);
             }
 
             set
@@ -91,7 +91,7 @@ namespace PacketDotNet
                 var versionType = VersionType;
 
                 // mask the new value in
-                versionType = (byte)((versionType & 0xF0) | (value & 0xF0));
+                versionType = (Byte)((versionType & 0xF0) | (value & 0xF0));
 
                 VersionType = versionType;
             }
@@ -167,9 +167,9 @@ namespace PacketDotNet
             log.Debug("");
 
             // allocate memory for this packet
-            int offset = 0;
-            int length = PPPoEFields.HeaderLength;
-            var headerBytes = new byte[length];
+            Int32 offset = 0;
+            Int32 length = PPPoEFields.HeaderLength;
+            var headerBytes = new Byte[length];
             header = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
@@ -224,11 +224,11 @@ namespace PacketDotNet
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -252,7 +252,7 @@ namespace PacketDotNet
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
+                Dictionary<String,String> properties = new Dictionary<String,String>();
                 // FIXME: The version output is incorrect
                 properties.Add("", Convert.ToString(Version, 2).PadLeft(4, '0') + " .... = version: " + Version.ToString());
                 properties.Add(" ", ".... " + Convert.ToString(Type, 2).PadLeft(4, '0') + " = type: " + Type.ToString());
@@ -263,7 +263,7 @@ namespace PacketDotNet
                 //properties.Add("payload length", PayloadLength.ToString());
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("PPPoE:  ******* PPPoE - \"Point-to-Point Protocol over Ethernet\" - offset=? length=" + TotalPacketLength);

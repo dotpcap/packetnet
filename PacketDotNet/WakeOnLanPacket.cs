@@ -63,15 +63,15 @@ namespace PacketDotNet
             log.Debug("");
 
             // allocate memory for this packet
-            int offset = 0;
-            int packetLength = syncSequence.Length + (EthernetFields.MacAddressLength * macRepetitions);
-            var packetBytes = new byte[packetLength];
+            Int32 offset = 0;
+            Int32 packetLength = syncSequence.Length + (EthernetFields.MacAddressLength * macRepetitions);
+            var packetBytes = new Byte[packetLength];
             var destinationMACBytes = destinationMAC.GetAddressBytes();
 
             // write the data to the payload
             // - synchronization sequence (6 bytes)
             // - destination MAC (16 copies of 6 bytes)
-            for(int i = 0; i < packetLength; i+=EthernetFields.MacAddressLength)
+            for(Int32 i = 0; i < packetLength; i+=EthernetFields.MacAddressLength)
             {
                 // copy the syncSequence on the first pass
                 if(i == 0)
@@ -116,7 +116,7 @@ namespace PacketDotNet
         {
             get
             {
-                byte[] destinationMAC = new byte[EthernetFields.MacAddressLength];
+                Byte[] destinationMAC = new Byte[EthernetFields.MacAddressLength];
                 Array.Copy(header.Bytes, header.Offset + syncSequence.Length,
                            destinationMAC, 0,
                            EthernetFields.MacAddressLength);
@@ -124,7 +124,7 @@ namespace PacketDotNet
             }
             set
             {
-                byte[] destinationMAC = value.GetAddressBytes();
+                Byte[] destinationMAC = value.GetAddressBytes();
                 Array.Copy(destinationMAC, 0,
                            header.Bytes, header.Offset + syncSequence.Length,
                            EthernetFields.MacAddressLength);
@@ -145,7 +145,7 @@ namespace PacketDotNet
         {
             var rnd = new Random();
 
-            byte[] destAddress = new byte[EthernetFields.MacAddressLength];
+            Byte[] destAddress = new Byte[EthernetFields.MacAddressLength];
 
             rnd.NextBytes(destAddress);
 
@@ -160,7 +160,7 @@ namespace PacketDotNet
         /// <returns>
         /// True if the Wake-On-LAN payload is valid
         /// </returns>
-        public bool IsValid()
+        public Boolean IsValid()
         {
             return IsValid(header);
         }
@@ -174,19 +174,19 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Boolean"/>
         /// </returns>
-        public static bool IsValid(ByteArraySegment bas)
+        public static Boolean IsValid(ByteArraySegment bas)
         {
             // fetch the destination MAC from the payload
-            byte[] destinationMAC = new byte[EthernetFields.MacAddressLength];
+            Byte[] destinationMAC = new Byte[EthernetFields.MacAddressLength];
             Array.Copy(bas.Bytes, bas.Offset + syncSequence.Length, destinationMAC, 0, EthernetFields.MacAddressLength);
 
             // the buffer is used to store both the synchronization sequence
             //  and the MAC address, both of which are the same length (in bytes)
-            byte[] buffer = new byte[EthernetFields.MacAddressLength];
+            Byte[] buffer = new Byte[EthernetFields.MacAddressLength];
 
             // validate the 16 repetitions of the wolDestinationMAC
             // - verify that the wolDestinationMAC address repeats 16 times in sequence
-            for(int i = 0; i<(EthernetFields.MacAddressLength * macRepetitions); i+=EthernetFields.MacAddressLength)
+            for(Int32 i = 0; i<(EthernetFields.MacAddressLength * macRepetitions); i+=EthernetFields.MacAddressLength)
             {
                 // Extract the sample from the payload for comparison
                 Array.Copy(bas.Bytes, bas.Offset + i, buffer, 0, buffer.Length);
@@ -217,7 +217,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Boolean"/>
         /// </returns>
-        public override bool Equals(object obj)
+        public override Boolean Equals(Object obj)
         {
             // Check for null values and compare run-time types.
             if (obj == null || GetType() != obj.GetType())
@@ -234,17 +234,17 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        public override int GetHashCode()
+        public override Int32 GetHashCode()
         {
             return header.GetHashCode();
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -263,11 +263,11 @@ namespace PacketDotNet
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
+                Dictionary<String,String> properties = new Dictionary<String,String>();
                 properties.Add("destination", HexPrinter.PrintMACAddress(DestinationMAC));
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("WOL:  ******* WOL - \"Wake-On-Lan\" - offset=? length=" + TotalPacketLength);
@@ -290,10 +290,10 @@ namespace PacketDotNet
         #region Members
 
         // the WOL synchronization sequence
-        private static readonly byte[] syncSequence = new byte[6] { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
+        private static readonly Byte[] syncSequence = new Byte[6] { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 
         // the number of times the Destination MAC appears in the payload
-        private static readonly int macRepetitions = 16;
+        private static readonly Int32 macRepetitions = 16;
 
         #endregion
     }

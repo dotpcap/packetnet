@@ -58,7 +58,7 @@ namespace PacketDotNet.LLDP
         /// <param name="offset">
         /// The TLVs offset from the start of byte[] bytes
         /// </param>
-        public TLV(byte[] bytes, int offset)
+        public TLV(Byte[] bytes, Int32 offset)
         {
             // setup a local ByteArrayAndOffset in order to retrieve the value length
             // NOTE: we cannot set tlvData to retrieve the value length as
@@ -84,7 +84,7 @@ namespace PacketDotNet.LLDP
         /// Length of value portion of the TLV
         /// NOTE: Does not include the length of the Type and Length fields
         /// </summary>
-        public int Length
+        public Int32 Length
         {
             get { return TypeLength.Length; }
 
@@ -96,7 +96,7 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Total length of the TLV, including the length of the Type and Length fields
         /// </summary>
-        public int TotalLength
+        public Int32 TotalLength
         {
             get { return tlvData.Length; }
         }
@@ -118,7 +118,7 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Offset to the value bytes of the TLV
         /// </summary>
-        internal int ValueOffset
+        internal Int32 ValueOffset
         {
             get { return tlvData.Offset + TLVTypeLength.TypeLengthLength; }
         }
@@ -126,7 +126,7 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Return a byte[] that contains the tlv
         /// </summary>
-        public virtual byte[] Bytes
+        public virtual Byte[] Bytes
         {
             get
             {

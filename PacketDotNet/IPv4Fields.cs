@@ -17,6 +17,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
+
+using System;
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -25,68 +28,68 @@ namespace PacketDotNet
     public struct IPv4Fields
     {
         /// <summary> Width of the IP version and header length field in bytes.</summary>
-        public readonly static int VersionAndHeaderLengthLength = 1;
+        public readonly static Int32 VersionAndHeaderLengthLength = 1;
 
         /// <summary> Width of the Differentiated Services / Type of service field in bytes.</summary>
-        public readonly static int DifferentiatedServicesLength = 1;
+        public readonly static Int32 DifferentiatedServicesLength = 1;
 
         /// <summary> Width of the total length field in bytes.</summary>
-        public readonly static int TotalLengthLength = 2;
+        public readonly static Int32 TotalLengthLength = 2;
 
         /// <summary> Width of the ID field in bytes.</summary>
-        public readonly static int IdLength = 2;
+        public readonly static Int32 IdLength = 2;
 
         /// <summary> Width of the fragment offset bits and offset field in bytes.</summary>
-        public readonly static int FragmentOffsetAndFlagsLength = 2;
+        public readonly static Int32 FragmentOffsetAndFlagsLength = 2;
 
         /// <summary> Width of the TTL field in bytes.</summary>
-        public readonly static int TtlLength = 1;
+        public readonly static Int32 TtlLength = 1;
 
         /// <summary> Width of the IP protocol code in bytes.</summary>
-        public readonly static int ProtocolLength = 1;
+        public readonly static Int32 ProtocolLength = 1;
 
         /// <summary> Width of the IP checksum in bytes.</summary>
-        public readonly static int ChecksumLength = 2;
+        public readonly static Int32 ChecksumLength = 2;
 
         /// <summary> Position of the version code and header length within the IP header.</summary>
-        public readonly static int VersionAndHeaderLengthPosition = 0;
+        public readonly static Int32 VersionAndHeaderLengthPosition = 0;
 
         /// <summary> Position of the differentiated services value within the IP header.</summary>
-        public readonly static int DifferentiatedServicesPosition;
+        public readonly static Int32 DifferentiatedServicesPosition;
 
         /// <summary> Position of the header length within the IP header.</summary>
-        public readonly static int TotalLengthPosition;
+        public readonly static Int32 TotalLengthPosition;
 
         /// <summary> Position of the packet ID within the IP header.</summary>
-        public readonly static int IdPosition;
+        public readonly static Int32 IdPosition;
 
         /// <summary> Position of the flag bits and fragment offset within the IP header.</summary>
-        public readonly static int FragmentOffsetAndFlagsPosition;
+        public readonly static Int32 FragmentOffsetAndFlagsPosition;
 
         /// <summary> Position of the ttl within the IP header.</summary>
-        public readonly static int TtlPosition;
+        public readonly static Int32 TtlPosition;
 
         /// <summary>
         /// Position of the protocol used within the IP data
         /// </summary>
-        public readonly static int ProtocolPosition;
+        public readonly static Int32 ProtocolPosition;
 
         /// <summary> Position of the checksum within the IP header.</summary>
-        public readonly static int ChecksumPosition;
+        public readonly static Int32 ChecksumPosition;
 
         /// <summary> Position of the source IP address within the IP header.</summary>
-        public readonly static int SourcePosition;
+        public readonly static Int32 SourcePosition;
 
         /// <summary> Position of the destination IP address within a packet.</summary>
-        public readonly static int DestinationPosition;
+        public readonly static Int32 DestinationPosition;
 
         /// <summary> Length in bytes of an IP header, excluding options.</summary>
-        public readonly static int HeaderLength; // == 20
+        public readonly static Int32 HeaderLength; // == 20
 
         /// <summary>
         /// Number of bytes in an IPv4 address
         /// </summary>
-        public readonly static int AddressLength = 4;
+        public readonly static Int32 AddressLength = 4;
 
         static IPv4Fields()
         {

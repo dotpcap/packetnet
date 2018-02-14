@@ -36,7 +36,7 @@ namespace PacketDotNet
         {
             private class ProbeRequestFields
             {
-                public readonly static int InformationElement1Position;
+                public readonly static Int32 InformationElement1Position;
 
                 static ProbeRequestFields()
                 {
@@ -50,7 +50,7 @@ namespace PacketDotNet
             /// This does not include the FCS, it represents only the header bytes that would
             /// would preceed any payload.
             /// </summary>
-            public override int FrameSize
+            public override Int32 FrameSize
             {
                 get
                 {

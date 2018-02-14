@@ -96,8 +96,8 @@ namespace PacketDotNet
         /// </value>
         public Int32 Length
         {
-            get { return _Length; }
-            set { _Length = value; }
+            get => _Length;
+            set => _Length = value;
         }
 
         /// <summary>
@@ -133,8 +133,8 @@ namespace PacketDotNet
         /// <returns>The requested TLV</returns>
         public TLV this[Int32 index]
         {
-            get { return TlvCollection[index]; }
-            set { TlvCollection[index] = value; }
+            get => TlvCollection[index];
+            set => TlvCollection[index] = value;
         }
 
         /// <summary>

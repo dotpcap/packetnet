@@ -139,8 +139,8 @@ namespace PacketDotNet.LLDP
         /// </value>
         public Int32 AddressLength
         {
-            get { return (Int32)tlvData.Bytes[ValueOffset]; }
-            internal set { tlvData.Bytes[ValueOffset] = (Byte)value; }
+            get => (Int32)tlvData.Bytes[ValueOffset];
+            internal set => tlvData.Bytes[ValueOffset] = (Byte)value;
         }
 
         /// <value>
@@ -148,10 +148,7 @@ namespace PacketDotNet.LLDP
         ///
         /// Forward to the MgmtAddress instance
         /// </value>
-        public AddressFamily AddressSubType
-        {
-            get { return MgmtAddress.AddressFamily; }
-        }
+        public AddressFamily AddressSubType => MgmtAddress.AddressFamily;
 
         /// <value>
         /// The Management Address
@@ -217,83 +214,47 @@ namespace PacketDotNet.LLDP
         /// </value>
         public InterfaceNumbering InterfaceSubType
         {
-            get
-            {
-                return (InterfaceNumbering)tlvData.Bytes[ValueOffset + MgmtAddressLengthLength + MgmtAddress.Length];
-            }
+            get => (InterfaceNumbering)tlvData.Bytes[ValueOffset + MgmtAddressLengthLength + MgmtAddress.Length];
 
-            set
-            {
-                tlvData.Bytes[ValueOffset + MgmtAddressLengthLength + MgmtAddress.Length] = (Byte)value;
-            }
+            set => tlvData.Bytes[ValueOffset + MgmtAddressLengthLength + MgmtAddress.Length] = (Byte)value;
         }
 
-        private Int32 InterfaceNumberOffset
-        {
-            get
-            {
-                return ValueOffset + MgmtAddressLengthLength + AddressLength + InterfaceNumberSubTypeLength;
-            }
-        }
+        private Int32 InterfaceNumberOffset => ValueOffset + MgmtAddressLengthLength + AddressLength + InterfaceNumberSubTypeLength;
 
         /// <value>
         /// Interface Number
         /// </value>
         public UInt32 InterfaceNumber
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt32(tlvData.Bytes,
-                                                       InterfaceNumberOffset);
-            }
+            get => EndianBitConverter.Big.ToUInt32(tlvData.Bytes,
+                InterfaceNumberOffset);
 
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value,
-                                                 tlvData.Bytes,
-                                                 InterfaceNumberOffset);
-            }
+            set => EndianBitConverter.Big.CopyBytes(value,
+                tlvData.Bytes,
+                InterfaceNumberOffset);
         }
 
-        private Int32 ObjIdLengthOffset
-        {
-            get
-            {
-                return InterfaceNumberOffset + InterfaceNumberLength;
-            }
-        }
+        private Int32 ObjIdLengthOffset => InterfaceNumberOffset + InterfaceNumberLength;
 
         /// <value>
         /// Object ID Length
         /// </value>
         public Byte ObjIdLength
         {
-            get
-            {
-                return tlvData.Bytes[ObjIdLengthOffset];
-            }
+            get => tlvData.Bytes[ObjIdLengthOffset];
 
-            internal set
-            {
-                tlvData.Bytes[ObjIdLengthOffset] = value;
-            }
+            internal set => tlvData.Bytes[ObjIdLengthOffset] = value;
         }
 
-        private Int32 ObjectIdentifierOffset
-        {
-            get { return ObjIdLengthOffset + ObjectIdentifierLengthLength; }
-        }
+        private Int32 ObjectIdentifierOffset => ObjIdLengthOffset + ObjectIdentifierLengthLength;
 
         /// <value>
         /// Object ID
         /// </value>
         public String ObjectIdentifier
         {
-            get
-            {
-                return UTF8Encoding.UTF8.GetString(tlvData.Bytes, ObjectIdentifierOffset,
-                                            ObjIdLength);
-            }
+            get => UTF8Encoding.UTF8.GetString(tlvData.Bytes, ObjectIdentifierOffset,
+                ObjIdLength);
 
             set
             {

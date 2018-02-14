@@ -61,18 +61,12 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The Timestamp value
         /// </summary>
-        public UInt32 Value
-        {
-            get { return EndianBitConverter.Big.ToUInt32(Bytes, ValueFieldOffset); }
-        }
+        public UInt32 Value => EndianBitConverter.Big.ToUInt32(Bytes, ValueFieldOffset);
 
         /// <summary>
         /// The Echo Reply
         /// </summary>
-        public UInt32 EchoReply
-        {
-            get { return EndianBitConverter.Big.ToUInt32(Bytes, EchoReplyFieldOffset); }
-        }
+        public UInt32 EchoReply => EndianBitConverter.Big.ToUInt32(Bytes, EchoReplyFieldOffset);
 
         #endregion
 

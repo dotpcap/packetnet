@@ -74,19 +74,16 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.Ppi802_3; }
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.Ppi802_3;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override Int32 Length { get {return 8; } }
-            
+            public override Int32 Length => 8;
+
             /// <summary>
             /// Gets or sets the standard 802.2 flags.
             /// </summary>
@@ -175,19 +172,16 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.PpiAggregation;}
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.PpiAggregation;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override Int32 Length { get {return 4; } }
-   
+            public override Int32 Length => 4;
+
             /// <summary>
             /// Zero-based index of the physical interface the packet was captured from.
             /// </summary>
@@ -202,15 +196,9 @@ namespace PacketDotNet
             /// <value>
             /// The bytes.
             /// </value>
-            public override Byte[] Bytes
-            {
-                get
-                {
-                    return BitConverter.GetBytes(InterfaceId);
-                }
-            }
-            
-        #endregion Properties
+            public override Byte[] Bytes => BitConverter.GetBytes(InterfaceId);
+
+            #endregion Properties
 
         #region Constructors
 
@@ -261,34 +249,25 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.PpiCaptureInfo;}
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.PpiCaptureInfo;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override Int32 Length { get { return 0; } }
-            
+            public override Int32 Length => 0;
+
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
             /// </summary>
             /// <value>
             /// The bytes.
             /// </value>
-            public override Byte[] Bytes
-            {
-                get
-                {
-                    return new Byte[0];
-                }
-            }
+            public override Byte[] Bytes => new Byte[0];
 
-        #endregion Properties
+            #endregion Properties
 
         #region Constructors
             /// <summary>
@@ -350,19 +329,16 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.PpiCommon;}
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.PpiCommon;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override Int32 Length { get { return 20; } }
-            
+            public override Int32 Length => 20;
+
             /// <summary>
             /// Radiotap-formatted channel flags.
             /// </summary>
@@ -629,19 +605,16 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.PpiMacExtensions;}
-            }
-   
+            public override PpiFieldType FieldType => PpiFieldType.PpiMacExtensions;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override Int32 Length { get { return 12; } }
-            
+            public override Int32 Length => 12;
+
             /// <summary>
             /// Gets or sets the 802.11n MAC extension flags.
             /// </summary>
@@ -728,19 +701,16 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.PpiMacPhy;}
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.PpiMacPhy;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override Int32 Length { get { return 48; } }
-            
+            public override Int32 Length => 48;
+
             /// <summary>
             /// Gets or sets the 802.11n MAC extension flags.
             /// </summary>
@@ -1048,11 +1018,8 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.PpiProcessInfo;}
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.PpiProcessInfo;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
@@ -1212,23 +1179,24 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType{ get { return fieldType; } } 
-            
+            public override PpiFieldType FieldType => fieldType;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override Int32 Length { get { return Bytes.Length; } }
-   
+            public override Int32 Length => Bytes.Length;
+
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
             /// </summary>
             /// <value>
             /// The bytes.
             /// </value>
-            public override Byte[] Bytes { get { return UnknownBytes; } }
+            public override Byte[] Bytes => UnknownBytes;
+
             /// <summary>
             /// Gets or sets the field data.
             /// </summary>
@@ -1300,18 +1268,16 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.PpiSpectrum;}
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.PpiSpectrum;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override Int32 Length { get { return 20 + SamplesData.Length; } }
+            public override Int32 Length => 20 + SamplesData.Length;
+
             /// <summary>
             /// Gets or sets the starting frequency in kHz.
             /// </summary>

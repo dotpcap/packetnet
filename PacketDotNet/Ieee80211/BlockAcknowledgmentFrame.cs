@@ -85,12 +85,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + BlockAcknowledgmentField.BlockAckRequestControlPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + BlockAcknowledgmentField.BlockAckRequestControlPosition);
             }
 
             /// <summary>
@@ -126,12 +123,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes (value,
-                        header.Bytes,
-                        header.Offset + BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes (value,
+                    header.Bytes,
+                    header.Offset + BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
             }
    
             private Byte[] blockAckBitmap;
@@ -147,11 +141,8 @@ namespace PacketDotNet
             /// </exception>
             public Byte[] BlockAckBitmap
             {
-                get
-                {
-                    return blockAckBitmap;
-                }
-                
+                get => blockAckBitmap;
+
                 set
                 {
                     if (value.Length == 8)
@@ -187,32 +178,23 @@ namespace PacketDotNet
 					return bitmap;
                 }
                 
-                set
-                {
-                    Array.Copy (BlockAckBitmap,
-                                0,
-                                header.Bytes,
-                                BlockAcknowledgmentField.BlockAckBitmapPosition,
-                                GetBitmapLength());
-                }
+                set => Array.Copy (BlockAckBitmap,
+                    0,
+                    header.Bytes,
+                    BlockAcknowledgmentField.BlockAckBitmapPosition,
+                    GetBitmapLength());
             }
 
 
             /// <summary>
             /// Length of the frame
             /// </summary>
-            override public Int32 FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 2) +
-                        BlockAcknowledgmentField.BlockAckRequestControlLength +
-                        BlockAcknowledgmentField.BlockAckStartingSequenceControlLength +
-                        GetBitmapLength());
-                }
-            }
+            override public Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 2) +
+                                                BlockAcknowledgmentField.BlockAckRequestControlLength +
+                                                BlockAcknowledgmentField.BlockAckStartingSequenceControlLength +
+                                                GetBitmapLength());
 
 
             private Int32 GetBitmapLength()

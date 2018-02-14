@@ -106,14 +106,8 @@ namespace PacketDotNet
         /// </summary>
         public LSAType LSType
         {
-            get
-            {
-                return (LSAType)EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + LinkStateRequestFields.LSTypePosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes((UInt32)value, header.Bytes, header.Offset + LinkStateRequestFields.LSTypePosition);
-            }
+            get => (LSAType)EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + LinkStateRequestFields.LSTypePosition);
+            set => EndianBitConverter.Big.CopyBytes((UInt32)value, header.Bytes, header.Offset + LinkStateRequestFields.LSTypePosition);
         }
 
         /// <summary>
@@ -159,13 +153,7 @@ namespace PacketDotNet
         /// Gets the bytes.
         /// </summary>
         /// <value>The bytes.</value>
-        public virtual Byte[] Bytes
-        {
-            get
-            {
-                return header.ActualBytes();
-            }
-        }
+        public virtual Byte[] Bytes => header.ActualBytes();
     }
 
 
@@ -220,14 +208,8 @@ namespace PacketDotNet
         /// </summary>
         public UInt16 LSAge
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + LSAFields.LSAgePosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + LSAFields.LSAgePosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + LSAFields.LSAgePosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + LSAFields.LSAgePosition);
         }
 
         /// <summary>
@@ -235,14 +217,8 @@ namespace PacketDotNet
         /// </summary>
         public Byte Options
         {
-            get
-            {
-                return header.Bytes[header.Offset + LSAFields.OptionsPosition];
-            }
-            set
-            {
-                header.Bytes[header.Offset + LSAFields.OptionsPosition] = value;
-            }
+            get => header.Bytes[header.Offset + LSAFields.OptionsPosition];
+            set => header.Bytes[header.Offset + LSAFields.OptionsPosition] = value;
         }
 
         ///<summary>
@@ -250,14 +226,8 @@ namespace PacketDotNet
         ///</summary>
         public LSAType LSType
         {
-            get
-            {
-                return (LSAType)header.Bytes[header.Offset + LSAFields.LSTypePosition];
-            }
-            set
-            {
-                header.Bytes[header.Offset + LSAFields.LSTypePosition] = (Byte)value;
-            }
+            get => (LSAType)header.Bytes[header.Offset + LSAFields.LSTypePosition];
+            set => header.Bytes[header.Offset + LSAFields.LSTypePosition] = (Byte)value;
         }
 
         /// <summary>
@@ -308,14 +278,8 @@ namespace PacketDotNet
         /// </summary>
         public UInt32 LSSequenceNumber
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + LSAFields.LSSequenceNumberPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + LSAFields.LSSequenceNumberPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + LSAFields.LSSequenceNumberPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + LSAFields.LSSequenceNumberPosition);
         }
 
         /// <summary>
@@ -324,14 +288,8 @@ namespace PacketDotNet
         /// </summary>
         public UInt16 Checksum
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + LSAFields.ChecksumPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + LSAFields.ChecksumPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + LSAFields.ChecksumPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + LSAFields.ChecksumPosition);
         }
 
         /// <summary>
@@ -340,14 +298,8 @@ namespace PacketDotNet
         /// </summary>
         public UInt16 Length
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + LSAFields.PacketLengthPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + LSAFields.PacketLengthPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + LSAFields.PacketLengthPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + LSAFields.PacketLengthPosition);
         }
 
         /// <summary>
@@ -365,14 +317,7 @@ namespace PacketDotNet
         /// Gets the bytes.
         /// </summary>
         /// <value>The bytes.</value>
-        public virtual Byte[] Bytes
-        {
-            get
-            {
-                return header.ActualBytes();
-            }
-        }
-
+        public virtual Byte[] Bytes => header.ActualBytes();
     }
 
     /// <summary>
@@ -475,14 +420,8 @@ namespace PacketDotNet
         /// </summary>
         public Byte Type
         {
-            get
-            {
-                return header.Bytes[header.Offset + RouterLinkFields.TypePosition];
-            }
-            set
-            {
-                header.Bytes[header.Offset + RouterLinkFields.TypePosition] = value;
-            }
+            get => header.Bytes[header.Offset + RouterLinkFields.TypePosition];
+            set => header.Bytes[header.Offset + RouterLinkFields.TypePosition] = value;
         }
 
         /// <summary>
@@ -491,14 +430,8 @@ namespace PacketDotNet
         /// </summary>
         public Byte TOSNumber
         {
-            get
-            {
-                return header.Bytes[header.Offset + RouterLinkFields.TOSNumberPosition];
-            }
-            set
-            {
-                header.Bytes[header.Offset + RouterLinkFields.TOSNumberPosition] = value;
-            }
+            get => header.Bytes[header.Offset + RouterLinkFields.TOSNumberPosition];
+            set => header.Bytes[header.Offset + RouterLinkFields.TOSNumberPosition] = value;
         }
 
         /// <summary>
@@ -506,14 +439,8 @@ namespace PacketDotNet
         /// </summary>
         public UInt16 Metric
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + RouterLinkFields.MetricPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + RouterLinkFields.MetricPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + RouterLinkFields.MetricPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + RouterLinkFields.MetricPosition);
         }
 
         /// <summary>
@@ -540,13 +467,7 @@ namespace PacketDotNet
         /// <summary>
         /// bytes representation
         /// </summary>
-        public Byte[] Bytes
-        {
-            get
-            {
-                return header.Bytes;
-            }
-        }
+        public Byte[] Bytes => header.Bytes;
     }
 
     /// <summary>
@@ -627,10 +548,7 @@ namespace PacketDotNet
                 Byte flags = (Byte)((header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] >> 2) & 1);
                 return flags;
             }
-            set
-            {
-                header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] |= (Byte)((value & 1) << 2);
-            }
+            set => header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] |= (Byte)((value & 1) << 2);
         }
 
         /// <summary>
@@ -643,10 +561,7 @@ namespace PacketDotNet
                 Byte flags = (Byte)((header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] >> 1) & 1);
                 return flags;
             }
-            set
-            {
-                header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] |= (Byte)((value & 1) << 1);
-            }
+            set => header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] |= (Byte)((value & 1) << 1);
         }
 
         /// <summary>
@@ -659,10 +574,7 @@ namespace PacketDotNet
                 Byte flags = (Byte)(header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] & 1);
                 return flags;
             }
-            set
-            {
-                header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] |= (Byte)(value & 1);
-            }
+            set => header.Bytes[header.Offset + RouterLSAFields.RouterOptionsPosition] |= (Byte)(value & 1);
         }
 
         /// <summary>
@@ -670,15 +582,9 @@ namespace PacketDotNet
         /// </summary>
         public UInt16 LinkNumber
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes,header.Offset + RouterLSAFields.LinkNumberPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(header.Bytes,header.Offset + RouterLSAFields.LinkNumberPosition);
 
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + RouterLSAFields.LinkNumberPosition);
-            }
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + RouterLSAFields.LinkNumberPosition);
         }
 
         /// <summary>
@@ -1080,26 +986,14 @@ namespace PacketDotNet
         /// </summary>
         public UInt32 ExternalRouteTag
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
         }
 
         /// <summary>
         /// Bytes representation
         /// </summary>
-        public Byte[] Bytes
-        {
-            get
-            {
-                return header.Bytes;
-            }
-        }
+        public Byte[] Bytes => header.Bytes;
     }
 
     /// <summary>

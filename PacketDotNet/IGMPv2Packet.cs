@@ -37,39 +37,24 @@ namespace PacketDotNet
         /// </value>
         virtual public IGMPMessageType Type
         {
-            get
-            {
-                return (IGMPMessageType)header.Bytes[header.Offset + IGMPv2Fields.TypePosition];
-            }
+            get => (IGMPMessageType)header.Bytes[header.Offset + IGMPv2Fields.TypePosition];
 
-            set
-            {
-                header.Bytes[header.Offset + IGMPv2Fields.TypePosition] = (Byte)value;
-            }
+            set => header.Bytes[header.Offset + IGMPv2Fields.TypePosition] = (Byte)value;
         }
 
         /// <summary> Fetch the IGMP max response time.</summary>
         virtual public Byte MaxResponseTime
         {
-            get
-            {
-                return header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition];
-            }
+            get => header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition];
 
-            set
-            {
-                header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition] = value;
-            }
+            set => header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition] = value;
         }
 
         /// <summary> Fetch the IGMP header checksum.</summary>
         virtual public Int16 Checksum
         {
-            get
-            {
-                return BitConverter.ToInt16(header.Bytes,
-                                                      header.Offset + IGMPv2Fields.ChecksumPosition);
-            }
+            get => BitConverter.ToInt16(header.Bytes,
+                header.Offset + IGMPv2Fields.ChecksumPosition);
 
             set
             {
@@ -79,26 +64,12 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the IGMP group address.</summary>
-        virtual public System.Net.IPAddress GroupAddress
-        {
-            get
-            {
-                return IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
-                                             header.Offset + IGMPv2Fields.GroupAddressPosition,
-                                             header.Bytes);
-            }
-
-        }
+        virtual public System.Net.IPAddress GroupAddress => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
+            header.Offset + IGMPv2Fields.GroupAddressPosition,
+            header.Bytes);
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.Brown;
-            }
-
-        }
+        override public System.String Color => AnsiEscapeSequences.Brown;
 
         /// <summary>
         /// Constructor

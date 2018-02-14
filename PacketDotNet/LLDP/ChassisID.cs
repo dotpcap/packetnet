@@ -132,16 +132,9 @@ namespace PacketDotNet.LLDP
         /// </value>
         public ChassisSubTypes SubType
         {
-            get
-            {
-                return (ChassisSubTypes)tlvData.Bytes[ValueOffset];
-            }
+            get => (ChassisSubTypes)tlvData.Bytes[ValueOffset];
 
-            set
-            {
-                // set the subtype
-                tlvData.Bytes[ValueOffset] = (Byte)value;
-            }
+            set => tlvData.Bytes[ValueOffset] = (Byte)value;
         }
 
         /// <value>
@@ -149,8 +142,8 @@ namespace PacketDotNet.LLDP
         /// </value>
         public Object SubTypeValue
         {
-            get { return GetSubTypeValue(); }
-            set { SetSubTypeValue(value); }
+            get => GetSubTypeValue();
+            set => SetSubTypeValue(value);
         }
 
         /// <summary>
@@ -158,7 +151,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public Byte[] ChassisComponent
         {
-            get { return (Byte[])GetSubTypeValue(); }
+            get => (Byte[])GetSubTypeValue();
             set
             {
                 SubType = ChassisSubTypes.ChassisComponent;
@@ -171,7 +164,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public String InterfaceName
         {
-            get { return (String)GetSubTypeValue(); }
+            get => (String)GetSubTypeValue();
             set
             {
                 SubType = ChassisSubTypes.InterfaceName;
@@ -184,7 +177,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public PhysicalAddress MACAddress
         {
-            get { return (PhysicalAddress)GetSubTypeValue(); }
+            get => (PhysicalAddress)GetSubTypeValue();
             set
             {
                 SubType = ChassisSubTypes.MACAddress;
@@ -197,7 +190,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public LLDP.NetworkAddress NetworkAddress
         {
-            get { return (LLDP.NetworkAddress)GetSubTypeValue(); }
+            get => (LLDP.NetworkAddress)GetSubTypeValue();
             set
             {
                 SubType = ChassisSubTypes.NetworkAddress;
@@ -210,7 +203,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public Byte[] PortComponent
         {
-            get { return (Byte[])GetSubTypeValue(); }
+            get => (Byte[])GetSubTypeValue();
             set
             {
                 SubType = ChassisSubTypes.PortComponent;
@@ -223,7 +216,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public Byte[] InterfaceAlias
         {
-            get { return (Byte[])GetSubTypeValue(); }
+            get => (Byte[])GetSubTypeValue();
             set
             {
                 SubType = ChassisSubTypes.InterfaceAlias;

@@ -32,52 +32,17 @@ namespace PacketDotNet
     public class L2TPPacket : Packet
     {
 
-        virtual public Boolean DataMessage
-        {
-            get
-            {
-                return 8 == (header.Bytes[header.Offset] & 0x8);
-            }
-        }
-        virtual public Boolean HasLength
-        {
-            get
-            {
-                return 4 == (header.Bytes[header.Offset] & 0x4);
-            }
-        }
+        virtual public Boolean DataMessage => 8 == (header.Bytes[header.Offset] & 0x8);
 
-        virtual public Boolean HasSequence
-        {
-            get
-            {
-                return 2 == (header.Bytes[header.Offset] & 0x2);
-            }
-        }
+        virtual public Boolean HasLength => 4 == (header.Bytes[header.Offset] & 0x4);
 
-        virtual public Boolean HasOffset
-        {
-            get
-            {
-                return 2 == (header.Bytes[header.Offset] & 0x2);
-            }
-        }
+        virtual public Boolean HasSequence => 2 == (header.Bytes[header.Offset] & 0x2);
 
-        virtual public Boolean IsPriority
-        {
-            get
-            {
-                return 2 == (header.Bytes[header.Offset] & 0x2);
-            }
-        }
+        virtual public Boolean HasOffset => 2 == (header.Bytes[header.Offset] & 0x2);
 
-        virtual public Int32 Version
-        {
-            get
-            {
-                return (header.Bytes[header.Offset + 1] & 0x7);
-            }
-        }
+        virtual public Boolean IsPriority => 2 == (header.Bytes[header.Offset] & 0x2);
+
+        virtual public Int32 Version => (header.Bytes[header.Offset + 1] & 0x7);
 
         virtual public Int32 TunnelID
         {
@@ -104,14 +69,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.DarkGray;
-            }
-
-        }
+        override public System.String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary>
         /// Constructor

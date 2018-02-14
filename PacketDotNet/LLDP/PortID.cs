@@ -111,11 +111,8 @@ namespace PacketDotNet.LLDP
         /// </value>
         public PortSubTypes SubType
         {
-            get { return (PortSubTypes)tlvData.Bytes[tlvData.Offset + TLVTypeLength.TypeLengthLength]; }
-            set
-            {
-                tlvData.Bytes[tlvData.Offset + TLVTypeLength.TypeLengthLength] = (Byte)value;
-            }
+            get => (PortSubTypes)tlvData.Bytes[tlvData.Offset + TLVTypeLength.TypeLengthLength];
+            set => tlvData.Bytes[tlvData.Offset + TLVTypeLength.TypeLengthLength] = (Byte)value;
         }
 
         /// <value>
@@ -123,25 +120,19 @@ namespace PacketDotNet.LLDP
         /// </value>
         public Object SubTypeValue
         {
-            get { return GetSubTypeValue(); }
-            set { SetSubTypeValue(value); }
+            get => GetSubTypeValue();
+            set => SetSubTypeValue(value);
         }
 
         /// <summary>
         /// Offset to the value field
         /// </summary>
-        private Int32 DataOffset
-        {
-            get { return ValueOffset + SubTypeLength; }
-        }
+        private Int32 DataOffset => ValueOffset + SubTypeLength;
 
         /// <summary>
         /// Size of the value field
         /// </summary>
-        private Int32 DataLength
-        {
-            get { return Length - SubTypeLength; }
-        }
+        private Int32 DataLength => Length - SubTypeLength;
 
         #endregion
 

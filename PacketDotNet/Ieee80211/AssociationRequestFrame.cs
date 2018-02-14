@@ -71,12 +71,9 @@ namespace PacketDotNet
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                        header.Bytes,
-                        header.Offset + AssociationRequestFields.CapabilityInformationPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + AssociationRequestFields.CapabilityInformationPosition);
             }
 
             /// <summary>
@@ -114,12 +111,9 @@ namespace PacketDotNet
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                        header.Bytes,
-                        header.Offset + AssociationRequestFields.ListenIntervalPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + AssociationRequestFields.ListenIntervalPosition);
             }
    
             /// <summary>
@@ -136,19 +130,13 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override Int32 FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        AssociationRequestFields.CapabilityInformationLength +
-                        AssociationRequestFields.ListenIntervalLength +
-                        InformationElements.Length);
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 3) +
+                                                MacFields.SequenceControlLength +
+                                                AssociationRequestFields.CapabilityInformationLength +
+                                                AssociationRequestFields.ListenIntervalLength +
+                                                InformationElements.Length);
 
 
             /// <summary>

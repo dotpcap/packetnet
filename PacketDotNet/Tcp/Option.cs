@@ -53,18 +53,12 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The Length of the Option type
         /// </summary>
-        public virtual Byte Length
-        {
-            get { return Bytes[LengthFieldOffset]; }
-        }
+        public virtual Byte Length => Bytes[LengthFieldOffset];
 
         /// <summary>
         /// The Kind of option
         /// </summary>
-        public OptionTypes Kind
-        {
-            get { return (OptionTypes)Bytes[KindFieldOffset]; }
-        }
+        public OptionTypes Kind => (OptionTypes)Bytes[KindFieldOffset];
 
         /// <summary>
         /// Returns a TLV that contains the Option

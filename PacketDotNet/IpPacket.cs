@@ -53,10 +53,7 @@ namespace PacketDotNet
         /// </value>
         public override Packet PayloadPacket
         {
-            get
-            {
-                return base.PayloadPacket;
-            }
+            get => base.PayloadPacket;
 
             set
             {
@@ -138,8 +135,8 @@ namespace PacketDotNet
         /// </value>
         public virtual IPProtocolType NextHeader
         {
-            get { return Protocol; }
-            set { Protocol = value; }
+            get => Protocol;
+            set => Protocol = value;
         }
 
         /// <value>
@@ -159,8 +156,8 @@ namespace PacketDotNet
         /// </value>
         public virtual Int32 HopLimit
         {
-            get { return TimeToLive; }
-            set { TimeToLive = value; }
+            get => TimeToLive;
+            set => TimeToLive = value;
         }
 
         /// <summary>

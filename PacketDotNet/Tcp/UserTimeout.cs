@@ -71,16 +71,11 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The User Timeout
         /// </summary>
-        public UInt16 Timeout
-        {
-            get { return (UInt16)((Int32)Values & TimeoutMask); }
-        }
+        public UInt16 Timeout => (UInt16)((Int32)Values & TimeoutMask);
 
         // a convenient property to grab the value fields for further processing
-        private UInt16 Values
-        {
-            get { return EndianBitConverter.Big.ToUInt16(Bytes, ValuesFieldOffset); }
-        }
+        private UInt16 Values => EndianBitConverter.Big.ToUInt16(Bytes, ValuesFieldOffset);
+
         #endregion
 
         #region Methods

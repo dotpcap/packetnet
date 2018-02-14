@@ -74,28 +74,20 @@ namespace MiscUtil.IO
         /// <summary>
         /// The bit converter used to write values to the stream
         /// </summary>
-        public EndianBitConverter BitConverter
-        {
-            get { return bitConverter; }
-        }
+        public EndianBitConverter BitConverter => bitConverter;
 
         Encoding encoding;
         /// <summary>
         /// The encoding used to write strings
         /// </summary>
-        public Encoding Encoding
-        {
-            get { return encoding; }
-        }
+        public Encoding Encoding => encoding;
 
         Stream stream;
         /// <summary>
         /// Gets the underlying stream of the EndianBinaryWriter.
         /// </summary>
-        public Stream BaseStream
-        {
-            get { return stream; }
-        }
+        public Stream BaseStream => stream;
+
         #endregion
 
         #region Public methods

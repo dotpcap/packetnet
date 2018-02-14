@@ -48,10 +48,7 @@ namespace PacketDotNet
         /// </value>
         public override Packet PayloadPacket
         {
-            get
-            {
-                return base.PayloadPacket;
-            }
+            get => base.PayloadPacket;
 
             set
             {
@@ -140,11 +137,8 @@ namespace PacketDotNet
         /// </value>
         public virtual EthernetPacketType Type
         {
-            get
-            {
-                return (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                                          header.Offset + EthernetFields.TypePosition);
-            }
+            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
+                header.Offset + EthernetFields.TypePosition);
 
             set
             {
@@ -249,13 +243,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.DarkGray;
-            }
-        }
+        public override System.String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override String ToString(StringOutputType outputFormat)

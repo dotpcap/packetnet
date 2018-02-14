@@ -47,11 +47,8 @@ namespace PacketDotNet
         /// </value>
         virtual public LinkLayers HardwareAddressType
         {
-            get
-            {
-                return (LinkLayers)EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                                  header.Offset + ARPFields.HardwareAddressTypePosition);
-            }
+            get => (LinkLayers)EndianBitConverter.Big.ToUInt16(header.Bytes,
+                header.Offset + ARPFields.HardwareAddressTypePosition);
 
             set
             {
@@ -67,11 +64,8 @@ namespace PacketDotNet
         /// </value>
         virtual public EthernetPacketType ProtocolAddressType
         {
-            get
-            {
-                return (EthernetPacketType)EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                                           header.Offset + ARPFields.ProtocolAddressTypePosition);
-            }
+            get => (EthernetPacketType)EndianBitConverter.Big.ToUInt16(header.Bytes,
+                header.Offset + ARPFields.ProtocolAddressTypePosition);
 
             set
             {
@@ -87,15 +81,9 @@ namespace PacketDotNet
         /// </value>
         virtual public Int32 HardwareAddressLength
         {
-            get
-            {
-                return header.Bytes[header.Offset + ARPFields.HardwareAddressLengthPosition];
-            }
+            get => header.Bytes[header.Offset + ARPFields.HardwareAddressLengthPosition];
 
-            set
-            {
-                header.Bytes[header.Offset + ARPFields.HardwareAddressLengthPosition] = (Byte)value;
-            }
+            set => header.Bytes[header.Offset + ARPFields.HardwareAddressLengthPosition] = (Byte)value;
         }
 
         /// <value>
@@ -103,15 +91,9 @@ namespace PacketDotNet
         /// </value>
         virtual public Int32 ProtocolAddressLength
         {
-            get
-            {
-                return header.Bytes[header.Offset + ARPFields.ProtocolAddressLengthPosition];
-            }
+            get => header.Bytes[header.Offset + ARPFields.ProtocolAddressLengthPosition];
 
-            set
-            {
-                header.Bytes[header.Offset + ARPFields.ProtocolAddressLengthPosition] = (Byte)value;
-            }
+            set => header.Bytes[header.Offset + ARPFields.ProtocolAddressLengthPosition] = (Byte)value;
         }
 
         /// <summary> Fetch the operation code.
@@ -122,11 +104,8 @@ namespace PacketDotNet
         /// </summary>
         virtual public ARPOperation Operation
         {
-            get
-            {
-                return (ARPOperation)EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                                    header.Offset + ARPFields.OperationPosition);
-            }
+            get => (ARPOperation)EndianBitConverter.Big.ToInt16(header.Bytes,
+                header.Offset + ARPFields.OperationPosition);
 
             set
             {
@@ -142,12 +121,9 @@ namespace PacketDotNet
         /// </value>
         virtual public System.Net.IPAddress SenderProtocolAddress
         {
-            get
-            {
-                return IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
-                                             header.Offset + ARPFields.SenderProtocolAddressPosition,
-                                             header.Bytes);
-            }
+            get => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
+                header.Offset + ARPFields.SenderProtocolAddressPosition,
+                header.Bytes);
 
             set
             {
@@ -167,12 +143,9 @@ namespace PacketDotNet
         /// </value>
         virtual public System.Net.IPAddress TargetProtocolAddress
         {
-            get
-            {
-                return IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
-                                             header.Offset + ARPFields.TargetProtocolAddressPosition,
-                                             header.Bytes);
-            }
+            get => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
+                header.Offset + ARPFields.TargetProtocolAddressPosition,
+                header.Bytes);
 
             set
             {
@@ -258,13 +231,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.Purple;
-            }
-        }
+        override public System.String Color => AnsiEscapeSequences.Purple;
 
         /// <summary>
         /// Create an ARPPacket from values

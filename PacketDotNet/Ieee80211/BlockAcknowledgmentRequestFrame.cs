@@ -80,12 +80,9 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + BlockAckRequestField.BlockAckRequestControlPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + BlockAckRequestField.BlockAckRequestControlPosition);
             }
 
             /// <summary>
@@ -129,29 +126,20 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                        header.Bytes,
-                        header.Offset + BlockAckRequestField.BlockAckStartingSequenceControlPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + BlockAckRequestField.BlockAckStartingSequenceControlPosition);
             }
 
 
             /// <summary>
             /// Length of the frame
             /// </summary>
-            override public Int32 FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 2) +
-                        BlockAckRequestField.BlockAckRequestControlLength +
-                        BlockAckRequestField.BlockAckStartingSequenceControlLength);
-                }
-            }
+            override public Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 2) +
+                                                BlockAckRequestField.BlockAckRequestControlLength +
+                                                BlockAckRequestField.BlockAckStartingSequenceControlLength);
 
             /// <summary>
             /// Constructor

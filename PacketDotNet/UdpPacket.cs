@@ -45,10 +45,7 @@ namespace PacketDotNet
         /// <summary> Fetch the port number on the source host.</summary>
         virtual public UInt16 SourcePort
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + UdpFields.SourcePortPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + UdpFields.SourcePortPosition);
 
             set
             {
@@ -60,11 +57,8 @@ namespace PacketDotNet
         /// <summary> Fetch the port number on the target host.</summary>
         virtual public UInt16 DestinationPort
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                      header.Offset + UdpFields.DestinationPortPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
+                header.Offset + UdpFields.DestinationPortPosition);
 
             set
             {
@@ -81,11 +75,8 @@ namespace PacketDotNet
         /// </value>
         virtual public Int32 Length
         {
-            get
-            {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + UdpFields.HeaderLengthPosition);
-            }
+            get => EndianBitConverter.Big.ToInt16(header.Bytes,
+                header.Offset + UdpFields.HeaderLengthPosition);
 
             // Internal because it is updated based on the payload when
             // its bytes are retrieved
@@ -101,11 +92,8 @@ namespace PacketDotNet
         /// <summary> Fetch the header checksum.</summary>
         override public UInt16 Checksum
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                       header.Offset + UdpFields.ChecksumPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
+                header.Offset + UdpFields.ChecksumPosition);
 
             set
             {
@@ -145,13 +133,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.LightGreen;
-            }
-        }
+        override public System.String Color => AnsiEscapeSequences.LightGreen;
 
         /// <summary>
         /// Update the Udp length

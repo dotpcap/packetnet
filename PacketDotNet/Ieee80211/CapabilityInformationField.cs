@@ -40,15 +40,9 @@ namespace PacketDotNet
             /// </summary>
             public Boolean IsEss
             {
-                get
-                {
-                    return GetBitFieldValue(0);
-                }
+                get => GetBitFieldValue(0);
 
-                set
-                {
-                    SetBitFieldValue(0, value);
-                }
+                set => SetBitFieldValue(0, value);
             }
 
             /// <summary>
@@ -58,15 +52,9 @@ namespace PacketDotNet
             /// </summary>
             public Boolean IsIbss
             {
-                get
-                {
-                    return GetBitFieldValue(1);
-                }
+                get => GetBitFieldValue(1);
 
-                set
-                {
-                    SetBitFieldValue(1, value);
-                }
+                set => SetBitFieldValue(1, value);
             }
 
             /// <summary>
@@ -78,15 +66,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean CfPollable
             {
-                get
-                {
-                    return GetBitFieldValue(2);
-                }
+                get => GetBitFieldValue(2);
 
-                set
-                {
-                    SetBitFieldValue(2, value);
-                }
+                set => SetBitFieldValue(2, value);
             }
 
             /// <summary>
@@ -98,15 +80,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean CfPollRequest
             {
-                get
-                {
-                    return GetBitFieldValue(3);
-                }
+                get => GetBitFieldValue(3);
 
-                set
-                {
-                    SetBitFieldValue(3, value);
-                }
+                set => SetBitFieldValue(3, value);
             }
 
             /// <summary>
@@ -118,15 +94,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean Privacy
             {
-                get
-                {
-                    return GetBitFieldValue(4);
-                }
+                get => GetBitFieldValue(4);
 
-                set
-                {
-                    SetBitFieldValue(4, value);
-                }
+                set => SetBitFieldValue(4, value);
             }
 
             /// <summary>
@@ -138,15 +108,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean ShortPreamble
             {
-                get
-                {
-                    return GetBitFieldValue(5);
-                }
+                get => GetBitFieldValue(5);
 
-                set
-                {
-                    SetBitFieldValue(5, value);
-                }
+                set => SetBitFieldValue(5, value);
             }
 
             /// <summary>
@@ -158,15 +122,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean Pbcc
             {
-                get
-                {
-                    return GetBitFieldValue(6);
-                }
+                get => GetBitFieldValue(6);
 
-                set
-                {
-                    SetBitFieldValue(6, value);
-                }
+                set => SetBitFieldValue(6, value);
             }
 
             /// <summary>
@@ -178,15 +136,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean ChannelAgility
             {
-                get
-                {
-                    return GetBitFieldValue(7);
-                }
+                get => GetBitFieldValue(7);
 
-                set
-                {
-                    SetBitFieldValue(7, value);
-                }
+                set => SetBitFieldValue(7, value);
             }
 
             /// <summary>
@@ -198,15 +150,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean ShortTimeSlot
             {
-                get
-                {
-                    return GetBitFieldValue(10);
-                }
+                get => GetBitFieldValue(10);
 
-                set
-                {
-                    SetBitFieldValue(10, value);
-                }
+                set => SetBitFieldValue(10, value);
             }
 
             /// <summary>
@@ -218,15 +164,9 @@ namespace PacketDotNet
             /// </value>
             public Boolean DssOfdm
             {
-                get
-                {
-                    return GetBitFieldValue(13);
-                }
+                get => GetBitFieldValue(13);
 
-                set
-                {
-                    SetBitFieldValue(13, value);
-                }
+                set => SetBitFieldValue(13, value);
             }
 
             /// <summary>

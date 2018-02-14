@@ -237,14 +237,8 @@ namespace PacketDotNet
             /// </value>
             public ElementId Id
             { 
-                get
-                {
-                    return (ElementId)bytes.Bytes [bytes.Offset + ElementIdPosition];
-                }
-                set
-                {
-                    bytes.Bytes [bytes.Offset + ElementIdPosition] = (Byte)value;
-                }
+                get => (ElementId)bytes.Bytes [bytes.Offset + ElementIdPosition];
+                set => bytes.Bytes [bytes.Offset + ElementIdPosition] = (Byte)value;
             }
 
             /// <summary>
@@ -253,33 +247,17 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public Int32 ValueLength
-            {
-                get
-                {
-                    return Math.Min((bytes.Length - ElementValuePosition),
-                                    bytes.Bytes [bytes.Offset + ElementLengthPosition]);
-                }
-                //no set Length method as we dont want to allow a mismatch between
-                //the length field and the actual length of the value
-            }
-            
+            public Int32 ValueLength => Math.Min((bytes.Length - ElementValuePosition),
+                bytes.Bytes [bytes.Offset + ElementLengthPosition]);
+
             /// <summary>
             /// Gets the length of the element including the Id and Length field
             /// </summary>
             /// <value>
             /// The length of the element.
             /// </value>
-            public Byte ElementLength
-            {
-                get
-                {
-                    return (Byte)(ElementIdLength + ElementLengthLength + ValueLength);
-                }
-                //no set Length method as we dont want to allow a mismatch between
-                //the length field and the actual length of the value
-            }
-   
+            public Byte ElementLength => (Byte)(ElementIdLength + ElementLengthLength + ValueLength);
+
             /// <summary>
             /// Gets or sets the value of the element
             /// </summary>
@@ -329,13 +307,7 @@ namespace PacketDotNet
             /// <value>
             /// The bytes.
             /// </value>
-            public Byte[] Bytes
-            {
-                get
-                {
-                    return bytes.ActualBytes();
-                }
-            }
+            public Byte[] Bytes => bytes.ActualBytes();
 
             /// <summary>
             /// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="PacketDotNet.Ieee80211.InformationElement"/>.

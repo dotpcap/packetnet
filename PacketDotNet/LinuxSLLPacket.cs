@@ -38,11 +38,8 @@ namespace PacketDotNet
         /// </value>
         public LinuxSLLType Type
         {
-            get
-            {
-                return (LinuxSLLType)EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + LinuxSLLFields.PacketTypePosition);
-            }
+            get => (LinuxSLLType)EndianBitConverter.Big.ToInt16(header.Bytes,
+                header.Offset + LinuxSLLFields.PacketTypePosition);
 
             set
             {
@@ -58,11 +55,8 @@ namespace PacketDotNet
         /// </value>
         public Int32 LinkLayerAddressType
         {
-            get
-            {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
-            }
+            get => EndianBitConverter.Big.ToInt16(header.Bytes,
+                header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
 
             set
             {
@@ -78,11 +72,8 @@ namespace PacketDotNet
         /// </value>
         public Int32 LinkLayerAddressLength
         {
-            get
-            {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
-            }
+            get => EndianBitConverter.Big.ToInt16(header.Bytes,
+                header.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
 
             set
             {
@@ -131,11 +122,8 @@ namespace PacketDotNet
         /// </value>
         public EthernetPacketType EthernetProtocolType
         {
-            get
-            {
-                return (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
-            }
+            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
+                header.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
 
             set
             {

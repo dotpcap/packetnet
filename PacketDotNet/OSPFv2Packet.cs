@@ -79,15 +79,9 @@ namespace PacketDotNet
         /// </summary>
         public OSPFVersion Version
         {
-            get
-            {
-                return (OSPFVersion)header.Bytes[header.Offset + OSPFv2Fields.VersionPosition];
-            }
+            get => (OSPFVersion)header.Bytes[header.Offset + OSPFv2Fields.VersionPosition];
 
-            set
-            {
-                header.Bytes[header.Offset + OSPFv2Fields.VersionPosition] = (Byte)value;
-            }
+            set => header.Bytes[header.Offset + OSPFv2Fields.VersionPosition] = (Byte)value;
         }
 
         /// <summary>
@@ -104,10 +98,7 @@ namespace PacketDotNet
                 else
                     throw new NotImplementedException("No such OSPF packet type " + val);
             }
-            set
-            {
-                header.Bytes[header.Offset + OSPFv2Fields.TypePosition] = (Byte)value;
-            }
+            set => header.Bytes[header.Offset + OSPFv2Fields.TypePosition] = (Byte)value;
         }
 
         /// <summary>
@@ -115,14 +106,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual UInt16 PacketLength
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + OSPFv2Fields.PacketLengthPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.PacketLengthPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + OSPFv2Fields.PacketLengthPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.PacketLengthPosition);
         }
 
         /// <summary>
@@ -169,14 +154,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual UInt16 Checksum
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + OSPFv2Fields.ChecksumPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.ChecksumPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + OSPFv2Fields.ChecksumPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.ChecksumPosition);
         }
 
         /// <summary>
@@ -184,14 +163,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual UInt16 AuType
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + OSPFv2Fields.AuTypePosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.AuTypePosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + OSPFv2Fields.AuTypePosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.AuTypePosition);
         }
 
         ///<summary>
@@ -199,14 +172,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual UInt64 Authentication
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt64(header.Bytes, header.Offset + OSPFv2Fields.AuthorizationPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.AuthorizationPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt64(header.Bytes, header.Offset + OSPFv2Fields.AuthorizationPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.AuthorizationPosition);
         }
 
         /// <summary>
@@ -349,14 +316,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual UInt16 HelloInterval
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + OSPFv2Fields.HelloIntervalPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.HelloIntervalPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + OSPFv2Fields.HelloIntervalPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.HelloIntervalPosition);
         }
 
         /// <summary>
@@ -364,14 +325,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual Byte HelloOptions
         {
-            get
-            {
-                return header.Bytes[header.Offset + OSPFv2Fields.HelloOptionsPosition];
-            }
-            set
-            {
-                header.Bytes[header.Offset + OSPFv2Fields.HelloOptionsPosition] = value;
-            }
+            get => header.Bytes[header.Offset + OSPFv2Fields.HelloOptionsPosition];
+            set => header.Bytes[header.Offset + OSPFv2Fields.HelloOptionsPosition] = value;
         }
 
         /// <summary>
@@ -379,14 +334,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual Byte RtrPriority
         {
-            get
-            {
-                return header.Bytes[header.Offset + OSPFv2Fields.RtrPriorityPosition];
-            }
-            set
-            {
-                header.Bytes[header.Offset + OSPFv2Fields.RtrPriorityPosition] = value;
-            }
+            get => header.Bytes[header.Offset + OSPFv2Fields.RtrPriorityPosition];
+            set => header.Bytes[header.Offset + OSPFv2Fields.RtrPriorityPosition] = value;
         }
 
 
@@ -395,14 +344,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual UInt32 RouterDeadInterval
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + OSPFv2Fields.RouterDeadIntervalPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.RouterDeadIntervalPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + OSPFv2Fields.RouterDeadIntervalPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.RouterDeadIntervalPosition);
         }
 
         /// <summary>
@@ -583,14 +526,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual UInt16 InterfaceMTU
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + OSPFv2Fields.InterfaceMTUPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.InterfaceMTUPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + OSPFv2Fields.InterfaceMTUPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.InterfaceMTUPosition);
         }
 
         /// <summary>
@@ -598,15 +535,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual Byte DBDescriptionOptions
         {
-            get
-            {
-                return header.Bytes[header.Offset + OSPFv2Fields.DBDescriptionOptionsPosition];
-            }
-            set
-            {
-                header.Bytes[header.Offset + OSPFv2Fields.DBDescriptionOptionsPosition] = value;
-
-            }
+            get => header.Bytes[header.Offset + OSPFv2Fields.DBDescriptionOptionsPosition];
+            set => header.Bytes[header.Offset + OSPFv2Fields.DBDescriptionOptionsPosition] = value;
         }
 
         /// <summary>
@@ -614,14 +544,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual Byte DBDescriptionBits
         {
-            get
-            {
-                return header.Bytes[header.Offset + OSPFv2Fields.BitsPosition];
-            }
-            set
-            {
-                header.Bytes[header.Offset + OSPFv2Fields.BitsPosition] = value;
-            }
+            get => header.Bytes[header.Offset + OSPFv2Fields.BitsPosition];
+            set => header.Bytes[header.Offset + OSPFv2Fields.BitsPosition] = value;
         }
 
         /// <summary>
@@ -629,14 +553,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual UInt32 DDSequence
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + OSPFv2Fields.DDSequencePosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.DDSequencePosition);
-            }
+            get => EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + OSPFv2Fields.DDSequencePosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.DDSequencePosition);
         }
 
         ///<summary>
@@ -911,14 +829,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual UInt32 LSANumber
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + OSPFv2Fields.LSANumberPosition);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.LSANumberPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt32(header.Bytes, header.Offset + OSPFv2Fields.LSANumberPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + OSPFv2Fields.LSANumberPosition);
         }
 
         /// <summary>

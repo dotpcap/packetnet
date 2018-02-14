@@ -95,18 +95,11 @@ namespace PacketDotNet.LLDP
         /// </value>
         public UInt16 Seconds
         {
-            get
-            {
-                // get the seconds
-                return BigEndianBitConverter.Big.ToUInt16(tlvData.Bytes,
-                                                          tlvData.Offset + TLVTypeLength.TypeLengthLength);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value,
-                                                 tlvData.Bytes,
-                                                 tlvData.Offset + TLVTypeLength.TypeLengthLength);
-            }
+            get => BigEndianBitConverter.Big.ToUInt16(tlvData.Bytes,
+                tlvData.Offset + TLVTypeLength.TypeLengthLength);
+            set => EndianBitConverter.Big.CopyBytes(value,
+                tlvData.Bytes,
+                tlvData.Offset + TLVTypeLength.TypeLengthLength);
         }
 
         /// <summary>

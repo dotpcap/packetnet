@@ -74,12 +74,9 @@ namespace PacketDotNet
                     }
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + AssociationResponseFields.CapabilityInformationPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value,
+                    header.Bytes,
+                    header.Offset + AssociationResponseFields.CapabilityInformationPosition);
             }
 
             /// <summary>
@@ -113,12 +110,9 @@ namespace PacketDotNet
                     }
                 }
                 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes ((UInt16)value,
-                        header.Bytes,
-                        header.Offset + AssociationResponseFields.StatusCodePosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes ((UInt16)value,
+                    header.Bytes,
+                    header.Offset + AssociationResponseFields.StatusCodePosition);
             }
 
             /// <summary>
@@ -164,20 +158,14 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override Int32 FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        AssociationResponseFields.CapabilityInformationLength +
-                        AssociationResponseFields.StatusCodeLength +
-                        AssociationResponseFields.AssociationIdLength +
-                        InformationElements.Length);
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 3) +
+                                                MacFields.SequenceControlLength +
+                                                AssociationResponseFields.CapabilityInformationLength +
+                                                AssociationResponseFields.StatusCodeLength +
+                                                AssociationResponseFields.AssociationIdLength +
+                                                InformationElements.Length);
 
 
             /// <summary>

@@ -35,7 +35,7 @@ namespace PacketDotNet
         /// <value>
         /// The type of IGMP message
         /// </value>
-        virtual public IGMPMessageType Type
+        public virtual IGMPMessageType Type
         {
             get => (IGMPMessageType)header.Bytes[header.Offset + IGMPv2Fields.TypePosition];
 
@@ -43,7 +43,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the IGMP max response time.</summary>
-        virtual public Byte MaxResponseTime
+        public virtual Byte MaxResponseTime
         {
             get => header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition];
 
@@ -51,7 +51,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the IGMP header checksum.</summary>
-        virtual public Int16 Checksum
+        public virtual Int16 Checksum
         {
             get => BitConverter.ToInt16(header.Bytes,
                 header.Offset + IGMPv2Fields.ChecksumPosition);
@@ -64,12 +64,12 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the IGMP group address.</summary>
-        virtual public System.Net.IPAddress GroupAddress => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
+        public virtual System.Net.IPAddress GroupAddress => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
             header.Offset + IGMPv2Fields.GroupAddressPosition,
             header.Bytes);
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color => AnsiEscapeSequences.Brown;
+        public override System.String Color => AnsiEscapeSequences.Brown;
 
         /// <summary>
         /// Constructor

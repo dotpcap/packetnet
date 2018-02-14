@@ -27,19 +27,19 @@ namespace PacketDotNet
     {
 
         /// <summary> Length of the Base Header in bytes.</summary>
-        public readonly static Int32 HeaderLength = 2;
+        public static readonly Int32 HeaderLength = 2;
         /// <summary> Length of the Flags in bytes.</summary>
-        public readonly static Int32 FlagsLength = 2;
+        public static readonly Int32 FlagsLength = 2;
         /// <summary> Length of the Length in bytes.</summary>
-        public readonly static Int32 LengthsLength = 2;
+        public static readonly Int32 LengthsLength = 2;
         /// <summary> Length of the Ns in bytes.</summary>
-        public readonly static Int32 NsLength = 2;
+        public static readonly Int32 NsLength = 2;
         /// <summary> Length of the Nr in bytes.</summary>
-        public readonly static Int32 NrLength = 2;
+        public static readonly Int32 NrLength = 2;
         /// <summary> Length of the Offset Size in bytes (Optional).</summary>      
-        public readonly static Int32 OffsetSizeLength = 2;
+        public static readonly Int32 OffsetSizeLength = 2;
         /// <summary> Length of the Offset Pad in bytes (Optional).</summary>
-        public readonly static Int32 OffsetPadLength = 2;
+        public static readonly Int32 OffsetPadLength = 2;
 
 
     }

@@ -39,23 +39,23 @@ namespace PacketDotNet
             /// <summary>
             /// The length in bytes of the Information Element id field.
             /// </summary>
-            public readonly static Int32 ElementIdLength = 1;
+            public static readonly Int32 ElementIdLength = 1;
             /// <summary>
             /// The length in bytes of the Information Element length field.
             /// </summary>
-            public readonly static Int32 ElementLengthLength = 1;
+            public static readonly Int32 ElementLengthLength = 1;
             /// <summary>
             /// The index of the id field in an Information Element.
             /// </summary>
-            public readonly static Int32 ElementIdPosition = 0;
+            public static readonly Int32 ElementIdPosition = 0;
             /// <summary>
             /// The index of the length field in an Information Element.
             /// </summary>
-            public readonly static Int32 ElementLengthPosition;
+            public static readonly Int32 ElementLengthPosition;
             /// <summary>
             /// The index of the first byte of the value field in an Information Element.
             /// </summary>
-            public readonly static Int32 ElementValuePosition;
+            public static readonly Int32 ElementValuePosition;
 
             static InformationElement ()
             {

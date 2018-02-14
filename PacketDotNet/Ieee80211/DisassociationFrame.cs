@@ -37,9 +37,9 @@ namespace PacketDotNet
         {
             private class DisassociationFields
             {
-                public readonly static Int32 ReasonCodeLength = 2;
+                public static readonly Int32 ReasonCodeLength = 2;
 
-                public readonly static Int32 ReasonCodePosition;
+                public static readonly Int32 ReasonCodePosition;
 
                 static DisassociationFields()
                 {

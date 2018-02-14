@@ -38,12 +38,12 @@ namespace PacketDotNet
         {
             private class BlockAcknowledgmentField
             {
-                public readonly static Int32 BlockAckRequestControlLength = 2;
-                public readonly static Int32 BlockAckStartingSequenceControlLength = 2;
+                public static readonly Int32 BlockAckRequestControlLength = 2;
+                public static readonly Int32 BlockAckStartingSequenceControlLength = 2;
 
-                public readonly static Int32 BlockAckRequestControlPosition;
-                public readonly static Int32 BlockAckStartingSequenceControlPosition;
-                public readonly static Int32 BlockAckBitmapPosition;
+                public static readonly Int32 BlockAckRequestControlPosition;
+                public static readonly Int32 BlockAckStartingSequenceControlPosition;
+                public static readonly Int32 BlockAckBitmapPosition;
 
                 static BlockAcknowledgmentField()
                 {
@@ -189,7 +189,7 @@ namespace PacketDotNet
             /// <summary>
             /// Length of the frame
             /// </summary>
-            override public Int32 FrameSize => (MacFields.FrameControlLength +
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
                                                 MacFields.DurationIDLength +
                                                 (MacFields.AddressLength * 2) +
                                                 BlockAcknowledgmentField.BlockAckRequestControlLength +

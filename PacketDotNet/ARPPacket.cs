@@ -45,7 +45,7 @@ namespace PacketDotNet
         /// <value>
         /// Also known as HardwareType
         /// </value>
-        virtual public LinkLayers HardwareAddressType
+        public virtual LinkLayers HardwareAddressType
         {
             get => (LinkLayers)EndianBitConverter.Big.ToUInt16(header.Bytes,
                 header.Offset + ARPFields.HardwareAddressTypePosition);
@@ -62,7 +62,7 @@ namespace PacketDotNet
         /// <value>
         /// Also known as ProtocolType
         /// </value>
-        virtual public EthernetPacketType ProtocolAddressType
+        public virtual EthernetPacketType ProtocolAddressType
         {
             get => (EthernetPacketType)EndianBitConverter.Big.ToUInt16(header.Bytes,
                 header.Offset + ARPFields.ProtocolAddressTypePosition);
@@ -79,7 +79,7 @@ namespace PacketDotNet
         /// <value>
         /// Hardware address length field
         /// </value>
-        virtual public Int32 HardwareAddressLength
+        public virtual Int32 HardwareAddressLength
         {
             get => header.Bytes[header.Offset + ARPFields.HardwareAddressLengthPosition];
 
@@ -89,7 +89,7 @@ namespace PacketDotNet
         /// <value>
         /// Protocol address length field
         /// </value>
-        virtual public Int32 ProtocolAddressLength
+        public virtual Int32 ProtocolAddressLength
         {
             get => header.Bytes[header.Offset + ARPFields.ProtocolAddressLengthPosition];
 
@@ -102,7 +102,7 @@ namespace PacketDotNet
         /// <summary> Sets the operation code.
         /// Usually one of ARPFields.{ARP_OP_REQ_CODE, ARP_OP_REP_CODE}.
         /// </summary>
-        virtual public ARPOperation Operation
+        public virtual ARPOperation Operation
         {
             get => (ARPOperation)EndianBitConverter.Big.ToInt16(header.Bytes,
                 header.Offset + ARPFields.OperationPosition);
@@ -119,7 +119,7 @@ namespace PacketDotNet
         /// <value>
         /// Upper layer protocol address of the sender, arp is used for IPv4, IPv6 uses NDP
         /// </value>
-        virtual public System.Net.IPAddress SenderProtocolAddress
+        public virtual System.Net.IPAddress SenderProtocolAddress
         {
             get => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
                 header.Offset + ARPFields.SenderProtocolAddressPosition,
@@ -141,7 +141,7 @@ namespace PacketDotNet
         /// <value>
         /// Upper layer protocol address of the target, arp is used for IPv4, IPv6 uses NDP
         /// </value>
-        virtual public System.Net.IPAddress TargetProtocolAddress
+        public virtual System.Net.IPAddress TargetProtocolAddress
         {
             get => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
                 header.Offset + ARPFields.TargetProtocolAddressPosition,
@@ -231,7 +231,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color => AnsiEscapeSequences.Purple;
+        public override System.String Color => AnsiEscapeSequences.Purple;
 
         /// <summary>
         /// Create an ARPPacket from values

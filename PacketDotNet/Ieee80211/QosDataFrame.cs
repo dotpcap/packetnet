@@ -47,9 +47,9 @@ namespace PacketDotNet
 
             private class QosDataField
             {
-                public readonly static Int32 QosControlLength = 2;
+                public static readonly Int32 QosControlLength = 2;
 
-                public readonly static Int32 QosControlPosition;
+                public static readonly Int32 QosControlPosition;
 
                 static QosDataField()
                 {

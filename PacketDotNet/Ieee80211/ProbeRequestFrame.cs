@@ -36,7 +36,7 @@ namespace PacketDotNet
         {
             private class ProbeRequestFields
             {
-                public readonly static Int32 InformationElement1Position;
+                public static readonly Int32 InformationElement1Position;
 
                 static ProbeRequestFields()
                 {

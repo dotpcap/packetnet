@@ -36,12 +36,9 @@ namespace PacketDotNet
             /// <summary>
             /// Protocol version
             /// </summary>
-            public byte ProtocolVersion
+            public Byte ProtocolVersion
             {
-                get
-                {
-                    return (byte)((Field >> 0x8) & 0x3);
-                }
+                get => (Byte)((this.Field >> 0x8) & 0x3);
 
                 set
                 {
@@ -51,8 +48,8 @@ namespace PacketDotNet
                     }
 
                     //unset the two bits before setting them to the value
-                    Field &= unchecked((UInt16)~(0x0300));
-                    Field |= (UInt16)(value << 0x8);
+                    this.Field &= unchecked((UInt16)~(0x0300));
+                    this.Field |= (UInt16)(value << 0x8);
                 }
             }
    
@@ -285,8 +282,8 @@ namespace PacketDotNet
             {
                 get
                 {
-                    int typeAndSubtype = (Field >> 8); //get rid of the flags
-                    int type = ((typeAndSubtype & 0xC) >> 2);
+                    Int32 typeAndSubtype = (this.Field >> 8); //get rid of the flags
+                    Int32 type = ((typeAndSubtype & 0xC) >> 2);
                     return (FrameTypes)type;
                 }
             }
@@ -299,43 +296,40 @@ namespace PacketDotNet
             {
                 get
                 {
-                    int typeAndSubtype = (Field >> 8); //get rid of the flags
-                    int type = (((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4));
+                    Int32 typeAndSubtype = (this.Field >> 8); //get rid of the flags
+                    Int32 type = (((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4));
                     return (FrameSubTypes)type;
                 }
 
                 set
                 {
-                    uint val = (uint)value;
-                    uint typeAndSubtype = ((val & 0x0F) << 4) | ((val >> 4) << 2);
+                    UInt32 val = (UInt32)value;
+                    UInt32 typeAndSubtype = ((val & 0x0F) << 4) | ((val >> 4) << 2);
                     //shift it into the right position in the field
                     typeAndSubtype = typeAndSubtype << 0x8;
                     //Unset all the bits related to the type and subtype
-                    Field &= 0x03FF;
+                    this.Field &= 0x03FF;
                     //Set the type bits
-                    Field |= (UInt16)typeAndSubtype;
+                    this.Field |= (UInt16)typeAndSubtype;
                 }
             }
 
             /// <summary>
             /// Is set to 1 when the frame is sent to Distribution System (DS)
             /// </summary>
-            public bool ToDS
+            public Boolean ToDS
             {
-                get
-                {
-                    return ((Field & 0x1) == 1) ? true : false;
-                }
+                get => ((this.Field & 0x1) == 1) ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= 0x1;
+                        this.Field |= 0x1;
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(0x1));
+                        this.Field &= unchecked((UInt16)~(0x1));
                     }
                 }
             }
@@ -343,22 +337,19 @@ namespace PacketDotNet
             /// <summary>
             /// Is set to 1 when the frame is received from the Distribution System (DS)
             /// </summary>
-            public bool FromDS
+            public Boolean FromDS
             {
-                get
-                {
-                    return (((Field >> 1) & 0x1) == 1) ? true : false;
-                }
+                get => (((this.Field >> 1) & 0x1) == 1) ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x1);
+                        this.Field |= (1 << 0x1);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x1));
+                        this.Field &= unchecked((UInt16)~(1 << 0x1));
                     }
                 }
             }
@@ -367,22 +358,19 @@ namespace PacketDotNet
             /// More Fragment is set to 1 when there are more fragments belonging to the same
             /// frame following the current fragment
             /// </summary>
-            public bool MoreFragments
+            public Boolean MoreFragments
             {
-                get
-                {
-                    return (((Field >> 2) & 0x1) == 1) ? true : false;
-                }
+                get => (((this.Field >> 2) & 0x1) == 1) ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x2);
+                        this.Field |= (1 << 0x2);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x2));
+                        this.Field &= unchecked((UInt16)~(1 << 0x2));
                     }
                 }
             }
@@ -391,22 +379,19 @@ namespace PacketDotNet
             /// Indicates that this fragment is a retransmission of a previously transmitted fragment.
             /// (For receiver to recognize duplicate transmissions of frames)
             /// </summary>
-            public bool Retry
+            public Boolean Retry
             {
-                get
-                {
-                    return (((Field >> 3) & 0x1) == 1) ? true : false;
-                }
+                get => (((this.Field >> 3) & 0x1) == 1) ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x3);
+                        this.Field |= (1 << 0x3);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x3));
+                        this.Field &= unchecked((UInt16)~(1 << 0x3));
                     }
                 }
             }
@@ -414,22 +399,19 @@ namespace PacketDotNet
             /// <summary>
             ///  Indicates the power management mode that the station will be in after the transmission of the frame
             /// </summary>
-            public bool PowerManagement
+            public Boolean PowerManagement
             {
-                get
-                {
-                    return (((Field >> 4) & 0x1) == 1) ? true : false;
-                }
+                get => (((this.Field >> 4) & 0x1) == 1) ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x4);
+                        this.Field |= (1 << 0x4);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x4));
+                        this.Field &= unchecked((UInt16)~(1 << 0x4));
                     }
                 }
             }
@@ -437,22 +419,19 @@ namespace PacketDotNet
             /// <summary>
             /// Indicates that there are more frames buffered for this station
             /// </summary>
-            public bool MoreData
+            public Boolean MoreData
             {
-                get
-                {
-                    return (((Field >> 5) & 0x1) == 1) ? true : false;
-                }
+                get => (((this.Field >> 5) & 0x1) == 1) ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x5);
+                        this.Field |= (1 << 0x5);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x5));
+                        this.Field &= unchecked((UInt16)~(1 << 0x5));
                     }
                 }
             }
@@ -461,31 +440,28 @@ namespace PacketDotNet
             /// Indicates that the frame body is encrypted according to the WEP (wired equivalent privacy) algorithm
             /// </summary>
             [ObsoleteAttribute("This property is obsolete. Use Protected instead.", false)]
-            public bool Wep
+            public Boolean Wep
             {
-                get { return Protected; }
-                set { Protected = value; }
+                get => this.Protected;
+                set => this.Protected = value;
             }
 
             /// <summary>
             /// Indicates whether the frame body is encrypted with one of several encryption standards
             /// </summary>
-            public bool Protected
+            public Boolean Protected
             {
-                get
-                {
-                    return (((Field >> 6) & 0x1) == 1) ? true : false;
-                }
+                get => (((this.Field >> 6) & 0x1) == 1) ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x6);
+                        this.Field |= (1 << 0x6);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x6));
+                        this.Field &= unchecked((UInt16)~(1 << 0x6));
                     }
                 }
             }
@@ -494,22 +470,19 @@ namespace PacketDotNet
             /// Bit is set when the "strict ordering" delivery method is employed. Frames and
             /// fragments are not always sent in order as it causes a transmission performance penalty.
             /// </summary>
-            public bool Order
+            public Boolean Order
             {
-                get
-                {
-                    return (((Field >> 0x7) & 0x1) == 1) ? true : false;
-                }
+                get => (((this.Field >> 0x7) & 0x1) == 1) ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x7);
+                        this.Field |= (1 << 0x7);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x7));
+                        this.Field &= unchecked((UInt16)~(1 << 0x7));
                     }
                 }
             }
@@ -547,37 +520,37 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.Ieee80211.FrameControlField"/>.
             /// </returns>
-            public override string ToString ()
+            public override String ToString ()
             {
                 var flags = new List<String>();
                 
-                flags.Add(SubType.ToString());
+                flags.Add(this.SubType.ToString());
                 
-                if (ToDS)
+                if (this.ToDS)
                 {
                     flags.Add("ToDS");
                 }
-                if (FromDS)
+                if (this.FromDS)
                 {
                     flags.Add("FromDS");
                 }
-                if (Retry)
+                if (this.Retry)
                 {
                     flags.Add("Retry");
                 }
-                if (PowerManagement)
+                if (this.PowerManagement)
                 {
                     flags.Add("PowerManagement");
                 }
-                if (MoreData)
+                if (this.MoreData)
                 {
                     flags.Add("MoreData");
                 }
-                if (Protected)
+                if (this.Protected)
                 {
                     flags.Add("Wep");
                 }
-                if (Order)
+                if (this.Order)
                 {
                     flags.Add("Order");
                 }

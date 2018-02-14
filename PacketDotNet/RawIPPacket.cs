@@ -53,46 +53,40 @@ namespace PacketDotNet
             // If the first nibble is 0x06, then you have IP v6
             // The RawIPPacketProtocol enum has been defined to match this.
             var firstNibble = bas.Bytes[0] >> 4;
-            Protocol = (RawIPPacketProtocol)firstNibble;
+            this.Protocol = (RawIPPacketProtocol)firstNibble;
 
-            header = new ByteArraySegment(bas);
-            header.Length = 0;
+            this.header = new ByteArraySegment(bas);
+            this.header.Length = 0;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = new PacketOrByteArraySegment();
+            this.payloadPacketOrData = new PacketOrByteArraySegment();
 
-            switch (Protocol)
+            switch (this.Protocol)
             {
             case RawIPPacketProtocol.IPv4:
-                payloadPacketOrData.ThePacket = new IPv4Packet(header.EncapsulatedBytes());
+                this.payloadPacketOrData.ThePacket = new IPv4Packet(this.header.EncapsulatedBytes());
                 break;
             case RawIPPacketProtocol.IPv6:
-                payloadPacketOrData.ThePacket = new IPv6Packet(header.EncapsulatedBytes());
+                this.payloadPacketOrData.ThePacket = new IPv6Packet(this.header.EncapsulatedBytes());
                 break;
             default:
-                throw new System.NotImplementedException("Protocol of " + Protocol + " is not implemented");
+                throw new NotImplementedException("Protocol of " + this.Protocol + " is not implemented");
             }
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.DarkGray;
-            }
-        }
+        public override String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
-                color = Color;
+                color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
@@ -101,21 +95,20 @@ namespace PacketDotNet
                 // build the output string
                 buffer.AppendFormat("{0}[RawPacket: Protocol={2}]{1}",
                     color,
-                    colorEscape,
-                    Protocol);
+                    colorEscape, this.Protocol);
             }
 
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string, string> properties = new Dictionary<string, string>();
-                properties.Add("protocol", Protocol.ToString() + " (0x" + Protocol.ToString("x") + ")");
+                Dictionary<String, String> properties = new Dictionary<String, String>();
+                properties.Add("protocol", this.Protocol.ToString() + " (0x" + this.Protocol.ToString("x") + ")");
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
-                buffer.AppendLine("Raw:  ******* Raw - \"Raw IP Packet\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("Raw:  ******* Raw - \"Raw IP Packet\" - offset=? length=" + this.TotalPacketLength);
                 buffer.AppendLine("Raw:");
                 foreach (var property in properties)
                 {

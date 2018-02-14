@@ -48,7 +48,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            int packetIndex = 0;
+            Int32 packetIndex = 0;
             while((rawCapture = dev.GetNextPacket()) != null)
             {
                 Console.WriteLine ("LinkLayerType: {0}", rawCapture.LinkLayerType);
@@ -56,10 +56,10 @@ namespace Test.PacketType
                 switch(packetIndex)
                 {
                 case 0:
-                    VerifyPacket0(p);
+                    this.VerifyPacket0(p);
                     break;
                 case 1:
-                    VerifyPacket1(p);
+                    this.VerifyPacket1(p);
                     break;
                 default:
                     Assert.Fail("didn't expect to get to packetIndex " + packetIndex);

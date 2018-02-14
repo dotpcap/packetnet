@@ -47,18 +47,12 @@ namespace PacketDotNet
         /// </summary>
         public NullPacketType Protocol
         {
-            get
-            {
-                return (NullPacketType)EndianBitConverter.Little.ToUInt32(header.Bytes,
-                    header.Offset + NullFields.ProtocolPosition);
-            }
+            get => (NullPacketType)EndianBitConverter.Little.ToUInt32(this.header.Bytes, this.header.Offset + NullFields.ProtocolPosition);
 
             set
             {
                 var val = (UInt32)value;
-                EndianBitConverter.Little.CopyBytes(val,
-                    header.Bytes,
-                    header.Offset + NullFields.ProtocolPosition);
+                EndianBitConverter.Little.CopyBytes(val, this.header.Bytes, this.header.Offset + NullFields.ProtocolPosition);
             }
         }
 
@@ -70,10 +64,10 @@ namespace PacketDotNet
             log.Debug("");
 
             // allocate memory for this packet
-            int offset = 0;
-            int length = NullFields.HeaderLength;
-            var headerBytes = new byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            Int32 offset = 0;
+            Int32 length = NullFields.HeaderLength;
+            var headerBytes = new Byte[length];
+            this.header = new ByteArraySegment(headerBytes, offset, length);
 
             // setup some typical values and default values
             this.Protocol = TheType;
@@ -90,11 +84,11 @@ namespace PacketDotNet
             log.Debug("");
 
             // slice off the header portion as our header
-            header = new ByteArraySegment(bas);
-            header.Length = NullFields.HeaderLength;
+            this.header = new ByteArraySegment(bas);
+            this.header.Length = NullFields.HeaderLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = ParseEncapsulatedBytes(header, Protocol);
+            this.payloadPacketOrData = ParseEncapsulatedBytes(this.header, this.Protocol);
         }
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
@@ -119,23 +113,17 @@ namespace PacketDotNet
                 break;
             case NullPacketType.IPX:
             default:
-                throw new System.NotImplementedException("Protocol of " + Protocol + " is not implemented");
+                throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");
             }
 
             return payloadPacketOrData;
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.LightPurple;
-            }
-        }
+        public override String Color => AnsiEscapeSequences.LightPurple;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             buffer.Append(base.ToString(outputFormat));
@@ -150,7 +138,7 @@ namespace PacketDotNet
         /// </returns>
         public static NullPacket RandomPacket()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

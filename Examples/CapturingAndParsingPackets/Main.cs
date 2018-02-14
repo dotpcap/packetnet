@@ -7,12 +7,12 @@ namespace CapturingAndParsingPackets
     class MainClass
     {
         // used to stop the capture loop
-        private static bool stopCapturing = false;
+        private static Boolean stopCapturing = false;
 
-        public static void Main(string[] args)
+        public static void Main(String[] args)
         {
             // Print SharpPcap version
-            string ver = SharpPcap.Version.VersionString;
+            String ver = SharpPcap.Version.VersionString;
             Console.WriteLine("PacketDotNet example using SharpPcap {0}", ver);
 
             // Retrieve the device list
@@ -30,7 +30,7 @@ namespace CapturingAndParsingPackets
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine();
 
-            int i = 0;
+            Int32 i = 0;
 
             // Print out the devices
             foreach(var dev in devices)
@@ -42,7 +42,7 @@ namespace CapturingAndParsingPackets
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to capture: ");
-            i = int.Parse( Console.ReadLine() );
+            i = Int32.Parse( Console.ReadLine() );
 
             // Register a cancle handler that lets us break out of our capture loop
             Console.CancelKeyPress += HandleCancelKeyPress;
@@ -50,7 +50,7 @@ namespace CapturingAndParsingPackets
             var device = devices[i];
 
             // Open the device for capturing
-            int readTimeoutMilliseconds = 1000;
+            Int32 readTimeoutMilliseconds = 1000;
             device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
 
             Console.WriteLine();
@@ -86,7 +86,7 @@ namespace CapturingAndParsingPackets
             device.Close();
         }
 
-        static void HandleCancelKeyPress(object sender, ConsoleCancelEventArgs e)
+        static void HandleCancelKeyPress(Object sender, ConsoleCancelEventArgs e)
         {
             Console.WriteLine("-- Stopping capture");
             stopCapturing = true;

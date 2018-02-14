@@ -48,7 +48,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public MaximumSegmentSize(byte[] bytes, int offset, int length) :
+        public MaximumSegmentSize(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
         { }
 
@@ -59,10 +59,7 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The Maximum Segment Size
         /// </summary>
-        public ushort Value
-        {
-            get { return EndianBitConverter.Big.ToUInt16(Bytes, ValueFieldOffset); }
-        }
+        public UInt16 Value => EndianBitConverter.Big.ToUInt16(this.Bytes, ValueFieldOffset);
 
         #endregion
 
@@ -74,9 +71,9 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return "[" + Kind.ToString() + ": Value=" + Value.ToString() + " bytes]";
+            return "[" + this.Kind.ToString() + ": Value=" + this.Value.ToString() + " bytes]";
         }
 
         #endregion
@@ -84,7 +81,7 @@ namespace PacketDotNet.Tcp
          #region Members
 
         // the offset (in bytes) of the Value Field
-        const int ValueFieldOffset = 2;
+        const Int32 ValueFieldOffset = 2;
 
         #endregion
     }

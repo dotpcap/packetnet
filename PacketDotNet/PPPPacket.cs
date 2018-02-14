@@ -47,18 +47,12 @@ namespace PacketDotNet
         /// </summary>
         public PPPProtocol Protocol
         {
-            get
-            {
-                return (PPPProtocol)EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                      header.Offset + PPPFields.ProtocolPosition);
-            }
+            get => (PPPProtocol)EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + PPPFields.ProtocolPosition);
 
             set
             {
                 var val = (UInt16)value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + PPPFields.ProtocolPosition);
+                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + PPPFields.ProtocolPosition);
             }
         }
 
@@ -71,10 +65,10 @@ namespace PacketDotNet
             log.Debug("");
 
             // allocate memory for this packet
-            int offset = 0;
-            int length = PPPFields.HeaderLength;
-            var headerBytes = new byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            Int32 offset = 0;
+            Int32 length = PPPFields.HeaderLength;
+            var headerBytes = new Byte[length];
+            this.header = new ByteArraySegment(headerBytes, offset, length);
 
             // setup some typical values and default values
             this.Protocol = PPPProtocol.Padding;
@@ -91,11 +85,11 @@ namespace PacketDotNet
             log.Debug("");
 
             // slice off the header portion as our header
-            header = new ByteArraySegment(bas);
-            header.Length = PPPFields.HeaderLength;
+            this.header = new ByteArraySegment(bas);
+            this.header.Length = PPPFields.HeaderLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = ParseEncapsulatedBytes(header, Protocol);
+            this.payloadPacketOrData = ParseEncapsulatedBytes(this.header, this.Protocol);
         }
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
@@ -126,24 +120,18 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.DarkGray;
-            }
-        }
+        public override String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
-                color = Color;
+                color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
@@ -152,21 +140,20 @@ namespace PacketDotNet
                 // build the output string
                 buffer.AppendFormat("{0}[PPPPacket: Protocol={2}]{1}",
                     color,
-                    colorEscape,
-                    Protocol);
+                    colorEscape, this.Protocol);
             }
 
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
-                properties.Add("protocol", Protocol.ToString() + " (0x" + Protocol.ToString("x") + ")");
+                Dictionary<String,String> properties = new Dictionary<String,String>();
+                properties.Add("protocol", this.Protocol.ToString() + " (0x" + this.Protocol.ToString("x") + ")");
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
-                buffer.AppendLine("PPP:  ******* PPP - \"Point-to-Point Protocol\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("PPP:  ******* PPP - \"Point-to-Point Protocol\" - offset=? length=" + this.TotalPacketLength);
                 buffer.AppendLine("PPP:");
                 foreach(var property in properties)
                 {
@@ -189,7 +176,7 @@ namespace PacketDotNet
         /// </returns>
         public static PPPoEPacket RandomPacket()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

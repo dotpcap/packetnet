@@ -58,7 +58,7 @@ namespace PacketDotNet.LLDP
         /// <param name="offset">
         /// The TLVs offset from the start of byte[] bytes
         /// </param>
-        public TLV(byte[] bytes, int offset)
+        public TLV(Byte[] bytes, Int32 offset)
         {
             // setup a local ByteArrayAndOffset in order to retrieve the value length
             // NOTE: we cannot set tlvData to retrieve the value length as
@@ -66,14 +66,14 @@ namespace PacketDotNet.LLDP
             //       the length of the ByteArrayAndOffset which would overwrite the value
             //       we are trying to retrieve
             var byteArraySegment = new ByteArraySegment(bytes, offset, TLVTypeLength.TypeLengthLength);
-            TypeLength = new TLVTypeLength(byteArraySegment);
+            this.TypeLength = new TLVTypeLength(byteArraySegment);
 
             // set the tlvData assuming we have at least the bytes required for the
             // type/length fields
-            tlvData =  new ByteArraySegment(bytes, offset, TypeLength.Length + TLVTypeLength.TypeLengthLength);
+            this.tlvData =  new ByteArraySegment(bytes, offset, this.TypeLength.Length + TLVTypeLength.TypeLengthLength);
 
             // retrieve the actual length
-            tlvData.Length = TypeLength.Length + TLVTypeLength.TypeLengthLength;
+            this.tlvData.Length = this.TypeLength.Length + TLVTypeLength.TypeLengthLength;
         }
 
         #endregion
@@ -84,55 +84,43 @@ namespace PacketDotNet.LLDP
         /// Length of value portion of the TLV
         /// NOTE: Does not include the length of the Type and Length fields
         /// </summary>
-        public int Length
+        public Int32 Length
         {
-            get { return TypeLength.Length; }
+            get => this.TypeLength.Length;
 
             // Length set property is internal because the tlv length is
             // automatically set based on the length of the tlv value
-            internal set { TypeLength.Length = value; }
+            internal set => this.TypeLength.Length = value;
         }
 
         /// <summary>
         /// Total length of the TLV, including the length of the Type and Length fields
         /// </summary>
-        public int TotalLength
-        {
-            get { return tlvData.Length; }
-        }
+        public Int32 TotalLength => this.tlvData.Length;
 
         /// <summary>
         /// Tlv type
         /// </summary>
         public TLVTypes Type
         {
-            get { return TypeLength.Type; }
+            get => this.TypeLength.Type;
 
             set
             {
                 log.DebugFormat("value {0}", value);
-                TypeLength.Type = value;
+                this.TypeLength.Type = value;
             }
         }
 
         /// <summary>
         /// Offset to the value bytes of the TLV
         /// </summary>
-        internal int ValueOffset
-        {
-            get { return tlvData.Offset + TLVTypeLength.TypeLengthLength; }
-        }
+        internal Int32 ValueOffset => this.tlvData.Offset + TLVTypeLength.TypeLengthLength;
 
         /// <summary>
         /// Return a byte[] that contains the tlv
         /// </summary>
-        public virtual byte[] Bytes
-        {
-            get
-            {
-                return tlvData.ActualBytes();
-            }
-        }
+        public virtual Byte[] Bytes => this.tlvData.ActualBytes();
 
         #endregion
 
@@ -148,17 +136,17 @@ namespace PacketDotNet.LLDP
         /// </summary>
         internal ByteArraySegment tlvData
         {
-            get { return _tlvData; }
+            get => this._tlvData;
 
             set
             {
-                _tlvData = value;
+                this._tlvData = value;
 
                 // create a new TypeLength that points at the new ByteArrayAndOffset
-                TypeLength = new TLVTypeLength(value);
+                this.TypeLength = new TLVTypeLength(value);
 
                 // update the length based upon the length of the ByteArrayAndOffset
-                TypeLength.Length = value.Length - TLVTypeLength.TypeLengthLength;
+                this.TypeLength.Length = value.Length - TLVTypeLength.TypeLengthLength;
             }
         }
 

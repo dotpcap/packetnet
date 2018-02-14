@@ -48,7 +48,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public MD5Signature(byte[] bytes, int offset, int length) :
+        public MD5Signature(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
         { }
 
@@ -59,12 +59,12 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The MD5 Digest
         /// </summary>
-        public byte[] MD5Digest
+        public Byte[] MD5Digest
         {
             get
             {
-                byte[] data = new byte[Length - MD5DigestFieldOffset];
-                Array.Copy(Bytes, MD5DigestFieldOffset, data, 0, data.Length);
+                Byte[] data = new Byte[this.Length - MD5DigestFieldOffset];
+                Array.Copy(this.Bytes, MD5DigestFieldOffset, data, 0, data.Length);
                 return data;
             }
         }
@@ -79,9 +79,9 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
-            return "[" + Kind.ToString() + ": MD5Digest=0x" + MD5Digest.ToString() + "]";
+            return "[" + this.Kind.ToString() + ": MD5Digest=0x" + this.MD5Digest.ToString() + "]";
         }
 
         #endregion
@@ -89,7 +89,7 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the offset (in bytes) of the MD5 Digest field
-        const int MD5DigestFieldOffset = 2;
+        const Int32 MD5DigestFieldOffset = 2;
 
         #endregion
     }

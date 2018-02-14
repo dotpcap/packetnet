@@ -52,20 +52,17 @@ namespace PacketDotNet
             /// </summary>
             public AcknowledgementPolicy Policy
             {
-                get
-                {
-                    return (AcknowledgementPolicy)(Field & 0x1);
-                }
-                
+                get => (AcknowledgementPolicy)(this.Field & 0x1);
+
                 set
                 {
                     if (value == AcknowledgementPolicy.Immediate)
                     {
-                        Field |= 0x1;
+                        this.Field |= 0x1;
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(0x1));
+                        this.Field &= unchecked((UInt16)~(0x1));
                     }
                 }
             }
@@ -73,22 +70,19 @@ namespace PacketDotNet
             /// <summary>
             /// True if the acknowledgement can ack multi traffic ids
             /// </summary>
-            public bool MultiTid
+            public Boolean MultiTid
             {
-                get
-                {
-                    return (((Field >> 1) & 0x1) == 1) ? true : false;
-                }
-                
+                get => (((this.Field >> 1) & 0x1) == 1) ? true : false;
+
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x1);
+                        this.Field |= (1 << 0x1);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x1));
+                        this.Field &= unchecked((UInt16)~(1 << 0x1));
                     }
                 }
             }
@@ -98,22 +92,19 @@ namespace PacketDotNet
             /// 
             /// Newer standards used a compressed bitmap reducing its size
             /// </summary>
-            public bool CompressedBitmap
+            public Boolean CompressedBitmap
             {
-                get
-                {
-                    return (((Field >> 2) & 0x1) == 1) ? true : false;
-                }
-                
+                get => (((this.Field >> 2) & 0x1) == 1) ? true : false;
+
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x2);
+                        this.Field |= (1 << 0x2);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x2));
+                        this.Field &= unchecked((UInt16)~(1 << 0x2));
                     }
                 }
             }
@@ -121,17 +112,14 @@ namespace PacketDotNet
             /// <summary>
             /// The traffic id being ack'd
             /// </summary>
-            public byte Tid
+            public Byte Tid
             {
-                get
-                {
-                    return (byte)(Field >> 12);
-                }
-                
+                get => (Byte)(this.Field >> 12);
+
                 set
                 {
-                    Field &= 0x0FFF;
-                    Field |= (UInt16)(value << 12);
+                    this.Field &= 0x0FFF;
+                    this.Field |= (UInt16)(value << 12);
                 }
             }
 
@@ -159,7 +147,7 @@ namespace PacketDotNet
             /// </param>
             public BlockAcknowledgmentControlField(UInt16 field)
             {
-                Field = field;
+                this.Field = field;
             }
         } 
     }

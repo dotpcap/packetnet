@@ -35,25 +35,25 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="System.Net.IPAddress"/>
         /// </returns>
-        public static System.Net.IPAddress GetIPAddress(IpVersion version)
+        public static IPAddress GetIPAddress(IpVersion version)
         {
             var rnd = new Random();
-            byte[] randomAddressBytes;
+            Byte[] randomAddressBytes;
 
             if(version == IpVersion.IPv4)
             {
-                randomAddressBytes = new byte[IPv4Fields.AddressLength];
+                randomAddressBytes = new Byte[IPv4Fields.AddressLength];
                 rnd.NextBytes(randomAddressBytes);
             } else if(version == IpVersion.IPv6)
             {
-                randomAddressBytes = new byte[IPv6Fields.AddressLength];
+                randomAddressBytes = new Byte[IPv6Fields.AddressLength];
                 rnd.NextBytes(randomAddressBytes);
             } else
             {
-                throw new System.InvalidOperationException("Unknown version of " + version);
+                throw new InvalidOperationException("Unknown version of " + version);
             }
 
-            return new System.Net.IPAddress(randomAddressBytes);
+            return new IPAddress(randomAddressBytes);
         }
 
         /// <summary>
@@ -65,11 +65,11 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="System.Int32"/>
         /// </returns>
-        public static int LongestStringLength(List<string> stringsList)
+        public static Int32 LongestStringLength(List<String> stringsList)
         {
-            string longest="";
+            String longest="";
 
-            foreach(string L in stringsList)
+            foreach(String L in stringsList)
             {
                 if (L.Length > longest.Length)
                 {

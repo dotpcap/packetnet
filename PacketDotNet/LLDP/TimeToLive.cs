@@ -43,7 +43,7 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Number of bytes in the value portion of this tlv
         /// </summary>
-        private const int ValueLength = 2;
+        private const Int32 ValueLength = 2;
 
         #region Constructors
 
@@ -56,7 +56,7 @@ namespace PacketDotNet.LLDP
         /// The TTL TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public TimeToLive(byte[] bytes, int offset) :
+        public TimeToLive(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {
             log.Debug("");
@@ -69,17 +69,17 @@ namespace PacketDotNet.LLDP
         /// The length in seconds until the LLDP
         /// is refreshed
         /// </param>
-        public TimeToLive(ushort seconds)
+        public TimeToLive(UInt16 seconds)
         {
             log.Debug("");
 
-            var bytes = new byte[TLVTypeLength.TypeLengthLength + ValueLength];
-            int offset = 0;
-            int length = bytes.Length;
-            tlvData = new ByteArraySegment(bytes, offset, length);
+            var bytes = new Byte[TLVTypeLength.TypeLengthLength + ValueLength];
+            Int32 offset = 0;
+            Int32 length = bytes.Length;
+            this.tlvData = new ByteArraySegment(bytes, offset, length);
 
-            Type = TLVTypes.TimeToLive;
-            Seconds = seconds;
+            this.Type = TLVTypes.TimeToLive;
+            this.Seconds = seconds;
         }
 
         #endregion
@@ -93,20 +93,10 @@ namespace PacketDotNet.LLDP
         /// A value of 0 means that the LLDP source is
         /// closed and should no longer be refreshed
         /// </value>
-        public ushort Seconds
+        public UInt16 Seconds
         {
-            get
-            {
-                // get the seconds
-                return BigEndianBitConverter.Big.ToUInt16(tlvData.Bytes,
-                                                          tlvData.Offset + TLVTypeLength.TypeLengthLength);
-            }
-            set
-            {
-                EndianBitConverter.Big.CopyBytes(value,
-                                                 tlvData.Bytes,
-                                                 tlvData.Offset + TLVTypeLength.TypeLengthLength);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength);
+            set => EndianBitConverter.Big.CopyBytes(value, this.tlvData.Bytes, this.tlvData.Offset + TLVTypeLength.TypeLengthLength);
         }
 
         /// <summary>
@@ -115,9 +105,9 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A human readable string
         /// </returns>
-        public override string ToString ()
+        public override String ToString ()
         {
-            return string.Format("[TimeToLive: Seconds={0}]", Seconds);
+            return String.Format("[TimeToLive: Seconds={0}]", this.Seconds);
         }
 
         #endregion

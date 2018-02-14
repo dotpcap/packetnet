@@ -41,15 +41,9 @@ namespace PacketDotNet
             /// <summary>
             /// Length of the frame
             /// </summary>
-            override public int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        MacFields.AddressLength);
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                MacFields.AddressLength);
 
             /// <summary>
             /// Constructor
@@ -59,13 +53,13 @@ namespace PacketDotNet
             /// </param>
             public AckFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                this.header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                ReceiverAddress = GetAddress(0);
-				
-				header.Length = FrameSize;
+                this.FrameControl = new FrameControlField (this.FrameControlBytes);
+                this.Duration = new DurationField (this.DurationBytes);
+                this.ReceiverAddress = this.GetAddress(0);
+
+                this.header.Length = this.FrameSize;
             }
 			
 			/// <summary>
@@ -88,14 +82,14 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((this.header == null) || (this.header.Length > (this.header.BytesLength - this.header.Offset)) || (this.header.Length < this.FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    this.header = new ByteArraySegment (new Byte[this.FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
                 this.DurationBytes = this.Duration.Field;
-                SetAddress (0, ReceiverAddress);
+                this.SetAddress (0, this.ReceiverAddress);
             }
 			
             /// <summary>
@@ -107,7 +101,7 @@ namespace PacketDotNet
             /// </returns>
             protected override String GetAddressString()
             {
-                return String.Format("RA {0}", ReceiverAddress);
+                return String.Format("RA {0}", this.ReceiverAddress);
             }
         } 
     }

@@ -49,7 +49,7 @@ namespace Test.Performance
         [Test]
         public void TestOptimalByteRetrieval()
         {
-            var ethernetPacket = BuildNonContiguousEthernetPacket();
+            var ethernetPacket = this.BuildNonContiguousEthernetPacket();
 
             // now extract a contiguous series of bytes
             var contiguousBytes = ethernetPacket.Bytes;
@@ -59,18 +59,18 @@ namespace Test.Performance
 
             // used to make sure we get the same byte[] reference returned each time
             // because thats what we expect
-            byte[] theByteArray = null;
+            Byte[] theByteArray = null;
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to improve performance
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             // now benchmark retrieving the byte[] for several seconds
             var startTime = DateTime.Now;
             var endTime = startTime.Add(new TimeSpan(0, 0, 2));
-            int testRuns = 0;
+            Int32 testRuns = 0;
             while(DateTime.Now < endTime)
             {
                 var theBytes = contiguousEthernetPacket.Bytes;
@@ -102,20 +102,20 @@ namespace Test.Performance
         [Test]
         public void TestSubOptimalByteRetrieval()
         {
-            var ethernetPacket = BuildNonContiguousEthernetPacket();
+            var ethernetPacket = this.BuildNonContiguousEthernetPacket();
 
-            byte[] lastByteArray = null;
+            Byte[] lastByteArray = null;
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to improve performance
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             // now benchmark retrieving the byte[] for several seconds
             var startTime = DateTime.Now;
             var endTime = startTime.Add(new TimeSpan(0, 0, 2));
-            int testRuns = 0;
+            Int32 testRuns = 0;
             while(DateTime.Now < endTime)
             {
                 var theBytes = ethernetPacket.Bytes;

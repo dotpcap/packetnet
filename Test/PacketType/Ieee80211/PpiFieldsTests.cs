@@ -178,13 +178,13 @@ namespace Test.PacketType
             [Test]
             public void Test_PpiUnknown_Construction()
             {
-                PpiUnknown field = new PpiUnknown(0xAA, new byte[]{0x1, 0x2, 0x3, 0x4});
+                PpiUnknown field = new PpiUnknown(0xAA, new Byte[]{0x1, 0x2, 0x3, 0x4});
                 
                 var ms = new MemoryStream(field.Bytes);
                 PpiUnknown recreatedField = new PpiUnknown(0xAA, new BinaryReader(ms), 4);
                 
-                Assert.AreEqual(0xAA, (int)recreatedField.FieldType);
-                Assert.AreEqual(new byte[]{0x1, 0x2, 0x3, 0x4}, recreatedField.Bytes);
+                Assert.AreEqual(0xAA, (Int32)recreatedField.FieldType);
+                Assert.AreEqual(new Byte[]{0x1, 0x2, 0x3, 0x4}, recreatedField.Bytes);
             }
             
             [Test]
@@ -197,7 +197,7 @@ namespace Test.PacketType
                 field.AmplitudeOffset = 0x98765432;
                 field.AmplitudeResolution = 0x11223344;
                 field.MaximumRssi = 0xAABB;
-                field.SamplesData = new byte[]{ 0xCC, 0xDD, 0xEE, 0xFF };
+                field.SamplesData = new Byte[]{ 0xCC, 0xDD, 0xEE, 0xFF };
                 
                 var ms = new MemoryStream(field.Bytes);
                 PpiSpectrum recreatedField = new PpiSpectrum(new BinaryReader(ms));
@@ -207,7 +207,7 @@ namespace Test.PacketType
                 Assert.AreEqual(0x98765432, recreatedField.AmplitudeOffset);
                 Assert.AreEqual(0x11223344, recreatedField.AmplitudeResolution);
                 Assert.AreEqual(0xAABB, recreatedField.MaximumRssi);
-                Assert.AreEqual(new byte[]{ 0xCC, 0xDD, 0xEE, 0xFF }, recreatedField.SamplesData);
+                Assert.AreEqual(new Byte[]{ 0xCC, 0xDD, 0xEE, 0xFF }, recreatedField.SamplesData);
             }
         }       
     }           

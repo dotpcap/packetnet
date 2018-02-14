@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of PacketDotNet
 
 PacketDotNet is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
-﻿using System;
+ using System;
 using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Utils;
@@ -43,35 +43,26 @@ namespace PacketDotNet
 #endif
 
         /// <summary> Fetch the port number on the source host.</summary>
-        virtual public ushort SourcePort
+        public virtual UInt16 SourcePort
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + UdpFields.SourcePortPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + UdpFields.SourcePortPosition);
 
             set
             {
                 var val = value;
-                EndianBitConverter.Big.CopyBytes(val, header.Bytes, header.Offset + UdpFields.SourcePortPosition);
+                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + UdpFields.SourcePortPosition);
             }
         }
 
         /// <summary> Fetch the port number on the target host.</summary>
-        virtual public ushort DestinationPort
+        public virtual UInt16 DestinationPort
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                      header.Offset + UdpFields.DestinationPortPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + UdpFields.DestinationPortPosition);
 
             set
             {
                 var val = value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + UdpFields.DestinationPortPosition);
+                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + UdpFields.DestinationPortPosition);
             }
         }
 
@@ -79,79 +70,61 @@ namespace PacketDotNet
         /// Length in bytes of the header and payload, minimum size of 8,
         /// the size of the Udp header
         /// </value>
-        virtual public int Length
+        public virtual Int32 Length
         {
-            get
-            {
-                return EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                      header.Offset + UdpFields.HeaderLengthPosition);
-            }
+            get => EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + UdpFields.HeaderLengthPosition);
 
             // Internal because it is updated based on the payload when
             // its bytes are retrieved
             internal set
             {
                 var val = (Int16)value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + UdpFields.HeaderLengthPosition);
+                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + UdpFields.HeaderLengthPosition);
             }
         }
 
         /// <summary> Fetch the header checksum.</summary>
-        override public ushort Checksum
+        public override UInt16 Checksum
         {
-            get
-            {
-                return EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                       header.Offset + UdpFields.ChecksumPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + UdpFields.ChecksumPosition);
 
             set
             {
                 var val = value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + UdpFields.ChecksumPosition);
+                EndianBitConverter.Big.CopyBytes(val, this.header.Bytes, this.header.Offset + UdpFields.ChecksumPosition);
             }
         }
 
         /// <summary> Check if the UDP packet is valid, checksum-wise.</summary>
-        public bool ValidChecksum
+        public Boolean ValidChecksum
         {
             get
             {
                 // IPv6 has no checksum so only the TCP checksum needs evaluation
-                if (ParentPacket.GetType() == typeof(IPv6Packet))
-                    return ValidUDPChecksum;
+                if (this.ParentPacket.GetType() == typeof(IPv6Packet))
+                    return this.ValidUDPChecksum;
                 // For IPv4 both the IP layer and the TCP layer contain checksums
                 else
-                    return ((IPv4Packet)ParentPacket).ValidIPChecksum && ValidUDPChecksum;
+                    return ((IPv4Packet) this.ParentPacket).ValidIPChecksum && this.ValidUDPChecksum;
             }
         }
 
         /// <value>
         /// True if the udp checksum is valid
         /// </value>
-        virtual public bool ValidUDPChecksum
+        public virtual Boolean ValidUDPChecksum
         {
             get
             {
                 log.Debug("ValidUDPChecksum");
-                var retval = IsValidChecksum(TransportPacket.TransportChecksumOption.AttachPseudoIPHeader);
+                var retval = this.IsValidChecksum(TransportChecksumOption.AttachPseudoIPHeader);
                 log.DebugFormat("ValidUDPChecksum {0}", retval);
                 return retval;
             }
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.LightGreen;
-            }
-        }
+        public override String Color => AnsiEscapeSequences.LightGreen;
 
         /// <summary>
         /// Update the Udp length
@@ -160,7 +133,7 @@ namespace PacketDotNet
         {
             // update the length field based on the length of this packet header
             // plus the length of all of the packets it contains
-            Length = TotalPacketLength;
+            this.Length = this.TotalPacketLength;
         }
 
         /// <summary>
@@ -172,15 +145,15 @@ namespace PacketDotNet
         /// <param name="DestinationPort">
         /// A <see cref="System.UInt16"/>
         /// </param>
-        public UdpPacket(ushort SourcePort, ushort DestinationPort)
+        public UdpPacket(UInt16 SourcePort, UInt16 DestinationPort)
         {
             log.Debug("");
 
             // allocate memory for this packet
-            int offset = 0;
-            int length = UdpFields.HeaderLength;
-            var headerBytes = new byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            Int32 offset = 0;
+            Int32 length = UdpFields.HeaderLength;
+            var headerBytes = new Byte[length];
+            this.header = new ByteArraySegment(headerBytes, offset, length);
 
             // set instance values
             this.SourcePort = SourcePort;
@@ -198,28 +171,28 @@ namespace PacketDotNet
             log.DebugFormat("bas {0}", bas.ToString());
 
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(bas);
-            header.Length = UdpFields.HeaderLength;
+            this.header = new ByteArraySegment(bas);
+            this.header.Length = UdpFields.HeaderLength;
 
-            payloadPacketOrData = new PacketOrByteArraySegment();
+            this.payloadPacketOrData = new PacketOrByteArraySegment();
 
             // is this packet going to port 7 or 9? if so it might be a WakeOnLan packet
-            const int wakeOnLanPort0 = 7;
-            const int wakeOnLanPort1 = 9;
-            if(DestinationPort.Equals(wakeOnLanPort0) || DestinationPort.Equals (wakeOnLanPort1))
+            const Int32 wakeOnLanPort0 = 7;
+            const Int32 wakeOnLanPort1 = 9;
+            if(this.DestinationPort.Equals(wakeOnLanPort0) || this.DestinationPort.Equals (wakeOnLanPort1))
             {
-                payloadPacketOrData.ThePacket = new WakeOnLanPacket(header.EncapsulatedBytes());
+                this.payloadPacketOrData.ThePacket = new WakeOnLanPacket(this.header.EncapsulatedBytes());
             } else
             {
                 // store the payload bytes
-                payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
+                this.payloadPacketOrData.TheByteArraySegment = this.header.EncapsulatedBytes();
             }
 
-            const int l2TPport = 1701;
-            if (DestinationPort.Equals(l2TPport) && DestinationPort.Equals(l2TPport))
+            const Int32 l2TPport = 1701;
+            if (this.DestinationPort.Equals(l2TPport) && this.DestinationPort.Equals(l2TPport))
             {
-                var payload = header.EncapsulatedBytes();
-                payloadPacketOrData.ThePacket = new L2TPPacket(payload, this);
+                var payload = this.header.EncapsulatedBytes();
+                this.payloadPacketOrData.ThePacket = new L2TPPacket(payload, this);
             }
         }
 
@@ -243,9 +216,9 @@ namespace PacketDotNet
         /// Calculates the UDP checksum, optionally updating the UDP checksum header.
         /// </summary>
         /// <returns>The calculated UDP checksum.</returns>
-        public int CalculateUDPChecksum()
+        public Int32 CalculateUDPChecksum()
         {
-            var newChecksum = CalculateChecksum(TransportChecksumOption.AttachPseudoIPHeader);
+            var newChecksum = this.CalculateChecksum(TransportChecksumOption.AttachPseudoIPHeader);
             return newChecksum;
         }
 
@@ -254,19 +227,19 @@ namespace PacketDotNet
         /// </summary>
         public void UpdateUDPChecksum()
         {
-            this.Checksum = (ushort)CalculateUDPChecksum();
+            this.Checksum = (UInt16) this.CalculateUDPChecksum();
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
-                color = Color;
+                color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
@@ -274,25 +247,23 @@ namespace PacketDotNet
             {
                 buffer.AppendFormat("{0}[UDPPacket: SourcePort={2}, DestinationPort={3}]{1}",
                 color,
-                colorEscape,
-                SourcePort,
-                DestinationPort);
+                colorEscape, this.SourcePort, this.DestinationPort);
             }
 
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
-                properties.Add("source", SourcePort.ToString());
-                properties.Add("destination", DestinationPort.ToString());
-                properties.Add("length", Length.ToString());
-                properties.Add("checksum", "0x" + Checksum.ToString("x") + " [" + (ValidUDPChecksum ? "valid" : "invalid") + "]");
+                Dictionary<String,String> properties = new Dictionary<String,String>();
+                properties.Add("source", this.SourcePort.ToString());
+                properties.Add("destination", this.DestinationPort.ToString());
+                properties.Add("length", this.Length.ToString());
+                properties.Add("checksum", "0x" + this.Checksum.ToString("x") + " [" + (this.ValidUDPChecksum ? "valid" : "invalid") + "]");
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
-                buffer.AppendLine("UDP:  ******* UDP - \"User Datagram Protocol\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("UDP:  ******* UDP - \"User Datagram Protocol\" - offset=? length=" + this.TotalPacketLength);
                 buffer.AppendLine("UDP:");
                 foreach(var property in properties)
                 {
@@ -316,8 +287,8 @@ namespace PacketDotNet
         public static UdpPacket RandomPacket()
         {
             var rnd = new Random();
-            var SourcePort = (ushort)rnd.Next(ushort.MinValue, ushort.MaxValue);
-            var DestinationPort = (ushort)rnd.Next(ushort.MinValue, ushort.MaxValue);
+            var SourcePort = (UInt16)rnd.Next(UInt16.MinValue, UInt16.MaxValue);
+            var DestinationPort = (UInt16)rnd.Next(UInt16.MinValue, UInt16.MaxValue);
 
             return new UdpPacket(SourcePort, DestinationPort);
         }

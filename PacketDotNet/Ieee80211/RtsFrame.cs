@@ -48,15 +48,9 @@ namespace PacketDotNet
             /// <summary>
             /// Length of the frame
             /// </summary>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 2));
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 2));
 
             /// <summary>
             /// Constructor
@@ -66,14 +60,14 @@ namespace PacketDotNet
             /// </param>
             public RtsFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                this.header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                ReceiverAddress = GetAddress (0);
-                TransmitterAddress = GetAddress(1);
-				
-				header.Length = FrameSize;
+                this.FrameControl = new FrameControlField (this.FrameControlBytes);
+                this.Duration = new DurationField (this.DurationBytes);
+                this.ReceiverAddress = this.GetAddress (0);
+                this.TransmitterAddress = this.GetAddress(1);
+
+                this.header.Length = this.FrameSize;
             }
    
             /// <summary>
@@ -85,9 +79,7 @@ namespace PacketDotNet
             /// </returns>
             protected override String GetAddressString()
             {
-                return String.Format("RA {0} TA {1}",
-                                     ReceiverAddress, 
-                                     TransmitterAddress);
+                return String.Format("RA {0} TA {1}", this.ReceiverAddress, this.TransmitterAddress);
             }
         } 
     }

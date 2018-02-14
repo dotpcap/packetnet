@@ -53,24 +53,24 @@ namespace PacketDotNet
         {
             get
             {
-                if (ddmList == null)
+                if (this.ddmList == null)
                 {
-                    ddmList = new List<DrdaDDMPacket>();
+                    this.ddmList = new List<DrdaDDMPacket>();
                 }
-                if (ddmList.Count > 0) return this.ddmList;
-                int startOffset = header.Offset;
-                while (startOffset < header.BytesLength)
+                if (this.ddmList.Count > 0) return this.ddmList;
+                Int32 startOffset = this.header.Offset;
+                while (startOffset < this.header.BytesLength)
                 {
-                    ushort length = BigEndianBitConverter.Big.ToUInt16(header.Bytes, startOffset);
-                    if (startOffset + length <= header.BytesLength)
+                    UInt16 length = EndianBitConverter.Big.ToUInt16(this.header.Bytes, startOffset);
+                    if (startOffset + length <= this.header.BytesLength)
                     {
-                        var ddmBas = new ByteArraySegment(header.Bytes, startOffset, length);
-                        ddmList.Add(new DrdaDDMPacket(ddmBas, this));
+                        var ddmBas = new ByteArraySegment(this.header.Bytes, startOffset, length);
+                        this.ddmList.Add(new DrdaDDMPacket(ddmBas, this));
                     }
                     startOffset += length;
                 }
-                log.DebugFormat("DrdaDDMPacket.Count {0}",ddmList.Count);
-                return ddmList;
+                log.DebugFormat("DrdaDDMPacket.Count {0}", this.ddmList.Count);
+                return this.ddmList;
             }
         }
 
@@ -83,11 +83,11 @@ namespace PacketDotNet
             log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(bas);
+            this.header = new ByteArraySegment(bas);
 
             // store the payload bytes
-            payloadPacketOrData = new PacketOrByteArraySegment();
-            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
+            this.payloadPacketOrData = new PacketOrByteArraySegment();
+            this.payloadPacketOrData.TheByteArraySegment = this.header.EncapsulatedBytes();
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace PacketDotNet
         /// </summary>
         /// <param name="outputFormat"></param>
         /// <returns></returns>
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             return base.ToString(outputFormat);
         }

@@ -45,7 +45,7 @@ namespace PacketDotNet
         /// <summary>
         /// The default time to live value for Ip packets being constructed
         /// </summary>
-        protected int DefaultTimeToLive = 64;
+        protected Int32 DefaultTimeToLive = 64;
 
         /// <value>
         /// Payload packet, overridden to set the NextHeader/Protocol based
@@ -53,10 +53,7 @@ namespace PacketDotNet
         /// </value>
         public override Packet PayloadPacket
         {
-            get
-            {
-                return base.PayloadPacket;
-            }
+            get => base.PayloadPacket;
 
             set
             {
@@ -65,32 +62,32 @@ namespace PacketDotNet
                 // set NextHeader (Protocol) based on the type of this packet
                 if(value is TcpPacket)
                 {
-                    NextHeader = IPProtocolType.TCP;
+                    this.NextHeader = IPProtocolType.TCP;
                 } else if(value is UdpPacket)
                 {
-                    NextHeader = IPProtocolType.UDP;
+                    this.NextHeader = IPProtocolType.UDP;
                 } else if(value is ICMPv6Packet)
                 {
-                    NextHeader = IPProtocolType.ICMPV6;
+                    this.NextHeader = IPProtocolType.ICMPV6;
                 } else if(value is ICMPv4Packet)
                 {
-                    NextHeader = IPProtocolType.ICMP;
+                    this.NextHeader = IPProtocolType.ICMP;
                 } else if(value is IGMPv2Packet)
                 {
-                    NextHeader = IPProtocolType.IGMP;
+                    this.NextHeader = IPProtocolType.IGMP;
                 } else if (value is OSPFPacket)
                 {
-                    NextHeader = IPProtocolType.OSPF;
+                    this.NextHeader = IPProtocolType.OSPF;
                 } else // NOTE: new checks go here
                 {
-                    NextHeader = IPProtocolType.NONE;
+                    this.NextHeader = IPProtocolType.NONE;
                 }
 
                 // update the payload length based on the size
                 // of the payload packet
-                var newPayloadLength = (ushort)base.PayloadPacket.Bytes.Length;
+                var newPayloadLength = (UInt16)base.PayloadPacket.Bytes.Length;
                 log.DebugFormat("newPayloadLength {0}", newPayloadLength);
-                PayloadLength = newPayloadLength;
+                this.PayloadLength = newPayloadLength;
             }
         }
 
@@ -138,8 +135,8 @@ namespace PacketDotNet
         /// </value>
         public virtual IPProtocolType NextHeader
         {
-            get { return Protocol; }
-            set { Protocol = value; }
+            get => this.Protocol;
+            set => this.Protocol = value;
         }
 
         /// <value>
@@ -147,7 +144,7 @@ namespace PacketDotNet
         /// Named 'TimeToLive' in IPv4
         /// Named 'HopLimit' in IPv6
         /// </value>
-        public abstract int TimeToLive
+        public abstract Int32 TimeToLive
         {
             get;
             set;
@@ -157,10 +154,10 @@ namespace PacketDotNet
         /// The number of hops remaining for this packet
         /// Included along side of TimeToLive for user convienence
         /// </value>
-        public virtual int HopLimit
+        public virtual Int32 HopLimit
         {
-            get { return TimeToLive; }
-            set { TimeToLive = value; }
+            get => this.TimeToLive;
+            set => this.TimeToLive = value;
         }
 
         /// <summary>
@@ -168,7 +165,7 @@ namespace PacketDotNet
         /// NOTE: This field is the number of 32bit words in the ip header,
         ///       ie. the number of bytes is 4x this value
         /// </summary>
-        public abstract int HeaderLength
+        public abstract Int32 HeaderLength
         {
             get; set;
         }
@@ -177,7 +174,7 @@ namespace PacketDotNet
         /// ipv4 total number of bytes in the ipv4 header + payload,
         /// ipv6 PayloadLength + IPv6Fields.HeaderLength
         /// </summary>
-        public abstract int TotalLength
+        public abstract Int32 TotalLength
         {
             get; set;
         }
@@ -186,7 +183,7 @@ namespace PacketDotNet
         /// ipv6 payload length in bytes,
         /// calculate from ipv4.TotalLength - (ipv4.HeaderLength * 4)
         /// </summary>
-        public abstract ushort PayloadLength
+        public abstract UInt16 PayloadLength
         {
             get;
             set;
@@ -202,7 +199,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Byte"/>
         /// </returns>
-        internal abstract byte[] AttachPseudoIPHeader(byte[] origHeader);
+        internal abstract Byte[] AttachPseudoIPHeader(Byte[] origHeader);
 
         /// <summary>
         /// Convert an ip address from a byte[]
@@ -219,26 +216,26 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Net.IPAddress"/>
         /// </returns>
-        public static System.Net.IPAddress GetIPAddress(System.Net.Sockets.AddressFamily ipType,
-                                                        int fieldOffset,
-                                                        byte[] bytes)
+        public static IPAddress GetIPAddress(System.Net.Sockets.AddressFamily ipType,
+                                                        Int32 fieldOffset,
+                                                        Byte[] bytes)
         {
-            byte[] address;
+            Byte[] address;
             if(ipType == System.Net.Sockets.AddressFamily.InterNetwork) // ipv4
             {
-                address = new byte[IPv4Fields.AddressLength];
+                address = new Byte[IPv4Fields.AddressLength];
             } else if(ipType == System.Net.Sockets.AddressFamily.InterNetworkV6)
             {
-                address = new byte[IPv6Fields.AddressLength];
+                address = new Byte[IPv6Fields.AddressLength];
             } else
             {
-                throw new System.InvalidOperationException("ipType " + ipType + " unknown");
+                throw new InvalidOperationException("ipType " + ipType + " unknown");
             }
 
-            System.Array.Copy(bytes, fieldOffset,
+            Array.Copy(bytes, fieldOffset,
                               address, 0, address.Length);
 
-            return new System.Net.IPAddress(address);
+            return new IPAddress(address);
         }
 
         /// <summary>
@@ -354,7 +351,7 @@ namespace PacketDotNet
                 return IPv6Packet.RandomPacket();
             } else
             {
-                throw new System.InvalidOperationException("Unknown version of " + version);
+                throw new InvalidOperationException("Unknown version of " + version);
             }
         }
     }

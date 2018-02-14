@@ -170,7 +170,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            int packetIndex = 0;
+            Int32 packetIndex = 0;
             while((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType,
@@ -178,22 +178,22 @@ namespace Test.PacketType
                 switch(packetIndex)
                 {
                 case 0:
-                    VerifyPacket0(p, rawCapture);
+                    this.VerifyPacket0(p, rawCapture);
                     break;
                 case 1:
-                    VerifyPacket1(p, rawCapture);
+                    this.VerifyPacket1(p, rawCapture);
                     break;
                 case 2:
-                    VerifyPacket2(p, rawCapture);
+                    this.VerifyPacket2(p, rawCapture);
                     break;
                 case 3:
-                    VerifyPacket3(p, rawCapture);
+                    this.VerifyPacket3(p, rawCapture);
                     break;
                 case 4:
-                    VerifyPacket4(p, rawCapture);
+                    this.VerifyPacket4(p, rawCapture);
                     break;
                 case 5:
-                    VerifyPacket5(p, rawCapture);
+                    this.VerifyPacket5(p, rawCapture);
                     break;
                 default:
                     Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
@@ -210,15 +210,15 @@ namespace Test.PacketType
         public void EthernetConstructorFromMacAddresses()
         {
             var srcHwAddressBytes = new Byte[EthernetFields.MacAddressLength];
-            for(int i = 0; i < srcHwAddressBytes.Length; i++)
+            for(Int32 i = 0; i < srcHwAddressBytes.Length; i++)
             {
-                srcHwAddressBytes[i] = (byte)i;
+                srcHwAddressBytes[i] = (Byte)i;
             }
 
             var dstHwAddressBytes = new Byte[EthernetFields.MacAddressLength];
-            for(int i = 0; i < dstHwAddressBytes.Length; i++)
+            for(Int32 i = 0; i < dstHwAddressBytes.Length; i++)
             {
-                dstHwAddressBytes[i] = (byte)(dstHwAddressBytes.Length - i);
+                dstHwAddressBytes[i] = (Byte)(dstHwAddressBytes.Length - i);
             }
 
             var srcHwAddress = new PhysicalAddress(srcHwAddressBytes);
@@ -227,7 +227,7 @@ namespace Test.PacketType
                                                     dstHwAddress,
                                                     EthernetPacketType.None);
 
-            int expectedLength = 14;
+            Int32 expectedLength = 14;
             Assert.AreEqual(expectedLength, ethernetPacket.Bytes.Length);
             //TODO: improve this here
             Console.WriteLine("ethernetPacket.ToString() {0}",
@@ -303,7 +303,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            bool foundEthernet = false;
+            Boolean foundEthernet = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var ethernetPacket = new EthernetPacket(new ByteArraySegment(rawCapture.Data));

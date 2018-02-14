@@ -74,19 +74,16 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.Ppi802_3; }
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.Ppi802_3;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override int Length { get {return 8; } }
-            
+            public override Int32 Length => 8;
+
             /// <summary>
             /// Gets or sets the standard 802.2 flags.
             /// </summary>
@@ -108,14 +105,14 @@ namespace PacketDotNet
             /// <value>
             /// The bytes.
             /// </value>
-            public override byte[] Bytes
+            public override Byte[] Bytes
             {
                 get
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
-                    writer.Write((uint)Flags);
-                    writer.Write((uint)Errors);
+                    writer.Write((UInt32) this.Flags);
+                    writer.Write((UInt32) this.Errors);
                     return ms.ToArray();
                 }
             }
@@ -136,8 +133,8 @@ namespace PacketDotNet
             /// </param>
             public Ppi802_3(BinaryReader br)
             {
-                Flags = (StandardFlags) br.ReadUInt32();
-                Errors = (ErrorFlags) br.ReadUInt32();
+                this.Flags = (StandardFlags) br.ReadUInt32();
+                this.Errors = (ErrorFlags) br.ReadUInt32();
             }
             
             /// <summary>
@@ -175,26 +172,23 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.PpiAggregation;}
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.PpiAggregation;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override int Length { get {return 4; } }
-   
+            public override Int32 Length => 4;
+
             /// <summary>
             /// Zero-based index of the physical interface the packet was captured from.
             /// </summary>
             /// <value>
             /// The interface id.
             /// </value>
-            public uint InterfaceId { get; set; }
+            public UInt32 InterfaceId { get; set; }
             
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
@@ -202,15 +196,9 @@ namespace PacketDotNet
             /// <value>
             /// The bytes.
             /// </value>
-            public override byte[] Bytes
-            {
-                get
-                {
-                    return BitConverter.GetBytes(InterfaceId);
-                }
-            }
-            
-        #endregion Properties
+            public override Byte[] Bytes => BitConverter.GetBytes(this.InterfaceId);
+
+            #endregion Properties
 
         #region Constructors
 
@@ -227,7 +215,7 @@ namespace PacketDotNet
             /// </param>
             public PpiAggregation (BinaryReader br)
             {
-                InterfaceId = br.ReadUInt32();
+                this.InterfaceId = br.ReadUInt32();
             }
    
             /// <summary>
@@ -236,7 +224,7 @@ namespace PacketDotNet
             /// <param name='InterfaceId'>
             /// The interface id.
             /// </param>
-            public PpiAggregation(uint InterfaceId)
+            public PpiAggregation(UInt32 InterfaceId)
             {
                 this.InterfaceId = InterfaceId;
             }
@@ -261,34 +249,25 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.PpiCaptureInfo;}
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.PpiCaptureInfo;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override int Length { get { return 0; } }
-            
+            public override Int32 Length => 0;
+
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
             /// </summary>
             /// <value>
             /// The bytes.
             /// </value>
-            public override byte[] Bytes
-            {
-                get
-                {
-                    return new byte[0];
-                }
-            }
+            public override Byte[] Bytes => new Byte[0];
 
-        #endregion Properties
+            #endregion Properties
 
         #region Constructors
             /// <summary>
@@ -350,19 +329,16 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.PpiCommon;}
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.PpiCommon;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override int Length { get { return 20; } }
-            
+            public override Int32 Length => 20;
+
             /// <summary>
             /// Radiotap-formatted channel flags.
             /// </summary>
@@ -387,7 +363,7 @@ namespace PacketDotNet
             /// <value>
             /// The data rate.
             /// </value>
-            public double Rate { get; set; } 
+            public Double Rate { get; set; } 
    
             /// <summary>
             /// Gets or sets the TSF timer.
@@ -439,22 +415,22 @@ namespace PacketDotNet
             /// <value>
             /// The bytes.
             /// </value>
-            public override byte[] Bytes
+            public override Byte[] Bytes
             {
                 get
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
                     
-                    writer.Write(TSFTimer);
-                    writer.Write((ushort)Flags);
-                    writer.Write((ushort)(Rate * 2));
-                    writer.Write(ChannelFrequency);
-                    writer.Write((ushort)ChannelFlags);
-                    writer.Write(FhssHopset);
-                    writer.Write(FhssPattern);
-                    writer.Write(AntennaSignalPower);
-                    writer.Write(AntennaSignalNoise);
+                    writer.Write(this.TSFTimer);
+                    writer.Write((UInt16) this.Flags);
+                    writer.Write((UInt16)(this.Rate * 2));
+                    writer.Write(this.ChannelFrequency);
+                    writer.Write((UInt16) this.ChannelFlags);
+                    writer.Write(this.FhssHopset);
+                    writer.Write(this.FhssPattern);
+                    writer.Write(this.AntennaSignalPower);
+                    writer.Write(this.AntennaSignalNoise);
                     
                     return ms.ToArray();
                 }
@@ -477,15 +453,15 @@ namespace PacketDotNet
             /// </param>
             public PpiCommon (BinaryReader br)
             {
-                TSFTimer = br.ReadUInt64 ();
-                Flags = (CommonFlags)br.ReadUInt16 ();
-                Rate = 0.5f * br.ReadUInt16 ();
-                ChannelFrequency = br.ReadUInt16 ();
-                ChannelFlags = (RadioTapChannelFlags) br.ReadUInt16 ();
-                FhssHopset = br.ReadByte ();
-                FhssPattern = br.ReadByte ();
-                AntennaSignalPower = br.ReadSByte();
-                AntennaSignalNoise = br.ReadSByte();
+                this.TSFTimer = br.ReadUInt64 ();
+                this.Flags = (CommonFlags)br.ReadUInt16 ();
+                this.Rate = 0.5f * br.ReadUInt16 ();
+                this.ChannelFrequency = br.ReadUInt16 ();
+                this.ChannelFlags = (RadioTapChannelFlags) br.ReadUInt16 ();
+                this.FhssHopset = br.ReadByte ();
+                this.FhssPattern = br.ReadByte ();
+                this.AntennaSignalPower = br.ReadSByte();
+                this.AntennaSignalNoise = br.ReadSByte();
             }
    
             /// <summary>
@@ -494,8 +470,8 @@ namespace PacketDotNet
             /// </summary>
             public PpiCommon ()
             {
-                AntennaSignalPower = -128;
-                AntennaSignalNoise = -128;
+                this.AntennaSignalPower = -128;
+                this.AntennaSignalNoise = -128;
             }
             
         #endregion Constructors
@@ -521,7 +497,7 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public abstract int Length { get; }
+            public abstract Int32 Length { get; }
             
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
@@ -529,7 +505,7 @@ namespace PacketDotNet
             /// <value>
             /// The bytes.
             /// </value>
-            public abstract byte[] Bytes { get; }
+            public abstract Byte[] Bytes { get; }
             
         #endregion Properties
 
@@ -550,7 +526,7 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="PpiField"/>
             /// </returns>
-            public static PpiField Parse (int fieldType, BinaryReader br, ushort fieldLength)
+            public static PpiField Parse (Int32 fieldType, BinaryReader br, UInt16 fieldLength)
             {
                 var type = (PpiFieldType)fieldType;
                 switch (type)
@@ -629,19 +605,16 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.PpiMacExtensions;}
-            }
-   
+            public override PpiFieldType FieldType => PpiFieldType.PpiMacExtensions;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override int Length { get { return 12; } }
-            
+            public override Int32 Length => 12;
+
             /// <summary>
             /// Gets or sets the 802.11n MAC extension flags.
             /// </summary>
@@ -655,14 +628,14 @@ namespace PacketDotNet
             /// <value>
             /// the A-MPDU id.
             /// </value>
-            public uint AMpduId { get; set; }
+            public UInt32 AMpduId { get; set; }
             /// <summary>
             /// Gets or sets the number of zero-length pad delimiters
             /// </summary>
             /// <value>
             /// The delimiter count.
             /// </value>
-            public byte DelimiterCount { get; set; }
+            public Byte DelimiterCount { get; set; }
             
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
@@ -670,17 +643,17 @@ namespace PacketDotNet
             /// <value>
             /// The bytes.
             /// </value>
-            public override byte[] Bytes
+            public override Byte[] Bytes
             {
                 get
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
                     
-                    writer.Write((uint) Flags);
-                    writer.Write(AMpduId);
-                    writer.Write(DelimiterCount);
-                    writer.Write(new byte[3]);
+                    writer.Write((UInt32) this.Flags);
+                    writer.Write(this.AMpduId);
+                    writer.Write(this.DelimiterCount);
+                    writer.Write(new Byte[3]);
                     
                     return ms.ToArray();
                 }
@@ -703,9 +676,9 @@ namespace PacketDotNet
             /// </param>
             public PpiMacExtensions (BinaryReader br)
             {
-                Flags = (PpiMacExtensionFlags) br.ReadUInt32();
-                AMpduId = br.ReadUInt32();
-                DelimiterCount = br.ReadByte();
+                this.Flags = (PpiMacExtensionFlags) br.ReadUInt32();
+                this.AMpduId = br.ReadUInt32();
+                this.DelimiterCount = br.ReadByte();
             }
             
             /// <summary>
@@ -728,19 +701,16 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.PpiMacPhy;}
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.PpiMacPhy;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override int Length { get { return 48; } }
-            
+            public override Int32 Length => 48;
+
             /// <summary>
             /// Gets or sets the 802.11n MAC extension flags.
             /// </summary>
@@ -754,28 +724,28 @@ namespace PacketDotNet
             /// <value>
             /// the A-MPDU id.
             /// </value>
-            public uint AMpduId { get; set; }
+            public UInt32 AMpduId { get; set; }
             /// <summary>
             /// Gets or sets the number of zero-length pad delimiters
             /// </summary>
             /// <value>
             /// The delimiter count.
             /// </value>
-            public byte DelimiterCount { get; set; }
+            public Byte DelimiterCount { get; set; }
             /// <summary>
             /// Gets or sets the modulation coding scheme.
             /// </summary>
             /// <value>
             /// The modulation coding scheme.
             /// </value>
-            public byte ModulationCodingScheme { get; set; }
+            public Byte ModulationCodingScheme { get; set; }
             /// <summary>
             /// Gets or sets the number of spatial streams.
             /// </summary>
             /// <value>
             /// The spatial stream count.
             /// </value>
-            public byte SpatialStreamCount { get; set; }
+            public Byte SpatialStreamCount { get; set; }
             /// <summary>
             /// Gets or sets the combined Received Signal Strength Indication (RSSI) value 
             /// from all the active antennas and channels.
@@ -783,70 +753,70 @@ namespace PacketDotNet
             /// <value>
             /// The combined RSSI.
             /// </value>
-            public byte RssiCombined { get; set; }
+            public Byte RssiCombined { get; set; }
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 0, control channel.
             /// </summary>
             /// <value>
             /// The antenna 0 RSSI value.
             /// </value>
-            public byte RssiAntenna0Control { get; set; }
+            public Byte RssiAntenna0Control { get; set; }
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 1, control channel.
             /// </summary>
             /// <value>
             /// The antenna 1 control channel RSSI value.
             /// </value>
-            public byte RssiAntenna1Control { get; set; }
+            public Byte RssiAntenna1Control { get; set; }
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 2, control channel.
             /// </summary>
             /// <value>
             /// The antenna 2 control channel RSSI value.
             /// </value>
-            public byte RssiAntenna2Control { get; set; }
+            public Byte RssiAntenna2Control { get; set; }
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 3, control channel.
             /// </summary>
             /// <value>
             /// The antenna 3 control channel RSSI value.
             /// </value>
-            public byte RssiAntenna3Control { get; set; }
+            public Byte RssiAntenna3Control { get; set; }
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 0, extension channel
             /// </summary>
             /// <value>
             /// The antenna 0 extension channel RSSI value.
             /// </value>
-            public byte RssiAntenna0Ext { get; set; }
+            public Byte RssiAntenna0Ext { get; set; }
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 1, extension channel
             /// </summary>
             /// <value>
             /// The antenna 1 extension channel RSSI value.
             /// </value>
-            public byte RssiAntenna1Ext { get; set; }
+            public Byte RssiAntenna1Ext { get; set; }
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 2, extension channel
             /// </summary>
             /// <value>
             /// The antenna 2 extension channel RSSI value.
             /// </value>
-            public byte RssiAntenna2Ext { get; set; }
+            public Byte RssiAntenna2Ext { get; set; }
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 3, extension channel
             /// </summary>
             /// <value>
             /// The antenna 3 extension channel RSSI value.
             /// </value>
-            public byte RssiAntenna3Ext { get; set; }
+            public Byte RssiAntenna3Ext { get; set; }
             /// <summary>
             /// Gets or sets the extension channel frequency.
             /// </summary>
             /// <value>
             /// The extension channel frequency.
             /// </value>
-            public ushort ExtensionChannelFrequency { get; set; }
+            public UInt16 ExtensionChannelFrequency { get; set; }
             /// <summary>
             /// Gets or sets the extension channel flags.
             /// </summary>
@@ -860,84 +830,84 @@ namespace PacketDotNet
             /// <value>
             /// The signal power.
             /// </value>
-            public byte DBmAntenna0SignalPower { get; set; }
+            public Byte DBmAntenna0SignalPower { get; set; }
             /// <summary>
             /// Gets or sets the RF signal noise at antenna 0.
             /// </summary>
             /// <value>
             /// The signal noise.
             /// </value>
-            public byte DBmAntenna0SignalNoise { get; set; }
+            public Byte DBmAntenna0SignalNoise { get; set; }
             /// <summary>
             /// Gets or sets the RF signal power at antenna 1.
             /// </summary>
             /// <value>
             /// The signal power.
             /// </value>
-            public byte DBmAntenna1SignalPower { get; set; }
+            public Byte DBmAntenna1SignalPower { get; set; }
             /// <summary>
             /// Gets or sets the RF signal noise at antenna 1.
             /// </summary>
             /// <value>
             /// The signal noise.
             /// </value>
-            public byte DBmAntenna1SignalNoise { get; set; }
+            public Byte DBmAntenna1SignalNoise { get; set; }
             /// <summary>
             /// Gets or sets the RF signal power at antenna 2.
             /// </summary>
             /// <value>
             /// The signal power.
             /// </value>
-            public byte DBmAntenna2SignalPower { get; set; }
+            public Byte DBmAntenna2SignalPower { get; set; }
             /// <summary>
             /// Gets or sets the RF signal noise at antenna 2.
             /// </summary>
             /// <value>
             /// The signal noise.
             /// </value>
-            public byte DBmAntenna2SignalNoise { get; set; }
+            public Byte DBmAntenna2SignalNoise { get; set; }
             /// <summary>
             /// Gets or sets the RF signal power at antenna 3.
             /// </summary>
             /// <value>
             /// The signal power.
             /// </value>
-            public byte DBmAntenna3SignalPower { get; set; }
+            public Byte DBmAntenna3SignalPower { get; set; }
             /// <summary>
             /// Gets or sets the RF signal noise at antenna 3.
             /// </summary>
             /// <value>
             /// The signal noise.
             /// </value>
-            public byte DBmAntenna3SignalNoise { get; set; }
+            public Byte DBmAntenna3SignalNoise { get; set; }
             /// <summary>
             /// Gets or sets the error vector magnitude for Chain 0.
             /// </summary>
             /// <value>
             /// The error vector magnitude.
             /// </value>
-            public uint ErrorVectorMagnitude0 { get; set; }
+            public UInt32 ErrorVectorMagnitude0 { get; set; }
             /// <summary>
             /// Gets or sets the error vector magnitude for Chain 1.
             /// </summary>
             /// <value>
             /// The error vector magnitude.
             /// </value>
-            public uint ErrorVectorMagnitude1 { get; set; }
+            public UInt32 ErrorVectorMagnitude1 { get; set; }
             /// <summary>
             /// Gets or sets the error vector magnitude for Chain 2.
             /// </summary>
             /// <value>
             /// The error vector magnitude.
             /// </value>
-            public uint ErrorVectorMagnitude2 { get; set; }
+            public UInt32 ErrorVectorMagnitude2 { get; set; }
             /// <summary>
             /// Gets or sets the error vector magnitude for Chain 3.
             /// </summary>
             /// <value>
             /// The error vector magnitude.
             /// </value>
-            public uint ErrorVectorMagnitude3 { get; set; }
+            public UInt32 ErrorVectorMagnitude3 { get; set; }
             
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
@@ -945,40 +915,40 @@ namespace PacketDotNet
             /// <value>
             /// The bytes.
             /// </value>
-            public override byte[] Bytes
+            public override Byte[] Bytes
             {
                 get
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
                     
-                    writer.Write(AMpduId);
-                    writer.Write(DelimiterCount);
-                    writer.Write(ModulationCodingScheme);
-                    writer.Write(SpatialStreamCount);
-                    writer.Write(RssiCombined);
-                    writer.Write(RssiAntenna0Control);
-                    writer.Write(RssiAntenna1Control);
-                    writer.Write(RssiAntenna2Control);
-                    writer.Write(RssiAntenna3Control);
-                    writer.Write(RssiAntenna0Ext);
-                    writer.Write(RssiAntenna1Ext);
-                    writer.Write(RssiAntenna2Ext);
-                    writer.Write(RssiAntenna3Ext);
-                    writer.Write(ExtensionChannelFrequency);
-                    writer.Write((ushort)ExtensionChannelFlags);
-                    writer.Write(DBmAntenna0SignalPower);
-                    writer.Write(DBmAntenna0SignalNoise);
-                    writer.Write(DBmAntenna1SignalPower);
-                    writer.Write(DBmAntenna1SignalNoise);
-                    writer.Write(DBmAntenna2SignalPower);
-                    writer.Write(DBmAntenna2SignalNoise);
-                    writer.Write(DBmAntenna3SignalPower);
-                    writer.Write(DBmAntenna3SignalNoise);
-                    writer.Write(ErrorVectorMagnitude0);
-                    writer.Write(ErrorVectorMagnitude1);
-                    writer.Write(ErrorVectorMagnitude2);
-                    writer.Write(ErrorVectorMagnitude3);
+                    writer.Write(this.AMpduId);
+                    writer.Write(this.DelimiterCount);
+                    writer.Write(this.ModulationCodingScheme);
+                    writer.Write(this.SpatialStreamCount);
+                    writer.Write(this.RssiCombined);
+                    writer.Write(this.RssiAntenna0Control);
+                    writer.Write(this.RssiAntenna1Control);
+                    writer.Write(this.RssiAntenna2Control);
+                    writer.Write(this.RssiAntenna3Control);
+                    writer.Write(this.RssiAntenna0Ext);
+                    writer.Write(this.RssiAntenna1Ext);
+                    writer.Write(this.RssiAntenna2Ext);
+                    writer.Write(this.RssiAntenna3Ext);
+                    writer.Write(this.ExtensionChannelFrequency);
+                    writer.Write((UInt16) this.ExtensionChannelFlags);
+                    writer.Write(this.DBmAntenna0SignalPower);
+                    writer.Write(this.DBmAntenna0SignalNoise);
+                    writer.Write(this.DBmAntenna1SignalPower);
+                    writer.Write(this.DBmAntenna1SignalNoise);
+                    writer.Write(this.DBmAntenna2SignalPower);
+                    writer.Write(this.DBmAntenna2SignalNoise);
+                    writer.Write(this.DBmAntenna3SignalPower);
+                    writer.Write(this.DBmAntenna3SignalNoise);
+                    writer.Write(this.ErrorVectorMagnitude0);
+                    writer.Write(this.ErrorVectorMagnitude1);
+                    writer.Write(this.ErrorVectorMagnitude2);
+                    writer.Write(this.ErrorVectorMagnitude3);
                     
                     return ms.ToArray();
                 }
@@ -1000,33 +970,33 @@ namespace PacketDotNet
             /// </param>
             public PpiMacPhy (BinaryReader br)
             {
-                AMpduId = br.ReadUInt32();
-                DelimiterCount = br.ReadByte();
-                ModulationCodingScheme = br.ReadByte();
-                SpatialStreamCount = br.ReadByte();
-                RssiCombined = br.ReadByte();
-                RssiAntenna0Control = br.ReadByte();
-                RssiAntenna1Control = br.ReadByte();
-                RssiAntenna2Control = br.ReadByte();
-                RssiAntenna3Control = br.ReadByte();
-                RssiAntenna0Ext = br.ReadByte();
-                RssiAntenna1Ext = br.ReadByte();
-                RssiAntenna2Ext = br.ReadByte();
-                RssiAntenna3Ext = br.ReadByte();
-                ExtensionChannelFrequency = br.ReadUInt16();
-                ExtensionChannelFlags = (RadioTapChannelFlags) br.ReadUInt16();
-                DBmAntenna0SignalPower = br.ReadByte();
-                DBmAntenna0SignalNoise = br.ReadByte();
-                DBmAntenna1SignalPower = br.ReadByte();
-                DBmAntenna1SignalNoise = br.ReadByte();
-                DBmAntenna2SignalPower = br.ReadByte();
-                DBmAntenna2SignalNoise = br.ReadByte();
-                DBmAntenna3SignalPower = br.ReadByte();
-                DBmAntenna3SignalNoise = br.ReadByte();
-                ErrorVectorMagnitude0 = br.ReadUInt32();
-                ErrorVectorMagnitude1 = br.ReadUInt32();
-                ErrorVectorMagnitude2 = br.ReadUInt32();
-                ErrorVectorMagnitude3 = br.ReadUInt32();
+                this.AMpduId = br.ReadUInt32();
+                this.DelimiterCount = br.ReadByte();
+                this.ModulationCodingScheme = br.ReadByte();
+                this.SpatialStreamCount = br.ReadByte();
+                this.RssiCombined = br.ReadByte();
+                this.RssiAntenna0Control = br.ReadByte();
+                this.RssiAntenna1Control = br.ReadByte();
+                this.RssiAntenna2Control = br.ReadByte();
+                this.RssiAntenna3Control = br.ReadByte();
+                this.RssiAntenna0Ext = br.ReadByte();
+                this.RssiAntenna1Ext = br.ReadByte();
+                this.RssiAntenna2Ext = br.ReadByte();
+                this.RssiAntenna3Ext = br.ReadByte();
+                this.ExtensionChannelFrequency = br.ReadUInt16();
+                this.ExtensionChannelFlags = (RadioTapChannelFlags) br.ReadUInt16();
+                this.DBmAntenna0SignalPower = br.ReadByte();
+                this.DBmAntenna0SignalNoise = br.ReadByte();
+                this.DBmAntenna1SignalPower = br.ReadByte();
+                this.DBmAntenna1SignalNoise = br.ReadByte();
+                this.DBmAntenna2SignalPower = br.ReadByte();
+                this.DBmAntenna2SignalNoise = br.ReadByte();
+                this.DBmAntenna3SignalPower = br.ReadByte();
+                this.DBmAntenna3SignalNoise = br.ReadByte();
+                this.ErrorVectorMagnitude0 = br.ReadUInt32();
+                this.ErrorVectorMagnitude1 = br.ReadUInt32();
+                this.ErrorVectorMagnitude2 = br.ReadUInt32();
+                this.ErrorVectorMagnitude3 = br.ReadUInt32();
             }
             
             /// <summary>
@@ -1048,24 +1018,21 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.PpiProcessInfo;}
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.PpiProcessInfo;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override int Length
+            public override Int32 Length
             {
                 get
                 {
-                    var processLength = (String.IsNullOrEmpty(ProcessPath)) ? 0 : Encoding.UTF8.GetByteCount(ProcessPath);
-                    var userLength = (String.IsNullOrEmpty(UserName)) ? 0 : Encoding.UTF8.GetByteCount(UserName);
-                    var groupLength = (String.IsNullOrEmpty(GroupName)) ? 0 : Encoding.UTF8.GetByteCount(GroupName);
+                    var processLength = (String.IsNullOrEmpty(this.ProcessPath)) ? 0 : Encoding.UTF8.GetByteCount(this.ProcessPath);
+                    var userLength = (String.IsNullOrEmpty(this.UserName)) ? 0 : Encoding.UTF8.GetByteCount(this.UserName);
+                    var groupLength = (String.IsNullOrEmpty(this.GroupName)) ? 0 : Encoding.UTF8.GetByteCount(this.GroupName);
                     return 19 + processLength + userLength + groupLength;
                 }
             }
@@ -1076,14 +1043,14 @@ namespace PacketDotNet
             /// <value>
             /// The process identifier.
             /// </value>
-            public uint ProcessId { get; set; }
+            public UInt32 ProcessId { get; set; }
             /// <summary>
             /// Gets or sets the thread identifier.
             /// </summary>
             /// <value>
             /// The thread identifier.
             /// </value>
-            public uint ThreadId { get; set; }
+            public UInt32 ThreadId { get; set; }
             /// <summary>
             /// Gets or sets the process path.
             /// </summary>
@@ -1097,7 +1064,7 @@ namespace PacketDotNet
             /// <value>
             /// The user identifier.
             /// </value>
-            public uint UserId { get; set; }
+            public UInt32 UserId { get; set; }
             /// <summary>
             /// Gets or sets the user name.
             /// </summary>
@@ -1111,7 +1078,7 @@ namespace PacketDotNet
             /// <value>
             /// The group identifier.
             /// </value>
-            public uint GroupId { get; set; }
+            public UInt32 GroupId { get; set; }
             /// <summary>
             /// Gets or sets the group name.
             /// </summary>
@@ -1126,30 +1093,30 @@ namespace PacketDotNet
             /// <value>
             /// The bytes.
             /// </value>
-            public override byte[] Bytes
+            public override Byte[] Bytes
             {
                 get
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
                     
-                    writer.Write(ProcessId);
-                    writer.Write(ThreadId);
+                    writer.Write(this.ProcessId);
+                    writer.Write(this.ThreadId);
                     
-                    var pathBytes = Encoding.UTF8.GetBytes(ProcessPath ?? String.Empty);
-                    writer.Write((byte)pathBytes.Length);
+                    var pathBytes = Encoding.UTF8.GetBytes(this.ProcessPath ?? String.Empty);
+                    writer.Write((Byte)pathBytes.Length);
                     writer.Write(pathBytes);
                     
-                    writer.Write(UserId);
+                    writer.Write(this.UserId);
                     
-                    var userBytes = Encoding.UTF8.GetBytes(UserName ?? String.Empty);
-                    writer.Write((byte)userBytes.Length);
+                    var userBytes = Encoding.UTF8.GetBytes(this.UserName ?? String.Empty);
+                    writer.Write((Byte)userBytes.Length);
                     writer.Write(userBytes);
                     
-                    writer.Write(GroupId);
+                    writer.Write(this.GroupId);
                     
-                    var groupBytes = Encoding.UTF8.GetBytes(GroupName ?? String.Empty);
-                    writer.Write((byte)groupBytes.Length);
+                    var groupBytes = Encoding.UTF8.GetBytes(this.GroupName ?? String.Empty);
+                    writer.Write((Byte)groupBytes.Length);
                     writer.Write(groupBytes);
                         
                     return ms.ToArray();
@@ -1172,22 +1139,21 @@ namespace PacketDotNet
             /// </param>
             public PpiProcessInfo (BinaryReader br)
             {
-                
-                ProcessId = br.ReadUInt32();
-                ThreadId = br.ReadUInt32();
+                this.ProcessId = br.ReadUInt32();
+                this.ThreadId = br.ReadUInt32();
                 
                 var pathLength = br.ReadByte();
-                ProcessPath = Encoding.UTF8.GetString(br.ReadBytes(pathLength));
-                
-                UserId = br.ReadUInt32();
+                this.ProcessPath = Encoding.UTF8.GetString(br.ReadBytes(pathLength));
+
+                this.UserId = br.ReadUInt32();
                 
                 var userLength = br.ReadByte();
-                UserName = Encoding.UTF8.GetString(br.ReadBytes(userLength));
-                
-                GroupId = br.ReadUInt32();
+                this.UserName = Encoding.UTF8.GetString(br.ReadBytes(userLength));
+
+                this.GroupId = br.ReadUInt32();
                 
                 var groupLength = br.ReadByte();
-                GroupName = Encoding.UTF8.GetString(br.ReadBytes(groupLength));
+                this.GroupName = Encoding.UTF8.GetString(br.ReadBytes(groupLength));
             }
             
             /// <summary>
@@ -1212,30 +1178,31 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType{ get { return fieldType; } } 
-            
+            public override PpiFieldType FieldType => this.fieldType;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override int Length { get { return Bytes.Length; } }
-   
+            public override Int32 Length => this.Bytes.Length;
+
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
             /// </summary>
             /// <value>
             /// The bytes.
             /// </value>
-            public override byte[] Bytes { get { return UnknownBytes; } }
+            public override Byte[] Bytes => this.UnknownBytes;
+
             /// <summary>
             /// Gets or sets the field data.
             /// </summary>
             /// <value>
             /// The fields values bytes.
             /// </value>
-            public byte[] UnknownBytes { get; set; }
+            public Byte[] UnknownBytes { get; set; }
             
         #endregion Properties
 
@@ -1257,10 +1224,10 @@ namespace PacketDotNet
             /// <param name='length'>
             /// The number of bytes the unknown field contains.
             /// </param>
-            public PpiUnknown (int typeNumber, BinaryReader br, int length)
+            public PpiUnknown (Int32 typeNumber, BinaryReader br, Int32 length)
             {
-                fieldType = (PpiFieldType) typeNumber;
-                UnknownBytes = br.ReadBytes(length);
+                this.fieldType = (PpiFieldType) typeNumber;
+                this.UnknownBytes = br.ReadBytes(length);
             }
    
             /// <summary>
@@ -1269,9 +1236,9 @@ namespace PacketDotNet
             /// <param name='typeNumber'>
             /// The PPI field type number.
             /// </param>
-            public PpiUnknown (int typeNumber)
+            public PpiUnknown (Int32 typeNumber)
             {
-                fieldType = (PpiFieldType)typeNumber;
+                this.fieldType = (PpiFieldType)typeNumber;
             }
             /// <summary>
             /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiUnknown"/> class.
@@ -1282,9 +1249,9 @@ namespace PacketDotNet
             /// <param name='UnknownBytes'>
             /// The field data.
             /// </param>
-            public PpiUnknown (int typeNumber, byte[] UnknownBytes)
+            public PpiUnknown (Int32 typeNumber, Byte[] UnknownBytes)
             {
-                fieldType = (PpiFieldType)typeNumber;
+                this.fieldType = (PpiFieldType)typeNumber;
                 this.UnknownBytes = UnknownBytes;
             }
             
@@ -1300,60 +1267,58 @@ namespace PacketDotNet
         #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType
-            {
-                get { return PpiFieldType.PpiSpectrum;}
-            }
-            
+            public override PpiFieldType FieldType => PpiFieldType.PpiSpectrum;
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
             /// <value>
             /// The length.
             /// </value>
-            public override int Length { get { return 20 + SamplesData.Length; } }
+            public override Int32 Length => 20 + this.SamplesData.Length;
+
             /// <summary>
             /// Gets or sets the starting frequency in kHz.
             /// </summary>
             /// <value>
             /// The starting frequency.
             /// </value>
-            public uint StartingFrequency { get; set; }
+            public UInt32 StartingFrequency { get; set; }
             /// <summary>
             /// Gets or sets the resolution of each sample in Hz.
             /// </summary>
             /// <value>
             /// The resolution in Hz.
             /// </value>
-            public uint Resolution { get; set; }
+            public UInt32 Resolution { get; set; }
             /// <summary>
             /// Gets or sets the amplitude offset (in 0.001 dBm)
             /// </summary>
             /// <value>
             /// The amplitude offset.
             /// </value>
-            public uint AmplitudeOffset { get; set; }
+            public UInt32 AmplitudeOffset { get; set; }
             /// <summary>
             /// Gets or sets the amplitude resolution (in .001 dBm)
             /// </summary>
             /// <value>
             /// The amplitude resolution.
             /// </value>
-            public uint AmplitudeResolution { get; set; }
+            public UInt32 AmplitudeResolution { get; set; }
             /// <summary>
             /// Gets or sets the maximum raw RSSI value reported by the device.
             /// </summary>
             /// <value>
             /// The maximum rssi.
             /// </value>
-            public ushort MaximumRssi { get; set; }
+            public UInt16 MaximumRssi { get; set; }
             /// <summary>
             /// Gets or sets the data samples.
             /// </summary>
             /// <value>
             /// The data samples.
             /// </value>
-            public byte[] SamplesData { get; set;}
+            public Byte[] SamplesData { get; set;}
             
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
@@ -1361,20 +1326,20 @@ namespace PacketDotNet
             /// <value>
             /// The bytes.
             /// </value>
-            public override byte[] Bytes
+            public override Byte[] Bytes
             {
                 get
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
                     
-                    writer.Write(StartingFrequency);
-                    writer.Write(Resolution);
-                    writer.Write(AmplitudeOffset);
-                    writer.Write(AmplitudeResolution);
-                    writer.Write(MaximumRssi);
-                    writer.Write((ushort) SamplesData.Length);
-                    writer.Write(SamplesData);
+                    writer.Write(this.StartingFrequency);
+                    writer.Write(this.Resolution);
+                    writer.Write(this.AmplitudeOffset);
+                    writer.Write(this.AmplitudeResolution);
+                    writer.Write(this.MaximumRssi);
+                    writer.Write((UInt16) this.SamplesData.Length);
+                    writer.Write(this.SamplesData);
                     
                     return ms.ToArray();
                 }    
@@ -1396,13 +1361,13 @@ namespace PacketDotNet
             /// </param>
             public PpiSpectrum (BinaryReader br)
             {
-                StartingFrequency = br.ReadUInt32();
-                Resolution = br.ReadUInt32();
-                AmplitudeOffset = br.ReadUInt32();
-                AmplitudeResolution = br.ReadUInt32();
-                MaximumRssi = br.ReadUInt16();
+                this.StartingFrequency = br.ReadUInt32();
+                this.Resolution = br.ReadUInt32();
+                this.AmplitudeOffset = br.ReadUInt32();
+                this.AmplitudeResolution = br.ReadUInt32();
+                this.MaximumRssi = br.ReadUInt16();
                 var samplesLength = br.ReadUInt16();
-                SamplesData = br.ReadBytes(samplesLength);
+                this.SamplesData = br.ReadBytes(samplesLength);
             }
             
             /// <summary>

@@ -36,9 +36,9 @@ namespace PacketDotNet
         {
             private class QosNullDataField
             {
-                public readonly static int QosControlLength = 2;
+                public static readonly Int32 QosControlLength = 2;
 
-                public readonly static int QosControlPosition;
+                public static readonly Int32 QosControlPosition;
 
                 static QosNullDataField()
                 {
@@ -58,10 +58,9 @@ namespace PacketDotNet
             {
                 get
                 {
-					if(header.Length >= (QosNullDataField.QosControlPosition + QosNullDataField.QosControlLength))
+					if(this.header.Length >= (QosNullDataField.QosControlPosition + QosNullDataField.QosControlLength))
 					{
-						return EndianBitConverter.Little.ToUInt16(header.Bytes,
-						                                          header.Offset + QosNullDataField.QosControlPosition);
+						return EndianBitConverter.Little.ToUInt16(this.header.Bytes, this.header.Offset + QosNullDataField.QosControlPosition);
 					}
 					else
 					{
@@ -69,12 +68,7 @@ namespace PacketDotNet
 					}
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                                                     header.Bytes,
-                                                     header.Offset + QosNullDataField.QosControlPosition);
-                }
+                set => EndianBitConverter.Little.CopyBytes(value, this.header.Bytes, this.header.Offset + QosNullDataField.QosControlPosition);
             }
 
             /// <summary>
@@ -83,12 +77,12 @@ namespace PacketDotNet
             /// This does not include the FCS, it represents only the header bytes that would
             /// would preceed any payload.
             /// </summary>
-            public override int FrameSize
+            public override Int32 FrameSize
             {
                 get
                 {
                     //if we are in WDS mode then there are 4 addresses (normally it is just 3)
-                    int numOfAddressFields = (FrameControl.ToDS && FrameControl.FromDS) ? 4 : 3;
+                    Int32 numOfAddressFields = (this.FrameControl.ToDS && this.FrameControl.FromDS) ? 4 : 3;
 
                     return (MacFields.FrameControlLength +
                         MacFields.DurationIDLength +
@@ -106,15 +100,15 @@ namespace PacketDotNet
             /// </param>
             public QosNullDataFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                this.header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                SequenceControl = new SequenceControlField (SequenceControlBytes);
-                QosControl = QosControlBytes;
-                ReadAddresses ();
-                
-                header.Length = FrameSize;
+                this.FrameControl = new FrameControlField (this.FrameControlBytes);
+                this.Duration = new DurationField (this.DurationBytes);
+                this.SequenceControl = new SequenceControlField (this.SequenceControlBytes);
+                this.QosControl = this.QosControlBytes;
+                this.ReadAddresses ();
+
+                this.header.Length = this.FrameSize;
             }
             
             /// <summary>
@@ -125,10 +119,10 @@ namespace PacketDotNet
                 this.FrameControl = new FrameControlField ();
                 this.Duration = new DurationField ();
                 this.SequenceControl = new SequenceControlField ();
-                
-                AssignDefaultAddresses ();
-                
-                FrameControl.SubType = FrameControlField.FrameSubTypes.QosNullData;
+
+                this.AssignDefaultAddresses ();
+
+                this.FrameControl.SubType = FrameControlField.FrameSubTypes.QosNullData;
             }
             
             /// <summary>
@@ -136,16 +130,16 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((this.header == null) || (this.header.Length > (this.header.BytesLength - this.header.Offset)) || (this.header.Length < this.FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    this.header = new ByteArraySegment (new Byte[this.FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
                 this.DurationBytes = this.Duration.Field;
                 this.SequenceControlBytes = this.SequenceControl.Field;
                 this.QosControlBytes = this.QosControl;
-                WriteAddressBytes ();
+                this.WriteAddressBytes ();
             }
         } 
     }

@@ -47,15 +47,9 @@ namespace PacketDotNet
             /// <summary>
             /// Length of the frame
             /// </summary>
-            override public int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 2));
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 2));
 
             /// <summary>
             /// Constructor
@@ -65,14 +59,14 @@ namespace PacketDotNet
             /// </param>
             public ContentionFreeEndFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                this.header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                ReceiverAddress = GetAddress (0);
-                BssId = GetAddress (1);
-                
-                header.Length = FrameSize;
+                this.FrameControl = new FrameControlField (this.FrameControlBytes);
+                this.Duration = new DurationField (this.DurationBytes);
+                this.ReceiverAddress = this.GetAddress (0);
+                this.BssId = this.GetAddress (1);
+
+                this.header.Length = this.FrameSize;
             }
    
             /// <summary>
@@ -92,7 +86,7 @@ namespace PacketDotNet
                 this.ReceiverAddress = ReceiverAddress;
                 this.BssId = BssId;
                 
-                this.FrameControl.SubType = PacketDotNet.Ieee80211.FrameControlField.FrameSubTypes.ControlCFEnd;
+                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ControlCFEnd;
             }
             
             /// <summary>
@@ -100,17 +94,17 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((this.header == null) || (this.header.Length > (this.header.BytesLength - this.header.Offset)) || (this.header.Length < this.FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    this.header = new ByteArraySegment (new Byte[this.FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
                 this.DurationBytes = this.Duration.Field;
-                SetAddress (0, ReceiverAddress);
-                SetAddress (1, BssId);
-               
-                header.Length = FrameSize;
+                this.SetAddress (0, this.ReceiverAddress);
+                this.SetAddress (1, this.BssId);
+
+                this.header.Length = this.FrameSize;
             }
             
             /// <summary>
@@ -122,7 +116,7 @@ namespace PacketDotNet
             /// </returns>
             protected override String GetAddressString()
             {
-                return String.Format("RA {0} BSSID {1}", ReceiverAddress, BssId);
+                return String.Format("RA {0} BSSID {1}", this.ReceiverAddress, this.BssId);
             }
         } 
     }

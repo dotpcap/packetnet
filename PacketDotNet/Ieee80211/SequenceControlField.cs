@@ -46,18 +46,15 @@ namespace PacketDotNet
             /// <value>
             /// The sequence number.
             /// </value>
-            public short SequenceNumber
+            public Int16 SequenceNumber
             {
-                get
-                {
-                    return (short)(Field >> 4);
-                }
+                get => (Int16)(this.Field >> 4);
 
                 set
                 {
                     //Use the & mask to make sure we only overwrite the sequence number part of the field
-                    Field &= 0xF;
-                    Field |= (UInt16)(value << 4);
+                    this.Field &= 0xF;
+                    this.Field |= (UInt16)(value << 4);
                 }
             }
    
@@ -67,17 +64,14 @@ namespace PacketDotNet
             /// <value>
             /// The fragment number.
             /// </value>
-            public byte FragmentNumber
+            public Byte FragmentNumber
             {
-                get
-                {
-                    return (byte)(Field & 0x000F);
-                }
+                get => (Byte)(this.Field & 0x000F);
 
                 set
                 {
-                    Field &= unchecked((ushort)~0xF);
-                    Field |= (UInt16)(value & 0x0F);
+                    this.Field &= unchecked((UInt16)~0xF);
+                    this.Field |= (UInt16)(value & 0x0F);
                 }
             }
 

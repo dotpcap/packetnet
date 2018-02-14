@@ -41,15 +41,12 @@ namespace PacketDotNet
         /// </value>
         public ByteArraySegment TheByteArraySegment
         {
-            get
-            {
-                return theByteArraySegment;
-            }
+            get => this.theByteArraySegment;
 
             set
             {
-                thePacket = null;
-                theByteArraySegment = value;
+                this.thePacket = null;
+                this.theByteArraySegment = value;
             }
         }
 
@@ -63,15 +60,12 @@ namespace PacketDotNet
         /// </value>
         public Packet ThePacket
         {
-            get
-            {
-                return thePacket;
-            }
+            get => this.thePacket;
 
             set
             {
-                theByteArraySegment = null;
-                thePacket = value;
+                this.theByteArraySegment = null;
+                this.thePacket = value;
             }
         }
 
@@ -85,13 +79,13 @@ namespace PacketDotNet
         /// </param>
         public void AppendToMemoryStream(MemoryStream ms)
         {
-            if(ThePacket != null)
+            if(this.ThePacket != null)
             {
-                var theBytes = ThePacket.Bytes;
+                var theBytes = this.ThePacket.Bytes;
                 ms.Write(theBytes, 0, theBytes.Length);
-            } else if(TheByteArraySegment != null)
+            } else if(this.TheByteArraySegment != null)
             {
-                var theBytes = TheByteArraySegment.ActualBytes();
+                var theBytes = this.TheByteArraySegment.ActualBytes();
                 ms.Write(theBytes, 0, theBytes.Length);
             }
         }
@@ -103,10 +97,10 @@ namespace PacketDotNet
         {
             get
             {
-                if(ThePacket != null)
+                if(this.ThePacket != null)
                 {
                     return PayloadType.Packet;
-                } else if(TheByteArraySegment != null)
+                } else if(this.TheByteArraySegment != null)
                 {
                     return PayloadType.Bytes;
                 } else

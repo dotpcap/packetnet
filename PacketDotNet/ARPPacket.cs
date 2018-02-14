@@ -45,73 +45,49 @@ namespace PacketDotNet
         /// <value>
         /// Also known as HardwareType
         /// </value>
-        virtual public LinkLayers HardwareAddressType
+        public virtual LinkLayers HardwareAddressType
         {
-            get
-            {
-                return (LinkLayers)EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                                  header.Offset + ARPFields.HardwareAddressTypePosition);
-            }
+            get => (LinkLayers)EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + ARPFields.HardwareAddressTypePosition);
 
             set
             {
                 var theValue = (UInt16)value;
-                EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + ARPFields.HardwareAddressTypePosition);
+                EndianBitConverter.Big.CopyBytes(theValue, this.header.Bytes, this.header.Offset + ARPFields.HardwareAddressTypePosition);
             }
         }
 
         /// <value>
         /// Also known as ProtocolType
         /// </value>
-        virtual public EthernetPacketType ProtocolAddressType
+        public virtual EthernetPacketType ProtocolAddressType
         {
-            get
-            {
-                return (EthernetPacketType)EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                                           header.Offset + ARPFields.ProtocolAddressTypePosition);
-            }
+            get => (EthernetPacketType)EndianBitConverter.Big.ToUInt16(this.header.Bytes, this.header.Offset + ARPFields.ProtocolAddressTypePosition);
 
             set
             {
                 var theValue = (UInt16)value;
-                EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + ARPFields.ProtocolAddressTypePosition);
+                EndianBitConverter.Big.CopyBytes(theValue, this.header.Bytes, this.header.Offset + ARPFields.ProtocolAddressTypePosition);
             }
         }
 
         /// <value>
         /// Hardware address length field
         /// </value>
-        virtual public int HardwareAddressLength
+        public virtual Int32 HardwareAddressLength
         {
-            get
-            {
-                return header.Bytes[header.Offset + ARPFields.HardwareAddressLengthPosition];
-            }
+            get => this.header.Bytes[this.header.Offset + ARPFields.HardwareAddressLengthPosition];
 
-            set
-            {
-                header.Bytes[header.Offset + ARPFields.HardwareAddressLengthPosition] = (byte)value;
-            }
+            set => this.header.Bytes[this.header.Offset + ARPFields.HardwareAddressLengthPosition] = (Byte)value;
         }
 
         /// <value>
         /// Protocol address length field
         /// </value>
-        virtual public int ProtocolAddressLength
+        public virtual Int32 ProtocolAddressLength
         {
-            get
-            {
-                return header.Bytes[header.Offset + ARPFields.ProtocolAddressLengthPosition];
-            }
+            get => this.header.Bytes[this.header.Offset + ARPFields.ProtocolAddressLengthPosition];
 
-            set
-            {
-                header.Bytes[header.Offset + ARPFields.ProtocolAddressLengthPosition] = (byte)value;
-            }
+            set => this.header.Bytes[this.header.Offset + ARPFields.ProtocolAddressLengthPosition] = (Byte)value;
         }
 
         /// <summary> Fetch the operation code.
@@ -120,44 +96,32 @@ namespace PacketDotNet
         /// <summary> Sets the operation code.
         /// Usually one of ARPFields.{ARP_OP_REQ_CODE, ARP_OP_REP_CODE}.
         /// </summary>
-        virtual public ARPOperation Operation
+        public virtual ARPOperation Operation
         {
-            get
-            {
-                return (ARPOperation)EndianBitConverter.Big.ToInt16(header.Bytes,
-                                                                    header.Offset + ARPFields.OperationPosition);
-            }
+            get => (ARPOperation)EndianBitConverter.Big.ToInt16(this.header.Bytes, this.header.Offset + ARPFields.OperationPosition);
 
             set
             {
                 var theValue = (Int16)value;
-                EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + ARPFields.OperationPosition);
+                EndianBitConverter.Big.CopyBytes(theValue, this.header.Bytes, this.header.Offset + ARPFields.OperationPosition);
             }
         }
 
         /// <value>
         /// Upper layer protocol address of the sender, arp is used for IPv4, IPv6 uses NDP
         /// </value>
-        virtual public System.Net.IPAddress SenderProtocolAddress
+        public virtual System.Net.IPAddress SenderProtocolAddress
         {
-            get
-            {
-                return IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
-                                             header.Offset + ARPFields.SenderProtocolAddressPosition,
-                                             header.Bytes);
-            }
+            get => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork, this.header.Offset + ARPFields.SenderProtocolAddressPosition, this.header.Bytes);
 
             set
             {
                 // check that the address family is ipv4
                 if (value.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork)
-                    throw new System.InvalidOperationException("Family != IPv4, ARP is used for IPv4, NDP for IPv6");
+                    throw new InvalidOperationException("Family != IPv4, ARP is used for IPv4, NDP for IPv6");
 
-                byte[] address = value.GetAddressBytes();
-                Array.Copy(address, 0,
-                           header.Bytes, header.Offset + ARPFields.SenderProtocolAddressPosition,
+                Byte[] address = value.GetAddressBytes();
+                Array.Copy(address, 0, this.header.Bytes, this.header.Offset + ARPFields.SenderProtocolAddressPosition,
                            address.Length);
             }
         }
@@ -165,24 +129,18 @@ namespace PacketDotNet
         /// <value>
         /// Upper layer protocol address of the target, arp is used for IPv4, IPv6 uses NDP
         /// </value>
-        virtual public System.Net.IPAddress TargetProtocolAddress
+        public virtual System.Net.IPAddress TargetProtocolAddress
         {
-            get
-            {
-                return IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
-                                             header.Offset + ARPFields.TargetProtocolAddressPosition,
-                                             header.Bytes);
-            }
+            get => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork, this.header.Offset + ARPFields.TargetProtocolAddressPosition, this.header.Bytes);
 
             set
             {
                 // check that the address family is ipv4
                 if (value.AddressFamily != System.Net.Sockets.AddressFamily.InterNetwork)
-                    throw new System.InvalidOperationException("Family != IPv4, ARP is used for IPv4, NDP for IPv6");
+                    throw new InvalidOperationException("Family != IPv4, ARP is used for IPv4, NDP for IPv6");
 
-                byte[] address = value.GetAddressBytes();
-                Array.Copy(address, 0,
-                           header.Bytes, header.Offset + ARPFields.TargetProtocolAddressPosition,
+                Byte[] address = value.GetAddressBytes();
+                Array.Copy(address, 0, this.header.Bytes, this.header.Offset + ARPFields.TargetProtocolAddressPosition,
                            address.Length);
             }
         }
@@ -196,28 +154,27 @@ namespace PacketDotNet
             {
                 //FIXME: this code is broken because it assumes that the address position is
                 // a fixed position
-                byte[] hwAddress = new byte[HardwareAddressLength];
-                Array.Copy(header.Bytes, header.Offset + ARPFields.SenderHardwareAddressPosition,
+                Byte[] hwAddress = new Byte[this.HardwareAddressLength];
+                Array.Copy(this.header.Bytes, this.header.Offset + ARPFields.SenderHardwareAddressPosition,
                            hwAddress, 0, hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
 
             set
             {
-                byte[] hwAddress = value.GetAddressBytes();
+                Byte[] hwAddress = value.GetAddressBytes();
 
                 // for now we only support ethernet addresses even though the arp protocol
                 // makes provisions for varying length addresses
                 if(hwAddress.Length != EthernetFields.MacAddressLength)
                 {
-                    throw new System.InvalidOperationException("expected physical address length of "
+                    throw new InvalidOperationException("expected physical address length of "
                                                                + EthernetFields.MacAddressLength
                                                                + " but it was "
                                                                + hwAddress.Length);
                 }
 
-                Array.Copy(hwAddress, 0,
-                           header.Bytes, header.Offset + ARPFields.SenderHardwareAddressPosition,
+                Array.Copy(hwAddress, 0, this.header.Bytes, this.header.Offset + ARPFields.SenderHardwareAddressPosition,
                            hwAddress.Length);
             }
         }
@@ -231,40 +188,33 @@ namespace PacketDotNet
             {
                 //FIXME: this code is broken because it assumes that the address position is
                 // a fixed position
-                byte[] hwAddress = new byte[HardwareAddressLength];
-                Array.Copy(header.Bytes, header.Offset + ARPFields.TargetHardwareAddressPosition,
+                Byte[] hwAddress = new Byte[this.HardwareAddressLength];
+                Array.Copy(this.header.Bytes, this.header.Offset + ARPFields.TargetHardwareAddressPosition,
                            hwAddress, 0,
                            hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
             set
             {
-                byte[] hwAddress = value.GetAddressBytes();
+                Byte[] hwAddress = value.GetAddressBytes();
 
                 // for now we only support ethernet addresses even though the arp protocol
                 // makes provisions for varying length addresses
                 if(hwAddress.Length != EthernetFields.MacAddressLength)
                 {
-                    throw new System.InvalidOperationException("expected physical address length of "
+                    throw new InvalidOperationException("expected physical address length of "
                                                                + EthernetFields.MacAddressLength
                                                                + " but it was "
                                                                + hwAddress.Length);
                 }
 
-                Array.Copy(hwAddress, 0,
-                           header.Bytes, header.Offset + ARPFields.TargetHardwareAddressPosition,
+                Array.Copy(hwAddress, 0, this.header.Bytes, this.header.Offset + ARPFields.TargetHardwareAddressPosition,
                            hwAddress.Length);
             }
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.Purple;
-            }
-        }
+        public override String Color => AnsiEscapeSequences.Purple;
 
         /// <summary>
         /// Create an ARPPacket from values
@@ -293,10 +243,10 @@ namespace PacketDotNet
             log.Debug("");
 
             // allocate memory for this packet
-            int offset = 0;
-            int length = ARPFields.HeaderLength;
-            var headerBytes = new byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            Int32 offset = 0;
+            Int32 length = ARPFields.HeaderLength;
+            var headerBytes = new Byte[length];
+            this.header = new ByteArraySegment(headerBytes, offset, length);
 
             this.Operation = Operation;
             this.TargetHardwareAddress = TargetHardwareAddress;
@@ -320,23 +270,23 @@ namespace PacketDotNet
         /// </param>
         public ARPPacket(ByteArraySegment bas)
         {
-            header = new ByteArraySegment(bas);
-            header.Length = ARPFields.HeaderLength;
+            this.header = new ByteArraySegment(bas);
+            this.header.Length = ARPFields.HeaderLength;
 
             // NOTE: no need to set the payloadPacketOrData field, arp packets have
             //       no payload
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
-                color = Color;
+                color = this.Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
@@ -345,31 +295,28 @@ namespace PacketDotNet
                 // build the output string
                 buffer.AppendFormat("{0}[ARPPacket: Operation={2}, SenderHardwareAddress={3}, TargetHardwareAddress={4}, SenderProtocolAddress={5}, TargetProtocolAddress={6}]{1}",
                     color,
-                    colorEscape,
-                    Operation,
-                    HexPrinter.PrintMACAddress(SenderHardwareAddress),
-                    HexPrinter.PrintMACAddress(TargetHardwareAddress),
-                    SenderProtocolAddress,
-                    TargetProtocolAddress);
+                    colorEscape, this.Operation,
+                    HexPrinter.PrintMACAddress(this.SenderHardwareAddress),
+                    HexPrinter.PrintMACAddress(this.TargetHardwareAddress), this.SenderProtocolAddress, this.TargetProtocolAddress);
             }
 
             if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string,string> properties = new Dictionary<string,string>();
-                properties.Add("hardware type", HardwareAddressType.ToString() + " (0x" + HardwareAddressType.ToString("x") + ")");
-                properties.Add("protocol type", ProtocolAddressType.ToString() + " (0x" + ProtocolAddressType.ToString("x") + ")");
-                properties.Add("operation", Operation.ToString() + " (0x" + Operation.ToString("x") + ")");
-                properties.Add("source hardware address", HexPrinter.PrintMACAddress(SenderHardwareAddress));
-                properties.Add("destination hardware address", HexPrinter.PrintMACAddress(TargetHardwareAddress));
-                properties.Add("source protocol address", SenderProtocolAddress.ToString());
-                properties.Add("destination protocol address", TargetProtocolAddress.ToString());
+                Dictionary<String,String> properties = new Dictionary<String,String>();
+                properties.Add("hardware type", this.HardwareAddressType.ToString() + " (0x" + this.HardwareAddressType.ToString("x") + ")");
+                properties.Add("protocol type", this.ProtocolAddressType.ToString() + " (0x" + this.ProtocolAddressType.ToString("x") + ")");
+                properties.Add("operation", this.Operation.ToString() + " (0x" + this.Operation.ToString("x") + ")");
+                properties.Add("source hardware address", HexPrinter.PrintMACAddress(this.SenderHardwareAddress));
+                properties.Add("destination hardware address", HexPrinter.PrintMACAddress(this.TargetHardwareAddress));
+                properties.Add("source protocol address", this.SenderProtocolAddress.ToString());
+                properties.Add("destination protocol address", this.TargetProtocolAddress.ToString());
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
-                buffer.AppendLine("ARP:  ******* ARP - \"Address Resolution Protocol\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("ARP:  ******* ARP - \"Address Resolution Protocol\" - offset=? length=" + this.TotalPacketLength);
                 buffer.AppendLine("ARP:");
                 foreach(var property in properties)
                 {

@@ -89,16 +89,10 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength);
-                }
-            }
+            public override Int32 FrameSize => (MacFields.FrameControlLength +
+                                                MacFields.DurationIDLength +
+                                                (MacFields.AddressLength * 3) +
+                                                MacFields.SequenceControlLength);
 
             /// <summary>
             /// Constructor
@@ -108,20 +102,20 @@ namespace PacketDotNet
             /// </param>
             public ActionFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                this.header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                DestinationAddress = GetAddress (0);
-                SourceAddress = GetAddress (1);
-                BssId = GetAddress (2);
-                SequenceControl = new SequenceControlField (SequenceControlBytes);
+                this.FrameControl = new FrameControlField (this.FrameControlBytes);
+                this.Duration = new DurationField (this.DurationBytes);
+                this.DestinationAddress = this.GetAddress (0);
+                this.SourceAddress = this.GetAddress (1);
+                this.BssId = this.GetAddress (2);
+                this.SequenceControl = new SequenceControlField (this.SequenceControlBytes);
 
-                header.Length = FrameSize; 
-                var availablePayloadLength = GetAvailablePayloadLength();
+                this.header.Length = this.FrameSize; 
+                var availablePayloadLength = this.GetAvailablePayloadLength();
 				if(availablePayloadLength > 0)
 				{
-					payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (availablePayloadLength);
+				    this.payloadPacketOrData.TheByteArraySegment = this.header.EncapsulatedBytes (availablePayloadLength);
 				}
             }
             
@@ -157,16 +151,16 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((this.header == null) || (this.header.Length > (this.header.BytesLength - this.header.Offset)) || (this.header.Length < this.FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    this.header = new ByteArraySegment (new Byte[this.FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
                 this.DurationBytes = this.Duration.Field;
-                SetAddress (0, DestinationAddress);
-                SetAddress (1, SourceAddress);
-                SetAddress (2, BssId);
+                this.SetAddress (0, this.DestinationAddress);
+                this.SetAddress (1, this.SourceAddress);
+                this.SetAddress (2, this.BssId);
                 this.SequenceControlBytes = this.SequenceControl.Field;
                 
             }

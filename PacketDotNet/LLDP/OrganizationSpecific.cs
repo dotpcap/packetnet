@@ -42,8 +42,8 @@ namespace PacketDotNet.LLDP
 #pragma warning restore 0169, 0649
 #endif
 
-        private const int OUILength = 3;
-        private const int OUISubTypeLength = 1;
+        private const Int32 OUILength = 3;
+        private const Int32 OUISubTypeLength = 1;
 
         #region Constructors
 
@@ -57,7 +57,7 @@ namespace PacketDotNet.LLDP
         /// The Organization Specific TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public OrganizationSpecific(byte[] bytes, int offset) :
+        public OrganizationSpecific(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {
             log.Debug("");
@@ -75,20 +75,20 @@ namespace PacketDotNet.LLDP
         /// <param name="infoString">
         /// An Organizationally Defined Information String
         /// </param>
-        public OrganizationSpecific(byte[] oui, int subType, byte[] infoString)
+        public OrganizationSpecific(Byte[] oui, Int32 subType, Byte[] infoString)
         {
             log.Debug("");
 
             var length = TLVTypeLength.TypeLengthLength + OUILength + OUISubTypeLength;
-            var bytes = new byte[length];
+            var bytes = new Byte[length];
             var offset = 0;
-            tlvData = new ByteArraySegment(bytes, offset, length);
+            this.tlvData = new ByteArraySegment(bytes, offset, length);
 
-            Type = TLVTypes.OrganizationSpecific;
+            this.Type = TLVTypes.OrganizationSpecific;
 
-            OrganizationUniqueID = oui;
-            OrganizationDefinedSubType = subType;
-            OrganizationDefinedInfoString = infoString;
+            this.OrganizationUniqueID = oui;
+            this.OrganizationDefinedSubType = subType;
+            this.OrganizationDefinedInfoString = infoString;
         }
 
         #endregion
@@ -98,50 +98,40 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// An Organizationally Unique Identifier
         /// </summary>
-        public byte[] OrganizationUniqueID
+        public Byte[] OrganizationUniqueID
         {
             get
             {
-                byte[] oui = new byte[OUILength];
-                Array.Copy(tlvData.Bytes, ValueOffset,
+                Byte[] oui = new Byte[OUILength];
+                Array.Copy(this.tlvData.Bytes, this.ValueOffset,
                            oui, 0,
                            OUILength);
                 return oui;
             }
 
-            set
-            {
-                Array.Copy(value, 0,
-                           tlvData.Bytes, ValueOffset, OUILength);
-            }
+            set => Array.Copy(value, 0, this.tlvData.Bytes, this.ValueOffset, OUILength);
         }
 
         /// <summary>
         /// An Organizationally Defined SubType
         /// </summary>
-        public int OrganizationDefinedSubType
+        public Int32 OrganizationDefinedSubType
         {
-            get
-            {
-                return tlvData.Bytes[ValueOffset + OUILength];
-            }
-            set
-            {
-                tlvData.Bytes[ValueOffset + OUILength] = (byte)value;
-            }
+            get => this.tlvData.Bytes[this.ValueOffset + OUILength];
+            set => this.tlvData.Bytes[this.ValueOffset + OUILength] = (Byte)value;
         }
 
         /// <summary>
         /// An Organizationally Defined Information String
         /// </summary>
-        public byte[] OrganizationDefinedInfoString
+        public Byte[] OrganizationDefinedInfoString
         {
             get
             {
-                var length = Length - (OUILength + OUISubTypeLength);
+                var length = this.Length - (OUILength + OUISubTypeLength);
 
-                var bytes = new byte[length];
-                Array.Copy(tlvData.Bytes, ValueOffset + OUILength + OUISubTypeLength,
+                var bytes = new Byte[length];
+                Array.Copy(this.tlvData.Bytes, this.ValueOffset + OUILength + OUISubTypeLength,
                            bytes, 0,
                            length);
 
@@ -150,7 +140,7 @@ namespace PacketDotNet.LLDP
 
             set
             {
-                var length = Length - (OUILength + OUISubTypeLength);
+                var length = this.Length - (OUILength + OUISubTypeLength);
 
                 // do we have the right sized tlv?
                 if(value.Length != length)
@@ -159,21 +149,20 @@ namespace PacketDotNet.LLDP
 
                     // resize the tlv
                     var newLength =  headerLength + value.Length;
-                    var bytes = new byte[newLength];
+                    var bytes = new Byte[newLength];
 
                     // copy the header bytes over
-                    Array.Copy(tlvData.Bytes, tlvData.Offset,
+                    Array.Copy(this.tlvData.Bytes, this.tlvData.Offset,
                                bytes, 0,
                                headerLength);
 
                     // assign a new ByteArrayAndOffset to tlvData
                     var offset = 0;
-                    tlvData = new ByteArraySegment(bytes, offset, newLength);
+                    this.tlvData = new ByteArraySegment(bytes, offset, newLength);
                 }
 
                 // copy the byte array in
-                Array.Copy(value, 0,
-                           tlvData.Bytes, ValueOffset + OUILength + OUISubTypeLength,
+                Array.Copy(value, 0, this.tlvData.Bytes, this.ValueOffset + OUILength + OUISubTypeLength,
                            value.Length);
             }
         }
@@ -184,9 +173,9 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A human readable string
         /// </returns>
-        public override string ToString ()
+        public override String ToString ()
         {
-            return string.Format("[OrganizationSpecific: OrganizationUniqueID={0}, OrganizationDefinedSubType={1}, OrganizationDefinedInfoString={2}]", OrganizationUniqueID, OrganizationDefinedSubType, OrganizationDefinedInfoString);
+            return String.Format("[OrganizationSpecific: OrganizationUniqueID={0}, OrganizationDefinedSubType={1}, OrganizationDefinedInfoString={2}]", this.OrganizationUniqueID, this.OrganizationDefinedSubType, this.OrganizationDefinedInfoString);
         }
 
         #endregion

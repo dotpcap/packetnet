@@ -48,7 +48,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public UserTimeout(byte[] bytes, int offset, int length) :
+        public UserTimeout(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
         { }
 
@@ -59,11 +59,11 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The Granularity
         /// </summary>
-        public bool Granularity
+        public Boolean Granularity
         {
             get
             {
-                int granularity = ((int)Values >> 15);
+                Int32 granularity = ((Int32)Values >> 15);
                 return (granularity != 0);
             }
         }
@@ -71,13 +71,13 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The User Timeout
         /// </summary>
-        public ushort Timeout
+        public UInt16 Timeout
         {
-            get { return (ushort)((int)Values & TimeoutMask); }
+            get { return (UInt16)((Int32)Values & TimeoutMask); }
         }
 
         // a convenient property to grab the value fields for further processing
-        private ushort Values
+        private UInt16 Values
         {
             get { return EndianBitConverter.Big.ToUInt16(Bytes, ValuesFieldOffset); }
         }
@@ -91,7 +91,7 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
             return "[" + Kind.ToString() + ": Granularity=" + (Granularity ? "minutes" : "seconds") + " Timeout=" + Timeout + "]";
         }
@@ -101,11 +101,11 @@ namespace PacketDotNet.Tcp
          #region Members
 
         // the offset (in bytes) of the Value Fields
-        const int ValuesFieldOffset = 2;
+        const Int32 ValuesFieldOffset = 2;
 
         // the mask used to strip the Granularity field from the
         //  Values filed to expose the UserTimeout field
-        const int TimeoutMask = 0x7FFF;
+        const Int32 TimeoutMask = 0x7FFF;
 
         #endregion
     }

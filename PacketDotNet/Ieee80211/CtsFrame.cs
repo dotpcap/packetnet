@@ -42,7 +42,7 @@ namespace PacketDotNet
             /// <summary>
             /// Length of the frame
             /// </summary>
-            override public int FrameSize
+            override public Int32 FrameSize
             {
                 get
                 {

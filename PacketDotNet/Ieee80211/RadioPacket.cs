@@ -51,9 +51,9 @@ namespace PacketDotNet
             /// Version 0. Only increases for drastic changes, introduction of compatible
             /// new fields does not count.
             /// </summary>
-            public byte Version { get; set; }
+            public Byte Version { get; set; }
             
-            private byte VersionBytes
+            private Byte VersionBytes
             {
                 get
                 {
@@ -105,7 +105,7 @@ namespace PacketDotNet
                 UInt32 bitmask = EndianBitConverter.Little.ToUInt32(header.Bytes,
                                                                     header.Offset + RadioFields.PresentPosition);
                 bitmaskFields.Add(bitmask);
-                int bitmaskOffsetInBytes = 4;
+                Int32 bitmaskOffsetInBytes = 4;
                 while ((bitmask & (1 << 31)) == 1)
                 {
                     // retrieve the next field
@@ -125,7 +125,7 @@ namespace PacketDotNet
             {
                 Present = new UInt32[1];
                 RadioTapFields = new SortedDictionary<RadioTapType, RadioTapField>();
-                Length = (ushort)RadioFields.DefaultHeaderLength;
+                Length = (UInt16)RadioFields.DefaultHeaderLength;
             }
             
             internal RadioPacket (ByteArraySegment bas)
@@ -150,11 +150,11 @@ namespace PacketDotNet
             }
 
             /// <summary cref="Packet.ToString(StringOutputType)" />
-            public override string ToString(StringOutputType outputFormat)
+            public override String ToString(StringOutputType outputFormat)
             {
                 var buffer = new StringBuilder();
-                string color = "";
-                string colorEscape = "";
+                String color = "";
+                String colorEscape = "";
 
                 if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
                 {
@@ -176,7 +176,7 @@ namespace PacketDotNet
                 if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
                 {
                     // collect the properties and their value
-                    Dictionary<string, string> properties = new Dictionary<string, string>();
+                    Dictionary<String, String> properties = new Dictionary<String, String>();
                     properties.Add("version", Version.ToString());
                     properties.Add("length", Length.ToString());
                     properties.Add("present", " (0x" + Present[0].ToString("x") + ")");
@@ -190,7 +190,7 @@ namespace PacketDotNet
                     }
 
                     // calculate the padding needed to right-justify the property names
-                    int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                    Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                     // build the output string
                     buffer.AppendLine("Ieee80211RadioPacket");
@@ -217,14 +217,14 @@ namespace PacketDotNet
             {
                 RadioTapFields[field.FieldType] = field;
                 Length += field.Length;
-                var presenceBit = (int)field.FieldType;
+                var presenceBit = (Int32)field.FieldType;
                 var presenceField = (presenceBit / 32);
                 if(Present.Length <= presenceField)
                 {
                     var newPresentFields = new UInt32[presenceField];
                     Array.Copy(Present, newPresentFields, Present.Length);
                     //set bit 31 to true for every present field except the last one
-                    for(int i = 0; i < newPresentFields.Length - 1; i++)
+                    for(Int32 i = 0; i < newPresentFields.Length - 1; i++)
                     {
                         newPresentFields[i] |= 0x80000000;
                     }
@@ -246,7 +246,7 @@ namespace PacketDotNet
                 {
                     RadioTapFields.Remove(fieldType);
                     Length -= field.Length;
-                    var presenceBit = (int)field.FieldType;
+                    var presenceBit = (Int32)field.FieldType;
                     var presenceField = (presenceBit / 32);
                     Present[presenceField] &= (UInt32)~(1 << presenceBit);
                 }
@@ -259,7 +259,7 @@ namespace PacketDotNet
             /// The field type to check for.
             /// </param>
             /// <returns><c>true</c> if the packet contains a field of the specified type; otherwise, <c>false</c>.</returns>
-            public bool Contains(RadioTapType fieldType)
+            public Boolean Contains(RadioTapType fieldType)
             {
                 return RadioTapFields.ContainsKey(fieldType);
             }
@@ -286,7 +286,7 @@ namespace PacketDotNet
             /// </summary>
             private SortedDictionary<RadioTapType, RadioTapField> RadioTapFields { get; set; }
             
-            private byte[] UnhandledFieldBytes {get; set;}
+            private Byte[] UnhandledFieldBytes {get; set;}
             
             private SortedDictionary<RadioTapType, RadioTapField> ReadRadioTapFields()
             {
@@ -294,7 +294,7 @@ namespace PacketDotNet
 
                 var retval = new SortedDictionary<RadioTapType, RadioTapField>();
 
-                int bitIndex = 0;
+                Int32 bitIndex = 0;
 
                 // create a binary reader that points to the memory immediately after the bitmasks
                 var offset = header.Offset +
@@ -302,21 +302,21 @@ namespace PacketDotNet
                              (bitmasks.Length) * Marshal.SizeOf (typeof(UInt32));
                 var br = new BinaryReader (new MemoryStream (header.Bytes,
                                                            offset,
-                                                           (int)(Length - offset)));
+                                                           (Int32)(Length - offset)));
 
                 // now go through each of the bitmask fields looking at the least significant
                 // bit first to retrieve each field
                 foreach (var bmask in bitmasks)
                 {
-                    int[] bmaskArray = new int[1];
-                    bmaskArray [0] = (int)bmask;
+                    Int32[] bmaskArray = new Int32[1];
+                    bmaskArray [0] = (Int32)bmask;
                     var ba = new BitArray (bmaskArray);
                     
-                    bool unhandledFieldFound = false;
+                    Boolean unhandledFieldFound = false;
 
                     // look at all of the bits, note we don't want to consider the
                     // highest bit since that indicates another bitfield that follows
-                    for (int x = 0; x < 31; x++)
+                    for (Int32 x = 0; x < 31; x++)
                     {
                         if (ba [x] == true)
                         {
@@ -393,7 +393,7 @@ namespace PacketDotNet
                 
                 if (flagsField != null)
                 {
-                    bool fcsPresent = ((flagsField.Flags & RadioTapFlags.FcsIncludedInFrame) == RadioTapFlags.FcsIncludedInFrame);
+                    Boolean fcsPresent = ((flagsField.Flags & RadioTapFlags.FcsIncludedInFrame) == RadioTapFlags.FcsIncludedInFrame);
                     
                     if (fcsPresent)
                     {

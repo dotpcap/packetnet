@@ -39,14 +39,14 @@ namespace PacketDotNet
         {
             private class ProbeResponseFields
             {
-                public readonly static int TimestampLength = 8;
-                public readonly static int BeaconIntervalLength = 2;
-                public readonly static int CapabilityInformationLength = 2;
+                public readonly static Int32 TimestampLength = 8;
+                public readonly static Int32 BeaconIntervalLength = 2;
+                public readonly static Int32 CapabilityInformationLength = 2;
 
-                public readonly static int TimestampPosition;
-                public readonly static int BeaconIntervalPosition;
-                public readonly static int CapabilityInformationPosition;
-                public readonly static int InformationElement1Position;
+                public readonly static Int32 TimestampPosition;
+                public readonly static Int32 BeaconIntervalPosition;
+                public readonly static Int32 CapabilityInformationPosition;
+                public readonly static Int32 InformationElement1Position;
 
                 static ProbeResponseFields()
                 {
@@ -164,7 +164,7 @@ namespace PacketDotNet
             /// This does not include the FCS, it represents only the header bytes that would
             /// would preceed any payload.
             /// </summary>
-            public override int FrameSize
+            public override Int32 FrameSize
             {
                 get
                 {

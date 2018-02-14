@@ -57,7 +57,7 @@ namespace Test.PacketType
             Assert.AreEqual(16,  ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
             Assert.AreEqual(255, ip.HopLimit);
             Assert.AreEqual(255, ip.TimeToLive);
-            Assert.AreEqual(0x3a, (byte)ip.NextHeader);
+            Assert.AreEqual(0x3a, (Byte)ip.NextHeader);
             Console.WriteLine("Failed: ip.ComputeIPChecksum() not implemented.");
             Assert.AreEqual(1221145299, rawCapture.Timeval.Seconds);
             Assert.AreEqual(453568.000, rawCapture.Timeval.MicroSeconds);
@@ -67,13 +67,13 @@ namespace Test.PacketType
         // for multiple LinkLayerType types
         [TestCase("../../CaptureFiles/ipv6_icmpv6_packet.pcap", LinkLayers.Ethernet)]
         [TestCase("../../CaptureFiles/ipv6_icmpv6_packet_raw_linklayer.pcap", LinkLayers.Raw)]
-        public void IPv6PacketTestParsing(string pcapPath, LinkLayers linkLayer)
+        public void IPv6PacketTestParsing(String pcapPath, LinkLayers linkLayer)
         {
             var dev = new CaptureFileReaderDevice(pcapPath);
             dev.Open();
 
             RawCapture rawCapture;
-            int packetIndex = 0;
+            Int32 packetIndex = 0;
             while((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
@@ -105,7 +105,7 @@ namespace Test.PacketType
             dev.Open();
 
             // checksums from wireshark of the capture file
-            int[] expectedChecksum = {0x41a2,
+            Int32[] expectedChecksum = {0x41a2,
                                       0x4201,
                                       0x5728,
                                       0xf448,
@@ -116,7 +116,7 @@ namespace Test.PacketType
                                       0x3725,
                                       0x3723};
 
-            int packetIndex = 0;
+            Int32 packetIndex = 0;
             RawCapture rawCapture;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
@@ -141,7 +141,7 @@ namespace Test.PacketType
         public void TCPDataIPv6()
         {
             String s = "-++++=== HELLLLOOO ===++++-";
-            byte[] data = System.Text.Encoding.UTF8.GetBytes(s);
+            Byte[] data = System.Text.Encoding.UTF8.GetBytes(s);
 
             //create random packet
             TcpPacket p = TcpPacket.RandomPacket();
@@ -211,7 +211,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            bool foundipv6 = false;
+            Boolean foundipv6 = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);

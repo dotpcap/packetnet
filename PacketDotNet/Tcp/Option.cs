@@ -41,7 +41,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32"/>
         /// </param>
-        public Option(byte[] bytes, int offset, int length)
+        public Option(Byte[] bytes, Int32 offset, Int32 length)
         {
             optionData = new ByteArraySegment(bytes, offset, length);
         }
@@ -53,7 +53,7 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The Length of the Option type
         /// </summary>
-        public virtual byte Length
+        public virtual Byte Length
         {
             get { return Bytes[LengthFieldOffset]; }
         }
@@ -69,11 +69,11 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// Returns a TLV that contains the Option
         /// </summary>
-        public byte[] Bytes
+        public Byte[] Bytes
         {
             get
             {
-                byte[] bytes = new byte[optionData.Length];
+                Byte[] bytes = new Byte[optionData.Length];
                 Array.Copy(optionData.Bytes, optionData.Offset, bytes, 0, optionData.Length);
                 return  bytes;
             }
@@ -89,7 +89,7 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="System.String"/>
         /// </returns>
-        public override string ToString()
+        public override String ToString()
         {
             return "[" + Kind.ToString() + "]";
         }
@@ -102,16 +102,16 @@ namespace PacketDotNet.Tcp
         private ByteArraySegment optionData;
 
         /// <summary>The length (in bytes) of the Kind field</summary>
-        internal const int KindFieldLength = 1;
+        internal const Int32 KindFieldLength = 1;
 
         /// <summary>The length (in bytes) of the Length field</summary>
-        internal const int LengthFieldLength = 1;
+        internal const Int32 LengthFieldLength = 1;
 
         /// <summary>The offset (in bytes) of the Kind Field</summary>
-        internal const int KindFieldOffset = 0;
+        internal const Int32 KindFieldOffset = 0;
 
         /// <summary>The offset (in bytes) of the Length field</summary>
-        internal const int LengthFieldOffset = 1;
+        internal const Int32 LengthFieldOffset = 1;
 
         #endregion
     }

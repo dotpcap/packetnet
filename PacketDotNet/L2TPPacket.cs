@@ -32,14 +32,14 @@ namespace PacketDotNet
     public class L2TPPacket : Packet
     {
 
-        virtual public bool DataMessage
+        virtual public Boolean DataMessage
         {
             get
             {
                 return 8 == (header.Bytes[header.Offset] & 0x8);
             }
         }
-        virtual public bool HasLength
+        virtual public Boolean HasLength
         {
             get
             {
@@ -47,7 +47,7 @@ namespace PacketDotNet
             }
         }
 
-        virtual public bool HasSequence
+        virtual public Boolean HasSequence
         {
             get
             {
@@ -55,7 +55,7 @@ namespace PacketDotNet
             }
         }
 
-        virtual public bool HasOffset
+        virtual public Boolean HasOffset
         {
             get
             {
@@ -63,7 +63,7 @@ namespace PacketDotNet
             }
         }
 
-        virtual public bool IsPriority
+        virtual public Boolean IsPriority
         {
             get
             {
@@ -71,7 +71,7 @@ namespace PacketDotNet
             }
         }
 
-        virtual public int Version
+        virtual public Int32 Version
         {
             get
             {
@@ -79,7 +79,7 @@ namespace PacketDotNet
             }
         }
 
-        virtual public int TunnelID
+        virtual public Int32 TunnelID
         {
             get
             {
@@ -91,7 +91,7 @@ namespace PacketDotNet
             }
         }
 
-        virtual public int SessionID
+        virtual public Int32 SessionID
         {
             get
             {
@@ -147,11 +147,11 @@ namespace PacketDotNet
 
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            String color = "";
+            String colorEscape = "";
             
 
             if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)

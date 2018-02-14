@@ -42,7 +42,7 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 4; } }
+            public override UInt16 Length { get { return 4; } }
 
             /// <summary>
             /// Frequency in MHz
@@ -52,7 +52,7 @@ namespace PacketDotNet
             /// <summary>
             /// Channel number derived from frequency
             /// </summary>
-            public int Channel { get; set; }
+            public Int32 Channel { get; set; }
 
             /// <summary>
             /// Channel flags
@@ -70,7 +70,7 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.Int32"/>
             /// </returns>
-            public static int ChannelFromFrequencyMHz(int frequencyMHz)
+            public static Int32 ChannelFromFrequencyMHz(Int32 frequencyMHz)
             {
                 switch (frequencyMHz)
                 {
@@ -182,7 +182,7 @@ namespace PacketDotNet
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
                 EndianBitConverter.Little.CopyBytes(FrequencyMHz, dest, offset);
                 EndianBitConverter.Little.CopyBytes((UInt16)Flags, dest, offset + 2);
@@ -231,9 +231,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("FrequencyMHz {0}, Channel {1}, Flags {2}",
+                return String.Format("FrequencyMHz {0}, Channel {1}, Flags {2}",
                                      FrequencyMHz, Channel, Flags);
             }
         }
@@ -252,22 +252,22 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 2; } }
+            public override UInt16 Length { get { return 2; } }
             
             /// <summary>
             /// Hop set
             /// </summary>
-            public byte ChannelHoppingSet { get; set; }
+            public Byte ChannelHoppingSet { get; set; }
 
             /// <summary>
             /// Hop pattern
             /// </summary>
-            public byte Pattern { get; set; }
+            public Byte Pattern { get; set; }
             
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
                 dest[offset] = ChannelHoppingSet;
                 dest[offset + 1] = Pattern;
@@ -283,8 +283,8 @@ namespace PacketDotNet
             {
                 var u16 = br.ReadUInt16();
 
-                ChannelHoppingSet = (byte)(u16 & 0xff);
-                Pattern = (byte)((u16 >> 8) & 0xff);
+                ChannelHoppingSet = (Byte)(u16 & 0xff);
+                Pattern = (Byte)((u16 >> 8) & 0xff);
             }
    
             /// <summary>
@@ -304,7 +304,7 @@ namespace PacketDotNet
             /// <param name='Pattern'>
             /// Channel hopping pattern.
             /// </param>
-            public FhssRadioTapField(byte ChannelHoppingSet, byte Pattern)
+            public FhssRadioTapField(Byte ChannelHoppingSet, Byte Pattern)
             {
                 this.ChannelHoppingSet = ChannelHoppingSet;
                 this.Pattern = Pattern;
@@ -316,9 +316,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("ChannelHoppingSet {0}, Pattern {1}",
+                return String.Format("ChannelHoppingSet {0}, Pattern {1}",
                                      ChannelHoppingSet, Pattern);
             }
         }
@@ -337,7 +337,7 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 1; } }
+            public override UInt16 Length { get { return 1; } }
             
             /// <summary>
             /// Flags set
@@ -347,9 +347,9 @@ namespace PacketDotNet
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = (byte) Flags;
+                dest[offset] = (Byte) Flags;
             }
 
             /// <summary>
@@ -389,9 +389,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("Flags {0}", Flags);
+                return String.Format("Flags {0}", Flags);
             }
         }
 
@@ -409,19 +409,19 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 1; } }
+            public override UInt16 Length { get { return 1; } }
             
             /// <summary>
             /// Rate in Mbps
             /// </summary>
-            public double RateMbps { get; set; }
+            public Double RateMbps { get; set; }
             
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = (byte) (RateMbps / 0.5);
+                dest[offset] = (Byte) (RateMbps / 0.5);
             }
 
             /// <summary>
@@ -450,7 +450,7 @@ namespace PacketDotNet
             /// <param name='RateMbps'>
             /// Rate mbps.
             /// </param>
-            public RateRadioTapField(double RateMbps)
+            public RateRadioTapField(Double RateMbps)
             {
                 this.RateMbps = RateMbps;             
             }
@@ -461,9 +461,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("RateMbps {0}", RateMbps);
+                return String.Format("RateMbps {0}", RateMbps);
             }
         }
 
@@ -481,17 +481,17 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 1; } }
+            public override UInt16 Length { get { return 1; } }
             
             /// <summary>
             /// Signal strength in dB
             /// </summary>
-            public byte SignalStrengthdB { get; set; }
+            public Byte SignalStrengthdB { get; set; }
             
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
                 dest[offset] = SignalStrengthdB;
             }
@@ -521,7 +521,7 @@ namespace PacketDotNet
             /// <param name='SignalStrengthdB'>
             /// Signal strength in dB
             /// </param>
-            public DbAntennaSignalRadioTapField (byte SignalStrengthdB)
+            public DbAntennaSignalRadioTapField (Byte SignalStrengthdB)
             {
                 this.SignalStrengthdB = SignalStrengthdB;
             }
@@ -532,9 +532,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("SignalStrengthdB {0}", SignalStrengthdB);
+                return String.Format("SignalStrengthdB {0}", SignalStrengthdB);
             }
         }
 
@@ -552,17 +552,17 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 1; } }
+            public override UInt16 Length { get { return 1; } }
             
             /// <summary>
             /// Antenna noise in dB
             /// </summary>
-            public byte AntennaNoisedB { get; set; }
+            public Byte AntennaNoisedB { get; set; }
             
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
                 dest[offset] = AntennaNoisedB;
             }
@@ -592,7 +592,7 @@ namespace PacketDotNet
             /// <param name='AntennaNoisedB'>
             /// Antenna signal noise in dB.
             /// </param>
-            public DbAntennaNoiseRadioTapField(byte AntennaNoisedB)
+            public DbAntennaNoiseRadioTapField(Byte AntennaNoisedB)
             {
                 this.AntennaNoisedB = AntennaNoisedB;
             }
@@ -603,9 +603,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("AntennaNoisedB {0}", AntennaNoisedB);
+                return String.Format("AntennaNoisedB {0}", AntennaNoisedB);
             }
         }
 
@@ -623,17 +623,17 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 1; } }
+            public override UInt16 Length { get { return 1; } }
             
             /// <summary>
             /// Antenna number
             /// </summary>
-            public byte Antenna { get; set; }
+            public Byte Antenna { get; set; }
             
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
                 dest[offset] = Antenna;
             }
@@ -663,7 +663,7 @@ namespace PacketDotNet
             /// <param name='Antenna'>
             /// Antenna index of the Rx/Tx antenna for this packet. The first antenna is antenna 0.
             /// </param>
-            public AntennaRadioTapField (byte Antenna)
+            public AntennaRadioTapField (Byte Antenna)
             {
                 this.Antenna = Antenna;
             }
@@ -674,9 +674,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("Antenna {0}", Antenna);
+                return String.Format("Antenna {0}", Antenna);
             }
         }
 
@@ -694,19 +694,19 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 1; } }
+            public override UInt16 Length { get { return 1; } }
             
             /// <summary>
             /// Antenna signal in dBm
             /// </summary>
-            public sbyte AntennaSignalDbm { get; set; }
+            public SByte AntennaSignalDbm { get; set; }
             
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = (byte)AntennaSignalDbm;
+                dest[offset] = (Byte)AntennaSignalDbm;
             }
 
             /// <summary>
@@ -734,7 +734,7 @@ namespace PacketDotNet
             /// <param name='AntennaSignalDbm'>
             /// Antenna signal power in dB.
             /// </param>
-            public DbmAntennaSignalRadioTapField (sbyte AntennaSignalDbm)
+            public DbmAntennaSignalRadioTapField (SByte AntennaSignalDbm)
             {
                 this.AntennaSignalDbm = AntennaSignalDbm;
             }
@@ -745,9 +745,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("AntennaSignalDbm {0}", AntennaSignalDbm);
+                return String.Format("AntennaSignalDbm {0}", AntennaSignalDbm);
             }
         }
 
@@ -765,19 +765,19 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 1; } }
+            public override UInt16 Length { get { return 1; } }
             
             /// <summary>
             /// Antenna noise in dBm
             /// </summary>
-            public sbyte AntennaNoisedBm { get; set; }
+            public SByte AntennaNoisedBm { get; set; }
             
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = (byte)AntennaNoisedBm;
+                dest[offset] = (Byte)AntennaNoisedBm;
             }
 
             /// <summary>
@@ -805,7 +805,7 @@ namespace PacketDotNet
             /// <param name='AntennaNoisedBm'>
             /// Antenna noise in dBm.
             /// </param>
-            public DbmAntennaNoiseRadioTapField (sbyte AntennaNoisedBm)
+            public DbmAntennaNoiseRadioTapField (SByte AntennaNoisedBm)
             {
                 this.AntennaNoisedBm = AntennaNoisedBm;
             }
@@ -816,9 +816,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("AntennaNoisedBm {0}", AntennaNoisedBm);
+                return String.Format("AntennaNoisedBm {0}", AntennaNoisedBm);
             }
         }
 
@@ -837,7 +837,7 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 2; } }
+            public override UInt16 Length { get { return 2; } }
             
             /// <summary>
             /// Signal quality
@@ -847,7 +847,7 @@ namespace PacketDotNet
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
                 EndianBitConverter.Little.CopyBytes(SignalQuality, dest, offset);
             }
@@ -888,9 +888,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("SignalQuality {0}", SignalQuality);
+                return String.Format("SignalQuality {0}", SignalQuality);
             }
         }
 
@@ -908,7 +908,7 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 8; } }
+            public override UInt16 Length { get { return 8; } }
             
             /// <summary>
             /// Timestamp in microseconds
@@ -918,7 +918,7 @@ namespace PacketDotNet
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
                 EndianBitConverter.Little.CopyBytes(TimestampUsec, dest, offset);
             }
@@ -959,9 +959,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("TimestampUsec {0}", TimestampUsec);
+                return String.Format("TimestampUsec {0}", TimestampUsec);
             }
         }
 
@@ -979,7 +979,7 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 2; } }
+            public override UInt16 Length { get { return 2; } }
             
             /// <summary>
             /// Gets or sets a value indicating whether the frame failed the PLCP CRC check.
@@ -987,12 +987,12 @@ namespace PacketDotNet
             /// <value>
             /// <c>true</c> if the PLCP CRC check failed; otherwise, <c>false</c>.
             /// </value>
-            public bool PlcpCrcCheckFailed {get; set;}
+            public Boolean PlcpCrcCheckFailed {get; set;}
             
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
                 UInt16 flags = (UInt16)((PlcpCrcCheckFailed) ? 0x2 : 0x0);
                 EndianBitConverter.Little.CopyBytes(flags, dest, offset);
@@ -1024,7 +1024,7 @@ namespace PacketDotNet
             /// <param name='PlcpCrcCheckFailed'>
             /// PLCP CRC check failed.
             /// </param>
-            public RxFlagsRadioTapField(bool PlcpCrcCheckFailed)
+            public RxFlagsRadioTapField(Boolean PlcpCrcCheckFailed)
             {
                 this.PlcpCrcCheckFailed = PlcpCrcCheckFailed;
             }
@@ -1035,9 +1035,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("PlcpCrcCheckFailed {0}", PlcpCrcCheckFailed);
+                return String.Format("PlcpCrcCheckFailed {0}", PlcpCrcCheckFailed);
             }
         }
         
@@ -1058,17 +1058,17 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 2; } }
+            public override UInt16 Length { get { return 2; } }
             
             /// <summary>
             /// Transmit power
             /// </summary>
-            public int TxPower { get; set; }
+            public Int32 TxPower { get; set; }
    
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
                 UInt16 absValue = (UInt16) Math.Abs(TxPower);
                 EndianBitConverter.Little.CopyBytes(absValue, dest, offset);
@@ -1082,7 +1082,7 @@ namespace PacketDotNet
             /// </param>
             public TxAttenuationRadioTapField(BinaryReader br)
             {
-                TxPower = -(int)br.ReadUInt16();
+                TxPower = -(Int32)br.ReadUInt16();
             }
             
             /// <summary>
@@ -1099,7 +1099,7 @@ namespace PacketDotNet
             /// <param name='TxPower'>
             /// Transmit power expressed as unitless distance from max power set at factory calibration. 0 is max power.
             /// </param>
-            public TxAttenuationRadioTapField (int TxPower)
+            public TxAttenuationRadioTapField (Int32 TxPower)
             {
                 this.TxPower = TxPower;
             }
@@ -1110,9 +1110,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("TxPower {0}", TxPower);
+                return String.Format("TxPower {0}", TxPower);
             }
         }
 
@@ -1132,17 +1132,17 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 2; } }
+            public override UInt16 Length { get { return 2; } }
             
             /// <summary>
             /// Transmit power 
             /// </summary>
-            public int TxPowerdB { get; set; }
+            public Int32 TxPowerdB { get; set; }
    
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
                 UInt16 absValue = (UInt16) Math.Abs(TxPowerdB);
                 EndianBitConverter.Little.CopyBytes(absValue, dest, offset);
@@ -1156,7 +1156,7 @@ namespace PacketDotNet
             /// </param>
             public DbTxAttenuationRadioTapField(BinaryReader br)
             {
-                TxPowerdB = -(int)br.ReadUInt16();
+                TxPowerdB = -(Int32)br.ReadUInt16();
             }
             
             /// <summary>
@@ -1173,7 +1173,7 @@ namespace PacketDotNet
             /// <param name='TxPowerdB'>
             /// Transmit power expressed as decibel distance from max power set at factory calibration. 0 is max power.
             /// </param>
-            public DbTxAttenuationRadioTapField(int TxPowerdB)
+            public DbTxAttenuationRadioTapField(Int32 TxPowerdB)
             {
                 this.TxPowerdB = TxPowerdB;
             }
@@ -1184,9 +1184,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("TxPowerdB {0}", TxPowerdB);
+                return String.Format("TxPowerdB {0}", TxPowerdB);
             }
         }
 
@@ -1206,19 +1206,19 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public override ushort Length { get { return 1; } }
+            public override UInt16 Length { get { return 1; } }
             
             /// <summary>
             /// Tx power in dBm
             /// </summary>
-            public sbyte TxPowerdBm { get; set; }
+            public SByte TxPowerdBm { get; set; }
    
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public override void CopyTo(byte[] dest, int offset)
+            public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = (byte)TxPowerdBm;
+                dest[offset] = (Byte)TxPowerdBm;
             }
             
             /// <summary>
@@ -1246,7 +1246,7 @@ namespace PacketDotNet
             /// <param name='TxPowerdBm'>
             /// Transmit power expressed as dBm (decibels from a 1 milliwatt reference).
             /// </param>
-            public DbmTxPowerRadioTapField(sbyte TxPowerdBm)
+            public DbmTxPowerRadioTapField(SByte TxPowerdBm)
             {
                 this.TxPowerdBm = TxPowerdBm;
             }
@@ -1257,9 +1257,9 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="System.String"/>
             /// </returns>
-            public override string ToString()
+            public override String ToString()
             {
-                return string.Format("TxPowerdBm {0}", TxPowerdBm);
+                return String.Format("TxPowerdBm {0}", TxPowerdBm);
             }
         }
 
@@ -1284,7 +1284,7 @@ namespace PacketDotNet
             /// <returns>
             /// A <see cref="RadioTapField"/>
             /// </returns>
-            public static RadioTapField Parse(int bitIndex, BinaryReader br)
+            public static RadioTapField Parse(Int32 bitIndex, BinaryReader br)
             {
                 var Type = (RadioTapType)bitIndex;
                 switch (Type)
@@ -1331,12 +1331,12 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public abstract ushort Length {get;}
+            public abstract UInt16 Length {get;}
             
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
-            public abstract void CopyTo(byte[] dest, int offset);
+            public abstract void CopyTo(Byte[] dest, Int32 offset);
         }; 
     }
 }

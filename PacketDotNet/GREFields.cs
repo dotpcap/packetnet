@@ -26,21 +26,21 @@ namespace PacketDotNet
     public class GREFields
     {
         /// <summary> Length of the Flags in bytes.</summary>
-        public readonly static Int32 FlagsLength = 2;
+        public static readonly Int32 FlagsLength = 2;
         /// <summary> Length of the Protocol in bytes.</summary>
-        public readonly static Int32 ProtocolLength = 2;
+        public static readonly Int32 ProtocolLength = 2;
         /// <summary> Length of the Checksum in bytes (Optional).</summary>      
-        public readonly static Int32 ChecksumLength = 2;
+        public static readonly Int32 ChecksumLength = 2;
         /// <summary> Length of the Reserved in bytes (Optional).</summary>
-        public readonly static Int32 ReservedLength = 2;
+        public static readonly Int32 ReservedLength = 2;
         /// <summary> Length of the Key in bytes (Optional).</summary>
-        public readonly static Int32 KeyLength = 4;
+        public static readonly Int32 KeyLength = 4;
         /// <summary> Length of the Sequence Number in bytes (Optional).</summary>
-        public readonly static Int32 SequenceLength = 4;
+        public static readonly Int32 SequenceLength = 4;
         /// <summary> Position of the Protocol.</summary>
-        public readonly static Int32 ProtocolPosition = 2;
+        public static readonly Int32 ProtocolPosition = 2;
         /// <summary> Position of the Checksum in bytes (Optional).</summary>      
-        public readonly static Int32 ChecksumPosition = 2;
+        public static readonly Int32 ChecksumPosition = 2;
 
 
     }

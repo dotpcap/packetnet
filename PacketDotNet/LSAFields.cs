@@ -31,40 +31,40 @@ namespace PacketDotNet
     public class LSAFields
     {
         /// <summary> The length of the LSAge field in bytes</summary>
-        public readonly static Int32 LSAgeLength = 2;
+        public static readonly Int32 LSAgeLength = 2;
         /// <summary> The length of the Options field in bytes</summary>
-        public readonly static Int32 OptionsLength = 1;
+        public static readonly Int32 OptionsLength = 1;
         /// <summary> The length of the LSType field in bytes</summary>
-        public readonly static Int32 LSTypeLength = 1;
+        public static readonly Int32 LSTypeLength = 1;
         /// <summary> The length of the LinkStateID field in bytes</summary>
-        public readonly static Int32 LinkStateIDLength = 4;
+        public static readonly Int32 LinkStateIDLength = 4;
         /// <summary> The length of the AdvertisingRouterID field in bytes</summary>
-        public readonly static Int32 AdvertisingRouterIDLength = 4;
+        public static readonly Int32 AdvertisingRouterIDLength = 4;
         /// <summary> The length of the LSSeqeunceNumber field in bytes</summary>
-        public readonly static Int32 LSSequenceNumberLength = 4;
+        public static readonly Int32 LSSequenceNumberLength = 4;
         /// <summary> The length of the Checksum field in bytes</summary>
-        public readonly static Int32 ChecksumLength = 2;
+        public static readonly Int32 ChecksumLength = 2;
         /// <summary> The length of the Length field in bytes</summary>
-        public readonly static Int32 PacketLength = 2;
+        public static readonly Int32 PacketLength = 2;
 
         /// <summary> The relative postion of the LSAge field</summary>
-        public readonly static Int32 LSAgePosition = 0;
+        public static readonly Int32 LSAgePosition = 0;
         /// <summary> The relative postion of the Option field</summary>
-        public readonly static Int32 OptionsPosition;
+        public static readonly Int32 OptionsPosition;
         /// <summary> The relative postion of the LSType field</summary>
-        public readonly static Int32 LSTypePosition;
+        public static readonly Int32 LSTypePosition;
         /// <summary> The relative postion of the LinkStateID field</summary>
-        public readonly static Int32 LinkStateIDPosition;
+        public static readonly Int32 LinkStateIDPosition;
         /// <summary> The relative postion of the AdvertisingRouterID field</summary>
-        public readonly static Int32 AdvertisingRouterIDPosition;
+        public static readonly Int32 AdvertisingRouterIDPosition;
         /// <summary> The relative postion of the LSSequenceNumber field</summary>
-        public readonly static Int32 LSSequenceNumberPosition;
+        public static readonly Int32 LSSequenceNumberPosition;
         /// <summary> The relative postion of the Checksum field</summary>
-        public readonly static Int32 ChecksumPosition;
+        public static readonly Int32 ChecksumPosition;
         /// <summary> The relative postion of the Length field</summary>
-        public readonly static Int32 PacketLengthPosition;
+        public static readonly Int32 PacketLengthPosition;
         /// <summary> The relative postion of the header's end</summary>
-        public readonly static Int32 HeaderEnd;
+        public static readonly Int32 HeaderEnd;
 
         static LSAFields()
         {
@@ -86,16 +86,16 @@ namespace PacketDotNet
     public class RouterLSAFields : LSAFields
     {
         /// <summary> The length of the RouterOptions field in bytes</summary>
-        public readonly static Int32 RouterOptionsLength = 2;
+        public static readonly Int32 RouterOptionsLength = 2;
         /// <summary> The length of the LinkNumber field in bytes</summary>
-        public readonly static Int32 LinkNumberLength = 2;
+        public static readonly Int32 LinkNumberLength = 2;
 
         /// <summary> The relative postion of the RouterOptions field</summary>
-        public readonly static Int32 RouterOptionsPosition;
+        public static readonly Int32 RouterOptionsPosition;
         /// <summary> The relative postion of the LinkNumber field</summary>
-        public readonly static Int32 LinkNumberPosition;
+        public static readonly Int32 LinkNumberPosition;
         /// <summary> The relative postion of the start of the RouterLink(s)</summary>
-        public readonly static Int32 RouterLinksStart;
+        public static readonly Int32 RouterLinksStart;
 
         static RouterLSAFields()
         {
@@ -112,14 +112,14 @@ namespace PacketDotNet
     public class NetworkLSAFields : LSAFields
     {
         /// <summary> The length of the NetworkMask field in bytes</summary>
-        public readonly static Int32 NetworkMaskLength = 4;
+        public static readonly Int32 NetworkMaskLength = 4;
         /// <summary> The length of the AttachedRouter field in bytes</summary>
-        public readonly static Int32 AttachedRouterLength = 4;
+        public static readonly Int32 AttachedRouterLength = 4;
 
         /// <summary> The relative postion of the NetworkMask field</summary>
-        public readonly static Int32 NetworkMaskPosition;
+        public static readonly Int32 NetworkMaskPosition;
         /// <summary> The relative postion of the AttachedRouter field</summary>
-        public readonly static Int32 AttachedRouterPosition;
+        public static readonly Int32 AttachedRouterPosition;
 
         static NetworkLSAFields()
         {
@@ -135,18 +135,18 @@ namespace PacketDotNet
     public class SummaryLSAFields : LSAFields
     {
         /// <summary> The length of the NetworkMask field in bytes</summary>
-        public readonly static Int32 NetworkMaskLength = 4;
+        public static readonly Int32 NetworkMaskLength = 4;
         /// <summary> The length of the Metric field in bytes</summary>
-        public readonly static Int32 MetricLength = 4;
+        public static readonly Int32 MetricLength = 4;
         /// <summary> The length of the TOSMetric field in bytes</summary>
-        public readonly static Int32 TOSMetricLength = 4;
+        public static readonly Int32 TOSMetricLength = 4;
 
         /// <summary> The relative postion of the NetworkMask field</summary>
-        public readonly static Int32 NetworkMaskPosition;
+        public static readonly Int32 NetworkMaskPosition;
         /// <summary> The relative postion of the Metric field</summary>
-        public readonly static Int32 MetricPosition;
+        public static readonly Int32 MetricPosition;
         /// <summary> The relative postion of the TOSMetric field</summary>
-        public readonly static Int32 TOSMetricPosition;
+        public static readonly Int32 TOSMetricPosition;
 
         static SummaryLSAFields()
         {
@@ -163,12 +163,12 @@ namespace PacketDotNet
     public class ASExternalLSAFields : LSAFields
     {
         /// <summary> The length of the NetworkMask field in bytes</summary>
-        public readonly static Int32 NetworkMaskLength = 4;
+        public static readonly Int32 NetworkMaskLength = 4;
 
         /// <summary> The relative postion of the NetworkMask field</summary>
-        public readonly static Int32 NetworkMaskPosition;
+        public static readonly Int32 NetworkMaskPosition;
         /// <summary> The relative postion of the Metric field</summary>
-        public readonly static Int32 MetricPosition;
+        public static readonly Int32 MetricPosition;
 
         static ASExternalLSAFields()
         {
@@ -184,28 +184,28 @@ namespace PacketDotNet
     public class RouterLinkFields
     {
         /// <summary> The length of the LinkID field in bytes</summary>
-        public readonly static Int32 LinkIDLength = 4;
+        public static readonly Int32 LinkIDLength = 4;
         /// <summary> The length of the LinkData field in bytes</summary>
-        public readonly static Int32 LinkDataLength = 4;
+        public static readonly Int32 LinkDataLength = 4;
         /// <summary> The length of the Type field in bytes</summary>
-        public readonly static Int32 TypeLength = 1;
+        public static readonly Int32 TypeLength = 1;
         /// <summary> The length of the TOSNumber field in bytes</summary>
-        public readonly static Int32 TOSNumberLength = 1;
+        public static readonly Int32 TOSNumberLength = 1;
         /// <summary> The length of the Metric field in bytes</summary>
-        public readonly static Int32 MetricLength = 2;
+        public static readonly Int32 MetricLength = 2;
 
         /// <summary> The relative postion of the LinkID field</summary>
-        public readonly static Int32 LinkIDPosition;
+        public static readonly Int32 LinkIDPosition;
         /// <summary> The relative postion of the LinkData field</summary>
-        public readonly static Int32 LinkDataPosition;
+        public static readonly Int32 LinkDataPosition;
         /// <summary> The relative postion of the Type field</summary>
-        public readonly static Int32 TypePosition;
+        public static readonly Int32 TypePosition;
         /// <summary> The relative postion of the TOSNumber field</summary>
-        public readonly static Int32 TOSNumberPosition;
+        public static readonly Int32 TOSNumberPosition;
         /// <summary> The relative postion of the Metric field</summary>
-        public readonly static Int32 MetricPosition;
+        public static readonly Int32 MetricPosition;
         /// <summary> The relative postion of the AdditionalMetrics field</summary>
-        public readonly static Int32 AdditionalMetricsPosition;
+        public static readonly Int32 AdditionalMetricsPosition;
 
         static RouterLinkFields()
         {
@@ -225,18 +225,18 @@ namespace PacketDotNet
     public class ASExternalLinkFields
     {
         /// <summary> The length of the TOS field in bytes</summary>
-        public readonly static Int32 TOSLength = 4;
+        public static readonly Int32 TOSLength = 4;
         /// <summary> The length of the ForwardingAddress field in bytes</summary>
-        public readonly static Int32 ForwardingAddressLength = 4;
+        public static readonly Int32 ForwardingAddressLength = 4;
         /// <summary> The length of the ExternalRouteTag field in bytes</summary>
-        public readonly static Int32 ExternalRouteTagLength = 4;
+        public static readonly Int32 ExternalRouteTagLength = 4;
 
         /// <summary> The relative postion of the TOSPosition field</summary>
-        public readonly static Int32 TOSPosition;
+        public static readonly Int32 TOSPosition;
         /// <summary> The relative postion of the ForwardingAddress field</summary>
-        public readonly static Int32 ForwardingAddressPosition;
+        public static readonly Int32 ForwardingAddressPosition;
         /// <summary> The relative postion of the ExternalRouteTag field</summary>
-        public readonly static Int32 ExternalRouteTagPosition;
+        public static readonly Int32 ExternalRouteTagPosition;
 
         static ASExternalLinkFields()
         {
@@ -253,18 +253,18 @@ namespace PacketDotNet
     public class LinkStateRequestFields
     {
         /// <summary> The length of the LSType field in bytes</summary>
-        public readonly static Int32 LSTypeLength = 4;
+        public static readonly Int32 LSTypeLength = 4;
         /// <summary> The length of the LinkStateID field in bytes</summary>
-        public readonly static Int32 LinkStateIdLength = 4;
+        public static readonly Int32 LinkStateIdLength = 4;
         /// <summary> The length of the AdvertisingRouter field in bytes</summary>
-        public readonly static Int32 AdvertisingRouterLength = 4;
+        public static readonly Int32 AdvertisingRouterLength = 4;
 
         /// <summary> The relative postion of the LSType field</summary>
-        public readonly static Int32 LSTypePosition;
+        public static readonly Int32 LSTypePosition;
         /// <summary> The relative postion of the LinkStateID field</summary>
-        public readonly static Int32 LinkStateIdPosition;
+        public static readonly Int32 LinkStateIdPosition;
         /// <summary> The relative postion of the AdvertisingRouter field</summary>
-        public readonly static Int32 AdvertisingRouterPosition;
+        public static readonly Int32 AdvertisingRouterPosition;
 
         static LinkStateRequestFields()
         {

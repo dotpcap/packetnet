@@ -43,7 +43,7 @@ namespace PacketDotNet
 #endif
 
         /// <summary> Fetch the port number on the source host.</summary>
-        virtual public UInt16 SourcePort
+        public virtual UInt16 SourcePort
         {
             get => EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + UdpFields.SourcePortPosition);
 
@@ -55,7 +55,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the port number on the target host.</summary>
-        virtual public UInt16 DestinationPort
+        public virtual UInt16 DestinationPort
         {
             get => EndianBitConverter.Big.ToUInt16(header.Bytes,
                 header.Offset + UdpFields.DestinationPortPosition);
@@ -73,7 +73,7 @@ namespace PacketDotNet
         /// Length in bytes of the header and payload, minimum size of 8,
         /// the size of the Udp header
         /// </value>
-        virtual public Int32 Length
+        public virtual Int32 Length
         {
             get => EndianBitConverter.Big.ToInt16(header.Bytes,
                 header.Offset + UdpFields.HeaderLengthPosition);
@@ -90,7 +90,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the header checksum.</summary>
-        override public UInt16 Checksum
+        public override UInt16 Checksum
         {
             get => EndianBitConverter.Big.ToUInt16(header.Bytes,
                 header.Offset + UdpFields.ChecksumPosition);
@@ -121,7 +121,7 @@ namespace PacketDotNet
         /// <value>
         /// True if the udp checksum is valid
         /// </value>
-        virtual public Boolean ValidUDPChecksum
+        public virtual Boolean ValidUDPChecksum
         {
             get
             {
@@ -133,7 +133,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color => AnsiEscapeSequences.LightGreen;
+        public override System.String Color => AnsiEscapeSequences.LightGreen;
 
         /// <summary>
         /// Update the Udp length

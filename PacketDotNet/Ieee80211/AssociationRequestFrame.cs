@@ -37,12 +37,12 @@ namespace PacketDotNet
         {
             private class AssociationRequestFields
             {
-                public readonly static Int32 CapabilityInformationLength = 2;
-                public readonly static Int32 ListenIntervalLength = 2;
+                public static readonly Int32 CapabilityInformationLength = 2;
+                public static readonly Int32 ListenIntervalLength = 2;
 
-                public readonly static Int32 CapabilityInformationPosition;
-                public readonly static Int32 ListenIntervalPosition;
-                public readonly static Int32 InformationElement1Position;
+                public static readonly Int32 CapabilityInformationPosition;
+                public static readonly Int32 ListenIntervalPosition;
+                public static readonly Int32 InformationElement1Position;
 
                 static AssociationRequestFields()
                 {

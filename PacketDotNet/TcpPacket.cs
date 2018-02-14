@@ -50,7 +50,7 @@ namespace PacketDotNet
         public const Int32 HeaderMinimumLength = 20;
 
         /// <summary> Fetch the port number on the source host.</summary>
-        virtual public UInt16 SourcePort
+        public virtual UInt16 SourcePort
         {
             get => EndianBitConverter.Big.ToUInt16(header.Bytes,
                 header.Offset + TcpFields.SourcePortPosition);
@@ -65,7 +65,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetches the port number on the destination host.</summary>
-        virtual public UInt16 DestinationPort
+        public virtual UInt16 DestinationPort
         {
             get => EndianBitConverter.Big.ToUInt16(header.Bytes,
                 header.Offset + TcpFields.DestinationPortPosition);
@@ -112,7 +112,7 @@ namespace PacketDotNet
         }
 
         /// <summary> The size of the tcp header in 32bit words </summary>
-        virtual public Int32 DataOffset
+        public virtual Int32 DataOffset
         {
             get
             {
@@ -136,7 +136,7 @@ namespace PacketDotNet
         /// bytes (beyond the sequence number in the acknowledgment field) that
         /// the receiver is currently willing to receive.
         /// </summary>
-        virtual public UInt16 WindowSize
+        public virtual UInt16 WindowSize
         {
             get => EndianBitConverter.Big.ToUInt16(header.Bytes,
                 header.Offset + TcpFields.WindowSizePosition);
@@ -149,7 +149,7 @@ namespace PacketDotNet
         /// <value>
         /// Tcp checksum field value of type UInt16
         /// </value>
-        override public UInt16 Checksum
+        public override UInt16 Checksum
         {
             get => EndianBitConverter.Big.ToUInt16(header.Bytes,
                 header.Offset + TcpFields.ChecksumPosition);
@@ -180,7 +180,7 @@ namespace PacketDotNet
         /// <value>
         /// True if the tcp checksum is valid
         /// </value>
-        virtual public Boolean ValidTCPChecksum
+        public virtual Boolean ValidTCPChecksum
         {
             get
             {
@@ -212,14 +212,14 @@ namespace PacketDotNet
         }
 
         /// <summary> Check the URG flag, flag indicates if the urgent pointer is valid.</summary>
-        virtual public Boolean Urg
+        public virtual Boolean Urg
         {
             get => (AllFlags & TcpFields.TCP_URG_MASK) != 0;
             set => setFlag(value, TcpFields.TCP_URG_MASK);
         }
 
         /// <summary> Check the ACK flag, flag indicates if the ack number is valid.</summary>
-        virtual public Boolean Ack
+        public virtual Boolean Ack
         {
             get => (AllFlags & TcpFields.TCP_ACK_MASK) != 0;
             set => setFlag(value, TcpFields.TCP_ACK_MASK);
@@ -228,7 +228,7 @@ namespace PacketDotNet
         /// <summary> Check the PSH flag, flag indicates the receiver should pass the
         /// data to the application as soon as possible.
         /// </summary>
-        virtual public Boolean Psh
+        public virtual Boolean Psh
         {
             get => (AllFlags & TcpFields.TCP_PSH_MASK) != 0;
             set => setFlag(value, TcpFields.TCP_PSH_MASK);
@@ -237,7 +237,7 @@ namespace PacketDotNet
         /// <summary> Check the RST flag, flag indicates the session should be reset between
         /// the sender and the receiver.
         /// </summary>
-        virtual public Boolean Rst
+        public virtual Boolean Rst
         {
             get => (AllFlags & TcpFields.TCP_RST_MASK) != 0;
             set => setFlag(value, TcpFields.TCP_RST_MASK);
@@ -247,14 +247,14 @@ namespace PacketDotNet
         /// be synchronized between the sender and receiver to initiate
         /// a connection.
         /// </summary>
-        virtual public Boolean Syn
+        public virtual Boolean Syn
         {
             get => (AllFlags & TcpFields.TCP_SYN_MASK) != 0;
             set => setFlag(value, TcpFields.TCP_SYN_MASK);
         }
 
         /// <summary> Check the FIN flag, flag indicates the sender is finished sending.</summary>
-        virtual public Boolean Fin
+        public virtual Boolean Fin
         {
             get => (AllFlags & TcpFields.TCP_FIN_MASK) != 0;
             set => setFlag(value, TcpFields.TCP_FIN_MASK);
@@ -263,7 +263,7 @@ namespace PacketDotNet
         /// <value>
         /// ECN flag
         /// </value>
-        virtual public Boolean ECN
+        public virtual Boolean ECN
         {
             get => (AllFlags & TcpFields.TCP_ECN_MASK) != 0;
             set => setFlag(value, TcpFields.TCP_ECN_MASK);
@@ -272,7 +272,7 @@ namespace PacketDotNet
         /// <value>
         /// CWR flag
         /// </value>
-        virtual public Boolean CWR
+        public virtual Boolean CWR
         {
             get => (AllFlags & TcpFields.TCP_CWR_MASK) != 0;
             set => setFlag(value, TcpFields.TCP_CWR_MASK);
@@ -281,7 +281,7 @@ namespace PacketDotNet
         /// <value>
         /// NS flag
         /// </value>
-        virtual public Boolean NS
+        public virtual Boolean NS
         {
             get => (AllFlags & TcpFields.TCP_NS_MASK) != 0;
             set => setFlag(value, TcpFields.TCP_NS_MASK);
@@ -296,7 +296,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color => AnsiEscapeSequences.Yellow;
+        public override System.String Color => AnsiEscapeSequences.Yellow;
 
         /// <summary>
         /// Create a new TCP packet from values

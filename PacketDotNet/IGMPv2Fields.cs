@@ -26,23 +26,23 @@ namespace PacketDotNet
     public class IGMPv2Fields
     {
         /// <summary> Length of the IGMP message type code in bytes.</summary>
-        public readonly static Int32 TypeLength = 1;
+        public static readonly Int32 TypeLength = 1;
         /// <summary> Length of the IGMP max response code in bytes.</summary>
-        public readonly static Int32 MaxResponseTimeLength = 1;
+        public static readonly Int32 MaxResponseTimeLength = 1;
         /// <summary> Length of the IGMP header checksum in bytes.</summary>
-        public readonly static Int32 ChecksumLength = 2;
+        public static readonly Int32 ChecksumLength = 2;
         /// <summary> Length of group address in bytes.</summary>
-        public readonly static Int32 GroupAddressLength;
+        public static readonly Int32 GroupAddressLength;
         /// <summary> Position of the IGMP message type.</summary>
-        public readonly static Int32 TypePosition = 0;
+        public static readonly Int32 TypePosition = 0;
         /// <summary> Position of the IGMP max response code.</summary>
-        public readonly static Int32 MaxResponseTimePosition;
+        public static readonly Int32 MaxResponseTimePosition;
         /// <summary> Position of the IGMP header checksum.</summary>
-        public readonly static Int32 ChecksumPosition;
+        public static readonly Int32 ChecksumPosition;
         /// <summary> Position of the IGMP group address.</summary>
-        public readonly static Int32 GroupAddressPosition;
+        public static readonly Int32 GroupAddressPosition;
         /// <summary> Length in bytes of an IGMP header.</summary>
-        public readonly static Int32 HeaderLength; // 8
+        public static readonly Int32 HeaderLength; // 8
 
         static IGMPv2Fields()
         {

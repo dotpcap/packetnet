@@ -39,14 +39,14 @@ namespace PacketDotNet
         {
             private class ProbeResponseFields
             {
-                public readonly static Int32 TimestampLength = 8;
-                public readonly static Int32 BeaconIntervalLength = 2;
-                public readonly static Int32 CapabilityInformationLength = 2;
+                public static readonly Int32 TimestampLength = 8;
+                public static readonly Int32 BeaconIntervalLength = 2;
+                public static readonly Int32 CapabilityInformationLength = 2;
 
-                public readonly static Int32 TimestampPosition;
-                public readonly static Int32 BeaconIntervalPosition;
-                public readonly static Int32 CapabilityInformationPosition;
-                public readonly static Int32 InformationElement1Position;
+                public static readonly Int32 TimestampPosition;
+                public static readonly Int32 BeaconIntervalPosition;
+                public static readonly Int32 CapabilityInformationPosition;
+                public static readonly Int32 InformationElement1Position;
 
                 static ProbeResponseFields()
                 {

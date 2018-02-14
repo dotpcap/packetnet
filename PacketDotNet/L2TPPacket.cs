@@ -32,19 +32,19 @@ namespace PacketDotNet
     public class L2TPPacket : Packet
     {
 
-        virtual public Boolean DataMessage => 8 == (header.Bytes[header.Offset] & 0x8);
+        public virtual Boolean DataMessage => 8 == (header.Bytes[header.Offset] & 0x8);
 
-        virtual public Boolean HasLength => 4 == (header.Bytes[header.Offset] & 0x4);
+        public virtual Boolean HasLength => 4 == (header.Bytes[header.Offset] & 0x4);
 
-        virtual public Boolean HasSequence => 2 == (header.Bytes[header.Offset] & 0x2);
+        public virtual Boolean HasSequence => 2 == (header.Bytes[header.Offset] & 0x2);
 
-        virtual public Boolean HasOffset => 2 == (header.Bytes[header.Offset] & 0x2);
+        public virtual Boolean HasOffset => 2 == (header.Bytes[header.Offset] & 0x2);
 
-        virtual public Boolean IsPriority => 2 == (header.Bytes[header.Offset] & 0x2);
+        public virtual Boolean IsPriority => 2 == (header.Bytes[header.Offset] & 0x2);
 
-        virtual public Int32 Version => (header.Bytes[header.Offset + 1] & 0x7);
+        public virtual Int32 Version => (header.Bytes[header.Offset + 1] & 0x7);
 
-        virtual public Int32 TunnelID
+        public virtual Int32 TunnelID
         {
             get
             {
@@ -56,7 +56,7 @@ namespace PacketDotNet
             }
         }
 
-        virtual public Int32 SessionID
+        public virtual Int32 SessionID
         {
             get
             {
@@ -69,7 +69,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color => AnsiEscapeSequences.DarkGray;
+        public override System.String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary>
         /// Constructor

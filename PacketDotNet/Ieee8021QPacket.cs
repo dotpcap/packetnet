@@ -140,7 +140,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color => AnsiEscapeSequences.LightCyan;
+        public override System.String Color => AnsiEscapeSequences.LightCyan;
 
         /// <summary>
         /// Constructor

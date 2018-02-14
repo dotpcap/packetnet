@@ -128,7 +128,7 @@ namespace PacketDotNet.Utils
         }
 
         /// <summary>Initializes an implementation of HashAlgorithm.</summary>
-        public override sealed void Initialize()
+        public sealed override void Initialize()
         {
             _crc = _allOnes;
         }

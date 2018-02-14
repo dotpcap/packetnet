@@ -37,13 +37,13 @@ namespace PacketDotNet
         {
             private class AuthenticationFields
             {
-                public readonly static Int32 AuthAlgorithmNumLength = 2;
-                public readonly static Int32 AuthAlgorithmTransactionSequenceNumLength = 2;
-                public readonly static Int32 StatusCodeLength = 2;
-                public readonly static Int32 AuthAlgorithmNumPosition;
-                public readonly static Int32 AuthAlgorithmTransactionSequenceNumPosition;
-                public readonly static Int32 StatusCodePosition;
-                public readonly static Int32 InformationElement1Position;
+                public static readonly Int32 AuthAlgorithmNumLength = 2;
+                public static readonly Int32 AuthAlgorithmTransactionSequenceNumLength = 2;
+                public static readonly Int32 StatusCodeLength = 2;
+                public static readonly Int32 AuthAlgorithmNumPosition;
+                public static readonly Int32 AuthAlgorithmTransactionSequenceNumPosition;
+                public static readonly Int32 StatusCodePosition;
+                public static readonly Int32 InformationElement1Position;
 
                 static AuthenticationFields ()
                 {

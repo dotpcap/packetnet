@@ -27,19 +27,19 @@ namespace PacketDotNet
     public class EthernetFields
     {
         /// <summary> Width of the ethernet type code in bytes.</summary>
-        public readonly static Int32 TypeLength = 2;
+        public static readonly Int32 TypeLength = 2;
 
         /// <summary> Position of the destination MAC address within the ethernet header.</summary>
-        public readonly static Int32 DestinationMacPosition = 0;
+        public static readonly Int32 DestinationMacPosition = 0;
 
         /// <summary> Position of the source MAC address within the ethernet header.</summary>
-        public readonly static Int32 SourceMacPosition;
+        public static readonly Int32 SourceMacPosition;
 
         /// <summary> Position of the ethernet type field within the ethernet header.</summary>
-        public readonly static Int32 TypePosition;
+        public static readonly Int32 TypePosition;
 
         /// <summary> Total length of an ethernet header in bytes.</summary>
-        public readonly static Int32 HeaderLength; // == 14
+        public static readonly Int32 HeaderLength; // == 14
 
         static EthernetFields()
         {
@@ -51,6 +51,6 @@ namespace PacketDotNet
         /// <summary>
         /// size of an ethernet mac address in bytes
         /// </summary>
-        public readonly static Int32 MacAddressLength = 6;
+        public static readonly Int32 MacAddressLength = 6;
     }
 }

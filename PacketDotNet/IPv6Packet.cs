@@ -442,7 +442,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public String Color => AnsiEscapeSequences.White;
+        public override String Color => AnsiEscapeSequences.White;
 
         /// <summary>
         /// Generate a random packet

@@ -65,11 +65,11 @@ namespace PacketDotNet
         public struct TypesOfService_Fields
         {
 #pragma warning disable 1591
-            public readonly static Int32 MINIMIZE_DELAY = 0x10;
-            public readonly static Int32 MAXIMIZE_THROUGHPUT = 0x08;
-            public readonly static Int32 MAXIMIZE_RELIABILITY = 0x04;
-            public readonly static Int32 MINIMIZE_MONETARY_COST = 0x02;
-            public readonly static Int32 UNUSED = 0x01;
+            public static readonly Int32 MINIMIZE_DELAY = 0x10;
+            public static readonly Int32 MAXIMIZE_THROUGHPUT = 0x08;
+            public static readonly Int32 MAXIMIZE_RELIABILITY = 0x04;
+            public static readonly Int32 MINIMIZE_MONETARY_COST = 0x02;
+            public static readonly Int32 UNUSED = 0x01;
 #pragma warning restore 1591
         }
 
@@ -135,7 +135,7 @@ namespace PacketDotNet
         /// increments by one each time a datagram is sent by a host.
         /// A 16-bit unsigned integer.
         /// </summary>
-        virtual public UInt16 Id
+        public virtual UInt16 Id
         {
             get => EndianBitConverter.Big.ToUInt16(header.Bytes,
                 header.Offset + IPv4Fields.IdPosition);
@@ -150,7 +150,7 @@ namespace PacketDotNet
         /// The offset specifies a number of octets (i.e., bytes).
         /// A 13-bit unsigned integer.
         /// </summary>
-        virtual public Int32 FragmentOffset
+        public virtual Int32 FragmentOffset
         {
             get
             {
@@ -207,7 +207,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the header checksum.</summary>
-        virtual public UInt16 Checksum
+        public virtual UInt16 Checksum
         {
             get => EndianBitConverter.Big.ToUInt16(header.Bytes,
                 header.Offset + IPv4Fields.ChecksumPosition);
@@ -222,7 +222,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Check if the IP packet is valid, checksum-wise.</summary>
-        virtual public Boolean ValidChecksum => ValidIPChecksum;
+        public virtual Boolean ValidChecksum => ValidIPChecksum;
 
         /// <summary>
         /// Check if the IP packet header is valid, checksum-wise.
@@ -258,7 +258,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color => AnsiEscapeSequences.White;
+        public override System.String Color => AnsiEscapeSequences.White;
 
         /// <summary> Fetch the type of service. </summary>
         public Int32 DifferentiatedServices

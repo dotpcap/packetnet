@@ -45,7 +45,7 @@ namespace PacketDotNet
         /// <value>
         /// The Type/Code enum value
         /// </value>
-        virtual public ICMPv4TypeCodes TypeCode
+        public virtual ICMPv4TypeCodes TypeCode
         {
             get
             {
@@ -159,7 +159,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color => AnsiEscapeSequences.LightBlue;
+        public override System.String Color => AnsiEscapeSequences.LightBlue;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override String ToString(StringOutputType outputFormat)

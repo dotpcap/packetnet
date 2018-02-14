@@ -45,7 +45,7 @@ namespace PacketDotNet
         /// <value>
         /// The Type value
         /// </value>
-        virtual public ICMPv6Types Type
+        public virtual ICMPv6Types Type
         {
             get
             {
@@ -61,7 +61,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the ICMP code </summary>
-        virtual public Byte Code
+        public virtual Byte Code
         {
             get => header.Bytes[header.Offset + ICMPv6Fields.CodePosition];
 
@@ -148,7 +148,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        override public System.String Color => AnsiEscapeSequences.LightBlue;
+        public override System.String Color => AnsiEscapeSequences.LightBlue;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override String ToString(StringOutputType outputFormat)

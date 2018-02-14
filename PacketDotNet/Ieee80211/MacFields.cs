@@ -32,19 +32,19 @@ namespace PacketDotNet
         /// </summary>
         class MacFields
         {
-            public readonly static Int32 FrameControlLength = 2;
-            public readonly static Int32 DurationIDLength = 2;
-            public readonly static Int32 AddressLength = EthernetFields.MacAddressLength;
-            public readonly static Int32 SequenceControlLength = 2;
-            public readonly static Int32 FrameCheckSequenceLength = 4;
+            public static readonly Int32 FrameControlLength = 2;
+            public static readonly Int32 DurationIDLength = 2;
+            public static readonly Int32 AddressLength = EthernetFields.MacAddressLength;
+            public static readonly Int32 SequenceControlLength = 2;
+            public static readonly Int32 FrameCheckSequenceLength = 4;
 
-            public readonly static Int32 FrameControlPosition = 0;
-            public readonly static Int32 DurationIDPosition;
+            public static readonly Int32 FrameControlPosition = 0;
+            public static readonly Int32 DurationIDPosition;
             /// <summary>
             /// Not all MAC Frames contain a sequence control field. The value of this field is only meaningful when they do.
             /// </summary>
-            public readonly static Int32 SequenceControlPosition;
-            public readonly static Int32 Address1Position;
+            public static readonly Int32 SequenceControlPosition;
+            public static readonly Int32 Address1Position;
 
             static MacFields()
             {

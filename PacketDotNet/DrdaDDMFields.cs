@@ -31,77 +31,77 @@ namespace PacketDotNet
         /// <summary>
         /// Length of the Length number in bytes.
         /// </summary>
-        public readonly static Int32 LengthLength = 2;
+        public static readonly Int32 LengthLength = 2;
 
         /// <summary>
         /// Length of the Magic field in bytes.
         /// </summary>
-        public readonly static Int32 MagicLength = 1;
+        public static readonly Int32 MagicLength = 1;
 
         /// <summary>
         /// Length of the Format field in bytes.
         /// </summary>
-        public readonly static Int32 FormatLength = 1;
+        public static readonly Int32 FormatLength = 1;
 
         /// <summary>
         /// Length of the CorrelId field in bytes.
         /// </summary>
-        public readonly static Int32 CorrelIdLength = 2;
+        public static readonly Int32 CorrelIdLength = 2;
 
         /// <summary>
         /// Length of the Length2 number in bytes.
         /// </summary>
-        public readonly static Int32 Length2Length = 2;
+        public static readonly Int32 Length2Length = 2;
 
         /// <summary>
         /// Length of the Code Point field in bytes.
         /// </summary>
-        public readonly static Int32 CodePointLength = 2;
+        public static readonly Int32 CodePointLength = 2;
 
         /// <summary>
         /// Position of the Length field
         /// </summary>
-        public readonly static Int32 LengthPosition = 0;
+        public static readonly Int32 LengthPosition = 0;
 
         /// <summary>
         /// Position of the Magic field
         /// </summary>
-        public readonly static Int32 MagicPosition;
+        public static readonly Int32 MagicPosition;
 
         /// <summary>
         /// Position of the Format field
         /// </summary>
-        public readonly static Int32 FormatPosition;
+        public static readonly Int32 FormatPosition;
 
         /// <summary>
         /// Position of the CorrlId field
         /// </summary>
-        public readonly static Int32 CorrelIdPosition;
+        public static readonly Int32 CorrelIdPosition;
 
         /// <summary>
         /// Position of the Length2 field
         /// </summary>
-        public readonly static Int32 Length2Position;
+        public static readonly Int32 Length2Position;
 
         /// <summary>
         /// Position of the Code Point field
         /// </summary>
-        public readonly static Int32 CodePointPosition;
+        public static readonly Int32 CodePointPosition;
 
         /// <summary>
         /// Total Length for DDM Head
         /// </summary>
-        public readonly static Int32 DDMHeadTotalLength;
+        public static readonly Int32 DDMHeadTotalLength;
 
         /// <summary>
         /// Length of the Parameter Length number in bytes.
         /// </summary>
-        public readonly static Int32 ParameterLengthLength = 2;
+        public static readonly Int32 ParameterLengthLength = 2;
 
         /// <summary>
         /// Length of the Parameter Code Point field in bytes.
         /// </summary>
-        public readonly static Int32 ParameterCodePointLength = 2;
+        public static readonly Int32 ParameterCodePointLength = 2;
 
         static DrdaDDMFields()
         {

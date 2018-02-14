@@ -31,41 +31,41 @@ namespace PacketDotNet
     public class ARPFields
     {
         /// <summary> Type code for ethernet addresses.</summary>
-        public readonly static Int32 EthernetProtocolType = 0x0001;
+        public static readonly Int32 EthernetProtocolType = 0x0001;
         /// <summary> Type code for MAC addresses.</summary>
-        public readonly static Int32 IPv4ProtocolType = 0x0800;
+        public static readonly Int32 IPv4ProtocolType = 0x0800;
 
         /// <summary> Operation type length in bytes.</summary>
-        public readonly static Int32 OperationLength = 2;
+        public static readonly Int32 OperationLength = 2;
         /// <summary>
         /// The length of the address type fields in bytes,
         /// eg. the length of hardware type or protocol type
         /// </summary>
-        public readonly static Int32 AddressTypeLength = 2;
+        public static readonly Int32 AddressTypeLength = 2;
         /// <summary>
         /// The length of the address length fields in bytes.
         /// </summary>
-        public readonly static Int32 AddressLengthLength = 1;
+        public static readonly Int32 AddressLengthLength = 1;
         /// <summary> Position of the hardware address type.</summary>
-        public readonly static Int32 HardwareAddressTypePosition = 0;
+        public static readonly Int32 HardwareAddressTypePosition = 0;
         /// <summary> Position of the protocol address type.</summary>
-        public readonly static Int32 ProtocolAddressTypePosition;
+        public static readonly Int32 ProtocolAddressTypePosition;
         /// <summary> Position of the hardware address length.</summary>
-        public readonly static Int32 HardwareAddressLengthPosition;
+        public static readonly Int32 HardwareAddressLengthPosition;
         /// <summary> Position of the protocol address length.</summary>
-        public readonly static Int32 ProtocolAddressLengthPosition;
+        public static readonly Int32 ProtocolAddressLengthPosition;
         /// <summary> Position of the operation type.</summary>
-        public readonly static Int32 OperationPosition;
+        public static readonly Int32 OperationPosition;
         /// <summary> Position of the sender hardware address.</summary>
-        public readonly static Int32 SenderHardwareAddressPosition;
+        public static readonly Int32 SenderHardwareAddressPosition;
         /// <summary> Position of the sender protocol address.</summary>
-        public readonly static Int32 SenderProtocolAddressPosition;
+        public static readonly Int32 SenderProtocolAddressPosition;
         /// <summary> Position of the target hardware address.</summary>
-        public readonly static Int32 TargetHardwareAddressPosition;
+        public static readonly Int32 TargetHardwareAddressPosition;
         /// <summary> Position of the target protocol address.</summary>
-        public readonly static Int32 TargetProtocolAddressPosition;
+        public static readonly Int32 TargetProtocolAddressPosition;
         /// <summary> Total length in bytes of an ARP header.</summary>
-        public readonly static Int32 HeaderLength; // == 28
+        public static readonly Int32 HeaderLength; // == 28
 
         static ARPFields()
         {

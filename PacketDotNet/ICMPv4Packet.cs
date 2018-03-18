@@ -51,12 +51,7 @@ namespace PacketDotNet
             {
                 var val = EndianBitConverter.Big.ToUInt16(header.Bytes,
                                                           header.Offset + ICMPv4Fields.TypeCodePosition);
-
-                //TODO: how to handle a mismatch in the mapping? maybe throw here?
-                if(Enum.IsDefined(typeof(ICMPv4TypeCodes), val))
-                    return (ICMPv4TypeCodes)val;
-                else
-                    throw new System.NotImplementedException("TypeCode of " + val + " is not defined in ICMPv4TypeCode");
+                return (ICMPv4TypeCodes)val;
             }
 
             set

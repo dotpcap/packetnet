@@ -47,15 +47,7 @@ namespace PacketDotNet
         /// </value>
         public virtual ICMPv6Types Type
         {
-            get
-            {
-                var val = header.Bytes[header.Offset + ICMPv6Fields.TypePosition];
-
-                if(Enum.IsDefined(typeof(ICMPv6Types), val))
-                    return (ICMPv6Types)val;
-                else
-                    throw new ArgumentOutOfRangeException("Type of \"" + val + "\" is not defined in ICMPv6Types");
-            }
+            get => (ICMPv6Types)header.Bytes[header.Offset + ICMPv6Fields.TypePosition];
 
             set => header.Bytes[header.Offset + ICMPv6Fields.TypePosition] = (Byte)value;
         }

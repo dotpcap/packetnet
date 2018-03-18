@@ -37,23 +37,16 @@ namespace PacketDotNet
         /// <returns>an OSPF packet</returns>
         public static OSPFPacket ConstructOSPFPacket(Byte[] payload, Int32 offset)
         {
-            Byte v = payload[offset + OSPFv2Fields.VersionPosition];
+            var v = (OSPFVersion)payload[offset + OSPFv2Fields.VersionPosition];
 
-            if (!Enum.IsDefined(typeof(OSPFVersion), v))
-            {
-                throw new Exception("No such OSPF version: " + v);
-            }
-
-            switch ((OSPFVersion)v)
+            switch (v)
             {
                 case OSPFVersion.OSPFv2:
                     return ConstructV2Packet(payload, offset);
                 case OSPFVersion.OSPFv3:
                     return ConstructV3Packet(payload, offset);
-
-                //we've already checked whether the version is correct, but the compiler wont shut up
                 default:
-                    return null;
+                    throw new InvalidOperationException("No such OSPF version: " + v);
             }
         }
 

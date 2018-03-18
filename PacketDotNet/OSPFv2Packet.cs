@@ -89,15 +89,7 @@ namespace PacketDotNet
         /// </summary>
         public virtual OSPFPacketType Type
         {
-            get
-            {
-                var val = header.Bytes[header.Offset + OSPFv2Fields.TypePosition];
-
-                if (Enum.IsDefined(typeof(OSPFPacketType), val))
-                    return (OSPFPacketType)val;
-                else
-                    throw new NotImplementedException("No such OSPF packet type " + val);
-            }
+            get => (OSPFPacketType)header.Bytes[header.Offset + OSPFv2Fields.TypePosition];
             set => header.Bytes[header.Offset + OSPFv2Fields.TypePosition] = (Byte)value;
         }
 

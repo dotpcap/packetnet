@@ -1,9 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net451</TargetFrameworks>
-    <TargetFrameworkIdentifier Condition="'$(_ShortFrameworkIdentifier)'=='net'">.NETFramework</TargetFrameworkIdentifier>
-    <TargetFrameworkIdentifier Condition="'$(_ShortFrameworkIdentifier)'=='netstandard'">.NETStandard</TargetFrameworkIdentifier>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <Version>0.16.1</Version>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -23,17 +21,6 @@
     <DefineConstants>TRACE;DEBUG;</DefineConstants>
     <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
-  
-   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net451|AnyCPU'">
-    <DefineConstants>TRACE;RELEASE;</DefineConstants>
-    <OutputPath>bin\Release\</OutputPath>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net451|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;</DefineConstants>
-    <OutputPath>bin\Debug\</OutputPath>
-  </PropertyGroup>
-
 
   <ItemGroup>
     <PackageReference Include="log4net" Version="2.0.8" />

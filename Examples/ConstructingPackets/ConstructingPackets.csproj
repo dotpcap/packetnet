@@ -6,12 +6,13 @@
     <ProjectGuid>{7CA1E07C-DB49-40B6-820A-5A8F1370127B}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AssemblyName>ConstructingPackets</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <RootNamespace>ConstructingPackets</RootNamespace>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

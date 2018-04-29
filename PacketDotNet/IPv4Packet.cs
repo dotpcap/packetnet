@@ -465,13 +465,15 @@ namespace PacketDotNet
             header = new ByteArraySegment(bas);
 
             // TOS? See http://en.wikipedia.org/wiki/TCP_offload_engine
-            if (TotalLength == 0)
+            var totalLength = TotalLength;
+            if (totalLength == 0)
             {
-                TotalLength = header.Length;
+                totalLength = header.Length;
+                TotalLength = totalLength;
             }
 
             // Check that the TotalLength is valid, at least HeaderMinimumLength long
-            if(TotalLength < HeaderMinimumLength)
+            if(totalLength < HeaderMinimumLength)
             {
                 throw new System.InvalidOperationException("TotalLength " + TotalLength + " < HeaderMinimumLength " + HeaderMinimumLength);
             }

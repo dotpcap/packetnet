@@ -356,38 +356,55 @@ namespace PacketDotNet
         /// A <see cref="Packet"/>
         /// </param>
         public TcpPacket(ByteArraySegment bas,
-                         Packet ParentPacket) :
-            this(bas)
+                         Packet ParentPacket)
         {
+            log.Debug("");
+
+            // set the header field, header field values are retrieved from this byte array
+            header = new ByteArraySegment(bas);
+
+            // NOTE: we update the Length field AFTER the header field because
+            // we need the header to be valid to retrieve the value of DataOffset
+            header.Length = DataOffset * 4;
+
+            // store the payload bytes
+            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            {
+                var result = new PacketOrByteArraySegment();
+                result.TheByteArraySegment = header.EncapsulatedBytes();
+
+                // if the parent packet is an IPv4Packet we need to adjust
+                // the payload length because it is possible for us to have
+                // X bytes of data but only (X - Y) bytes are actually valid
+                if (this.ParentPacket is IPv4Packet)
+                {
+                    // actual total length (tcp header + tcp payload)
+                    var ipv4Parent = (IPv4Packet)this.ParentPacket;
+                    var ipPayloadTotalLength = ipv4Parent.TotalLength - (ipv4Parent.HeaderLength * 4);
+
+                    log.DebugFormat("ipv4Parent.TotalLength {0}, ipv4Parent.HeaderLength {1}",
+                                    ipv4Parent.TotalLength,
+                                    ipv4Parent.HeaderLength * 4);
+
+                    var newTcpPayloadLength = ipPayloadTotalLength - header.Length;
+
+                    log.DebugFormat("Header.Length {0}, Current payload length: {1}, new payload length {2}",
+                                    header.Length,
+                                    payloadPacketOrData.Value.TheByteArraySegment.Length,
+                                    newTcpPayloadLength);
+
+                    // the length of the payload is the total payload length
+                    // above, minus the length of the tcp header
+                    payloadPacketOrData.Value.TheByteArraySegment.Length = newTcpPayloadLength;
+                    DecodePayload();
+                }
+
+                return result;
+            });
+
             log.DebugFormat("ParentPacket.GetType() {0}", ParentPacket.GetType());
 
             this.ParentPacket = ParentPacket;
-
-            // if the parent packet is an IPv4Packet we need to adjust
-            // the payload length because it is possible for us to have
-            // X bytes of data but only (X - Y) bytes are actually valid
-            if(this.ParentPacket is IPv4Packet)
-            {
-                // actual total length (tcp header + tcp payload)
-                var ipv4Parent = (IPv4Packet)this.ParentPacket;
-                var ipPayloadTotalLength = ipv4Parent.TotalLength - (ipv4Parent.HeaderLength * 4);
-
-                log.DebugFormat("ipv4Parent.TotalLength {0}, ipv4Parent.HeaderLength {1}",
-                                ipv4Parent.TotalLength,
-                                ipv4Parent.HeaderLength * 4);
-
-                var newTcpPayloadLength = ipPayloadTotalLength - HeaderLength;
-
-                log.DebugFormat("Header.Length {0}, Current payload length: {1}, new payload length {2}",
-                                header.Length,
-                                payloadPacketOrData.Value.TheByteArraySegment.Length,
-                                newTcpPayloadLength);
-
-                // the length of the payload is the total payload length
-                // above, minus the length of the tcp header
-                payloadPacketOrData.Value.TheByteArraySegment.Length = newTcpPayloadLength;
-                DecodePayload();
-            }
         }
 
         /// <summary>
@@ -396,17 +413,16 @@ namespace PacketDotNet
         /// <returns></returns>
         public TcpPacket DecodePayload()
         {
-            var payloadData = PayloadData;
-            if (payloadData == null)
-            {
+            if (payloadPacketOrData.Value.TheByteArraySegment == null)
                 return this;
-            }
-            //PayloadData[2] is Magic field and Magic field==0xd0 means this may be a Drda Packet
-            if (payloadData.Length >= DrdaDDMFields.DDMHeadTotalLength && payloadData[2] == 0xd0)
+
+            if (payloadPacketOrData.Value.TheByteArraySegment.Length >= DrdaDDMFields.DDMHeadTotalLength &&
+                payloadPacketOrData.Value.TheByteArraySegment.Bytes[payloadPacketOrData.Value.TheByteArraySegment.Offset + 2] == 0xD0)
             {
                 var drdaPacket = new DrdaPacket(payloadPacketOrData.Value.TheByteArraySegment, this);
                 payloadPacketOrData.Value.ThePacket = drdaPacket;
             }
+
             return this;
         }
 

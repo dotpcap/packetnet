@@ -161,12 +161,7 @@ namespace PacketDotNet
         /// Returns a
         /// </value>
         public virtual Byte[] Header => header.ActualBytes();
-
-        /// <summary>
-        /// Gets the length of the header.
-        /// </summary>
-        public virtual int HeaderLength => header.Length;
-
+        
         /// <summary>
         /// Packet that this packet carries if one is present.
         /// Note that the packet MAY have a null PayloadPacket but
@@ -475,7 +470,7 @@ namespace PacketDotNet
             // search for a packet type that matches the given one
             do
             {
-                if(type.IsAssignableFrom(p.GetType ()))
+                if(type.IsInstanceOfType(p))
                 {
                     return p;
                 }

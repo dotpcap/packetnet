@@ -115,9 +115,9 @@ namespace PacketDotNet
         /// </summary>
         public Byte[] Data
         {
-            get => payloadPacketOrData.TheByteArraySegment.ActualBytes();
+            get => payloadPacketOrData.Value.TheByteArraySegment.ActualBytes();
 
-            set => payloadPacketOrData.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
+            set => payloadPacketOrData.Value.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
         }
 
         /// <summary>
@@ -134,8 +134,12 @@ namespace PacketDotNet
             header.Length = ICMPv4Fields.HeaderLength;
 
             // store the payload bytes
-            payloadPacketOrData = new PacketOrByteArraySegment();
-            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
+            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            {
+                var result = new PacketOrByteArraySegment();
+                result.TheByteArraySegment = header.EncapsulatedBytes();
+                return result;
+            });
         }
 
         /// <summary>

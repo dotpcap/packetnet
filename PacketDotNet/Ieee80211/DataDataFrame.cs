@@ -72,7 +72,7 @@ namespace PacketDotNet
                 var availablePayloadLength = GetAvailablePayloadLength();
 				if(availablePayloadLength > 0)
 				{
-					payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes (availablePayloadLength);
+					payloadPacketOrData.Value.TheByteArraySegment = header.EncapsulatedBytes (availablePayloadLength);
 				}
             }
             

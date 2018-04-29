@@ -146,8 +146,8 @@ namespace PacketDotNet
             header.Length = LinuxSLLFields.SLLHeaderLength;
 
             // parse the payload via an EthernetPacket method
-            payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(header,
-                                                                        EthernetProtocolType);
+            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(()=> EthernetPacket.ParseEncapsulatedBytes(header,
+                                                                                                                EthernetProtocolType));
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />

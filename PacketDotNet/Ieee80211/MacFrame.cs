@@ -558,7 +558,7 @@ namespace PacketDotNet
                         var theHeader = Header;
                         ms.Write(theHeader, 0, theHeader.Length);
     
-                        payloadPacketOrData.AppendToMemoryStream(ms);
+                        payloadPacketOrData.Value.AppendToMemoryStream(ms);
                         
                         if(AppendFcs)
                         {     

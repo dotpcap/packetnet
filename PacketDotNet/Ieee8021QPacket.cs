@@ -155,8 +155,8 @@ namespace PacketDotNet
             header.Length = Ieee8021QFields.HeaderLength;
 
             // parse the payload via an EthernetPacket method
-            payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(header,
-                                                                        Type);
+            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(header,
+                                                                                                                 Type));
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />

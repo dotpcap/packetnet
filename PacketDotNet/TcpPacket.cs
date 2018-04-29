@@ -338,8 +338,12 @@ namespace PacketDotNet
             header.Length = DataOffset * 4;
 
             // store the payload bytes
-            payloadPacketOrData = new PacketOrByteArraySegment();
-            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
+            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            {
+                var result = new PacketOrByteArraySegment();
+                result.TheByteArraySegment = header.EncapsulatedBytes();
+                return result;
+            });
         }
 
         /// <summary>
@@ -372,17 +376,17 @@ namespace PacketDotNet
                                 ipv4Parent.TotalLength,
                                 ipv4Parent.HeaderLength * 4);
 
-                var newTcpPayloadLength = ipPayloadTotalLength - this.Header.Length;
+                var newTcpPayloadLength = ipPayloadTotalLength - HeaderLength;
 
                 log.DebugFormat("Header.Length {0}, Current payload length: {1}, new payload length {2}",
-                                this.header.Length,
-                                payloadPacketOrData.TheByteArraySegment.Length,
+                                header.Length,
+                                payloadPacketOrData.Value.TheByteArraySegment.Length,
                                 newTcpPayloadLength);
 
                 // the length of the payload is the total payload length
                 // above, minus the length of the tcp header
-                payloadPacketOrData.TheByteArraySegment.Length = newTcpPayloadLength;
-                this.DecodePayload();
+                payloadPacketOrData.Value.TheByteArraySegment.Length = newTcpPayloadLength;
+                DecodePayload();
             }
         }
 
@@ -392,15 +396,16 @@ namespace PacketDotNet
         /// <returns></returns>
         public TcpPacket DecodePayload()
         {
-            if (PayloadData == null)
+            var payloadData = PayloadData;
+            if (payloadData == null)
             {
                 return this;
             }
             //PayloadData[2] is Magic field and Magic field==0xd0 means this may be a Drda Packet
-            if (PayloadData.Length >= DrdaDDMFields.DDMHeadTotalLength && PayloadData[2] == 0xd0)
+            if (payloadData.Length >= DrdaDDMFields.DDMHeadTotalLength && payloadData[2] == 0xd0)
             {
-                var drdaPacket = new DrdaPacket(payloadPacketOrData.TheByteArraySegment, this);
-                payloadPacketOrData.ThePacket = drdaPacket;
+                var drdaPacket = new DrdaPacket(payloadPacketOrData.Value.TheByteArraySegment, this);
+                payloadPacketOrData.Value.ThePacket = drdaPacket;
             }
             return this;
         }

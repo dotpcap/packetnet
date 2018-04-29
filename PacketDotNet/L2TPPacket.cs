@@ -93,12 +93,12 @@ namespace PacketDotNet
             var payload = header.EncapsulatedBytes();
             try
             {
-                this.PayloadPacket = new PPPPacket(payload);
-                this.PayloadPacket.ParentPacket = this;
+                PayloadPacket = new PPPPacket(payload);
+                PayloadPacket.ParentPacket = this;
             } catch (Exception)
             {
                 //it's not a PPP packet, just attach the data
-                payloadPacketOrData.TheByteArraySegment = payload;
+                payloadPacketOrData.Value.TheByteArraySegment = payload;
             }
             this.ParentPacket = ParentPacket;
         }

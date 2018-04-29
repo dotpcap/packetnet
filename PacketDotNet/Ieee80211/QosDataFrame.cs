@@ -133,11 +133,11 @@ namespace PacketDotNet
                     // should parse it
                     if (FrameControl.Protected)
                     {
-                        payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes(availablePayloadLength);
+                        payloadPacketOrData.Value.TheByteArraySegment = header.EncapsulatedBytes(availablePayloadLength);
                     }
                     else
                     {
-                        payloadPacketOrData.ThePacket = new LogicalLinkControl(header.EncapsulatedBytes());
+                        payloadPacketOrData.Value.ThePacket = new LogicalLinkControl(header.EncapsulatedBytes());
                     }
 				}
             }

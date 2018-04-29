@@ -185,7 +185,7 @@ namespace PacketDotNet
             header.Length = EthernetFields.HeaderLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = ParseEncapsulatedBytes(header, Type);
+            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(header, Type));
         }
 
         /// <summary>

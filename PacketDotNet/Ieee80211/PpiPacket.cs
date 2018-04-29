@@ -180,7 +180,7 @@ namespace PacketDotNet
                 PpiCommon commonField = FindFirstByType(PpiFieldType.PpiCommon) as PpiCommon;
                 
                 // parse the encapsulated bytes
-                payloadPacketOrData = ParseEncapsulatedBytes (header, commonField);
+                payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(header, commonField));
             }
             
             /// <summary>

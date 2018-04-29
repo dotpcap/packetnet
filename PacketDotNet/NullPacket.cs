@@ -91,7 +91,7 @@ namespace PacketDotNet
             header.Length = NullFields.HeaderLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = ParseEncapsulatedBytes(header, Protocol);
+            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(()=> ParseEncapsulatedBytes(header, Protocol));
         }
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,

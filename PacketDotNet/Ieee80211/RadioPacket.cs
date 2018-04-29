@@ -134,7 +134,7 @@ namespace PacketDotNet
                 //Before we attempt to parse the payload we need to work out if 
                 //the FCS was valid and if it will be present at the end of the frame
                 FlagsRadioTapField flagsField = this[RadioTapType.Flags] as FlagsRadioTapField;
-		        payloadPacketOrData = ParseEncapsulatedBytes(header.EncapsulatedBytes(), flagsField);
+		        payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(header.EncapsulatedBytes(), flagsField));
             }
 
             /// <summary cref="Packet.ToString(StringOutputType)" />
@@ -169,7 +169,7 @@ namespace PacketDotNet
                     properties.Add("length", Length.ToString());
                     properties.Add("present", " (0x" + Present[0].ToString("x") + ")");
 
-                    var radioTapFields = this.RadioTapFields;
+                    var radioTapFields = RadioTapFields;
 
                     foreach (var r in radioTapFields)
                     {
@@ -178,7 +178,7 @@ namespace PacketDotNet
                     }
 
                     // calculate the padding needed to right-justify the property names
-                    Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                    Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                     // build the output string
                     buffer.AppendLine("Ieee80211RadioPacket");

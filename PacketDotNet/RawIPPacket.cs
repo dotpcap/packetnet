@@ -36,7 +36,7 @@ namespace PacketDotNet
         /// <summary>
         /// </summary>
         public RawIPPacketProtocol Protocol;
-       
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -59,23 +59,27 @@ namespace PacketDotNet
             header.Length = 0;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = new PacketOrByteArraySegment();
-
-            switch (Protocol)
+            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-            case RawIPPacketProtocol.IPv4:
-                payloadPacketOrData.ThePacket = new IPv4Packet(header.EncapsulatedBytes());
-                break;
-            case RawIPPacketProtocol.IPv6:
-                payloadPacketOrData.ThePacket = new IPv6Packet(header.EncapsulatedBytes());
-                break;
-            default:
-                throw new System.NotImplementedException("Protocol of " + Protocol + " is not implemented");
-            }
+                var result = new PacketOrByteArraySegment();
+                switch (Protocol)
+                {
+                    case RawIPPacketProtocol.IPv4:
+                        result.ThePacket = new IPv4Packet(header.EncapsulatedBytes());
+                        break;
+                    case RawIPPacketProtocol.IPv6:
+                        result.ThePacket = new IPv6Packet(header.EncapsulatedBytes());
+                        break;
+                    default:
+                        throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");
+                }
+
+                return result;
+            });
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color => AnsiEscapeSequences.DarkGray;
+        public override String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override String ToString(StringOutputType outputFormat)

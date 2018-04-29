@@ -247,6 +247,7 @@ namespace Test.PacketType
                 dev.Close ();
                 
                 PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+                Assert.IsTrue(p?.PayloadPacket is MacFrame);
                 var expectedLength = p.Length - p[1].Length - PpiHeaderFields.FieldHeaderLength;
                 p.Remove(p[1]);
                 
@@ -269,6 +270,7 @@ namespace Test.PacketType
                 dev.Close ();
                 
                 PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+                Assert.IsTrue(p?.PayloadPacket is MacFrame);
                 p.RemoveAll(PpiFieldType.PpiMacPhy);
                 
                 PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, p.Bytes) as PpiPacket;
@@ -290,6 +292,7 @@ namespace Test.PacketType
                 dev.Close ();
                 
                 PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+                Assert.IsTrue(p?.PayloadPacket is MacFrame);
                 
                 PpiUnknown unknownField = new PpiUnknown(99, new Byte[]{0xAA, 0xBB, 0xCC, 0xDD});
                 p.Add(unknownField);

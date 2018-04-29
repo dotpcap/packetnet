@@ -272,7 +272,7 @@ namespace PacketDotNet
             // if we are an ipv4 packet with a non-zero FragementOffset we shouldn't attempt
             // to decode the content, it is a continuation of a previous packet so it won't
             // have the proper headers for its type, that was in the first packet fragment
-            if (ParentPacket.Extract(typeof(IPv4Packet)) is IPv4Packet ipv4Packet)
+            if (ParentPacket is IPv4Packet ipv4Packet)
             {
                 if (ipv4Packet.FragmentOffset > 0)
                 {

@@ -52,7 +52,7 @@ namespace PacketDotNet
         /// <summary>
         /// Used internally when building new packet dissectors
         /// </summary>
-        protected Lazy<PacketOrByteArraySegment> payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => new PacketOrByteArraySegment());
+        protected Lazy<PacketOrByteArraySegment> payloadPacketOrData = new Lazy<PacketOrByteArraySegment>();
 
         /// <summary>
         /// The parent packet. Accessible via the 'ParentPacket' property
@@ -106,7 +106,8 @@ namespace PacketDotNet
             {
                 log.Debug("");
 
-                switch (payloadPacketOrData.Value.Type)
+                var payloadType = payloadPacketOrData.Value?.Type ?? PayloadType.None;
+                switch (payloadType)
                 {
                     case PayloadType.Bytes:
                         // is the byte array payload the same byte[] and does the offset indicate
@@ -338,7 +339,7 @@ namespace PacketDotNet
             UpdateCalculatedValues();
 
             // if the packet contains another packet, call its
-            if (payloadPacketOrData.Value.Type == PayloadType.Packet)
+            if (payloadPacketOrData.Value?.Type == PayloadType.Packet)
             {
                 payloadPacketOrData.Value.ThePacket.RecursivelyUpdateCalculatedValues();
             }

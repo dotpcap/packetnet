@@ -18,9 +18,10 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
- using System;
+using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -51,7 +52,7 @@ namespace PacketDotNet
         /// <summary>
         /// Used internally when building new packet dissectors
         /// </summary>
-        protected Lazy<PacketOrByteArraySegment> payloadPacketOrData = null;
+        protected Lazy<PacketOrByteArraySegment> payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => new PacketOrByteArraySegment());
 
         /// <summary>
         /// The parent packet. Accessible via the 'ParentPacket' property
@@ -74,7 +75,7 @@ namespace PacketDotNet
                 if (header != null)
                     totalLength += header.Length;
 
-                if (payloadPacketOrData?.Value != null)
+                if (payloadPacketOrData.Value != null)
                 {
                     if (payloadPacketOrData.Value.Type == PayloadType.Bytes)
                     {
@@ -161,7 +162,7 @@ namespace PacketDotNet
         /// Returns a
         /// </value>
         public virtual Byte[] Header => header.ActualBytes();
-        
+
         /// <summary>
         /// Packet that this packet carries if one is present.
         /// Note that the packet MAY have a null PayloadPacket but
@@ -244,7 +245,7 @@ namespace PacketDotNet
 
                 // if we share memory with all of our sub packets we can take a
                 // higher performance path to retrieve the bytes
-                if(SharesMemoryWithSubPackets)
+                if (SharesMemoryWithSubPackets)
                 {
                     // The high performance path that is often taken because it is called on
                     // packets that have not had their header, or any of their sub packets, resized

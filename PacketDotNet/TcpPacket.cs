@@ -370,16 +370,14 @@ namespace PacketDotNet
             // store the payload bytes
             payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment();
-                result.TheByteArraySegment = header.EncapsulatedBytes();
+                var result = new PacketOrByteArraySegment {TheByteArraySegment = header.EncapsulatedBytes()};
 
                 // if the parent packet is an IPv4Packet we need to adjust
                 // the payload length because it is possible for us to have
                 // X bytes of data but only (X - Y) bytes are actually valid
-                if (this.ParentPacket is IPv4Packet)
+                if (this.ParentPacket is IPv4Packet ipv4Parent)
                 {
                     // actual total length (tcp header + tcp payload)
-                    var ipv4Parent = (IPv4Packet)this.ParentPacket;
                     var ipPayloadTotalLength = ipv4Parent.TotalLength - (ipv4Parent.HeaderLength * 4);
 
                     log.DebugFormat("ipv4Parent.TotalLength {0}, ipv4Parent.HeaderLength {1}",
@@ -390,13 +388,13 @@ namespace PacketDotNet
 
                     log.DebugFormat("Header.Length {0}, Current payload length: {1}, new payload length {2}",
                                     header.Length,
-                                    payloadPacketOrData.Value.TheByteArraySegment.Length,
+                                    result.TheByteArraySegment.Length,
                                     newTcpPayloadLength);
 
                     // the length of the payload is the total payload length
                     // above, minus the length of the tcp header
-                    payloadPacketOrData.Value.TheByteArraySegment.Length = newTcpPayloadLength;
-                    DecodePayload();
+                    result.TheByteArraySegment.Length = newTcpPayloadLength;
+                    DecodePayload(result);
                 }
 
                 return result;
@@ -410,17 +408,18 @@ namespace PacketDotNet
         /// <summary>
         /// Decode Payload to Support Drda procotol
         /// </summary>
+        /// <param name="result"></param>
         /// <returns></returns>
-        public TcpPacket DecodePayload()
+        public TcpPacket DecodePayload(PacketOrByteArraySegment result)
         {
-            if (payloadPacketOrData.Value.TheByteArraySegment == null)
+            if (result.TheByteArraySegment == null)
                 return this;
 
-            if (payloadPacketOrData.Value.TheByteArraySegment.Length >= DrdaDDMFields.DDMHeadTotalLength &&
-                payloadPacketOrData.Value.TheByteArraySegment.Bytes[payloadPacketOrData.Value.TheByteArraySegment.Offset + 2] == 0xD0)
+            if (result.TheByteArraySegment.Length >= DrdaDDMFields.DDMHeadTotalLength &&
+                result.TheByteArraySegment.Bytes[result.TheByteArraySegment.Offset + 2] == 0xD0)
             {
-                var drdaPacket = new DrdaPacket(payloadPacketOrData.Value.TheByteArraySegment, this);
-                payloadPacketOrData.Value.ThePacket = drdaPacket;
+                var drdaPacket = new DrdaPacket(result.TheByteArraySegment, this);
+                result.ThePacket = drdaPacket;
             }
 
             return this;

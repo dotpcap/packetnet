@@ -126,7 +126,7 @@ namespace PacketDotNet
             get
             {
                 log.Debug("ValidUDPChecksum");
-                var retval = IsValidChecksum(TransportPacket.TransportChecksumOption.AttachPseudoIPHeader);
+                var retval = IsValidChecksum(TransportPacket.TransportChecksumOption.IncludePseudoIPHeader);
                 log.DebugFormat("ValidUDPChecksum {0}", retval);
                 return retval;
             }
@@ -230,10 +230,9 @@ namespace PacketDotNet
         /// Calculates the UDP checksum, optionally updating the UDP checksum header.
         /// </summary>
         /// <returns>The calculated UDP checksum.</returns>
-        public Int32 CalculateUDPChecksum()
+        public UInt16 CalculateUDPChecksum()
         {
-            var newChecksum = CalculateChecksum(TransportChecksumOption.AttachPseudoIPHeader);
-            return newChecksum;
+            return (ushort) CalculateChecksum(TransportChecksumOption.IncludePseudoIPHeader);
         }
 
         /// <summary>
@@ -241,7 +240,7 @@ namespace PacketDotNet
         /// </summary>
         public void UpdateUDPChecksum()
         {
-            this.Checksum = (UInt16)CalculateUDPChecksum();
+            Checksum = CalculateUDPChecksum();
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />

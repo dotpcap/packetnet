@@ -233,27 +233,27 @@ namespace PacketDotNet
             {
                 log.Debug("");
 
+                
                 // first validate other information about the packet. if this stuff
                 // is not true, the packet (and therefore the checksum) is invalid
                 // - ip_hl >= 5 (ip_hl is the length in 4-byte words)
-                if (Header.Length < IPv4Fields.HeaderLength)
+                if (header.Length < IPv4Fields.HeaderLength)
                 {
                     log.DebugFormat("invalid length, returning false");
                     return false;
                 }
-                else
-                {
-                    var headerOnesSum = ChecksumUtils.OnesSum(Header);
-                    log.DebugFormat(HexPrinter.GetString(Header, 0, Header.Length));
-                    const Int32 expectedHeaderOnesSum = 0xffff;
-                    var retval = (headerOnesSum == expectedHeaderOnesSum);
-                    log.DebugFormat("headerOnesSum: {0}, expectedHeaderOnesSum {1}, returning {2}",
-                                    headerOnesSum,
-                                    expectedHeaderOnesSum,
-                                    retval);
-                    log.DebugFormat("Header.Length {0}", Header.Length);
-                    return retval;
-                }
+
+                var headerOnesSum = ChecksumUtils.OnesSum(header, new byte[0]);
+
+                log.DebugFormat(HexPrinter.GetString(header.ActualBytes(), 0, header.Length));
+
+                const Int32 expectedHeaderOnesSum = 0xFFFF;
+                var retval = headerOnesSum == expectedHeaderOnesSum;
+
+                log.DebugFormat("headerOnesSum: {0}, expectedHeaderOnesSum {1}, returning {2}", headerOnesSum, expectedHeaderOnesSum, retval);
+                log.DebugFormat("Header.Length {0}", header.Length);
+
+                return retval;
             }
         }
 
@@ -350,81 +350,49 @@ namespace PacketDotNet
         /// <summary>
         /// Calculates the IP checksum, optionally updating the IP checksum header.
         /// </summary>
-        /// <returns> The calculated IP checksum.
-        /// </returns>
+        /// <returns>The calculated IP checksum.</returns>
         public UInt16 CalculateIPChecksum()
         {
-            //copy the ip header
-            var theHeader = Header;
-            Byte[] ip = new Byte[theHeader.Length];
-            Array.Copy(theHeader, ip, theHeader.Length);
+            var originalChecksum = Checksum;
 
-            //reset the checksum field (checksum is calculated when this field is zeroed)
-            var theValue = (UInt16)0;
-            EndianBitConverter.Big.CopyBytes(theValue, ip, IPv4Fields.ChecksumPosition);
+            Checksum = 0; // This needs to be reset first to calculate the checksum.
+            var calculatedChecksum = ChecksumUtils.OnesComplementSum(header.Bytes, header.Offset, header.Length);
 
-            //calculate the one's complement sum of the ip header
-            Int32 cs = ChecksumUtils.OnesComplementSum(ip, 0, ip.Length);
-
-            return (UInt16)cs;
+            Checksum = originalChecksum;
+            return (UInt16)calculatedChecksum;
         }
 
         /// <summary>
-        /// Update the checksum value
+        /// Update the checksum value.
         /// </summary>
         public void UpdateIPChecksum ()
         {
-            this.Checksum = CalculateIPChecksum();
+            Checksum = CalculateIPChecksum();
         }
 
-        /// <summary>
-        /// Prepend to the given byte[] origHeader the portion of the IPv6 header used for
-        /// generating an tcp checksum
-        ///
-        /// http://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_checksum_using_IPv4
-        /// http://tools.ietf.org/html/rfc793
-        /// </summary>
-        /// <param name="origHeader">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="System.Byte"/>
-        /// </returns>
-        internal override Byte[] AttachPseudoIPHeader(Byte[] origHeader)
+        internal override byte[] GetPseudoIPHeader(int originalHeaderLength)
         {
             log.DebugFormat("origHeader.Length {0}",
-                            origHeader.Length);
+                            originalHeaderLength);
 
-            Boolean odd = origHeader.Length % 2 != 0;
-            Int32 numberOfBytesFromIPHeaderUsedToGenerateChecksum = 12;
-            Int32 headerSize = numberOfBytesFromIPHeaderUsedToGenerateChecksum + origHeader.Length;
-            if (odd)
-                headerSize++;
+            const int headerSize = 12;
+            var headerForChecksum = new Byte[headerSize];
 
-            Byte[] headerForChecksum = new Byte[headerSize];
             // 0-7: ip src+dest addr
             Array.Copy(header.Bytes,
                        header.Offset + IPv4Fields.SourcePosition,
                        headerForChecksum,
                        0,
                        IPv4Fields.AddressLength * 2);
+
             // 8: always zero
             headerForChecksum[8] = 0;
             // 9: ip protocol
             headerForChecksum[9] = (Byte)Protocol;
             // 10-11: header+data length
-            var length = (Int16)origHeader.Length;
+            var length = (Int16)originalHeaderLength;
             EndianBitConverter.Big.CopyBytes(length, headerForChecksum,
                                              10);
-
-            // prefix the pseudoHeader to the header+data
-            Array.Copy(origHeader, 0,
-                       headerForChecksum, numberOfBytesFromIPHeaderUsedToGenerateChecksum,
-                       origHeader.Length);
-
-            //if not even length, pad with a zero
-            if (odd)
-                headerForChecksum[headerForChecksum.Length - 1] = 0;
 
             return headerForChecksum;
         }

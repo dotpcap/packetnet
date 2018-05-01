@@ -35,10 +35,8 @@ namespace PacketDotNet.Utils
     * taken from TCP/IP Illustrated Vol. 2(1995) by Gary R. Wright and W.
     * Richard Stevens. Page 236
     */
-    public sealed class ChecksumUtils
+    public static class ChecksumUtils
     {
-        private ChecksumUtils() { }
-
         /// <summary>
         /// Computes the one's complement sum on a byte array
         /// </summary>
@@ -47,14 +45,23 @@ namespace PacketDotNet.Utils
             //just complement the one's sum
             return OnesComplementSum(bytes, 0, bytes.Length);
         }
-
+        
         /// <summary>
         /// Computes the one's complement sum on a byte array
         /// </summary>
         public static Int32 OnesComplementSum(Byte[] bytes, Int32 start, Int32 len)
         {
             //just complement the one's sum
-            return (~OnesSum(bytes, start, len)) & 0xFFFF;
+            return ~OnesSum(bytes, start, len) & 0xFFFF;
+        }
+
+        /// <summary>
+        /// Computes the one's complement sum on a byte array combination.
+        /// </summary>
+        public static Int32 OnesComplementSum(ByteArraySegment byteArraySegment, byte[] prefixedBytes)
+        {
+            //just complement the one's sum
+            return ~OnesSum(byteArraySegment, prefixedBytes) & 0xFFFF;
         }
 
         /// <summary>
@@ -93,11 +100,9 @@ namespace PacketDotNet.Utils
             BinaryReader br = new BinaryReader(memStream);
             Int32 sum = 0;
 
-            UInt16 val;
-
-            while (memStream.Position < memStream.Length -1)
+            while (memStream.Position < memStream.Length - 1)
             {
-                val = (UInt16)System.Net.IPAddress.NetworkToHostOrder(br.ReadInt16());
+                var val = (UInt16)System.Net.IPAddress.NetworkToHostOrder(br.ReadInt16());
                 sum += val;
             }
 
@@ -107,8 +112,60 @@ namespace PacketDotNet.Utils
                 sum += br.ReadByte();
             }
 
+
             // fold the sum into 16 bits
-            while((sum >> 16) != 0)
+            while (sum >> 16 != 0)
+            {
+                sum = (sum & 0xffff) + (sum >> 16);
+            }
+
+            return sum;
+        }
+
+        /// <summary>
+        /// 16 bit sum of all values
+        /// http://en.wikipedia.org/wiki/Signed_number_representations#Ones.27_complement
+        /// </summary>
+        /// <param name="byteArraySegment">A <see cref="ByteArraySegment" />.</param>
+        /// <param name="prefixedBytes">The prefixed bytes.</param>
+        /// <param name="padOddBytesToLeft">if set to <c>true</c> pads the last byte to the left if the last byte has an odd index.</param>
+        /// <returns>A <see cref="System.Int32" /></returns>
+        public static int OnesSum(ByteArraySegment byteArraySegment, byte[] prefixedBytes, bool padOddBytesToLeft = true)
+        {
+            var sum = 0;
+            for (int i = 0; i < prefixedBytes.Length; i += 2)
+            {
+                sum += prefixedBytes[i] << 8 | prefixedBytes[i + 1];
+            }
+
+
+            var byteArraySegmentStartOffset = 0;
+            if (prefixedBytes.Length % 2 == 1 && byteArraySegment.Length > 0)
+            {
+                sum += prefixedBytes[prefixedBytes.Length - 1] << 8 | byteArraySegment.Bytes[byteArraySegment.Offset];
+                byteArraySegmentStartOffset++;
+            }
+
+
+            var byteArraySegmentStart = byteArraySegmentStartOffset + byteArraySegment.Offset;
+            var byteArraySegmentEnd = byteArraySegment.Length + byteArraySegment.Offset - 1;
+            for (int i = byteArraySegmentStart; i < byteArraySegmentEnd; i += 2)
+            {
+                sum += byteArraySegment.Bytes[i] << 8 |
+                       byteArraySegment.Bytes[i + 1];
+            }
+
+
+            if (byteArraySegment.Length % 2 == 1 && byteArraySegmentStartOffset == 0)
+            {
+                if (padOddBytesToLeft)
+                    sum += byteArraySegment.Bytes[byteArraySegment.Offset + byteArraySegment.Length - 1] << 8;
+                else
+                    sum += byteArraySegment.Bytes[byteArraySegment.Offset + byteArraySegment.Length - 1];
+            }
+
+
+            while (sum >> 16 != 0)
             {
                 sum = (sum & 0xffff) + (sum >> 16);
             }

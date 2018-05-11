@@ -86,8 +86,11 @@ namespace PacketDotNet
             header = new ByteArraySegment(bas);
 
             // store the payload bytes
-            payloadPacketOrData = new PacketOrByteArraySegment();
-            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
+            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            {
+                var result = new PacketOrByteArraySegment {TheByteArraySegment = header.EncapsulatedBytes()};
+                return result;
+            }); 
         }
 
         /// <summary>

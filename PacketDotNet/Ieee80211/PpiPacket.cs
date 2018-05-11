@@ -180,7 +180,7 @@ namespace PacketDotNet
                 PpiCommon commonField = FindFirstByType(PpiFieldType.PpiCommon) as PpiCommon;
                 
                 // parse the encapsulated bytes
-                payloadPacketOrData = ParseEncapsulatedBytes (header, commonField);
+                payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(header, commonField));
             }
             
             /// <summary>
@@ -204,6 +204,8 @@ namespace PacketDotNet
             /// </param>
             public void Add(PpiField field)
             {
+                payloadPacketOrData.Evaluate();
+
                 PpiFields.Add(field);
             }
             
@@ -215,6 +217,8 @@ namespace PacketDotNet
             /// </param>
             public void Remove(PpiField field)
             {
+                payloadPacketOrData.Evaluate();
+
                 PpiFields.Remove(field);
             }
             
@@ -226,6 +230,8 @@ namespace PacketDotNet
             /// </param>
             public void RemoveAll(PpiFieldType type)
             {
+                payloadPacketOrData.Evaluate();
+
                 PpiFields.RemoveAll( field => type == field.FieldType);
             }
             
@@ -288,6 +294,8 @@ namespace PacketDotNet
             /// <summary cref="Packet.ToString(StringOutputType)" />
             public override String ToString (StringOutputType outputFormat)
             {
+                payloadPacketOrData.Evaluate();
+
                 var buffer = new StringBuilder ();
                 String color = "";
                 String colorEscape = "";
@@ -359,6 +367,8 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
+                payloadPacketOrData.Evaluate();
+
                 //If aligned is true then fields must all start on 32bit boundaries so we might need
                 //to read some extra padding from the end of the header fields.
                 Boolean aligned = ((Flags & HeaderFlags.Alignment32Bit) == HeaderFlags.Alignment32Bit);

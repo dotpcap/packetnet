@@ -18,9 +18,10 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
- using System;
+using System;
 using System.IO;
 using System.Text;
+using System.Threading;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -51,7 +52,7 @@ namespace PacketDotNet
         /// <summary>
         /// Used internally when building new packet dissectors
         /// </summary>
-        protected PacketOrByteArraySegment payloadPacketOrData = new PacketOrByteArraySegment();
+        protected Lazy<PacketOrByteArraySegment> payloadPacketOrData = new Lazy<PacketOrByteArraySegment>();
 
         /// <summary>
         /// The parent packet. Accessible via the 'ParentPacket' property
@@ -71,16 +72,20 @@ namespace PacketDotNet
             get
             {
                 Int32 totalLength = 0;
-                totalLength += header.Length;
+                if (header != null)
+                    totalLength += header.Length;
 
-                if(payloadPacketOrData.Type == PayloadType.Bytes)
+                if (payloadPacketOrData.Value != null)
                 {
-                    totalLength += payloadPacketOrData.TheByteArraySegment.Length;
-                } else if(payloadPacketOrData.Type == PayloadType.Packet)
-                {
-                    totalLength += payloadPacketOrData.ThePacket.TotalPacketLength;
+                    if (payloadPacketOrData.Value.Type == PayloadType.Bytes)
+                    {
+                        totalLength += payloadPacketOrData.Value.TheByteArraySegment.Length;
+                    }
+                    else if (payloadPacketOrData.Value.Type == PayloadType.Packet)
+                    {
+                        totalLength += payloadPacketOrData.Value.ThePacket.TotalPacketLength;
+                    }
                 }
-
                 return totalLength;
             }
         }
@@ -101,43 +106,46 @@ namespace PacketDotNet
             {
                 log.Debug("");
 
-                switch(payloadPacketOrData.Type)
+                var payloadType = payloadPacketOrData.Value?.Type ?? PayloadType.None;
+                switch (payloadType)
                 {
-                case PayloadType.Bytes:
-                    // is the byte array payload the same byte[] and does the offset indicate
-                    // that the bytes are contiguous?
-                    if((header.Bytes == payloadPacketOrData.TheByteArraySegment.Bytes) &&
-                       ((header.Offset + header.Length) == payloadPacketOrData.TheByteArraySegment.Offset))
-                    {
-                        log.Debug("PayloadType.Bytes returning true");
+                    case PayloadType.Bytes:
+                        // is the byte array payload the same byte[] and does the offset indicate
+                        // that the bytes are contiguous?
+                        if ((header.Bytes == payloadPacketOrData.Value.TheByteArraySegment.Bytes) &&
+                           ((header.Offset + header.Length) == payloadPacketOrData.Value.TheByteArraySegment.Offset))
+                        {
+                            log.Debug("PayloadType.Bytes returning true");
+                            return true;
+                        }
+                        else
+                        {
+                            log.Debug("PayloadType.Bytes returning false");
+                            return false;
+                        }
+                    case PayloadType.Packet:
+                        // is the byte array payload the same as the payload packet header and does
+                        // the offset indicate that the bytes are contiguous?
+                        if ((header.Bytes == payloadPacketOrData.Value.ThePacket.header.Bytes) &&
+                           ((header.Offset + header.Length) == payloadPacketOrData.Value.ThePacket.header.Offset))
+                        {
+                            // and does the sub packet share memory with its sub packets?
+                            var retval = payloadPacketOrData.Value.ThePacket.SharesMemoryWithSubPackets;
+                            log.DebugFormat("PayloadType.Packet retval {0}", retval);
+                            return retval;
+                        }
+                        else
+                        {
+                            log.Debug("PayloadType.Packet returning false");
+                            return false;
+                        }
+                    case PayloadType.None:
+                        // no payload data or packet thus we must share memory with
+                        // our non-existent sub packets
+                        log.Debug("PayloadType.None, returning true");
                         return true;
-                    } else
-                    {
-                        log.Debug("PayloadType.Bytes returning false");
-                        return false;
-                    }
-                case PayloadType.Packet:
-                    // is the byte array payload the same as the payload packet header and does
-                    // the offset indicate that the bytes are contiguous?
-                    if((header.Bytes == payloadPacketOrData.ThePacket.header.Bytes) &&
-                       ((header.Offset + header.Length) == payloadPacketOrData.ThePacket.header.Offset))
-                    {
-                        // and does the sub packet share memory with its sub packets?
-                        var retval = payloadPacketOrData.ThePacket.SharesMemoryWithSubPackets;
-                        log.DebugFormat("PayloadType.Packet retval {0}", retval);
-                        return retval;
-                    } else
-                    {
-                        log.Debug("PayloadType.Packet returning false");
-                        return false;
-                    }
-                case PayloadType.None:
-                    // no payload data or packet thus we must share memory with
-                    // our non-existent sub packets
-                    log.Debug("PayloadType.None, returning true");
-                    return true;
-                default:
-                    throw new System.NotImplementedException();
+                    default:
+                        throw new NotImplementedException();
                 }
             }
         }
@@ -154,7 +162,7 @@ namespace PacketDotNet
         /// <value>
         /// Returns a
         /// </value>
-        public virtual Byte[] Header => this.header.ActualBytes();
+        public virtual Byte[] Header => header.ActualBytes();
 
         /// <summary>
         /// Packet that this packet carries if one is present.
@@ -163,14 +171,14 @@ namespace PacketDotNet
         /// </summary>
         public virtual Packet PayloadPacket
         {
-            get => payloadPacketOrData.ThePacket;
+            get => payloadPacketOrData.Value.ThePacket;
             set
             {
                 if (this == value)
                     throw new InvalidOperationException("A packet cannot have itself as its payload.");
 
-                payloadPacketOrData.ThePacket = value;
-                payloadPacketOrData.ThePacket.ParentPacket = this;
+                payloadPacketOrData.Value.ThePacket = value;
+                payloadPacketOrData.Value.ThePacket.ParentPacket = this;
             }
         }
 
@@ -183,23 +191,22 @@ namespace PacketDotNet
         {
             get
             {
-                if(payloadPacketOrData.TheByteArraySegment == null)
+                if (payloadPacketOrData.Value.TheByteArraySegment == null)
                 {
                     log.Debug("returning null");
                     return null;
-                } else
-                {
-                    var retval = payloadPacketOrData.TheByteArraySegment.ActualBytes();
-                    log.DebugFormat("retval.Length: {0}", retval.Length);
-                    return retval;
                 }
+
+                var retval = payloadPacketOrData.Value.TheByteArraySegment.ActualBytes();
+                log.DebugFormat("retval.Length: {0}", retval.Length);
+                return retval;
             }
 
             set
             {
                 log.DebugFormat("value.Length {0}", value.Length);
 
-                payloadPacketOrData.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
+                payloadPacketOrData.Value.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
             }
         }
 
@@ -239,7 +246,7 @@ namespace PacketDotNet
 
                 // if we share memory with all of our sub packets we can take a
                 // higher performance path to retrieve the bytes
-                if(SharesMemoryWithSubPackets)
+                if (SharesMemoryWithSubPackets)
                 {
                     // The high performance path that is often taken because it is called on
                     // packets that have not had their header, or any of their sub packets, resized
@@ -249,32 +256,24 @@ namespace PacketDotNet
                     log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}",
                                     newByteArraySegment.ToString());
                     return newByteArraySegment;
-                } else // need to rebuild things from scratch
-                {
-                    log.Debug("rebuilding the byte array");
-
-                    var ms = new MemoryStream();
-
-                    // TODO: not sure if this is a performance gain or if
-                    //       the compiler is smart enough to not call the get accessor for Header
-                    //       twice, once when retrieving the header and again when retrieving the Length
-                    var theHeader = Header;
-                    ms.Write(theHeader, 0, theHeader.Length);
-
-                    payloadPacketOrData.AppendToMemoryStream(ms);
-
-                    var newBytes = ms.ToArray();
-
-                    return new ByteArraySegment(newBytes, 0, newBytes.Length);
                 }
-            }
-        }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public Packet()
-        {
+                log.Debug("rebuilding the byte array");
+
+                var ms = new MemoryStream();
+
+                // TODO: not sure if this is a performance gain or if
+                //       the compiler is smart enough to not call the get accessor for Header
+                //       twice, once when retrieving the header and again when retrieving the Length
+                var theHeader = Header;
+                ms.Write(theHeader, 0, theHeader.Length);
+
+                payloadPacketOrData.Value.AppendToMemoryStream(ms);
+
+                var newBytes = ms.ToArray();
+
+                return new ByteArraySegment(newBytes, 0, newBytes.Length);
+            }
         }
 
         /// <summary>
@@ -340,9 +339,9 @@ namespace PacketDotNet
             UpdateCalculatedValues();
 
             // if the packet contains another packet, call its
-            if(payloadPacketOrData.Type == PayloadType.Packet)
+            if (payloadPacketOrData.Value?.Type == PayloadType.Packet)
             {
-                payloadPacketOrData.ThePacket.RecursivelyUpdateCalculatedValues();
+                payloadPacketOrData.Value.ThePacket.RecursivelyUpdateCalculatedValues();
             }
         }
 
@@ -376,13 +375,12 @@ namespace PacketDotNet
         /// </param>
         public virtual String ToString(StringOutputType outputFormat)
         {
-            if(payloadPacketOrData.Type == PayloadType.Packet)
+            if (payloadPacketOrData.Value.Type == PayloadType.Packet)
             {
-                return payloadPacketOrData.ThePacket.ToString(outputFormat);
-            } else
-            {
-                return String.Empty;
+                return payloadPacketOrData.Value.ThePacket.ToString(outputFormat);
             }
+
+            return String.Empty;
         }
 
         /// <summary>
@@ -474,7 +472,7 @@ namespace PacketDotNet
             // search for a packet type that matches the given one
             do
             {
-                if(type.IsAssignableFrom(p.GetType ()))
+                if(type.IsInstanceOfType(p))
                 {
                     return p;
                 }

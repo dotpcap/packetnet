@@ -294,10 +294,13 @@ namespace PacketDotNet
             header.Length = bas.Length - PayloadLength;
 
             // parse the payload
-            var payload = header.EncapsulatedBytes(PayloadLength);
-            payloadPacketOrData = IpPacket.ParseEncapsulatedBytes(payload,
-                                                                  NextHeader,
-                                                                  this);
+            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            {
+                var payload = header.EncapsulatedBytes(PayloadLength);
+                return ParseEncapsulatedBytes(payload,
+                                              NextHeader,
+                                              this);
+            });
         }
 
         /// <summary>

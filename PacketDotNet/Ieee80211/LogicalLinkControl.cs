@@ -135,8 +135,8 @@ namespace PacketDotNet
                 header.Length = LogicalLinkControlFields.HeaderLength;
 
                 // parse the payload via an EthernetPacket method
-                payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(header,
-                                                                            Type);
+                payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(header,
+                                                                                                                     Type));
             }
         }
     }

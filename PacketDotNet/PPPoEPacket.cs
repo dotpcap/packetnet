@@ -176,7 +176,7 @@ namespace PacketDotNet
             header.Length = PPPoEFields.HeaderLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = ParseEncapsulatedBytes(header);
+            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(()=> ParseEncapsulatedBytes(header));
         }
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header)

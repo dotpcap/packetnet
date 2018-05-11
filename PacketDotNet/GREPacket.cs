@@ -77,7 +77,7 @@ namespace PacketDotNet
                 header.Length += GREFields.SequenceLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = EthernetPacket.ParseEncapsulatedBytes(header, Protocol);
+            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(header, Protocol));
             this.ParentPacket = ParentPacket;
         }
         

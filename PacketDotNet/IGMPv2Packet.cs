@@ -84,8 +84,12 @@ namespace PacketDotNet
             header.Length = UdpFields.HeaderLength;
 
             // store the payload bytes
-            payloadPacketOrData = new PacketOrByteArraySegment();
-            payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
+            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            {
+                var result = new PacketOrByteArraySegment();
+                result.TheByteArraySegment = header.EncapsulatedBytes();
+                return result;
+            });
         }
 
         /// <summary>

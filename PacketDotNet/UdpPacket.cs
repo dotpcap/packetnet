@@ -183,26 +183,31 @@ namespace PacketDotNet
             header = new ByteArraySegment(bas);
             header.Length = UdpFields.HeaderLength;
 
-            payloadPacketOrData = new PacketOrByteArraySegment();
+            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            {
+                var result = new PacketOrByteArraySegment();
+                // is this packet going to port 7 or 9? if so it might be a WakeOnLan packet
+                const Int32 wakeOnLanPort0 = 7;
+                const Int32 wakeOnLanPort1 = 9;
+                if (DestinationPort.Equals(wakeOnLanPort0) || DestinationPort.Equals(wakeOnLanPort1))
+                {
+                    result.ThePacket = new WakeOnLanPacket(header.EncapsulatedBytes());
+                }
+                else
+                {
+                    // store the payload bytes
+                    result.TheByteArraySegment = header.EncapsulatedBytes();
+                }
 
-            // is this packet going to port 7 or 9? if so it might be a WakeOnLan packet
-            const Int32 wakeOnLanPort0 = 7;
-            const Int32 wakeOnLanPort1 = 9;
-            if(DestinationPort.Equals(wakeOnLanPort0) || DestinationPort.Equals (wakeOnLanPort1))
-            {
-                payloadPacketOrData.ThePacket = new WakeOnLanPacket(header.EncapsulatedBytes());
-            } else
-            {
-                // store the payload bytes
-                payloadPacketOrData.TheByteArraySegment = header.EncapsulatedBytes();
-            }
+                const Int32 l2TPport = 1701;
+                if (DestinationPort.Equals(l2TPport) && DestinationPort.Equals(l2TPport))
+                {
+                    var payload = header.EncapsulatedBytes();
+                    result.ThePacket = new L2TPPacket(payload, this);
+                }
 
-            const Int32 l2TPport = 1701;
-            if (DestinationPort.Equals(l2TPport) && DestinationPort.Equals(l2TPport))
-            {
-                var payload = header.EncapsulatedBytes();
-                payloadPacketOrData.ThePacket = new L2TPPacket(payload, this);
-            }
+                return result;
+            });
         }
 
         /// <summary>

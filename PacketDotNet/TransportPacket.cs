@@ -16,7 +16,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 using System;
 using PacketDotNet.Utils;
-using MiscUtil.Conversion;
 
 namespace PacketDotNet
 {
@@ -26,6 +25,7 @@ namespace PacketDotNet
     [Serializable]
     public abstract class TransportPacket : Packet
     {
+
 #if DEBUG
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 #else
@@ -70,13 +70,14 @@ namespace PacketDotNet
             Checksum = 0;
 
             // copy the tcp section with data
-            Byte[] dataToChecksum = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
+            var dataToChecksum = ((IpPacket)ParentPacket).PayloadPacket.BytesHighPerformance;
 
-             if (option == TransportChecksumOption.AttachPseudoIPHeader)
-                dataToChecksum = ((IpPacket)ParentPacket).AttachPseudoIPHeader(dataToChecksum);
+            var bytes = option == TransportChecksumOption.IncludePseudoIPHeader
+                    ? ((IpPacket)ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
+                    : new byte[0];
 
             // calculate the one's complement sum of the tcp header
-            Int32 cs = ChecksumUtils.OnesComplementSum(dataToChecksum);
+            Int32 cs = ChecksumUtils.OnesComplementSum(dataToChecksum, bytes);
 
             // restore the checksum field value
             Checksum = originalChecksum;
@@ -95,21 +96,23 @@ namespace PacketDotNet
         /// </returns>
         public virtual Boolean IsValidChecksum(TransportChecksumOption option)
         {
-            var upperLayer = ((IpPacket)ParentPacket).PayloadPacket.Bytes;
+            var dataToChecksum = ((IpPacket)ParentPacket).PayloadPacket.BytesHighPerformance;
 
-            log.DebugFormat("option: {0}, upperLayer.Length {1}",
-                            option, upperLayer.Length);
+            var bytes = option == TransportChecksumOption.IncludePseudoIPHeader
+                    ? ((IpPacket)ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
+                    : new byte[0];
+            
+            var onesSum = ChecksumUtils.OnesSum(dataToChecksum, bytes);
+            
+            log.DebugFormat("option: {0}, byteArrayCombination.Length {1}",
+                            option, bytes.Length);
 
-            if (option == TransportChecksumOption.AttachPseudoIPHeader)
-                upperLayer = ((IpPacket)ParentPacket).AttachPseudoIPHeader(upperLayer);
-
-            var onesSum = ChecksumUtils.OnesSum(upperLayer);
             const Int32 expectedOnesSum = 0xffff;
             log.DebugFormat("onesSum {0} expected {1}",
                             onesSum,
                             expectedOnesSum);
 
-            return (onesSum == expectedOnesSum);
+            return onesSum == expectedOnesSum;
         }
 
         /// <summary>
@@ -123,9 +126,9 @@ namespace PacketDotNet
             None,
 
             /// <summary>
-            /// Attach a pseudo IP header to the transport data being checksummed
+            /// Includes a pseudo IP header to the transport data being checksummed.
             /// </summary>
-            AttachPseudoIPHeader,
+            IncludePseudoIPHeader
         }
     }
 }

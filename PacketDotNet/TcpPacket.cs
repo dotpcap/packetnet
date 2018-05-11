@@ -171,9 +171,9 @@ namespace PacketDotNet
                 // IPv6 has no checksum so only the TCP checksum needs evaluation
                 if (ParentPacket.GetType() == typeof(IPv6Packet))
                     return ValidTCPChecksum;
+
                 // For IPv4 both the IP layer and the TCP layer contain checksums
-                else
-                    return ((IPv4Packet)ParentPacket).ValidIPChecksum && ValidTCPChecksum;
+                return ((IPv4Packet)ParentPacket).ValidIPChecksum && ValidTCPChecksum;
             }
         }
 
@@ -185,7 +185,7 @@ namespace PacketDotNet
             get
             {
                 log.Debug("ValidTCPChecksum");
-                var retval = IsValidChecksum(TransportPacket.TransportChecksumOption.AttachPseudoIPHeader);
+                var retval = IsValidChecksum(TransportPacket.TransportChecksumOption.IncludePseudoIPHeader);
                 log.DebugFormat("ValidTCPChecksum {0}", retval);
                 return retval;
             }
@@ -429,10 +429,9 @@ namespace PacketDotNet
         /// Computes the TCP checksum. Does not update the current checksum value
         /// </summary>
         /// <returns> The calculated TCP checksum.</returns>
-        public Int32 CalculateTCPChecksum()
+        public UInt16 CalculateTCPChecksum()
         {
-            var newChecksum = CalculateChecksum(TransportChecksumOption.AttachPseudoIPHeader);
-            return newChecksum;
+            return (ushort) CalculateChecksum(TransportChecksumOption.IncludePseudoIPHeader);
         }
 
         /// <summary>
@@ -440,8 +439,7 @@ namespace PacketDotNet
         /// </summary>
         public void UpdateTCPChecksum()
         {
-            log.Debug("");
-            this.Checksum = (UInt16)CalculateTCPChecksum();
+            Checksum = CalculateTCPChecksum();
         }
 
         /// <summary> Fetch the urgent pointer.</summary>

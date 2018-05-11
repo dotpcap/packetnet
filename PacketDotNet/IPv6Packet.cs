@@ -319,20 +319,7 @@ namespace PacketDotNet
         }
 
 
-        /// <summary>
-        /// Prepend to the given byte[] origHeader the portion of the IPv6 header used for
-        /// generating an tcp checksum
-        ///
-        /// http://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_checksum_using_IPv6
-        /// http://tools.ietf.org/html/rfc2460#page-27
-        /// </summary>
-        /// <param name="origHeader">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="System.Byte"/>
-        /// </returns>
-        internal override Byte[] AttachPseudoIPHeader(Byte[] origHeader)
+        internal override byte[] GetPseudoIPHeader(int originalHeaderLength)
         {
             MemoryStream ms = new MemoryStream();
             BinaryWriter bw = new BinaryWriter(ms);
@@ -346,7 +333,7 @@ namespace PacketDotNet
                      IPv6Fields.AddressLength);
 
             // 33-36: TCP length
-            bw.Write((UInt32)System.Net.IPAddress.HostToNetworkOrder((Int32)origHeader.Length));
+            bw.Write((UInt32)System.Net.IPAddress.HostToNetworkOrder((Int32)originalHeaderLength));
 
             // 37-39: 3 bytes of zeros
             bw.Write((Byte)0);
@@ -357,27 +344,9 @@ namespace PacketDotNet
             bw.Write((Byte)NextHeader);
 
             // prefix the pseudoHeader to the header+data
-            Byte[] pseudoHeader = ms.ToArray();
-            Int32 headerSize = pseudoHeader.Length + origHeader.Length;
-            Boolean odd = origHeader.Length % 2 != 0;
-            if (odd)
-                headerSize++;
-
-            Byte[] finalData = new Byte[headerSize];
-
-            // copy the pseudo header in
-            Array.Copy(pseudoHeader, 0, finalData, 0, pseudoHeader.Length);
-
-            // copy the origHeader in
-            Array.Copy(origHeader, 0, finalData, pseudoHeader.Length, origHeader.Length);
-
-            //if not even length, pad with a zero
-            if (odd)
-                finalData[finalData.Length - 1] = 0;
-
-            return finalData;
+            return ms.ToArray();
         }
-
+        
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override String ToString(StringOutputType outputFormat)
         {

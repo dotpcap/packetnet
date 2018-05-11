@@ -79,14 +79,15 @@ namespace PacketDotNet
         /// </param>
         public void AppendToMemoryStream(MemoryStream ms)
         {
-            if(ThePacket != null)
+            if (ThePacket != null)
             {
-                var theBytes = ThePacket.Bytes;
-                ms.Write(theBytes, 0, theBytes.Length);
-            } else if(TheByteArraySegment != null)
+                var bytes = ThePacket.Bytes;
+                ms.Write(bytes, 0, bytes.Length);
+            }
+            else if (TheByteArraySegment != null)
             {
-                var theBytes = TheByteArraySegment.ActualBytes();
-                ms.Write(theBytes, 0, theBytes.Length);
+                var bytes = TheByteArraySegment.ActualBytes();
+                ms.Write(bytes, 0, bytes.Length);
             }
         }
 
@@ -97,16 +98,11 @@ namespace PacketDotNet
         {
             get
             {
-                if(ThePacket != null)
-                {
+                if (ThePacket != null)
                     return PayloadType.Packet;
-                } else if(TheByteArraySegment != null)
-                {
-                    return PayloadType.Bytes;
-                } else
-                {
-                    return PayloadType.None;
-                }
+
+
+                return TheByteArraySegment != null ? PayloadType.Bytes : PayloadType.None;
             }
         }
     }

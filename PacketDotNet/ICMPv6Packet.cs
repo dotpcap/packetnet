@@ -127,13 +127,11 @@ namespace PacketDotNet
 
             // start with this packet with a zeroed out checksum field
             Checksum = 0;
-            var originalBytes = Bytes;
 
+            var dataToChecksum = BytesHighPerformance;
             var ipv6Parent = ParentPacket as IPv6Packet;
-            var bytesToChecksum = ipv6Parent.AttachPseudoIPHeader(originalBytes);
 
-            // calculate the one's complement sum of the tcp header
-            Checksum = (UInt16)ChecksumUtils.OnesComplementSum(bytesToChecksum);
+            Checksum = (ushort) ChecksumUtils.OnesComplementSum(dataToChecksum, ipv6Parent?.GetPseudoIPHeader(dataToChecksum.Length) ?? new byte[0]);
 
             // clear the skip variable
             skipUpdating = false;

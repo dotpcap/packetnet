@@ -112,8 +112,8 @@ namespace PacketDotNet
                     case PayloadType.Bytes:
                         // is the byte array payload the same byte[] and does the offset indicate
                         // that the bytes are contiguous?
-                        if ((header.Bytes == payloadPacketOrData.Value.TheByteArraySegment.Bytes) &&
-                           ((header.Offset + header.Length) == payloadPacketOrData.Value.TheByteArraySegment.Offset))
+                        if (header.Bytes == payloadPacketOrData.Value?.TheByteArraySegment.Bytes &&
+                            header.Offset + header.Length == payloadPacketOrData.Value?.TheByteArraySegment.Offset)
                         {
                             log.Debug("PayloadType.Bytes returning true");
                             return true;
@@ -126,8 +126,8 @@ namespace PacketDotNet
                     case PayloadType.Packet:
                         // is the byte array payload the same as the payload packet header and does
                         // the offset indicate that the bytes are contiguous?
-                        if ((header.Bytes == payloadPacketOrData.Value.ThePacket.header.Bytes) &&
-                           ((header.Offset + header.Length) == payloadPacketOrData.Value.ThePacket.header.Offset))
+                        if (header.Bytes == payloadPacketOrData.Value?.ThePacket.header.Bytes &&
+                            header.Offset + header.Length == payloadPacketOrData.Value?.ThePacket.header.Offset)
                         {
                             // and does the sub packet share memory with its sub packets?
                             var retval = payloadPacketOrData.Value.ThePacket.SharesMemoryWithSubPackets;
@@ -221,12 +221,12 @@ namespace PacketDotNet
                 log.Debug("");
 
                 // Retrieve the byte array container
-                var ba = BytesHighPerformance;
+                var bytesHighPerformance = BytesHighPerformance;
 
                 // ActualBytes() will copy bytes if necessary but will avoid a copy in the
                 // case where our offset is zero and the byte[] length matches the
                 // encapsulated Length
-                return ba.ActualBytes();
+                return bytesHighPerformance.ActualBytes();
             }
         }
 
@@ -250,29 +250,24 @@ namespace PacketDotNet
                 {
                     // The high performance path that is often taken because it is called on
                     // packets that have not had their header, or any of their sub packets, resized
-                    var newByteArraySegment = new ByteArraySegment(header.Bytes,
-                                                                   header.Offset,
-                                                                   header.BytesLength - header.Offset);
-                    log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}",
-                                    newByteArraySegment.ToString());
-                    return newByteArraySegment;
+                    var byteArraySegment = new ByteArraySegment(header.Bytes,
+                                                                header.Offset,
+                                                                header.BytesLength - header.Offset);
+                    log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}", byteArraySegment);
+                    return byteArraySegment;
                 }
 
                 log.Debug("rebuilding the byte array");
 
-                var ms = new MemoryStream();
+                var memoryStream = new MemoryStream();
 
-                // TODO: not sure if this is a performance gain or if
-                //       the compiler is smart enough to not call the get accessor for Header
-                //       twice, once when retrieving the header and again when retrieving the Length
-                var theHeader = Header;
-                ms.Write(theHeader, 0, theHeader.Length);
+                var headerCopy = Header;
+                memoryStream.Write(headerCopy, 0, headerCopy.Length);
 
-                payloadPacketOrData.Value.AppendToMemoryStream(ms);
+                payloadPacketOrData.Value.AppendToMemoryStream(memoryStream);
 
-                var newBytes = ms.ToArray();
-
-                return new ByteArraySegment(newBytes, 0, newBytes.Length);
+                var bytes = memoryStream.ToArray();
+                return new ByteArraySegment(bytes, 0, bytes.Length);
             }
         }
 

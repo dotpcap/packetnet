@@ -85,7 +85,7 @@ namespace PacketDotNet
 
                 // update the payload length based on the size
                 // of the payload packet
-                var newPayloadLength = (UInt16)base.PayloadPacket.Bytes.Length;
+                var newPayloadLength = (UInt16)base.PayloadPacket.BytesHighPerformance.Length;
                 log.DebugFormat("newPayloadLength {0}", newPayloadLength);
                 PayloadLength = newPayloadLength;
             }
@@ -190,16 +190,11 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Adds a pseudo ip header to a given packet. Used to generate the full
-        /// byte array required to generate a udp or tcp checksum.
+        /// Gets the pseudo ip header.
         /// </summary>
-        /// <param name="origHeader">
-        /// A <see cref="System.Byte"/>
-        /// </param>
-        /// <returns>
-        /// A <see cref="System.Byte"/>
-        /// </returns>
-        internal abstract Byte[] AttachPseudoIPHeader(Byte[] origHeader);
+        /// <param name="originalHeaderLength">Length of the original header.</param>
+        /// <returns><see cref="Byte"/>s.</returns>
+        internal abstract byte[] GetPseudoIPHeader(int originalHeaderLength);
 
         /// <summary>
         /// Convert an ip address from a byte[]

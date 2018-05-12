@@ -157,17 +157,16 @@ namespace PacketDotNet.Utils
         {
             log.DebugFormat("{0}", ToString());
 
-            if(NeedsCopyForActualBytes)
+            if (NeedsCopyForActualBytes)
             {
                 log.Debug("needs copy");
                 var newBytes = new Byte[Length];
                 Array.Copy(Bytes, Offset, newBytes, 0, Length);
                 return newBytes;
-            } else
-            {
-                log.Debug("does not need copy");
-                return Bytes;
             }
+
+            log.Debug("does not need copy");
+            return Bytes;
         }
 
         /// <summary>

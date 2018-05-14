@@ -46,32 +46,32 @@ namespace PacketDotNet
         /// <summary>
         /// The Length field
         /// </summary>
-        public UInt16 Length => BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.LengthPosition);
+        public UInt16 Length => BigEndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.LengthPosition);
 
         /// <summary>
         /// The Magic field
         /// </summary>
-        public Byte Magic => header.Bytes[header.Offset + DrdaDDMFields.MagicPosition];
+        public Byte Magic => Header.Bytes[Header.Offset + DrdaDDMFields.MagicPosition];
 
         /// <summary>
         /// The Format field
         /// </summary>
-        public Byte Format => header.Bytes[header.Offset + DrdaDDMFields.FormatPosition];
+        public Byte Format => Header.Bytes[Header.Offset + DrdaDDMFields.FormatPosition];
 
         /// <summary>
         /// The CorrelId field
         /// </summary>
-        public UInt16 CorrelId => BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.CorrelIdPosition);
+        public UInt16 CorrelId => BigEndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.CorrelIdPosition);
 
         /// <summary>
         /// The Length2 field
         /// </summary>
-        public UInt16 Length2 => BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.Length2Position);
+        public UInt16 Length2 => BigEndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.Length2Position);
 
         /// <summary>
         /// The Code Point field
         /// </summary>
-        public DrdaCodepointType CodePoint => (DrdaCodepointType)BigEndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + DrdaDDMFields.CodePointPosition);
+        public DrdaCodepointType CodePoint => (DrdaCodepointType)BigEndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.CodePointPosition);
 
         private List<DrdaDDMParameter> paramters;
 
@@ -84,21 +84,21 @@ namespace PacketDotNet
             {
                 if (paramters == null) paramters = new List<DrdaDDMParameter>();
                 if (paramters.Count > 0) return paramters;
-                var offset = header.Offset + DrdaDDMFields.DDMHeadTotalLength;
+                var offset = Header.Offset + DrdaDDMFields.DDMHeadTotalLength;
                 var ddmTotalLength = this.Length;
-                while (offset < header.Offset+ ddmTotalLength)
+                while (offset < Header.Offset+ ddmTotalLength)
                 {
-                    Int32 length = BigEndianBitConverter.Big.ToUInt16(header.Bytes, offset);
+                    Int32 length = BigEndianBitConverter.Big.ToUInt16(Header.Bytes, offset);
                     if (length == 0)
                     {
-                        length = header.Offset + ddmTotalLength - offset;
+                        length = Header.Offset + ddmTotalLength - offset;
                     }
-                    if (offset + length <= header.Offset + ddmTotalLength)
+                    if (offset + length <= Header.Offset + ddmTotalLength)
                     {
                         var parameter = new DrdaDDMParameter()
                         {
                             Length = length,
-                            DrdaCodepoint = (DrdaCodepointType)BigEndianBitConverter.Big.ToUInt16(header.Bytes, offset + DrdaDDMFields.ParameterLengthLength)
+                            DrdaCodepoint = (DrdaCodepointType)BigEndianBitConverter.Big.ToUInt16(Header.Bytes, offset + DrdaDDMFields.ParameterLengthLength)
                         };
 
                         var startIndex = offset + DrdaDDMFields.ParameterLengthLength + DrdaDDMFields.ParameterCodePointLength;
@@ -108,11 +108,11 @@ namespace PacketDotNet
                         {
                             startIndex++;
                             strLength-=2;
-                            parameter.Data = ASCIIEncoding.UTF8.GetString(header.Bytes, startIndex,strLength).Trim();
+                            parameter.Data = ASCIIEncoding.UTF8.GetString(Header.Bytes, startIndex,strLength).Trim();
                         }
                         else
                         {
-                            parameter.Data = StringConverter.EbcdicToAscii(header.Bytes, startIndex, strLength).Trim();
+                            parameter.Data = StringConverter.EbcdicToAscii(Header.Bytes, startIndex, strLength).Trim();
                         }
                         paramters.Add(parameter);
                     }
@@ -131,7 +131,7 @@ namespace PacketDotNet
             log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(bas);
         }
 
         /// <summary>

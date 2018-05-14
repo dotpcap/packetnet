@@ -86,7 +86,7 @@ namespace PacketDotNet
             get
             {
                 Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
-                Array.Copy(header.Bytes, header.Offset + EthernetFields.SourceMacPosition,
+                Array.Copy(Header.Bytes, Header.Offset + EthernetFields.SourceMacPosition,
                            hwAddress, 0, hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
@@ -101,7 +101,7 @@ namespace PacketDotNet
                                                                + EthernetFields.MacAddressLength);
                 }
 
-                Array.Copy(hwAddress, 0, header.Bytes, header.Offset + EthernetFields.SourceMacPosition,
+                Array.Copy(hwAddress, 0, Header.Bytes, Header.Offset + EthernetFields.SourceMacPosition,
                            hwAddress.Length);
             }
         }
@@ -112,7 +112,7 @@ namespace PacketDotNet
             get
             {
                 Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
-                Array.Copy(header.Bytes, header.Offset + EthernetFields.DestinationMacPosition,
+                Array.Copy(Header.Bytes, Header.Offset + EthernetFields.DestinationMacPosition,
                            hwAddress, 0, hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
@@ -127,7 +127,7 @@ namespace PacketDotNet
                                                                + EthernetFields.MacAddressLength);
                 }
 
-                Array.Copy(hwAddress, 0, header.Bytes, header.Offset + EthernetFields.DestinationMacPosition,
+                Array.Copy(hwAddress, 0, Header.Bytes, Header.Offset + EthernetFields.DestinationMacPosition,
                            hwAddress.Length);
             }
         }
@@ -137,15 +137,15 @@ namespace PacketDotNet
         /// </value>
         public virtual EthernetPacketType Type
         {
-            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
-                header.Offset + EthernetFields.TypePosition);
+            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(Header.Bytes,
+                Header.Offset + EthernetFields.TypePosition);
 
             set
             {
                 Int16 val = (Int16)value;
                 EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + EthernetFields.TypePosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + EthernetFields.TypePosition);
             }
         }
 
@@ -162,7 +162,7 @@ namespace PacketDotNet
             Int32 offset = 0;
             Int32 length = EthernetFields.HeaderLength;
             var headerBytes = new Byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            Header = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
             this.SourceHwAddress = SourceHwAddress;
@@ -181,11 +181,11 @@ namespace PacketDotNet
             log.Debug("");
 
             // slice off the header portion
-            header = new ByteArraySegment(bas);
-            header.Length = EthernetFields.HeaderLength;
+            Header = new ByteArraySegment(bas);
+            Header.Length = EthernetFields.HeaderLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(header, Type));
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, Type));
         }
 
         /// <summary>

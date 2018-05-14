@@ -32,24 +32,24 @@ namespace PacketDotNet
     public class GREPacket : Packet
     {
 
-        public virtual Boolean HasCheckSum => 8 == (header.Bytes[header.Offset + 1] & 0x8);
+        public virtual Boolean HasCheckSum => 8 == (Header.Bytes[Header.Offset + 1] & 0x8);
 
-        public virtual Boolean HasReserved => 4 == (header.Bytes[header.Offset + 1] & 0x4);
+        public virtual Boolean HasReserved => 4 == (Header.Bytes[Header.Offset + 1] & 0x4);
 
-        public virtual Boolean HasKey => 2 == (header.Bytes[header.Offset + 1] & 0x2);
+        public virtual Boolean HasKey => 2 == (Header.Bytes[Header.Offset + 1] & 0x2);
 
-        public virtual Boolean HasSequence => 1 == (header.Bytes[header.Offset + 1] & 0x1);
+        public virtual Boolean HasSequence => 1 == (Header.Bytes[Header.Offset + 1] & 0x1);
 
 
-        public virtual Int32 Version => (header.Bytes[2] & 0x7);
+        public virtual Int32 Version => (Header.Bytes[2] & 0x7);
 
-        public virtual EthernetPacketType Protocol => (EthernetPacketType) EndianBitConverter.Big.ToUInt16(header.Bytes,
-            header.Offset + GREFields.FlagsLength);
+        public virtual EthernetPacketType Protocol => (EthernetPacketType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
+            Header.Offset + GREFields.FlagsLength);
 
 
         /// <summary> Fetch the GRE header checksum.</summary>
-        public virtual Int16 Checksum => BitConverter.ToInt16(header.Bytes,
-            header.Offset + GREFields.ChecksumPosition);
+        public virtual Int16 Checksum => BitConverter.ToInt16(Header.Bytes,
+            Header.Offset + GREFields.ChecksumPosition);
 
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
@@ -64,20 +64,20 @@ namespace PacketDotNet
         public GREPacket(ByteArraySegment bas, Packet ParentPacket)
         {
             // slice off the header portion
-            header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(bas);
 
-            header.Length = GREFields.FlagsLength + GREFields.ProtocolLength;
+            Header.Length = GREFields.FlagsLength + GREFields.ProtocolLength;
             if (HasCheckSum)
-                header.Length += GREFields.ChecksumLength;
+                Header.Length += GREFields.ChecksumLength;
             if (HasReserved)
-                header.Length += GREFields.ReservedLength;
+                Header.Length += GREFields.ReservedLength;
             if (HasKey)
-                header.Length += GREFields.KeyLength;
+                Header.Length += GREFields.KeyLength;
             if (HasSequence)
-                header.Length += GREFields.SequenceLength;
+                Header.Length += GREFields.SequenceLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(header, Protocol));
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header, Protocol));
             this.ParentPacket = ParentPacket;
         }
         

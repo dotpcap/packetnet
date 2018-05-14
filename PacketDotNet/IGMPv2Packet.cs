@@ -37,36 +37,36 @@ namespace PacketDotNet
         /// </value>
         public virtual IGMPMessageType Type
         {
-            get => (IGMPMessageType)header.Bytes[header.Offset + IGMPv2Fields.TypePosition];
+            get => (IGMPMessageType)Header.Bytes[Header.Offset + IGMPv2Fields.TypePosition];
 
-            set => header.Bytes[header.Offset + IGMPv2Fields.TypePosition] = (Byte)value;
+            set => Header.Bytes[Header.Offset + IGMPv2Fields.TypePosition] = (Byte)value;
         }
 
         /// <summary> Fetch the IGMP max response time.</summary>
         public virtual Byte MaxResponseTime
         {
-            get => header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition];
+            get => Header.Bytes[Header.Offset + IGMPv2Fields.MaxResponseTimePosition];
 
-            set => header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition] = value;
+            set => Header.Bytes[Header.Offset + IGMPv2Fields.MaxResponseTimePosition] = value;
         }
 
         /// <summary> Fetch the IGMP header checksum.</summary>
         public virtual Int16 Checksum
         {
-            get => BitConverter.ToInt16(header.Bytes,
-                header.Offset + IGMPv2Fields.ChecksumPosition);
+            get => BitConverter.ToInt16(Header.Bytes,
+                Header.Offset + IGMPv2Fields.ChecksumPosition);
 
             set
             {
                 Byte[] theValue = BitConverter.GetBytes(value);
-                Array.Copy(theValue, 0, header.Bytes, (header.Offset + IGMPv2Fields.ChecksumPosition), 2);
+                Array.Copy(theValue, 0, Header.Bytes, (Header.Offset + IGMPv2Fields.ChecksumPosition), 2);
             }
         }
 
         /// <summary> Fetch the IGMP group address.</summary>
         public virtual System.Net.IPAddress GroupAddress => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
-            header.Offset + IGMPv2Fields.GroupAddressPosition,
-            header.Bytes);
+            Header.Offset + IGMPv2Fields.GroupAddressPosition,
+            Header.Bytes);
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override System.String Color => AnsiEscapeSequences.Brown;
@@ -80,14 +80,14 @@ namespace PacketDotNet
         public IGMPv2Packet(ByteArraySegment bas)
         {
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(bas);
-            header.Length = UdpFields.HeaderLength;
+            Header = new ByteArraySegment(bas);
+            Header.Length = UdpFields.HeaderLength;
 
             // store the payload bytes
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
                 var result = new PacketOrByteArraySegment();
-                result.TheByteArraySegment = header.EncapsulatedBytes();
+                result.TheByteArraySegment = Header.EncapsulatedBytes();
                 return result;
             });
         }

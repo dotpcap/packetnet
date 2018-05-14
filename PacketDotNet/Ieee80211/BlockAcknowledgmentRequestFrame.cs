@@ -67,12 +67,12 @@ namespace PacketDotNet
             {
                 get
                 {
-					if(header.Length >= 
+					if(Header.Length >= 
 					   (BlockAckRequestField.BlockAckRequestControlPosition + 
 					    BlockAckRequestField.BlockAckRequestControlLength))
 					{
-						return EndianBitConverter.Little.ToUInt16(header.Bytes,
-						                                          header.Offset + BlockAckRequestField.BlockAckRequestControlPosition);
+						return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+						                                          Header.Offset + BlockAckRequestField.BlockAckRequestControlPosition);
 					}
 					else
 					{
@@ -81,8 +81,8 @@ namespace PacketDotNet
                 }
 
                 set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + BlockAckRequestField.BlockAckRequestControlPosition);
+                    Header.Bytes,
+                    Header.Offset + BlockAckRequestField.BlockAckRequestControlPosition);
             }
 
             /// <summary>
@@ -113,12 +113,12 @@ namespace PacketDotNet
             {
                 get
                 {
-					if(header.Length >= 
+					if(Header.Length >= 
 					   (BlockAckRequestField.BlockAckStartingSequenceControlPosition + 
 					    BlockAckRequestField.BlockAckStartingSequenceControlLength))
 					{
-						return EndianBitConverter.Little.ToUInt16(header.Bytes,
-						                                          header.Offset + BlockAckRequestField.BlockAckStartingSequenceControlPosition);
+						return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+						                                          Header.Offset + BlockAckRequestField.BlockAckStartingSequenceControlPosition);
 					}
 					else
 					{
@@ -127,8 +127,8 @@ namespace PacketDotNet
                 }
 
                 set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + BlockAckRequestField.BlockAckStartingSequenceControlPosition);
+                    Header.Bytes,
+                    Header.Offset + BlockAckRequestField.BlockAckStartingSequenceControlPosition);
             }
 
 
@@ -149,7 +149,7 @@ namespace PacketDotNet
             /// </param>
             public BlockAcknowledgmentRequestFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                Header = new ByteArraySegment (bas);
 
                 FrameControl = new FrameControlField (FrameControlBytes);
                 Duration = new DurationField (DurationBytes);
@@ -158,7 +158,7 @@ namespace PacketDotNet
                 BlockAcknowledgmentControl = new BlockAcknowledgmentControlField (BlockAckRequestControlBytes);
                 BlockAckStartingSequenceControl = BlockAckStartingSequenceControlBytes;
                 
-                header.Length = FrameSize;
+                Header.Length = FrameSize;
             }
             
             /// <summary>
@@ -187,9 +187,9 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    Header = new ByteArraySegment (new Byte[FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
@@ -200,7 +200,7 @@ namespace PacketDotNet
                 this.BlockAckRequestControlBytes = this.BlockAcknowledgmentControl.Field;
                 this.BlockAckStartingSequenceControlBytes = this.BlockAckStartingSequenceControl;
                 
-                header.Length = FrameSize;
+                Header.Length = FrameSize;
             }
             
             /// <summary>

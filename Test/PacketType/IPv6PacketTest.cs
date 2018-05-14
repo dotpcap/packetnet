@@ -237,7 +237,7 @@ namespace Test.PacketType
                 Assert.AreEqual(ipv6.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(ipv6.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(ipv6.Color, fromFile.Color);
-                Assert.AreEqual(ipv6.Header, fromFile.Header);
+                Assert.AreEqual(ipv6.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ipv6.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(ipv6.DestinationAddress, fromFile.DestinationAddress);
                 Assert.AreEqual(ipv6.HeaderLength, fromFile.HeaderLength);

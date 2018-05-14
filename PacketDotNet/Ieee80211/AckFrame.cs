@@ -53,13 +53,13 @@ namespace PacketDotNet
             /// </param>
             public AckFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                Header = new ByteArraySegment (bas);
 
                 FrameControl = new FrameControlField (FrameControlBytes);
                 Duration = new DurationField (DurationBytes);
                 ReceiverAddress = GetAddress(0);
 				
-				header.Length = FrameSize;
+				Header.Length = FrameSize;
             }
 			
 			/// <summary>
@@ -82,9 +82,9 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    Header = new ByteArraySegment (new Byte[FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;

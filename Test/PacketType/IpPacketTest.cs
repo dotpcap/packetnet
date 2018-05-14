@@ -49,7 +49,7 @@ namespace Test.PacketType
             var ip = (IpPacket)p.Extract(typeof(IpPacket));
             Console.WriteLine(ip.GetType());
 
-            Assert.AreEqual(20, ip.Header.Length, "Header.Length doesn't match expected length");
+            Assert.AreEqual(20, ip.HeaderData.Length, "Header.Length doesn't match expected length");
             Console.WriteLine(ip.ToString());
         }
 
@@ -130,7 +130,7 @@ namespace Test.PacketType
                 Assert.AreEqual(ip.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(ip.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(ip.Color, fromFile.Color);
-                Assert.AreEqual(ip.Header, fromFile.Header);
+                Assert.AreEqual(ip.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ip.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(ip.DestinationAddress, fromFile.DestinationAddress);
                 Assert.AreEqual(ip.HeaderLength, fromFile.HeaderLength);

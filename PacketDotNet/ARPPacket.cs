@@ -47,15 +47,15 @@ namespace PacketDotNet
         /// </value>
         public virtual LinkLayers HardwareAddressType
         {
-            get => (LinkLayers)EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + ARPFields.HardwareAddressTypePosition);
+            get => (LinkLayers)EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + ARPFields.HardwareAddressTypePosition);
 
             set
             {
                 var theValue = (UInt16)value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + ARPFields.HardwareAddressTypePosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + ARPFields.HardwareAddressTypePosition);
             }
         }
 
@@ -64,15 +64,15 @@ namespace PacketDotNet
         /// </value>
         public virtual EthernetPacketType ProtocolAddressType
         {
-            get => (EthernetPacketType)EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + ARPFields.ProtocolAddressTypePosition);
+            get => (EthernetPacketType)EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + ARPFields.ProtocolAddressTypePosition);
 
             set
             {
                 var theValue = (UInt16)value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + ARPFields.ProtocolAddressTypePosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + ARPFields.ProtocolAddressTypePosition);
             }
         }
 
@@ -81,9 +81,9 @@ namespace PacketDotNet
         /// </value>
         public virtual Int32 HardwareAddressLength
         {
-            get => header.Bytes[header.Offset + ARPFields.HardwareAddressLengthPosition];
+            get => Header.Bytes[Header.Offset + ARPFields.HardwareAddressLengthPosition];
 
-            set => header.Bytes[header.Offset + ARPFields.HardwareAddressLengthPosition] = (Byte)value;
+            set => Header.Bytes[Header.Offset + ARPFields.HardwareAddressLengthPosition] = (Byte)value;
         }
 
         /// <value>
@@ -91,9 +91,9 @@ namespace PacketDotNet
         /// </value>
         public virtual Int32 ProtocolAddressLength
         {
-            get => header.Bytes[header.Offset + ARPFields.ProtocolAddressLengthPosition];
+            get => Header.Bytes[Header.Offset + ARPFields.ProtocolAddressLengthPosition];
 
-            set => header.Bytes[header.Offset + ARPFields.ProtocolAddressLengthPosition] = (Byte)value;
+            set => Header.Bytes[Header.Offset + ARPFields.ProtocolAddressLengthPosition] = (Byte)value;
         }
 
         /// <summary> Fetch the operation code.
@@ -104,15 +104,15 @@ namespace PacketDotNet
         /// </summary>
         public virtual ARPOperation Operation
         {
-            get => (ARPOperation)EndianBitConverter.Big.ToInt16(header.Bytes,
-                header.Offset + ARPFields.OperationPosition);
+            get => (ARPOperation)EndianBitConverter.Big.ToInt16(Header.Bytes,
+                Header.Offset + ARPFields.OperationPosition);
 
             set
             {
                 var theValue = (Int16)value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + ARPFields.OperationPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + ARPFields.OperationPosition);
             }
         }
 
@@ -122,8 +122,8 @@ namespace PacketDotNet
         public virtual System.Net.IPAddress SenderProtocolAddress
         {
             get => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
-                header.Offset + ARPFields.SenderProtocolAddressPosition,
-                header.Bytes);
+                Header.Offset + ARPFields.SenderProtocolAddressPosition,
+                Header.Bytes);
 
             set
             {
@@ -133,7 +133,7 @@ namespace PacketDotNet
 
                 Byte[] address = value.GetAddressBytes();
                 Array.Copy(address, 0,
-                           header.Bytes, header.Offset + ARPFields.SenderProtocolAddressPosition,
+                           Header.Bytes, Header.Offset + ARPFields.SenderProtocolAddressPosition,
                            address.Length);
             }
         }
@@ -144,8 +144,8 @@ namespace PacketDotNet
         public virtual System.Net.IPAddress TargetProtocolAddress
         {
             get => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
-                header.Offset + ARPFields.TargetProtocolAddressPosition,
-                header.Bytes);
+                Header.Offset + ARPFields.TargetProtocolAddressPosition,
+                Header.Bytes);
 
             set
             {
@@ -155,7 +155,7 @@ namespace PacketDotNet
 
                 Byte[] address = value.GetAddressBytes();
                 Array.Copy(address, 0,
-                           header.Bytes, header.Offset + ARPFields.TargetProtocolAddressPosition,
+                           Header.Bytes, Header.Offset + ARPFields.TargetProtocolAddressPosition,
                            address.Length);
             }
         }
@@ -170,7 +170,7 @@ namespace PacketDotNet
                 //FIXME: this code is broken because it assumes that the address position is
                 // a fixed position
                 Byte[] hwAddress = new Byte[HardwareAddressLength];
-                Array.Copy(header.Bytes, header.Offset + ARPFields.SenderHardwareAddressPosition,
+                Array.Copy(Header.Bytes, Header.Offset + ARPFields.SenderHardwareAddressPosition,
                            hwAddress, 0, hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
@@ -190,7 +190,7 @@ namespace PacketDotNet
                 }
 
                 Array.Copy(hwAddress, 0,
-                           header.Bytes, header.Offset + ARPFields.SenderHardwareAddressPosition,
+                           Header.Bytes, Header.Offset + ARPFields.SenderHardwareAddressPosition,
                            hwAddress.Length);
             }
         }
@@ -205,7 +205,7 @@ namespace PacketDotNet
                 //FIXME: this code is broken because it assumes that the address position is
                 // a fixed position
                 Byte[] hwAddress = new Byte[HardwareAddressLength];
-                Array.Copy(header.Bytes, header.Offset + ARPFields.TargetHardwareAddressPosition,
+                Array.Copy(Header.Bytes, Header.Offset + ARPFields.TargetHardwareAddressPosition,
                            hwAddress, 0,
                            hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
@@ -225,7 +225,7 @@ namespace PacketDotNet
                 }
 
                 Array.Copy(hwAddress, 0,
-                           header.Bytes, header.Offset + ARPFields.TargetHardwareAddressPosition,
+                           Header.Bytes, Header.Offset + ARPFields.TargetHardwareAddressPosition,
                            hwAddress.Length);
             }
         }
@@ -263,7 +263,7 @@ namespace PacketDotNet
             Int32 offset = 0;
             Int32 length = ARPFields.HeaderLength;
             var headerBytes = new Byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            Header = new ByteArraySegment(headerBytes, offset, length);
 
             this.Operation = Operation;
             this.TargetHardwareAddress = TargetHardwareAddress;
@@ -287,8 +287,8 @@ namespace PacketDotNet
         /// </param>
         public ARPPacket(ByteArraySegment bas)
         {
-            header = new ByteArraySegment(bas);
-            header.Length = ARPFields.HeaderLength;
+            Header = new ByteArraySegment(bas);
+            Header.Length = ARPFields.HeaderLength;
 
             // NOTE: no need to set the payloadPacketOrData field, arp packets have
             //       no payload

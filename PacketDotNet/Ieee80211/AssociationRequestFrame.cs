@@ -59,11 +59,11 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if(header.Length >= 
+                    if(Header.Length >= 
                         (AssociationRequestFields.CapabilityInformationPosition + AssociationRequestFields.CapabilityInformationLength))
                     {
-                        return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                                  header.Offset + AssociationRequestFields.CapabilityInformationPosition);
+                        return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                                  Header.Offset + AssociationRequestFields.CapabilityInformationPosition);
                     }
                     else
                     {
@@ -72,8 +72,8 @@ namespace PacketDotNet
                 }
 
                 set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + AssociationRequestFields.CapabilityInformationPosition);
+                    Header.Bytes,
+                    Header.Offset + AssociationRequestFields.CapabilityInformationPosition);
             }
 
             /// <summary>
@@ -100,10 +100,10 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if(header.Length >= (AssociationRequestFields.ListenIntervalPosition + AssociationRequestFields.ListenIntervalLength))
+                    if(Header.Length >= (AssociationRequestFields.ListenIntervalPosition + AssociationRequestFields.ListenIntervalLength))
                     {
-                        return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                                  header.Offset + AssociationRequestFields.ListenIntervalPosition);
+                        return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                                  Header.Offset + AssociationRequestFields.ListenIntervalPosition);
                     }
                     else
                     {
@@ -112,8 +112,8 @@ namespace PacketDotNet
                 }
 
                 set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + AssociationRequestFields.ListenIntervalPosition);
+                    Header.Bytes,
+                    Header.Offset + AssociationRequestFields.ListenIntervalPosition);
             }
    
             /// <summary>
@@ -147,7 +147,7 @@ namespace PacketDotNet
             /// </param>
             public AssociationRequestFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                Header = new ByteArraySegment (bas);
 
                 FrameControl = new FrameControlField (FrameControlBytes);
                 Duration = new DurationField (DurationBytes);
@@ -175,7 +175,7 @@ namespace PacketDotNet
 
                 //cant set length until after we have handled the information elements
                 //as they vary in length
-                header.Length = FrameSize;
+                Header.Length = FrameSize;
             }
             
             /// <summary>
@@ -215,9 +215,9 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    Header = new ByteArraySegment (new Byte[FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
@@ -229,9 +229,9 @@ namespace PacketDotNet
                 this.CapabilityInformationBytes = this.CapabilityInformation.Field;
                 
                 //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
-                this.InformationElements.CopyTo (header, header.Offset + AssociationRequestFields.InformationElement1Position);
+                this.InformationElements.CopyTo (Header, Header.Offset + AssociationRequestFields.InformationElement1Position);
                 
-                header.Length = FrameSize;
+                Header.Length = FrameSize;
             }
             
         } 

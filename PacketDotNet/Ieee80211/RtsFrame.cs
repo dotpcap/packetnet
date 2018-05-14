@@ -60,14 +60,14 @@ namespace PacketDotNet
             /// </param>
             public RtsFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                Header = new ByteArraySegment (bas);
 
                 FrameControl = new FrameControlField (FrameControlBytes);
                 Duration = new DurationField (DurationBytes);
                 ReceiverAddress = GetAddress (0);
                 TransmitterAddress = GetAddress(1);
 				
-				header.Length = FrameSize;
+				Header.Length = FrameSize;
             }
    
             /// <summary>

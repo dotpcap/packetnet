@@ -50,9 +50,9 @@ namespace PacketDotNet
             /// <value>The dsap.</value>
             public Byte DSAP
             {
-                get => header.Bytes[header.Offset + LogicalLinkControlFields.DsapPosition];
+                get => Header.Bytes[Header.Offset + LogicalLinkControlFields.DsapPosition];
 
-                set => header.Bytes[header.Offset + LogicalLinkControlFields.DsapPosition] = value;
+                set => Header.Bytes[Header.Offset + LogicalLinkControlFields.DsapPosition] = value;
             }
 
             /// <summary>
@@ -61,9 +61,9 @@ namespace PacketDotNet
             /// <value>The ssap.</value>
             public Byte SSAP
             {
-                get => header.Bytes[header.Offset + LogicalLinkControlFields.SsapPosition];
+                get => Header.Bytes[Header.Offset + LogicalLinkControlFields.SsapPosition];
 
-                set => header.Bytes[header.Offset + LogicalLinkControlFields.SsapPosition] = value;
+                set => Header.Bytes[Header.Offset + LogicalLinkControlFields.SsapPosition] = value;
             }
 
             /// <summary>
@@ -72,15 +72,15 @@ namespace PacketDotNet
             /// <value>The control organization code.</value>
             protected UInt32 ControlOrganizationCode
             {
-                get => EndianBitConverter.Big.ToUInt32(header.Bytes,
-                    header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
+                get => EndianBitConverter.Big.ToUInt32(Header.Bytes,
+                    Header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
 
                 set
                 {
                     var val = (UInt32)value;
                     EndianBitConverter.Big.CopyBytes(val,
-                                                     header.Bytes,
-                                                     header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
+                                                     Header.Bytes,
+                                                     Header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
                 }
             }
 
@@ -112,15 +112,15 @@ namespace PacketDotNet
             /// <value>The type.</value>
             public EthernetPacketType Type
             {
-                get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
-                    header.Offset + LogicalLinkControlFields.TypePosition);
+                get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(Header.Bytes,
+                    Header.Offset + LogicalLinkControlFields.TypePosition);
 
                 set
                 {
                     Int16 val = (Int16)value;
                     EndianBitConverter.Big.CopyBytes(val,
-                                                     header.Bytes,
-                                                     header.Offset + LogicalLinkControlFields.TypePosition);
+                                                     Header.Bytes,
+                                                     Header.Offset + LogicalLinkControlFields.TypePosition);
                 }
             }
 
@@ -131,11 +131,11 @@ namespace PacketDotNet
             public LogicalLinkControl(ByteArraySegment bas)
             {
                 // set the header field, header field values are retrieved from this byte array
-                header = new ByteArraySegment(bas);
-                header.Length = LogicalLinkControlFields.HeaderLength;
+                Header = new ByteArraySegment(bas);
+                Header.Length = LogicalLinkControlFields.HeaderLength;
 
                 // parse the payload via an EthernetPacket method
-                payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(header,
+                PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header,
                                                                                                                      Type));
             }
         }

@@ -49,8 +49,8 @@ namespace PacketDotNet
         {
             get
             {
-                var val = EndianBitConverter.Big.ToUInt16(header.Bytes,
-                                                          header.Offset + ICMPv4Fields.TypeCodePosition);
+                var val = EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                          Header.Offset + ICMPv4Fields.TypeCodePosition);
                 return (ICMPv4TypeCodes)val;
             }
 
@@ -58,8 +58,8 @@ namespace PacketDotNet
             {
                 var theValue = (UInt16)value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + ICMPv4Fields.TypeCodePosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + ICMPv4Fields.TypeCodePosition);
             }
         }
 
@@ -68,15 +68,15 @@ namespace PacketDotNet
         /// </value>
         public UInt16 Checksum
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + ICMPv4Fields.ChecksumPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + ICMPv4Fields.ChecksumPosition);
 
             set
             {
                 var theValue = value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + ICMPv4Fields.ChecksumPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + ICMPv4Fields.ChecksumPosition);
             }
         }
 
@@ -85,15 +85,15 @@ namespace PacketDotNet
         /// </summary>
         public UInt16 ID
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + ICMPv4Fields.IDPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + ICMPv4Fields.IDPosition);
 
             set
             {
                 var theValue = value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + ICMPv4Fields.IDPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + ICMPv4Fields.IDPosition);
             }
         }
 
@@ -102,12 +102,12 @@ namespace PacketDotNet
         /// </summary>
         public UInt16 Sequence
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + ICMPv4Fields.SequencePosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + ICMPv4Fields.SequencePosition);
 
             set => EndianBitConverter.Big.CopyBytes(value,
-                header.Bytes,
-                header.Offset + ICMPv4Fields.SequencePosition);
+                Header.Bytes,
+                Header.Offset + ICMPv4Fields.SequencePosition);
         }
 
         /// <summary>
@@ -115,9 +115,9 @@ namespace PacketDotNet
         /// </summary>
         public Byte[] Data
         {
-            get => payloadPacketOrData.Value.TheByteArraySegment.ActualBytes();
+            get => PayloadPacketOrData.Value.TheByteArraySegment.ActualBytes();
 
-            set => payloadPacketOrData.Value.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
+            set => PayloadPacketOrData.Value.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
         }
 
         /// <summary>
@@ -130,14 +130,14 @@ namespace PacketDotNet
         {
             log.Debug("");
 
-            header = new ByteArraySegment(bas);
-            header.Length = ICMPv4Fields.HeaderLength;
+            Header = new ByteArraySegment(bas);
+            Header.Length = ICMPv4Fields.HeaderLength;
 
             // store the payload bytes
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
                 var result = new PacketOrByteArraySegment();
-                result.TheByteArraySegment = header.EncapsulatedBytes();
+                result.TheByteArraySegment = Header.EncapsulatedBytes();
                 return result;
             });
         }

@@ -69,10 +69,10 @@ namespace PacketDotNet
             {
                 get
                 {
-					if(header.Length >= (QosDataField.QosControlPosition + QosDataField.QosControlLength))
+					if(Header.Length >= (QosDataField.QosControlPosition + QosDataField.QosControlLength))
 					{
-						return EndianBitConverter.Little.ToUInt16(header.Bytes,
-						                                          header.Offset + QosDataField.QosControlPosition);
+						return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+						                                          Header.Offset + QosDataField.QosControlPosition);
 					}
 					else
 					{
@@ -81,8 +81,8 @@ namespace PacketDotNet
                 }
 
                 set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + QosDataField.QosControlPosition);
+                    Header.Bytes,
+                    Header.Offset + QosDataField.QosControlPosition);
             }
 
             /// <summary>
@@ -117,7 +117,7 @@ namespace PacketDotNet
             {
                 log.Debug("");
 
-                header = new ByteArraySegment (bas);
+                Header = new ByteArraySegment (bas);
 
                 FrameControl = new FrameControlField (FrameControlBytes);
                 Duration = new DurationField (DurationBytes);
@@ -125,7 +125,7 @@ namespace PacketDotNet
                 QosControl = QosControlBytes;
                 ReadAddresses ();
                 
-                header.Length = FrameSize;
+                Header.Length = FrameSize;
                 var availablePayloadLength = GetAvailablePayloadLength();
                 if(availablePayloadLength > 0)
 				{
@@ -133,11 +133,11 @@ namespace PacketDotNet
                     // should parse it
                     if (FrameControl.Protected)
                     {
-                        payloadPacketOrData.Value.TheByteArraySegment = header.EncapsulatedBytes(availablePayloadLength);
+                        PayloadPacketOrData.Value.TheByteArraySegment = Header.EncapsulatedBytes(availablePayloadLength);
                     }
                     else
                     {
-                        payloadPacketOrData.Value.ThePacket = new LogicalLinkControl(header.EncapsulatedBytes());
+                        PayloadPacketOrData.Value.ThePacket = new LogicalLinkControl(Header.EncapsulatedBytes());
                     }
 				}
             }
@@ -160,9 +160,9 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    Header = new ByteArraySegment (new Byte[FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;

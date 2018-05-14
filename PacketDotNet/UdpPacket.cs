@@ -45,27 +45,27 @@ namespace PacketDotNet
         /// <summary> Fetch the port number on the source host.</summary>
         public virtual UInt16 SourcePort
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + UdpFields.SourcePortPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
 
             set
             {
                 var val = value;
-                EndianBitConverter.Big.CopyBytes(val, header.Bytes, header.Offset + UdpFields.SourcePortPosition);
+                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
             }
         }
 
         /// <summary> Fetch the port number on the target host.</summary>
         public virtual UInt16 DestinationPort
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + UdpFields.DestinationPortPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + UdpFields.DestinationPortPosition);
 
             set
             {
                 var val = value;
                 EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + UdpFields.DestinationPortPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + UdpFields.DestinationPortPosition);
             }
         }
 
@@ -75,8 +75,8 @@ namespace PacketDotNet
         /// </value>
         public virtual Int32 Length
         {
-            get => EndianBitConverter.Big.ToInt16(header.Bytes,
-                header.Offset + UdpFields.HeaderLengthPosition);
+            get => EndianBitConverter.Big.ToInt16(Header.Bytes,
+                Header.Offset + UdpFields.HeaderLengthPosition);
 
             // Internal because it is updated based on the payload when
             // its bytes are retrieved
@@ -84,23 +84,23 @@ namespace PacketDotNet
             {
                 var val = (Int16)value;
                 EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + UdpFields.HeaderLengthPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + UdpFields.HeaderLengthPosition);
             }
         }
 
         /// <summary> Fetch the header checksum.</summary>
         public override UInt16 Checksum
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + UdpFields.ChecksumPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + UdpFields.ChecksumPosition);
 
             set
             {
                 var val = value;
                 EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + UdpFields.ChecksumPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + UdpFields.ChecksumPosition);
             }
         }
 
@@ -162,7 +162,7 @@ namespace PacketDotNet
             Int32 offset = 0;
             Int32 length = UdpFields.HeaderLength;
             var headerBytes = new Byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            Header = new ByteArraySegment(headerBytes, offset, length);
 
             // set instance values
             this.SourcePort = SourcePort;
@@ -180,10 +180,10 @@ namespace PacketDotNet
             log.DebugFormat("bas {0}", bas.ToString());
 
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(bas);
-            header.Length = UdpFields.HeaderLength;
+            Header = new ByteArraySegment(bas);
+            Header.Length = UdpFields.HeaderLength;
 
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
                 var result = new PacketOrByteArraySegment();
                 // is this packet going to port 7 or 9? if so it might be a WakeOnLan packet
@@ -191,18 +191,18 @@ namespace PacketDotNet
                 const Int32 wakeOnLanPort1 = 9;
                 if (DestinationPort.Equals(wakeOnLanPort0) || DestinationPort.Equals(wakeOnLanPort1))
                 {
-                    result.ThePacket = new WakeOnLanPacket(header.EncapsulatedBytes());
+                    result.ThePacket = new WakeOnLanPacket(Header.EncapsulatedBytes());
                 }
                 else
                 {
                     // store the payload bytes
-                    result.TheByteArraySegment = header.EncapsulatedBytes();
+                    result.TheByteArraySegment = Header.EncapsulatedBytes();
                 }
 
                 const Int32 l2TPport = 1701;
                 if (DestinationPort.Equals(l2TPport) && DestinationPort.Equals(l2TPport))
                 {
-                    var payload = header.EncapsulatedBytes();
+                    var payload = Header.EncapsulatedBytes();
                     result.ThePacket = new L2TPPacket(payload, this);
                 }
 

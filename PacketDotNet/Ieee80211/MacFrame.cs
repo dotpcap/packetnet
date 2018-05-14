@@ -45,7 +45,7 @@ namespace PacketDotNet
             
             private Int32 GetOffsetForAddress(Int32 addressIndex)
             {
-                Int32 offset = header.Offset;
+                Int32 offset = Header.Offset;
 
                 offset += MacFields.Address1Position + MacFields.AddressLength * addressIndex;
 
@@ -64,10 +64,10 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if(header.Length >= (MacFields.FrameControlPosition + MacFields.FrameControlLength))
+                    if(Header.Length >= (MacFields.FrameControlPosition + MacFields.FrameControlLength))
                     {
-                        return EndianBitConverter.Big.ToUInt16 (header.Bytes,
-                                                                header.Offset);
+                        return EndianBitConverter.Big.ToUInt16 (Header.Bytes,
+                                                                Header.Offset);
                     }
                     else
                     {
@@ -76,8 +76,8 @@ namespace PacketDotNet
                 }
 
                 set => EndianBitConverter.Big.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset);
+                    Header.Bytes,
+                    Header.Offset);
             }
 
             /// <summary>
@@ -96,10 +96,10 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if(header.Length >= (MacFields.DurationIDPosition + MacFields.DurationIDLength))
+                    if(Header.Length >= (MacFields.DurationIDPosition + MacFields.DurationIDLength))
                     {
-                        return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                                  header.Offset + MacFields.DurationIDPosition);
+                        return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                                  Header.Offset + MacFields.DurationIDPosition);
                     }
                     else
                     {
@@ -108,8 +108,8 @@ namespace PacketDotNet
                 }
 
                 set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + MacFields.DurationIDPosition);
+                    Header.Bytes,
+                    Header.Offset + MacFields.DurationIDPosition);
             }
    
             /// <summary>
@@ -166,7 +166,7 @@ namespace PacketDotNet
                                                                + MacFields.AddressLength);
                 }
 
-                Array.Copy(hwAddress, 0, header.Bytes, offset,
+                Array.Copy(hwAddress, 0, Header.Bytes, offset,
                            hwAddress.Length);
             }
    
@@ -196,10 +196,10 @@ namespace PacketDotNet
             /// </param>
             protected PhysicalAddress GetAddressByOffset(Int32 offset)
             {
-				if((header.Offset + header.Length) >= (offset + MacFields.AddressLength))
+				if((Header.Offset + Header.Length) >= (offset + MacFields.AddressLength))
 				{
         	        Byte[] hwAddress = new Byte[MacFields.AddressLength];
-            	    Array.Copy(header.Bytes, offset,
+            	    Array.Copy(Header.Bytes, offset,
                 	           hwAddress, 0, hwAddress.Length);
                 	return new PhysicalAddress(hwAddress);
 				}
@@ -245,7 +245,7 @@ namespace PacketDotNet
             /// </value>
 			protected Int32 GetAvailablePayloadLength()
 			{
-				Int32 payloadLength = header.BytesLength - (header.Offset + FrameSize);
+				Int32 payloadLength = Header.BytesLength - (Header.Offset + FrameSize);
 				return (payloadLength > 0) ? payloadLength : 0;
 			}
 			
@@ -524,7 +524,7 @@ namespace PacketDotNet
                     // if we share memory with all of our sub packets we can take a
                     // higher performance path to retrieve the bytes
                     var totalPacketLength = TotalPacketLength;
-                    if (SharesMemoryWithSubPackets && (!AppendFcs || header.Bytes.Length >= (header.Offset + totalPacketLength + MacFields.FrameCheckSequenceLength)))
+                    if (SharesMemoryWithSubPackets && (!AppendFcs || Header.Bytes.Length >= (Header.Offset + totalPacketLength + MacFields.FrameCheckSequenceLength)))
                     {
                         var packetLength = totalPacketLength;
                         if (AppendFcs)
@@ -533,14 +533,14 @@ namespace PacketDotNet
                             //We need to update the FCS field because this couldn't be done during 
                             //RecursivelyUpdateCalculatedValues because we didn't know where it would be
                             EndianBitConverter.Big.CopyBytes(FrameCheckSequence,
-                                                                header.Bytes,
-                                                                header.Offset + totalPacketLength);
+                                                                Header.Bytes,
+                                                                Header.Offset + totalPacketLength);
                         }
                         
                         // The high performance path that is often taken because it is called on
                         // packets that have not had their header, or any of their sub packets, resized
-                        var newByteArraySegment = new ByteArraySegment(header.Bytes,
-                                                                       header.Offset,
+                        var newByteArraySegment = new ByteArraySegment(Header.Bytes,
+                                                                       Header.Offset,
                                                                        packetLength);
                         log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}",
                                         newByteArraySegment.ToString());
@@ -551,10 +551,10 @@ namespace PacketDotNet
     
                     var ms = new MemoryStream();
     
-                    var headerCopy = Header;
+                    var headerCopy = HeaderData;
                     ms.Write(headerCopy, 0, headerCopy.Length);
     
-                    payloadPacketOrData.Value.AppendToMemoryStream(ms);
+                    PayloadPacketOrData.Value.AppendToMemoryStream(ms);
                         
                     if(AppendFcs)
                     {     

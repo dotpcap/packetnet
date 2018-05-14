@@ -80,12 +80,12 @@ namespace PacketDotNet
             
             private UInt16 LengthBytes
             {
-                get => EndianBitConverter.Little.ToUInt16 (header.Bytes,
-                    header.Offset + PpiHeaderFields.LengthPosition);
+                get => EndianBitConverter.Little.ToUInt16 (Header.Bytes,
+                    Header.Offset + PpiHeaderFields.LengthPosition);
 
                 set => EndianBitConverter.Little.CopyBytes (value,
-                    header.Bytes,
-                    header.Offset + PpiHeaderFields.LengthPosition);
+                    Header.Bytes,
+                    Header.Offset + PpiHeaderFields.LengthPosition);
             }
 
             
@@ -98,9 +98,9 @@ namespace PacketDotNet
             
             private Byte VersionBytes
             {
-                get => header.Bytes [header.Offset + PpiHeaderFields.VersionPosition];
+                get => Header.Bytes [Header.Offset + PpiHeaderFields.VersionPosition];
 
-                set => header.Bytes [header.Offset + PpiHeaderFields.VersionPosition] = value;
+                set => Header.Bytes [Header.Offset + PpiHeaderFields.VersionPosition] = value;
             }
             
             /// <summary>
@@ -113,9 +113,9 @@ namespace PacketDotNet
             
             private HeaderFlags FlagsBytes
             {
-                get => (HeaderFlags)header.Bytes[header.Offset + PpiHeaderFields.FlagsPosition];
+                get => (HeaderFlags)Header.Bytes[Header.Offset + PpiHeaderFields.FlagsPosition];
 
-                set => header.Bytes[header.Offset + PpiHeaderFields.FlagsPosition] = (Byte) value;
+                set => Header.Bytes[Header.Offset + PpiHeaderFields.FlagsPosition] = (Byte) value;
             }
             
             /// <summary>
@@ -129,12 +129,12 @@ namespace PacketDotNet
             
             private LinkLayers LinkTypeBytes
             {
-                get => (LinkLayers) EndianBitConverter.Little.ToUInt32(header.Bytes,
-                    header.Offset + PpiHeaderFields.DataLinkTypePosition);
+                get => (LinkLayers) EndianBitConverter.Little.ToUInt32(Header.Bytes,
+                    Header.Offset + PpiHeaderFields.DataLinkTypePosition);
 
                 set => EndianBitConverter.Little.CopyBytes((UInt32)LinkType,
-                    header.Bytes,
-                    header.Offset + PpiHeaderFields.DataLinkTypePosition);
+                    Header.Bytes,
+                    Header.Offset + PpiHeaderFields.DataLinkTypePosition);
             }
             
             /// <summary>
@@ -167,20 +167,20 @@ namespace PacketDotNet
             public PpiPacket (ByteArraySegment bas)
             {
                 // slice off the header portion
-                header = new ByteArraySegment (bas);
+                Header = new ByteArraySegment (bas);
                 
                 Version = VersionBytes;
                 Flags = FlagsBytes;
                 
                 // update the header size based on the headers packet length
-                header.Length = LengthBytes;
+                Header.Length = LengthBytes;
                 LinkType = LinkTypeBytes;
                 PpiFields = ReadPpiFields();
     
                 PpiCommon commonField = FindFirstByType(PpiFieldType.PpiCommon) as PpiCommon;
                 
                 // parse the encapsulated bytes
-                payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(header, commonField));
+                PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, commonField));
             }
             
             /// <summary>
@@ -204,7 +204,7 @@ namespace PacketDotNet
             /// </param>
             public void Add(PpiField field)
             {
-                payloadPacketOrData.Evaluate();
+                PayloadPacketOrData.Evaluate();
 
                 PpiFields.Add(field);
             }
@@ -217,7 +217,7 @@ namespace PacketDotNet
             /// </param>
             public void Remove(PpiField field)
             {
-                payloadPacketOrData.Evaluate();
+                PayloadPacketOrData.Evaluate();
 
                 PpiFields.Remove(field);
             }
@@ -230,7 +230,7 @@ namespace PacketDotNet
             /// </param>
             public void RemoveAll(PpiFieldType type)
             {
-                payloadPacketOrData.Evaluate();
+                PayloadPacketOrData.Evaluate();
 
                 PpiFields.RemoveAll( field => type == field.FieldType);
             }
@@ -294,7 +294,7 @@ namespace PacketDotNet
             /// <summary cref="Packet.ToString(StringOutputType)" />
             public override String ToString (StringOutputType outputFormat)
             {
-                payloadPacketOrData.Evaluate();
+                PayloadPacketOrData.Evaluate();
 
                 var buffer = new StringBuilder ();
                 String color = "";
@@ -367,7 +367,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                payloadPacketOrData.Evaluate();
+                PayloadPacketOrData.Evaluate();
 
                 //If aligned is true then fields must all start on 32bit boundaries so we might need
                 //to read some extra padding from the end of the header fields.
@@ -375,20 +375,20 @@ namespace PacketDotNet
                 
                 var totalFieldLength = Length;
              
-                if ((header == null) || (totalFieldLength > header.Length))
+                if ((Header == null) || (totalFieldLength > Header.Length))
                 {
-                    header = new ByteArraySegment (new Byte[totalFieldLength]);
+                    Header = new ByteArraySegment (new Byte[totalFieldLength]);
                 }
                 
-                header.Length = totalFieldLength;
+                Header.Length = totalFieldLength;
                 
                 VersionBytes = Version;
                 FlagsBytes = Flags;
                 LengthBytes = (UInt16)totalFieldLength;
                 LinkTypeBytes = LinkType;
                 
-                MemoryStream ms = new MemoryStream(header.Bytes,
-                                                   header.Offset + PpiHeaderFields.FirstFieldPosition,
+                MemoryStream ms = new MemoryStream(Header.Bytes,
+                                                   Header.Offset + PpiHeaderFields.FirstFieldPosition,
                                                    totalFieldLength - PpiHeaderFields.FirstFieldPosition);
                 BinaryWriter writer = new BinaryWriter(ms);
                 foreach (var field in PpiFields)
@@ -420,13 +420,13 @@ namespace PacketDotNet
                 var retList = new List<PpiField> ();
 
                 // create a binary reader that points to the memory immediately after the dtl
-                var offset = header.Offset + PpiHeaderFields.FirstFieldPosition;
-                var br = new BinaryReader (new MemoryStream (header.Bytes,
+                var offset = Header.Offset + PpiHeaderFields.FirstFieldPosition;
+                var br = new BinaryReader (new MemoryStream (Header.Bytes,
                                                        offset,
-                                                       (Int32)(header.Length - offset)));
+                                                       (Int32)(Header.Length - offset)));
                 Int32 type = 0;
                 Int32 length = PpiHeaderFields.FirstFieldPosition;
-                while(length < header.Length)
+                while(length < Header.Length)
                 {
                     type = br.ReadUInt16 ();
                     var fieldLength = br.ReadUInt16 ();

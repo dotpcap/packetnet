@@ -81,10 +81,10 @@ namespace PacketDotNet
         {
             log.Debug("");
 
-            header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(bas);
 
             // Initiate the TLV list from the existing data
-            ParseByteArrayIntoTlvs(header.Bytes, header.Offset);
+            ParseByteArrayIntoTlvs(Header.Bytes, Header.Offset);
         }
 
         #endregion

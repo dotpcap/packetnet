@@ -47,15 +47,15 @@ namespace PacketDotNet
         /// </summary>
         public PPPProtocol Protocol
         {
-            get => (PPPProtocol)EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + PPPFields.ProtocolPosition);
+            get => (PPPProtocol)EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + PPPFields.ProtocolPosition);
 
             set
             {
                 var val = (UInt16)value;
                 EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + PPPFields.ProtocolPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + PPPFields.ProtocolPosition);
             }
         }
 
@@ -71,7 +71,7 @@ namespace PacketDotNet
             Int32 offset = 0;
             Int32 length = PPPFields.HeaderLength;
             var headerBytes = new Byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            Header = new ByteArraySegment(headerBytes, offset, length);
 
             // setup some typical values and default values
             this.Protocol = PPPProtocol.Padding;
@@ -88,11 +88,11 @@ namespace PacketDotNet
             log.Debug("");
 
             // slice off the header portion as our header
-            header = new ByteArraySegment(bas);
-            header.Length = PPPFields.HeaderLength;
+            Header = new ByteArraySegment(bas);
+            Header.Length = PPPFields.HeaderLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(()=> ParseEncapsulatedBytes(header, Protocol));
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(()=> ParseEncapsulatedBytes(Header, Protocol));
         }
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,

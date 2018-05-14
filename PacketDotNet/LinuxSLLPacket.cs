@@ -38,15 +38,15 @@ namespace PacketDotNet
         /// </value>
         public LinuxSLLType Type
         {
-            get => (LinuxSLLType)EndianBitConverter.Big.ToInt16(header.Bytes,
-                header.Offset + LinuxSLLFields.PacketTypePosition);
+            get => (LinuxSLLType)EndianBitConverter.Big.ToInt16(Header.Bytes,
+                Header.Offset + LinuxSLLFields.PacketTypePosition);
 
             set
             {
                 var theValue = (Int16)value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + LinuxSLLFields.PacketTypePosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + LinuxSLLFields.PacketTypePosition);
             }
         }
 
@@ -55,15 +55,15 @@ namespace PacketDotNet
         /// </value>
         public Int32 LinkLayerAddressType
         {
-            get => EndianBitConverter.Big.ToInt16(header.Bytes,
-                header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
+            get => EndianBitConverter.Big.ToInt16(Header.Bytes,
+                Header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
 
             set
             {
                 var theValue = (Int16)value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
             }
         }
 
@@ -72,8 +72,8 @@ namespace PacketDotNet
         /// </value>
         public Int32 LinkLayerAddressLength
         {
-            get => EndianBitConverter.Big.ToInt16(header.Bytes,
-                header.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
+            get => EndianBitConverter.Big.ToInt16(Header.Bytes,
+                Header.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
 
             set
             {
@@ -85,8 +85,8 @@ namespace PacketDotNet
 
                 var theValue = (Int16)value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
             }
         }
 
@@ -99,7 +99,7 @@ namespace PacketDotNet
             {
                 var headerLength = LinkLayerAddressLength;
                 var theHeader = new Byte[headerLength];
-                Array.Copy(header.Bytes, header.Offset + LinuxSLLFields.LinkLayerAddressPosition,
+                Array.Copy(Header.Bytes, Header.Offset + LinuxSLLFields.LinkLayerAddressPosition,
                            theHeader, 0,
                            headerLength);
                 return theHeader;
@@ -112,7 +112,7 @@ namespace PacketDotNet
 
                 // copy in the new link layer header bytes
                 Array.Copy(value, 0,
-                           header.Bytes, header.Offset + LinuxSLLFields.LinkLayerAddressPosition,
+                           Header.Bytes, Header.Offset + LinuxSLLFields.LinkLayerAddressPosition,
                            value.Length);
             }
         }
@@ -122,15 +122,15 @@ namespace PacketDotNet
         /// </value>
         public EthernetPacketType EthernetProtocolType
         {
-            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
-                header.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
+            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(Header.Bytes,
+                Header.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
 
             set
             {
                 var theValue = (Int16)value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
             }
         }
 
@@ -142,11 +142,11 @@ namespace PacketDotNet
         /// </param>
         public LinuxSLLPacket(ByteArraySegment bas)
         {
-            header = new ByteArraySegment(bas);
-            header.Length = LinuxSLLFields.SLLHeaderLength;
+            Header = new ByteArraySegment(bas);
+            Header.Length = LinuxSLLFields.SLLHeaderLength;
 
             // parse the payload via an EthernetPacket method
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(()=> EthernetPacket.ParseEncapsulatedBytes(header,
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(()=> EthernetPacket.ParseEncapsulatedBytes(Header,
                                                                                                                 EthernetProtocolType));
         }
 

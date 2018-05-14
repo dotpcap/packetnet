@@ -43,9 +43,9 @@ namespace PacketDotNet
 
         private Byte VersionType
         {
-            get => header.Bytes[header.Offset + PPPoEFields.VersionTypePosition];
+            get => Header.Bytes[Header.Offset + PPPoEFields.VersionTypePosition];
 
-            set => header.Bytes[header.Offset + PPPoEFields.VersionTypePosition] = value;
+            set => Header.Bytes[Header.Offset + PPPoEFields.VersionTypePosition] = value;
         }
 
         /// <summary>
@@ -91,15 +91,15 @@ namespace PacketDotNet
         /// FIXME: This currently outputs the wrong code
         public PPPoECode Code
         {
-            get => (PPPoECode)EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + PPPoEFields.CodePosition);
+            get => (PPPoECode)EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + PPPoEFields.CodePosition);
 
             set
             {
                 var val = (UInt16)value;
                 EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + PPPoEFields.CodePosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + PPPoEFields.CodePosition);
             }
         }
 
@@ -108,15 +108,15 @@ namespace PacketDotNet
         /// </summary>
         public UInt16 SessionId
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + PPPoEFields.SessionIdPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + PPPoEFields.SessionIdPosition);
 
             set
             {
                 var val = (UInt16)value;
                 EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + PPPoEFields.SessionIdPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + PPPoEFields.SessionIdPosition);
             }
         }
 
@@ -125,15 +125,15 @@ namespace PacketDotNet
         /// </summary>
         public UInt16 Length
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + PPPoEFields.LengthPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + PPPoEFields.LengthPosition);
 
             set
             {
                 var val = (UInt16)value;
                 EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + PPPoEFields.LengthPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + PPPoEFields.LengthPosition);
             }
         }
 
@@ -149,7 +149,7 @@ namespace PacketDotNet
             Int32 offset = 0;
             Int32 length = PPPoEFields.HeaderLength;
             var headerBytes = new Byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            Header = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
             this.Code = Code;
@@ -172,11 +172,11 @@ namespace PacketDotNet
             log.Debug("");
 
             // slice off the header portion
-            header = new ByteArraySegment(bas);
-            header.Length = PPPoEFields.HeaderLength;
+            Header = new ByteArraySegment(bas);
+            Header.Length = PPPoEFields.HeaderLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(()=> ParseEncapsulatedBytes(header));
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(()=> ParseEncapsulatedBytes(Header));
         }
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header)

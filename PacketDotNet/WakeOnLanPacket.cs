@@ -84,7 +84,7 @@ namespace PacketDotNet
                 }
             }
 
-            header = new ByteArraySegment(packetBytes, offset, packetLength);
+            Header = new ByteArraySegment(packetBytes, offset, packetLength);
         }
 
         /// <summary>
@@ -100,8 +100,8 @@ namespace PacketDotNet
             if(WakeOnLanPacket.IsValid(bas))
             {
                 // set the header field, header field values are retrieved from this byte array
-                header = new ByteArraySegment(bas);
-                header.Length = Bytes.Length;
+                Header = new ByteArraySegment(bas);
+                Header.Length = Bytes.Length;
             }
         }
 
@@ -117,7 +117,7 @@ namespace PacketDotNet
             get
             {
                 Byte[] destinationMAC = new Byte[EthernetFields.MacAddressLength];
-                Array.Copy(header.Bytes, header.Offset + syncSequence.Length,
+                Array.Copy(Header.Bytes, Header.Offset + syncSequence.Length,
                            destinationMAC, 0,
                            EthernetFields.MacAddressLength);
                 return new PhysicalAddress(destinationMAC);
@@ -126,7 +126,7 @@ namespace PacketDotNet
             {
                 Byte[] destinationMAC = value.GetAddressBytes();
                 Array.Copy(destinationMAC, 0,
-                           header.Bytes, header.Offset + syncSequence.Length,
+                           Header.Bytes, Header.Offset + syncSequence.Length,
                            EthernetFields.MacAddressLength);
             }
         }
@@ -162,7 +162,7 @@ namespace PacketDotNet
         /// </returns>
         public Boolean IsValid()
         {
-            return IsValid(header);
+            return IsValid(Header);
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace PacketDotNet
         /// </returns>
         public override Int32 GetHashCode()
         {
-            return header.GetHashCode();
+            return Header.GetHashCode();
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />

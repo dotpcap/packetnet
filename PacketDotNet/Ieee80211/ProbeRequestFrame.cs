@@ -74,7 +74,7 @@ namespace PacketDotNet
             /// </param>
             public ProbeRequestFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                Header = new ByteArraySegment (bas);
 
                 FrameControl = new FrameControlField (FrameControlBytes);
                 Duration = new DurationField (DurationBytes);
@@ -98,7 +98,7 @@ namespace PacketDotNet
 				}
                 //cant set length until after we have handled the information elements
                 //as they vary in length
-                header.Length = FrameSize;
+                Header.Length = FrameSize;
             }
    
             /// <summary>
@@ -137,9 +137,9 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    Header = new ByteArraySegment (new Byte[FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
@@ -150,9 +150,9 @@ namespace PacketDotNet
                 this.SequenceControlBytes = this.SequenceControl.Field;
                 
                 //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
-                this.InformationElements.CopyTo (header, header.Offset + ProbeRequestFields.InformationElement1Position);
+                this.InformationElements.CopyTo (Header, Header.Offset + ProbeRequestFields.InformationElement1Position);
                 
-                header.Length = FrameSize;
+                Header.Length = FrameSize;
             }
         } 
     }

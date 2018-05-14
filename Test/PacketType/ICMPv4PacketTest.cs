@@ -133,7 +133,7 @@ namespace Test.PacketType
                 Assert.AreEqual(icmp.Checksum, fromFile.Checksum);
                 Assert.AreEqual(icmp.Color, fromFile.Color);
                 Assert.AreEqual(icmp.Data, fromFile.Data);
-                Assert.AreEqual(icmp.Header, fromFile.Header);
+                Assert.AreEqual(icmp.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(icmp.ID, fromFile.ID);
                 Assert.AreEqual(icmp.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(icmp.Sequence, fromFile.Sequence);

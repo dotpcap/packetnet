@@ -55,9 +55,9 @@ namespace PacketDotNet
             
             private Byte VersionBytes
             {
-                get => header.Bytes[header.Offset + RadioFields.VersionPosition];
+                get => Header.Bytes[Header.Offset + RadioFields.VersionPosition];
 
-                set => header.Bytes[header.Offset + RadioFields.VersionPosition] = value;
+                set => Header.Bytes[Header.Offset + RadioFields.VersionPosition] = value;
             }
 
             /// <summary>
@@ -68,12 +68,12 @@ namespace PacketDotNet
             
             private UInt16 LengthBytes
             {
-                get => EndianBitConverter.Little.ToUInt16(header.Bytes,
-                    header.Offset + RadioFields.LengthPosition);
+                get => EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                    Header.Offset + RadioFields.LengthPosition);
 
                 set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + RadioFields.LengthPosition);
+                    Header.Bytes,
+                    Header.Offset + RadioFields.LengthPosition);
             }
 
             /// <summary>
@@ -90,15 +90,15 @@ namespace PacketDotNet
                 // the highest bit indicates whether other bitmask fields follow
                 // the current field
                 var bitmaskFields = new List<UInt32>();
-                UInt32 bitmask = EndianBitConverter.Little.ToUInt32(header.Bytes,
-                                                                    header.Offset + RadioFields.PresentPosition);
+                UInt32 bitmask = EndianBitConverter.Little.ToUInt32(Header.Bytes,
+                                                                    Header.Offset + RadioFields.PresentPosition);
                 bitmaskFields.Add(bitmask);
                 Int32 bitmaskOffsetInBytes = 4;
                 while ((bitmask & (1 << 31)) == 1)
                 {
                     // retrieve the next field
-                    bitmask = EndianBitConverter.Little.ToUInt32(header.Bytes,
-                                                                 header.Offset + RadioFields.PresentPosition + bitmaskOffsetInBytes);
+                    bitmask = EndianBitConverter.Little.ToUInt32(Header.Bytes,
+                                                                 Header.Offset + RadioFields.PresentPosition + bitmaskOffsetInBytes);
                     bitmaskFields.Add(bitmask);
                     bitmaskOffsetInBytes += 4;
                 }
@@ -121,20 +121,20 @@ namespace PacketDotNet
                 log.Debug ("");
 
                 // slice off the header portion
-                header = new ByteArraySegment (bas);
-                header.Length = RadioFields.DefaultHeaderLength;
+                Header = new ByteArraySegment (bas);
+                Header.Length = RadioFields.DefaultHeaderLength;
                 Version = VersionBytes;
                 Length = LengthBytes;
                 
                 // update the header size based on the headers packet length
-                header.Length = Length;
+                Header.Length = Length;
                 Present = ReadPresentFields();
                 RadioTapFields = ReadRadioTapFields();
     
                 //Before we attempt to parse the payload we need to work out if 
                 //the FCS was valid and if it will be present at the end of the frame
                 FlagsRadioTapField flagsField = this[RadioTapType.Flags] as FlagsRadioTapField;
-		        payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(header.EncapsulatedBytes(), flagsField));
+		        PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header.EncapsulatedBytes(), flagsField));
             }
 
             /// <summary cref="Packet.ToString(StringOutputType)" />
@@ -285,10 +285,10 @@ namespace PacketDotNet
                 Int32 bitIndex = 0;
 
                 // create a binary reader that points to the memory immediately after the bitmasks
-                var offset = header.Offset +
+                var offset = Header.Offset +
                              RadioFields.PresentPosition +
                              (bitmasks.Length) * Marshal.SizeOf (typeof(UInt32));
-                var br = new BinaryReader (new MemoryStream (header.Bytes,
+                var br = new BinaryReader (new MemoryStream (Header.Bytes,
                                                            offset,
                                                            (Int32)(Length - offset)));
 
@@ -344,10 +344,10 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                if ((header == null) || (header.Length < Length))
+                if ((Header == null) || (Header.Length < Length))
                 {
                     //the backing buffer isnt big enough to accommodate the info elements so we need to resize it
-                    header = new ByteArraySegment (new Byte[Length]);
+                    Header = new ByteArraySegment (new Byte[Length]);
                 }
                 
                 VersionBytes = Version;
@@ -356,21 +356,21 @@ namespace PacketDotNet
                 foreach(var presentField in Present)
                 {
                     EndianBitConverter.Little.CopyBytes(presentField,
-                                                        header.Bytes,
-                                                        header.Offset + index);
+                                                        Header.Bytes,
+                                                        Header.Offset + index);
                     index += RadioFields.PresentLength;
                 }
                 
                 foreach(var field in RadioTapFields)
                 {
                     //then copy the field data to the appropriate index
-                    field.Value.CopyTo(header.Bytes, header.Offset + index);
+                    field.Value.CopyTo(Header.Bytes, Header.Offset + index);
                     index += field.Value.Length;
                 }
                 
                 if((UnhandledFieldBytes != null) && (UnhandledFieldBytes.Length > 0))
                 {
-                    Array.Copy(UnhandledFieldBytes, 0, header.Bytes, header.Offset + index, UnhandledFieldBytes.Length);
+                    Array.Copy(UnhandledFieldBytes, 0, Header.Bytes, Header.Offset + index, UnhandledFieldBytes.Length);
                 }
             }
 

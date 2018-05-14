@@ -157,7 +157,7 @@ namespace Test.PacketType
                 Assert.AreEqual(icmpv6.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(icmpv6.Checksum, fromFile.Checksum);
                 Assert.AreEqual(icmpv6.Color, fromFile.Color);
-                Assert.AreEqual(icmpv6.Header, fromFile.Header);
+                Assert.AreEqual(icmpv6.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(icmpv6.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(icmpv6.Code, fromFile.Code);
                 Assert.AreEqual(icmpv6.Type, fromFile.Type);

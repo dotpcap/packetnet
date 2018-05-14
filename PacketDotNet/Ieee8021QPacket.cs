@@ -37,15 +37,15 @@ namespace PacketDotNet
         /// </value>
         public virtual EthernetPacketType Type
         {
-            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(header.Bytes,
-                header.Offset + Ieee8021QFields.TypePosition);
+            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(Header.Bytes,
+                Header.Offset + Ieee8021QFields.TypePosition);
 
             set
             {
                 Int16 val = (Int16)value;
                 EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + Ieee8021QFields.TypePosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + Ieee8021QFields.TypePosition);
             }
         }
 
@@ -127,15 +127,15 @@ namespace PacketDotNet
 
         private UInt16 TagControlInformation
         {
-            get => (UInt16)EndianBitConverter.Big.ToInt16(header.Bytes,
-                header.Offset + Ieee8021QFields.TagControlInformationPosition);
+            get => (UInt16)EndianBitConverter.Big.ToInt16(Header.Bytes,
+                Header.Offset + Ieee8021QFields.TagControlInformationPosition);
 
             set
             {
                 Int16 val = (Int16)value;
                 EndianBitConverter.Big.CopyBytes(val,
-                                                 header.Bytes,
-                                                 header.Offset + Ieee8021QFields.TagControlInformationPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + Ieee8021QFields.TagControlInformationPosition);
             }
         }
 
@@ -151,11 +151,11 @@ namespace PacketDotNet
         public Ieee8021QPacket(ByteArraySegment bas)
         {
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(bas);
-            header.Length = Ieee8021QFields.HeaderLength;
+            Header = new ByteArraySegment(bas);
+            Header.Length = Ieee8021QFields.HeaderLength;
 
             // parse the payload via an EthernetPacket method
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(header,
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header,
                                                                                                                  Type));
         }
 

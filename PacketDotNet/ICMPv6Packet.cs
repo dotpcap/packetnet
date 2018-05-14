@@ -47,17 +47,17 @@ namespace PacketDotNet
         /// </value>
         public virtual ICMPv6Types Type
         {
-            get => (ICMPv6Types)header.Bytes[header.Offset + ICMPv6Fields.TypePosition];
+            get => (ICMPv6Types)Header.Bytes[Header.Offset + ICMPv6Fields.TypePosition];
 
-            set => header.Bytes[header.Offset + ICMPv6Fields.TypePosition] = (Byte)value;
+            set => Header.Bytes[Header.Offset + ICMPv6Fields.TypePosition] = (Byte)value;
         }
 
         /// <summary> Fetch the ICMP code </summary>
         public virtual Byte Code
         {
-            get => header.Bytes[header.Offset + ICMPv6Fields.CodePosition];
+            get => Header.Bytes[Header.Offset + ICMPv6Fields.CodePosition];
 
-            set => header.Bytes[header.Offset + ICMPv6Fields.CodePosition] = (Byte)value;
+            set => Header.Bytes[Header.Offset + ICMPv6Fields.CodePosition] = (Byte)value;
         }
 
         /// <value>
@@ -65,15 +65,15 @@ namespace PacketDotNet
         /// </value>
         public UInt16 Checksum
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + ICMPv6Fields.ChecksumPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + ICMPv6Fields.ChecksumPosition);
 
             set
             {
                 var theValue = value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + ICMPv6Fields.ChecksumPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + ICMPv6Fields.ChecksumPosition);
             }
         }
 
@@ -87,7 +87,7 @@ namespace PacketDotNet
         {
             log.Debug("");
 
-            header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(bas);
         }
 
         /// <summary>

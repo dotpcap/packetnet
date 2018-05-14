@@ -59,10 +59,10 @@ namespace PacketDotNet
             {
                 get
                 {
-					if(header.Length >= (DeauthenticationFields.ReasonCodePosition + DeauthenticationFields.ReasonCodeLength))
+					if(Header.Length >= (DeauthenticationFields.ReasonCodePosition + DeauthenticationFields.ReasonCodeLength))
 					{
-						return (ReasonCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
-						                                                       header.Offset + DeauthenticationFields.ReasonCodePosition);
+						return (ReasonCode)EndianBitConverter.Little.ToUInt16 (Header.Bytes,
+						                                                       Header.Offset + DeauthenticationFields.ReasonCodePosition);
 					}
 					else
 					{
@@ -71,8 +71,8 @@ namespace PacketDotNet
                 }
                 
                 set => EndianBitConverter.Little.CopyBytes ((UInt16)value,
-                    header.Bytes,
-                    header.Offset + DeauthenticationFields.ReasonCodePosition);
+                    Header.Bytes,
+                    Header.Offset + DeauthenticationFields.ReasonCodePosition);
             }
 
             /// <summary>
@@ -95,7 +95,7 @@ namespace PacketDotNet
             /// </param>
             public DeauthenticationFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                Header = new ByteArraySegment (bas);
 
                 FrameControl = new FrameControlField (FrameControlBytes);
                 Duration = new DurationField (DurationBytes);
@@ -105,7 +105,7 @@ namespace PacketDotNet
                 SequenceControl = new SequenceControlField (SequenceControlBytes);
                 Reason = ReasonBytes;
 
-                header.Length = FrameSize;
+                Header.Length = FrameSize;
             }
             
             /// <summary>
@@ -139,9 +139,9 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    Header = new ByteArraySegment (new Byte[FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
@@ -152,7 +152,7 @@ namespace PacketDotNet
                 this.SequenceControlBytes = this.SequenceControl.Field;
                 this.ReasonBytes = this.Reason;
                 
-                header.Length = FrameSize;
+                Header.Length = FrameSize;
             }
 
         } 

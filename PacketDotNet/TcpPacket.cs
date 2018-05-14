@@ -52,63 +52,63 @@ namespace PacketDotNet
         /// <summary> Fetch the port number on the source host.</summary>
         public virtual UInt16 SourcePort
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + TcpFields.SourcePortPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + TcpFields.SourcePortPosition);
 
             set
             {
                 var theValue = value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + TcpFields.SourcePortPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + TcpFields.SourcePortPosition);
             }
         }
 
         /// <summary> Fetches the port number on the destination host.</summary>
         public virtual UInt16 DestinationPort
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + TcpFields.DestinationPortPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + TcpFields.DestinationPortPosition);
 
             set
             {
                 var theValue = value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + TcpFields.DestinationPortPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + TcpFields.DestinationPortPosition);
             }
         }
 
         /// <summary> Fetch the packet sequence number.</summary>
         public UInt32 SequenceNumber
         {
-            get => EndianBitConverter.Big.ToUInt32(header.Bytes,
-                header.Offset + TcpFields.SequenceNumberPosition);
+            get => EndianBitConverter.Big.ToUInt32(Header.Bytes,
+                Header.Offset + TcpFields.SequenceNumberPosition);
 
             set => EndianBitConverter.Big.CopyBytes(value,
-                header.Bytes,
-                header.Offset + TcpFields.SequenceNumberPosition);
+                Header.Bytes,
+                Header.Offset + TcpFields.SequenceNumberPosition);
         }
 
         /// <summary> Fetch the packet acknowledgment number.</summary>
         public UInt32 AcknowledgmentNumber
         {
-            get => EndianBitConverter.Big.ToUInt32(header.Bytes,
-                header.Offset + TcpFields.AckNumberPosition);
+            get => EndianBitConverter.Big.ToUInt32(Header.Bytes,
+                Header.Offset + TcpFields.AckNumberPosition);
 
             set => EndianBitConverter.Big.CopyBytes(value,
-                header.Bytes,
-                header.Offset + TcpFields.AckNumberPosition);
+                Header.Bytes,
+                Header.Offset + TcpFields.AckNumberPosition);
         }
 
         private UInt16 DataOffsetAndFlags
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + TcpFields.DataOffsetAndFlagsPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + TcpFields.DataOffsetAndFlagsPosition);
 
             set => EndianBitConverter.Big.CopyBytes(value,
-                header.Bytes,
-                header.Offset + TcpFields.DataOffsetAndFlagsPosition);
+                Header.Bytes,
+                Header.Offset + TcpFields.DataOffsetAndFlagsPosition);
         }
 
         /// <summary> The size of the tcp header in 32bit words </summary>
@@ -138,12 +138,12 @@ namespace PacketDotNet
         /// </summary>
         public virtual UInt16 WindowSize
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + TcpFields.WindowSizePosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + TcpFields.WindowSizePosition);
 
             set => EndianBitConverter.Big.CopyBytes(value,
-                header.Bytes,
-                header.Offset + TcpFields.WindowSizePosition);
+                Header.Bytes,
+                Header.Offset + TcpFields.WindowSizePosition);
         }
 
         /// <value>
@@ -151,15 +151,15 @@ namespace PacketDotNet
         /// </value>
         public override UInt16 Checksum
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + TcpFields.ChecksumPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + TcpFields.ChecksumPosition);
 
             set
             {
                 var theValue = value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + TcpFields.ChecksumPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + TcpFields.ChecksumPosition);
             }
         }
 
@@ -310,7 +310,7 @@ namespace PacketDotNet
             Int32 offset = 0;
             Int32 length = TcpFields.HeaderLength;
             var headerBytes = new Byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            Header = new ByteArraySegment(headerBytes, offset, length);
 
             // make this packet valid
             DataOffset = length / 4;
@@ -331,17 +331,17 @@ namespace PacketDotNet
             log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(bas);
 
             // NOTE: we update the Length field AFTER the header field because
             // we need the header to be valid to retrieve the value of DataOffset
-            header.Length = DataOffset * 4;
+            Header.Length = DataOffset * 4;
 
             // store the payload bytes
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
                 var result = new PacketOrByteArraySegment();
-                result.TheByteArraySegment = header.EncapsulatedBytes();
+                result.TheByteArraySegment = Header.EncapsulatedBytes();
                 return result;
             });
         }
@@ -361,16 +361,16 @@ namespace PacketDotNet
             log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(bas);
 
             // NOTE: we update the Length field AFTER the header field because
             // we need the header to be valid to retrieve the value of DataOffset
-            header.Length = DataOffset * 4;
+            Header.Length = DataOffset * 4;
 
             // store the payload bytes
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment {TheByteArraySegment = header.EncapsulatedBytes()};
+                var result = new PacketOrByteArraySegment {TheByteArraySegment = Header.EncapsulatedBytes()};
 
                 // if the parent packet is an IPv4Packet we need to adjust
                 // the payload length because it is possible for us to have
@@ -384,10 +384,10 @@ namespace PacketDotNet
                                     ipv4Parent.TotalLength,
                                     ipv4Parent.HeaderLength * 4);
 
-                    var newTcpPayloadLength = ipPayloadTotalLength - header.Length;
+                    var newTcpPayloadLength = ipPayloadTotalLength - Header.Length;
 
                     log.DebugFormat("Header.Length {0}, Current payload length: {1}, new payload length {2}",
-                                    header.Length,
+                                    Header.Length,
                                     result.TheByteArraySegment.Length,
                                     newTcpPayloadLength);
 
@@ -445,15 +445,15 @@ namespace PacketDotNet
         /// <summary> Fetch the urgent pointer.</summary>
         public Int32 UrgentPointer
         {
-            get => EndianBitConverter.Big.ToInt16(header.Bytes,
-                header.Offset + TcpFields.UrgentPointerPosition);
+            get => EndianBitConverter.Big.ToInt16(Header.Bytes,
+                Header.Offset + TcpFields.UrgentPointerPosition);
 
             set
             {
                 var theValue = (Int16)value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + TcpFields.UrgentPointerPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + TcpFields.UrgentPointerPosition);
             }
         }
 
@@ -476,7 +476,7 @@ namespace PacketDotNet
                 Int32 optionsLength = (DataOffset * 4) - optionsOffset;
 
                 Byte[] optionBytes = new Byte[optionsLength];
-                Array.Copy(header.Bytes, header.Offset + optionsOffset,
+                Array.Copy(Header.Bytes, Header.Offset + optionsOffset,
                            optionBytes, 0,
                            optionsLength);
 

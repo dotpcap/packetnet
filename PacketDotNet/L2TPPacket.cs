@@ -32,26 +32,26 @@ namespace PacketDotNet
     public class L2TPPacket : Packet
     {
 
-        public virtual Boolean DataMessage => 8 == (header.Bytes[header.Offset] & 0x8);
+        public virtual Boolean DataMessage => 8 == (Header.Bytes[Header.Offset] & 0x8);
 
-        public virtual Boolean HasLength => 4 == (header.Bytes[header.Offset] & 0x4);
+        public virtual Boolean HasLength => 4 == (Header.Bytes[Header.Offset] & 0x4);
 
-        public virtual Boolean HasSequence => 2 == (header.Bytes[header.Offset] & 0x2);
+        public virtual Boolean HasSequence => 2 == (Header.Bytes[Header.Offset] & 0x2);
 
-        public virtual Boolean HasOffset => 2 == (header.Bytes[header.Offset] & 0x2);
+        public virtual Boolean HasOffset => 2 == (Header.Bytes[Header.Offset] & 0x2);
 
-        public virtual Boolean IsPriority => 2 == (header.Bytes[header.Offset] & 0x2);
+        public virtual Boolean IsPriority => 2 == (Header.Bytes[Header.Offset] & 0x2);
 
-        public virtual Int32 Version => (header.Bytes[header.Offset + 1] & 0x7);
+        public virtual Int32 Version => (Header.Bytes[Header.Offset + 1] & 0x7);
 
         public virtual Int32 TunnelID
         {
             get
             {
                 if (HasLength)
-                    return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + 3);
+                    return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 3);
                 else
-                    return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + 2);
+                    return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 2);
 
             }
         }
@@ -61,9 +61,9 @@ namespace PacketDotNet
             get
             {
                 if (HasLength)
-                    return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + 5);
+                    return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 5);
                 else
-                    return EndianBitConverter.Big.ToUInt16(header.Bytes, header.Offset + 4);
+                    return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 4);
 
             }
         }
@@ -80,17 +80,17 @@ namespace PacketDotNet
         public L2TPPacket(ByteArraySegment bas, Packet ParentPacket)
         {
             // slice off the header portion
-            header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(bas);
 
-            header.Length = L2TPFields.HeaderLength;
+            Header.Length = L2TPFields.HeaderLength;
             if (HasLength)
-                header.Length += L2TPFields.LengthsLength;
+                Header.Length += L2TPFields.LengthsLength;
             if (HasSequence)
-                header.Length += L2TPFields.NsLength + L2TPFields.NrLength;
+                Header.Length += L2TPFields.NsLength + L2TPFields.NrLength;
             if (HasOffset)
-                header.Length += L2TPFields.OffsetSizeLength + L2TPFields.OffsetPadLength;
+                Header.Length += L2TPFields.OffsetSizeLength + L2TPFields.OffsetPadLength;
 
-            var payload = header.EncapsulatedBytes();
+            var payload = Header.EncapsulatedBytes();
             try
             {
                 PayloadPacket = new PPPPacket(payload);
@@ -98,7 +98,7 @@ namespace PacketDotNet
             } catch (Exception)
             {
                 //it's not a PPP packet, just attach the data
-                payloadPacketOrData.Value.TheByteArraySegment = payload;
+                PayloadPacketOrData.Value.TheByteArraySegment = payload;
             }
             this.ParentPacket = ParentPacket;
         }

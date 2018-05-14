@@ -70,9 +70,9 @@ namespace PacketDotNet
             {
                 get
                 {
-					if(header.Length >= (ProbeResponseFields.TimestampPosition + ProbeResponseFields.TimestampLength))
+					if(Header.Length >= (ProbeResponseFields.TimestampPosition + ProbeResponseFields.TimestampLength))
 					{
-						return EndianBitConverter.Little.ToUInt64(header.Bytes, header.Offset + ProbeResponseFields.TimestampPosition);
+						return EndianBitConverter.Little.ToUInt64(Header.Bytes, Header.Offset + ProbeResponseFields.TimestampPosition);
 					}
 					else
 					{
@@ -81,8 +81,8 @@ namespace PacketDotNet
                 }
 
                 set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + ProbeResponseFields.TimestampPosition);
+                    Header.Bytes,
+                    Header.Offset + ProbeResponseFields.TimestampPosition);
             }
 
             /// <summary>
@@ -97,9 +97,9 @@ namespace PacketDotNet
             {
                 get
                 {
-					if(header.Length >= (ProbeResponseFields.BeaconIntervalPosition + ProbeResponseFields.BeaconIntervalLength))
+					if(Header.Length >= (ProbeResponseFields.BeaconIntervalPosition + ProbeResponseFields.BeaconIntervalLength))
 					{
-						return EndianBitConverter.Little.ToUInt16(header.Bytes, header.Offset + ProbeResponseFields.BeaconIntervalPosition);
+						return EndianBitConverter.Little.ToUInt16(Header.Bytes, Header.Offset + ProbeResponseFields.BeaconIntervalPosition);
 					}
 					else
 					{
@@ -108,8 +108,8 @@ namespace PacketDotNet
                 }
 
                 set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + ProbeResponseFields.BeaconIntervalPosition);
+                    Header.Bytes,
+                    Header.Offset + ProbeResponseFields.BeaconIntervalPosition);
             }
 
             /// <summary>
@@ -119,11 +119,11 @@ namespace PacketDotNet
             {
                 get
                 {
-					if(header.Length >= 
+					if(Header.Length >= 
 					   (ProbeResponseFields.CapabilityInformationPosition + ProbeResponseFields.CapabilityInformationLength))
 					{
-						return EndianBitConverter.Little.ToUInt16(header.Bytes,
-						                                          header.Offset + ProbeResponseFields.CapabilityInformationPosition);
+						return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+						                                          Header.Offset + ProbeResponseFields.CapabilityInformationPosition);
 					}
 					else
 					{
@@ -132,8 +132,8 @@ namespace PacketDotNet
                 }
 
                 set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + ProbeResponseFields.CapabilityInformationPosition);
+                    Header.Bytes,
+                    Header.Offset + ProbeResponseFields.CapabilityInformationPosition);
             }
    
             /// <summary>
@@ -172,7 +172,7 @@ namespace PacketDotNet
             /// </param>
             public ProbeResponseFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                Header = new ByteArraySegment (bas);
 
                 FrameControl = new FrameControlField (FrameControlBytes);
                 Duration = new DurationField (DurationBytes);
@@ -199,7 +199,7 @@ namespace PacketDotNet
 				}
                 //cant set length until after we have handled the information elements
                 //as they vary in length
-                header.Length = FrameSize;
+                Header.Length = FrameSize;
             }
             
             /// <summary>
@@ -239,9 +239,9 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    Header = new ByteArraySegment (new Byte[FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
@@ -253,9 +253,9 @@ namespace PacketDotNet
                 this.CapabilityInformationBytes = this.CapabilityInformation.Field;
                 
                 //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
-                this.InformationElements.CopyTo (header, header.Offset + ProbeResponseFields.InformationElement1Position);
+                this.InformationElements.CopyTo (Header, Header.Offset + ProbeResponseFields.InformationElement1Position);
                 
-                header.Length = FrameSize;
+                Header.Length = FrameSize;
             }
 
         } 

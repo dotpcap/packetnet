@@ -56,7 +56,7 @@ namespace Test.PacketType
 
             u = (UdpPacket)p.Extract(typeof(UdpPacket));
             Assert.IsNotNull(u, "Expected a non-null UdpPacket");
-            Assert.AreEqual(41 - u.Header.Length,
+            Assert.AreEqual(41 - u.HeaderData.Length,
                             u.PayloadData.Length, "UDPData.Length mismatch");
 
             // check the second packet
@@ -67,7 +67,7 @@ namespace Test.PacketType
 
             u = (UdpPacket)p.Extract(typeof(UdpPacket));
             Assert.IsNotNull(u, "Expected u to be a UdpPacket");
-            Assert.AreEqual(356 - u.Header.Length,
+            Assert.AreEqual(356 - u.HeaderData.Length,
                             u.PayloadData.Length, "UDPData.Length mismatch");
 
             Console.WriteLine("u is {0}", u.ToString());
@@ -266,7 +266,7 @@ namespace Test.PacketType
                 Assert.AreEqual(udpPacket.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(udpPacket.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(udpPacket.Color, fromFile.Color);
-                Assert.AreEqual(udpPacket.Header, fromFile.Header);
+                Assert.AreEqual(udpPacket.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(udpPacket.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(udpPacket.DestinationPort, fromFile.DestinationPort);
                 Assert.AreEqual(udpPacket.Length, fromFile.Length);

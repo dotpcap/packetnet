@@ -62,11 +62,11 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if(header.Length >= 
+                    if(Header.Length >= 
                        (AssociationResponseFields.CapabilityInformationPosition + AssociationResponseFields.CapabilityInformationLength))
                     {
-                        return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                                  header.Offset + AssociationResponseFields.CapabilityInformationPosition);
+                        return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                                  Header.Offset + AssociationResponseFields.CapabilityInformationPosition);
                     }
                     else
                     {
@@ -75,8 +75,8 @@ namespace PacketDotNet
                 }
 
                 set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    header.Offset + AssociationResponseFields.CapabilityInformationPosition);
+                    Header.Bytes,
+                    Header.Offset + AssociationResponseFields.CapabilityInformationPosition);
             }
 
             /// <summary>
@@ -97,10 +97,10 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if(header.Length >= (AssociationResponseFields.StatusCodePosition + AssociationResponseFields.StatusCodeLength))
+                    if(Header.Length >= (AssociationResponseFields.StatusCodePosition + AssociationResponseFields.StatusCodeLength))
                     {
-                        return (AuthenticationStatusCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
-                                                                                             header.Offset + AssociationResponseFields.StatusCodePosition);
+                        return (AuthenticationStatusCode)EndianBitConverter.Little.ToUInt16 (Header.Bytes,
+                                                                                             Header.Offset + AssociationResponseFields.StatusCodePosition);
                     }
                     else
                     {
@@ -111,8 +111,8 @@ namespace PacketDotNet
                 }
                 
                 set => EndianBitConverter.Little.CopyBytes ((UInt16)value,
-                    header.Bytes,
-                    header.Offset + AssociationResponseFields.StatusCodePosition);
+                    Header.Bytes,
+                    Header.Offset + AssociationResponseFields.StatusCodePosition);
             }
 
             /// <summary>
@@ -127,9 +127,9 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if(header.Length >= AssociationResponseFields.AssociationIdPosition + AssociationResponseFields.AssociationIdLength)
+                    if(Header.Length >= AssociationResponseFields.AssociationIdPosition + AssociationResponseFields.AssociationIdLength)
                     {
-                        UInt16 associationID = EndianBitConverter.Little.ToUInt16(header.Bytes, header.Offset + AssociationResponseFields.AssociationIdPosition);
+                        UInt16 associationID = EndianBitConverter.Little.ToUInt16(Header.Bytes, Header.Offset + AssociationResponseFields.AssociationIdPosition);
                         return (UInt16)(associationID & 0xCF);
                     }
                     else
@@ -142,8 +142,8 @@ namespace PacketDotNet
                 {
                     UInt16 associationID = (UInt16)(value & 0xCF);
                     EndianBitConverter.Little.CopyBytes(associationID,
-                                                     header.Bytes,
-                                                     header.Offset + AssociationResponseFields.AssociationIdPosition);
+                                                     Header.Bytes,
+                                                     Header.Offset + AssociationResponseFields.AssociationIdPosition);
                 }
             }
 
@@ -176,7 +176,7 @@ namespace PacketDotNet
             /// </param>
             public AssociationResponseFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                Header = new ByteArraySegment (bas);
 
                 FrameControl = new FrameControlField (FrameControlBytes);
                 Duration = new DurationField (DurationBytes);
@@ -204,7 +204,7 @@ namespace PacketDotNet
                 }
                 //cant set length until after we have handled the information elements
                 //as they vary in length
-                header.Length = FrameSize;
+                Header.Length = FrameSize;
             }
             
             /// <summary>
@@ -245,9 +245,9 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    Header = new ByteArraySegment (new Byte[FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;
@@ -261,9 +261,9 @@ namespace PacketDotNet
                 this.AssociationIdBytes = this.AssociationId;
                 
                 //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
-                this.InformationElements.CopyTo (header, header.Offset + AssociationResponseFields.InformationElement1Position);
+                this.InformationElements.CopyTo (Header, Header.Offset + AssociationResponseFields.InformationElement1Position);
                 
-                header.Length = FrameSize;
+                Header.Length = FrameSize;
             }
                 
         } 

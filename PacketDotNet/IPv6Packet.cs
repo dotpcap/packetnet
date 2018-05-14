@@ -61,10 +61,10 @@ namespace PacketDotNet
 
         private Int32 VersionTrafficClassFlowLabel
         {
-            get => EndianBitConverter.Big.ToInt32(header.Bytes,
-                header.Offset + IPv6Fields.VersionTrafficClassFlowLabelPosition);
+            get => EndianBitConverter.Big.ToInt32(Header.Bytes,
+                Header.Offset + IPv6Fields.VersionTrafficClassFlowLabelPosition);
 
-            set => EndianBitConverter.Big.CopyBytes(value, header.Bytes, header.Offset + IPv6Fields.VersionTrafficClassFlowLabelPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + IPv6Fields.VersionTrafficClassFlowLabelPosition);
         }
 
         /// <summary>
@@ -136,12 +136,12 @@ namespace PacketDotNet
         /// </summary>
         public override UInt16 PayloadLength
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + IPv6Fields.PayloadLengthPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                Header.Offset + IPv6Fields.PayloadLengthPosition);
 
             set => EndianBitConverter.Big.CopyBytes(value,
-                header.Bytes,
-                header.Offset + IPv6Fields.PayloadLengthPosition);
+                Header.Bytes,
+                Header.Offset + IPv6Fields.PayloadLengthPosition);
         }
 
         /// <value>
@@ -172,9 +172,9 @@ namespace PacketDotNet
         /// </summary>
         public override IPProtocolType NextHeader
         {
-            get => (IPProtocolType)(header.Bytes[header.Offset + IPv6Fields.NextHeaderPosition]);
+            get => (IPProtocolType)(Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition]);
 
-            set => header.Bytes[header.Offset + IPv6Fields.NextHeaderPosition] = (Byte)value;
+            set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition] = (Byte)value;
         }
 
         /// <value>
@@ -194,9 +194,9 @@ namespace PacketDotNet
         /// </summary>
         public override Int32 HopLimit
         {
-            get => header.Bytes[header.Offset + IPv6Fields.HopLimitPosition];
+            get => Header.Bytes[Header.Offset + IPv6Fields.HopLimitPosition];
 
-            set => header.Bytes[header.Offset + IPv6Fields.HopLimitPosition] = (Byte)value;
+            set => Header.Bytes[Header.Offset + IPv6Fields.HopLimitPosition] = (Byte)value;
         }
 
         /// <value>
@@ -214,14 +214,14 @@ namespace PacketDotNet
         public override System.Net.IPAddress SourceAddress
         {
             get => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetworkV6,
-                header.Offset + IPv6Fields.SourceAddressPosition,
-                header.Bytes);
+                Header.Offset + IPv6Fields.SourceAddressPosition,
+                Header.Bytes);
 
             set
             {
                 Byte[] address = value.GetAddressBytes();
                 System.Array.Copy(address, 0,
-                                  header.Bytes, header.Offset + IPv6Fields.SourceAddressPosition,
+                                  Header.Bytes, Header.Offset + IPv6Fields.SourceAddressPosition,
                                   address.Length);
             }
         }
@@ -232,14 +232,14 @@ namespace PacketDotNet
         public override System.Net.IPAddress DestinationAddress
         {
             get => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetworkV6,
-                header.Offset + IPv6Fields.DestinationAddressPosition,
-                header.Bytes);
+                Header.Offset + IPv6Fields.DestinationAddressPosition,
+                Header.Bytes);
 
             set
             {
                 Byte[] address = value.GetAddressBytes();
                 System.Array.Copy(address, 0,
-                                  header.Bytes, header.Offset + IPv6Fields.DestinationAddressPosition,
+                                  Header.Bytes, Header.Offset + IPv6Fields.DestinationAddressPosition,
                                   address.Length);
             }
         }
@@ -262,7 +262,7 @@ namespace PacketDotNet
             Int32 offset = 0;
             Int32 length = IPv6Fields.HeaderLength;
             var headerBytes = new Byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            Header = new ByteArraySegment(headerBytes, offset, length);
 
             // set some default values to make this packet valid
             PayloadLength = 0;
@@ -285,18 +285,18 @@ namespace PacketDotNet
             log.Debug(bas.ToString());
 
             // slice off the header
-            header = new ByteArraySegment(bas);
-            header.Length = IPv6Packet.HeaderMinimumLength;
+            Header = new ByteArraySegment(bas);
+            Header.Length = IPv6Packet.HeaderMinimumLength;
 
             // set the actual length, we need to do this because we need to set
             // header to something valid above before we can retrieve the PayloadLength
             log.DebugFormat("PayloadLength: {0}", PayloadLength);
-            header.Length = bas.Length - PayloadLength;
+            Header.Length = bas.Length - PayloadLength;
 
             // parse the payload
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                var payload = header.EncapsulatedBytes(PayloadLength);
+                var payload = Header.EncapsulatedBytes(PayloadLength);
                 return ParseEncapsulatedBytes(payload,
                                               NextHeader,
                                               this);
@@ -325,11 +325,11 @@ namespace PacketDotNet
             BinaryWriter bw = new BinaryWriter(ms);
 
             // 0-16: ip src addr
-            bw.Write(header.Bytes, header.Offset + IPv6Fields.SourceAddressPosition,
+            bw.Write(Header.Bytes, Header.Offset + IPv6Fields.SourceAddressPosition,
                      IPv6Fields.AddressLength);
 
             // 17-32: ip dst addr
-            bw.Write(header.Bytes, header.Offset + IPv6Fields.DestinationAddressPosition,
+            bw.Write(Header.Bytes, Header.Offset + IPv6Fields.DestinationAddressPosition,
                      IPv6Fields.AddressLength);
 
             // 33-36: TCP length

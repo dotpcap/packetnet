@@ -104,7 +104,7 @@ namespace Test.PacketType
                 Assert.AreEqual(ppp.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(ppp.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(ppp.Color, fromFile.Color);
-                Assert.AreEqual(ppp.Header, fromFile.Header);
+                Assert.AreEqual(ppp.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ppp.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(ppp.Protocol, fromFile.Protocol);
 

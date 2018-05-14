@@ -58,13 +58,13 @@ namespace PacketDotNet
                     ddmList = new List<DrdaDDMPacket>();
                 }
                 if (ddmList.Count > 0) return this.ddmList;
-                Int32 startOffset = header.Offset;
-                while (startOffset < header.BytesLength)
+                Int32 startOffset = Header.Offset;
+                while (startOffset < Header.BytesLength)
                 {
-                    UInt16 length = BigEndianBitConverter.Big.ToUInt16(header.Bytes, startOffset);
-                    if (startOffset + length <= header.BytesLength)
+                    UInt16 length = BigEndianBitConverter.Big.ToUInt16(Header.Bytes, startOffset);
+                    if (startOffset + length <= Header.BytesLength)
                     {
-                        var ddmBas = new ByteArraySegment(header.Bytes, startOffset, length);
+                        var ddmBas = new ByteArraySegment(Header.Bytes, startOffset, length);
                         ddmList.Add(new DrdaDDMPacket(ddmBas, this));
                     }
                     startOffset += length;
@@ -83,12 +83,12 @@ namespace PacketDotNet
             log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(bas);
 
             // store the payload bytes
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment {TheByteArraySegment = header.EncapsulatedBytes()};
+                var result = new PacketOrByteArraySegment {TheByteArraySegment = Header.EncapsulatedBytes()};
                 return result;
             }); 
         }

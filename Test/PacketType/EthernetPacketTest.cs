@@ -329,7 +329,7 @@ namespace Test.PacketType
                 Assert.AreEqual(ethernetPacket.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(ethernetPacket.Color, fromFile.Color);
                 Assert.AreEqual(ethernetPacket.DestinationHwAddress, fromFile.DestinationHwAddress);
-                Assert.AreEqual(ethernetPacket.Header, fromFile.Header);
+                Assert.AreEqual(ethernetPacket.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ethernetPacket.ParentPacket, fromFile.ParentPacket);
                 Assert.AreEqual(ethernetPacket.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(ethernetPacket.SourceHwAddress, fromFile.SourceHwAddress);

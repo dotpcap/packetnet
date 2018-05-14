@@ -127,7 +127,7 @@ namespace Test.PacketType
                 Assert.AreEqual(ipv4.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(ipv4.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(ipv4.Color, fromFile.Color);
-                Assert.AreEqual(ipv4.Header, fromFile.Header);
+                Assert.AreEqual(ipv4.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ipv4.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(ipv4.DestinationAddress, fromFile.DestinationAddress);
                 Assert.AreEqual(ipv4.HeaderLength, fromFile.HeaderLength);

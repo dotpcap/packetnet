@@ -195,7 +195,7 @@ namespace Test.PacketType
                 Assert.AreEqual(arpPacket.Color, fromFile.Color);
                 Assert.AreEqual(arpPacket.HardwareAddressLength, fromFile.HardwareAddressLength);
                 Assert.AreEqual(arpPacket.HardwareAddressType, fromFile.HardwareAddressType);
-                CollectionAssert.AreEqual(arpPacket.Header, fromFile.Header);
+                CollectionAssert.AreEqual(arpPacket.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(arpPacket.Operation, fromFile.Operation);
                 Assert.AreEqual(arpPacket.ParentPacket, fromFile.ParentPacket);
                 CollectionAssert.AreEqual(arpPacket.PayloadData, fromFile.PayloadData);

@@ -55,20 +55,20 @@ namespace PacketDotNet
             var firstNibble = bas.Bytes[0] >> 4;
             Protocol = (RawIPPacketProtocol)firstNibble;
 
-            header = new ByteArraySegment(bas);
-            header.Length = 0;
+            Header = new ByteArraySegment(bas);
+            Header.Length = 0;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
                 var result = new PacketOrByteArraySegment();
                 switch (Protocol)
                 {
                     case RawIPPacketProtocol.IPv4:
-                        result.ThePacket = new IPv4Packet(header.EncapsulatedBytes());
+                        result.ThePacket = new IPv4Packet(Header.EncapsulatedBytes());
                         break;
                     case RawIPPacketProtocol.IPv6:
-                        result.ThePacket = new IPv6Packet(header.EncapsulatedBytes());
+                        result.ThePacket = new IPv6Packet(Header.EncapsulatedBytes());
                         break;
                     default:
                         throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");

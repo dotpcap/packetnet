@@ -47,15 +47,15 @@ namespace PacketDotNet
         /// </summary>
         public NullPacketType Protocol
         {
-            get => (NullPacketType)EndianBitConverter.Little.ToUInt32(header.Bytes,
-                header.Offset + NullFields.ProtocolPosition);
+            get => (NullPacketType)EndianBitConverter.Little.ToUInt32(Header.Bytes,
+                Header.Offset + NullFields.ProtocolPosition);
 
             set
             {
                 var val = (UInt32)value;
                 EndianBitConverter.Little.CopyBytes(val,
-                    header.Bytes,
-                    header.Offset + NullFields.ProtocolPosition);
+                    Header.Bytes,
+                    Header.Offset + NullFields.ProtocolPosition);
             }
         }
 
@@ -70,7 +70,7 @@ namespace PacketDotNet
             Int32 offset = 0;
             Int32 length = NullFields.HeaderLength;
             var headerBytes = new Byte[length];
-            header = new ByteArraySegment(headerBytes, offset, length);
+            Header = new ByteArraySegment(headerBytes, offset, length);
 
             // setup some typical values and default values
             this.Protocol = TheType;
@@ -87,11 +87,11 @@ namespace PacketDotNet
             log.Debug("");
 
             // slice off the header portion as our header
-            header = new ByteArraySegment(bas);
-            header.Length = NullFields.HeaderLength;
+            Header = new ByteArraySegment(bas);
+            Header.Length = NullFields.HeaderLength;
 
             // parse the encapsulated bytes
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(()=> ParseEncapsulatedBytes(header, Protocol));
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(()=> ParseEncapsulatedBytes(Header, Protocol));
         }
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,

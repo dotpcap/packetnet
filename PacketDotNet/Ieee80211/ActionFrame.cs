@@ -102,7 +102,7 @@ namespace PacketDotNet
             /// </param>
             public ActionFrame (ByteArraySegment bas)
             {
-                header = new ByteArraySegment (bas);
+                Header = new ByteArraySegment (bas);
 
                 FrameControl = new FrameControlField (FrameControlBytes);
                 Duration = new DurationField (DurationBytes);
@@ -111,11 +111,11 @@ namespace PacketDotNet
                 BssId = GetAddress (2);
                 SequenceControl = new SequenceControlField (SequenceControlBytes);
 
-                header.Length = FrameSize; 
+                Header.Length = FrameSize; 
                 var availablePayloadLength = GetAvailablePayloadLength();
 				if(availablePayloadLength > 0)
 				{
-					payloadPacketOrData.Value.TheByteArraySegment = header.EncapsulatedBytes (availablePayloadLength);
+					PayloadPacketOrData.Value.TheByteArraySegment = Header.EncapsulatedBytes (availablePayloadLength);
 				}
             }
             
@@ -151,9 +151,9 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues ()
             {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
+                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
                 {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
+                    Header = new ByteArraySegment (new Byte[FrameSize]);
                 }
                 
                 this.FrameControlBytes = this.FrameControl.Field;

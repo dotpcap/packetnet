@@ -17,6 +17,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
+
 using System;
 using PacketDotNet.Utils;
 
@@ -33,13 +34,13 @@ namespace PacketDotNet.Tcp
         /// Creates an Option from a byte[]
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="T:System.Byte[]"/>
+        /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         public Option(Byte[] bytes, Int32 offset, Int32 length)
         {
@@ -47,6 +48,23 @@ namespace PacketDotNet.Tcp
         }
 
         #endregion
+
+
+        #region Methods
+
+        /// <summary>
+        /// Returns the Option info as a string
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" />
+        /// </returns>
+        public override String ToString()
+        {
+            return "[" + Kind + "]";
+        }
+
+        #endregion
+
 
         #region Properties
 
@@ -58,7 +76,7 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The Kind of option
         /// </summary>
-        public OptionTypes Kind => (OptionTypes)Bytes[KindFieldOffset];
+        public OptionTypes Kind => (OptionTypes) Bytes[KindFieldOffset];
 
         /// <summary>
         /// Returns a TLV that contains the Option
@@ -69,31 +87,17 @@ namespace PacketDotNet.Tcp
             {
                 Byte[] bytes = new Byte[optionData.Length];
                 Array.Copy(optionData.Bytes, optionData.Offset, bytes, 0, optionData.Length);
-                return  bytes;
+                return bytes;
             }
         }
 
         #endregion
 
-        #region Methods
-
-        /// <summary>
-        /// Returns the Option info as a string
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/>
-        /// </returns>
-        public override String ToString()
-        {
-            return "[" + Kind.ToString() + "]";
-        }
-
-        #endregion
 
         #region Members
 
         // stores the data/length/offset of the option
-        private ByteArraySegment optionData;
+        private readonly ByteArraySegment optionData;
 
         /// <summary>The length (in bytes) of the Kind field</summary>
         internal const Int32 KindFieldLength = 1;

@@ -17,8 +17,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2018 Steven Haufe<haufes@hotmail.com>
   */
+
 using System;
-using System.Collections.Generic;
 using System.Text;
 using MiscUtil.Conversion;
 using PacketDotNet.Utils;
@@ -31,51 +31,11 @@ namespace PacketDotNet
     [Serializable]
     public class L2TPPacket : Packet
     {
-
-        public virtual Boolean DataMessage => 8 == (Header.Bytes[Header.Offset] & 0x8);
-
-        public virtual Boolean HasLength => 4 == (Header.Bytes[Header.Offset] & 0x4);
-
-        public virtual Boolean HasSequence => 2 == (Header.Bytes[Header.Offset] & 0x2);
-
-        public virtual Boolean HasOffset => 2 == (Header.Bytes[Header.Offset] & 0x2);
-
-        public virtual Boolean IsPriority => 2 == (Header.Bytes[Header.Offset] & 0x2);
-
-        public virtual Int32 Version => (Header.Bytes[Header.Offset + 1] & 0x7);
-
-        public virtual Int32 TunnelID
-        {
-            get
-            {
-                if (HasLength)
-                    return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 3);
-                else
-                    return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 2);
-
-            }
-        }
-
-        public virtual Int32 SessionID
-        {
-            get
-            {
-                if (HasLength)
-                    return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 5);
-                else
-                    return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 4);
-
-            }
-        }
-
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color => AnsiEscapeSequences.DarkGray;
-
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
         public L2TPPacket(ByteArraySegment bas, Packet ParentPacket)
         {
@@ -95,13 +55,54 @@ namespace PacketDotNet
             {
                 PayloadPacket = new PPPPacket(payload);
                 PayloadPacket.ParentPacket = this;
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 //it's not a PPP packet, just attach the data
                 PayloadPacketOrData.Value.TheByteArraySegment = payload;
             }
+
             this.ParentPacket = ParentPacket;
         }
+
+        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override String Color => AnsiEscapeSequences.DarkGray;
+
+        public virtual Boolean DataMessage => 8 == (Header.Bytes[Header.Offset] & 0x8);
+
+        public virtual Boolean HasLength => 4 == (Header.Bytes[Header.Offset] & 0x4);
+
+        public virtual Boolean HasOffset => 2 == (Header.Bytes[Header.Offset] & 0x2);
+
+        public virtual Boolean HasSequence => 2 == (Header.Bytes[Header.Offset] & 0x2);
+
+        public virtual Boolean IsPriority => 2 == (Header.Bytes[Header.Offset] & 0x2);
+
+        public virtual Int32 SessionID
+        {
+            get
+            {
+                if (HasLength)
+                    return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 5);
+
+
+                return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 4);
+            }
+        }
+
+        public virtual Int32 TunnelID
+        {
+            get
+            {
+                if (HasLength)
+                    return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 3);
+
+
+                return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 2);
+            }
+        }
+
+        public virtual Int32 Version => (Header.Bytes[Header.Offset + 1] & 0x7);
 
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
@@ -110,26 +111,26 @@ namespace PacketDotNet
             var buffer = new StringBuilder();
             String color = "";
             String colorEscape = "";
-            
 
-            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+
+            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
                 buffer.AppendFormat("{0}[L2TPPacket",
-                    color,
-                    colorEscape);
+                                    color,
+                                    colorEscape);
             }
 
 
             // append the base string output
             buffer.Append(base.ToString(outputFormat));
-            
+
             return buffer.ToString();
         }
     }

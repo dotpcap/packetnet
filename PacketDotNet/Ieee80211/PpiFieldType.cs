@@ -21,20 +21,21 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #endregion Header
+
+
 using System;
 
 namespace PacketDotNet
 {
     namespace Ieee80211
     {
+        #region Enumerations
 
-    #region Enumerations
-
-        ///<summary>
+        /// <summary>
         /// from PPI v 1.0.10
         /// </summary>
         [Flags]
-        public enum PpiFieldType : int
+        public enum PpiFieldType
         {
             /// <summary>
             /// PpiReserved0
@@ -51,9 +52,9 @@ namespace PacketDotNet
             /// </summary>
             PpiCommon = 2,
 
-            ///<summary>
+            /// <summary>
             /// PpiMacExtensions
-            ///</summary>
+            /// </summary>
             PpiMacExtensions = 3,
 
             /// <summary>
@@ -89,9 +90,9 @@ namespace PacketDotNet
             /// <summary>
             /// PpiReservedAll
             /// </summary>
-            PpiReservedAll = 10,
+            PpiReservedAll = 10
         }
 
-    #endregion Enumerations
+        #endregion Enumerations
     }
 }

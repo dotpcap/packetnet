@@ -17,22 +17,22 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
+
 using System;
 using MiscUtil.Conversion;
-using PacketDotNet.Utils;
 
 namespace PacketDotNet.Tcp
 {
     /// <summary>
     /// SACK (Selective Ack) Option
-    ///  Provides a means for a receiver to notify the sender about
-    ///  all the segments that have arrived successfully.
-    ///  Used to cut down on the number of unnecessary re-transmissions.
+    /// Provides a means for a receiver to notify the sender about
+    /// all the segments that have arrived successfully.
+    /// Used to cut down on the number of unnecessary re-transmissions.
     /// </summary>
     /// <remarks>
     /// References:
-    ///  http://datatracker.ietf.org/doc/rfc2018/
-    ///  http://datatracker.ietf.org/doc/rfc2883/
+    /// http://datatracker.ietf.org/doc/rfc2018/
+    /// http://datatracker.ietf.org/doc/rfc2883/
     /// </remarks>
     public class SACK : Option
     {
@@ -42,19 +42,20 @@ namespace PacketDotNet.Tcp
         /// Creates a SACK (Selective Ack) Option
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="T:System.Byte[]"/>
+        /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         public SACK(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
         { }
 
         #endregion
+
 
         #region Properties
 
@@ -68,16 +69,18 @@ namespace PacketDotNet.Tcp
                 Int32 numOfBlocks = (Length - SACKBlocksFieldOffset) / BlockLength;
                 UInt16[] blocks = new UInt16[numOfBlocks];
                 Int32 offset = 0;
-                for(Int32 i = 0; i < numOfBlocks; i++)
+                for (Int32 i = 0; i < numOfBlocks; i++)
                 {
                     offset = SACKBlocksFieldOffset + (i * BlockLength);
                     blocks[i] = EndianBitConverter.Big.ToUInt16(Bytes, offset);
                 }
+
                 return blocks;
             }
         }
 
         #endregion
+
 
         #region Methods
 
@@ -85,15 +88,15 @@ namespace PacketDotNet.Tcp
         /// Returns the Option info as a string
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        /// A <see cref="System.String" />
         /// </returns>
         public override String ToString()
         {
-            String output = "[" + Kind.ToString() + ": ";
+            String output = "[" + Kind + ": ";
 
-            for(Int32 i = 0; i < SACKBlocks.Length; i++)
+            for (Int32 i = 0; i < SACKBlocks.Length; i++)
             {
-                output += "Block" + i + "=" + SACKBlocks[i].ToString() + " ";
+                output += "Block" + i + "=" + SACKBlocks[i] + " ";
             }
 
             output.TrimEnd();
@@ -103,7 +106,8 @@ namespace PacketDotNet.Tcp
         }
 
         #endregion
-        
+
+
         #region Members
 
         // the length (in bytes) of a SACK block
@@ -112,6 +116,6 @@ namespace PacketDotNet.Tcp
         // the offset (in bytes) of the ScaleFactor Field
         const Int32 SACKBlocksFieldOffset = 2;
 
-       #endregion
+        #endregion
     }
 }

@@ -16,7 +16,7 @@ namespace MiscUtil.Conversion
         /// </summary>
         /// <param name="d">The double to convert.</param>
         /// <returns>A string representation of the double's exact decimal value.</returns>
-        public static String ToExactString (Double d)
+        public static String ToExactString(Double d)
         {
             if (Double.IsPositiveInfinity(d))
                 return "+Infinity";
@@ -24,6 +24,7 @@ namespace MiscUtil.Conversion
                 return "-Infinity";
             if (Double.IsNaN(d))
                 return "NaN";
+
 
             // Translate the double into sign, exponent and mantissa.
             Int64 bits = BitConverter.DoubleToInt64Bits(d);
@@ -33,7 +34,7 @@ namespace MiscUtil.Conversion
 
             // Subnormal numbers; exponent is effectively one higher,
             // but there's no extra normalisation bit in the mantissa
-            if (exponent==0)
+            if (exponent == 0)
             {
                 exponent++;
             }
@@ -41,7 +42,7 @@ namespace MiscUtil.Conversion
             // bit to the front of the mantissa
             else
             {
-                mantissa = mantissa | (1L<<52);
+                mantissa = mantissa | (1L << 52);
             }
 
             // Bias the exponent. It's actually biased by 1023, but we're
@@ -55,36 +56,38 @@ namespace MiscUtil.Conversion
             }
 
             /* Normalize */
-            while((mantissa & 1) == 0)
-            {    /*  i.e., Mantissa is even */
+            while ((mantissa & 1) == 0)
+            {
+                /*  i.e., Mantissa is even */
                 mantissa >>= 1;
                 exponent++;
             }
 
             // Construct a new decimal expansion with the mantissa
-            ArbitraryDecimal ad = new ArbitraryDecimal (mantissa);
+            ArbitraryDecimal ad = new ArbitraryDecimal(mantissa);
 
             // If the exponent is less than 0, we need to repeatedly
             // divide by 2 - which is the equivalent of multiplying
             // by 5 and dividing by 10.
             if (exponent < 0)
             {
-                for (Int32 i=0; i < -exponent; i++)
+                for (Int32 i = 0; i < -exponent; i++)
                     ad.MultiplyBy(5);
                 ad.Shift(-exponent);
             }
-                // Otherwise, we need to repeatedly multiply by 2
+            // Otherwise, we need to repeatedly multiply by 2
             else
             {
-                for (Int32 i=0; i < exponent; i++)
+                for (Int32 i = 0; i < exponent; i++)
                     ad.MultiplyBy(2);
             }
 
             // Finally, return the string with an appropriate sign
             if (negative)
-                return "-"+ad.ToString();
-            else
-                return ad.ToString();
+                return "-" + ad;
+
+
+            return ad.ToString();
         }
 
         /// <summary>
@@ -92,23 +95,24 @@ namespace MiscUtil.Conversion
         /// </summary>
         class ArbitraryDecimal
         {
-            /// <summary>Digits in the decimal expansion, one byte per digit</summary>
-            Byte[] digits;
             /// <summary>
             /// How many digits are *after* the decimal point
             /// </summary>
-            Int32 decimalPoint=0;
+            Int32 decimalPoint;
+
+            /// <summary>Digits in the decimal expansion, one byte per digit</summary>
+            Byte[] digits;
 
             /// <summary>
             /// Constructs an arbitrary decimal expansion from the given long.
             /// The long must not be negative.
             /// </summary>
-            internal ArbitraryDecimal (Int64 x)
+            internal ArbitraryDecimal(Int64 x)
             {
                 String tmp = x.ToString(CultureInfo.InvariantCulture);
                 digits = new Byte[tmp.Length];
-                for (Int32 i=0; i < tmp.Length; i++)
-                    digits[i] = (Byte) (tmp[i]-'0');
+                for (Int32 i = 0; i < tmp.Length; i++)
+                    digits[i] = (Byte) (tmp[i] - '0');
                 Normalize();
             }
 
@@ -118,21 +122,23 @@ namespace MiscUtil.Conversion
             /// </summary>
             internal void MultiplyBy(Int32 amount)
             {
-                Byte[] result = new Byte[digits.Length+1];
-                for (Int32 i=digits.Length-1; i >= 0; i--)
+                Byte[] result = new Byte[digits.Length + 1];
+                for (Int32 i = digits.Length - 1; i >= 0; i--)
                 {
-                    Int32 resultDigit = digits[i]*amount+result[i+1];
-                    result[i]=(Byte)(resultDigit/10);
-                    result[i+1]=(Byte)(resultDigit%10);
+                    Int32 resultDigit = digits[i] * amount + result[i + 1];
+                    result[i] = (Byte) (resultDigit / 10);
+                    result[i + 1] = (Byte) (resultDigit % 10);
                 }
+
                 if (result[0] != 0)
                 {
-                    digits=result;
+                    digits = result;
                 }
                 else
                 {
-                    Array.Copy (result, 1, digits, 0, digits.Length);
+                    Array.Copy(result, 1, digits, 0, digits.Length);
                 }
+
                 Normalize();
             }
 
@@ -142,7 +148,7 @@ namespace MiscUtil.Conversion
             /// decimal place) and a positive value makes the decimal
             /// expansion smaller.
             /// </summary>
-            internal void Shift (Int32 amount)
+            internal void Shift(Int32 amount)
             {
                 decimalPoint += amount;
             }
@@ -153,23 +159,27 @@ namespace MiscUtil.Conversion
             internal void Normalize()
             {
                 Int32 first;
-                for (first=0; first < digits.Length; first++)
-                    if (digits[first]!=0)
-                        break;
-                Int32 last;
-                for (last=digits.Length-1; last >= 0; last--)
-                    if (digits[last]!=0)
+                for (first = 0; first < digits.Length; first++)
+                    if (digits[first] != 0)
                         break;
 
-                if (first==0 && last==digits.Length-1)
+
+                Int32 last;
+                for (last = digits.Length - 1; last >= 0; last--)
+                    if (digits[last] != 0)
+                        break;
+
+
+                if (first == 0 && last == digits.Length - 1)
                     return;
 
-                Byte[] tmp = new Byte[last-first+1];
-                for (Int32 i=0; i < tmp.Length; i++)
-                    tmp[i]=digits[i+first];
 
-                decimalPoint -= digits.Length-(last+1);
-                digits=tmp;
+                Byte[] tmp = new Byte[last - first + 1];
+                for (Int32 i = 0; i < tmp.Length; i++)
+                    tmp[i] = digits[i + first];
+
+                decimalPoint -= digits.Length - (last + 1);
+                digits = tmp;
             }
 
             /// <summary>
@@ -178,41 +188,42 @@ namespace MiscUtil.Conversion
             public override String ToString()
             {
                 Char[] digitString = new Char[digits.Length];
-                for (Int32 i=0; i < digits.Length; i++)
-                    digitString[i] = (Char)(digits[i]+'0');
+                for (Int32 i = 0; i < digits.Length; i++)
+                    digitString[i] = (Char) (digits[i] + '0');
 
                 // Simplest case - nothing after the decimal point,
                 // and last real digit is non-zero, eg value=35
-                if (decimalPoint==0)
+                if (decimalPoint == 0)
                 {
-                    return new String (digitString);
+                    return new String(digitString);
                 }
 
                 // Fairly simple case - nothing after the decimal
                 // point, but some 0s to add, eg value=350
                 if (decimalPoint < 0)
                 {
-                    return new String (digitString)+
-                        new String ('0', -decimalPoint);
+                    return new String(digitString) +
+                           new String('0', -decimalPoint);
                 }
 
                 // Nothing before the decimal point, eg 0.035
                 if (decimalPoint >= digitString.Length)
                 {
-                    return "0."+
-                        new String ('0',(decimalPoint-digitString.Length))+
-                        new String (digitString);
+                    return "0." +
+                           new String('0', (decimalPoint - digitString.Length)) +
+                           new String(digitString);
                 }
 
                 // Most complicated case - part of the string comes
                 // before the decimal point, part comes after it,
                 // eg 3.5
-                return new String (digitString, 0,
-                    digitString.Length-decimalPoint)+
-                    "."+
-                    new String (digitString,
-                    digitString.Length-decimalPoint,
-                    decimalPoint);
+                return new String(digitString,
+                                  0,
+                                  digitString.Length - decimalPoint) +
+                       "." +
+                       new String(digitString,
+                                  digitString.Length - decimalPoint,
+                                  decimalPoint);
             }
         }
     }

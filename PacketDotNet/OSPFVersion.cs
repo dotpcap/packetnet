@@ -1,4 +1,4 @@
-    /*
+/*
 This file is part of PacketDotNet
 
 PacketDotNet is free software: you can redistribute it and/or modify
@@ -17,7 +17,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2011 Georgi Baychev <georgi.baychev@gmail.com>
  */
-using System;
 
 namespace PacketDotNet
 {
@@ -26,7 +25,8 @@ namespace PacketDotNet
     {
         /// <summary> OSPF protocol version 2.</summary>
         OSPFv2 = 2,
+
         /// <summary> OSPF protocol version 3.</summary>
-        OSPFv3 = 3,
+        OSPFv3 = 3
     }
 }

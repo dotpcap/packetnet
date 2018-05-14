@@ -17,6 +17,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
 
 namespace PacketDotNet
@@ -26,31 +27,31 @@ namespace PacketDotNet
     /// </summary>
     public class EthernetFields
     {
-        /// <summary> Width of the ethernet type code in bytes.</summary>
-        public static readonly Int32 TypeLength = 2;
-
         /// <summary> Position of the destination MAC address within the ethernet header.</summary>
         public static readonly Int32 DestinationMacPosition = 0;
 
-        /// <summary> Position of the source MAC address within the ethernet header.</summary>
-        public static readonly Int32 SourceMacPosition;
-
-        /// <summary> Position of the ethernet type field within the ethernet header.</summary>
-        public static readonly Int32 TypePosition;
-
         /// <summary> Total length of an ethernet header in bytes.</summary>
         public static readonly Int32 HeaderLength; // == 14
-
-        static EthernetFields()
-        {
-            SourceMacPosition = EthernetFields.MacAddressLength;
-            TypePosition = EthernetFields.MacAddressLength * 2;
-            HeaderLength = EthernetFields.TypePosition + EthernetFields.TypeLength;
-        }
 
         /// <summary>
         /// size of an ethernet mac address in bytes
         /// </summary>
         public static readonly Int32 MacAddressLength = 6;
+
+        /// <summary> Position of the source MAC address within the ethernet header.</summary>
+        public static readonly Int32 SourceMacPosition;
+
+        /// <summary> Width of the ethernet type code in bytes.</summary>
+        public static readonly Int32 TypeLength = 2;
+
+        /// <summary> Position of the ethernet type field within the ethernet header.</summary>
+        public static readonly Int32 TypePosition;
+
+        static EthernetFields()
+        {
+            SourceMacPosition = MacAddressLength;
+            TypePosition = MacAddressLength * 2;
+            HeaderLength = TypePosition + TypeLength;
+        }
     }
 }

@@ -19,9 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using PacketDotNet.Utils;
 using MiscUtil.Conversion;
 
 namespace PacketDotNet
@@ -33,8 +31,58 @@ namespace PacketDotNet
         /// </summary>
         public class ChannelRadioTapField : RadioTapField
         {
+            /// <summary>
+            /// Channel flags
+            /// </summary>
+            public RadioTapChannelFlags Flags;
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            public ChannelRadioTapField(BinaryReader br)
+            {
+                FrequencyMHz = br.ReadUInt16();
+                Channel = ChannelFromFrequencyMHz(FrequencyMHz);
+                Flags = (RadioTapChannelFlags) br.ReadUInt16();
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ChannelRadioTapField" /> class.
+            /// </summary>
+            public ChannelRadioTapField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ChannelRadioTapField" /> class.
+            /// </summary>
+            /// <param name='FrequencyMhz'>
+            /// Tx/Rx Frequency in MHz.
+            /// </param>
+            /// <param name='Flags'>
+            /// Flags.
+            /// </param>
+            public ChannelRadioTapField(UInt16 FrequencyMhz, RadioTapChannelFlags Flags)
+            {
+                FrequencyMHz = FrequencyMHz;
+                Channel = ChannelFromFrequencyMHz(FrequencyMHz);
+                this.Flags = Flags;
+            }
+
+            /// <summary>
+            /// Channel number derived from frequency
+            /// </summary>
+            public Int32 Channel { get; set; }
+
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType => RadioTapType.Channel;
+
+            /// <summary>
+            /// Frequency in MHz
+            /// </summary>
+            public UInt16 FrequencyMHz { get; set; }
 
             /// <summary>
             /// Gets the length of the field data.
@@ -45,30 +93,17 @@ namespace PacketDotNet
             public override UInt16 Length => 4;
 
             /// <summary>
-            /// Frequency in MHz
-            /// </summary>
-            public UInt16 FrequencyMHz { get; set; }
-
-            /// <summary>
-            /// Channel number derived from frequency
-            /// </summary>
-            public Int32 Channel { get; set; }
-
-            /// <summary>
-            /// Channel flags
-            /// </summary>
-            public RadioTapChannelFlags Flags;
-
-            /// <summary>
             /// Convert a frequency to a channel
             /// </summary>
-            /// <remarks>There is some overlap between the 802.11b/g channel numbers and the 802.11a channel numbers. This means that while a particular frequncy will only
-            /// ever map to single channel number the same channel number may be returned for more than one frequency. At present this affects channel numbers 8 and 12.</remarks>
+            /// <remarks>
+            /// There is some overlap between the 802.11b/g channel numbers and the 802.11a channel numbers. This means that while a particular frequncy will only
+            /// ever map to single channel number the same channel number may be returned for more than one frequency. At present this affects channel numbers 8 and 12.
+            /// </remarks>
             /// <param name="frequencyMHz">
-            /// A <see cref="System.Int32"/>
+            /// A <see cref="System.Int32" />
             /// </param>
             /// <returns>
-            /// A <see cref="System.Int32"/>
+            /// A <see cref="System.Int32" />
             /// </returns>
             public static Int32 ChannelFromFrequencyMHz(Int32 frequencyMHz)
             {
@@ -176,65 +211,32 @@ namespace PacketDotNet
                         return 165;
                     default:
                         return 0;
-                };
+                }
+
+                ;
             }
-            
+
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
                 EndianBitConverter.Little.CopyBytes(FrequencyMHz, dest, offset);
-                EndianBitConverter.Little.CopyBytes((UInt16)Flags, dest, offset + 2);
-            }
-
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            public ChannelRadioTapField(BinaryReader br)
-            {
-                FrequencyMHz = br.ReadUInt16();
-                Channel = ChannelFromFrequencyMHz(FrequencyMHz);
-                Flags = (RadioTapChannelFlags)br.ReadUInt16();
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ChannelRadioTapField"/> class.
-            /// </summary>
-            public ChannelRadioTapField()
-            {
-             
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ChannelRadioTapField"/> class.
-            /// </summary>
-            /// <param name='FrequencyMhz'>
-            /// Tx/Rx Frequency in MHz.
-            /// </param>
-            /// <param name='Flags'>
-            /// Flags.
-            /// </param>
-            public ChannelRadioTapField(UInt16 FrequencyMhz, RadioTapChannelFlags Flags)
-            {
-                this.FrequencyMHz = FrequencyMHz;
-                this.Channel = ChannelFromFrequencyMHz(FrequencyMHz);
-                this.Flags = Flags;
+                EndianBitConverter.Little.CopyBytes((UInt16) Flags, dest, offset + 2);
             }
 
             /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
                 return String.Format("FrequencyMHz {0}, Channel {1}, Flags {2}",
-                                     FrequencyMHz, Channel, Flags);
+                                     FrequencyMHz,
+                                     Channel,
+                                     Flags);
             }
         }
 
@@ -243,60 +245,28 @@ namespace PacketDotNet
         /// </summary>
         public class FhssRadioTapField : RadioTapField
         {
-            /// <summary>Type of the field</summary>
-            public override RadioTapType FieldType => RadioTapType.Fhss;
-
-            /// <summary>
-            /// Gets the length of the field data.
-            /// </summary>
-            /// <value>
-            /// The length.
-            /// </value>
-            public override UInt16 Length => 2;
-
-            /// <summary>
-            /// Hop set
-            /// </summary>
-            public Byte ChannelHoppingSet { get; set; }
-
-            /// <summary>
-            /// Hop pattern
-            /// </summary>
-            public Byte Pattern { get; set; }
-            
-            /// <summary>
-            /// Copies the field data to the destination buffer at the specified offset.
-            /// </summary>
-            public override void CopyTo(Byte[] dest, Int32 offset)
-            {
-                dest[offset] = ChannelHoppingSet;
-                dest[offset + 1] = Pattern;
-            }
-
             /// <summary>
             /// Constructor
             /// </summary>
             /// <param name="br">
-            /// A <see cref="BinaryReader"/>
+            /// A <see cref="BinaryReader" />
             /// </param>
             public FhssRadioTapField(BinaryReader br)
             {
                 var u16 = br.ReadUInt16();
 
-                ChannelHoppingSet = (Byte)(u16 & 0xff);
-                Pattern = (Byte)((u16 >> 8) & 0xff);
+                ChannelHoppingSet = (Byte) (u16 & 0xff);
+                Pattern = (Byte) ((u16 >> 8) & 0xff);
             }
-   
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FhssRadioTapField"/> class.
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FhssRadioTapField" /> class.
             /// </summary>
             public FhssRadioTapField()
-            {
-             
-            }
-            
+            { }
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FhssRadioTapField"/> class.
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FhssRadioTapField" /> class.
             /// </summary>
             /// <param name='ChannelHoppingSet'>
             /// Channel hopping set.
@@ -309,17 +279,48 @@ namespace PacketDotNet
                 this.ChannelHoppingSet = ChannelHoppingSet;
                 this.Pattern = Pattern;
             }
-            
+
+            /// <summary>
+            /// Hop set
+            /// </summary>
+            public Byte ChannelHoppingSet { get; set; }
+
+            /// <summary>Type of the field</summary>
+            public override RadioTapType FieldType => RadioTapType.Fhss;
+
+            /// <summary>
+            /// Gets the length of the field data.
+            /// </summary>
+            /// <value>
+            /// The length.
+            /// </value>
+            public override UInt16 Length => 2;
+
+            /// <summary>
+            /// Hop pattern
+            /// </summary>
+            public Byte Pattern { get; set; }
+
+            /// <summary>
+            /// Copies the field data to the destination buffer at the specified offset.
+            /// </summary>
+            public override void CopyTo(Byte[] dest, Int32 offset)
+            {
+                dest[offset] = ChannelHoppingSet;
+                dest[offset + 1] = Pattern;
+            }
+
             /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
                 return String.Format("ChannelHoppingSet {0}, Pattern {1}",
-                                     ChannelHoppingSet, Pattern);
+                                     ChannelHoppingSet,
+                                     Pattern);
             }
         }
 
@@ -328,6 +329,40 @@ namespace PacketDotNet
         /// </summary>
         public class FlagsRadioTapField : RadioTapField
         {
+            /// <summary>
+            /// Flags set
+            /// </summary>
+            public RadioTapFlags Flags;
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            public FlagsRadioTapField(BinaryReader br)
+            {
+                var u8 = br.ReadByte();
+                Flags = (RadioTapFlags) u8;
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FlagsRadioTapField" /> class.
+            /// </summary>
+            public FlagsRadioTapField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FlagsRadioTapField" /> class.
+            /// </summary>
+            /// <param name='Flags'>
+            /// Flags.
+            /// </param>
+            public FlagsRadioTapField(RadioTapFlags Flags)
+            {
+                this.Flags = Flags;
+            }
+
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType => RadioTapType.Flags;
 
@@ -340,11 +375,6 @@ namespace PacketDotNet
             public override UInt16 Length => 1;
 
             /// <summary>
-            /// Flags set
-            /// </summary>
-            public RadioTapFlags Flags;
-            
-            /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
@@ -353,41 +383,10 @@ namespace PacketDotNet
             }
 
             /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            public FlagsRadioTapField(BinaryReader br)
-            {
-                var u8 = br.ReadByte();
-                Flags = (RadioTapFlags)u8;
-            }
-   
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FlagsRadioTapField"/> class.
-            /// </summary>
-            public FlagsRadioTapField()
-            {
-             
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FlagsRadioTapField"/> class.
-            /// </summary>
-            /// <param name='Flags'>
-            /// Flags.
-            /// </param>
-            public FlagsRadioTapField(RadioTapFlags Flags)
-            {
-                this.Flags = Flags;
-            }
-            
-            /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
@@ -400,6 +399,35 @@ namespace PacketDotNet
         /// </summary>
         public class RateRadioTapField : RadioTapField
         {
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            public RateRadioTapField(BinaryReader br)
+            {
+                var u8 = br.ReadByte();
+                RateMbps = (0.5 * (u8 & 0x7f));
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.RateRadioTapField" /> class.
+            /// </summary>
+            public RateRadioTapField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.RateRadioTapField" /> class.
+            /// </summary>
+            /// <param name='RateMbps'>
+            /// Rate mbps.
+            /// </param>
+            public RateRadioTapField(Double RateMbps)
+            {
+                this.RateMbps = RateMbps;
+            }
+
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType => RadioTapType.Rate;
 
@@ -415,7 +443,7 @@ namespace PacketDotNet
             /// Rate in Mbps
             /// </summary>
             public Double RateMbps { get; set; }
-            
+
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
@@ -425,41 +453,10 @@ namespace PacketDotNet
             }
 
             /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            public RateRadioTapField(BinaryReader br)
-            {
-                var u8 = br.ReadByte();
-                RateMbps = (0.5 * (u8 & 0x7f));
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.RateRadioTapField"/> class.
-            /// </summary>
-            public RateRadioTapField ()
-            {
-             
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.RateRadioTapField"/> class.
-            /// </summary>
-            /// <param name='RateMbps'>
-            /// Rate mbps.
-            /// </param>
-            public RateRadioTapField(Double RateMbps)
-            {
-                this.RateMbps = RateMbps;             
-            }
-
-            /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
@@ -472,6 +469,34 @@ namespace PacketDotNet
         /// </summary>
         public class DbAntennaSignalRadioTapField : RadioTapField
         {
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            public DbAntennaSignalRadioTapField(BinaryReader br)
+            {
+                SignalStrengthdB = br.ReadByte();
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbAntennaSignalRadioTapField" /> class.
+            /// </summary>
+            public DbAntennaSignalRadioTapField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbAntennaSignalRadioTapField" /> class.
+            /// </summary>
+            /// <param name='SignalStrengthdB'>
+            /// Signal strength in dB
+            /// </param>
+            public DbAntennaSignalRadioTapField(Byte SignalStrengthdB)
+            {
+                this.SignalStrengthdB = SignalStrengthdB;
+            }
+
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType => RadioTapType.DbAntennaSignal;
 
@@ -487,7 +512,7 @@ namespace PacketDotNet
             /// Signal strength in dB
             /// </summary>
             public Byte SignalStrengthdB { get; set; }
-            
+
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
@@ -497,40 +522,10 @@ namespace PacketDotNet
             }
 
             /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            public DbAntennaSignalRadioTapField(BinaryReader br)
-            {
-                SignalStrengthdB = br.ReadByte();
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbAntennaSignalRadioTapField"/> class.
-            /// </summary>
-            public DbAntennaSignalRadioTapField()
-            {
-             
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbAntennaSignalRadioTapField"/> class.
-            /// </summary>
-            /// <param name='SignalStrengthdB'>
-            /// Signal strength in dB
-            /// </param>
-            public DbAntennaSignalRadioTapField (Byte SignalStrengthdB)
-            {
-                this.SignalStrengthdB = SignalStrengthdB;
-            }
-
-            /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
@@ -543,6 +538,39 @@ namespace PacketDotNet
         /// </summary>
         public class DbAntennaNoiseRadioTapField : RadioTapField
         {
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            public DbAntennaNoiseRadioTapField(BinaryReader br)
+            {
+                AntennaNoisedB = br.ReadByte();
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbAntennaNoiseRadioTapField" /> class.
+            /// </summary>
+            public DbAntennaNoiseRadioTapField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbAntennaNoiseRadioTapField" /> class.
+            /// </summary>
+            /// <param name='AntennaNoisedB'>
+            /// Antenna signal noise in dB.
+            /// </param>
+            public DbAntennaNoiseRadioTapField(Byte AntennaNoisedB)
+            {
+                this.AntennaNoisedB = AntennaNoisedB;
+            }
+
+            /// <summary>
+            /// Antenna noise in dB
+            /// </summary>
+            public Byte AntennaNoisedB { get; set; }
+
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType => RadioTapType.DbAntennaNoise;
 
@@ -555,11 +583,6 @@ namespace PacketDotNet
             public override UInt16 Length => 1;
 
             /// <summary>
-            /// Antenna noise in dB
-            /// </summary>
-            public Byte AntennaNoisedB { get; set; }
-            
-            /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
@@ -568,40 +591,10 @@ namespace PacketDotNet
             }
 
             /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            public DbAntennaNoiseRadioTapField(BinaryReader br)
-            {
-                AntennaNoisedB = br.ReadByte();
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbAntennaNoiseRadioTapField"/> class.
-            /// </summary>
-            public DbAntennaNoiseRadioTapField()
-            {
-             
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbAntennaNoiseRadioTapField"/> class.
-            /// </summary>
-            /// <param name='AntennaNoisedB'>
-            /// Antenna signal noise in dB.
-            /// </param>
-            public DbAntennaNoiseRadioTapField(Byte AntennaNoisedB)
-            {
-                this.AntennaNoisedB = AntennaNoisedB;
-            }
-
-            /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
@@ -614,6 +607,39 @@ namespace PacketDotNet
         /// </summary>
         public class AntennaRadioTapField : RadioTapField
         {
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            public AntennaRadioTapField(BinaryReader br)
+            {
+                Antenna = br.ReadByte();
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.AntennaRadioTapField" /> class.
+            /// </summary>
+            public AntennaRadioTapField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.AntennaRadioTapField" /> class.
+            /// </summary>
+            /// <param name='Antenna'>
+            /// Antenna index of the Rx/Tx antenna for this packet. The first antenna is antenna 0.
+            /// </param>
+            public AntennaRadioTapField(Byte Antenna)
+            {
+                this.Antenna = Antenna;
+            }
+
+            /// <summary>
+            /// Antenna number
+            /// </summary>
+            public Byte Antenna { get; set; }
+
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType => RadioTapType.Antenna;
 
@@ -626,11 +652,6 @@ namespace PacketDotNet
             public override UInt16 Length => 1;
 
             /// <summary>
-            /// Antenna number
-            /// </summary>
-            public Byte Antenna { get; set; }
-            
-            /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
@@ -639,40 +660,10 @@ namespace PacketDotNet
             }
 
             /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            public AntennaRadioTapField(BinaryReader br)
-            {
-                Antenna = br.ReadByte();
-            }
-   
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.AntennaRadioTapField"/> class.
-            /// </summary>
-            public AntennaRadioTapField()
-            {
-             
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.AntennaRadioTapField"/> class.
-            /// </summary>
-            /// <param name='Antenna'>
-            /// Antenna index of the Rx/Tx antenna for this packet. The first antenna is antenna 0.
-            /// </param>
-            public AntennaRadioTapField (Byte Antenna)
-            {
-                this.Antenna = Antenna;
-            }
-            
-            /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
@@ -685,6 +676,39 @@ namespace PacketDotNet
         /// </summary>
         public class DbmAntennaSignalRadioTapField : RadioTapField
         {
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            public DbmAntennaSignalRadioTapField(BinaryReader br)
+            {
+                AntennaSignalDbm = br.ReadSByte();
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbmAntennaSignalRadioTapField" /> class.
+            /// </summary>
+            public DbmAntennaSignalRadioTapField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbmAntennaSignalRadioTapField" /> class.
+            /// </summary>
+            /// <param name='AntennaSignalDbm'>
+            /// Antenna signal power in dB.
+            /// </param>
+            public DbmAntennaSignalRadioTapField(SByte AntennaSignalDbm)
+            {
+                this.AntennaSignalDbm = AntennaSignalDbm;
+            }
+
+            /// <summary>
+            /// Antenna signal in dBm
+            /// </summary>
+            public SByte AntennaSignalDbm { get; set; }
+
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType => RadioTapType.DbmAntennaSignal;
 
@@ -697,53 +721,18 @@ namespace PacketDotNet
             public override UInt16 Length => 1;
 
             /// <summary>
-            /// Antenna signal in dBm
-            /// </summary>
-            public SByte AntennaSignalDbm { get; set; }
-            
-            /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = (Byte)AntennaSignalDbm;
-            }
-
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            public DbmAntennaSignalRadioTapField(BinaryReader br)
-            {
-                AntennaSignalDbm = br.ReadSByte();
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbmAntennaSignalRadioTapField"/> class.
-            /// </summary>
-            public DbmAntennaSignalRadioTapField()
-            {
-             
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbmAntennaSignalRadioTapField"/> class.
-            /// </summary>
-            /// <param name='AntennaSignalDbm'>
-            /// Antenna signal power in dB.
-            /// </param>
-            public DbmAntennaSignalRadioTapField (SByte AntennaSignalDbm)
-            {
-                this.AntennaSignalDbm = AntennaSignalDbm;
+                dest[offset] = (Byte) AntennaSignalDbm;
             }
 
             /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
@@ -756,6 +745,39 @@ namespace PacketDotNet
         /// </summary>
         public class DbmAntennaNoiseRadioTapField : RadioTapField
         {
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            public DbmAntennaNoiseRadioTapField(BinaryReader br)
+            {
+                AntennaNoisedBm = br.ReadSByte();
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbmAntennaNoiseRadioTapField" /> class.
+            /// </summary>
+            public DbmAntennaNoiseRadioTapField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbmAntennaNoiseRadioTapField" /> class.
+            /// </summary>
+            /// <param name='AntennaNoisedBm'>
+            /// Antenna noise in dBm.
+            /// </param>
+            public DbmAntennaNoiseRadioTapField(SByte AntennaNoisedBm)
+            {
+                this.AntennaNoisedBm = AntennaNoisedBm;
+            }
+
+            /// <summary>
+            /// Antenna noise in dBm
+            /// </summary>
+            public SByte AntennaNoisedBm { get; set; }
+
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType => RadioTapType.DbmAntennaNoise;
 
@@ -768,53 +790,18 @@ namespace PacketDotNet
             public override UInt16 Length => 1;
 
             /// <summary>
-            /// Antenna noise in dBm
-            /// </summary>
-            public SByte AntennaNoisedBm { get; set; }
-            
-            /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = (Byte)AntennaNoisedBm;
+                dest[offset] = (Byte) AntennaNoisedBm;
             }
 
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            public DbmAntennaNoiseRadioTapField(BinaryReader br)
-            {
-                AntennaNoisedBm = br.ReadSByte();
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbmAntennaNoiseRadioTapField"/> class.
-            /// </summary>
-            public DbmAntennaNoiseRadioTapField()
-            {
-             
-            }
-   
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbmAntennaNoiseRadioTapField"/> class.
-            /// </summary>
-            /// <param name='AntennaNoisedBm'>
-            /// Antenna noise in dBm.
-            /// </param>
-            public DbmAntennaNoiseRadioTapField (SByte AntennaNoisedBm)
-            {
-                this.AntennaNoisedBm = AntennaNoisedBm;
-            }
-            
             /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
@@ -827,6 +814,34 @@ namespace PacketDotNet
         /// </summary>
         public class LockQualityRadioTapField : RadioTapField
         {
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            public LockQualityRadioTapField(BinaryReader br)
+            {
+                SignalQuality = br.ReadUInt16();
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.LockQualityRadioTapField" /> class.
+            /// </summary>
+            public LockQualityRadioTapField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.LockQualityRadioTapField" /> class.
+            /// </summary>
+            /// <param name='SignalQuality'>
+            /// Signal quality.
+            /// </param>
+            public LockQualityRadioTapField(UInt16 SignalQuality)
+            {
+                this.SignalQuality = SignalQuality;
+            }
+
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType => RadioTapType.LockQuality;
 
@@ -843,7 +858,7 @@ namespace PacketDotNet
             /// Signal quality
             /// </summary>
             public UInt16 SignalQuality { get; set; }
-   
+
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
@@ -851,42 +866,12 @@ namespace PacketDotNet
             {
                 EndianBitConverter.Little.CopyBytes(SignalQuality, dest, offset);
             }
-            
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            public LockQualityRadioTapField(BinaryReader br)
-            {
-                SignalQuality = br.ReadUInt16();
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.LockQualityRadioTapField"/> class.
-            /// </summary>
-            public LockQualityRadioTapField()
-            {
-             
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.LockQualityRadioTapField"/> class.
-            /// </summary>
-            /// <param name='SignalQuality'>
-            /// Signal quality.
-            /// </param>
-            public LockQualityRadioTapField(UInt16 SignalQuality)
-            {
-                this.SignalQuality = SignalQuality;
-            }
 
             /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
@@ -899,6 +884,34 @@ namespace PacketDotNet
         /// </summary>
         public class TsftRadioTapField : RadioTapField
         {
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            public TsftRadioTapField(BinaryReader br)
+            {
+                TimestampUsec = br.ReadUInt64();
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.TsftRadioTapField" /> class.
+            /// </summary>
+            public TsftRadioTapField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.TsftRadioTapField" /> class.
+            /// </summary>
+            /// <param name='TimestampUsec'>
+            /// Value in microseconds of the Time Synchronization Function timer
+            /// </param>
+            public TsftRadioTapField(UInt64 TimestampUsec)
+            {
+                this.TimestampUsec = TimestampUsec;
+            }
+
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType => RadioTapType.Tsft;
 
@@ -914,7 +927,7 @@ namespace PacketDotNet
             /// Timestamp in microseconds
             /// </summary>
             public UInt64 TimestampUsec { get; set; }
-            
+
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
@@ -924,40 +937,10 @@ namespace PacketDotNet
             }
 
             /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            public TsftRadioTapField(BinaryReader br)
-            {
-                TimestampUsec = br.ReadUInt64();
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.TsftRadioTapField"/> class.
-            /// </summary>
-            public TsftRadioTapField()
-            {
-             
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.TsftRadioTapField"/> class.
-            /// </summary>
-            /// <param name='TimestampUsec'>
-            /// Value in microseconds of the Time Synchronization Function timer
-            /// </param>
-            public TsftRadioTapField(UInt64 TimestampUsec)
-            {
-                this.TimestampUsec = TimestampUsec;
-            }
-
-            /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
@@ -970,6 +953,35 @@ namespace PacketDotNet
         /// </summary>
         public class RxFlagsRadioTapField : RadioTapField
         {
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            public RxFlagsRadioTapField(BinaryReader br)
+            {
+                UInt16 flags = br.ReadUInt16();
+                PlcpCrcCheckFailed = ((flags & 0x2) == 0x2);
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.RxFlagsRadioTapField" /> class.
+            /// </summary>
+            public RxFlagsRadioTapField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.RxFlagsRadioTapField" /> class.
+            /// </summary>
+            /// <param name='PlcpCrcCheckFailed'>
+            /// PLCP CRC check failed.
+            /// </param>
+            public RxFlagsRadioTapField(Boolean PlcpCrcCheckFailed)
+            {
+                this.PlcpCrcCheckFailed = PlcpCrcCheckFailed;
+            }
+
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType => RadioTapType.RxFlags;
 
@@ -987,60 +999,29 @@ namespace PacketDotNet
             /// <value>
             /// <c>true</c> if the PLCP CRC check failed; otherwise, <c>false</c>.
             /// </value>
-            public Boolean PlcpCrcCheckFailed {get; set;}
-            
+            public Boolean PlcpCrcCheckFailed { get; set; }
+
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                UInt16 flags = (UInt16)((PlcpCrcCheckFailed) ? 0x2 : 0x0);
+                UInt16 flags = (UInt16) ((PlcpCrcCheckFailed) ? 0x2 : 0x0);
                 EndianBitConverter.Little.CopyBytes(flags, dest, offset);
-            }
-
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            public RxFlagsRadioTapField(BinaryReader br)
-            {
-                UInt16 flags = br.ReadUInt16();
-                PlcpCrcCheckFailed = ((flags & 0x2) == 0x2);
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.RxFlagsRadioTapField"/> class.
-            /// </summary>
-            public RxFlagsRadioTapField()
-            {
-             
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.RxFlagsRadioTapField"/> class.
-            /// </summary>
-            /// <param name='PlcpCrcCheckFailed'>
-            /// PLCP CRC check failed.
-            /// </param>
-            public RxFlagsRadioTapField(Boolean PlcpCrcCheckFailed)
-            {
-                this.PlcpCrcCheckFailed = PlcpCrcCheckFailed;
             }
 
             /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
                 return String.Format("PlcpCrcCheckFailed {0}", PlcpCrcCheckFailed);
             }
         }
-        
+
 
         /// <summary>
         /// Transmit power expressed as unitless distance from max
@@ -1049,6 +1030,34 @@ namespace PacketDotNet
         /// </summary>
         public class TxAttenuationRadioTapField : RadioTapField
         {
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            public TxAttenuationRadioTapField(BinaryReader br)
+            {
+                TxPower = -br.ReadUInt16();
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.TxAttenuationRadioTapField" /> class.
+            /// </summary>
+            public TxAttenuationRadioTapField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.TxAttenuationRadioTapField" /> class.
+            /// </summary>
+            /// <param name='TxPower'>
+            /// Transmit power expressed as unitless distance from max power set at factory calibration. 0 is max power.
+            /// </param>
+            public TxAttenuationRadioTapField(Int32 TxPower)
+            {
+                this.TxPower = TxPower;
+            }
+
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType => RadioTapType.TxAttenuation;
 
@@ -1064,7 +1073,7 @@ namespace PacketDotNet
             /// Transmit power
             /// </summary>
             public Int32 TxPower { get; set; }
-   
+
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
@@ -1073,42 +1082,12 @@ namespace PacketDotNet
                 UInt16 absValue = (UInt16) Math.Abs(TxPower);
                 EndianBitConverter.Little.CopyBytes(absValue, dest, offset);
             }
-            
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            public TxAttenuationRadioTapField(BinaryReader br)
-            {
-                TxPower = -(Int32)br.ReadUInt16();
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.TxAttenuationRadioTapField"/> class.
-            /// </summary>
-            public TxAttenuationRadioTapField()
-            {
-             
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.TxAttenuationRadioTapField"/> class.
-            /// </summary>
-            /// <param name='TxPower'>
-            /// Transmit power expressed as unitless distance from max power set at factory calibration. 0 is max power.
-            /// </param>
-            public TxAttenuationRadioTapField (Int32 TxPower)
-            {
-                this.TxPower = TxPower;
-            }
 
             /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
@@ -1123,6 +1102,34 @@ namespace PacketDotNet
         /// </summary>
         public class DbTxAttenuationRadioTapField : RadioTapField
         {
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            public DbTxAttenuationRadioTapField(BinaryReader br)
+            {
+                TxPowerdB = -br.ReadUInt16();
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbTxAttenuationRadioTapField" /> class.
+            /// </summary>
+            public DbTxAttenuationRadioTapField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbTxAttenuationRadioTapField" /> class.
+            /// </summary>
+            /// <param name='TxPowerdB'>
+            /// Transmit power expressed as decibel distance from max power set at factory calibration. 0 is max power.
+            /// </param>
+            public DbTxAttenuationRadioTapField(Int32 TxPowerdB)
+            {
+                this.TxPowerdB = TxPowerdB;
+            }
+
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType => RadioTapType.DbTxAttenuation;
 
@@ -1135,10 +1142,10 @@ namespace PacketDotNet
             public override UInt16 Length => 2;
 
             /// <summary>
-            /// Transmit power 
+            /// Transmit power
             /// </summary>
             public Int32 TxPowerdB { get; set; }
-   
+
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
@@ -1147,42 +1154,12 @@ namespace PacketDotNet
                 UInt16 absValue = (UInt16) Math.Abs(TxPowerdB);
                 EndianBitConverter.Little.CopyBytes(absValue, dest, offset);
             }
-            
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            public DbTxAttenuationRadioTapField(BinaryReader br)
-            {
-                TxPowerdB = -(Int32)br.ReadUInt16();
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbTxAttenuationRadioTapField"/> class.
-            /// </summary>
-            public DbTxAttenuationRadioTapField()
-            {
-             
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbTxAttenuationRadioTapField"/> class.
-            /// </summary>
-            /// <param name='TxPowerdB'>
-            /// Transmit power expressed as decibel distance from max power set at factory calibration. 0 is max power.
-            /// </param>
-            public DbTxAttenuationRadioTapField(Int32 TxPowerdB)
-            {
-                this.TxPowerdB = TxPowerdB;
-            }
 
             /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
@@ -1197,6 +1174,34 @@ namespace PacketDotNet
         /// </summary>
         public class DbmTxPowerRadioTapField : RadioTapField
         {
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            public DbmTxPowerRadioTapField(BinaryReader br)
+            {
+                TxPowerdBm = br.ReadSByte();
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbmTxPowerRadioTapField" /> class.
+            /// </summary>
+            public DbmTxPowerRadioTapField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbmTxPowerRadioTapField" /> class.
+            /// </summary>
+            /// <param name='TxPowerdBm'>
+            /// Transmit power expressed as dBm (decibels from a 1 milliwatt reference).
+            /// </param>
+            public DbmTxPowerRadioTapField(SByte TxPowerdBm)
+            {
+                this.TxPowerdBm = TxPowerdBm;
+            }
+
             /// <summary>Type of the field</summary>
             public override RadioTapType FieldType => RadioTapType.DbmTxPower;
 
@@ -1212,50 +1217,20 @@ namespace PacketDotNet
             /// Tx power in dBm
             /// </summary>
             public SByte TxPowerdBm { get; set; }
-   
+
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                dest[offset] = (Byte)TxPowerdBm;
-            }
-            
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            public DbmTxPowerRadioTapField(BinaryReader br)
-            {
-                TxPowerdBm = br.ReadSByte();
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbmTxPowerRadioTapField"/> class.
-            /// </summary>
-            public DbmTxPowerRadioTapField()
-            {
-             
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DbmTxPowerRadioTapField"/> class.
-            /// </summary>
-            /// <param name='TxPowerdBm'>
-            /// Transmit power expressed as dBm (decibels from a 1 milliwatt reference).
-            /// </param>
-            public DbmTxPowerRadioTapField(SByte TxPowerdBm)
-            {
-                this.TxPowerdBm = TxPowerdBm;
+                dest[offset] = (Byte) TxPowerdBm;
             }
 
             /// <summary>
             /// ToString() override
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/>
+            /// A <see cref="System.String" />
             /// </returns>
             public override String ToString()
             {
@@ -1269,24 +1244,31 @@ namespace PacketDotNet
         public abstract class RadioTapField
         {
             /// <summary>Type of the field</summary>
-            public abstract RadioTapType FieldType
-            { get; }
+            public abstract RadioTapType FieldType { get; }
+
+            /// <summary>
+            /// Gets the length of the field data.
+            /// </summary>
+            /// <value>
+            /// The length.
+            /// </value>
+            public abstract UInt16 Length { get; }
 
             /// <summary>
             /// Parse a radio tap field, indicated by bitIndex, from a given BinaryReader
             /// </summary>
             /// <param name="bitIndex">
-            /// A <see cref="System.Int32"/>
+            /// A <see cref="System.Int32" />
             /// </param>
             /// <param name="br">
-            /// A <see cref="BinaryReader"/>
+            /// A <see cref="BinaryReader" />
             /// </param>
             /// <returns>
-            /// A <see cref="RadioTapField"/>
+            /// A <see cref="RadioTapField" />
             /// </returns>
             public static RadioTapField Parse(Int32 bitIndex, BinaryReader br)
             {
-                var Type = (RadioTapType)bitIndex;
+                var Type = (RadioTapType) bitIndex;
                 switch (Type)
                 {
                     case RadioTapType.Flags:
@@ -1324,19 +1306,11 @@ namespace PacketDotNet
                         return null;
                 }
             }
-            
-            /// <summary>
-            /// Gets the length of the field data.
-            /// </summary>
-            /// <value>
-            /// The length.
-            /// </value>
-            public abstract UInt16 Length {get;}
-            
+
             /// <summary>
             /// Copies the field data to the destination buffer at the specified offset.
             /// </summary>
             public abstract void CopyTo(Byte[] dest, Int32 offset);
-        }; 
+        }
     }
 }

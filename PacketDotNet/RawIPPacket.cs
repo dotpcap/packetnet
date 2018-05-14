@@ -18,11 +18,11 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  *  Copyright 2016 Cameron Elliott <cameron@cameronelliott.com>
  */
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Utils;
-using MiscUtil.Conversion;
 
 namespace PacketDotNet
 {
@@ -41,11 +41,10 @@ namespace PacketDotNet
         /// Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
         public RawIPPacket(ByteArraySegment bas)
         {
-
             // Pcap raw link layer format does not have any header
             // you need to identify whether you have ipv4 or ipv6
             // directly by checking the IP version number.
@@ -53,7 +52,7 @@ namespace PacketDotNet
             // If the first nibble is 0x06, then you have IP v6
             // The RawIPPacketProtocol enum has been defined to match this.
             var firstNibble = bas.Bytes[0] >> 4;
-            Protocol = (RawIPPacketProtocol)firstNibble;
+            Protocol = (RawIPPacketProtocol) firstNibble;
 
             Header = new ByteArraySegment(bas);
             Header.Length = 0;
@@ -98,19 +97,21 @@ namespace PacketDotNet
             {
                 // build the output string
                 buffer.AppendFormat("{0}[RawPacket: Protocol={2}]{1}",
-                    color,
-                    colorEscape,
-                    Protocol);
+                                    color,
+                                    colorEscape,
+                                    Protocol);
             }
 
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>();
-                properties.Add("protocol", Protocol.ToString() + " (0x" + Protocol.ToString("x") + ")");
+                Dictionary<String, String> properties = new Dictionary<String, String>
+                {
+                    {"protocol", Protocol + " (0x" + Protocol.ToString("x") + ")"}
+                };
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Raw:  ******* Raw - \"Raw IP Packet\" - offset=? length=" + TotalPacketLength);
@@ -119,6 +120,7 @@ namespace PacketDotNet
                 {
                     buffer.AppendLine("Raw: " + property.Key.PadLeft(padLength) + " = " + property.Value);
                 }
+
                 buffer.AppendLine("Raw:");
             }
 
@@ -129,4 +131,3 @@ namespace PacketDotNet
         }
     }
 }
-

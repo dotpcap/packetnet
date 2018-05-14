@@ -19,10 +19,11 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
+using log4net;
 using MiscUtil.Conversion;
-using PacketDotNet.Tcp;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -34,19 +35,19 @@ namespace PacketDotNet
     public class DrdaDDMPacket : Packet
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-        // NOTE: No need to warn about lack of use, the compiler won't
-        //       put any calls to 'log' here but we need 'log' to exist to compile
+// NOTE: No need to warn about lack of use, the compiler won't
+//       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
         /// <summary>
         /// The Length field
         /// </summary>
-        public UInt16 Length => BigEndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.LengthPosition);
+        public UInt16 Length => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.LengthPosition);
 
         /// <summary>
         /// The Magic field
@@ -61,17 +62,17 @@ namespace PacketDotNet
         /// <summary>
         /// The CorrelId field
         /// </summary>
-        public UInt16 CorrelId => BigEndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.CorrelIdPosition);
+        public UInt16 CorrelId => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.CorrelIdPosition);
 
         /// <summary>
         /// The Length2 field
         /// </summary>
-        public UInt16 Length2 => BigEndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.Length2Position);
+        public UInt16 Length2 => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.Length2Position);
 
         /// <summary>
         /// The Code Point field
         /// </summary>
-        public DrdaCodepointType CodePoint => (DrdaCodepointType)BigEndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.CodePointPosition);
+        public DrdaCodepointType CodePoint => (DrdaCodepointType) EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.CodePointPosition);
 
         private List<DrdaDDMParameter> paramters;
 
@@ -84,40 +85,46 @@ namespace PacketDotNet
             {
                 if (paramters == null) paramters = new List<DrdaDDMParameter>();
                 if (paramters.Count > 0) return paramters;
+
+
                 var offset = Header.Offset + DrdaDDMFields.DDMHeadTotalLength;
-                var ddmTotalLength = this.Length;
-                while (offset < Header.Offset+ ddmTotalLength)
+                var ddmTotalLength = Length;
+                while (offset < Header.Offset + ddmTotalLength)
                 {
-                    Int32 length = BigEndianBitConverter.Big.ToUInt16(Header.Bytes, offset);
+                    Int32 length = EndianBitConverter.Big.ToUInt16(Header.Bytes, offset);
                     if (length == 0)
                     {
                         length = Header.Offset + ddmTotalLength - offset;
                     }
+
                     if (offset + length <= Header.Offset + ddmTotalLength)
                     {
-                        var parameter = new DrdaDDMParameter()
+                        var parameter = new DrdaDDMParameter
                         {
                             Length = length,
-                            DrdaCodepoint = (DrdaCodepointType)BigEndianBitConverter.Big.ToUInt16(Header.Bytes, offset + DrdaDDMFields.ParameterLengthLength)
+                            DrdaCodepoint = (DrdaCodepointType) EndianBitConverter.Big.ToUInt16(Header.Bytes, offset + DrdaDDMFields.ParameterLengthLength)
                         };
 
                         var startIndex = offset + DrdaDDMFields.ParameterLengthLength + DrdaDDMFields.ParameterCodePointLength;
                         var strLength = length - 4;
                         //For Type=Data or Type=QryDta,Decode bytes as utf-8 ascii string
-                        if (parameter.DrdaCodepoint== DrdaCodepointType.DATA|| parameter.DrdaCodepoint == DrdaCodepointType.QRYDTA)
+                        if (parameter.DrdaCodepoint == DrdaCodepointType.DATA || parameter.DrdaCodepoint == DrdaCodepointType.QRYDTA)
                         {
                             startIndex++;
-                            strLength-=2;
-                            parameter.Data = ASCIIEncoding.UTF8.GetString(Header.Bytes, startIndex,strLength).Trim();
+                            strLength -= 2;
+                            parameter.Data = Encoding.UTF8.GetString(Header.Bytes, startIndex, strLength).Trim();
                         }
                         else
                         {
                             parameter.Data = StringConverter.EbcdicToAscii(Header.Bytes, startIndex, strLength).Trim();
                         }
+
                         paramters.Add(parameter);
                     }
+
                     offset += length;
                 }
+
                 return paramters;
             }
         }
@@ -128,7 +135,7 @@ namespace PacketDotNet
         /// <param name="bas">Payload Bytes</param>
         public DrdaDDMPacket(ByteArraySegment bas)
         {
-            log.Debug("");
+            Log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
             Header = new ByteArraySegment(bas);
@@ -141,7 +148,7 @@ namespace PacketDotNet
         /// <param name="ParentPacket">Parent Packet</param>
         public DrdaDDMPacket(ByteArraySegment bas, Packet ParentPacket) : this(bas)
         {
-            log.DebugFormat("ParentPacket.GetType() {0}", ParentPacket.GetType());
+            Log.DebugFormat("ParentPacket.GetType() {0}", ParentPacket.GetType());
 
             this.ParentPacket = ParentPacket;
         }
@@ -158,28 +165,30 @@ namespace PacketDotNet
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
+
             if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
                 buffer.AppendFormat("{0}[DrdaDDMPacket: Length={2}, Magic=0x{3:x2}, Format=0x{4:x2}, CorrelId={5}, Length2={6}, CodePoint={7}]{1}",
-                    color,
-                    colorEscape,
-                    Length,
-                    Magic,
-                    Format,
-                    CorrelId,
-                    Length2,
-                    CodePoint);
+                                    color,
+                                    colorEscape,
+                                    Length,
+                                    Magic,
+                                    Format,
+                                    CorrelId,
+                                    Length2,
+                                    CodePoint);
                 buffer.Append(" Paramters:{");
-                foreach(var paramter in Parameters)
+                foreach (var paramter in Parameters)
                 {
                     buffer.AppendFormat("{0}[DrdaDDMParameter: Length={2}, CodePoint={3}, Data='{4}']{1}",
-                    color,
-                    colorEscape,
-                    paramter.Length,
-                    paramter.DrdaCodepoint,
-                    paramter.Data);
+                                        color,
+                                        colorEscape,
+                                        paramter.Length,
+                                        paramter.DrdaCodepoint,
+                                        paramter.Data);
                 }
+
                 buffer.Append("}");
             }
 

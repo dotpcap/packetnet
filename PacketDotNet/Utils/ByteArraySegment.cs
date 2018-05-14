@@ -14,7 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
+using System.Reflection;
+using log4net;
 
 namespace PacketDotNet.Utils
 {
@@ -27,12 +30,12 @@ namespace PacketDotNet.Utils
     public class ByteArraySegment
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-        // NOTE: No need to warn about lack of use, the compiler won't
-        //       put any calls to 'log' here but we need 'log' to exist to compile
+// NOTE: No need to warn about lack of use, the compiler won't
+//       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
@@ -51,7 +54,6 @@ namespace PacketDotNet.Utils
 
         /// <value>
         /// Number of bytes beyond the offset into Bytes
-        ///
         /// Take care when setting this parameter as many things are based on
         /// the value of this property being correct
         /// </value>
@@ -61,11 +63,12 @@ namespace PacketDotNet.Utils
             set
             {
                 // check for invalid values
-                if(value < 0)
-                    throw new System.InvalidOperationException("attempting to set a negative length of " + value);
+                if (value < 0)
+                    throw new InvalidOperationException("attempting to set a negative length of " + value);
+
 
                 length = value;
-                log.DebugFormat("Length: {0}", value);
+                Log.DebugFormat("Length: {0}", value);
             }
         }
 
@@ -78,7 +81,7 @@ namespace PacketDotNet.Utils
         /// Constructor
         /// </summary>
         /// <param name="Bytes">
-        /// A <see cref="T:System.Byte[]"/>
+        /// A <see cref="T:System.Byte[]" />
         /// </param>
         public ByteArraySegment(Byte[] Bytes) :
             this(Bytes, 0, Bytes.Length)
@@ -89,13 +92,13 @@ namespace PacketDotNet.Utils
         /// a length beyond that offset of the bytes this class is referencing
         /// </summary>
         /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// A <see cref="System.Byte" />
         /// </param>
         /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         /// <param name="Length">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         public ByteArraySegment(Byte[] Bytes, Int32 Offset, Int32 Length)
             : this(Bytes, Offset, Length, Bytes.Length)
@@ -105,20 +108,20 @@ namespace PacketDotNet.Utils
         /// Constructor
         /// </summary>
         /// <param name="Bytes">
-        /// A <see cref="T:System.Byte[]"/>
+        /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         /// <param name="Length">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         /// <param name="BytesLength">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         public ByteArraySegment(Byte[] Bytes, Int32 Offset, Int32 Length, Int32 BytesLength)
         {
-            log.DebugFormat("Bytes.Length {0}, Offset {1}, Length {2}, BytesLength {3}",
+            Log.DebugFormat("Bytes.Length {0}, Offset {1}, Length {2}, BytesLength {3}",
                             Bytes.Length,
                             Offset,
                             Length,
@@ -134,38 +137,37 @@ namespace PacketDotNet.Utils
         /// Copy constructor
         /// </summary>
         /// <param name="original">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
         public ByteArraySegment(ByteArraySegment original)
         {
-            this.Bytes = original.Bytes;
-            this.Offset = original.Offset;
-            this.Length = original.Length;
-            this.BytesLength = original.BytesLength;
+            Bytes = original.Bytes;
+            Offset = original.Offset;
+            Length = original.Length;
+            BytesLength = original.BytesLength;
         }
 
         /// <summary>
         /// Returns a contiguous byte[] from this container, if necessary, by copying
         /// the bytes from the current offset into a newly allocated byte[].
         /// NeedsCopyForActualBytes can be used to determine if the copy is necessary
-        ///
         /// </summary>
         /// <returns>
-        /// A <see cref="System.Byte"/>
+        /// A <see cref="System.Byte" />
         /// </returns>
         public Byte[] ActualBytes()
         {
-            log.DebugFormat("{0}", ToString());
+            Log.DebugFormat("{0}", ToString());
 
             if (NeedsCopyForActualBytes)
             {
-                log.Debug("needs copy");
+                Log.Debug("needs copy");
                 var newBytes = new Byte[Length];
                 Array.Copy(Bytes, Offset, newBytes, 0, Length);
                 return newBytes;
             }
 
-            log.Debug("does not need copy");
+            Log.Debug("does not need copy");
             return Bytes;
         }
 
@@ -174,7 +176,7 @@ namespace PacketDotNet.Utils
         /// the bytes represented by this class
         /// </summary>
         /// <returns>
-        /// A <see cref="System.Boolean"/>
+        /// A <see cref="System.Boolean" />
         /// </returns>
         public Boolean NeedsCopyForActualBytes
         {
@@ -185,7 +187,7 @@ namespace PacketDotNet.Utils
                 var okWithoutCopy = ((Offset == 0) && (Length == Bytes.Length));
                 var retval = !okWithoutCopy;
 
-                log.DebugFormat("retval {0}", retval);
+                Log.DebugFormat("retval {0}", retval);
 
                 return retval;
             }
@@ -197,7 +199,7 @@ namespace PacketDotNet.Utils
         /// wants to pass the next segment to a sub class for processing
         /// </summary>
         /// <returns>
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </returns>
         public ByteArraySegment EncapsulatedBytes()
         {
@@ -209,18 +211,18 @@ namespace PacketDotNet.Utils
         /// Create the segment after the current one
         /// </summary>
         /// <param name="NewSegmentLength">
-        /// A <see cref="System.Int32"/> that can be used to limit the segment length
+        /// A <see cref="System.Int32" /> that can be used to limit the segment length
         /// of the ByteArraySegment that is to be returned. Often used to exclude trailing bytes.
         /// </param>
         /// <returns>
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </returns>
         public ByteArraySegment EncapsulatedBytes(Int32 NewSegmentLength)
         {
-            log.DebugFormat("NewSegmentLength {0}", NewSegmentLength);
+            Log.DebugFormat("NewSegmentLength {0}", NewSegmentLength);
 
             Int32 startingOffset = Offset + Length; // start at the end of the current segment
-            log.DebugFormat("startingOffset({0}) = Offset({1}) + Length({2})",
+            Log.DebugFormat("startingOffset({0}) = Offset({1}) + Length({2})",
                             startingOffset,
                             Offset,
                             Length);
@@ -232,8 +234,10 @@ namespace PacketDotNet.Utils
             // calculate the ByteLength property of the new ByteArraySegment
             Int32 NewByteLength = startingOffset + NewSegmentLength;
 
-            log.DebugFormat("NewSegmentLength {0}, NewByteLength {1}, BytesLength {2}",
-                            NewSegmentLength, NewByteLength, BytesLength);
+            Log.DebugFormat("NewSegmentLength {0}, NewByteLength {1}, BytesLength {2}",
+                            NewSegmentLength,
+                            NewByteLength,
+                            BytesLength);
 
             return new ByteArraySegment(Bytes, startingOffset, NewSegmentLength, NewByteLength);
         }
@@ -242,12 +246,16 @@ namespace PacketDotNet.Utils
         /// Format the class information as a string
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        /// A <see cref="System.String" />
         /// </returns>
-        public override String ToString ()
+        public override String ToString()
         {
             return String.Format("[ByteArraySegment: Length={0}, Bytes.Length={1}, BytesLength={2}, Offset={3}, NeedsCopyForActualBytes={4}]",
-                                 Length, Bytes.Length, BytesLength, Offset, NeedsCopyForActualBytes);
+                                 Length,
+                                 Bytes.Length,
+                                 BytesLength,
+                                 Offset,
+                                 NeedsCopyForActualBytes);
         }
     }
 }

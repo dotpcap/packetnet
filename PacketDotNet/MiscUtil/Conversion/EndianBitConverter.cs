@@ -8,7 +8,62 @@ namespace MiscUtil.Conversion
     /// </summary>
     public abstract class EndianBitConverter
     {
+        #region Private struct used for Single/Int32 conversions
+
+        /// <summary>
+        /// Union used solely for the equivalent of DoubleToInt64Bits and vice versa.
+        /// </summary>
+        [StructLayout(LayoutKind.Explicit)]
+        struct Int32SingleUnion
+        {
+            /// <summary>
+            /// Int32 version of the value.
+            /// </summary>
+            [FieldOffset(0)]
+            readonly Int32 i;
+
+            /// <summary>
+            /// Single version of the value.
+            /// </summary>
+            [FieldOffset(0)]
+            readonly Single f;
+
+            /// <summary>
+            /// Creates an instance representing the given integer.
+            /// </summary>
+            /// <param name="i">The integer value of the new instance.</param>
+            internal Int32SingleUnion(Int32 i)
+            {
+                f = 0; // Just to keep the compiler happy
+                this.i = i;
+            }
+
+            /// <summary>
+            /// Creates an instance representing the given floating point number.
+            /// </summary>
+            /// <param name="f">The floating point value of the new instance.</param>
+            internal Int32SingleUnion(Single f)
+            {
+                i = 0; // Just to keep the compiler happy
+                this.f = f;
+            }
+
+            /// <summary>
+            /// Returns the value of the instance as an integer.
+            /// </summary>
+            internal Int32 AsInt32 => i;
+
+            /// <summary>
+            /// Returns the value of the instance as a floating point number.
+            /// </summary>
+            internal Single AsSingle => f;
+        }
+
+        #endregion
+
+
         #region Endianness of this converter
+
         /// <summary>
         /// Indicates the byte order ("endianess") in which data is converted using this class.
         /// </summary>
@@ -24,26 +79,29 @@ namespace MiscUtil.Conversion
         /// Indicates the byte order ("endianess") in which data is converted using this class.
         /// </summary>
         public abstract Endianness Endianness { get; }
+
         #endregion
 
+
         #region Factory properties
-        static LittleEndianBitConverter little = new LittleEndianBitConverter();
+
         /// <summary>
         /// Returns a little-endian bit converter instance. The same instance is
         /// always returned.
         /// </summary>
-        public static LittleEndianBitConverter Little => little;
+        public static LittleEndianBitConverter Little { get; } = new LittleEndianBitConverter();
 
-        static BigEndianBitConverter big = new BigEndianBitConverter();
         /// <summary>
         /// Returns a big-endian bit converter instance. The same instance is
         /// always returned.
         /// </summary>
-        public static BigEndianBitConverter Big => big;
+        public static BigEndianBitConverter Big { get; } = new BigEndianBitConverter();
 
         #endregion
 
+
         #region Double/primitive conversions
+
         /// <summary>
         /// Converts the specified double-precision floating point number to a
         /// 64-bit signed integer. Note: the endianness of this converter does not
@@ -63,7 +121,7 @@ namespace MiscUtil.Conversion
         /// </summary>
         /// <param name="value">The number to convert. </param>
         /// <returns>A double-precision floating point number whose value is equivalent to value.</returns>
-        public Double Int64BitsToDouble (Int64 value)
+        public Double Int64BitsToDouble(Int64 value)
         {
             return BitConverter.Int64BitsToDouble(value);
         }
@@ -87,20 +145,23 @@ namespace MiscUtil.Conversion
         /// </summary>
         /// <param name="value">The number to convert. </param>
         /// <returns>A single-precision floating point number whose value is equivalent to value.</returns>
-        public Single Int32BitsToSingle (Int32 value)
+        public Single Int32BitsToSingle(Int32 value)
         {
             return new Int32SingleUnion(value).AsSingle;
         }
+
         #endregion
 
+
         #region To(PrimitiveType) conversions
+
         /// <summary>
         /// Returns a Boolean value converted from one byte at a specified position in a byte array.
         /// </summary>
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>true if the byte at startIndex in value is nonzero; otherwise, false.</returns>
-        public Boolean ToBoolean (Byte[] value, Int32 startIndex)
+        public Boolean ToBoolean(Byte[] value, Int32 startIndex)
         {
             CheckByteArgument(value, startIndex, 1);
             return BitConverter.ToBoolean(value, startIndex);
@@ -112,7 +173,7 @@ namespace MiscUtil.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A character formed by two bytes beginning at startIndex.</returns>
-        public Char ToChar (Byte[] value, Int32 startIndex)
+        public Char ToChar(Byte[] value, Int32 startIndex)
         {
             return unchecked((Char) (CheckedFromBytes(value, startIndex, 2)));
         }
@@ -124,7 +185,7 @@ namespace MiscUtil.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A double precision floating point number formed by eight bytes beginning at startIndex.</returns>
-        public Double ToDouble (Byte[] value, Int32 startIndex)
+        public Double ToDouble(Byte[] value, Int32 startIndex)
         {
             return Int64BitsToDouble(ToInt64(value, startIndex));
         }
@@ -136,7 +197,7 @@ namespace MiscUtil.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A single precision floating point number formed by four bytes beginning at startIndex.</returns>
-        public Single ToSingle (Byte[] value, Int32 startIndex)
+        public Single ToSingle(Byte[] value, Int32 startIndex)
         {
             return Int32BitsToSingle(ToInt32(value, startIndex));
         }
@@ -147,7 +208,7 @@ namespace MiscUtil.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 16-bit signed integer formed by two bytes beginning at startIndex.</returns>
-        public Int16 ToInt16 (Byte[] value, Int32 startIndex)
+        public Int16 ToInt16(Byte[] value, Int32 startIndex)
         {
             return unchecked((Int16) (CheckedFromBytes(value, startIndex, 2)));
         }
@@ -158,7 +219,7 @@ namespace MiscUtil.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 32-bit signed integer formed by four bytes beginning at startIndex.</returns>
-        public Int32 ToInt32 (Byte[] value, Int32 startIndex)
+        public Int32 ToInt32(Byte[] value, Int32 startIndex)
         {
             return unchecked((Int32) (CheckedFromBytes(value, startIndex, 4)));
         }
@@ -169,7 +230,7 @@ namespace MiscUtil.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 64-bit signed integer formed by eight bytes beginning at startIndex.</returns>
-        public Int64 ToInt64 (Byte[] value, Int32 startIndex)
+        public Int64 ToInt64(Byte[] value, Int32 startIndex)
         {
             return CheckedFromBytes(value, startIndex, 8);
         }
@@ -180,7 +241,7 @@ namespace MiscUtil.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 16-bit unsigned integer formed by two bytes beginning at startIndex.</returns>
-        public UInt16 ToUInt16 (Byte[] value, Int32 startIndex)
+        public UInt16 ToUInt16(Byte[] value, Int32 startIndex)
         {
             return unchecked((UInt16) (CheckedFromBytes(value, startIndex, 2)));
         }
@@ -191,7 +252,7 @@ namespace MiscUtil.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 32-bit unsigned integer formed by four bytes beginning at startIndex.</returns>
-        public UInt32 ToUInt32 (Byte[] value, Int32 startIndex)
+        public UInt32 ToUInt32(Byte[] value, Int32 startIndex)
         {
             return unchecked((UInt32) (CheckedFromBytes(value, startIndex, 4)));
         }
@@ -202,7 +263,7 @@ namespace MiscUtil.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A 64-bit unsigned integer formed by eight bytes beginning at startIndex.</returns>
-        public UInt64 ToUInt64 (Byte[] value, Int32 startIndex)
+        public UInt64 ToUInt64(Byte[] value, Int32 startIndex)
         {
             return unchecked((UInt64) (CheckedFromBytes(value, startIndex, 8)));
         }
@@ -219,11 +280,12 @@ namespace MiscUtil.Conversion
         /// </exception>
         static void CheckByteArgument(Byte[] value, Int32 startIndex, Int32 bytesRequired)
         {
-            if (value==null)
+            if (value == null)
             {
                 throw new ArgumentNullException("value");
             }
-            if (startIndex < 0 || startIndex > value.Length-bytesRequired)
+
+            if (startIndex < 0 || startIndex > value.Length - bytesRequired)
             {
                 throw new ArgumentOutOfRangeException("startIndex");
             }
@@ -253,9 +315,12 @@ namespace MiscUtil.Conversion
         /// <param name="bytesToConvert">The number of bytes to use in the conversion</param>
         /// <returns>The converted number</returns>
         protected abstract Int64 FromBytes(Byte[] value, Int32 startIndex, Int32 bytesToConvert);
+
         #endregion
 
+
         #region ToString conversions
+
         /// <summary>
         /// Returns a String converted from the elements of a byte array.
         /// </summary>
@@ -300,9 +365,12 @@ namespace MiscUtil.Conversion
         {
             return BitConverter.ToString(value, startIndex, length);
         }
+
         #endregion
 
+
         #region    Decimal conversions
+
         /// <summary>
         /// Returns a decimal value converted from sixteen bytes
         /// at a specified position in a byte array.
@@ -310,16 +378,17 @@ namespace MiscUtil.Conversion
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>A decimal  formed by sixteen bytes beginning at startIndex.</returns>
-        public Decimal ToDecimal (Byte[] value, Int32 startIndex)
+        public Decimal ToDecimal(Byte[] value, Int32 startIndex)
         {
             // HACK: This always assumes four parts, each in their own endianness,
             // starting with the first part at the start of the byte array.
             // On the other hand, there's no real format specified...
             Int32[] parts = new Int32[4];
-            for (Int32 i=0; i < 4; i++)
+            for (Int32 i = 0; i < 4; i++)
             {
-                parts[i] = ToInt32(value, startIndex+i*4);
+                parts[i] = ToInt32(value, startIndex + i * 4);
             }
+
             return new Decimal(parts);
         }
 
@@ -332,10 +401,11 @@ namespace MiscUtil.Conversion
         {
             Byte[] bytes = new Byte[16];
             Int32[] parts = Decimal.GetBits(value);
-            for (Int32 i=0; i < 4; i++)
+            for (Int32 i = 0; i < 4; i++)
             {
-                CopyBytesImpl(parts[i], 4, bytes, i*4);
+                CopyBytesImpl(parts[i], 4, bytes, i * 4);
             }
+
             return bytes;
         }
 
@@ -349,14 +419,17 @@ namespace MiscUtil.Conversion
         public void CopyBytes(Decimal value, Byte[] buffer, Int32 index)
         {
             Int32[] parts = Decimal.GetBits(value);
-            for (Int32 i=0; i < 4; i++)
+            for (Int32 i = 0; i < 4; i++)
             {
-                CopyBytesImpl(parts[i], 4, buffer, i*4+index);
+                CopyBytesImpl(parts[i], 4, buffer, i * 4 + index);
             }
         }
+
         #endregion
 
+
         #region GetBytes conversions
+
         /// <summary>
         /// Returns an array with the given number of bytes formed
         /// from the least significant bytes of the specified value.
@@ -468,12 +541,14 @@ namespace MiscUtil.Conversion
         /// <returns>An array of bytes with length 8.</returns>
         public Byte[] GetBytes(UInt64 value)
         {
-            return GetBytes(unchecked((Int64)value), 8);
+            return GetBytes(unchecked((Int64) value), 8);
         }
 
         #endregion
 
+
         #region CopyBytes conversions
+
         /// <summary>
         /// Copies the given number of bytes from the least-specific
         /// end of the specified value into the specified byte array, beginning
@@ -486,14 +561,16 @@ namespace MiscUtil.Conversion
         /// <param name="index">The first index into the array to copy the bytes into</param>
         void CopyBytes(Int64 value, Int32 bytes, Byte[] buffer, Int32 index)
         {
-            if (buffer==null)
+            if (buffer == null)
             {
                 throw new ArgumentNullException("buffer", "Byte array must not be null");
             }
-            if (buffer.Length < index+bytes)
+
+            if (buffer.Length < index + bytes)
             {
                 throw new ArgumentOutOfRangeException("Buffer not big enough for value");
             }
+
             CopyBytesImpl(value, bytes, buffer, index);
         }
 
@@ -627,59 +704,9 @@ namespace MiscUtil.Conversion
         /// <param name="index">The first index into the array to copy the bytes into</param>
         public void CopyBytes(UInt64 value, Byte[] buffer, Int32 index)
         {
-            CopyBytes(unchecked((Int64)value), 8, buffer, index);
+            CopyBytes(unchecked((Int64) value), 8, buffer, index);
         }
 
-        #endregion
-
-        #region Private struct used for Single/Int32 conversions
-        /// <summary>
-        /// Union used solely for the equivalent of DoubleToInt64Bits and vice versa.
-        /// </summary>
-        [StructLayout(LayoutKind.Explicit)]
-            struct Int32SingleUnion
-        {
-            /// <summary>
-            /// Int32 version of the value.
-            /// </summary>
-            [FieldOffset(0)]
-            Int32 i;
-            /// <summary>
-            /// Single version of the value.
-            /// </summary>
-            [FieldOffset(0)]
-            Single f;
-
-            /// <summary>
-            /// Creates an instance representing the given integer.
-            /// </summary>
-            /// <param name="i">The integer value of the new instance.</param>
-            internal Int32SingleUnion(Int32 i)
-            {
-                this.f = 0; // Just to keep the compiler happy
-                this.i = i;
-            }
-
-            /// <summary>
-            /// Creates an instance representing the given floating point number.
-            /// </summary>
-            /// <param name="f">The floating point value of the new instance.</param>
-            internal Int32SingleUnion(Single f)
-            {
-                this.i = 0; // Just to keep the compiler happy
-                this.f = f;
-            }
-
-            /// <summary>
-            /// Returns the value of the instance as an integer.
-            /// </summary>
-            internal Int32 AsInt32 => i;
-
-            /// <summary>
-            /// Returns the value of the instance as a floating point number.
-            /// </summary>
-            internal Single AsSingle => f;
-        }
         #endregion
     }
 }

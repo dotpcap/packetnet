@@ -18,9 +18,10 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
-using System.Text;
-using PacketDotNet.Utils;
+using System.Reflection;
+using log4net;
 
 namespace PacketDotNet.LLDP
 {
@@ -31,14 +32,15 @@ namespace PacketDotNet.LLDP
     public class PortDescription : StringTLV
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-        // NOTE: No need to warn about lack of use, the compiler won't
-        //       put any calls to 'log' here but we need 'log' to exist to compile
+// NOTE: No need to warn about lack of use, the compiler won't
+//       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
+
 
         #region Constructors
 
@@ -54,7 +56,7 @@ namespace PacketDotNet.LLDP
         public PortDescription(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {
-            log.Debug("");
+            Log.Debug("");
         }
 
         /// <summary>
@@ -65,10 +67,11 @@ namespace PacketDotNet.LLDP
         /// </param>
         public PortDescription(String description) : base(TLVTypes.PortDescription, description)
         {
-            log.Debug("");
+            Log.Debug("");
         }
 
         #endregion
+
 
         #region Properties
 

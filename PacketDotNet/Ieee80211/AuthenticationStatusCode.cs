@@ -18,11 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace PacketDotNet
 {
     namespace Ieee80211
@@ -161,6 +156,6 @@ namespace PacketDotNet
             /// Constant cipher suite policy rejection.
             /// </summary>
             CipherSuitePolicyRejection = 46
-        } 
+        }
     }
 }

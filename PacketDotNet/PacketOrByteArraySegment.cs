@@ -33,6 +33,8 @@ namespace PacketDotNet
     {
         private ByteArraySegment theByteArraySegment;
 
+        private Packet thePacket;
+
         /// <summary>
         /// Gets or sets the byte array segment.
         /// </summary>
@@ -49,8 +51,6 @@ namespace PacketDotNet
                 theByteArraySegment = value;
             }
         }
-
-        private Packet thePacket;
 
         /// <summary>
         /// Gets or sets the packet.
@@ -69,28 +69,6 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary>
-        /// Appends to the MemoryStream either the byte[] represented by TheByteArray, or
-        /// if ThePacket is non-null, the Packet.Bytes will be appended to the memory stream
-        /// which will append ThePacket's header and any encapsulated packets it contains
-        /// </summary>
-        /// <param name="ms">
-        /// A <see cref="MemoryStream"/>
-        /// </param>
-        public void AppendToMemoryStream(MemoryStream ms)
-        {
-            if (ThePacket != null)
-            {
-                var bytes = ThePacket.Bytes;
-                ms.Write(bytes, 0, bytes.Length);
-            }
-            else if (TheByteArraySegment != null)
-            {
-                var bytes = TheByteArraySegment.ActualBytes();
-                ms.Write(bytes, 0, bytes.Length);
-            }
-        }
-
         /// <value>
         /// Whether or not this container contains a packet, a byte[] or neither
         /// </value>
@@ -103,6 +81,28 @@ namespace PacketDotNet
 
 
                 return TheByteArraySegment != null ? PayloadType.Bytes : PayloadType.None;
+            }
+        }
+
+        /// <summary>
+        /// Appends to the MemoryStream either the byte[] represented by TheByteArray, or
+        /// if ThePacket is non-null, the Packet.Bytes will be appended to the memory stream
+        /// which will append ThePacket's header and any encapsulated packets it contains
+        /// </summary>
+        /// <param name="ms">
+        /// A <see cref="MemoryStream" />
+        /// </param>
+        public void AppendToMemoryStream(MemoryStream ms)
+        {
+            if (ThePacket != null)
+            {
+                var bytes = ThePacket.Bytes;
+                ms.Write(bytes, 0, bytes.Length);
+            }
+            else if (TheByteArraySegment != null)
+            {
+                var bytes = TheByteArraySegment.ActualBytes();
+                ms.Write(bytes, 0, bytes.Length);
             }
         }
     }

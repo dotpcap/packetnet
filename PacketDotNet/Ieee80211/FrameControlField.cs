@@ -17,10 +17,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PacketDotNet
 {
@@ -33,45 +32,6 @@ namespace PacketDotNet
         /// </summary>
         public class FrameControlField
         {
-            /// <summary>
-            /// Protocol version
-            /// </summary>
-            public Byte ProtocolVersion
-            {
-                get => (Byte)((Field >> 0x8) & 0x3);
-
-                set
-                {
-                    if ((value < 0) || (value > 3))
-                    {
-                        throw new ArgumentException("Invalid protocol version value. Value must be in the range 0-3.");
-                    }
-
-                    //unset the two bits before setting them to the value
-                    Field &= unchecked((UInt16)~(0x0300));
-                    Field |= (UInt16)(value << 0x8);
-                }
-            }
-   
-            /// <summary>
-            /// Specifies the main frame type: Control, Management or Data.
-            /// </summary>
-            public enum FrameTypes
-            {
-                /// <summary>
-                /// Management frame.
-                /// </summary>
-                Management = 0,
-                /// <summary>
-                /// Control frame.
-                /// </summary>
-                Control = 1,
-                /// <summary>
-                /// Data frame.
-                /// </summary>
-                Data = 2
-            }
-            
             /// <summary>
             /// Sepcifies the frame types down to the sub type level.
             /// </summary>
@@ -186,6 +146,7 @@ namespace PacketDotNet
                 /// CF-End
                 /// </summary>
                 ControlCFEnd = 0x1E,
+
                 /// <summary>
                 /// CF-End CF-Ack
                 /// </summary>
@@ -270,69 +231,53 @@ namespace PacketDotNet
                 /// Constant qos CF ack and CF poll.
                 /// </summary>
                 QosCFAckAndCFPoll = 0x2F
-            };
+            }
 
             /// <summary>
-            /// Gets the type of the frame.
+            /// Specifies the main frame type: Control, Management or Data.
+            /// </summary>
+            public enum FrameTypes
+            {
+                /// <summary>
+                /// Management frame.
+                /// </summary>
+                Management = 0,
+
+                /// <summary>
+                /// Control frame.
+                /// </summary>
+                Control = 1,
+
+                /// <summary>
+                /// Data frame.
+                /// </summary>
+                Data = 2
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FrameControlField" /> class.
+            /// </summary>
+            public FrameControlField()
+            { }
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="field">
+            /// A <see cref="ushort" />
+            /// </param>
+            public FrameControlField(UInt16 field)
+            {
+                Field = field;
+            }
+
+            /// <summary>
+            /// Gets or sets the field.
             /// </summary>
             /// <value>
-            /// The type.
+            /// The field.
             /// </value>
-            public FrameTypes Type
-            {
-                get
-                {
-                    Int32 typeAndSubtype = (Field >> 8); //get rid of the flags
-                    Int32 type = ((typeAndSubtype & 0xC) >> 2);
-                    return (FrameTypes)type;
-                }
-            }
-            
-            /// <summary>
-            /// Helps to identify the type of WLAN frame, control data and management are
-            /// the various frame types defined in IEEE 802.11
-            /// </summary>
-            public FrameSubTypes SubType
-            {
-                get
-                {
-                    Int32 typeAndSubtype = (Field >> 8); //get rid of the flags
-                    Int32 type = (((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4));
-                    return (FrameSubTypes)type;
-                }
-
-                set
-                {
-                    UInt32 val = (UInt32)value;
-                    UInt32 typeAndSubtype = ((val & 0x0F) << 4) | ((val >> 4) << 2);
-                    //shift it into the right position in the field
-                    typeAndSubtype = typeAndSubtype << 0x8;
-                    //Unset all the bits related to the type and subtype
-                    Field &= 0x03FF;
-                    //Set the type bits
-                    Field |= (UInt16)typeAndSubtype;
-                }
-            }
-
-            /// <summary>
-            /// Is set to 1 when the frame is sent to Distribution System (DS)
-            /// </summary>
-            public Boolean ToDS
-            {
-                get => ((Field & 0x1) == 1) ? true : false;
-
-                set
-                {
-                    if (value)
-                    {
-                        Field |= 0x1;
-                    }
-                    else
-                    {
-                        Field &= unchecked((UInt16)~(0x1));
-                    }
-                }
-            }
+            public UInt16 Field { get; set; }
 
             /// <summary>
             /// Is set to 1 when the frame is received from the Distribution System (DS)
@@ -349,7 +294,27 @@ namespace PacketDotNet
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x1));
+                        Field &= unchecked((UInt16) ~(1 << 0x1));
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Indicates that there are more frames buffered for this station
+            /// </summary>
+            public Boolean MoreData
+            {
+                get => (((Field >> 5) & 0x1) == 1) ? true : false;
+
+                set
+                {
+                    if (value)
+                    {
+                        Field |= (1 << 0x5);
+                    }
+                    else
+                    {
+                        Field &= unchecked((UInt16) ~(1 << 0x5));
                     }
                 }
             }
@@ -370,98 +335,7 @@ namespace PacketDotNet
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x2));
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Indicates that this fragment is a retransmission of a previously transmitted fragment.
-            /// (For receiver to recognize duplicate transmissions of frames)
-            /// </summary>
-            public Boolean Retry
-            {
-                get => (((Field >> 3) & 0x1) == 1) ? true : false;
-
-                set
-                {
-                    if (value)
-                    {
-                        Field |= (1 << 0x3);
-                    }
-                    else
-                    {
-                        Field &= unchecked((UInt16)~(1 << 0x3));
-                    }
-                }
-            }
-
-            /// <summary>
-            ///  Indicates the power management mode that the station will be in after the transmission of the frame
-            /// </summary>
-            public Boolean PowerManagement
-            {
-                get => (((Field >> 4) & 0x1) == 1) ? true : false;
-
-                set
-                {
-                    if (value)
-                    {
-                        Field |= (1 << 0x4);
-                    }
-                    else
-                    {
-                        Field &= unchecked((UInt16)~(1 << 0x4));
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Indicates that there are more frames buffered for this station
-            /// </summary>
-            public Boolean MoreData
-            {
-                get => (((Field >> 5) & 0x1) == 1) ? true : false;
-
-                set
-                {
-                    if (value)
-                    {
-                        Field |= (1 << 0x5);
-                    }
-                    else
-                    {
-                        Field &= unchecked((UInt16)~(1 << 0x5));
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Indicates that the frame body is encrypted according to the WEP (wired equivalent privacy) algorithm
-            /// </summary>
-            [ObsoleteAttribute("This property is obsolete. Use Protected instead.", false)]
-            public Boolean Wep
-            {
-                get => Protected;
-                set => Protected = value;
-            }
-
-            /// <summary>
-            /// Indicates whether the frame body is encrypted with one of several encryption standards
-            /// </summary>
-            public Boolean Protected
-            {
-                get => (((Field >> 6) & 0x1) == 1) ? true : false;
-
-                set
-                {
-                    if (value)
-                    {
-                        Field |= (1 << 0x6);
-                    }
-                    else
-                    {
-                        Field &= unchecked((UInt16)~(1 << 0x6));
+                        Field &= unchecked((UInt16) ~(1 << 0x2));
                     }
                 }
             }
@@ -482,81 +356,214 @@ namespace PacketDotNet
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x7));
+                        Field &= unchecked((UInt16) ~(1 << 0x7));
                     }
                 }
             }
 
             /// <summary>
-            /// Gets or sets the field.
+            /// Indicates the power management mode that the station will be in after the transmission of the frame
+            /// </summary>
+            public Boolean PowerManagement
+            {
+                get => (((Field >> 4) & 0x1) == 1) ? true : false;
+
+                set
+                {
+                    if (value)
+                    {
+                        Field |= (1 << 0x4);
+                    }
+                    else
+                    {
+                        Field &= unchecked((UInt16) ~(1 << 0x4));
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Indicates whether the frame body is encrypted with one of several encryption standards
+            /// </summary>
+            public Boolean Protected
+            {
+                get => (((Field >> 6) & 0x1) == 1) ? true : false;
+
+                set
+                {
+                    if (value)
+                    {
+                        Field |= (1 << 0x6);
+                    }
+                    else
+                    {
+                        Field &= unchecked((UInt16) ~(1 << 0x6));
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Protocol version
+            /// </summary>
+            public Byte ProtocolVersion
+            {
+                get => (Byte) ((Field >> 0x8) & 0x3);
+
+                set
+                {
+                    if ((value < 0) || (value > 3))
+                    {
+                        throw new ArgumentException("Invalid protocol version value. Value must be in the range 0-3.");
+                    }
+
+                    //unset the two bits before setting them to the value
+                    Field &= unchecked((UInt16) ~(0x0300));
+                    Field |= (UInt16) (value << 0x8);
+                }
+            }
+
+            /// <summary>
+            /// Indicates that this fragment is a retransmission of a previously transmitted fragment.
+            /// (For receiver to recognize duplicate transmissions of frames)
+            /// </summary>
+            public Boolean Retry
+            {
+                get => (((Field >> 3) & 0x1) == 1) ? true : false;
+
+                set
+                {
+                    if (value)
+                    {
+                        Field |= (1 << 0x3);
+                    }
+                    else
+                    {
+                        Field &= unchecked((UInt16) ~(1 << 0x3));
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Helps to identify the type of WLAN frame, control data and management are
+            /// the various frame types defined in IEEE 802.11
+            /// </summary>
+            public FrameSubTypes SubType
+            {
+                get
+                {
+                    Int32 typeAndSubtype = (Field >> 8); //get rid of the flags
+                    Int32 type = (((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4));
+                    return (FrameSubTypes) type;
+                }
+
+                set
+                {
+                    UInt32 val = (UInt32) value;
+                    UInt32 typeAndSubtype = ((val & 0x0F) << 4) | ((val >> 4) << 2);
+                    //shift it into the right position in the field
+                    typeAndSubtype = typeAndSubtype << 0x8;
+                    //Unset all the bits related to the type and subtype
+                    Field &= 0x03FF;
+                    //Set the type bits
+                    Field |= (UInt16) typeAndSubtype;
+                }
+            }
+
+            /// <summary>
+            /// Is set to 1 when the frame is sent to Distribution System (DS)
+            /// </summary>
+            public Boolean ToDS
+            {
+                get => ((Field & 0x1) == 1) ? true : false;
+
+                set
+                {
+                    if (value)
+                    {
+                        Field |= 0x1;
+                    }
+                    else
+                    {
+                        Field &= unchecked((UInt16) ~(0x1));
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Gets the type of the frame.
             /// </summary>
             /// <value>
-            /// The field.
+            /// The type.
             /// </value>
-            public UInt16 Field { get; set; }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.FrameControlField"/> class.
-            /// </summary>
-            public FrameControlField()
+            public FrameTypes Type
             {
-
+                get
+                {
+                    Int32 typeAndSubtype = (Field >> 8); //get rid of the flags
+                    Int32 type = ((typeAndSubtype & 0xC) >> 2);
+                    return (FrameTypes) type;
+                }
             }
 
             /// <summary>
-            /// Constructor
+            /// Indicates that the frame body is encrypted according to the WEP (wired equivalent privacy) algorithm
             /// </summary>
-            /// <param name="field">
-            /// A <see cref="UInt16"/>
-            /// </param>
-            public FrameControlField(UInt16 field)
+            [Obsolete("This property is obsolete. Use Protected instead.", false)]
+            public Boolean Wep
             {
-                this.Field = field;
+                get => Protected;
+                set => Protected = value;
             }
-   
+
             /// <summary>
-            /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.Ieee80211.FrameControlField"/>.
+            /// Returns a <see cref="System.String" /> that represents the current <see cref="PacketDotNet.Ieee80211.FrameControlField" />.
             /// </summary>
             /// <returns>
-            /// A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.Ieee80211.FrameControlField"/>.
+            /// A <see cref="System.String" /> that represents the current <see cref="PacketDotNet.Ieee80211.FrameControlField" />.
             /// </returns>
-            public override String ToString ()
+            public override String ToString()
             {
-                var flags = new List<String>();
-                
-                flags.Add(SubType.ToString());
-                
+                var flags = new List<String>
+                {
+                    SubType.ToString()
+                };
+
                 if (ToDS)
                 {
                     flags.Add("ToDS");
                 }
+
                 if (FromDS)
                 {
                     flags.Add("FromDS");
                 }
+
                 if (Retry)
                 {
                     flags.Add("Retry");
                 }
+
                 if (PowerManagement)
                 {
                     flags.Add("PowerManagement");
                 }
+
                 if (MoreData)
                 {
                     flags.Add("MoreData");
                 }
+
                 if (Protected)
                 {
                     flags.Add("Wep");
                 }
+
                 if (Order)
                 {
                     flags.Add("Order");
                 }
-              
+
                 return String.Join(" ", flags.ToArray());
             }
-        } 
+        }
     }
 }

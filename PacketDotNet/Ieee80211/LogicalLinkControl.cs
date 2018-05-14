@@ -17,11 +17,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2017 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
-using System.Net.NetworkInformation;
-using PacketDotNet.Utils;
+using System.Reflection;
+using log4net;
 using MiscUtil.Conversion;
-using System.IO;
+using PacketDotNet.Utils;
 
 namespace PacketDotNet
 {
@@ -35,12 +36,12 @@ namespace PacketDotNet
         public class LogicalLinkControl : Packet
         {
 #if DEBUG
-            private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-        // NOTE: No need to warn about lack of use, the compiler won't
-        //       put any calls to 'log' here but we need 'log' to exist to compile
+// NOTE: No need to warn about lack of use, the compiler won't
+//       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
@@ -73,11 +74,11 @@ namespace PacketDotNet
             protected UInt32 ControlOrganizationCode
             {
                 get => EndianBitConverter.Big.ToUInt32(Header.Bytes,
-                    Header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
+                                                       Header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
 
                 set
                 {
-                    var val = (UInt32)value;
+                    var val = value;
                     EndianBitConverter.Big.CopyBytes(val,
                                                      Header.Bytes,
                                                      Header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
@@ -90,7 +91,7 @@ namespace PacketDotNet
             /// <value>The control.</value>
             public Byte Control
             {
-                get => (Byte)((ControlOrganizationCode >> 24) & 0xFF);
+                get => (Byte) ((ControlOrganizationCode >> 24) & 0xFF);
 
                 set => throw new NotImplementedException("Control setter not implemented");
             }
@@ -101,7 +102,7 @@ namespace PacketDotNet
             /// <value>The organization code.</value>
             public UInt32 OrganizationCode
             {
-                get => (Byte)((ControlOrganizationCode & 0x00FFFFFF));
+                get => (Byte) ((ControlOrganizationCode & 0x00FFFFFF));
 
                 set => throw new NotImplementedException("OrganizationCode setter not implemented");
             }
@@ -112,12 +113,12 @@ namespace PacketDotNet
             /// <value>The type.</value>
             public EthernetPacketType Type
             {
-                get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(Header.Bytes,
-                    Header.Offset + LogicalLinkControlFields.TypePosition);
+                get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
+                                                                           Header.Offset + LogicalLinkControlFields.TypePosition);
 
                 set
                 {
-                    Int16 val = (Int16)value;
+                    Int16 val = (Int16) value;
                     EndianBitConverter.Big.CopyBytes(val,
                                                      Header.Bytes,
                                                      Header.Offset + LogicalLinkControlFields.TypePosition);
@@ -125,7 +126,7 @@ namespace PacketDotNet
             }
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="T:PacketDotNet.Ieee80211.LogicalLinkControl"/> class.
+            /// Initializes a new instance of the <see cref="T:PacketDotNet.Ieee80211.LogicalLinkControl" /> class.
             /// </summary>
             /// <param name="bas">Bas.</param>
             public LogicalLinkControl(ByteArraySegment bas)

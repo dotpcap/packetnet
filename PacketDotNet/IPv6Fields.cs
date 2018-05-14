@@ -92,7 +92,7 @@ namespace PacketDotNet
         /// <summary>
         /// Commutes the field positions.
         /// </summary>
-        static IPv6Fields( )
+        static IPv6Fields()
         {
             PayloadLengthPosition = VersionTrafficClassFlowLabelPosition + VersionTrafficClassFlowLabelLength;
             NextHeaderPosition = PayloadLengthPosition + PayloadLengthLength;

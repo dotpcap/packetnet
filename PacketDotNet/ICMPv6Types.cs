@@ -18,8 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
-
 namespace PacketDotNet
 {
     /// <summary>
@@ -29,7 +27,10 @@ namespace PacketDotNet
     public enum ICMPv6Types : byte
     {
 #pragma warning disable 1591
+
+
         #region ICMPv6 Error Messages
+
         DestinationUnreachable = 1, // [RFC4443]
         PacketTooBig = 2, // [RFC4443]
         TimeExceeded = 3, // [RFC4443]
@@ -37,8 +38,12 @@ namespace PacketDotNet
         PrivateExperimentation1 = 100, // [RFC4443]
         PrivateExperimentation2 = 101, // [RFC4443]
         ReservedForExpansion1 = 127, // [RFC4443]
+
         #endregion
+
+
         #region ICMPv6 Informational Messages
+
         EchoRequest = 128, // [RFC4443]
         EchoReply = 129, // [RFC4443]
         MulticastListenerQuery = 130, // [RFC2710]
@@ -76,7 +81,10 @@ namespace PacketDotNet
         PrivateExperimentation3 = 200, // [RFC4443]
         PrivateExperimentation4 = 201, // [RFC4443]
         ReservedForExpansion2 = 255 // [RFC4443]
+
         #endregion
+
+
 #pragma warning restore 1591
     }
 }

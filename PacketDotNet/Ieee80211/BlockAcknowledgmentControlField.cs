@@ -19,9 +19,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PacketDotNet
 {
@@ -41,31 +38,58 @@ namespace PacketDotNet
                 /// The acknowledgement does not have to be sent immediately after the request
                 /// </summary>
                 Delayed = 0,
+
                 /// <summary>
                 /// The acknowledgement must be sent immediately after the request
                 /// </summary>
-                Immediate = 1,
+                Immediate = 1
             }
 
             /// <summary>
-            /// The block acknowledgement policy in use
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentControlField" /> class.
             /// </summary>
-            public AcknowledgementPolicy Policy
+            public BlockAcknowledgmentControlField()
+            { }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentControlField" /> class.
+            /// </summary>
+            /// <param name='field'>
+            /// Field.
+            /// </param>
+            public BlockAcknowledgmentControlField(UInt16 field)
             {
-                get => (AcknowledgementPolicy)(Field & 0x1);
+                Field = field;
+            }
+
+            /// <summary>
+            /// True if the frame is using a compressed acknowledgement bitmap.
+            /// Newer standards used a compressed bitmap reducing its size
+            /// </summary>
+            public Boolean CompressedBitmap
+            {
+                get => (((Field >> 2) & 0x1) == 1) ? true : false;
 
                 set
                 {
-                    if (value == AcknowledgementPolicy.Immediate)
+                    if (value)
                     {
-                        Field |= 0x1;
+                        Field |= (1 << 0x2);
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(0x1));
+                        Field &= unchecked((UInt16) ~(1 << 0x2));
                     }
                 }
             }
+
+            /// <summary>
+            /// Gets or sets the field. This provides direct access to the bytes that back all the other properties in the field.
+            /// </summary>
+            /// <value>
+            /// The field.
+            /// </value>
+            public UInt16 Field { get; set; }
 
             /// <summary>
             /// True if the acknowledgement can ack multi traffic ids
@@ -82,29 +106,27 @@ namespace PacketDotNet
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x1));
+                        Field &= unchecked((UInt16) ~(1 << 0x1));
                     }
                 }
             }
 
             /// <summary>
-            /// True if the frame is using a compressed acknowledgement bitmap.
-            /// 
-            /// Newer standards used a compressed bitmap reducing its size
+            /// The block acknowledgement policy in use
             /// </summary>
-            public Boolean CompressedBitmap
+            public AcknowledgementPolicy Policy
             {
-                get => (((Field >> 2) & 0x1) == 1) ? true : false;
+                get => (AcknowledgementPolicy) (Field & 0x1);
 
                 set
                 {
-                    if (value)
+                    if (value == AcknowledgementPolicy.Immediate)
                     {
-                        Field |= (1 << 0x2);
+                        Field |= 0x1;
                     }
                     else
                     {
-                        Field &= unchecked((UInt16)~(1 << 0x2));
+                        Field &= unchecked((UInt16) ~(0x1));
                     }
                 }
             }
@@ -114,41 +136,14 @@ namespace PacketDotNet
             /// </summary>
             public Byte Tid
             {
-                get => (Byte)(Field >> 12);
+                get => (Byte) (Field >> 12);
 
                 set
                 {
                     Field &= 0x0FFF;
-                    Field |= (UInt16)(value << 12);
+                    Field |= (UInt16) (value << 12);
                 }
             }
-
-            /// <summary>
-            /// Gets or sets the field. This provides direct access to the bytes that back all the other properties in the field.
-            /// </summary>
-            /// <value>
-            /// The field.
-            /// </value>
-            public UInt16 Field {get; set;}
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentControlField"/> class.
-            /// </summary>
-            public BlockAcknowledgmentControlField ()
-            {
-             
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentControlField"/> class.
-            /// </summary>
-            /// <param name='field'>
-            /// Field.
-            /// </param>
-            public BlockAcknowledgmentControlField(UInt16 field)
-            {
-                Field = field;
-            }
-        } 
+        }
     }
 }

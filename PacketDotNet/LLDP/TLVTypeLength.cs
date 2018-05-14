@@ -18,7 +18,10 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
+using System.Reflection;
+using log4net;
 using MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
@@ -32,12 +35,12 @@ namespace PacketDotNet.LLDP
     public class TLVTypeLength
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-        // NOTE: No need to warn about lack of use, the compiler won't
-        //       put any calls to 'log' here but we need 'log' to exist to compile
+// NOTE: No need to warn about lack of use, the compiler won't
+//       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
@@ -53,15 +56,15 @@ namespace PacketDotNet.LLDP
 
         private const Int32 MaximumTLVLength = 511;
 
-        private ByteArraySegment byteArraySegment;
+        private readonly ByteArraySegment byteArraySegment;
 
         /// <summary>
         /// Construct a TLVTypeLength for a TLV
         /// </summary>
         /// <param name="byteArraySegment">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
-        public TLVTypeLength (ByteArraySegment byteArraySegment)
+        public TLVTypeLength(ByteArraySegment byteArraySegment)
         {
             this.byteArraySegment = byteArraySegment;
         }
@@ -76,26 +79,26 @@ namespace PacketDotNet.LLDP
                 // get the type
                 UInt16 typeAndLength = TypeAndLength;
                 // remove the length info
-                return (TLVTypes)(typeAndLength >> LengthBits);
+                return (TLVTypes) (typeAndLength >> LengthBits);
             }
 
             set
             {
-                log.DebugFormat("value of {0}", value);
+                Log.DebugFormat("value of {0}", value);
 
                 // shift type into the type position
-                var type = (UInt16)((UInt16)value << LengthBits);
+                var type = (UInt16) ((UInt16) value << LengthBits);
                 // save the old length
-                UInt16 length = (UInt16)(LengthMask & TypeAndLength);
+                UInt16 length = (UInt16) (LengthMask & TypeAndLength);
                 // set the type
-                TypeAndLength = (UInt16)(type | length);
+                TypeAndLength = (UInt16) (type | length);
             }
         }
 
         /// <value>
         /// The TLV Value's Length
         /// NOTE: Value is the length of the TLV Value only, does not include the length
-        ///       of the type and length fields
+        /// of the type and length fields
         /// </value>
         public Int32 Length
         {
@@ -111,15 +114,22 @@ namespace PacketDotNet.LLDP
             // the tlvs content
             internal set
             {
-                log.DebugFormat("value {0}", value);
+                Log.DebugFormat("value {0}", value);
 
-                if(value < 0) { throw new System.ArgumentOutOfRangeException("Length", "Length must be a positive value"); }
-                if(value > MaximumTLVLength) { throw new ArgumentOutOfRangeException("Length", "The maximum value for a TLV length is 511"); }
+                if (value < 0)
+                {
+                    throw new ArgumentOutOfRangeException("Length", "Length must be a positive value");
+                }
+
+                if (value > MaximumTLVLength)
+                {
+                    throw new ArgumentOutOfRangeException("Length", "The maximum value for a TLV length is 511");
+                }
 
                 // save the old type
-                UInt16 type = (UInt16)(TypeMask & TypeAndLength);
+                UInt16 type = (UInt16) (TypeMask & TypeAndLength);
                 // set the length
-                TypeAndLength = (UInt16)(type | value);
+                TypeAndLength = (UInt16) (type | value);
             }
         }
 

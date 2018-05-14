@@ -1,4 +1,3 @@
-
 namespace MiscUtil.Conversion
 {
     /// <summary>
@@ -10,6 +9,7 @@ namespace MiscUtil.Conversion
         /// Little endian - least significant byte first
         /// </summary>
         LittleEndian,
+
         /// <summary>
         /// Big endian - most significant byte first
         /// </summary>

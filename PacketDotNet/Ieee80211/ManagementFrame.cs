@@ -19,12 +19,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net.NetworkInformation;
 using MiscUtil.Conversion;
-using PacketDotNet.Utils;
 
 namespace PacketDotNet
 {
@@ -36,19 +32,24 @@ namespace PacketDotNet
         public abstract class ManagementFrame : MacFrame
         {
             /// <summary>
+            /// BssID
+            /// </summary>
+            public PhysicalAddress BssId { get; set; }
+
+            /// <summary>
             /// DestinationAddress
             /// </summary>
-            public PhysicalAddress DestinationAddress {get; set;}
+            public PhysicalAddress DestinationAddress { get; set; }
+
+            /// <summary>
+            /// Sequence control field
+            /// </summary>
+            public SequenceControlField SequenceControl { get; set; }
 
             /// <summary>
             /// SourceAddress
             /// </summary>
-            public PhysicalAddress SourceAddress {get; set;}
-
-            /// <summary>
-            /// BssID
-            /// </summary>
-            public PhysicalAddress BssId {get; set;}
+            public PhysicalAddress SourceAddress { get; set; }
 
 
             /// <summary>
@@ -58,27 +59,20 @@ namespace PacketDotNet
             {
                 get
                 {
-					if(Header.Length >= (MacFields.SequenceControlPosition + MacFields.SequenceControlLength))
-					{
-						return EndianBitConverter.Little.ToUInt16(Header.Bytes,
-						                                          (Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
-					}
-					else
-					{
-						return 0;
-					}
+                    if (Header.Length >= (MacFields.SequenceControlPosition + MacFields.SequenceControlLength))
+                    {
+                        return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                                  (Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+                    }
+
+                    return 0;
                 }
 
                 set => EndianBitConverter.Little.CopyBytes(value,
-                    Header.Bytes,
-                    (Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+                                                           Header.Bytes,
+                                                           (Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
             }
 
-            /// <summary>
-            /// Sequence control field
-            /// </summary>
-            public SequenceControlField SequenceControl {get; set;}
-            
             /// <summary>
             /// Returns a string with a description of the addresses used in the packet.
             /// This is used as a compoent of the string returned by ToString().
@@ -89,11 +83,10 @@ namespace PacketDotNet
             protected override String GetAddressString()
             {
                 return String.Format("SA {0} DA {1} BSSID {2}",
-                                     SourceAddress, 
-                                     DestinationAddress, 
+                                     SourceAddress,
+                                     DestinationAddress,
                                      BssId);
             }
-        } 
+        }
     }
-
 }

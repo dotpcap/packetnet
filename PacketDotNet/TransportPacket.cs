@@ -14,7 +14,10 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 using System;
+using System.Reflection;
+using log4net;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -25,39 +28,30 @@ namespace PacketDotNet
     [Serializable]
     public abstract class TransportPacket : Packet
     {
-
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-        // NOTE: No need to warn about lack of use, the compiler won't
-        //       put any calls to 'log' here but we need 'log' to exist to compile
+// NOTE: No need to warn about lack of use, the compiler won't
+//       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public TransportPacket()
-        {
-        }
 
         /// <value>
         /// The Checksum version
         /// </value>
-        public abstract UInt16 Checksum
-        {
-            get;
-            set;
-        }
+        public abstract UInt16 Checksum { get; set; }
 
         /// <summary>
         /// Calculates the transport layer checksum, either for the
         /// tcp or udp packet
         /// </summary>
-        /// <param name="option"><see cref="TransportPacket.TransportChecksumOption"/></param>
+        /// <param name="option">
+        ///     <see cref="TransportPacket.TransportChecksumOption" />
+        /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </returns>
         internal Int32 CalculateChecksum(TransportChecksumOption option)
         {
@@ -70,11 +64,11 @@ namespace PacketDotNet
             Checksum = 0;
 
             // copy the tcp section with data
-            var dataToChecksum = ((IpPacket)ParentPacket).PayloadPacket.BytesHighPerformance;
+            var dataToChecksum = ((IpPacket) ParentPacket).PayloadPacket.BytesHighPerformance;
 
             var bytes = option == TransportChecksumOption.IncludePseudoIPHeader
-                    ? ((IpPacket)ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
-                    : new byte[0];
+                ? ((IpPacket) ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
+                : new byte[0];
 
             // calculate the one's complement sum of the tcp header
             Int32 cs = ChecksumUtils.OnesComplementSum(dataToChecksum, bytes);
@@ -89,26 +83,27 @@ namespace PacketDotNet
         /// Determine if the transport layer checksum is valid
         /// </summary>
         /// <param name="option">
-        /// A <see cref="TransportChecksumOption"/>
+        /// A <see cref="TransportChecksumOption" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Boolean"/>
+        /// A <see cref="System.Boolean" />
         /// </returns>
         public virtual Boolean IsValidChecksum(TransportChecksumOption option)
         {
-            var dataToChecksum = ((IpPacket)ParentPacket).PayloadPacket.BytesHighPerformance;
+            var dataToChecksum = ((IpPacket) ParentPacket).PayloadPacket.BytesHighPerformance;
 
             var bytes = option == TransportChecksumOption.IncludePseudoIPHeader
-                    ? ((IpPacket)ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
-                    : new byte[0];
-            
+                ? ((IpPacket) ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
+                : new byte[0];
+
             var onesSum = ChecksumUtils.OnesSum(dataToChecksum, bytes);
-            
-            log.DebugFormat("option: {0}, byteArrayCombination.Length {1}",
-                            option, bytes.Length);
+
+            Log.DebugFormat("option: {0}, byteArrayCombination.Length {1}",
+                            option,
+                            bytes.Length);
 
             const Int32 expectedOnesSum = 0xffff;
-            log.DebugFormat("onesSum {0} expected {1}",
+            Log.DebugFormat("onesSum {0} expected {1}",
                             onesSum,
                             expectedOnesSum);
 

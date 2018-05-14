@@ -19,9 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -35,34 +33,7 @@ namespace PacketDotNet
         /// Is thrown when an argument passed to a method is invalid.
         /// </exception>
         public class InformationElement
-        {     
-            /// <summary>
-            /// The length in bytes of the Information Element id field.
-            /// </summary>
-            public static readonly Int32 ElementIdLength = 1;
-            /// <summary>
-            /// The length in bytes of the Information Element length field.
-            /// </summary>
-            public static readonly Int32 ElementLengthLength = 1;
-            /// <summary>
-            /// The index of the id field in an Information Element.
-            /// </summary>
-            public static readonly Int32 ElementIdPosition = 0;
-            /// <summary>
-            /// The index of the length field in an Information Element.
-            /// </summary>
-            public static readonly Int32 ElementLengthPosition;
-            /// <summary>
-            /// The index of the first byte of the value field in an Information Element.
-            /// </summary>
-            public static readonly Int32 ElementValuePosition;
-
-            static InformationElement ()
-            {
-                ElementLengthPosition = ElementIdPosition + ElementIdLength;
-                ElementValuePosition = ElementLengthPosition + ElementLengthLength;
-            }
-
+        {
             /// <summary>
             /// Types of information elements
             /// </summary>
@@ -98,119 +69,174 @@ namespace PacketDotNet
                 /// Indicates which stations have buffered traffic waiting to be picked up
                 /// </summary>
                 TrafficIndicationMap = 0x05,
+
                 /// <summary>
                 /// Indicates the number of time units (TUs) between ATIM frames in an IBSS.
                 /// </summary>
                 IbssParameterSet = 0x06,
+
                 /// <summary>
                 /// Specifies regulatory constraints stations must adhere to based on the country the network is operating in.
                 /// </summary>
                 Country = 0x07,
+
                 /// <summary>
                 /// Specifies the hopping pattern of timeslots used in frequency hopping physical layers.
                 /// </summary>
                 HoppingParametersPattern = 0x08,
+
                 /// <summary>
                 /// Specifies the hopping pattern table used in frequency hopping physical layers.
                 /// </summary>
                 HoppingPatternTable = 0x09,
+
                 /// <summary>
-                /// Specifies the Ids of the information elements being requested in a <see cref="PacketDotNet.Ieee80211.ProbeRequestFrame"/>.
+                /// Specifies the Ids of the information elements being requested in a <see cref="PacketDotNet.Ieee80211.ProbeRequestFrame" />.
                 /// </summary>
                 Request = 0x0A,
+
                 /// <summary>
                 /// Specifies the encrypted challenge text that stations must decrypt as part of the authentication process.
                 /// </summary>
                 ChallengeText = 0x10,
+
                 /// <summary>
                 /// Specifies the difference between the regulatory maximum transmit power and any local constraint.
                 /// </summary>
                 PowerContstraint = 0x20,
+
                 /// <summary>
                 /// Specifies the minimum and maximum transmit power a station is capable of.
                 /// </summary>
                 PowerCapability = 0x21,
+
                 /// <summary>
                 /// Used to request radio link management information. This type of information element never has an associated value.
                 /// </summary>
                 TransmitPowerControlRequest = 0x22,
+
                 /// <summary>
                 /// Radio link managment report used by stations to tune their transmission power.
                 /// </summary>
                 TransmitPowerControlReport = 0x23,
+
                 /// <summary>
                 /// Specifies local constraints on the channels in use.
                 /// </summary>
                 SupportedChannels = 0x24,
+
                 /// <summary>
                 /// Announces an impending change of channel for the network.
                 /// </summary>
                 ChannelSwitchAnnouncement = 0x25,
+
                 /// <summary>
                 /// Requests a report on the state of the radio channel.
                 /// </summary>
                 MeasurementRequest = 0x26,
+
                 /// <summary>
                 /// A report of on the status of the radio channel.
                 /// </summary>
                 MeasurementReport = 0x27,
+
                 /// <summary>
                 /// Specifies the scheduling of temporary quiet periods on the channel.
                 /// </summary>
                 Quiet = 0x28,
+
                 /// <summary>
                 /// Specifies the details the Dynamic Frequency Selection (DFS) algorithm in use in the IBSS.
                 /// </summary>
                 IbssDfs = 0x29,
+
                 /// <summary>
                 /// Indicates whether or not the Extended Rate PHY is in use on the network at that time.
                 /// </summary>
                 ErpInformation = 0x2A,
+
                 /// <summary>
                 /// Specifies a stations high throughput capabilities.
                 /// </summary>
                 HighThroughputCapabilities = 0x2d,
+
                 /// <summary>
                 /// The erp information2.
                 /// </summary>
                 ErpInformation2 = 0x2F,
+
                 /// <summary>
                 /// Specifies details of the Robust Security Network encryption in use on the network.
                 /// </summary>
                 RobustSecurityNetwork = 0x30,
+
                 /// <summary>
                 /// Specifies more data rates supported by the network. This is identical to the Supported Rates element but it allows for a longer value.
                 /// </summary>
                 ExtendedSupportedRates = 0x32,
+
                 /// <summary>
                 /// Specified how high throughput capable stations will be operated in the network.
                 /// </summary>
                 HighThroughputInformation = 0x3d,
+
                 /// <summary>
                 /// Specifies details of the WiFi Protected Access encryption in use on the network.
                 /// </summary>
                 WifiProtectedAccess = 0xD3,
+
                 /// <summary>
                 /// Non standard information element implemented by the hardware vendor.
                 /// </summary>
                 VendorSpecific = 0xDD
             }
-            
-            private ByteArraySegment bytes;
-   
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.InformationElement"/> class.
+            /// The length in bytes of the Information Element id field.
+            /// </summary>
+            public static readonly Int32 ElementIdLength = 1;
+
+            /// <summary>
+            /// The index of the id field in an Information Element.
+            /// </summary>
+            public static readonly Int32 ElementIdPosition = 0;
+
+            /// <summary>
+            /// The length in bytes of the Information Element length field.
+            /// </summary>
+            public static readonly Int32 ElementLengthLength = 1;
+
+            /// <summary>
+            /// The index of the length field in an Information Element.
+            /// </summary>
+            public static readonly Int32 ElementLengthPosition;
+
+            /// <summary>
+            /// The index of the first byte of the value field in an Information Element.
+            /// </summary>
+            public static readonly Int32 ElementValuePosition;
+
+            private ByteArraySegment bytes;
+
+            static InformationElement()
+            {
+                ElementLengthPosition = ElementIdPosition + ElementIdLength;
+                ElementValuePosition = ElementLengthPosition + ElementLengthLength;
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.InformationElement" /> class.
             /// </summary>
             /// <param name='bas'>
             /// The bytes of the information element. The Offset property should point to the first byte of the element, the Id byte
             /// </param>
-            public InformationElement (ByteArraySegment bas)
+            public InformationElement(ByteArraySegment bas)
             {
                 bytes = bas;
             }
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.InformationElement"/> class.
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.InformationElement" /> class.
             /// </summary>
             /// <param name='id'>
             /// Identifier.
@@ -224,31 +250,18 @@ namespace PacketDotNet
             public InformationElement(ElementId id, Byte[] value)
             {
                 var ie = new Byte[ElementIdLength + ElementLengthLength + value.Length];
-                bytes = new ByteArraySegment (ie);
+                bytes = new ByteArraySegment(ie);
                 Id = id;
                 Value = value;
             }
-   
-            /// <summary>
-            /// Gets or sets the identifier.
-            /// </summary>
-            /// <value>
-            /// The identifier.
-            /// </value>
-            public ElementId Id
-            { 
-                get => (ElementId)bytes.Bytes [bytes.Offset + ElementIdPosition];
-                set => bytes.Bytes [bytes.Offset + ElementIdPosition] = (Byte)value;
-            }
 
             /// <summary>
-            /// Gets the length.
+            /// Gets the bytes.
             /// </summary>
             /// <value>
-            /// The length.
+            /// The bytes.
             /// </value>
-            public Int32 ValueLength => Math.Min((bytes.Length - ElementValuePosition),
-                bytes.Bytes [bytes.Offset + ElementLengthPosition]);
+            public Byte[] Bytes => bytes.ActualBytes();
 
             /// <summary>
             /// Gets the length of the element including the Id and Length field
@@ -256,7 +269,19 @@ namespace PacketDotNet
             /// <value>
             /// The length of the element.
             /// </value>
-            public Byte ElementLength => (Byte)(ElementIdLength + ElementLengthLength + ValueLength);
+            public Byte ElementLength => (Byte) (ElementIdLength + ElementLengthLength + ValueLength);
+
+            /// <summary>
+            /// Gets or sets the identifier.
+            /// </summary>
+            /// <value>
+            /// The identifier.
+            /// </value>
+            public ElementId Id
+            {
+                get => (ElementId) bytes.Bytes[bytes.Offset + ElementIdPosition];
+                set => bytes.Bytes[bytes.Offset + ElementIdPosition] = (Byte) value;
+            }
 
             /// <summary>
             /// Gets or sets the value of the element
@@ -273,51 +298,54 @@ namespace PacketDotNet
                 get
                 {
                     var valueArray = new Byte[ValueLength];
-                    Array.Copy (bytes.Bytes,
-                        bytes.Offset + ElementValuePosition,
-                        valueArray, 0, ValueLength);
+                    Array.Copy(bytes.Bytes,
+                               bytes.Offset + ElementValuePosition,
+                               valueArray,
+                               0,
+                               ValueLength);
                     return valueArray;
                 }
-                
+
                 set
                 {
                     if (value.Length > Byte.MaxValue)
                     {
-                        throw new ArgumentException ("The provided value is too long. Maximum allowed length is 255 bytes.");
+                        throw new ArgumentException("The provided value is too long. Maximum allowed length is 255 bytes.");
                     }
+
                     //Decide if the current ByteArraySegement is big enough to hold the new info element
                     Int32 newIeLength = ElementIdLength + ElementLengthLength + value.Length;
                     if (bytes.Length < newIeLength)
                     {
                         var newIe = new Byte[newIeLength];
-                        newIe [ElementIdPosition] = bytes.Bytes [bytes.Offset + ElementIdPosition];
-                        bytes = new ByteArraySegment (newIe);
+                        newIe[ElementIdPosition] = bytes.Bytes[bytes.Offset + ElementIdPosition];
+                        bytes = new ByteArraySegment(newIe);
                     }
-                    
-                    Array.Copy (value, 0, bytes.Bytes, bytes.Offset + ElementValuePosition, value.Length);
+
+                    Array.Copy(value, 0, bytes.Bytes, bytes.Offset + ElementValuePosition, value.Length);
                     bytes.Length = newIeLength;
-                    bytes.Bytes [bytes.Offset + ElementLengthPosition] = (Byte)value.Length;
-                    
+                    bytes.Bytes[bytes.Offset + ElementLengthPosition] = (Byte) value.Length;
                 }
             }
-            
-            /// <summary>
-            /// Gets the bytes.
-            /// </summary>
-            /// <value>
-            /// The bytes.
-            /// </value>
-            public Byte[] Bytes => bytes.ActualBytes();
 
             /// <summary>
-            /// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="PacketDotNet.Ieee80211.InformationElement"/>.
+            /// Gets the length.
+            /// </summary>
+            /// <value>
+            /// The length.
+            /// </value>
+            public Int32 ValueLength => Math.Min((bytes.Length - ElementValuePosition),
+                                                 bytes.Bytes[bytes.Offset + ElementLengthPosition]);
+
+            /// <summary>
+            /// Determines whether the specified <see cref="System.Object" /> is equal to the current <see cref="PacketDotNet.Ieee80211.InformationElement" />.
             /// </summary>
             /// <param name='obj'>
-            /// The <see cref="System.Object"/> to compare with the current <see cref="PacketDotNet.Ieee80211.InformationElement"/>.
+            /// The <see cref="System.Object" /> to compare with the current <see cref="PacketDotNet.Ieee80211.InformationElement" />.
             /// </param>
             /// <returns>
-            /// <c>true</c> if the specified <see cref="System.Object"/> is equal to the current
-            /// <see cref="PacketDotNet.Ieee80211.InformationElement"/>; otherwise, <c>false</c>.
+            /// <c>true</c> if the specified <see cref="System.Object" /> is equal to the current
+            /// <see cref="PacketDotNet.Ieee80211.InformationElement" />; otherwise, <c>false</c>.
             /// </returns>
             public override Boolean Equals(Object obj)
             {
@@ -331,7 +359,7 @@ namespace PacketDotNet
             }
 
             /// <summary>
-            /// Serves as a hash function for a <see cref="PacketDotNet.Ieee80211.InformationElement"/> object.
+            /// Serves as a hash function for a <see cref="PacketDotNet.Ieee80211.InformationElement" /> object.
             /// </summary>
             /// <returns>
             /// A hash code for this instance that is suitable for use in hashing algorithms and data structures such as
@@ -341,7 +369,6 @@ namespace PacketDotNet
             {
                 return Id.GetHashCode() ^ Value.GetHashCode();
             }
-            
-        } 
+        }
     }
 }

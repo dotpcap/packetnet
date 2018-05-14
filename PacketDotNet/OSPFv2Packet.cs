@@ -20,10 +20,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Reflection;
 using System.Text;
-using PacketDotNet;
-using PacketDotNet.Utils;
+using log4net;
 using MiscUtil.Conversion;
+using PacketDotNet.Utils;
 
 namespace PacketDotNet
 {
@@ -31,16 +33,15 @@ namespace PacketDotNet
     /// OSPFv2 packet.
     /// </summary>
     [Serializable]
-    public abstract class  OSPFv2Packet : OSPFPacket
+    public abstract class OSPFv2Packet : OSPFPacket
     {
-
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-        // NOTE: No need to warn about lack of use, the compiler won't
-        //       put any calls to 'log' here but we need 'log' to exist to compile
+// NOTE: No need to warn about lack of use, the compiler won't
+//       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169
 #endif
         /// <value>
@@ -53,7 +54,7 @@ namespace PacketDotNet
         /// </summary>
         public OSPFv2Packet()
         {
-            log.Debug("");
+            Log.Debug("");
 
             // allocate memory for this packet
             Int32 offset = 0;
@@ -61,7 +62,7 @@ namespace PacketDotNet
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
-            this.Version = ospfVersion;
+            Version = ospfVersion;
         }
 
         /// <summary>
@@ -69,9 +70,9 @@ namespace PacketDotNet
         /// </summary>
         public OSPFv2Packet(Byte[] Bytes, Int32 Offset)
         {
-            log.Debug("");
+            Log.Debug("");
             Header = new ByteArraySegment(Bytes, Offset, OSPFv2Fields.HeaderLength);
-            this.Version = ospfVersion;
+            Version = ospfVersion;
         }
 
         /// <summary>
@@ -79,9 +80,9 @@ namespace PacketDotNet
         /// </summary>
         public OSPFVersion Version
         {
-            get => (OSPFVersion)Header.Bytes[Header.Offset + OSPFv2Fields.VersionPosition];
+            get => (OSPFVersion) Header.Bytes[Header.Offset + OSPFv2Fields.VersionPosition];
 
-            set => Header.Bytes[Header.Offset + OSPFv2Fields.VersionPosition] = (Byte)value;
+            set => Header.Bytes[Header.Offset + OSPFv2Fields.VersionPosition] = (Byte) value;
         }
 
         /// <summary>
@@ -89,8 +90,8 @@ namespace PacketDotNet
         /// </summary>
         public virtual OSPFPacketType Type
         {
-            get => (OSPFPacketType)Header.Bytes[Header.Offset + OSPFv2Fields.TypePosition];
-            set => Header.Bytes[Header.Offset + OSPFv2Fields.TypePosition] = (Byte)value;
+            get => (OSPFPacketType) Header.Bytes[Header.Offset + OSPFv2Fields.TypePosition];
+            set => Header.Bytes[Header.Offset + OSPFv2Fields.TypePosition] = (Byte) value;
         }
 
         /// <summary>
@@ -105,18 +106,20 @@ namespace PacketDotNet
         /// <summary>
         /// The Router ID of the packet's source.
         /// </summary>
-        public virtual System.Net.IPAddress RouterID
+        public virtual IPAddress RouterID
         {
             get
             {
                 var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.RouterIDPosition);
-                return new System.Net.IPAddress(val);
+                return new IPAddress(val);
             }
             set
             {
                 Byte[] address = value.GetAddressBytes();
-                Array.Copy(address, 0,
-                           Header.Bytes, Header.Offset + OSPFv2Fields.RouterIDPosition,
+                Array.Copy(address,
+                           0,
+                           Header.Bytes,
+                           Header.Offset + OSPFv2Fields.RouterIDPosition,
                            address.Length);
             }
         }
@@ -124,18 +127,20 @@ namespace PacketDotNet
         /// <summary>
         /// Identifies the area that this packet belongs to. See http://www.ietf.org/rfc/rfc2328.txt for details.
         /// </summary>
-        public virtual System.Net.IPAddress AreaID
+        public virtual IPAddress AreaID
         {
             get
             {
                 var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.AreaIDPosition);
-                return new System.Net.IPAddress(val);
+                return new IPAddress(val);
             }
             set
             {
                 Byte[] address = value.GetAddressBytes();
-                Array.Copy(address, 0,
-                           Header.Bytes, Header.Offset + OSPFv2Fields.AreaIDPosition,
+                Array.Copy(address,
+                           0,
+                           Header.Bytes,
+                           Header.Offset + OSPFv2Fields.AreaIDPosition,
                            address.Length);
             }
         }
@@ -159,7 +164,7 @@ namespace PacketDotNet
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.AuTypePosition);
         }
 
-        ///<summary>
+        /// <summary>
         /// A 64-bit field for use by the authentication scheme
         /// </summary>
         public virtual UInt64 Authentication
@@ -169,24 +174,24 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2Packet"/>.
+        /// Returns a <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2Packet" />.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2Packet"/>.</returns>
+        /// <returns>A <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2Packet" />.</returns>
         public override String ToString()
         {
             StringBuilder packet = new StringBuilder();
-            packet.AppendFormat("OSPFv2 packet, type {0} ", this.Type);
-            packet.AppendFormat("length: {0}, ", this.PacketLength);
-            packet.AppendFormat("Checksum: {0:X8}, ", this.Checksum);
+            packet.AppendFormat("OSPFv2 packet, type {0} ", Type);
+            packet.AppendFormat("length: {0}, ", PacketLength);
+            packet.AppendFormat("Checksum: {0:X8}, ", Checksum);
             return packet.ToString();
         }
 
         /// <summary cref="Packet.ToString()">
         /// Output the packet information in the specified format
-        ///  Normal - outputs the packet info to a single line
-        ///  Colored - outputs the packet info to a single line with coloring
-        ///  Verbose - outputs detailed info about the packet
-        ///  VerboseColored - outputs detailed info about the packet with coloring
+        /// Normal - outputs the packet info to a single line
+        /// Colored - outputs the packet info to a single line with coloring
+        /// Verbose - outputs detailed info about the packet
+        /// VerboseColored - outputs detailed info about the packet with coloring
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>
@@ -204,7 +209,6 @@ namespace PacketDotNet
     /// </summary>
     public class OSPFv2HelloPacket : OSPFv2Packet
     {
-
         /// <value>
         /// The packet type
         /// </value>
@@ -214,7 +218,7 @@ namespace PacketDotNet
         /// Constructs an OSPFv2 Hello packet from ByteArraySegment
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
         public OSPFv2HelloPacket(ByteArraySegment bas)
         {
@@ -228,18 +232,21 @@ namespace PacketDotNet
         /// <param name="NetworkMask">The Network mask - see http://www.ietf.org/rfc/rfc2328.txt for details.</param>
         /// <param name="HelloInterval">The Hello interval - see http://www.ietf.org/rfc/rfc2328.txt for details.</param>
         /// <param name="RouterDeadInterval">The Router dead interval - see http://www.ietf.org/rfc/rfc2328.txt for details.</param>
-        public OSPFv2HelloPacket(System.Net.IPAddress NetworkMask, UInt16 HelloInterval,
-                                 UInt16 RouterDeadInterval)
+        public OSPFv2HelloPacket
+        (
+            IPAddress NetworkMask,
+            UInt16 HelloInterval,
+            UInt16 RouterDeadInterval)
         {
             Byte[] b = new Byte[OSPFv2Fields.NeighborIDStart];
             Array.Copy(Header.Bytes, b, Header.Bytes.Length);
-            this.Header = new ByteArraySegment(b, 0, OSPFv2Fields.NeighborIDStart);
-            this.Type = packetType;
+            Header = new ByteArraySegment(b, 0, OSPFv2Fields.NeighborIDStart);
+            Type = packetType;
 
             this.NetworkMask = NetworkMask;
             this.HelloInterval = HelloInterval;
             this.RouterDeadInterval = RouterDeadInterval;
-            this.PacketLength = (UInt16)Header.Bytes.Length;
+            PacketLength = (UInt16) Header.Bytes.Length;
         }
 
         /// <summary>
@@ -250,8 +257,12 @@ namespace PacketDotNet
         /// <param name="HelloInterval">The Hello interval - see http://www.ietf.org/rfc/rfc2328.txt for details.</param>
         /// <param name="RouterDeadInterval">The Router dead interval - see http://www.ietf.org/rfc/rfc2328.txt for details.</param>
         /// <param name="Neighbors">List of router neighbors - see http://www.ietf.org/rfc/rfc2328.txt for details.</param>
-        public OSPFv2HelloPacket(System.Net.IPAddress NetworkMask, UInt16 HelloInterval,
-                                 UInt16 RouterDeadInterval, List<System.Net.IPAddress> Neighbors)
+        public OSPFv2HelloPacket
+        (
+            IPAddress NetworkMask,
+            UInt16 HelloInterval,
+            UInt16 RouterDeadInterval,
+            List<IPAddress> Neighbors)
             : this(NetworkMask, HelloInterval, RouterDeadInterval)
         {
             Int32 length = Neighbors.Count * 4;
@@ -266,39 +277,65 @@ namespace PacketDotNet
             }
 
             Header = new ByteArraySegment(bytes);
-            this.PacketLength = (UInt16)Header.Bytes.Length;
+            PacketLength = (UInt16) Header.Bytes.Length;
         }
 
         /// <summary>
         /// Constructs an OSPFv2 Hello packet from given bytes and offset.
         /// </summary>
         /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// A <see cref="System.Byte" />
         /// </param>
         /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         public OSPFv2HelloPacket(Byte[] Bytes, Int32 Offset) :
             base(Bytes, Offset)
         {
-            this.Type = packetType;
+            Type = packetType;
         }
 
+
         /// <summary>
-        /// The network mask associated with this interface.
+        /// The identity of the Backup Designated Router for this network,
+        /// in the view of the sending router.
         /// </summary>
-        public virtual System.Net.IPAddress NetworkMask
+        public virtual IPAddress BackupRouterID
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.NetworkMaskPositon);
-                return new System.Net.IPAddress(val);
+                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.BackupRouterIDPosition);
+                return new IPAddress(val);
             }
             set
             {
                 Byte[] address = value.GetAddressBytes();
-                Array.Copy(address, 0,
-                           Header.Bytes, Header.Offset + OSPFv2Fields.NetworkMaskPositon,
+                Array.Copy(address,
+                           0,
+                           Header.Bytes,
+                           Header.Offset + OSPFv2Fields.BackupRouterIDPosition,
+                           address.Length);
+            }
+        }
+
+        /// <summary>
+        /// The identity of the Designated Router for this network, in the
+        /// view of the sending router.
+        /// </summary>
+        public virtual IPAddress DesignatedRouterID
+        {
+            get
+            {
+                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.DesignatedRouterIDPosition);
+                return new IPAddress(val);
+            }
+            set
+            {
+                Byte[] address = value.GetAddressBytes();
+                Array.Copy(address,
+                           0,
+                           Header.Bytes,
+                           Header.Offset + OSPFv2Fields.DesignatedRouterIDPosition,
                            address.Length);
             }
         }
@@ -322,12 +359,53 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// This router's Router Priority.
+        /// List of the Router IDs of each router from whom valid Hello packets have
+        /// been seen recently on the network.  Recently means in the last
+        /// RouterDeadInterval seconds. Can be zero or more.
         /// </summary>
-        public virtual Byte RtrPriority
+        public virtual List<IPAddress> NeighborID
         {
-            get => Header.Bytes[Header.Offset + OSPFv2Fields.RtrPriorityPosition];
-            set => Header.Bytes[Header.Offset + OSPFv2Fields.RtrPriorityPosition] = value;
+            get
+            {
+                List<IPAddress> ret = new List<IPAddress>();
+                Int32 bytesAvailable = PacketLength - OSPFv2Fields.NeighborIDStart;
+
+                if (bytesAvailable % 4 != 0)
+                {
+                    throw new Exception("malformed OSPFv2Hello Packet - bad NeighborID size");
+                }
+
+                Int32 offset = OSPFv2Fields.NeighborIDStart;
+                while (offset < PacketLength)
+                {
+                    Int64 address = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + offset);
+                    ret.Add(new IPAddress(address));
+                    offset += 4;
+                }
+
+                return ret;
+            }
+        }
+
+        /// <summary>
+        /// The network mask associated with this interface.
+        /// </summary>
+        public virtual IPAddress NetworkMask
+        {
+            get
+            {
+                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.NetworkMaskPositon);
+                return new IPAddress(val);
+            }
+            set
+            {
+                Byte[] address = value.GetAddressBytes();
+                Array.Copy(address,
+                           0,
+                           Header.Bytes,
+                           Header.Offset + OSPFv2Fields.NetworkMaskPositon,
+                           address.Length);
+            }
         }
 
 
@@ -341,94 +419,34 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// The identity of the Designated Router for this network, in the
-        /// view of the sending router.
+        /// This router's Router Priority.
         /// </summary>
-        public virtual System.Net.IPAddress DesignatedRouterID
+        public virtual Byte RtrPriority
         {
-            get
-            {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.DesignatedRouterIDPosition);
-                return new System.Net.IPAddress(val);
-            }
-            set
-            {
-                Byte[] address = value.GetAddressBytes();
-                Array.Copy(address, 0,
-                           Header.Bytes, Header.Offset + OSPFv2Fields.DesignatedRouterIDPosition,
-                           address.Length);
-            }
-        }
-
-
-        /// <summary>
-        /// The identity of the Backup Designated Router for this network,
-        /// in the view of the sending router.
-        /// </summary>
-        public virtual System.Net.IPAddress BackupRouterID
-        {
-            get
-            {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.BackupRouterIDPosition);
-                return new System.Net.IPAddress(val);
-            }
-            set
-            {
-                Byte[] address = value.GetAddressBytes();
-                Array.Copy(address, 0,
-                           Header.Bytes, Header.Offset + OSPFv2Fields.BackupRouterIDPosition,
-                           address.Length);
-            }
+            get => Header.Bytes[Header.Offset + OSPFv2Fields.RtrPriorityPosition];
+            set => Header.Bytes[Header.Offset + OSPFv2Fields.RtrPriorityPosition] = value;
         }
 
         /// <summary>
-        /// List of the Router IDs of each router from whom valid Hello packets have
-        /// been seen recently on the network.  Recently means in the last
-        /// RouterDeadInterval seconds. Can be zero or more.
+        /// Returns a <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2HelloPacket" />.
         /// </summary>
-        public virtual List<System.Net.IPAddress> NeighborID
-        {
-            get
-            {
-                List<System.Net.IPAddress> ret = new List<System.Net.IPAddress>();
-                Int32 bytesAvailable = this.PacketLength - OSPFv2Fields.NeighborIDStart;
-
-                if (bytesAvailable % 4 != 0)
-                {
-                    throw new Exception("malformed OSPFv2Hello Packet - bad NeighborID size");
-                }
-
-                Int32 offset = OSPFv2Fields.NeighborIDStart;
-                while (offset < this.PacketLength)
-                {
-                    Int64 address = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + offset);
-                    ret.Add(new System.Net.IPAddress(address));
-                    offset += 4;
-                }
-                return ret;
-            }
-        }
-
-        /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2HelloPacket"/>.
-        /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2HelloPacket"/>.</returns>
+        /// <returns>A <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2HelloPacket" />.</returns>
         public override String ToString()
         {
             StringBuilder packet = new StringBuilder();
             packet.Append(base.ToString());
             packet.Append(" ");
-            packet.AppendFormat("HelloOptions: {0} ", this.HelloOptions);
-            packet.AppendFormat("RouterID: {0} ", this.RouterID);
+            packet.AppendFormat("HelloOptions: {0} ", HelloOptions);
+            packet.AppendFormat("RouterID: {0} ", RouterID);
             return packet.ToString();
         }
 
         /// <summary cref="Packet.ToString()">
         /// Output the packet information in the specified format
-        ///  Normal - outputs the packet info to a single line
-        ///  Colored - outputs the packet info to a single line with coloring
-        ///  Verbose - outputs detailed info about the packet
-        ///  VerboseColored - outputs detailed info about the packet with coloring
+        /// Normal - outputs the packet info to a single line
+        /// Colored - outputs the packet info to a single line with coloring
+        /// Verbose - outputs detailed info about the packet
+        /// VerboseColored - outputs detailed info about the packet with coloring
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>
@@ -454,7 +472,7 @@ namespace PacketDotNet
         /// Constructs an OSPFv2 DD packet from ByteArraySegment
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
         public OSPFv2DDPacket(ByteArraySegment bas)
         {
@@ -468,10 +486,10 @@ namespace PacketDotNet
         {
             Byte[] b = new Byte[OSPFv2Fields.LSAHeaderPosition];
             Array.Copy(Header.Bytes, b, Header.Bytes.Length);
-            this.Header = new ByteArraySegment(b, 0, OSPFv2Fields.LSAHeaderPosition);
-            this.Type = packetType;
+            Header = new ByteArraySegment(b, 0, OSPFv2Fields.LSAHeaderPosition);
+            Type = packetType;
 
-            this.PacketLength = (UInt16)Header.Bytes.Length;
+            PacketLength = (UInt16) Header.Bytes.Length;
         }
 
         /// <summary>
@@ -492,23 +510,50 @@ namespace PacketDotNet
             }
 
             Header = new ByteArraySegment(bytes);
-            this.Type = packetType;
-            this.PacketLength = (UInt16)Header.Bytes.Length;
+            Type = packetType;
+            PacketLength = (UInt16) Header.Bytes.Length;
         }
 
         /// <summary>
         /// Constructs a packet from bytes and offset
         /// </summary>
         /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// A <see cref="System.Byte" />
         /// </param>
         /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         public OSPFv2DDPacket(Byte[] Bytes, Int32 Offset) :
             base(Bytes, Offset)
         {
-            this.Type = packetType;
+            Type = packetType;
+        }
+
+        /// <summary>
+        /// DD Packet bits - See http://www.ietf.org/rfc/rfc2328.txt for details.
+        /// </summary>
+        public virtual Byte DBDescriptionBits
+        {
+            get => Header.Bytes[Header.Offset + OSPFv2Fields.BitsPosition];
+            set => Header.Bytes[Header.Offset + OSPFv2Fields.BitsPosition] = value;
+        }
+
+        /// <summary>
+        /// The optional capabilities supported by the router. See http://www.ietf.org/rfc/rfc2328.txt for details.
+        /// </summary>
+        public virtual Byte DBDescriptionOptions
+        {
+            get => Header.Bytes[Header.Offset + OSPFv2Fields.DBDescriptionOptionsPosition];
+            set => Header.Bytes[Header.Offset + OSPFv2Fields.DBDescriptionOptionsPosition] = value;
+        }
+
+        /// <summary>
+        /// Used to sequence the collection of Database Description Packets.
+        /// </summary>
+        public virtual UInt32 DDSequence
+        {
+            get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.DDSequencePosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.DDSequencePosition);
         }
 
 
@@ -523,83 +568,58 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// The optional capabilities supported by the router. See http://www.ietf.org/rfc/rfc2328.txt for details.
-        /// </summary>
-        public virtual Byte DBDescriptionOptions
-        {
-            get => Header.Bytes[Header.Offset + OSPFv2Fields.DBDescriptionOptionsPosition];
-            set => Header.Bytes[Header.Offset + OSPFv2Fields.DBDescriptionOptionsPosition] = value;
-        }
-
-        /// <summary>
-        /// DD Packet bits - See http://www.ietf.org/rfc/rfc2328.txt for details.
-        /// </summary>
-        public virtual Byte DBDescriptionBits
-        {
-            get => Header.Bytes[Header.Offset + OSPFv2Fields.BitsPosition];
-            set => Header.Bytes[Header.Offset + OSPFv2Fields.BitsPosition] = value;
-        }
-
-        /// <summary>
-        /// Used to sequence the collection of Database Description Packets.
-        /// </summary>
-        public virtual UInt32 DDSequence
-        {
-            get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.DDSequencePosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.DDSequencePosition);
-        }
-
-        ///<summary>
         /// A (possibly partial) list of the link-state database's pieces.
         /// Each LSA in the database is described by its LSA header.
         /// See http://www.ietf.org/rfc/rfc2328.txt for details.
-        ///</summary>
-        /// See <see cref="PacketDotNet.LSA"/>
+        /// </summary>
+        /// See
+        /// <see cref="PacketDotNet.LSA" />
         public virtual List<LSA> LSAHeader
         {
             get
             {
                 List<LSA> ret = new List<LSA>();
-                Int32 bytesNeeded = this.PacketLength - OSPFv2Fields.LSAHeaderPosition;
+                Int32 bytesNeeded = PacketLength - OSPFv2Fields.LSAHeaderPosition;
 
                 if (bytesNeeded % OSPFv2Fields.LSAHeaderLength != 0)
                 {
                     throw new Exception("OSPFv2 DD Packet - Invalid LSA headers count");
                 }
 
-                Int32 offset = this.Header.Offset + OSPFv2Fields.LSAHeaderPosition;
+                Int32 offset = Header.Offset + OSPFv2Fields.LSAHeaderPosition;
                 Int32 headerCount = bytesNeeded / OSPFv2Fields.LSAHeaderLength;
 
                 for (Int32 i = 0; i < headerCount; i++)
                 {
-                    LSA l = new LSA(this.Header.Bytes, offset , OSPFv2Fields.LSAHeaderLength);
+                    LSA l = new LSA(Header.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
                     offset += OSPFv2Fields.LSAHeaderLength;
                     ret.Add(l);
                 }
+
                 return ret;
             }
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2DDPacket"/>.
+        /// Returns a <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2DDPacket" />.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2DDPacket"/>.</returns>
+        /// <returns>A <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2DDPacket" />.</returns>
         public override String ToString()
         {
             StringBuilder packet = new StringBuilder();
             packet.Append(base.ToString());
             packet.Append(" ");
-            packet.AppendFormat("DDSequence: 0x{0:X8} ", this.DDSequence);
-            packet.AppendFormat("#LSA headers: {0} ", this.LSAHeader.Count);
+            packet.AppendFormat("DDSequence: 0x{0:X8} ", DDSequence);
+            packet.AppendFormat("#LSA headers: {0} ", LSAHeader.Count);
             return packet.ToString();
         }
 
         /// <summary cref="Packet.ToString()">
         /// Output the packet information in the specified format
-        ///  Normal - outputs the packet info to a single line
-        ///  Colored - outputs the packet info to a single line with coloring
-        ///  Verbose - outputs detailed info about the packet
-        ///  VerboseColored - outputs detailed info about the packet with coloring
+        /// Normal - outputs the packet info to a single line
+        /// Colored - outputs the packet info to a single line with coloring
+        /// Verbose - outputs detailed info about the packet
+        /// VerboseColored - outputs detailed info about the packet with coloring
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>
@@ -627,8 +647,8 @@ namespace PacketDotNet
         /// </summary>
         public OSPFv2LSRequestPacket()
         {
-            this.Type = packetType;
-            this.PacketLength = (UInt16)Header.Bytes.Length;
+            Type = packetType;
+            PacketLength = (UInt16) Header.Bytes.Length;
         }
 
         /// <summary>
@@ -649,15 +669,15 @@ namespace PacketDotNet
             }
 
             Header = new ByteArraySegment(bytes);
-            this.Type = packetType;
-            this.PacketLength = (UInt16)Header.Bytes.Length;
+            Type = packetType;
+            PacketLength = (UInt16) Header.Bytes.Length;
         }
 
         /// <summary>
         /// Constructs an OSPFv2 LSR packet from ByteArraySegment
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
         public OSPFv2LSRequestPacket(ByteArraySegment bas)
         {
@@ -668,49 +688,51 @@ namespace PacketDotNet
         /// Constructs a packet from bytes and offset
         /// </summary>
         /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// A <see cref="System.Byte" />
         /// </param>
         /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         public OSPFv2LSRequestPacket(Byte[] Bytes, Int32 Offset) :
             base(Bytes, Offset)
         {
-            this.Type = packetType;
+            Type = packetType;
         }
 
         /// <summary>
         /// A list of link state requests, contained in this packet
         /// </summary>
-        /// See <see cref="PacketDotNet.LinkStateRequest"/>
+        /// See
+        /// <see cref="PacketDotNet.LinkStateRequest" />
         public virtual List<LinkStateRequest> LinkStateRequests
         {
             get
             {
-                Int32 bytesNeeded = this.PacketLength - OSPFv2Fields.LSRStart;
+                Int32 bytesNeeded = PacketLength - OSPFv2Fields.LSRStart;
                 if (bytesNeeded % LinkStateRequest.Length != 0)
                 {
                     throw new Exception("Malformed LSR packet - bad size for the LS requests");
                 }
 
                 List<LinkStateRequest> ret = new List<LinkStateRequest>();
-                Int32 offset = this.Header.Offset + OSPFv2Fields.LSRStart;
+                Int32 offset = Header.Offset + OSPFv2Fields.LSRStart;
                 Int32 lsrCount = bytesNeeded / LinkStateRequest.Length;
 
                 for (Int32 i = 0; i < lsrCount; i++)
                 {
-                    LinkStateRequest request = new LinkStateRequest(this.Header.Bytes, offset, LinkStateRequest.Length);
+                    LinkStateRequest request = new LinkStateRequest(Header.Bytes, offset, LinkStateRequest.Length);
                     ret.Add(request);
                     offset += LinkStateRequest.Length;
                 }
+
                 return ret;
             }
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2LSRequestPacket"/>.
+        /// Returns a <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2LSRequestPacket" />.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2LSRequestPacket"/>.</returns>
+        /// <returns>A <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2LSRequestPacket" />.</returns>
         public override String ToString()
         {
             StringBuilder packet = new StringBuilder();
@@ -722,10 +744,10 @@ namespace PacketDotNet
 
         /// <summary cref="Packet.ToString()">
         /// Output the packet information in the specified format
-        ///  Normal - outputs the packet info to a single line
-        ///  Colored - outputs the packet info to a single line with coloring
-        ///  Verbose - outputs detailed info about the packet
-        ///  VerboseColored - outputs detailed info about the packet with coloring
+        /// Normal - outputs the packet info to a single line
+        /// Colored - outputs the packet info to a single line with coloring
+        /// Verbose - outputs detailed info about the packet
+        /// VerboseColored - outputs detailed info about the packet with coloring
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>
@@ -753,11 +775,11 @@ namespace PacketDotNet
         {
             Byte[] b = new Byte[OSPFv2Fields.HeaderLength + 4];
             Array.Copy(Header.Bytes, b, Header.Bytes.Length);
-            this.Header = new ByteArraySegment(b, 0, OSPFv2Fields.LSRStart);
-            this.Type = packetType;
+            Header = new ByteArraySegment(b, 0, OSPFv2Fields.LSRStart);
+            Type = packetType;
 
-            this.PacketLength = (UInt16)Header.Bytes.Length;
-            this.LSANumber = 0;
+            PacketLength = (UInt16) Header.Bytes.Length;
+            LSANumber = 0;
         }
 
         /// <summary>
@@ -785,31 +807,31 @@ namespace PacketDotNet
             }
 
             Header = new ByteArraySegment(bytes);
-            this.Type = packetType;
-            this.PacketLength = (UInt16)Header.Bytes.Length;
-            this.LSANumber = (UInt32)lsas.Count;
+            Type = packetType;
+            PacketLength = (UInt16) Header.Bytes.Length;
+            LSANumber = (UInt32) lsas.Count;
         }
 
         /// <summary>
         /// Constructs a packet from bytes and offset
         /// </summary>
         /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// A <see cref="System.Byte" />
         /// </param>
         /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         public OSPFv2LSUpdatePacket(Byte[] Bytes, Int32 Offset) :
             base(Bytes, Offset)
         {
-            this.Type = packetType;
+            Type = packetType;
         }
 
         /// <summary>
         /// Constructs an OSPFv2 LSU packet from ByteArraySegment
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
         public OSPFv2LSUpdatePacket(ByteArraySegment bas)
         {
@@ -828,58 +850,61 @@ namespace PacketDotNet
         /// <summary>
         /// A list of LSA, contained in this packet
         /// </summary>
-        /// See <see cref="PacketDotNet.LSA"/>
+        /// See
+        /// <see cref="PacketDotNet.LSA" />
         public virtual List<LSA> LSAUpdates
         {
             get
             {
                 List<LSA> ret = new List<LSA>();
 
-                Int32 offset = this.Header.Offset + OSPFv2Fields.LSAUpdatesPositon;
-                for (Int32 i = 0; i < this.LSANumber; i++)
+                Int32 offset = Header.Offset + OSPFv2Fields.LSAUpdatesPositon;
+                for (Int32 i = 0; i < LSANumber; i++)
                 {
-                    LSA l = new LSA(this.Header.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
+                    LSA l = new LSA(Header.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
                     switch (l.LSType)
                     {
                         case LSAType.ASExternal:
-                            ret.Add(new ASExternalLSA(this.Header.Bytes, offset, l.Length));
+                            ret.Add(new ASExternalLSA(Header.Bytes, offset, l.Length));
                             break;
                         case LSAType.Network:
-                            ret.Add(new NetworkLSA(this.Header.Bytes, offset, l.Length));
+                            ret.Add(new NetworkLSA(Header.Bytes, offset, l.Length));
                             break;
                         case LSAType.Router:
-                            ret.Add(new RouterLSA(this.Header.Bytes, offset, l.Length));
+                            ret.Add(new RouterLSA(Header.Bytes, offset, l.Length));
                             break;
                         case LSAType.Summary:
                         case LSAType.SummaryASBR:
-                            ret.Add(new SummaryLSA(this.Header.Bytes, offset, l.Length));
+                            ret.Add(new SummaryLSA(Header.Bytes, offset, l.Length));
                             break;
                     }
+
                     offset += l.Length;
                 }
+
                 return ret;
             }
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2LSUpdatePacket"/>.
+        /// Returns a <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2LSUpdatePacket" />.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2LSUpdatePacket"/>.</returns>
+        /// <returns>A <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2LSUpdatePacket" />.</returns>
         public override String ToString()
         {
             StringBuilder packet = new StringBuilder();
             packet.Append(base.ToString());
             packet.Append(" ");
-            packet.AppendFormat("LSANumber: {0} ", this.LSANumber);
+            packet.AppendFormat("LSANumber: {0} ", LSANumber);
             return packet.ToString();
         }
 
         /// <summary cref="Packet.ToString()">
         /// Output the packet information in the specified format
-        ///  Normal - outputs the packet info to a single line
-        ///  Colored - outputs the packet info to a single line with coloring
-        ///  Verbose - outputs detailed info about the packet
-        ///  VerboseColored - outputs detailed info about the packet with coloring
+        /// Normal - outputs the packet info to a single line
+        /// Colored - outputs the packet info to a single line with coloring
+        /// Verbose - outputs detailed info about the packet
+        /// VerboseColored - outputs detailed info about the packet with coloring
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>
@@ -905,7 +930,7 @@ namespace PacketDotNet
         /// Constructs an OSPFv2 Link State Acknowledge packet from ByteArraySegment
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
         public OSPFv2LSAPacket(ByteArraySegment bas)
         {
@@ -919,10 +944,10 @@ namespace PacketDotNet
         {
             Byte[] b = new Byte[OSPFv2Fields.LSAHeaderPosition];
             Array.Copy(Header.Bytes, b, Header.Bytes.Length);
-            this.Header = new ByteArraySegment(b, 0, OSPFv2Fields.LSAHeaderPosition);
-            this.Type = packetType;
+            Header = new ByteArraySegment(b, 0, OSPFv2Fields.LSAHeaderPosition);
+            Type = packetType;
 
-            this.PacketLength = (UInt16)Header.Bytes.Length;
+            PacketLength = (UInt16) Header.Bytes.Length;
         }
 
         /// <summary>
@@ -938,28 +963,28 @@ namespace PacketDotNet
             Array.Copy(Header.Bytes, bytes, Header.Length);
             for (Int32 i = 0; i < lsas.Count; i++)
             {
-                Array.Copy(lsas[i].Bytes, 0, bytes, offset, OSPFv2Fields.LSAHeaderLength); 
+                Array.Copy(lsas[i].Bytes, 0, bytes, offset, OSPFv2Fields.LSAHeaderLength);
                 offset += 20;
             }
 
             Header = new ByteArraySegment(bytes);
-            this.Type = packetType;
-            this.PacketLength = (UInt16)Header.Bytes.Length;
+            Type = packetType;
+            PacketLength = (UInt16) Header.Bytes.Length;
         }
 
         /// <summary>
         /// Constructs a packet from bytes and offset
         /// </summary>
         /// <param name="Bytes">
-        /// A <see cref="System.Byte"/>
+        /// A <see cref="System.Byte" />
         /// </param>
         /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         public OSPFv2LSAPacket(Byte[] Bytes, Int32 Offset) :
             base(Bytes, Offset)
         {
-            this.Type = packetType;
+            Type = packetType;
         }
 
         /// <summary>
@@ -970,30 +995,31 @@ namespace PacketDotNet
             get
             {
                 List<LSA> ret = new List<LSA>();
-                Int32 bytesNeeded = this.PacketLength - OSPFv2Fields.LSAAckPosition;
+                Int32 bytesNeeded = PacketLength - OSPFv2Fields.LSAAckPosition;
 
                 if (bytesNeeded % OSPFv2Fields.LSAHeaderLength != 0)
                 {
                     throw new Exception("OSPFv2 LSA Packet - Invalid LSA headers count");
                 }
 
-                Int32 offset = this.Header.Offset + OSPFv2Fields.LSAAckPosition;
+                Int32 offset = Header.Offset + OSPFv2Fields.LSAAckPosition;
                 Int32 headerCount = bytesNeeded / OSPFv2Fields.LSAHeaderLength;
 
                 for (Int32 i = 0; i < headerCount; i++)
                 {
-                    LSA l = new LSA(this.Header.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
+                    LSA l = new LSA(Header.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
                     ret.Add(l);
                     offset += OSPFv2Fields.LSAHeaderLength;
                 }
+
                 return ret;
             }
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2LSAPacket"/>.
+        /// Returns a <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2LSAPacket" />.
         /// </summary>
-        /// <returns>A <see cref="System.String"/> that represents the current <see cref="PacketDotNet.OSPFv2LSAPacket"/>.</returns>
+        /// <returns>A <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2LSAPacket" />.</returns>
         public override String ToString()
         {
             StringBuilder packet = new StringBuilder();
@@ -1004,10 +1030,10 @@ namespace PacketDotNet
 
         /// <summary cref="Packet.ToString()">
         /// Output the packet information in the specified format
-        ///  Normal - outputs the packet info to a single line
-        ///  Colored - outputs the packet info to a single line with coloring
-        ///  Verbose - outputs detailed info about the packet
-        ///  VerboseColored - outputs detailed info about the packet with coloring
+        /// Normal - outputs the packet info to a single line
+        /// Colored - outputs the packet info to a single line with coloring
+        /// Verbose - outputs detailed info about the packet
+        /// VerboseColored - outputs detailed info about the packet with coloring
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>

@@ -19,8 +19,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -28,7 +28,7 @@ namespace PacketDotNet
     namespace Ieee80211
     {
         /// <summary>
-        /// A <see cref="T:System.Collections.Generic.List"/> of 
+        /// A <see cref="T:System.Collections.Generic.List" /> of
         /// <see cref="PacketDotNet.Ieee80211.InformationElement">InformationElements</see>.
         /// </summary>
         /// <remarks>
@@ -36,49 +36,70 @@ namespace PacketDotNet
         /// by the 802.11 standards.
         /// </remarks>
         public class InformationElementList : List<InformationElement>
-        {          
+        {
             /// <summary>
-            /// Initializes an empty <see cref="PacketDotNet.Ieee80211.InformationElementList"/>.
+            /// Initializes an empty <see cref="PacketDotNet.Ieee80211.InformationElementList" />.
             /// </summary>
-            public InformationElementList ()
-            {
-             
-            }
-            
+            public InformationElementList()
+            { }
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.InformationElementList"/> class.
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.InformationElementList" /> class.
             /// </summary>
             /// <param name='list'>
             /// The elements to be included in the list.
             /// </param>
-            public InformationElementList (InformationElementList list)
-               :base(list)
-            {
-             
-            }
-            
+            public InformationElementList(InformationElementList list)
+                : base(list)
+            { }
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.InformationElementList"/> class.
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.InformationElementList" /> class.
             /// </summary>
             /// <param name='bas'>
-            /// A <see cref="PacketDotNet.Utils.ByteArraySegment"/> containing one or more information elements.
-            /// bas.Offset should point to the first byte of the first Information Element. 
+            /// A <see cref="PacketDotNet.Utils.ByteArraySegment" /> containing one or more information elements.
+            /// bas.Offset should point to the first byte of the first Information Element.
             /// </param>
-            public InformationElementList (ByteArraySegment bas)
+            public InformationElementList(ByteArraySegment bas)
             {
                 Int32 index = 0;
                 while ((index + InformationElement.ElementLengthPosition) < bas.Length)
                 {
                     var ieStartPosition = bas.Offset + index;
-                    Byte valueLength = bas.Bytes [ieStartPosition + InformationElement.ElementLengthPosition];
+                    Byte valueLength = bas.Bytes[ieStartPosition + InformationElement.ElementLengthPosition];
                     var ieLength = InformationElement.ElementIdLength + InformationElement.ElementLengthLength + valueLength;
                     var availableLength = Math.Min(ieLength, bas.Length - index);
-                    this.Add (new InformationElement (new ByteArraySegment (bas.Bytes, ieStartPosition, availableLength)));
+                    Add(new InformationElement(new ByteArraySegment(bas.Bytes, ieStartPosition, availableLength)));
 
                     index += ieLength;
                 }
             }
-            
+
+            /// <summary>
+            /// Gets a Byte[] containing the serialised
+            /// <see cref="PacketDotNet.Ieee80211.InformationElement">InformationElements</see>
+            /// </summary>
+            /// <value>
+            /// The serialised <see cref="PacketDotNet.Ieee80211.InformationElement">InformationElements</see>
+            /// </value>
+            public Byte[] Bytes
+            {
+                get
+                {
+                    var bytes = new Byte[Length];
+                    Int32 index = 0;
+                    foreach (var ie in this)
+                    {
+                        var ieBytes = ie.Bytes;
+                        Array.Copy(ieBytes, 0, bytes, index, ieBytes.Length);
+
+                        index += ieBytes.Length;
+                    }
+
+                    return bytes;
+                }
+            }
+
             /// <summary>
             /// Gets the total length in bytes of the list if its elements were serialised into a byte array
             /// </summary>
@@ -94,35 +115,11 @@ namespace PacketDotNet
                     {
                         length += ie.ElementLength;
                     }
+
                     return length;
                 }
             }
-            
-            /// <summary>
-            /// Gets a Byte[] containing the serialised 
-            /// <see cref="PacketDotNet.Ieee80211.InformationElement">InformationElements</see>
-            /// </summary>
-            /// <value>
-            /// The serialised <see cref="PacketDotNet.Ieee80211.InformationElement">InformationElements</see>
-            /// </value>
-            public Byte[] Bytes
-            {
-                get
-                {
-                    var bytes = new Byte[Length];
-                    Int32 index = 0;
-                    foreach (var ie in this)
-                    {
-                        var ieBytes = ie.Bytes;
-                        Array.Copy (ieBytes, 0, bytes, index, ieBytes.Length);
 
-                        index += ieBytes.Length;
-                    }
-
-                    return bytes;
-                }
-            }
-            
             /// <summary>
             /// Finds all <see cref="InformationElement">InformatonElements</see> in the lists
             /// with the provided id.
@@ -133,13 +130,15 @@ namespace PacketDotNet
             /// <param name='id'>
             /// The Id to search for
             /// </param>
-            public InformationElement[] FindById (InformationElement.ElementId id)
+            public InformationElement[] FindById(InformationElement.ElementId id)
             {
-                return (from ie in this where ie.Id == id select ie).ToArray ();
+                return (from ie in this
+                        where ie.Id == id
+                        select ie).ToArray();
             }
-            
+
             /// <summary>
-            /// Finds the first <see cref="InformationElement"/> in the list
+            /// Finds the first <see cref="InformationElement" /> in the list
             /// with the provided id.
             /// </summary>
             /// <returns>
@@ -148,37 +147,38 @@ namespace PacketDotNet
             /// <param name='id'>
             /// The Id to search for
             /// </param>
-            public InformationElement FindFirstById (InformationElement.ElementId id)
+            public InformationElement FindFirstById(InformationElement.ElementId id)
             {
-                return (from ie in this where ie.Id == id select ie).FirstOrDefault ();
+                return (from ie in this
+                        where ie.Id == id
+                        select ie).FirstOrDefault();
             }
-            
+
             /// <summary>
             /// Serialises the <see cref="InformationElement">InformationElements</see>
             /// in the list into the provided buffer.
             /// </summary>
             /// <param name='destination'>
-            /// The <see cref="PacketDotNet.Utils.ByteArraySegment"/> to copy the elements into.
+            /// The <see cref="PacketDotNet.Utils.ByteArraySegment" /> to copy the elements into.
             /// </param>
             /// <param name='offset'>
             /// The offset into destination at which to start copy the <see cref="InformationElement">InformationElements</see>
             /// </param>
-            /// <remarks>Ensure that the destination is large enough to contain serialised elements
-            /// before calling this method</remarks>
-            public void CopyTo (ByteArraySegment destination, Int32 offset)
+            /// <remarks>
+            /// Ensure that the destination is large enough to contain serialised elements
+            /// before calling this method
+            /// </remarks>
+            public void CopyTo(ByteArraySegment destination, Int32 offset)
             {
                 Int32 index = 0;
                 foreach (var ie in this)
                 {
                     var ieBytes = ie.Bytes;
-                    Array.Copy (ieBytes, 0, destination.Bytes, offset + index, ieBytes.Length);
+                    Array.Copy(ieBytes, 0, destination.Bytes, offset + index, ieBytes.Length);
 
                     index += ieBytes.Length;
                 }
-
             }
-            
         }
     }
 }
-

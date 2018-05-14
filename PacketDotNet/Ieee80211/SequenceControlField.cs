@@ -17,21 +17,36 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace PacketDotNet
 {
     namespace Ieee80211
     {
         /// <summary>
-        /// The Sequence control field occurs in management and data frames and is used to 
+        /// The Sequence control field occurs in management and data frames and is used to
         /// relate together fragmented payloads carried in multiple 802.11 frames.
         /// </summary>
         public class SequenceControlField
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.SequenceControlField" /> class.
+            /// </summary>
+            public SequenceControlField()
+            { }
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="field">
+            /// A <see cref="ushort" />
+            /// </param>
+            public SequenceControlField(UInt16 field)
+            {
+                Field = field;
+            }
+
             /// <summary>
             /// Gets or sets the field that backs all the other properties in the class.
             /// </summary>
@@ -39,25 +54,7 @@ namespace PacketDotNet
             /// The field.
             /// </value>
             public UInt16 Field { get; set; }
-   
-            /// <summary>
-            /// Gets or sets the sequence number.
-            /// </summary>
-            /// <value>
-            /// The sequence number.
-            /// </value>
-            public Int16 SequenceNumber
-            {
-                get => (Int16)(Field >> 4);
 
-                set
-                {
-                    //Use the & mask to make sure we only overwrite the sequence number part of the field
-                    Field &= 0xF;
-                    Field |= (UInt16)(value << 4);
-                }
-            }
-   
             /// <summary>
             /// Gets or sets the fragment number.
             /// </summary>
@@ -66,33 +63,32 @@ namespace PacketDotNet
             /// </value>
             public Byte FragmentNumber
             {
-                get => (Byte)(Field & 0x000F);
+                get => (Byte) (Field & 0x000F);
 
                 set
                 {
-                    Field &= unchecked((UInt16)~0xF);
-                    Field |= (UInt16)(value & 0x0F);
+                    Field &= unchecked((UInt16) ~0xF);
+                    Field |= (UInt16) (value & 0x0F);
                 }
             }
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.SequenceControlField"/> class.
+            /// Gets or sets the sequence number.
             /// </summary>
-            public SequenceControlField()
+            /// <value>
+            /// The sequence number.
+            /// </value>
+            public Int16 SequenceNumber
             {
+                get => (Int16) (Field >> 4);
 
+                set
+                {
+                    //Use the & mask to make sure we only overwrite the sequence number part of the field
+                    Field &= 0xF;
+                    Field |= (UInt16) (value << 4);
+                }
             }
-
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="field">
-            /// A <see cref="UInt16"/>
-            /// </param>
-            public SequenceControlField(UInt16 field)
-            {
-                this.Field = field;
-            }
-        } 
+        }
     }
 }

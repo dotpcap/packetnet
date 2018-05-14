@@ -12,40 +12,66 @@ namespace MiscUtil.IO
     /// </summary>
     public class EndianBinaryReader : IDisposable
     {
+        #region IDisposable Members
+
+        /// <summary>
+        /// Disposes of the underlying stream.
+        /// </summary>
+        public void Dispose()
+        {
+            if (!disposed)
+            {
+                disposed = true;
+                ((IDisposable) BaseStream).Dispose();
+            }
+        }
+
+        #endregion
+
+
         #region Fields not directly related to properties
+
         /// <summary>
         /// Whether or not this reader has been disposed yet.
         /// </summary>
-        Boolean disposed=false;
+        Boolean disposed;
+
         /// <summary>
         /// Decoder to use for string conversions.
         /// </summary>
-        Decoder decoder;
+        readonly Decoder decoder;
+
         /// <summary>
         /// Buffer used for temporary storage before conversion into primitives
         /// </summary>
-        Byte[] buffer = new Byte[16];
+        readonly Byte[] buffer = new Byte[16];
+
         /// <summary>
         /// Buffer used for temporary storage when reading a single character
         /// </summary>
-        Char[] charBuffer = new Char[1];
+        readonly Char[] charBuffer = new Char[1];
+
         /// <summary>
         /// Minimum number of bytes used to encode a character
         /// </summary>
-        Int32 minBytesPerChar;
+        readonly Int32 minBytesPerChar;
+
         #endregion
 
+
         #region Constructors
+
         /// <summary>
         /// Equivalent of System.IO.BinaryWriter, but with either endianness, depending on
         /// the EndianBitConverter it is constructed with.
         /// </summary>
         /// <param name="bitConverter">Converter to use when reading data</param>
         /// <param name="stream">Stream to read data from</param>
-        public EndianBinaryReader (EndianBitConverter bitConverter,
-                                   Stream stream) : this (bitConverter, stream, Encoding.UTF8)
-        {
-        }
+        public EndianBinaryReader
+        (
+            EndianBitConverter bitConverter,
+            Stream stream) : this(bitConverter, stream, Encoding.UTF8)
+        { }
 
         /// <summary>
         /// Constructs a new binary reader with the given bit converter, reading
@@ -54,59 +80,65 @@ namespace MiscUtil.IO
         /// <param name="bitConverter">Converter to use when reading data</param>
         /// <param name="stream">Stream to read data from</param>
         /// <param name="encoding">Encoding to use when reading character data</param>
-        public EndianBinaryReader (EndianBitConverter bitConverter,    Stream stream, Encoding encoding)
+        public EndianBinaryReader(EndianBitConverter bitConverter, Stream stream, Encoding encoding)
         {
-            if (bitConverter==null)
+            if (bitConverter == null)
             {
                 throw new ArgumentNullException("bitConverter");
             }
-            if (stream==null)
+
+            if (stream == null)
             {
                 throw new ArgumentNullException("stream");
             }
-            if (encoding==null)
+
+            if (encoding == null)
             {
                 throw new ArgumentNullException("encoding");
             }
+
             if (!stream.CanRead)
             {
                 throw new ArgumentException("Stream isn't writable", "stream");
             }
-            this.stream = stream;
-            this.bitConverter = bitConverter;
-            this.encoding = encoding;
-            this.decoder = encoding.GetDecoder();
-            this.minBytesPerChar = 1;
+
+            BaseStream = stream;
+            BitConverter = bitConverter;
+            Encoding = encoding;
+            decoder = encoding.GetDecoder();
+            minBytesPerChar = 1;
 
             if (encoding is UnicodeEncoding)
             {
                 minBytesPerChar = 2;
             }
         }
+
         #endregion
 
+
         #region Properties
-        EndianBitConverter bitConverter;
+
         /// <summary>
         /// The bit converter used to read values from the stream
         /// </summary>
-        public EndianBitConverter BitConverter => bitConverter;
+        public EndianBitConverter BitConverter { get; }
 
-        Encoding encoding;
         /// <summary>
         /// The encoding used to read strings
         /// </summary>
-        public Encoding Encoding => encoding;
+        public Encoding Encoding { get; }
 
-        Stream stream;
         /// <summary>
         /// Gets the underlying stream of the EndianBinaryReader.
         /// </summary>
-        public Stream BaseStream => stream;
+        public Stream BaseStream { get; }
 
         #endregion
 
+
         #region Public methods
+
         /// <summary>
         /// Closes the reader, including the underlying stream..
         /// </summary>
@@ -120,10 +152,10 @@ namespace MiscUtil.IO
         /// </summary>
         /// <param name="offset">Offset to seek to.</param>
         /// <param name="origin">Origin of seek operation.</param>
-        public void Seek (Int32 offset, SeekOrigin origin)
+        public void Seek(Int32 offset, SeekOrigin origin)
         {
             CheckDisposed();
-            stream.Seek (offset, origin);
+            BaseStream.Seek(offset, origin);
         }
 
         /// <summary>
@@ -143,7 +175,7 @@ namespace MiscUtil.IO
         public SByte ReadSByte()
         {
             ReadInternal(buffer, 1);
-            return unchecked((SByte)buffer[0]);
+            return unchecked((SByte) buffer[0]);
         }
 
         /// <summary>
@@ -153,7 +185,7 @@ namespace MiscUtil.IO
         public Boolean ReadBoolean()
         {
             ReadInternal(buffer, 1);
-            return bitConverter.ToBoolean(buffer, 0);
+            return BitConverter.ToBoolean(buffer, 0);
         }
 
         /// <summary>
@@ -164,7 +196,7 @@ namespace MiscUtil.IO
         public Int16 ReadInt16()
         {
             ReadInternal(buffer, 2);
-            return bitConverter.ToInt16(buffer, 0);
+            return BitConverter.ToInt16(buffer, 0);
         }
 
         /// <summary>
@@ -175,7 +207,7 @@ namespace MiscUtil.IO
         public Int32 ReadInt32()
         {
             ReadInternal(buffer, 4);
-            return bitConverter.ToInt32(buffer, 0);
+            return BitConverter.ToInt32(buffer, 0);
         }
 
         /// <summary>
@@ -186,7 +218,7 @@ namespace MiscUtil.IO
         public Int64 ReadInt64()
         {
             ReadInternal(buffer, 8);
-            return bitConverter.ToInt64(buffer, 0);
+            return BitConverter.ToInt64(buffer, 0);
         }
 
         /// <summary>
@@ -197,7 +229,7 @@ namespace MiscUtil.IO
         public UInt16 ReadUInt16()
         {
             ReadInternal(buffer, 2);
-            return bitConverter.ToUInt16(buffer, 0);
+            return BitConverter.ToUInt16(buffer, 0);
         }
 
         /// <summary>
@@ -208,7 +240,7 @@ namespace MiscUtil.IO
         public UInt32 ReadUInt32()
         {
             ReadInternal(buffer, 4);
-            return bitConverter.ToUInt32(buffer, 0);
+            return BitConverter.ToUInt32(buffer, 0);
         }
 
         /// <summary>
@@ -219,7 +251,7 @@ namespace MiscUtil.IO
         public UInt64 ReadUInt64()
         {
             ReadInternal(buffer, 8);
-            return bitConverter.ToUInt64(buffer, 0);
+            return BitConverter.ToUInt64(buffer, 0);
         }
 
         /// <summary>
@@ -230,7 +262,7 @@ namespace MiscUtil.IO
         public Single ReadSingle()
         {
             ReadInternal(buffer, 4);
-            return bitConverter.ToSingle(buffer, 0);
+            return BitConverter.ToSingle(buffer, 0);
         }
 
         /// <summary>
@@ -241,7 +273,7 @@ namespace MiscUtil.IO
         public Double ReadDouble()
         {
             ReadInternal(buffer, 8);
-            return bitConverter.ToDouble(buffer, 0);
+            return BitConverter.ToDouble(buffer, 0);
         }
 
         /// <summary>
@@ -252,7 +284,7 @@ namespace MiscUtil.IO
         public Decimal ReadDecimal()
         {
             ReadInternal(buffer, 16);
-            return bitConverter.ToDecimal(buffer, 0);
+            return BitConverter.ToDecimal(buffer, 0);
         }
 
         /// <summary>
@@ -264,14 +296,12 @@ namespace MiscUtil.IO
         public Int32 Read()
         {
             Int32 charsRead = Read(charBuffer, 0, 1);
-            if (charsRead==0)
+            if (charsRead == 0)
             {
                 return -1;
             }
-            else
-            {
-                return charBuffer[0];
-            }
+
+            return charBuffer[0];
         }
 
         /// <summary>
@@ -281,38 +311,42 @@ namespace MiscUtil.IO
         /// <param name="data">The buffer to copy data into</param>
         /// <param name="index">The first index to copy data into</param>
         /// <param name="count">The number of characters to read</param>
-        /// <returns>The number of characters actually read. This will only be less than
+        /// <returns>
+        /// The number of characters actually read. This will only be less than
         /// the requested number of characters if the end of the stream is reached.
         /// </returns>
         public Int32 Read(Char[] data, Int32 index, Int32 count)
         {
             CheckDisposed();
-            if (buffer==null)
+            if (buffer == null)
             {
                 throw new ArgumentNullException("buffer");
             }
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException("index");
             }
+
             if (count < 0)
             {
                 throw new ArgumentOutOfRangeException("index");
             }
-            if (count+index > data.Length)
+
+            if (count + index > data.Length)
             {
                 throw new ArgumentException
                     ("Not enough space in buffer for specified number of characters starting at specified index");
             }
 
-            Int32 read=0;
-            Boolean firstTime=true;
+            Int32 read = 0;
+            Boolean firstTime = true;
 
             // Use the normal buffer if we're only reading a small amount, otherwise
             // use at most 4K at a time.
             Byte[] byteBuffer = buffer;
 
-            if (byteBuffer.Length < count*minBytesPerChar)
+            if (byteBuffer.Length < count * minBytesPerChar)
             {
                 byteBuffer = new Byte[4096];
             }
@@ -323,28 +357,32 @@ namespace MiscUtil.IO
                 // First time through we know we haven't previously read any data
                 if (firstTime)
                 {
-                    amountToRead = count*minBytesPerChar;
-                    firstTime=false;
+                    amountToRead = count * minBytesPerChar;
+                    firstTime = false;
                 }
                 // After that we can only assume we need to fully read "chars left -1" characters
                 // and a single byte of the character we may be in the middle of
                 else
                 {
-                    amountToRead = ((count-read-1)*minBytesPerChar)+1;
+                    amountToRead = ((count - read - 1) * minBytesPerChar) + 1;
                 }
+
                 if (amountToRead > byteBuffer.Length)
                 {
                     amountToRead = byteBuffer.Length;
                 }
+
                 Int32 bytesRead = TryReadInternal(byteBuffer, amountToRead);
-                if (bytesRead==0)
+                if (bytesRead == 0)
                 {
                     return read;
                 }
+
                 Int32 decoded = decoder.GetChars(byteBuffer, 0, bytesRead, data, index);
                 read += decoded;
                 index += decoded;
             }
+
             return read;
         }
 
@@ -355,41 +393,48 @@ namespace MiscUtil.IO
         /// <param name="buffer">The buffer to copy data into</param>
         /// <param name="index">The first index to copy data into</param>
         /// <param name="count">The number of bytes to read</param>
-        /// <returns>The number of bytes actually read. This will only be less than
+        /// <returns>
+        /// The number of bytes actually read. This will only be less than
         /// the requested number of bytes if the end of the stream is reached.
         /// </returns>
         public Int32 Read(Byte[] buffer, Int32 index, Int32 count)
         {
             CheckDisposed();
-            if (buffer==null)
+            if (buffer == null)
             {
                 throw new ArgumentNullException("buffer");
             }
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException("index");
             }
+
             if (count < 0)
             {
                 throw new ArgumentOutOfRangeException("index");
             }
-            if (count+index > buffer.Length)
+
+            if (count + index > buffer.Length)
             {
                 throw new ArgumentException
                     ("Not enough space in buffer for specified number of bytes starting at specified index");
             }
-            Int32 read=0;
+
+            Int32 read = 0;
             while (count > 0)
             {
-                Int32 block = stream.Read(buffer, index, count);
-                if (block==0)
+                Int32 block = BaseStream.Read(buffer, index, count);
+                if (block == 0)
                 {
                     return read;
                 }
+
                 index += block;
                 read += block;
                 count -= block;
             }
+
             return read;
         }
 
@@ -407,20 +452,23 @@ namespace MiscUtil.IO
             {
                 throw new ArgumentOutOfRangeException("count");
             }
+
             Byte[] ret = new Byte[count];
-            Int32 index=0;
+            Int32 index = 0;
             while (index < count)
             {
-                Int32 read = stream.Read(ret, index, count-index);
+                Int32 read = BaseStream.Read(ret, index, count - index);
                 // Stream has finished half way through. That's fine, return what we've got.
-                if (read==0)
+                if (read == 0)
                 {
                     Byte[] copy = new Byte[index];
                     Buffer.BlockCopy(ret, 0, copy, 0, index);
                     return copy;
                 }
+
                 index += read;
             }
+
             return ret;
         }
 
@@ -449,20 +497,22 @@ namespace MiscUtil.IO
         {
             CheckDisposed();
 
-            Int32 ret=0;
-            for (Int32 shift = 0; shift < 35; shift+=7)
+            Int32 ret = 0;
+            for (Int32 shift = 0; shift < 35; shift += 7)
             {
-                Int32 b = stream.ReadByte();
-                if (b==-1)
+                Int32 b = BaseStream.ReadByte();
+                if (b == -1)
                 {
                     throw new EndOfStreamException();
                 }
-                ret = ret | ((b&0x7f) << shift);
+
+                ret = ret | ((b & 0x7f) << shift);
                 if ((b & 0x80) == 0)
                 {
                     return ret;
                 }
             }
+
             // Still haven't seen a byte with the high bit unset? Dodgy data.
             throw new IOException("Invalid 7-bit encoded integer in stream.");
         }
@@ -478,20 +528,22 @@ namespace MiscUtil.IO
         {
             CheckDisposed();
 
-            Int32 ret=0;
-            for (Int32 i=0; i < 5; i++)
+            Int32 ret = 0;
+            for (Int32 i = 0; i < 5; i++)
             {
-                Int32 b = stream.ReadByte();
-                if (b==-1)
+                Int32 b = BaseStream.ReadByte();
+                if (b == -1)
                 {
                     throw new EndOfStreamException();
                 }
-                ret = (ret << 7) | (b&0x7f);
+
+                ret = (ret << 7) | (b & 0x7f);
                 if ((b & 0x80) == 0)
                 {
                     return ret;
                 }
             }
+
             // Still haven't seen a byte with the high bit unset? Dodgy data.
             throw new IOException("Invalid 7-bit encoded integer in stream.");
         }
@@ -509,12 +561,14 @@ namespace MiscUtil.IO
 
             Byte[] data = new Byte[bytesToRead];
             ReadInternal(data, bytesToRead);
-            return encoding.GetString(data, 0, data.Length);
+            return Encoding.GetString(data, 0, data.Length);
         }
 
         #endregion
 
+
         #region Private methods
+
         /// <summary>
         /// Checks whether or not the reader has been disposed, throwing an exception if so.
         /// </summary>
@@ -532,19 +586,21 @@ namespace MiscUtil.IO
         /// </summary>
         /// <param name="data">Buffer to read into</param>
         /// <param name="size">Number of bytes to read</param>
-        void ReadInternal (Byte[] data, Int32 size)
+        void ReadInternal(Byte[] data, Int32 size)
         {
             CheckDisposed();
-            Int32 index=0;
+            Int32 index = 0;
             while (index < size)
             {
-                Int32 read = stream.Read(data, index, size-index);
-                if (read==0)
+                Int32 read = BaseStream.Read(data, index, size - index);
+                if (read == 0)
                 {
                     throw new EndOfStreamException
-                        (String.Format("End of stream reached with {0} byte{1} left to read.", size-index,
-                        size-index==1 ? "s" : ""));
+                        (String.Format("End of stream reached with {0} byte{1} left to read.",
+                                       size - index,
+                                       size - index == 1 ? "s" : ""));
                 }
+
                 index += read;
             }
         }
@@ -557,35 +613,24 @@ namespace MiscUtil.IO
         /// <param name="data">Buffer to read into</param>
         /// <param name="size">Number of bytes to read</param>
         /// <returns>Number of bytes actually read</returns>
-        Int32 TryReadInternal (Byte[] data, Int32 size)
+        Int32 TryReadInternal(Byte[] data, Int32 size)
         {
             CheckDisposed();
-            Int32 index=0;
+            Int32 index = 0;
             while (index < size)
             {
-                Int32 read = stream.Read(data, index, size-index);
-                if (read==0)
+                Int32 read = BaseStream.Read(data, index, size - index);
+                if (read == 0)
                 {
                     return index;
                 }
+
                 index += read;
             }
+
             return index;
         }
-        #endregion
 
-        #region IDisposable Members
-        /// <summary>
-        /// Disposes of the underlying stream.
-        /// </summary>
-        public void Dispose()
-        {
-            if (!disposed)
-            {
-                disposed = true;
-                ((IDisposable)stream).Dispose();
-            }
-        }
         #endregion
     }
 }

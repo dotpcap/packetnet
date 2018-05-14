@@ -17,12 +17,15 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
- using System;
+
+using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Text;
-using PacketDotNet.Utils;
+using log4net;
 using MiscUtil.Conversion;
+using PacketDotNet.Utils;
 
 namespace PacketDotNet
 {
@@ -33,12 +36,12 @@ namespace PacketDotNet
     public class EthernetPacket : InternetLinkLayerPacket
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-        // NOTE: No need to warn about lack of use, the compiler won't
-        //       put any calls to 'log' here but we need 'log' to exist to compile
+// NOTE: No need to warn about lack of use, the compiler won't
+//       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
@@ -55,21 +58,23 @@ namespace PacketDotNet
                 base.PayloadPacket = value;
 
                 // set Type based on the type of the payload
-                if(value is IPv4Packet)
+                if (value is IPv4Packet)
                 {
                     Type = EthernetPacketType.IpV4;
-                } else if(value is IPv6Packet)
+                }
+                else if (value is IPv6Packet)
                 {
                     Type = EthernetPacketType.IpV6;
-                } else if(value is ARPPacket)
+                }
+                else if (value is ARPPacket)
                 {
                     Type = EthernetPacketType.Arp;
                 }
-                else if(value is LLDPPacket)
+                else if (value is LLDPPacket)
                 {
                     Type = EthernetPacketType.LLDP;
                 }
-                else if(value is PPPoEPacket)
+                else if (value is PPPoEPacket)
                 {
                     Type = EthernetPacketType.PointToPointProtocolOverEthernetSessionStage;
                 }
@@ -86,22 +91,26 @@ namespace PacketDotNet
             get
             {
                 Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
-                Array.Copy(Header.Bytes, Header.Offset + EthernetFields.SourceMacPosition,
-                           hwAddress, 0, hwAddress.Length);
+                Array.Copy(Header.Bytes,
+                           Header.Offset + EthernetFields.SourceMacPosition,
+                           hwAddress,
+                           0,
+                           hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
 
             set
             {
                 Byte[] hwAddress = value.GetAddressBytes();
-                if(hwAddress.Length != EthernetFields.MacAddressLength)
+                if (hwAddress.Length != EthernetFields.MacAddressLength)
                 {
-                    throw new System.InvalidOperationException("address length " + hwAddress.Length
-                                                               + " not equal to the expected length of "
-                                                               + EthernetFields.MacAddressLength);
+                    throw new InvalidOperationException("address length " + hwAddress.Length + " not equal to the expected length of " + EthernetFields.MacAddressLength);
                 }
 
-                Array.Copy(hwAddress, 0, Header.Bytes, Header.Offset + EthernetFields.SourceMacPosition,
+                Array.Copy(hwAddress,
+                           0,
+                           Header.Bytes,
+                           Header.Offset + EthernetFields.SourceMacPosition,
                            hwAddress.Length);
             }
         }
@@ -112,22 +121,26 @@ namespace PacketDotNet
             get
             {
                 Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
-                Array.Copy(Header.Bytes, Header.Offset + EthernetFields.DestinationMacPosition,
-                           hwAddress, 0, hwAddress.Length);
+                Array.Copy(Header.Bytes,
+                           Header.Offset + EthernetFields.DestinationMacPosition,
+                           hwAddress,
+                           0,
+                           hwAddress.Length);
                 return new PhysicalAddress(hwAddress);
             }
 
             set
             {
                 Byte[] hwAddress = value.GetAddressBytes();
-                if(hwAddress.Length != EthernetFields.MacAddressLength)
+                if (hwAddress.Length != EthernetFields.MacAddressLength)
                 {
-                    throw new System.InvalidOperationException("address length " + hwAddress.Length
-                                                               + " not equal to the expected length of "
-                                                               + EthernetFields.MacAddressLength);
+                    throw new InvalidOperationException("address length " + hwAddress.Length + " not equal to the expected length of " + EthernetFields.MacAddressLength);
                 }
 
-                Array.Copy(hwAddress, 0, Header.Bytes, Header.Offset + EthernetFields.DestinationMacPosition,
+                Array.Copy(hwAddress,
+                           0,
+                           Header.Bytes,
+                           Header.Offset + EthernetFields.DestinationMacPosition,
                            hwAddress.Length);
             }
         }
@@ -137,12 +150,12 @@ namespace PacketDotNet
         /// </value>
         public virtual EthernetPacketType Type
         {
-            get => (EthernetPacketType)EndianBitConverter.Big.ToInt16(Header.Bytes,
-                Header.Offset + EthernetFields.TypePosition);
+            get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
+                                                                       Header.Offset + EthernetFields.TypePosition);
 
             set
             {
-                Int16 val = (Int16)value;
+                Int16 val = (Int16) value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  Header.Bytes,
                                                  Header.Offset + EthernetFields.TypePosition);
@@ -152,11 +165,13 @@ namespace PacketDotNet
         /// <summary>
         /// Construct a new ethernet packet from source and destination mac addresses
         /// </summary>
-        public EthernetPacket(PhysicalAddress SourceHwAddress,
-                              PhysicalAddress DestinationHwAddress,
-                              EthernetPacketType ethernetPacketType)
+        public EthernetPacket
+        (
+            PhysicalAddress SourceHwAddress,
+            PhysicalAddress DestinationHwAddress,
+            EthernetPacketType ethernetPacketType)
         {
-            log.Debug("");
+            Log.Debug("");
 
             // allocate memory for this packet
             Int32 offset = 0;
@@ -167,18 +182,18 @@ namespace PacketDotNet
             // set the instance values
             this.SourceHwAddress = SourceHwAddress;
             this.DestinationHwAddress = DestinationHwAddress;
-            this.Type = ethernetPacketType;
+            Type = ethernetPacketType;
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
         public EthernetPacket(ByteArraySegment bas)
         {
-            log.Debug("");
+            Log.Debug("");
 
             // slice off the header portion
             Header = new ByteArraySegment(bas);
@@ -193,57 +208,59 @@ namespace PacketDotNet
         /// also needs to perform the same operations as it contains an ethernet type
         /// </summary>
         /// <param name="Header">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
         /// <param name="Type">
-        /// A <see cref="EthernetPacketType"/>
+        /// A <see cref="EthernetPacketType" />
         /// </param>
         /// <returns>
-        /// A <see cref="PacketOrByteArraySegment"/>
+        /// A <see cref="PacketOrByteArraySegment" />
         /// </returns>
-        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
-                                                                        EthernetPacketType Type)
+        internal static PacketOrByteArraySegment ParseEncapsulatedBytes
+        (
+            ByteArraySegment Header,
+            EthernetPacketType Type)
         {
             // slice off the payload
             var payload = Header.EncapsulatedBytes();
-            log.DebugFormat("payload {0}", payload.ToString());
+            Log.DebugFormat("payload {0}", payload);
 
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
             // parse the encapsulated bytes
-            switch(Type)
+            switch (Type)
             {
-            case EthernetPacketType.IpV4:
-                payloadPacketOrData.ThePacket = new IPv4Packet(payload);
-                break;
-            case EthernetPacketType.IpV6:
-                payloadPacketOrData.ThePacket = new IPv6Packet(payload);
-                break;
-            case EthernetPacketType.Arp:
-                payloadPacketOrData.ThePacket = new ARPPacket(payload);
-                break;
-            case EthernetPacketType.LLDP:
-                payloadPacketOrData.ThePacket = new LLDPPacket(payload);
-                break;
-            case EthernetPacketType.PointToPointProtocolOverEthernetSessionStage:
-                payloadPacketOrData.ThePacket = new PPPoEPacket(payload);
-                break;
-            case EthernetPacketType.WakeOnLan:
-                payloadPacketOrData.ThePacket = new WakeOnLanPacket(payload);
-                break;
-            case EthernetPacketType.VLanTaggedFrame:
-                payloadPacketOrData.ThePacket = new Ieee8021QPacket(payload);
-                break;
-            default: // consider the sub-packet to be a byte array
-                payloadPacketOrData.TheByteArraySegment = payload;
-                break;
+                case EthernetPacketType.IpV4:
+                    payloadPacketOrData.ThePacket = new IPv4Packet(payload);
+                    break;
+                case EthernetPacketType.IpV6:
+                    payloadPacketOrData.ThePacket = new IPv6Packet(payload);
+                    break;
+                case EthernetPacketType.Arp:
+                    payloadPacketOrData.ThePacket = new ARPPacket(payload);
+                    break;
+                case EthernetPacketType.LLDP:
+                    payloadPacketOrData.ThePacket = new LLDPPacket(payload);
+                    break;
+                case EthernetPacketType.PointToPointProtocolOverEthernetSessionStage:
+                    payloadPacketOrData.ThePacket = new PPPoEPacket(payload);
+                    break;
+                case EthernetPacketType.WakeOnLan:
+                    payloadPacketOrData.ThePacket = new WakeOnLanPacket(payload);
+                    break;
+                case EthernetPacketType.VLanTaggedFrame:
+                    payloadPacketOrData.ThePacket = new Ieee8021QPacket(payload);
+                    break;
+                default: // consider the sub-packet to be a byte array
+                    payloadPacketOrData.TheByteArraySegment = payload;
+                    break;
             }
 
             return payloadPacketOrData;
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color => AnsiEscapeSequences.DarkGray;
+        public override String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override String ToString(StringOutputType outputFormat)
@@ -252,41 +269,44 @@ namespace PacketDotNet
             String color = "";
             String colorEscape = "";
 
-            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
                 buffer.AppendFormat("{0}[EthernetPacket: SourceHwAddress={2}, DestinationHwAddress={3}, Type={4}]{1}",
-                    color,
-                    colorEscape,
-                    HexPrinter.PrintMACAddress(SourceHwAddress),
-                    HexPrinter.PrintMACAddress(DestinationHwAddress),
-                    Type.ToString());
+                                    color,
+                                    colorEscape,
+                                    HexPrinter.PrintMACAddress(SourceHwAddress),
+                                    HexPrinter.PrintMACAddress(DestinationHwAddress),
+                                    Type.ToString());
             }
 
-            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String,String> properties = new Dictionary<String,String>();
-                properties.Add("destination", HexPrinter.PrintMACAddress(DestinationHwAddress));
-                properties.Add("source", HexPrinter.PrintMACAddress(SourceHwAddress));
-                properties.Add("type", Type.ToString() + " (0x" + Type.ToString("x") + ")");
+                Dictionary<String, String> properties = new Dictionary<String, String>
+                {
+                    {"destination", HexPrinter.PrintMACAddress(DestinationHwAddress)},
+                    {"source", HexPrinter.PrintMACAddress(SourceHwAddress)},
+                    {"type", Type + " (0x" + Type.ToString("x") + ")"}
+                };
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Eth:  ******* Ethernet - \"Ethernet\" - offset=? length=" + TotalPacketLength);
                 buffer.AppendLine("Eth:");
-                foreach(var property in properties)
+                foreach (var property in properties)
                 {
                     buffer.AppendLine("Eth: " + property.Key.PadLeft(padLength) + " = " + property.Value);
                 }
+
                 buffer.AppendLine("Eth:");
             }
 
@@ -301,7 +321,7 @@ namespace PacketDotNet
         /// TODO: could improve this routine to set a random payload as well
         /// </summary>
         /// <returns>
-        /// A <see cref="EthernetPacket"/>
+        /// A <see cref="EthernetPacket" />
         /// </returns>
         public static EthernetPacket RandomPacket()
         {

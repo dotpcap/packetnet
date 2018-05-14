@@ -17,7 +17,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2013 Chris Morgan <chmorgan@gmail.com>
  */
-using System;
 
 namespace PacketDotNet
 {
@@ -31,30 +30,37 @@ namespace PacketDotNet
         /// Background
         /// </summary>
         Background_0 = 1,
+
         /// <summary>
         /// Best effort
         /// </summary>
         BestEffort_1 = 0,
+
         /// <summary>
         /// Excellent effort
         /// </summary>
         ExcellentEffort_2 = 2,
+
         /// <summary>
         /// Critical application
         /// </summary>
         CriticalApplications_3 = 3,
+
         /// <summary>
         /// Video, &lt; 100ms latency and jitter
         /// </summary>
         Video_4 = 4,
+
         /// <summary>
         /// Voice, &lt; 10ms latency and jitter
         /// </summary>
         Voice_5 = 5,
+
         /// <summary>
         /// Internetwork control
         /// </summary>
         InternetworkControl_6 = 6,
+
         /// <summary>
         /// Network control
         /// </summary>

@@ -17,17 +17,16 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
-using System;
 
 namespace PacketDotNet.Tcp
 {
     /// <summary>
     /// Specifies the different types of algorithms that the
-    ///  Alternative Checksum option are allowed to use
+    /// Alternative Checksum option are allowed to use
     /// </summary>
     /// <remarks>
     /// References:
-    ///  http://datatracker.ietf.org/doc/rfc1146/
+    /// http://datatracker.ietf.org/doc/rfc1146/
     /// </remarks>
     public enum ChecksumAlgorighmType
     {
@@ -44,4 +43,3 @@ namespace PacketDotNet.Tcp
         RedundantChecksumAvoidance = 3
     }
 }
-

@@ -31,24 +31,26 @@ namespace PacketDotNet.Utils
         /// text form
         /// </summary>
         /// <param name="Byte">
-        /// A <see cref="System.Byte"/>
+        /// A <see cref="System.Byte" />
         /// </param>
         /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         /// <param name="Length">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.String"/>
+        /// A <see cref="System.String" />
         /// </returns>
-        public static String GetString(Byte[] Byte,
-                                       Int32 Offset,
-                                       Int32 Length)
+        public static String GetString
+        (
+            Byte[] Byte,
+            Int32 Offset,
+            Int32 Length)
         {
             StringBuilder sb = new StringBuilder();
 
-            for(Int32 i = Offset; i < Offset + Length; i++)
+            for (Int32 i = Offset; i < Offset + Length; i++)
             {
                 sb.AppendFormat("[{0:x2}]", Byte[i]);
             }
@@ -60,20 +62,21 @@ namespace PacketDotNet.Utils
         /// Creates a string from a Physical address in the format "xx:xx:xx:xx:xx:xx"
         /// </summary>
         /// <param name="address">
-        /// A <see cref="PhysicalAddress"/>
+        /// A <see cref="PhysicalAddress" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.String"/>
+        /// A <see cref="System.String" />
         /// </returns>
         public static String PrintMACAddress(PhysicalAddress address)
         {
             Byte[] bytes = address.GetAddressBytes();
             String output = "";
 
-            for(Int32 i = 0; i < bytes.Length; i++)
+            for (Int32 i = 0; i < bytes.Length; i++)
             {
                 output += bytes[i].ToString("x").PadLeft(2, '0') + ":";
             }
+
             return output.TrimEnd(':');
         }
     }

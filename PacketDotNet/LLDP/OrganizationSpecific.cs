@@ -18,14 +18,16 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
+using System.Reflection;
+using log4net;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet.LLDP
 {
     /// <summary>
     /// An Organization Specific TLV
-    ///
     /// [TLV Type Length : 2][Organizationally Unique Identifier OUI : 3]
     /// [Organizationally Defined Subtype : 1][Organizationally Defined Information String : 0 - 507]
     /// </summary>
@@ -33,17 +35,18 @@ namespace PacketDotNet.LLDP
     public class OrganizationSpecific : TLV
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-        // NOTE: No need to warn about lack of use, the compiler won't
-        //       put any calls to 'log' here but we need 'log' to exist to compile
+// NOTE: No need to warn about lack of use, the compiler won't
+//       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
         private const Int32 OUILength = 3;
         private const Int32 OUISubTypeLength = 1;
+
 
         #region Constructors
 
@@ -60,7 +63,7 @@ namespace PacketDotNet.LLDP
         public OrganizationSpecific(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {
-            log.Debug("");
+            Log.Debug("");
         }
 
         /// <summary>
@@ -77,7 +80,7 @@ namespace PacketDotNet.LLDP
         /// </param>
         public OrganizationSpecific(Byte[] oui, Int32 subType, Byte[] infoString)
         {
-            log.Debug("");
+            Log.Debug("");
 
             var length = TLVTypeLength.TypeLengthLength + OUILength + OUISubTypeLength;
             var bytes = new Byte[length];
@@ -93,6 +96,7 @@ namespace PacketDotNet.LLDP
 
         #endregion
 
+
         #region Properties
 
         /// <summary>
@@ -103,14 +107,19 @@ namespace PacketDotNet.LLDP
             get
             {
                 Byte[] oui = new Byte[OUILength];
-                Array.Copy(tlvData.Bytes, ValueOffset,
-                           oui, 0,
+                Array.Copy(tlvData.Bytes,
+                           ValueOffset,
+                           oui,
+                           0,
                            OUILength);
                 return oui;
             }
 
-            set => Array.Copy(value, 0,
-                tlvData.Bytes, ValueOffset, OUILength);
+            set => Array.Copy(value,
+                              0,
+                              tlvData.Bytes,
+                              ValueOffset,
+                              OUILength);
         }
 
         /// <summary>
@@ -119,7 +128,7 @@ namespace PacketDotNet.LLDP
         public Int32 OrganizationDefinedSubType
         {
             get => tlvData.Bytes[ValueOffset + OUILength];
-            set => tlvData.Bytes[ValueOffset + OUILength] = (Byte)value;
+            set => tlvData.Bytes[ValueOffset + OUILength] = (Byte) value;
         }
 
         /// <summary>
@@ -132,8 +141,10 @@ namespace PacketDotNet.LLDP
                 var length = Length - (OUILength + OUISubTypeLength);
 
                 var bytes = new Byte[length];
-                Array.Copy(tlvData.Bytes, ValueOffset + OUILength + OUISubTypeLength,
-                           bytes, 0,
+                Array.Copy(tlvData.Bytes,
+                           ValueOffset + OUILength + OUISubTypeLength,
+                           bytes,
+                           0,
                            length);
 
                 return bytes;
@@ -144,17 +155,19 @@ namespace PacketDotNet.LLDP
                 var length = Length - (OUILength + OUISubTypeLength);
 
                 // do we have the right sized tlv?
-                if(value.Length != length)
+                if (value.Length != length)
                 {
                     var headerLength = TLVTypeLength.TypeLengthLength + OUILength + OUISubTypeLength;
 
                     // resize the tlv
-                    var newLength =  headerLength + value.Length;
+                    var newLength = headerLength + value.Length;
                     var bytes = new Byte[newLength];
 
                     // copy the header bytes over
-                    Array.Copy(tlvData.Bytes, tlvData.Offset,
-                               bytes, 0,
+                    Array.Copy(tlvData.Bytes,
+                               tlvData.Offset,
+                               bytes,
+                               0,
                                headerLength);
 
                     // assign a new ByteArrayAndOffset to tlvData
@@ -163,8 +176,10 @@ namespace PacketDotNet.LLDP
                 }
 
                 // copy the byte array in
-                Array.Copy(value, 0,
-                           tlvData.Bytes, ValueOffset + OUILength + OUISubTypeLength,
+                Array.Copy(value,
+                           0,
+                           tlvData.Bytes,
+                           ValueOffset + OUILength + OUISubTypeLength,
                            value.Length);
             }
         }
@@ -175,9 +190,12 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A human readable string
         /// </returns>
-        public override String ToString ()
+        public override String ToString()
         {
-            return String.Format("[OrganizationSpecific: OrganizationUniqueID={0}, OrganizationDefinedSubType={1}, OrganizationDefinedInfoString={2}]", OrganizationUniqueID, OrganizationDefinedSubType, OrganizationDefinedInfoString);
+            return String.Format("[OrganizationSpecific: OrganizationUniqueID={0}, OrganizationDefinedSubType={1}, OrganizationDefinedInfoString={2}]",
+                                 OrganizationUniqueID,
+                                 OrganizationDefinedSubType,
+                                 OrganizationDefinedInfoString);
         }
 
         #endregion

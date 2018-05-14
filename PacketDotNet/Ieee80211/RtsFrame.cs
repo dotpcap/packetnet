@@ -19,9 +19,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 
@@ -36,14 +33,22 @@ namespace PacketDotNet
         public class RtsFrame : MacFrame
         {
             /// <summary>
-            /// ReceiverAddress
+            /// Constructor
             /// </summary>
-            public PhysicalAddress ReceiverAddress {get; set;}
+            /// <param name="bas">
+            /// A <see cref="ByteArraySegment" />
+            /// </param>
+            public RtsFrame(ByteArraySegment bas)
+            {
+                Header = new ByteArraySegment(bas);
 
-            /// <summary>
-            /// TransmitterAddress
-            /// </summary>
-            public PhysicalAddress TransmitterAddress {get; set;}
+                FrameControl = new FrameControlField(FrameControlBytes);
+                Duration = new DurationField(DurationBytes);
+                ReceiverAddress = GetAddress(0);
+                TransmitterAddress = GetAddress(1);
+
+                Header.Length = FrameSize;
+            }
 
             /// <summary>
             /// Length of the frame
@@ -53,23 +58,15 @@ namespace PacketDotNet
                                                 (MacFields.AddressLength * 2));
 
             /// <summary>
-            /// Constructor
+            /// ReceiverAddress
             /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public RtsFrame (ByteArraySegment bas)
-            {
-                Header = new ByteArraySegment (bas);
+            public PhysicalAddress ReceiverAddress { get; set; }
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                ReceiverAddress = GetAddress (0);
-                TransmitterAddress = GetAddress(1);
-				
-				Header.Length = FrameSize;
-            }
-   
+            /// <summary>
+            /// TransmitterAddress
+            /// </summary>
+            public PhysicalAddress TransmitterAddress { get; set; }
+
             /// <summary>
             /// Returns a string with a description of the addresses used in the packet.
             /// This is used as a compoent of the string returned by ToString().
@@ -80,9 +77,9 @@ namespace PacketDotNet
             protected override String GetAddressString()
             {
                 return String.Format("RA {0} TA {1}",
-                                     ReceiverAddress, 
+                                     ReceiverAddress,
                                      TransmitterAddress);
             }
-        } 
+        }
     }
 }

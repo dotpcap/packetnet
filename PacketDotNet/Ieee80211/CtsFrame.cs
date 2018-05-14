@@ -19,11 +19,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using PacketDotNet.Utils;
 using System.Net.NetworkInformation;
+using PacketDotNet.Utils;
 
 namespace PacketDotNet
 {
@@ -35,9 +32,36 @@ namespace PacketDotNet
         public class CtsFrame : MacFrame
         {
             /// <summary>
-            /// Receiver address
+            /// Constructor
             /// </summary>
-            public PhysicalAddress ReceiverAddress {get; set;}
+            /// <param name="bas">
+            /// A <see cref="ByteArraySegment" />
+            /// </param>
+            public CtsFrame(ByteArraySegment bas)
+            {
+                Header = new ByteArraySegment(bas);
+
+                FrameControl = new FrameControlField(FrameControlBytes);
+                Duration = new DurationField(DurationBytes);
+                ReceiverAddress = GetAddress(0);
+
+                Header.Length = FrameSize;
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.CtsFrame" /> class.
+            /// </summary>
+            /// <param name='ReceiverAddress'>
+            /// Receiver address.
+            /// </param>
+            public CtsFrame(PhysicalAddress ReceiverAddress)
+            {
+                FrameControl = new FrameControlField();
+                Duration = new DurationField();
+                this.ReceiverAddress = ReceiverAddress;
+
+                FrameControl.SubType = FrameControlField.FrameSubTypes.ControlCTS;
+            }
 
             /// <summary>
             /// Length of the frame
@@ -47,52 +71,25 @@ namespace PacketDotNet
                                                 MacFields.AddressLength);
 
             /// <summary>
-            /// Constructor
+            /// Receiver address
             /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public CtsFrame (ByteArraySegment bas)
-            {
-                Header = new ByteArraySegment (bas);
+            public PhysicalAddress ReceiverAddress { get; set; }
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                ReceiverAddress = GetAddress(0);
-				
-				Header.Length = FrameSize;
-            }
-			
-			/// <summary>
-			/// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.CtsFrame"/> class.
-			/// </summary>
-			/// <param name='ReceiverAddress'>
-			/// Receiver address.
-			/// </param>
-			public CtsFrame (PhysicalAddress ReceiverAddress)
-			{
-				this.FrameControl = new FrameControlField ();
-                this.Duration = new DurationField ();
-				this.ReceiverAddress = ReceiverAddress;
-				
-                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ControlCTS;
-			}
-			
-			/// <summary>
+            /// <summary>
             /// Writes the current packet properties to the backing ByteArraySegment.
             /// </summary>
-            public override void UpdateCalculatedValues ()
+            public override void UpdateCalculatedValues()
             {
                 if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
                 {
-                    Header = new ByteArraySegment (new Byte[FrameSize]);
+                    Header = new ByteArraySegment(new Byte[FrameSize]);
                 }
-                
-                this.FrameControlBytes = this.FrameControl.Field;
-                this.DurationBytes = this.Duration.Field;
-                SetAddress (0, ReceiverAddress);
+
+                FrameControlBytes = FrameControl.Field;
+                DurationBytes = Duration.Field;
+                SetAddress(0, ReceiverAddress);
             }
-            
+
             /// <summary>
             /// Returns a string with a description of the addresses used in the packet.
             /// This is used as a compoent of the string returned by ToString().
@@ -104,7 +101,6 @@ namespace PacketDotNet
             {
                 return String.Format("RA {0}", ReceiverAddress);
             }
-        } 
+        }
     }
-
 }

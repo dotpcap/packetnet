@@ -21,12 +21,13 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
-using System.Linq;
-using PacketDotNet.Utils;
+using log4net;
 using MiscUtil.Conversion;
+using PacketDotNet.Utils;
 
 namespace PacketDotNet
 {
@@ -38,12 +39,12 @@ namespace PacketDotNet
         public class RadioPacket : InternetLinkLayerPacket
         {
 #if DEBUG
-            private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+            private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-        // NOTE: No need to warn about lack of use, the compiler won't
-        //       put any calls to 'log' here but we need 'log' to exist to compile
+// NOTE: No need to warn about lack of use, the compiler won't
+//       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
@@ -52,7 +53,7 @@ namespace PacketDotNet
             /// new fields does not count.
             /// </summary>
             public Byte Version { get; set; }
-            
+
             private Byte VersionBytes
             {
                 get => Header.Bytes[Header.Offset + RadioFields.VersionPosition];
@@ -64,16 +65,16 @@ namespace PacketDotNet
             /// Length of the whole header in bytes, including it_version, it_pad, it_len
             /// and data fields
             /// </summary>
-            public UInt16 Length {get; set;}
-            
+            public UInt16 Length { get; set; }
+
             private UInt16 LengthBytes
             {
                 get => EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                    Header.Offset + RadioFields.LengthPosition);
+                                                          Header.Offset + RadioFields.LengthPosition);
 
                 set => EndianBitConverter.Little.CopyBytes(value,
-                    Header.Bytes,
-                    Header.Offset + RadioFields.LengthPosition);
+                                                           Header.Bytes,
+                                                           Header.Offset + RadioFields.LengthPosition);
             }
 
             /// <summary>
@@ -82,8 +83,8 @@ namespace PacketDotNet
             /// to extend the bitmap by another 32 bits. Additional extensions are made
             /// by setting bit 31.
             /// </summary>
-            private UInt32[] Present {get; set;}
-                
+            private UInt32[] Present { get; set; }
+
             private UInt32[] ReadPresentFields()
             {
                 // make an array of the bitmask fields
@@ -105,36 +106,36 @@ namespace PacketDotNet
 
                 return bitmaskFields.ToArray();
             }
-   
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.RadioPacket"/> class.
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.RadioPacket" /> class.
             /// </summary>
             public RadioPacket()
             {
                 Present = new UInt32[1];
                 RadioTapFields = new SortedDictionary<RadioTapType, RadioTapField>();
-                Length = (UInt16)RadioFields.DefaultHeaderLength;
+                Length = (UInt16) RadioFields.DefaultHeaderLength;
             }
-            
-            internal RadioPacket (ByteArraySegment bas)
+
+            internal RadioPacket(ByteArraySegment bas)
             {
-                log.Debug ("");
+                Log.Debug("");
 
                 // slice off the header portion
-                Header = new ByteArraySegment (bas);
+                Header = new ByteArraySegment(bas);
                 Header.Length = RadioFields.DefaultHeaderLength;
                 Version = VersionBytes;
                 Length = LengthBytes;
-                
+
                 // update the header size based on the headers packet length
                 Header.Length = Length;
                 Present = ReadPresentFields();
                 RadioTapFields = ReadRadioTapFields();
-    
+
                 //Before we attempt to parse the payload we need to work out if 
                 //the FCS was valid and if it will be present at the end of the frame
                 FlagsRadioTapField flagsField = this[RadioTapType.Flags] as FlagsRadioTapField;
-		        PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header.EncapsulatedBytes(), flagsField));
+                PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header.EncapsulatedBytes(), flagsField));
             }
 
             /// <summary cref="Packet.ToString(StringOutputType)" />
@@ -154,20 +155,22 @@ namespace PacketDotNet
                 {
                     // build the output string
                     buffer.AppendFormat("{0}[Ieee80211RadioPacket: Version={2}, Length={3}, Present[0]=0x{4:x}]{1}",
-                        color,
-                        colorEscape,
-                        Version,
-                        Length,
-                        Present[0]);
+                                        color,
+                                        colorEscape,
+                                        Version,
+                                        Length,
+                                        Present[0]);
                 }
 
                 if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
                 {
                     // collect the properties and their value
-                    Dictionary<String, String> properties = new Dictionary<String, String>();
-                    properties.Add("version", Version.ToString());
-                    properties.Add("length", Length.ToString());
-                    properties.Add("present", " (0x" + Present[0].ToString("x") + ")");
+                    Dictionary<String, String> properties = new Dictionary<String, String>
+                    {
+                        {"version", Version.ToString()},
+                        {"length", Length.ToString()},
+                        {"present", " (0x" + Present[0].ToString("x") + ")"}
+                    };
 
                     var radioTapFields = RadioTapFields;
 
@@ -186,6 +189,7 @@ namespace PacketDotNet
                     {
                         buffer.AppendLine("TAP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
                     }
+
                     buffer.AppendLine("TAP:");
                 }
 
@@ -194,7 +198,7 @@ namespace PacketDotNet
 
                 return buffer.ToString();
             }
-   
+
             /// <summary>
             /// Add the specified field to the packet.
             /// </summary>
@@ -205,22 +209,24 @@ namespace PacketDotNet
             {
                 RadioTapFields[field.FieldType] = field;
                 Length += field.Length;
-                var presenceBit = (Int32)field.FieldType;
+                var presenceBit = (Int32) field.FieldType;
                 var presenceField = (presenceBit / 32);
-                if(Present.Length <= presenceField)
+                if (Present.Length <= presenceField)
                 {
                     var newPresentFields = new UInt32[presenceField];
                     Array.Copy(Present, newPresentFields, Present.Length);
                     //set bit 31 to true for every present field except the last one
-                    for(Int32 i = 0; i < newPresentFields.Length - 1; i++)
+                    for (Int32 i = 0; i < newPresentFields.Length - 1; i++)
                     {
                         newPresentFields[i] |= 0x80000000;
                     }
+
                     Present = newPresentFields;
                 }
-                Present[presenceField] |= (UInt32)(1 << presenceBit);
+
+                Present[presenceField] |= (UInt32) (1 << presenceBit);
             }
-            
+
             /// <summary>
             /// Removes a field of the specified type if one is present in the packet.
             /// </summary>
@@ -230,16 +236,16 @@ namespace PacketDotNet
             public void Remove(RadioTapType fieldType)
             {
                 RadioTapField field;
-                if(RadioTapFields.TryGetValue(fieldType, out field))
+                if (RadioTapFields.TryGetValue(fieldType, out field))
                 {
                     RadioTapFields.Remove(fieldType);
                     Length -= field.Length;
-                    var presenceBit = (Int32)field.FieldType;
+                    var presenceBit = (Int32) field.FieldType;
                     var presenceField = (presenceBit / 32);
-                    Present[presenceField] &= (UInt32)~(1 << presenceBit);
+                    Present[presenceField] &= (UInt32) ~(1 << presenceBit);
                 }
             }
-            
+
             /// <summary>
             /// Checks for the presence of a field of the specified type in the packet.
             /// </summary>
@@ -251,9 +257,9 @@ namespace PacketDotNet
             {
                 return RadioTapFields.ContainsKey(fieldType);
             }
-            
+
             /// <summary>
-            /// Gets the <see cref="PacketDotNet.Ieee80211.RadioTapField"/> with the specified type, or null if the
+            /// Gets the <see cref="PacketDotNet.Ieee80211.RadioTapField" /> with the specified type, or null if the
             /// field is not in the packet.
             /// </summary>
             /// <param name='type'>
@@ -268,14 +274,14 @@ namespace PacketDotNet
                     return field;
                 }
             }
-            
+
             /// <summary>
             /// Array of radio tap fields
             /// </summary>
             private SortedDictionary<RadioTapType, RadioTapField> RadioTapFields { get; set; }
-            
-            private Byte[] UnhandledFieldBytes {get; set;}
-            
+
+            private Byte[] UnhandledFieldBytes { get; set; }
+
             private SortedDictionary<RadioTapType, RadioTapField> ReadRadioTapFields()
             {
                 var bitmasks = Present;
@@ -287,28 +293,28 @@ namespace PacketDotNet
                 // create a binary reader that points to the memory immediately after the bitmasks
                 var offset = Header.Offset +
                              RadioFields.PresentPosition +
-                             (bitmasks.Length) * Marshal.SizeOf (typeof(UInt32));
-                var br = new BinaryReader (new MemoryStream (Header.Bytes,
+                             (bitmasks.Length) * Marshal.SizeOf(typeof(UInt32));
+                var br = new BinaryReader(new MemoryStream(Header.Bytes,
                                                            offset,
-                                                           (Int32)(Length - offset)));
+                                                           Length - offset));
 
                 // now go through each of the bitmask fields looking at the least significant
                 // bit first to retrieve each field
                 foreach (var bmask in bitmasks)
                 {
                     Int32[] bmaskArray = new Int32[1];
-                    bmaskArray [0] = (Int32)bmask;
-                    var ba = new BitArray (bmaskArray);
-                    
+                    bmaskArray[0] = (Int32) bmask;
+                    var ba = new BitArray(bmaskArray);
+
                     Boolean unhandledFieldFound = false;
 
                     // look at all of the bits, note we don't want to consider the
                     // highest bit since that indicates another bitfield that follows
                     for (Int32 x = 0; x < 31; x++)
                     {
-                        if (ba [x] == true)
+                        if (ba[x])
                         {
-                            var field = RadioTapField.Parse (bitIndex, br);
+                            var field = RadioTapField.Parse(bitIndex, br);
                             if (field != null)
                             {
                                 retval[field.FieldType] = field;
@@ -322,22 +328,23 @@ namespace PacketDotNet
                                 break;
                             }
                         }
+
                         bitIndex++;
                     }
-                    
-                    if(unhandledFieldFound)
+
+                    if (unhandledFieldFound)
                     {
                         break;
                     }
                 }
-                
+
                 //this will read the rest of the bytes. We pass in max value because we dont know how
                 //much there is but this will ensure we get up to the end of the buffer
                 UnhandledFieldBytes = br.ReadBytes(UInt16.MaxValue);
 
                 return retval;
             }
-   
+
             /// <summary>
             /// Called to ensure that field values are updated before
             /// the packet bytes are retrieved
@@ -347,56 +354,56 @@ namespace PacketDotNet
                 if ((Header == null) || (Header.Length < Length))
                 {
                     //the backing buffer isnt big enough to accommodate the info elements so we need to resize it
-                    Header = new ByteArraySegment (new Byte[Length]);
+                    Header = new ByteArraySegment(new Byte[Length]);
                 }
-                
+
                 VersionBytes = Version;
                 LengthBytes = Length;
                 var index = RadioFields.PresentPosition;
-                foreach(var presentField in Present)
+                foreach (var presentField in Present)
                 {
                     EndianBitConverter.Little.CopyBytes(presentField,
                                                         Header.Bytes,
                                                         Header.Offset + index);
                     index += RadioFields.PresentLength;
                 }
-                
-                foreach(var field in RadioTapFields)
+
+                foreach (var field in RadioTapFields)
                 {
                     //then copy the field data to the appropriate index
                     field.Value.CopyTo(Header.Bytes, Header.Offset + index);
                     index += field.Value.Length;
                 }
-                
-                if((UnhandledFieldBytes != null) && (UnhandledFieldBytes.Length > 0))
+
+                if ((UnhandledFieldBytes != null) && (UnhandledFieldBytes.Length > 0))
                 {
                     Array.Copy(UnhandledFieldBytes, 0, Header.Bytes, Header.Offset + index, UnhandledFieldBytes.Length);
                 }
             }
 
-            internal static PacketOrByteArraySegment ParseEncapsulatedBytes (ByteArraySegment payload, FlagsRadioTapField flagsField)
+            internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment payload, FlagsRadioTapField flagsField)
             {
-                var payloadPacketOrData = new PacketOrByteArraySegment ();
+                var payloadPacketOrData = new PacketOrByteArraySegment();
                 MacFrame frame = null;
-                
+
                 if (flagsField != null)
                 {
                     Boolean fcsPresent = ((flagsField.Flags & RadioTapFlags.FcsIncludedInFrame) == RadioTapFlags.FcsIncludedInFrame);
-                    
+
                     if (fcsPresent)
                     {
-                        frame = MacFrame.ParsePacketWithFcs (payload);
+                        frame = MacFrame.ParsePacketWithFcs(payload);
                     }
                     else
                     {
-                        frame = MacFrame.ParsePacket (payload);
+                        frame = MacFrame.ParsePacket(payload);
                     }
                 }
                 else
                 {
-                    frame = MacFrame.ParsePacket (payload);
+                    frame = MacFrame.ParsePacket(payload);
                 }
-                
+
                 if (frame == null)
                 {
                     payloadPacketOrData.TheByteArraySegment = payload;
@@ -405,9 +412,9 @@ namespace PacketDotNet
                 {
                     payloadPacketOrData.ThePacket = frame;
                 }
-                
+
                 return payloadPacketOrData;
             }
-        } 
+        }
     }
 }

@@ -19,9 +19,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -35,8 +32,38 @@ namespace PacketDotNet
         public class NullDataFrame : DataFrame
         {
             /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.NullDataFrame" /> class.
+            /// </summary>
+            /// <param name='bas'>
+            /// A <see cref="ByteArraySegment" />
+            /// </param>
+            public NullDataFrame(ByteArraySegment bas)
+            {
+                Header = new ByteArraySegment(bas);
+
+                FrameControl = new FrameControlField(FrameControlBytes);
+                Duration = new DurationField(DurationBytes);
+                SequenceControl = new SequenceControlField(SequenceControlBytes);
+                ReadAddresses();
+
+                Header.Length = FrameSize;
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.NullDataFrame" /> class.
+            /// </summary>
+            public NullDataFrame()
+            {
+                FrameControl = new FrameControlField();
+                Duration = new DurationField();
+                SequenceControl = new SequenceControlField();
+                AssignDefaultAddresses();
+
+                FrameControl.SubType = FrameControlField.FrameSubTypes.DataNullFunctionNoData;
+            }
+
+            /// <summary>
             /// Length of the frame header.
-            /// 
             /// This does not include the FCS, it represents only the header bytes that would
             /// would preceed any payload.
             /// </summary>
@@ -48,59 +75,27 @@ namespace PacketDotNet
                     Int32 numOfAddressFields = (FrameControl.ToDS && FrameControl.FromDS) ? 4 : 3;
 
                     return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * numOfAddressFields) +
-                        MacFields.SequenceControlLength);
+                            MacFields.DurationIDLength +
+                            (MacFields.AddressLength * numOfAddressFields) +
+                            MacFields.SequenceControlLength);
                 }
             }
-   
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.NullDataFrame"/> class.
-            /// </summary>
-            /// <param name='bas'>
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public NullDataFrame (ByteArraySegment bas)
-            {
-                Header = new ByteArraySegment (bas);
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                SequenceControl = new SequenceControlField (SequenceControlBytes);
-                ReadAddresses ();
-                
-                Header.Length = FrameSize;
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.NullDataFrame"/> class.
-            /// </summary>
-            public NullDataFrame ()
-            {
-                this.FrameControl = new FrameControlField ();
-                this.Duration = new DurationField ();
-                this.SequenceControl = new SequenceControlField ();
-                AssignDefaultAddresses ();
-                
-                FrameControl.SubType = FrameControlField.FrameSubTypes.DataNullFunctionNoData;
-            }
-            
             /// <summary>
             /// Writes the current packet properties to the backing ByteArraySegment.
             /// </summary>
-            public override void UpdateCalculatedValues ()
+            public override void UpdateCalculatedValues()
             {
                 if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
                 {
-                    Header = new ByteArraySegment (new Byte[FrameSize]);
+                    Header = new ByteArraySegment(new Byte[FrameSize]);
                 }
-                
-                this.FrameControlBytes = this.FrameControl.Field;
-                this.DurationBytes = this.Duration.Field;
-                this.SequenceControlBytes = this.SequenceControl.Field;
-                WriteAddressBytes ();
-            }
 
-        } 
+                FrameControlBytes = FrameControl.Field;
+                DurationBytes = Duration.Field;
+                SequenceControlBytes = SequenceControl.Field;
+                WriteAddressBytes();
+            }
+        }
     }
 }

@@ -21,8 +21,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #endregion Header
+
+
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -36,6 +37,33 @@ namespace PacketDotNet
         public class Ppi802_3 : PpiField
         {
             /// <summary>
+            /// Flags for errors detected at the time the packet was captured.
+            /// </summary>
+            [Flags]
+            public enum ErrorFlags : uint
+            {
+                /// <summary>
+                /// The frames FCS is invalid.
+                /// </summary>
+                InvalidFcs = 1,
+
+                /// <summary>
+                /// The frame has a sequence error.
+                /// </summary>
+                SequenceError = 2,
+
+                /// <summary>
+                /// The frame has a symbol error.
+                /// </summary>
+                SymbolError = 4,
+
+                /// <summary>
+                /// The frame has a data error.
+                /// </summary>
+                DataError = 8
+            }
+
+            /// <summary>
             /// 802.3 specific extension flags.
             /// </summary>
             [Flags]
@@ -46,32 +74,9 @@ namespace PacketDotNet
                 /// </summary>
                 FcsPresent = 1
             }
-            
-            /// <summary>
-            /// Flags for errors detected at the time the packet was captured.
-            /// </summary>
-            [Flags]
-            public enum ErrorFlags : uint
-            {
-                /// <summary>
-                /// The frames FCS is invalid.
-                /// </summary>
-                InvalidFcs = 1,
-                /// <summary>
-                /// The frame has a sequence error.
-                /// </summary>
-                SequenceError = 2,
-                /// <summary>
-                /// The frame has a symbol error.
-                /// </summary>
-                SymbolError = 4,
-                /// <summary>
-                /// The frame has a data error.
-                /// </summary>
-                DataError = 8
-            }
-            
-        #region Properties
+
+
+            #region Properties
 
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType => PpiFieldType.Ppi802_3;
@@ -91,6 +96,7 @@ namespace PacketDotNet
             /// The standard flags.
             /// </value>
             public StandardFlags Flags { get; set; }
+
             /// <summary>
             /// Gets or sets the 802.3 error flags.
             /// </summary>
@@ -98,7 +104,7 @@ namespace PacketDotNet
             /// The error flags.
             /// </value>
             public ErrorFlags Errors { get; set; }
-            
+
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
             /// </summary>
@@ -111,17 +117,19 @@ namespace PacketDotNet
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
-                    writer.Write((UInt32)Flags);
-                    writer.Write((UInt32)Errors);
+                    writer.Write((UInt32) Flags);
+                    writer.Write((UInt32) Errors);
                     return ms.ToArray();
                 }
             }
 
-        #endregion Properties
+            #endregion Properties
 
-        #region Constructors
+
+            #region Constructors
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.Ppi802_3"/> class from the 
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.Ppi802_3" /> class from the
             /// provided stream.
             /// </summary>
             /// <remarks>
@@ -136,9 +144,9 @@ namespace PacketDotNet
                 Flags = (StandardFlags) br.ReadUInt32();
                 Errors = (ErrorFlags) br.ReadUInt32();
             }
-            
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.Ppi802_3"/> class.
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.Ppi802_3" /> class.
             /// </summary>
             /// <param name='Flags'>
             /// Standard Flags.
@@ -151,16 +159,14 @@ namespace PacketDotNet
                 this.Flags = Flags;
                 this.Errors = Errors;
             }
-            
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.Ppi802_3"/> class.
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.Ppi802_3" /> class.
             /// </summary>
             public Ppi802_3()
-            {
-             
-            }
+            { }
 
-        #endregion Constructors
+            #endregion Constructors
         }
 
         /// <summary>
@@ -169,7 +175,7 @@ namespace PacketDotNet
         /// </summary>
         public class PpiAggregation : PpiField
         {
-        #region Properties
+            #region Properties
 
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType => PpiFieldType.PpiAggregation;
@@ -189,7 +195,7 @@ namespace PacketDotNet
             /// The interface id.
             /// </value>
             public UInt32 InterfaceId { get; set; }
-            
+
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
             /// </summary>
@@ -200,10 +206,11 @@ namespace PacketDotNet
 
             #endregion Properties
 
-        #region Constructors
+
+            #region Constructors
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiAggregation"/> class from the 
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiAggregation" /> class from the
             /// provided stream.
             /// </summary>
             /// <remarks>
@@ -213,13 +220,13 @@ namespace PacketDotNet
             /// <param name='br'>
             /// The stream the field will be read from
             /// </param>
-            public PpiAggregation (BinaryReader br)
+            public PpiAggregation(BinaryReader br)
             {
                 InterfaceId = br.ReadUInt32();
             }
-   
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiAggregation"/> class.
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiAggregation" /> class.
             /// </summary>
             /// <param name='InterfaceId'>
             /// The interface id.
@@ -228,16 +235,14 @@ namespace PacketDotNet
             {
                 this.InterfaceId = InterfaceId;
             }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiAggregation"/> class.
-            /// </summary>
-            public PpiAggregation ()
-            {
 
-            }
-            
-        #endregion Constructors
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiAggregation" /> class.
+            /// </summary>
+            public PpiAggregation()
+            { }
+
+            #endregion Constructors
         }
 
         /// <summary>
@@ -246,7 +251,7 @@ namespace PacketDotNet
         /// </summary>
         public class PpiCaptureInfo : PpiField
         {
-        #region Properties
+            #region Properties
 
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType => PpiFieldType.PpiCaptureInfo;
@@ -269,9 +274,11 @@ namespace PacketDotNet
 
             #endregion Properties
 
-        #region Constructors
+
+            #region Constructors
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiCaptureInfo"/> class from the 
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiCaptureInfo" /> class from the
             /// provided stream.
             /// </summary>
             /// <remarks>
@@ -281,21 +288,18 @@ namespace PacketDotNet
             /// <param name='br'>
             /// The stream the field will be read from
             /// </param>
-            public PpiCaptureInfo (BinaryReader br)
-            {
-            }
-            
+            public PpiCaptureInfo(BinaryReader br)
+            { }
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiCaptureInfo"/> class.
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiCaptureInfo" /> class.
             /// </summary>
             public PpiCaptureInfo()
-            {
-             
-            }
+            { }
 
-        #endregion Constructors
+            #endregion Constructors
         }
-  
+
         /// <summary>
         /// The PPI Common field contains fields common to all 802.11 specifications.
         /// This field is loosely based on the Radio Tap header format.
@@ -312,21 +316,25 @@ namespace PacketDotNet
                 /// Defines whether or not an FCS is included at the end of the encapsulated 802.11 frame.
                 /// </summary>
                 FcsIncludedInFrame = 0x1,
+
                 /// <summary>
                 /// If set the TSF-timer is in milliseconds, if not set the TSF-timer is in microseconds
                 /// </summary>
                 TimerSynchFunctionInUse = 0x2,
+
                 /// <summary>
                 /// Indicates that the FCS on the encapsulated 802.11 frame is invalid
                 /// </summary>
                 FailedFcsCheck = 0x4,
+
                 /// <summary>
                 /// Indicates that there was some type of physical error when receiving the packet.
                 /// </summary>
                 PhysicalError = 0x8
             }
-         
-        #region Properties
+
+
+            #region Properties
 
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType => PpiFieldType.PpiCommon;
@@ -343,7 +351,7 @@ namespace PacketDotNet
             /// Radiotap-formatted channel flags.
             /// </summary>
             public RadioTapChannelFlags ChannelFlags { get; set; }
-            
+
             /// <summary>
             /// Radiotap-formatted channel frequency, in MHz. 0 indicates an invalid value.
             /// </summary>
@@ -351,20 +359,20 @@ namespace PacketDotNet
             /// The channel frequency.
             /// </value>
             public UInt16 ChannelFrequency { get; set; }
-            
+
             /// <summary>
             /// The common flags.
             /// </summary>
             public CommonFlags Flags { get; set; }
-   
+
             /// <summary>
             /// Data rate in multiples of 500 Kbps. 0 indicates an invalid value.
             /// </summary>
             /// <value>
             /// The data rate.
             /// </value>
-            public Double Rate { get; set; } 
-   
+            public Double Rate { get; set; }
+
             /// <summary>
             /// Gets or sets the TSF timer.
             /// </summary>
@@ -372,7 +380,7 @@ namespace PacketDotNet
             /// The TSF Timer value.
             /// </value>
             public UInt64 TSFTimer { get; set; }
-            
+
             /// <summary>
             /// Gets or sets the Frequency-hopping spread spectrum (FHSS) hopset
             /// </summary>
@@ -380,7 +388,7 @@ namespace PacketDotNet
             /// The FHSS hopset.
             /// </value>
             public Byte FhssHopset { get; set; }
-            
+
             /// <summary>
             /// Gets or sets the Frequency-hopping spread spectrum (FHSS) pattern.
             /// </summary>
@@ -388,7 +396,7 @@ namespace PacketDotNet
             /// The FHSS pattern.
             /// </value>
             public Byte FhssPattern { get; set; }
-   
+
             /// <summary>
             /// Gets or sets the RF signal power at antenna.
             /// </summary>
@@ -396,19 +404,15 @@ namespace PacketDotNet
             /// The antenna signal power.
             /// </value>
             public SByte AntennaSignalPower { get; set; }
-            
+
             /// <summary>
             /// Gets or sets the RF signal noise at antenna
             /// </summary>
             /// <value>
             /// The antenna signal noise.
             /// </value>
-            public SByte AntennaSignalNoise
-            {
-                get;
-                set;
-            }
-            
+            public SByte AntennaSignalNoise { get; set; }
+
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
             /// </summary>
@@ -421,27 +425,28 @@ namespace PacketDotNet
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
-                    
+
                     writer.Write(TSFTimer);
-                    writer.Write((UInt16)Flags);
-                    writer.Write((UInt16)(Rate * 2));
+                    writer.Write((UInt16) Flags);
+                    writer.Write((UInt16) (Rate * 2));
                     writer.Write(ChannelFrequency);
-                    writer.Write((UInt16)ChannelFlags);
+                    writer.Write((UInt16) ChannelFlags);
                     writer.Write(FhssHopset);
                     writer.Write(FhssPattern);
                     writer.Write(AntennaSignalPower);
                     writer.Write(AntennaSignalNoise);
-                    
+
                     return ms.ToArray();
                 }
             }
-            
-        #endregion Properties
 
-        #region Constructors
-            
+            #endregion Properties
+
+
+            #region Constructors
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiCommon"/> class from the 
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiCommon" /> class from the
             /// provided stream.
             /// </summary>
             /// <remarks>
@@ -451,46 +456,93 @@ namespace PacketDotNet
             /// <param name='br'>
             /// The stream the field will be read from
             /// </param>
-            public PpiCommon (BinaryReader br)
+            public PpiCommon(BinaryReader br)
             {
-                TSFTimer = br.ReadUInt64 ();
-                Flags = (CommonFlags)br.ReadUInt16 ();
-                Rate = 0.5f * br.ReadUInt16 ();
-                ChannelFrequency = br.ReadUInt16 ();
-                ChannelFlags = (RadioTapChannelFlags) br.ReadUInt16 ();
-                FhssHopset = br.ReadByte ();
-                FhssPattern = br.ReadByte ();
+                TSFTimer = br.ReadUInt64();
+                Flags = (CommonFlags) br.ReadUInt16();
+                Rate = 0.5f * br.ReadUInt16();
+                ChannelFrequency = br.ReadUInt16();
+                ChannelFlags = (RadioTapChannelFlags) br.ReadUInt16();
+                FhssHopset = br.ReadByte();
+                FhssPattern = br.ReadByte();
                 AntennaSignalPower = br.ReadSByte();
                 AntennaSignalNoise = br.ReadSByte();
             }
-   
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiCommon"/> class.
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiCommon" /> class.
             /// AntennaSignalPower and AntennaSignalNoise are both set to their minimum value of -128.
             /// </summary>
-            public PpiCommon ()
+            public PpiCommon()
             {
                 AntennaSignalPower = -128;
                 AntennaSignalNoise = -128;
             }
-            
-        #endregion Constructors
+
+            #endregion Constructors
         }
-        
+
 
         /// <summary>
         /// Abstract class for all PPI fields
         /// </summary>
         public abstract class PpiField
         {
-        #region Properties
+            #region Public Methods
+
+            /// <summary>
+            /// Parse a PPI indicated by type, from a given BinaryReader
+            /// </summary>
+            /// <param name="fieldType">
+            /// A <see cref="System.Int32" />
+            /// </param>
+            /// <param name="br">
+            /// A <see cref="BinaryReader" />
+            /// </param>
+            /// <param name="fieldLength">
+            /// The maximum number of bytes that the field to be parsed can encompass.
+            /// </param>
+            /// <returns>
+            /// A <see cref="PpiField" />
+            /// </returns>
+            public static PpiField Parse(Int32 fieldType, BinaryReader br, UInt16 fieldLength)
+            {
+                var type = (PpiFieldType) fieldType;
+                switch (type)
+                {
+                    case PpiFieldType.PpiReserved0:
+                        return new PpiUnknown(fieldType, br, fieldLength);
+                    case PpiFieldType.PpiReserved1:
+                        return new PpiUnknown(fieldType, br, fieldLength);
+                    case PpiFieldType.PpiCommon:
+                        return new PpiCommon(br);
+                    case PpiFieldType.PpiMacExtensions:
+                        return new PpiMacExtensions(br);
+                    case PpiFieldType.PpiMacPhy:
+                        return new PpiMacPhy(br);
+                    case PpiFieldType.PpiSpectrum:
+                        return new PpiSpectrum(br);
+                    case PpiFieldType.PpiProcessInfo:
+                        return new PpiProcessInfo(br);
+                    case PpiFieldType.PpiCaptureInfo:
+                        return new PpiCaptureInfo(br);
+                    case PpiFieldType.PpiAggregation:
+                        return new PpiAggregation(br);
+                    case PpiFieldType.Ppi802_3:
+                        return new Ppi802_3(br);
+                    default:
+                        return new PpiUnknown(fieldType, br, fieldLength);
+                }
+            }
+
+            #endregion Public Methods
+
+
+            #region Properties
 
             /// <summary>Type of the field</summary>
-            public abstract PpiFieldType FieldType
-            {
-                get;
-            }
-   
+            public abstract PpiFieldType FieldType { get; }
+
             /// <summary>
             /// Gets the length of the field data.
             /// </summary>
@@ -498,7 +550,7 @@ namespace PacketDotNet
             /// The length.
             /// </value>
             public abstract Int32 Length { get; }
-            
+
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
             /// </summary>
@@ -506,59 +558,10 @@ namespace PacketDotNet
             /// The bytes.
             /// </value>
             public abstract Byte[] Bytes { get; }
-            
-        #endregion Properties
 
-        #region Public Methods
-
-            /// <summary>
-            /// Parse a PPI indicated by type, from a given BinaryReader
-            /// </summary>
-            /// <param name="fieldType">
-            /// A <see cref="System.Int32"/>
-            /// </param>
-            /// <param name="br">
-            /// A <see cref="BinaryReader"/>
-            /// </param>
-            /// <param name="fieldLength">
-            /// The maximum number of bytes that the field to be parsed can encompass.
-            /// </param>
-            /// <returns>
-            /// A <see cref="PpiField"/>
-            /// </returns>
-            public static PpiField Parse (Int32 fieldType, BinaryReader br, UInt16 fieldLength)
-            {
-                var type = (PpiFieldType)fieldType;
-                switch (type)
-                {
-                case PpiFieldType.PpiReserved0:
-                    return new PpiUnknown (fieldType, br, fieldLength);
-                case PpiFieldType.PpiReserved1:
-                    return new PpiUnknown (fieldType, br, fieldLength);
-                case PpiFieldType.PpiCommon:
-                    return new PpiCommon (br);
-                case PpiFieldType.PpiMacExtensions:
-                    return new PpiMacExtensions (br);
-                case PpiFieldType.PpiMacPhy:
-                    return new PpiMacPhy (br);
-                case PpiFieldType.PpiSpectrum:
-                    return new PpiSpectrum (br);
-                case PpiFieldType.PpiProcessInfo:
-                    return new PpiProcessInfo (br);
-                case PpiFieldType.PpiCaptureInfo:
-                    return new PpiCaptureInfo (br);
-                case PpiFieldType.PpiAggregation:
-                    return new PpiAggregation (br);
-                case PpiFieldType.Ppi802_3:
-                    return new Ppi802_3 (br);
-                default:
-                    return new PpiUnknown (fieldType, br, fieldLength);
-                }
-            }
-
-        #endregion Public Methods
+            #endregion Properties
         }
-        
+
         /// <summary>
         /// 802.11n MAC Extension flags.
         /// </summary>
@@ -569,40 +572,44 @@ namespace PacketDotNet
             /// increased efficiency.
             /// </summary>
             GreenField = 0x1,
+
             /// <summary>
-            /// Indicates the High Throughput (HT) mode. If not set channel width is 20MHz, if set it is 40MHz. 
+            /// Indicates the High Throughput (HT) mode. If not set channel width is 20MHz, if set it is 40MHz.
             /// </summary>
             HtIndicator = 0x2,
+
             /// <summary>
             /// Indicates the use of a Short Guard Interval (SGI).
             /// </summary>
             RxSgi = 0x4,
+
             /// <summary>
             /// Indicates the use of HT Duplicate mode.
             /// </summary>
             DuplicateRx = 0x8,
+
             /// <summary>
             /// Indicates the use of MPDU aggregation.
             /// </summary>
             Aggregate = 0x10,
+
             /// <summary>
             /// Indicates the presence of more aggregate frames.
             /// </summary>
             MoreAggregates = 0x20,
+
             /// <summary>
             /// Indicates there was a CRC error in the A-MPDU delimiter after this frame.
             /// </summary>
             AggregateDelimiterCrc = 0x40
         }
-  
+
         /// <summary>
         /// The 802.11n MAC Extension field contains radio information specific to 802.11n.
         /// </summary>
         public class PpiMacExtensions : PpiField
         {
-            
-            
-        #region Properties
+            #region Properties
 
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType => PpiFieldType.PpiMacExtensions;
@@ -622,6 +629,7 @@ namespace PacketDotNet
             /// The flags.
             /// </value>
             public PpiMacExtensionFlags Flags { get; set; }
+
             /// <summary>
             /// Gets or sets the A-MPDU identifier.
             /// </summary>
@@ -629,6 +637,7 @@ namespace PacketDotNet
             /// the A-MPDU id.
             /// </value>
             public UInt32 AMpduId { get; set; }
+
             /// <summary>
             /// Gets or sets the number of zero-length pad delimiters
             /// </summary>
@@ -636,7 +645,7 @@ namespace PacketDotNet
             /// The delimiter count.
             /// </value>
             public Byte DelimiterCount { get; set; }
-            
+
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
             /// </summary>
@@ -649,22 +658,23 @@ namespace PacketDotNet
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
-                    
+
                     writer.Write((UInt32) Flags);
                     writer.Write(AMpduId);
                     writer.Write(DelimiterCount);
                     writer.Write(new Byte[3]);
-                    
+
                     return ms.ToArray();
                 }
             }
-            
-        #endregion Properties
 
-        #region Constructors
-   
+            #endregion Properties
+
+
+            #region Constructors
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiMacExtensions"/> class from the 
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiMacExtensions" /> class from the
             /// provided stream.
             /// </summary>
             /// <remarks>
@@ -674,31 +684,28 @@ namespace PacketDotNet
             /// <param name='br'>
             /// The stream the field will be read from
             /// </param>
-            public PpiMacExtensions (BinaryReader br)
+            public PpiMacExtensions(BinaryReader br)
             {
                 Flags = (PpiMacExtensionFlags) br.ReadUInt32();
                 AMpduId = br.ReadUInt32();
                 DelimiterCount = br.ReadByte();
             }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiMacExtensions"/> class.
-            /// </summary>
-            public PpiMacExtensions ()
-            {
-             
-            }
 
-        #endregion Constructors
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiMacExtensions" /> class.
+            /// </summary>
+            public PpiMacExtensions()
+            { }
+
+            #endregion Constructors
         }
-  
+
         /// <summary>
         /// The 802.11n MAC + PHY Extension field contains radio information specific to 802.11n.
         /// </summary>
         public class PpiMacPhy : PpiField
         {
-            
-        #region Properties
+            #region Properties
 
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType => PpiFieldType.PpiMacPhy;
@@ -718,6 +725,7 @@ namespace PacketDotNet
             /// The flags.
             /// </value>
             public PpiMacExtensionFlags Flags { get; set; }
+
             /// <summary>
             /// Gets or sets the A-MPDU identifier.
             /// </summary>
@@ -725,6 +733,7 @@ namespace PacketDotNet
             /// the A-MPDU id.
             /// </value>
             public UInt32 AMpduId { get; set; }
+
             /// <summary>
             /// Gets or sets the number of zero-length pad delimiters
             /// </summary>
@@ -732,6 +741,7 @@ namespace PacketDotNet
             /// The delimiter count.
             /// </value>
             public Byte DelimiterCount { get; set; }
+
             /// <summary>
             /// Gets or sets the modulation coding scheme.
             /// </summary>
@@ -739,6 +749,7 @@ namespace PacketDotNet
             /// The modulation coding scheme.
             /// </value>
             public Byte ModulationCodingScheme { get; set; }
+
             /// <summary>
             /// Gets or sets the number of spatial streams.
             /// </summary>
@@ -746,14 +757,16 @@ namespace PacketDotNet
             /// The spatial stream count.
             /// </value>
             public Byte SpatialStreamCount { get; set; }
+
             /// <summary>
-            /// Gets or sets the combined Received Signal Strength Indication (RSSI) value 
+            /// Gets or sets the combined Received Signal Strength Indication (RSSI) value
             /// from all the active antennas and channels.
             /// </summary>
             /// <value>
             /// The combined RSSI.
             /// </value>
             public Byte RssiCombined { get; set; }
+
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 0, control channel.
             /// </summary>
@@ -761,6 +774,7 @@ namespace PacketDotNet
             /// The antenna 0 RSSI value.
             /// </value>
             public Byte RssiAntenna0Control { get; set; }
+
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 1, control channel.
             /// </summary>
@@ -768,6 +782,7 @@ namespace PacketDotNet
             /// The antenna 1 control channel RSSI value.
             /// </value>
             public Byte RssiAntenna1Control { get; set; }
+
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 2, control channel.
             /// </summary>
@@ -775,6 +790,7 @@ namespace PacketDotNet
             /// The antenna 2 control channel RSSI value.
             /// </value>
             public Byte RssiAntenna2Control { get; set; }
+
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 3, control channel.
             /// </summary>
@@ -782,6 +798,7 @@ namespace PacketDotNet
             /// The antenna 3 control channel RSSI value.
             /// </value>
             public Byte RssiAntenna3Control { get; set; }
+
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 0, extension channel
             /// </summary>
@@ -789,6 +806,7 @@ namespace PacketDotNet
             /// The antenna 0 extension channel RSSI value.
             /// </value>
             public Byte RssiAntenna0Ext { get; set; }
+
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 1, extension channel
             /// </summary>
@@ -796,6 +814,7 @@ namespace PacketDotNet
             /// The antenna 1 extension channel RSSI value.
             /// </value>
             public Byte RssiAntenna1Ext { get; set; }
+
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 2, extension channel
             /// </summary>
@@ -803,6 +822,7 @@ namespace PacketDotNet
             /// The antenna 2 extension channel RSSI value.
             /// </value>
             public Byte RssiAntenna2Ext { get; set; }
+
             /// <summary>
             /// Gets or sets the Received Signal Strength Indication (RSSI) value for the antenna 3, extension channel
             /// </summary>
@@ -810,6 +830,7 @@ namespace PacketDotNet
             /// The antenna 3 extension channel RSSI value.
             /// </value>
             public Byte RssiAntenna3Ext { get; set; }
+
             /// <summary>
             /// Gets or sets the extension channel frequency.
             /// </summary>
@@ -817,6 +838,7 @@ namespace PacketDotNet
             /// The extension channel frequency.
             /// </value>
             public UInt16 ExtensionChannelFrequency { get; set; }
+
             /// <summary>
             /// Gets or sets the extension channel flags.
             /// </summary>
@@ -824,6 +846,7 @@ namespace PacketDotNet
             /// The extension channel flags.
             /// </value>
             public RadioTapChannelFlags ExtensionChannelFlags { get; set; }
+
             /// <summary>
             /// Gets or sets the RF signal power at antenna 0.
             /// </summary>
@@ -831,6 +854,7 @@ namespace PacketDotNet
             /// The signal power.
             /// </value>
             public Byte DBmAntenna0SignalPower { get; set; }
+
             /// <summary>
             /// Gets or sets the RF signal noise at antenna 0.
             /// </summary>
@@ -838,6 +862,7 @@ namespace PacketDotNet
             /// The signal noise.
             /// </value>
             public Byte DBmAntenna0SignalNoise { get; set; }
+
             /// <summary>
             /// Gets or sets the RF signal power at antenna 1.
             /// </summary>
@@ -845,6 +870,7 @@ namespace PacketDotNet
             /// The signal power.
             /// </value>
             public Byte DBmAntenna1SignalPower { get; set; }
+
             /// <summary>
             /// Gets or sets the RF signal noise at antenna 1.
             /// </summary>
@@ -852,6 +878,7 @@ namespace PacketDotNet
             /// The signal noise.
             /// </value>
             public Byte DBmAntenna1SignalNoise { get; set; }
+
             /// <summary>
             /// Gets or sets the RF signal power at antenna 2.
             /// </summary>
@@ -859,6 +886,7 @@ namespace PacketDotNet
             /// The signal power.
             /// </value>
             public Byte DBmAntenna2SignalPower { get; set; }
+
             /// <summary>
             /// Gets or sets the RF signal noise at antenna 2.
             /// </summary>
@@ -866,6 +894,7 @@ namespace PacketDotNet
             /// The signal noise.
             /// </value>
             public Byte DBmAntenna2SignalNoise { get; set; }
+
             /// <summary>
             /// Gets or sets the RF signal power at antenna 3.
             /// </summary>
@@ -873,6 +902,7 @@ namespace PacketDotNet
             /// The signal power.
             /// </value>
             public Byte DBmAntenna3SignalPower { get; set; }
+
             /// <summary>
             /// Gets or sets the RF signal noise at antenna 3.
             /// </summary>
@@ -880,6 +910,7 @@ namespace PacketDotNet
             /// The signal noise.
             /// </value>
             public Byte DBmAntenna3SignalNoise { get; set; }
+
             /// <summary>
             /// Gets or sets the error vector magnitude for Chain 0.
             /// </summary>
@@ -887,6 +918,7 @@ namespace PacketDotNet
             /// The error vector magnitude.
             /// </value>
             public UInt32 ErrorVectorMagnitude0 { get; set; }
+
             /// <summary>
             /// Gets or sets the error vector magnitude for Chain 1.
             /// </summary>
@@ -894,6 +926,7 @@ namespace PacketDotNet
             /// The error vector magnitude.
             /// </value>
             public UInt32 ErrorVectorMagnitude1 { get; set; }
+
             /// <summary>
             /// Gets or sets the error vector magnitude for Chain 2.
             /// </summary>
@@ -901,6 +934,7 @@ namespace PacketDotNet
             /// The error vector magnitude.
             /// </value>
             public UInt32 ErrorVectorMagnitude2 { get; set; }
+
             /// <summary>
             /// Gets or sets the error vector magnitude for Chain 3.
             /// </summary>
@@ -908,7 +942,7 @@ namespace PacketDotNet
             /// The error vector magnitude.
             /// </value>
             public UInt32 ErrorVectorMagnitude3 { get; set; }
-            
+
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
             /// </summary>
@@ -921,7 +955,7 @@ namespace PacketDotNet
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
-                    
+
                     writer.Write(AMpduId);
                     writer.Write(DelimiterCount);
                     writer.Write(ModulationCodingScheme);
@@ -936,7 +970,7 @@ namespace PacketDotNet
                     writer.Write(RssiAntenna2Ext);
                     writer.Write(RssiAntenna3Ext);
                     writer.Write(ExtensionChannelFrequency);
-                    writer.Write((UInt16)ExtensionChannelFlags);
+                    writer.Write((UInt16) ExtensionChannelFlags);
                     writer.Write(DBmAntenna0SignalPower);
                     writer.Write(DBmAntenna0SignalNoise);
                     writer.Write(DBmAntenna1SignalPower);
@@ -949,16 +983,18 @@ namespace PacketDotNet
                     writer.Write(ErrorVectorMagnitude1);
                     writer.Write(ErrorVectorMagnitude2);
                     writer.Write(ErrorVectorMagnitude3);
-                    
+
                     return ms.ToArray();
                 }
             }
-            
-        #endregion Properties
 
-        #region Constructors
+            #endregion Properties
+
+
+            #region Constructors
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiMacPhy"/> class from the 
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiMacPhy" /> class from the
             /// provided stream.
             /// </summary>
             /// <remarks>
@@ -968,7 +1004,7 @@ namespace PacketDotNet
             /// <param name='br'>
             /// The stream the field will be read from
             /// </param>
-            public PpiMacPhy (BinaryReader br)
+            public PpiMacPhy(BinaryReader br)
             {
                 AMpduId = br.ReadUInt32();
                 DelimiterCount = br.ReadByte();
@@ -998,24 +1034,22 @@ namespace PacketDotNet
                 ErrorVectorMagnitude2 = br.ReadUInt32();
                 ErrorVectorMagnitude3 = br.ReadUInt32();
             }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiMacPhy"/> class.
-            /// </summary>
-            public PpiMacPhy ()
-            {
-                
-            }
 
-        #endregion Constructors
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiMacPhy" /> class.
+            /// </summary>
+            public PpiMacPhy()
+            { }
+
+            #endregion Constructors
         }
-  
+
         /// <summary>
         /// PPI process info field.
         /// </summary>
         public class PpiProcessInfo : PpiField
         {
-        #region Properties
+            #region Properties
 
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType => PpiFieldType.PpiProcessInfo;
@@ -1036,7 +1070,7 @@ namespace PacketDotNet
                     return 19 + processLength + userLength + groupLength;
                 }
             }
-            
+
             /// <summary>
             /// Gets or sets the process identifier.
             /// </summary>
@@ -1044,6 +1078,7 @@ namespace PacketDotNet
             /// The process identifier.
             /// </value>
             public UInt32 ProcessId { get; set; }
+
             /// <summary>
             /// Gets or sets the thread identifier.
             /// </summary>
@@ -1051,6 +1086,7 @@ namespace PacketDotNet
             /// The thread identifier.
             /// </value>
             public UInt32 ThreadId { get; set; }
+
             /// <summary>
             /// Gets or sets the process path.
             /// </summary>
@@ -1058,6 +1094,7 @@ namespace PacketDotNet
             /// The process path.
             /// </value>
             public String ProcessPath { get; set; }
+
             /// <summary>
             /// Gets or sets the user identifier.
             /// </summary>
@@ -1065,6 +1102,7 @@ namespace PacketDotNet
             /// The user identifier.
             /// </value>
             public UInt32 UserId { get; set; }
+
             /// <summary>
             /// Gets or sets the user name.
             /// </summary>
@@ -1072,6 +1110,7 @@ namespace PacketDotNet
             /// The user name.
             /// </value>
             public String UserName { get; set; }
+
             /// <summary>
             /// Gets or sets the group identifier.
             /// </summary>
@@ -1079,6 +1118,7 @@ namespace PacketDotNet
             /// The group identifier.
             /// </value>
             public UInt32 GroupId { get; set; }
+
             /// <summary>
             /// Gets or sets the group name.
             /// </summary>
@@ -1086,7 +1126,7 @@ namespace PacketDotNet
             /// The group name.
             /// </value>
             public String GroupName { get; set; }
-            
+
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
             /// </summary>
@@ -1099,35 +1139,37 @@ namespace PacketDotNet
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
-                    
+
                     writer.Write(ProcessId);
                     writer.Write(ThreadId);
-                    
+
                     var pathBytes = Encoding.UTF8.GetBytes(ProcessPath ?? String.Empty);
-                    writer.Write((Byte)pathBytes.Length);
+                    writer.Write((Byte) pathBytes.Length);
                     writer.Write(pathBytes);
-                    
+
                     writer.Write(UserId);
-                    
+
                     var userBytes = Encoding.UTF8.GetBytes(UserName ?? String.Empty);
-                    writer.Write((Byte)userBytes.Length);
+                    writer.Write((Byte) userBytes.Length);
                     writer.Write(userBytes);
-                    
+
                     writer.Write(GroupId);
-                    
+
                     var groupBytes = Encoding.UTF8.GetBytes(GroupName ?? String.Empty);
-                    writer.Write((Byte)groupBytes.Length);
+                    writer.Write((Byte) groupBytes.Length);
                     writer.Write(groupBytes);
-                        
+
                     return ms.ToArray();
                 }
             }
 
-        #endregion Properties
+            #endregion Properties
 
-        #region Constructors
+
+            #region Constructors
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiProcessInfo"/> class from the 
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiProcessInfo" /> class from the
             /// provided stream.
             /// </summary>
             /// <remarks>
@@ -1137,49 +1179,45 @@ namespace PacketDotNet
             /// <param name='br'>
             /// The stream the field will be read from
             /// </param>
-            public PpiProcessInfo (BinaryReader br)
+            public PpiProcessInfo(BinaryReader br)
             {
-                
                 ProcessId = br.ReadUInt32();
                 ThreadId = br.ReadUInt32();
-                
+
                 var pathLength = br.ReadByte();
                 ProcessPath = Encoding.UTF8.GetString(br.ReadBytes(pathLength));
-                
+
                 UserId = br.ReadUInt32();
-                
+
                 var userLength = br.ReadByte();
                 UserName = Encoding.UTF8.GetString(br.ReadBytes(userLength));
-                
+
                 GroupId = br.ReadUInt32();
-                
+
                 var groupLength = br.ReadByte();
                 GroupName = Encoding.UTF8.GetString(br.ReadBytes(groupLength));
             }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiProcessInfo"/> class.
-            /// </summary>
-            public PpiProcessInfo ()
-            {
-                
-            }
 
-        #endregion Constructors
+            /// <summary>
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiProcessInfo" /> class.
+            /// </summary>
+            public PpiProcessInfo()
+            { }
+
+            #endregion Constructors
         }
-  
+
         /// <summary>
         /// The PpiUnknown field class can be used to represent any field types not
-        /// currently supported by PacketDotNet. Any unsupported field types encountered during 
+        /// currently supported by PacketDotNet. Any unsupported field types encountered during
         /// parsing will be stored as PpiUnknown fields.
         /// </summary>
         public class PpiUnknown : PpiField
         {
-            private PpiFieldType fieldType;
-        #region Properties
+            #region Properties
 
             /// <summary>Type of the field</summary>
-            public override PpiFieldType FieldType => fieldType;
+            public override PpiFieldType FieldType { get; }
 
             /// <summary>
             /// Gets the length of the field data.
@@ -1204,12 +1242,14 @@ namespace PacketDotNet
             /// The fields values bytes.
             /// </value>
             public Byte[] UnknownBytes { get; set; }
-            
-        #endregion Properties
 
-        #region Constructors
+            #endregion Properties
+
+
+            #region Constructors
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiUnknown"/> class from the 
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiUnknown" /> class from the
             /// provided stream.
             /// </summary>
             /// <remarks>
@@ -1225,24 +1265,25 @@ namespace PacketDotNet
             /// <param name='length'>
             /// The number of bytes the unknown field contains.
             /// </param>
-            public PpiUnknown (Int32 typeNumber, BinaryReader br, Int32 length)
+            public PpiUnknown(Int32 typeNumber, BinaryReader br, Int32 length)
             {
-                fieldType = (PpiFieldType) typeNumber;
+                FieldType = (PpiFieldType) typeNumber;
                 UnknownBytes = br.ReadBytes(length);
             }
-   
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiUnknown"/> class.
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiUnknown" /> class.
             /// </summary>
             /// <param name='typeNumber'>
             /// The PPI field type number.
             /// </param>
-            public PpiUnknown (Int32 typeNumber)
+            public PpiUnknown(Int32 typeNumber)
             {
-                fieldType = (PpiFieldType)typeNumber;
+                FieldType = (PpiFieldType) typeNumber;
             }
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiUnknown"/> class.
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiUnknown" /> class.
             /// </summary>
             /// <param name='typeNumber'>
             /// The PPI field type number.
@@ -1250,22 +1291,22 @@ namespace PacketDotNet
             /// <param name='UnknownBytes'>
             /// The field data.
             /// </param>
-            public PpiUnknown (Int32 typeNumber, Byte[] UnknownBytes)
+            public PpiUnknown(Int32 typeNumber, Byte[] UnknownBytes)
             {
-                fieldType = (PpiFieldType)typeNumber;
+                FieldType = (PpiFieldType) typeNumber;
                 this.UnknownBytes = UnknownBytes;
             }
-            
-        #endregion Constructors
+
+            #endregion Constructors
         }
-        
+
         /// <summary>
         /// The PPI Spectrum field is intended to be compatible with the sweep records
         /// returned by the Wi-Spy spectrum analyzer.
         /// </summary>
         public class PpiSpectrum : PpiField
         {
-        #region Properties
+            #region Properties
 
             /// <summary>Type of the field</summary>
             public override PpiFieldType FieldType => PpiFieldType.PpiSpectrum;
@@ -1285,6 +1326,7 @@ namespace PacketDotNet
             /// The starting frequency.
             /// </value>
             public UInt32 StartingFrequency { get; set; }
+
             /// <summary>
             /// Gets or sets the resolution of each sample in Hz.
             /// </summary>
@@ -1292,6 +1334,7 @@ namespace PacketDotNet
             /// The resolution in Hz.
             /// </value>
             public UInt32 Resolution { get; set; }
+
             /// <summary>
             /// Gets or sets the amplitude offset (in 0.001 dBm)
             /// </summary>
@@ -1299,6 +1342,7 @@ namespace PacketDotNet
             /// The amplitude offset.
             /// </value>
             public UInt32 AmplitudeOffset { get; set; }
+
             /// <summary>
             /// Gets or sets the amplitude resolution (in .001 dBm)
             /// </summary>
@@ -1306,6 +1350,7 @@ namespace PacketDotNet
             /// The amplitude resolution.
             /// </value>
             public UInt32 AmplitudeResolution { get; set; }
+
             /// <summary>
             /// Gets or sets the maximum raw RSSI value reported by the device.
             /// </summary>
@@ -1313,14 +1358,15 @@ namespace PacketDotNet
             /// The maximum rssi.
             /// </value>
             public UInt16 MaximumRssi { get; set; }
+
             /// <summary>
             /// Gets or sets the data samples.
             /// </summary>
             /// <value>
             /// The data samples.
             /// </value>
-            public Byte[] SamplesData { get; set;}
-            
+            public Byte[] SamplesData { get; set; }
+
             /// <summary>
             /// Gets the field bytes. This doesn't include the PPI field header.
             /// </summary>
@@ -1333,7 +1379,7 @@ namespace PacketDotNet
                 {
                     MemoryStream ms = new MemoryStream();
                     BinaryWriter writer = new BinaryWriter(ms);
-                    
+
                     writer.Write(StartingFrequency);
                     writer.Write(Resolution);
                     writer.Write(AmplitudeOffset);
@@ -1341,16 +1387,18 @@ namespace PacketDotNet
                     writer.Write(MaximumRssi);
                     writer.Write((UInt16) SamplesData.Length);
                     writer.Write(SamplesData);
-                    
-                    return ms.ToArray();
-                }    
-            }
-            
-        #endregion Properties
 
-        #region Constructors
+                    return ms.ToArray();
+                }
+            }
+
+            #endregion Properties
+
+
+            #region Constructors
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiSpectrum"/> class from the 
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiSpectrum" /> class from the
             /// provided stream.
             /// </summary>
             /// <remarks>
@@ -1360,7 +1408,7 @@ namespace PacketDotNet
             /// <param name='br'>
             /// The stream the field will be read from
             /// </param>
-            public PpiSpectrum (BinaryReader br)
+            public PpiSpectrum(BinaryReader br)
             {
                 StartingFrequency = br.ReadUInt32();
                 Resolution = br.ReadUInt32();
@@ -1370,16 +1418,14 @@ namespace PacketDotNet
                 var samplesLength = br.ReadUInt16();
                 SamplesData = br.ReadBytes(samplesLength);
             }
-            
+
             /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiSpectrum"/> class.
+            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.PpiSpectrum" /> class.
             /// </summary>
-            public PpiSpectrum ()
-            {
-             
-            }
-            
-        #endregion Constructors
+            public PpiSpectrum()
+            { }
+
+            #endregion Constructors
         }
     }
 }

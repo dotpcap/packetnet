@@ -17,7 +17,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
 *  Copyright 2017 Chris Morgan <chmorgan@gmail.com>
 */
-using System;
 
 namespace PacketDotNet
 {
@@ -31,18 +30,22 @@ namespace PacketDotNet
         /// Internet Protocol, Version 4 (IPv4)
         /// </summary>
         IpV4 = 2,
+
         /// <summary>
         /// Internet Protocol, Version 6 (IPv6)
         /// </summary>
         IpV6 = 24,
+
         /// <summary>
         /// Internet Protocol, Version 6 (IPv6)
         /// </summary>
         IpV6_28 = 28,
+
         /// <summary>
         /// Internet Protocol, Version 6 (IPv6)
         /// </summary>
         IpV6_30 = 30,
+
         /// <summary>
         /// IPX
         /// </summary>

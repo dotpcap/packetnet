@@ -17,9 +17,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
+
 using System;
-using MiscUtil.Conversion;
-using PacketDotNet.Utils;
 
 namespace PacketDotNet.Tcp
 {
@@ -28,39 +27,49 @@ namespace PacketDotNet.Tcp
     /// </summary>
     public class AlternateChecksumRequest : Option
     {
+        #region Members
+
+        // the offset (in bytes) of the Checksum field
+        const Int32 ChecksumFieldOffset = 2;
+
+        #endregion
+
+
         #region Constructors
 
         /// <summary>
         /// Creates an Alternate Checksum Request Option
-        ///  Used to negotiate an alternative checksum algorithm in a connection
+        /// Used to negotiate an alternative checksum algorithm in a connection
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="T:System.Byte[]"/>
+        /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         /// <remarks>
         /// References:
-        ///  http://datatracker.ietf.org/doc/rfc1146/
+        /// http://datatracker.ietf.org/doc/rfc1146/
         /// </remarks>
-         public AlternateChecksumRequest(Byte[] bytes, Int32 offset, Int32 length) :
+        public AlternateChecksumRequest(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
         { }
 
         #endregion
+
 
         #region Properties
 
         /// <summary>
         /// The Checksum
         /// </summary>
-        public ChecksumAlgorighmType Checksum => (ChecksumAlgorighmType)Bytes[ChecksumFieldOffset];
+        public ChecksumAlgorighmType Checksum => (ChecksumAlgorighmType) Bytes[ChecksumFieldOffset];
 
         #endregion
+
 
         #region Methods
 
@@ -68,19 +77,12 @@ namespace PacketDotNet.Tcp
         /// Returns the Option info as a string
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        /// A <see cref="System.String" />
         /// </returns>
         public override String ToString()
         {
-            return "[" + Kind.ToString() + ": ChecksumType=" + Checksum.ToString() + "]";
+            return "[" + Kind + ": ChecksumType=" + Checksum + "]";
         }
-
-        #endregion
-
-        #region Members
-
-        // the offset (in bytes) of the Checksum field
-        const Int32 ChecksumFieldOffset = 2;
 
         #endregion
     }

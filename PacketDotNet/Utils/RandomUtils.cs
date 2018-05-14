@@ -30,52 +30,55 @@ namespace PacketDotNet.Utils
         /// Generate a random ip address
         /// </summary>
         /// <param name="version">
-        /// A <see cref="IpVersion"/>
+        /// A <see cref="IpVersion" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Net.IPAddress"/>
+        /// A <see cref="System.Net.IPAddress" />
         /// </returns>
-        public static System.Net.IPAddress GetIPAddress(IpVersion version)
+        public static IPAddress GetIPAddress(IpVersion version)
         {
             var rnd = new Random();
             Byte[] randomAddressBytes;
 
-            if(version == IpVersion.IPv4)
+            if (version == IpVersion.IPv4)
             {
                 randomAddressBytes = new Byte[IPv4Fields.AddressLength];
                 rnd.NextBytes(randomAddressBytes);
-            } else if(version == IpVersion.IPv6)
+            }
+            else if (version == IpVersion.IPv6)
             {
                 randomAddressBytes = new Byte[IPv6Fields.AddressLength];
                 rnd.NextBytes(randomAddressBytes);
-            } else
+            }
+            else
             {
-                throw new System.InvalidOperationException("Unknown version of " + version);
+                throw new InvalidOperationException("Unknown version of " + version);
             }
 
-            return new System.Net.IPAddress(randomAddressBytes);
+            return new IPAddress(randomAddressBytes);
         }
 
         /// <summary>
         /// Get the length of the longest string in a list of strings
         /// </summary>
         /// <param name="stringsList">
-        /// A <see cref="T:List{System.String}"/>
+        /// A <see cref="T:List{System.String}" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </returns>
         public static Int32 LongestStringLength(List<String> stringsList)
         {
-            String longest="";
+            String longest = "";
 
-            foreach(String L in stringsList)
+            foreach (String L in stringsList)
             {
                 if (L.Length > longest.Length)
                 {
                     longest = L;
                 }
             }
+
             return longest.Length;
         }
     }

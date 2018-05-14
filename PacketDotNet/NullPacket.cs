@@ -17,11 +17,13 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2017 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
-using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
-using PacketDotNet.Utils;
+using log4net;
 using MiscUtil.Conversion;
+using PacketDotNet.Utils;
 
 namespace PacketDotNet
 {
@@ -33,12 +35,12 @@ namespace PacketDotNet
     public class NullPacket : Packet
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-        // NOTE: No need to warn about lack of use, the compiler won't
-        //       put any calls to 'log' here but we need 'log' to exist to compile
+// NOTE: No need to warn about lack of use, the compiler won't
+//       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
@@ -47,15 +49,15 @@ namespace PacketDotNet
         /// </summary>
         public NullPacketType Protocol
         {
-            get => (NullPacketType)EndianBitConverter.Little.ToUInt32(Header.Bytes,
-                Header.Offset + NullFields.ProtocolPosition);
+            get => (NullPacketType) EndianBitConverter.Little.ToUInt32(Header.Bytes,
+                                                                       Header.Offset + NullFields.ProtocolPosition);
 
             set
             {
-                var val = (UInt32)value;
+                var val = (UInt32) value;
                 EndianBitConverter.Little.CopyBytes(val,
-                    Header.Bytes,
-                    Header.Offset + NullFields.ProtocolPosition);
+                                                    Header.Bytes,
+                                                    Header.Offset + NullFields.ProtocolPosition);
             }
         }
 
@@ -64,7 +66,7 @@ namespace PacketDotNet
         /// </summary>
         public NullPacket(NullPacketType TheType)
         {
-            log.Debug("");
+            Log.Debug("");
 
             // allocate memory for this packet
             Int32 offset = 0;
@@ -73,57 +75,59 @@ namespace PacketDotNet
             Header = new ByteArraySegment(headerBytes, offset, length);
 
             // setup some typical values and default values
-            this.Protocol = TheType;
+            Protocol = TheType;
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
         public NullPacket(ByteArraySegment bas)
         {
-            log.Debug("");
+            Log.Debug("");
 
             // slice off the header portion as our header
             Header = new ByteArraySegment(bas);
             Header.Length = NullFields.HeaderLength;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(()=> ParseEncapsulatedBytes(Header, Protocol));
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, Protocol));
         }
 
-        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header,
-                                                                        NullPacketType Protocol)
+        internal static PacketOrByteArraySegment ParseEncapsulatedBytes
+        (
+            ByteArraySegment Header,
+            NullPacketType Protocol)
         {
             // slice off the payload
             var payload = Header.EncapsulatedBytes();
 
-            log.DebugFormat("Protocol: {0}, payload: {1}", Protocol, payload);
+            Log.DebugFormat("Protocol: {0}, payload: {1}", Protocol, payload);
 
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
-            switch(Protocol)
+            switch (Protocol)
             {
-            case NullPacketType.IpV4:
-                payloadPacketOrData.ThePacket = new IPv4Packet(payload);
-                break;
-            case NullPacketType.IpV6:
-            case NullPacketType.IpV6_28:
-            case NullPacketType.IpV6_30:
-                payloadPacketOrData.ThePacket = new IPv6Packet(payload);
-                break;
-            case NullPacketType.IPX:
-            default:
-                throw new System.NotImplementedException("Protocol of " + Protocol + " is not implemented");
+                case NullPacketType.IpV4:
+                    payloadPacketOrData.ThePacket = new IPv4Packet(payload);
+                    break;
+                case NullPacketType.IpV6:
+                case NullPacketType.IpV6_28:
+                case NullPacketType.IpV6_30:
+                    payloadPacketOrData.ThePacket = new IPv6Packet(payload);
+                    break;
+                case NullPacketType.IPX:
+                default:
+                    throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");
             }
 
             return payloadPacketOrData;
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color => AnsiEscapeSequences.LightPurple;
+        public override String Color => AnsiEscapeSequences.LightPurple;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override String ToString(StringOutputType outputFormat)
@@ -137,11 +141,11 @@ namespace PacketDotNet
         /// Generate a random packet
         /// </summary>
         /// <returns>
-        /// A <see cref="NullPacket"/>
+        /// A <see cref="NullPacket" />
         /// </returns>
         public static NullPacket RandomPacket()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }

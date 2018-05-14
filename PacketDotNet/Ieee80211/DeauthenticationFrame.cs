@@ -87,11 +87,11 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override Int32 FrameSize => (MacFields.FrameControlLength +
-                                                MacFields.DurationIDLength +
-                                                (MacFields.AddressLength * 3) +
-                                                MacFields.SequenceControlLength +
-                                                DeauthenticationFields.ReasonCodeLength);
+            public override Int32 FrameSize => MacFields.FrameControlLength +
+                                               MacFields.DurationIDLength +
+                                               (MacFields.AddressLength * 3) +
+                                               MacFields.SequenceControlLength +
+                                               DeauthenticationFields.ReasonCodeLength;
 
             /// <summary>
             /// Gets the reason for deauthentication.
@@ -105,7 +105,7 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if (Header.Length >= (DeauthenticationFields.ReasonCodePosition + DeauthenticationFields.ReasonCodeLength))
+                    if (Header.Length >= DeauthenticationFields.ReasonCodePosition + DeauthenticationFields.ReasonCodeLength)
                     {
                         return (ReasonCode) EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                                                Header.Offset + DeauthenticationFields.ReasonCodePosition);
@@ -124,7 +124,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
+                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
                 {
                     Header = new ByteArraySegment(new Byte[FrameSize]);
                 }

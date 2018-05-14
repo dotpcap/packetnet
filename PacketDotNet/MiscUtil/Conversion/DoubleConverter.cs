@@ -27,10 +27,10 @@ namespace MiscUtil.Conversion
 
 
             // Translate the double into sign, exponent and mantissa.
-            Int64 bits = BitConverter.DoubleToInt64Bits(d);
-            Boolean negative = (bits < 0);
-            Int32 exponent = (Int32) ((bits >> 52) & 0x7ffL);
-            Int64 mantissa = bits & 0xfffffffffffffL;
+            var bits = BitConverter.DoubleToInt64Bits(d);
+            var negative = bits < 0;
+            var exponent = (Int32) ((bits >> 52) & 0x7ffL);
+            var mantissa = bits & 0xfffffffffffffL;
 
             // Subnormal numbers; exponent is effectively one higher,
             // but there's no extra normalisation bit in the mantissa
@@ -64,21 +64,21 @@ namespace MiscUtil.Conversion
             }
 
             // Construct a new decimal expansion with the mantissa
-            ArbitraryDecimal ad = new ArbitraryDecimal(mantissa);
+            var ad = new ArbitraryDecimal(mantissa);
 
             // If the exponent is less than 0, we need to repeatedly
             // divide by 2 - which is the equivalent of multiplying
             // by 5 and dividing by 10.
             if (exponent < 0)
             {
-                for (Int32 i = 0; i < -exponent; i++)
+                for (var i = 0; i < -exponent; i++)
                     ad.MultiplyBy(5);
                 ad.Shift(-exponent);
             }
             // Otherwise, we need to repeatedly multiply by 2
             else
             {
-                for (Int32 i = 0; i < exponent; i++)
+                for (var i = 0; i < exponent; i++)
                     ad.MultiplyBy(2);
             }
 
@@ -109,9 +109,9 @@ namespace MiscUtil.Conversion
             /// </summary>
             internal ArbitraryDecimal(Int64 x)
             {
-                String tmp = x.ToString(CultureInfo.InvariantCulture);
+                var tmp = x.ToString(CultureInfo.InvariantCulture);
                 digits = new Byte[tmp.Length];
-                for (Int32 i = 0; i < tmp.Length; i++)
+                for (var i = 0; i < tmp.Length; i++)
                     digits[i] = (Byte) (tmp[i] - '0');
                 Normalize();
             }
@@ -122,10 +122,10 @@ namespace MiscUtil.Conversion
             /// </summary>
             internal void MultiplyBy(Int32 amount)
             {
-                Byte[] result = new Byte[digits.Length + 1];
-                for (Int32 i = digits.Length - 1; i >= 0; i--)
+                var result = new Byte[digits.Length + 1];
+                for (var i = digits.Length - 1; i >= 0; i--)
                 {
-                    Int32 resultDigit = digits[i] * amount + result[i + 1];
+                    var resultDigit = digits[i] * amount + result[i + 1];
                     result[i] = (Byte) (resultDigit / 10);
                     result[i + 1] = (Byte) (resultDigit % 10);
                 }
@@ -174,8 +174,8 @@ namespace MiscUtil.Conversion
                     return;
 
 
-                Byte[] tmp = new Byte[last - first + 1];
-                for (Int32 i = 0; i < tmp.Length; i++)
+                var tmp = new Byte[last - first + 1];
+                for (var i = 0; i < tmp.Length; i++)
                     tmp[i] = digits[i + first];
 
                 decimalPoint -= digits.Length - (last + 1);
@@ -187,8 +187,8 @@ namespace MiscUtil.Conversion
             /// </summary>
             public override String ToString()
             {
-                Char[] digitString = new Char[digits.Length];
-                for (Int32 i = 0; i < digits.Length; i++)
+                var digitString = new Char[digits.Length];
+                for (var i = 0; i < digits.Length; i++)
                     digitString[i] = (Char) (digits[i] + '0');
 
                 // Simplest case - nothing after the decimal point,
@@ -210,7 +210,7 @@ namespace MiscUtil.Conversion
                 if (decimalPoint >= digitString.Length)
                 {
                     return "0." +
-                           new String('0', (decimalPoint - digitString.Length)) +
+                           new String('0', decimalPoint - digitString.Length) +
                            new String(digitString);
                 }
 

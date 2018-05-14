@@ -59,10 +59,10 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if (Header.Length >= (MacFields.SequenceControlPosition + MacFields.SequenceControlLength))
+                    if (Header.Length >= MacFields.SequenceControlPosition + MacFields.SequenceControlLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                                  (Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+                                                                  Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3));
                     }
 
                     return 0;
@@ -70,7 +70,7 @@ namespace PacketDotNet
 
                 set => EndianBitConverter.Little.CopyBytes(value,
                                                            Header.Bytes,
-                                                           (Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+                                                           Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3));
             }
 
             /// <summary>

@@ -101,7 +101,7 @@ namespace PacketDotNet
                 var availablePayloadLength = GetAvailablePayloadLength();
                 if (availablePayloadLength > 0)
                 {
-                    PayloadPacketOrData.Value.TheByteArraySegment = Header.EncapsulatedBytes(availablePayloadLength);
+                    PayloadPacketOrData.Value.ByteArraySegment = Header.EncapsulatedBytes(availablePayloadLength);
                 }
             }
 
@@ -140,17 +140,17 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override Int32 FrameSize => (MacFields.FrameControlLength +
-                                                MacFields.DurationIDLength +
-                                                (MacFields.AddressLength * 3) +
-                                                MacFields.SequenceControlLength);
+            public override Int32 FrameSize => MacFields.FrameControlLength +
+                                               MacFields.DurationIDLength +
+                                               (MacFields.AddressLength * 3) +
+                                               MacFields.SequenceControlLength;
 
             /// <summary>
             /// Writes the current packet properties to the backing ByteArraySegment.
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
+                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
                 {
                     Header = new ByteArraySegment(new Byte[FrameSize]);
                 }

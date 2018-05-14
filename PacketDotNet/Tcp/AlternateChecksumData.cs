@@ -71,7 +71,7 @@ namespace PacketDotNet.Tcp
         {
             get
             {
-                Byte[] data = new Byte[Length - DataFieldOffset];
+                var data = new Byte[Length - DataFieldOffset];
                 Array.Copy(Bytes, DataFieldOffset, data, 0, data.Length);
                 return data;
             }

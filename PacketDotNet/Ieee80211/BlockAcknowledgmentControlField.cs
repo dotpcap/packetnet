@@ -68,13 +68,13 @@ namespace PacketDotNet
             /// </summary>
             public Boolean CompressedBitmap
             {
-                get => (((Field >> 2) & 0x1) == 1) ? true : false;
+                get => ((Field >> 2) & 0x1) == 1 ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x2);
+                        Field |= 1 << 0x2;
                     }
                     else
                     {
@@ -96,13 +96,13 @@ namespace PacketDotNet
             /// </summary>
             public Boolean MultiTid
             {
-                get => (((Field >> 1) & 0x1) == 1) ? true : false;
+                get => ((Field >> 1) & 0x1) == 1 ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x1);
+                        Field |= 1 << 0x1;
                     }
                     else
                     {
@@ -126,7 +126,7 @@ namespace PacketDotNet
                     }
                     else
                     {
-                        Field &= unchecked((UInt16) ~(0x1));
+                        Field &= unchecked((UInt16) ~0x1);
                     }
                 }
             }

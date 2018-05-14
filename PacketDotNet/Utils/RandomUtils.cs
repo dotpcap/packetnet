@@ -69,9 +69,9 @@ namespace PacketDotNet.Utils
         /// </returns>
         public static Int32 LongestStringLength(List<String> stringsList)
         {
-            String longest = "";
+            var longest = "";
 
-            foreach (String L in stringsList)
+            foreach (var L in stringsList)
             {
                 if (L.Length > longest.Length)
                 {

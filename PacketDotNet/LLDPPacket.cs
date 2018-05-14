@@ -97,11 +97,7 @@ namespace PacketDotNet
         /// <value>
         /// The current length of the LLDPDU
         /// </value>
-        public Int32 Length
-        {
-            get => _Length;
-            set => _Length = value;
-        }
+        public Int32 Length { get; set; }
 
         /// <summary>
         /// LLDPPacket specific implementation of BytesHighPerformance
@@ -160,7 +156,7 @@ namespace PacketDotNet
         {
             Log.DebugFormat("bytes.Length {0}, offset {1}", bytes.Length, offset);
 
-            Int32 position = 0;
+            var position = 0;
 
             TlvCollection.Clear();
 
@@ -172,7 +168,7 @@ namespace PacketDotNet
 
                 // create a TLV based on the type and
                 // add it to the collection
-                TLV currentTlv = TLVFactory(bytes, offset + position, typeLength.Type);
+                var currentTlv = TLVFactory(bytes, offset + position, typeLength.Type);
                 if (currentTlv == null)
                 {
                     Log.Debug("currentTlv == null");
@@ -191,7 +187,7 @@ namespace PacketDotNet
                 }
 
                 // Increment the position to seek the next TLV
-                position += (currentTlv.TotalLength);
+                position += currentTlv.TotalLength;
             }
 
             Log.DebugFormat("Done, position {0}", position);
@@ -199,7 +195,7 @@ namespace PacketDotNet
 
         /// <summary>
         /// </summary>
-        /// <param name="Bytes">
+        /// <param name="bytes">
         /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
@@ -211,30 +207,30 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="TLV" />
         /// </returns>
-        private static TLV TLVFactory(Byte[] Bytes, Int32 offset, TLVTypes type)
+        private static TLV TLVFactory(Byte[] bytes, Int32 offset, TLVTypes type)
         {
             switch (type)
             {
                 case TLVTypes.ChassisID:
-                    return new ChassisID(Bytes, offset);
+                    return new ChassisID(bytes, offset);
                 case TLVTypes.PortID:
-                    return new PortID(Bytes, offset);
+                    return new PortID(bytes, offset);
                 case TLVTypes.TimeToLive:
-                    return new TimeToLive(Bytes, offset);
+                    return new TimeToLive(bytes, offset);
                 case TLVTypes.PortDescription:
-                    return new PortDescription(Bytes, offset);
+                    return new PortDescription(bytes, offset);
                 case TLVTypes.SystemName:
-                    return new SystemName(Bytes, offset);
+                    return new SystemName(bytes, offset);
                 case TLVTypes.SystemDescription:
-                    return new SystemDescription(Bytes, offset);
+                    return new SystemDescription(bytes, offset);
                 case TLVTypes.SystemCapabilities:
-                    return new SystemCapabilities(Bytes, offset);
+                    return new SystemCapabilities(bytes, offset);
                 case TLVTypes.ManagementAddress:
-                    return new ManagementAddress(Bytes, offset);
+                    return new ManagementAddress(bytes, offset);
                 case TLVTypes.OrganizationSpecific:
-                    return new OrganizationSpecific(Bytes, offset);
+                    return new OrganizationSpecific(bytes, offset);
                 case TLVTypes.EndOfLLDPU:
-                    return new EndOfLLDPDU(Bytes, offset);
+                    return new EndOfLLDPDU(bytes, offset);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -252,16 +248,16 @@ namespace PacketDotNet
 
             var lldpPacket = new LLDPPacket();
 
-            Byte[] physicalAddressBytes = new Byte[EthernetFields.MacAddressLength];
+            var physicalAddressBytes = new Byte[EthernetFields.MacAddressLength];
             rnd.NextBytes(physicalAddressBytes);
             var physicalAddress = new PhysicalAddress(physicalAddressBytes);
             lldpPacket.TlvCollection.Add(new ChassisID(physicalAddress));
 
-            Byte[] networkAddress = new Byte[IPv4Fields.AddressLength];
+            var networkAddress = new Byte[IPv4Fields.AddressLength];
             rnd.NextBytes(networkAddress);
             lldpPacket.TlvCollection.Add(new PortID(new NetworkAddress(new IPAddress(networkAddress))));
 
-            UInt16 seconds = (UInt16) rnd.Next(0, 120);
+            var seconds = (UInt16) rnd.Next(0, 120);
             lldpPacket.TlvCollection.Add(new TimeToLive(seconds));
 
             lldpPacket.TlvCollection.Add(new EndOfLLDPDU());
@@ -273,8 +269,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -285,9 +281,9 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the string of tlvs
-                String tlvs = "{";
+                var tlvs = "{";
                 var r = new Regex(@"[^(\.)]([^\.]*)$");
-                foreach (TLV tlv in TlvCollection)
+                foreach (var tlv in TlvCollection)
                 {
                     // regex trim the parent namespaces from the class type
                     //   (ex. "PacketDotNet.LLDP.TimeToLive" becomes "TimeToLive")
@@ -333,8 +329,6 @@ namespace PacketDotNet
         /// Contains the TLV's in the LLDPDU
         /// </summary>
         public TLVCollection TlvCollection = new TLVCollection();
-
-        Int32 _Length;
 
         #endregion
     }

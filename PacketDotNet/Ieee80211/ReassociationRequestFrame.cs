@@ -58,9 +58,9 @@ namespace PacketDotNet
                 if (bas.Length > ReassociationRequestFields.InformationElement1Position)
                 {
                     //create a segment that just refers to the info element section
-                    ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                                                (bas.Offset + ReassociationRequestFields.InformationElement1Position),
-                                                                                (bas.Length - ReassociationRequestFields.InformationElement1Position));
+                    var infoElementsSegment = new ByteArraySegment(bas.Bytes,
+                                                                   bas.Offset + ReassociationRequestFields.InformationElement1Position,
+                                                                   bas.Length - ReassociationRequestFields.InformationElement1Position);
 
                     InformationElements = new InformationElementList(infoElementsSegment);
                 }
@@ -127,14 +127,14 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override Int32 FrameSize => (MacFields.FrameControlLength +
-                                                MacFields.DurationIDLength +
-                                                (MacFields.AddressLength * 3) +
-                                                MacFields.SequenceControlLength +
-                                                ReassociationRequestFields.CapabilityInformationLength +
-                                                ReassociationRequestFields.ListenIntervalLength +
-                                                MacFields.AddressLength +
-                                                InformationElements.Length);
+            public override Int32 FrameSize => MacFields.FrameControlLength +
+                                               MacFields.DurationIDLength +
+                                               (MacFields.AddressLength * 3) +
+                                               MacFields.SequenceControlLength +
+                                               ReassociationRequestFields.CapabilityInformationLength +
+                                               ReassociationRequestFields.ListenIntervalLength +
+                                               MacFields.AddressLength +
+                                               InformationElements.Length;
 
             /// <summary>
             /// Gets or sets the information elements.
@@ -161,7 +161,7 @@ namespace PacketDotNet
                 get
                 {
                     if (Header.Length >=
-                        (ReassociationRequestFields.CapabilityInformationPosition + ReassociationRequestFields.CapabilityInformationLength))
+                        ReassociationRequestFields.CapabilityInformationPosition + ReassociationRequestFields.CapabilityInformationLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                                   Header.Offset + ReassociationRequestFields.CapabilityInformationPosition);
@@ -193,7 +193,7 @@ namespace PacketDotNet
                 get
                 {
                     if (Header.Length >=
-                        (ReassociationRequestFields.ListenIntervalPosition + ReassociationRequestFields.ListenIntervalLength))
+                        ReassociationRequestFields.ListenIntervalPosition + ReassociationRequestFields.ListenIntervalLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                                   Header.Offset + ReassociationRequestFields.ListenIntervalPosition);
@@ -212,7 +212,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
+                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
                 {
                     Header = new ByteArraySegment(new Byte[FrameSize]);
                 }

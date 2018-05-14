@@ -67,14 +67,14 @@ namespace PacketDotNet
         /// </summary>
         public PPPPacket
         (
-            PPPoECode Code,
-            UInt16 SessionId)
+            PPPoECode code,
+            UInt16 sessionId)
         {
             Log.Debug("");
 
             // allocate memory for this packet
-            Int32 offset = 0;
-            Int32 length = PPPFields.HeaderLength;
+            const int offset = 0;
+            var length = PPPFields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
@@ -93,6 +93,7 @@ namespace PacketDotNet
             Log.Debug("");
 
             // slice off the header portion as our header
+            // ReSharper disable once UseObjectOrCollectionInitializer
             Header = new ByteArraySegment(bas);
             Header.Length = PPPFields.HeaderLength;
 
@@ -102,27 +103,27 @@ namespace PacketDotNet
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes
         (
-            ByteArraySegment Header,
-            PPPProtocol Protocol)
+            ByteArraySegment header,
+            PPPProtocol protocol)
         {
             // slice off the payload
-            var payload = Header.EncapsulatedBytes();
+            var payload = header.EncapsulatedBytes();
 
             Log.DebugFormat("payload: {0}", payload);
 
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
-            switch (Protocol)
+            switch (protocol)
             {
                 case PPPProtocol.IPv4:
-                    payloadPacketOrData.ThePacket = new IPv4Packet(payload);
+                    payloadPacketOrData.Packet = new IPv4Packet(payload);
                     break;
                 case PPPProtocol.IPv6:
-                    payloadPacketOrData.ThePacket = new IPv6Packet(payload);
+                    payloadPacketOrData.Packet = new IPv6Packet(payload);
                     break;
                 default:
                     //Probably a control packet, lets just add it to the data
-                    payloadPacketOrData.TheByteArraySegment = payload;
+                    payloadPacketOrData.ByteArraySegment = payload;
                     break;
             }
 
@@ -136,8 +137,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -157,13 +158,13 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>
+                var properties = new Dictionary<String, String>
                 {
                     {"protocol", Protocol + " (0x" + Protocol.ToString("x") + ")"}
                 };
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("PPP:  ******* PPP - \"Point-to-Point Protocol\" - offset=? length=" + TotalPacketLength);

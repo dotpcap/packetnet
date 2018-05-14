@@ -118,9 +118,9 @@ namespace PacketDotNet
         /// </summary>
         public Byte[] Data
         {
-            get => PayloadPacketOrData.Value.TheByteArraySegment.ActualBytes();
+            get => PayloadPacketOrData.Value.ByteArraySegment.ActualBytes();
 
-            set => PayloadPacketOrData.Value.TheByteArraySegment = new ByteArraySegment(value, 0, value.Length);
+            set => PayloadPacketOrData.Value.ByteArraySegment = new ByteArraySegment(value, 0, value.Length);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace PacketDotNet
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
                 var result = new PacketOrByteArraySegment();
-                result.TheByteArraySegment = Header.EncapsulatedBytes();
+                result.ByteArraySegment = Header.EncapsulatedBytes();
                 return result;
             });
         }
@@ -169,8 +169,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -190,7 +190,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>
+                var properties = new Dictionary<String, String>
                 {
                     {"type/code", TypeCode + " (0x" + TypeCode.ToString("x") + ")"},
                     // TODO: Implement checksum verification for ICMPv4
@@ -200,7 +200,7 @@ namespace PacketDotNet
                 };
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("ICMP:  ******* ICMPv4 - \"Internet Control Message Protocol (Version 4)\" - offset=? length=" + TotalPacketLength);

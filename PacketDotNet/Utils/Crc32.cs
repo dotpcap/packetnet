@@ -103,7 +103,7 @@ namespace PacketDotNet.Utils
         /// <remarks>The computation preserves the internal state between the calls, so it can be used for computation of a stream data.</remarks>
         public Byte[] ComputeHash(String asciiString)
         {
-            Byte[] rawBytes = Encoding.ASCII.GetBytes(asciiString);
+            var rawBytes = Encoding.ASCII.GetBytes(asciiString);
             return ComputeHash(rawBytes);
         }
 
@@ -150,7 +150,7 @@ namespace PacketDotNet.Utils
         /// <summary>Routes data written to the object into the hash algorithm for computing the hash.</summary>
         protected override void HashCore(Byte[] buffer, Int32 offset, Int32 count)
         {
-            for (Int32 i = offset; i < count; i++)
+            for (var i = offset; i < count; i++)
             {
                 UInt64 ptr = (_crc & 0xFF) ^ buffer[i];
                 _crc >>= 8;
@@ -183,10 +183,10 @@ namespace PacketDotNet.Utils
             var table = new UInt32[256];
 
             // 256 values representing ASCII character codes.
-            for (Int32 i = 0; i < 256; i++)
+            for (var i = 0; i < 256; i++)
             {
                 var crc = (UInt32) i;
-                for (Int32 j = 8; j > 0; j--)
+                for (var j = 8; j > 0; j--)
                 {
                     if ((crc & 1) == 1)
                         crc = (crc >> 1) ^ polynomial;

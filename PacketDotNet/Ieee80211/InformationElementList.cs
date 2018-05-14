@@ -62,11 +62,11 @@ namespace PacketDotNet
             /// </param>
             public InformationElementList(ByteArraySegment bas)
             {
-                Int32 index = 0;
-                while ((index + InformationElement.ElementLengthPosition) < bas.Length)
+                var index = 0;
+                while (index + InformationElement.ElementLengthPosition < bas.Length)
                 {
                     var ieStartPosition = bas.Offset + index;
-                    Byte valueLength = bas.Bytes[ieStartPosition + InformationElement.ElementLengthPosition];
+                    var valueLength = bas.Bytes[ieStartPosition + InformationElement.ElementLengthPosition];
                     var ieLength = InformationElement.ElementIdLength + InformationElement.ElementLengthLength + valueLength;
                     var availableLength = Math.Min(ieLength, bas.Length - index);
                     Add(new InformationElement(new ByteArraySegment(bas.Bytes, ieStartPosition, availableLength)));
@@ -87,7 +87,7 @@ namespace PacketDotNet
                 get
                 {
                     var bytes = new Byte[Length];
-                    Int32 index = 0;
+                    var index = 0;
                     foreach (var ie in this)
                     {
                         var ieBytes = ie.Bytes;
@@ -110,8 +110,8 @@ namespace PacketDotNet
             {
                 get
                 {
-                    Int32 length = 0;
-                    foreach (InformationElement ie in this)
+                    var length = 0;
+                    foreach (var ie in this)
                     {
                         length += ie.ElementLength;
                     }
@@ -170,7 +170,7 @@ namespace PacketDotNet
             /// </remarks>
             public void CopyTo(ByteArraySegment destination, Int32 offset)
             {
-                Int32 index = 0;
+                var index = 0;
                 foreach (var ie in this)
                 {
                     var ieBytes = ie.Bytes;

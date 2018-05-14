@@ -51,9 +51,9 @@ namespace PacketDotNet
                 if (bas.Length > ProbeRequestFields.InformationElement1Position)
                 {
                     //create a segment that just refers to the info element section
-                    ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                                                (bas.Offset + ProbeRequestFields.InformationElement1Position),
-                                                                                (bas.Length - ProbeRequestFields.InformationElement1Position));
+                    var infoElementsSegment = new ByteArraySegment(bas.Bytes,
+                                                                   bas.Offset + ProbeRequestFields.InformationElement1Position,
+                                                                   bas.Length - ProbeRequestFields.InformationElement1Position);
 
                     InformationElements = new InformationElementList(infoElementsSegment);
                 }
@@ -105,11 +105,11 @@ namespace PacketDotNet
             /// This does not include the FCS, it represents only the header bytes that would
             /// would preceed any payload.
             /// </summary>
-            public override Int32 FrameSize => (MacFields.FrameControlLength +
-                                                MacFields.DurationIDLength +
-                                                (MacFields.AddressLength * 3) +
-                                                MacFields.SequenceControlLength +
-                                                InformationElements.Length);
+            public override Int32 FrameSize => MacFields.FrameControlLength +
+                                               MacFields.DurationIDLength +
+                                               (MacFields.AddressLength * 3) +
+                                               MacFields.SequenceControlLength +
+                                               InformationElements.Length;
 
             /// <summary>
             /// Gets or sets the information elements included in the frame.
@@ -128,7 +128,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
+                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
                 {
                     Header = new ByteArraySegment(new Byte[FrameSize]);
                 }

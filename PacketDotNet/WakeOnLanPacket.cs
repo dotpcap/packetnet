@@ -65,15 +65,15 @@ namespace PacketDotNet
             Log.Debug("");
 
             // allocate memory for this packet
-            Int32 offset = 0;
-            Int32 packetLength = SyncSequence.Length + (EthernetFields.MacAddressLength * MACRepetitions);
+            var offset = 0;
+            var packetLength = SyncSequence.Length + (EthernetFields.MacAddressLength * MACRepetitions);
             var packetBytes = new Byte[packetLength];
             var destinationMACBytes = destinationMAC.GetAddressBytes();
 
             // write the data to the payload
             // - synchronization sequence (6 bytes)
             // - destination MAC (16 copies of 6 bytes)
-            for (Int32 i = 0; i < packetLength; i += EthernetFields.MacAddressLength)
+            for (var i = 0; i < packetLength; i += EthernetFields.MacAddressLength)
             {
                 // copy the syncSequence on the first pass
                 if (i == 0)
@@ -120,7 +120,7 @@ namespace PacketDotNet
         {
             get
             {
-                Byte[] destinationMAC = new Byte[EthernetFields.MacAddressLength];
+                var destinationMAC = new Byte[EthernetFields.MacAddressLength];
                 Array.Copy(Header.Bytes,
                            Header.Offset + SyncSequence.Length,
                            destinationMAC,
@@ -130,7 +130,7 @@ namespace PacketDotNet
             }
             set
             {
-                Byte[] destinationMAC = value.GetAddressBytes();
+                var destinationMAC = value.GetAddressBytes();
                 Array.Copy(destinationMAC,
                            0,
                            Header.Bytes,
@@ -154,7 +154,7 @@ namespace PacketDotNet
         {
             var rnd = new Random();
 
-            Byte[] destAddress = new Byte[EthernetFields.MacAddressLength];
+            var destAddress = new Byte[EthernetFields.MacAddressLength];
 
             rnd.NextBytes(destAddress);
 
@@ -186,16 +186,16 @@ namespace PacketDotNet
         public static Boolean IsValid(ByteArraySegment bas)
         {
             // fetch the destination MAC from the payload
-            Byte[] destinationMAC = new Byte[EthernetFields.MacAddressLength];
+            var destinationMAC = new Byte[EthernetFields.MacAddressLength];
             Array.Copy(bas.Bytes, bas.Offset + SyncSequence.Length, destinationMAC, 0, EthernetFields.MacAddressLength);
 
             // the buffer is used to store both the synchronization sequence
             //  and the MAC address, both of which are the same length (in bytes)
-            Byte[] buffer = new Byte[EthernetFields.MacAddressLength];
+            var buffer = new Byte[EthernetFields.MacAddressLength];
 
             // validate the 16 repetitions of the wolDestinationMAC
             // - verify that the wolDestinationMAC address repeats 16 times in sequence
-            for (Int32 i = 0; i < (EthernetFields.MacAddressLength * MACRepetitions); i += EthernetFields.MacAddressLength)
+            for (var i = 0; i < EthernetFields.MacAddressLength * MACRepetitions; i += EthernetFields.MacAddressLength)
             {
                 // Extract the sample from the payload for comparison
                 Array.Copy(bas.Bytes, bas.Offset + i, buffer, 0, buffer.Length);
@@ -254,8 +254,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -274,13 +274,13 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>
+                var properties = new Dictionary<String, String>
                 {
                     {"destination", HexPrinter.PrintMACAddress(DestinationMAC)}
                 };
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("WOL:  ******* WOL - \"Wake-On-Lan\" - offset=? length=" + TotalPacketLength);

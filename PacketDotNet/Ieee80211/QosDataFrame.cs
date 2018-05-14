@@ -69,7 +69,7 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if (Header.Length >= (QosDataField.QosControlPosition + QosDataField.QosControlLength))
+                    if (Header.Length >= QosDataField.QosControlPosition + QosDataField.QosControlLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                                   Header.Offset + QosDataField.QosControlPosition);
@@ -93,13 +93,13 @@ namespace PacketDotNet
                 get
                 {
                     //if we are in WDS mode then there are 4 addresses (normally it is just 3)
-                    Int32 numOfAddressFields = (FrameControl.ToDS && FrameControl.FromDS) ? 4 : 3;
+                    var numOfAddressFields = FrameControl.ToDS && FrameControl.FromDS ? 4 : 3;
 
-                    return (MacFields.FrameControlLength +
-                            MacFields.DurationIDLength +
-                            (MacFields.AddressLength * numOfAddressFields) +
-                            MacFields.SequenceControlLength +
-                            QosDataField.QosControlLength);
+                    return MacFields.FrameControlLength +
+                           MacFields.DurationIDLength +
+                           (MacFields.AddressLength * numOfAddressFields) +
+                           MacFields.SequenceControlLength +
+                           QosDataField.QosControlLength;
                 }
             }
 
@@ -130,11 +130,11 @@ namespace PacketDotNet
                     // should parse it
                     if (FrameControl.Protected)
                     {
-                        PayloadPacketOrData.Value.TheByteArraySegment = Header.EncapsulatedBytes(availablePayloadLength);
+                        PayloadPacketOrData.Value.ByteArraySegment = Header.EncapsulatedBytes(availablePayloadLength);
                     }
                     else
                     {
-                        PayloadPacketOrData.Value.ThePacket = new LogicalLinkControl(Header.EncapsulatedBytes());
+                        PayloadPacketOrData.Value.Packet = new LogicalLinkControl(Header.EncapsulatedBytes());
                     }
                 }
             }
@@ -157,7 +157,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
+                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
                 {
                     Header = new ByteArraySegment(new Byte[FrameSize]);
                 }

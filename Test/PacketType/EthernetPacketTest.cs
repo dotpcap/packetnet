@@ -249,7 +249,7 @@ namespace Test.PacketType
             Assert.AreEqual(PhysicalAddress.Parse("00-13-10-03-71-47"), e.SourceHwAddress);
             Assert.AreEqual(PhysicalAddress.Parse("00-E0-4C-E5-73-AD"), e.DestinationHwAddress);
 
-            Assert.AreEqual(EthernetPacketType.IpV4, e.Type);
+            Assert.AreEqual(EthernetPacketType.IPv4, e.Type);
 
             dev.Close();
         }

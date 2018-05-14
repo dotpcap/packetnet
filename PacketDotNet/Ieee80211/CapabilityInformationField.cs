@@ -194,7 +194,7 @@ namespace PacketDotNet
             /// <param name="index">0 indexed position of the bit</param>
             private Boolean GetBitFieldValue(UInt16 index)
             {
-                return (((Field >> index) & 0x1) == 1) ? true : false;
+                return ((Field >> index) & 0x1) == 1 ? true : false;
             }
 
             private void SetBitFieldValue(UInt16 index, Boolean value)

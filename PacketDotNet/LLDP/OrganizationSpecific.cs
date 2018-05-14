@@ -106,7 +106,7 @@ namespace PacketDotNet.LLDP
         {
             get
             {
-                Byte[] oui = new Byte[OUILength];
+                var oui = new Byte[OUILength];
                 Array.Copy(tlvData.Bytes,
                            ValueOffset,
                            oui,

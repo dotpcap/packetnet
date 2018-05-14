@@ -102,7 +102,7 @@ namespace PacketDotNet
             /// <value>The organization code.</value>
             public UInt32 OrganizationCode
             {
-                get => (Byte) ((ControlOrganizationCode & 0x00FFFFFF));
+                get => (Byte) (ControlOrganizationCode & 0x00FFFFFF);
 
                 set => throw new NotImplementedException("OrganizationCode setter not implemented");
             }
@@ -118,7 +118,7 @@ namespace PacketDotNet
 
                 set
                 {
-                    Int16 val = (Int16) value;
+                    var val = (Int16) value;
                     EndianBitConverter.Big.CopyBytes(val,
                                                      Header.Bytes,
                                                      Header.Offset + LogicalLinkControlFields.TypePosition);

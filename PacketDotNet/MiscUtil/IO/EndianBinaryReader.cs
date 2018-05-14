@@ -295,7 +295,7 @@ namespace MiscUtil.IO
         /// <returns>The character read, or -1 for end of stream.</returns>
         public Int32 Read()
         {
-            Int32 charsRead = Read(charBuffer, 0, 1);
+            var charsRead = Read(charBuffer, 0, 1);
             if (charsRead == 0)
             {
                 return -1;
@@ -339,12 +339,12 @@ namespace MiscUtil.IO
                     ("Not enough space in buffer for specified number of characters starting at specified index");
             }
 
-            Int32 read = 0;
-            Boolean firstTime = true;
+            var read = 0;
+            var firstTime = true;
 
             // Use the normal buffer if we're only reading a small amount, otherwise
             // use at most 4K at a time.
-            Byte[] byteBuffer = buffer;
+            var byteBuffer = buffer;
 
             if (byteBuffer.Length < count * minBytesPerChar)
             {
@@ -372,13 +372,13 @@ namespace MiscUtil.IO
                     amountToRead = byteBuffer.Length;
                 }
 
-                Int32 bytesRead = TryReadInternal(byteBuffer, amountToRead);
+                var bytesRead = TryReadInternal(byteBuffer, amountToRead);
                 if (bytesRead == 0)
                 {
                     return read;
                 }
 
-                Int32 decoded = decoder.GetChars(byteBuffer, 0, bytesRead, data, index);
+                var decoded = decoder.GetChars(byteBuffer, 0, bytesRead, data, index);
                 read += decoded;
                 index += decoded;
             }
@@ -421,10 +421,10 @@ namespace MiscUtil.IO
                     ("Not enough space in buffer for specified number of bytes starting at specified index");
             }
 
-            Int32 read = 0;
+            var read = 0;
             while (count > 0)
             {
-                Int32 block = BaseStream.Read(buffer, index, count);
+                var block = BaseStream.Read(buffer, index, count);
                 if (block == 0)
                 {
                     return read;
@@ -453,15 +453,15 @@ namespace MiscUtil.IO
                 throw new ArgumentOutOfRangeException("count");
             }
 
-            Byte[] ret = new Byte[count];
-            Int32 index = 0;
+            var ret = new Byte[count];
+            var index = 0;
             while (index < count)
             {
-                Int32 read = BaseStream.Read(ret, index, count - index);
+                var read = BaseStream.Read(ret, index, count - index);
                 // Stream has finished half way through. That's fine, return what we've got.
                 if (read == 0)
                 {
-                    Byte[] copy = new Byte[index];
+                    var copy = new Byte[index];
                     Buffer.BlockCopy(ret, 0, copy, 0, index);
                     return copy;
                 }
@@ -481,7 +481,7 @@ namespace MiscUtil.IO
         /// <returns>The bytes read</returns>
         public Byte[] ReadBytesOrThrow(Int32 count)
         {
-            Byte[] ret = new Byte[count];
+            var ret = new Byte[count];
             ReadInternal(ret, count);
             return ret;
         }
@@ -497,10 +497,10 @@ namespace MiscUtil.IO
         {
             CheckDisposed();
 
-            Int32 ret = 0;
-            for (Int32 shift = 0; shift < 35; shift += 7)
+            var ret = 0;
+            for (var shift = 0; shift < 35; shift += 7)
             {
-                Int32 b = BaseStream.ReadByte();
+                var b = BaseStream.ReadByte();
                 if (b == -1)
                 {
                     throw new EndOfStreamException();
@@ -528,10 +528,10 @@ namespace MiscUtil.IO
         {
             CheckDisposed();
 
-            Int32 ret = 0;
-            for (Int32 i = 0; i < 5; i++)
+            var ret = 0;
+            for (var i = 0; i < 5; i++)
             {
-                Int32 b = BaseStream.ReadByte();
+                var b = BaseStream.ReadByte();
                 if (b == -1)
                 {
                     throw new EndOfStreamException();
@@ -557,9 +557,9 @@ namespace MiscUtil.IO
         /// <returns>The string read from the stream.</returns>
         public String ReadString()
         {
-            Int32 bytesToRead = Read7BitEncodedInt();
+            var bytesToRead = Read7BitEncodedInt();
 
-            Byte[] data = new Byte[bytesToRead];
+            var data = new Byte[bytesToRead];
             ReadInternal(data, bytesToRead);
             return Encoding.GetString(data, 0, data.Length);
         }
@@ -589,10 +589,10 @@ namespace MiscUtil.IO
         void ReadInternal(Byte[] data, Int32 size)
         {
             CheckDisposed();
-            Int32 index = 0;
+            var index = 0;
             while (index < size)
             {
-                Int32 read = BaseStream.Read(data, index, size - index);
+                var read = BaseStream.Read(data, index, size - index);
                 if (read == 0)
                 {
                     throw new EndOfStreamException
@@ -616,10 +616,10 @@ namespace MiscUtil.IO
         Int32 TryReadInternal(Byte[] data, Int32 size)
         {
             CheckDisposed();
-            Int32 index = 0;
+            var index = 0;
             while (index < size)
             {
-                Int32 read = BaseStream.Read(data, index, size - index);
+                var read = BaseStream.Read(data, index, size - index);
                 if (read == 0)
                 {
                     return index;

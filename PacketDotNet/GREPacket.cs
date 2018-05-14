@@ -79,15 +79,15 @@ namespace PacketDotNet
                                                                                                            Header.Offset + GREFields.FlagsLength);
 
 
-        public virtual Int32 Version => (Header.Bytes[2] & 0x7);
+        public virtual Int32 Version => Header.Bytes[2] & 0x7;
 
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
@@ -108,7 +108,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>
+                var properties = new Dictionary<String, String>
                 {
                     {"Protocol ", Protocol + " (0x" + Protocol.ToString("x") + ")"}
                 };

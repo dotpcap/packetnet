@@ -26,6 +26,7 @@ namespace PacketDotNet
     /// Point to Point Protocol
     /// See http://tools.ietf.org/html/rfc2516
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     public class PPPoEFields
     {
         /// <summary> Size in bytes of the code field </summary>

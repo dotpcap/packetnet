@@ -139,7 +139,7 @@ namespace PacketDotNet
                     throw new InvalidOperationException("Family != IPv4, ARP is used for IPv4, NDP for IPv6");
 
 
-                Byte[] address = value.GetAddressBytes();
+                var address = value.GetAddressBytes();
                 Array.Copy(address,
                            0,
                            Header.Bytes,
@@ -164,7 +164,7 @@ namespace PacketDotNet
                     throw new InvalidOperationException("Family != IPv4, ARP is used for IPv4, NDP for IPv6");
 
 
-                Byte[] address = value.GetAddressBytes();
+                var address = value.GetAddressBytes();
                 Array.Copy(address,
                            0,
                            Header.Bytes,
@@ -182,7 +182,7 @@ namespace PacketDotNet
             {
                 //FIXME: this code is broken because it assumes that the address position is
                 // a fixed position
-                Byte[] hwAddress = new Byte[HardwareAddressLength];
+                var hwAddress = new Byte[HardwareAddressLength];
                 Array.Copy(Header.Bytes,
                            Header.Offset + ARPFields.SenderHardwareAddressPosition,
                            hwAddress,
@@ -193,7 +193,7 @@ namespace PacketDotNet
 
             set
             {
-                Byte[] hwAddress = value.GetAddressBytes();
+                var hwAddress = value.GetAddressBytes();
 
                 // for now we only support ethernet addresses even though the arp protocol
                 // makes provisions for varying length addresses
@@ -219,7 +219,7 @@ namespace PacketDotNet
             {
                 //FIXME: this code is broken because it assumes that the address position is
                 // a fixed position
-                Byte[] hwAddress = new Byte[HardwareAddressLength];
+                var hwAddress = new Byte[HardwareAddressLength];
                 Array.Copy(Header.Bytes,
                            Header.Offset + ARPFields.TargetHardwareAddressPosition,
                            hwAddress,
@@ -229,7 +229,7 @@ namespace PacketDotNet
             }
             set
             {
-                Byte[] hwAddress = value.GetAddressBytes();
+                var hwAddress = value.GetAddressBytes();
 
                 // for now we only support ethernet addresses even though the arp protocol
                 // makes provisions for varying length addresses
@@ -278,8 +278,8 @@ namespace PacketDotNet
             Log.Debug("");
 
             // allocate memory for this packet
-            Int32 offset = 0;
-            Int32 length = ARPFields.HeaderLength;
+            var offset = 0;
+            var length = ARPFields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
@@ -293,7 +293,7 @@ namespace PacketDotNet
             HardwareAddressType = LinkLayers.Ethernet;
             HardwareAddressLength = EthernetFields.MacAddressLength;
 
-            ProtocolAddressType = EthernetPacketType.IpV4;
+            ProtocolAddressType = EthernetPacketType.IPv4;
             ProtocolAddressLength = IPv4Fields.AddressLength;
         }
 
@@ -316,8 +316,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -341,7 +341,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>
+                var properties = new Dictionary<String, String>
                 {
                     {"hardware type", HardwareAddressType + " (0x" + HardwareAddressType.ToString("x") + ")"},
                     {"protocol type", ProtocolAddressType + " (0x" + ProtocolAddressType.ToString("x") + ")"},
@@ -353,7 +353,7 @@ namespace PacketDotNet
                 };
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("ARP:  ******* ARP - \"Address Resolution Protocol\" - offset=? length=" + TotalPacketLength);

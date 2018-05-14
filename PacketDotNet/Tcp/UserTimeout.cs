@@ -80,8 +80,8 @@ namespace PacketDotNet.Tcp
         {
             get
             {
-                Int32 granularity = (Values >> 15);
-                return (granularity != 0);
+                var granularity = Values >> 15;
+                return granularity != 0;
             }
         }
 

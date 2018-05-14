@@ -62,7 +62,7 @@ namespace PacketDotNet
             {
                 var tci = TagControlInformation;
                 tci >>= 12;
-                return ((tci & 0x1) == 1) ? true : false;
+                return (tci & 0x1) == 1 ? true : false;
             }
 
             set
@@ -70,7 +70,7 @@ namespace PacketDotNet
                 var tci = TagControlInformation;
 
                 // mask the existing CFI off and then back in from value
-                Int32 val = (value ? 1 : 0);
+                var val = value ? 1 : 0;
                 tci = (UInt16) ((tci & 0xEFFF) | (val << 12));
                 TagControlInformation = tci;
             }
@@ -90,7 +90,7 @@ namespace PacketDotNet
             get
             {
                 var tci = TagControlInformation;
-                tci >>= (16 - 3); // priority is the upper 3 bits
+                tci >>= 16 - 3; // priority is the upper 3 bits
                 return (IeeeP8021PPriorities) tci;
             }
 
@@ -99,7 +99,7 @@ namespace PacketDotNet
                 var tci = TagControlInformation;
 
                 // mask the existing Priority off and then back in from value
-                UInt16 val = (UInt16) value;
+                var val = (UInt16) value;
                 tci = (UInt16) ((tci & 0x1FFF) | ((val & 0x7) << (16 - 3)));
                 TagControlInformation = tci;
             }
@@ -115,7 +115,7 @@ namespace PacketDotNet
 
             set
             {
-                Int16 val = (Int16) value;
+                var val = (Int16) value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  Header.Bytes,
                                                  Header.Offset + Ieee8021QFields.TypePosition);
@@ -153,7 +153,7 @@ namespace PacketDotNet
 
             set
             {
-                Int16 val = (Int16) value;
+                var val = (Int16) value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  Header.Bytes,
                                                  Header.Offset + Ieee8021QFields.TagControlInformationPosition);
@@ -164,8 +164,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -187,7 +187,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>
+                var properties = new Dictionary<String, String>
                 {
                     {"priority", PriorityControlPoint + " (0x" + PriorityControlPoint.ToString("x") + ")"},
                     {"canonical format indicator", CanonicalFormatIndicator.ToString()},
@@ -196,7 +196,7 @@ namespace PacketDotNet
                 };
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Ieee802.1Q:  ******* Ieee802.1Q - \"VLan tag\" - offset=? length=" + TotalPacketLength);

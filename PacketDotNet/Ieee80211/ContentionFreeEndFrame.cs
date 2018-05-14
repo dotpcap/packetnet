@@ -79,9 +79,9 @@ namespace PacketDotNet
             /// <summary>
             /// Length of the frame
             /// </summary>
-            public override Int32 FrameSize => (MacFields.FrameControlLength +
-                                                MacFields.DurationIDLength +
-                                                (MacFields.AddressLength * 2));
+            public override Int32 FrameSize => MacFields.FrameControlLength +
+                                               MacFields.DurationIDLength +
+                                               (MacFields.AddressLength * 2);
 
             /// <summary>
             /// Receiver address
@@ -93,7 +93,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
+                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
                 {
                     Header = new ByteArraySegment(new Byte[FrameSize]);
                 }

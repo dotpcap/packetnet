@@ -77,7 +77,7 @@ namespace PacketDotNet.LLDP
             get
             {
                 // get the type
-                UInt16 typeAndLength = TypeAndLength;
+                var typeAndLength = TypeAndLength;
                 // remove the length info
                 return (TLVTypes) (typeAndLength >> LengthBits);
             }
@@ -89,7 +89,7 @@ namespace PacketDotNet.LLDP
                 // shift type into the type position
                 var type = (UInt16) ((UInt16) value << LengthBits);
                 // save the old length
-                UInt16 length = (UInt16) (LengthMask & TypeAndLength);
+                var length = (UInt16) (LengthMask & TypeAndLength);
                 // set the type
                 TypeAndLength = (UInt16) (type | length);
             }
@@ -105,7 +105,7 @@ namespace PacketDotNet.LLDP
             get
             {
                 // get the length
-                UInt16 typeAndLength = TypeAndLength;
+                var typeAndLength = TypeAndLength;
                 // remove the type info
                 return LengthMask & typeAndLength;
             }
@@ -127,7 +127,7 @@ namespace PacketDotNet.LLDP
                 }
 
                 // save the old type
-                UInt16 type = (UInt16) (TypeMask & TypeAndLength);
+                var type = (UInt16) (TypeMask & TypeAndLength);
                 // set the length
                 TypeAndLength = (UInt16) (type | value);
             }

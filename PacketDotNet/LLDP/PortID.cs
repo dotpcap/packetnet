@@ -150,7 +150,7 @@ namespace PacketDotNet.LLDP
         {
             var length = TLVTypeLength.TypeLengthLength + SubTypeLength;
             var bytes = new Byte[length];
-            Int32 offset = 0;
+            var offset = 0;
             tlvData = new ByteArraySegment(bytes, offset, length);
         }
 
@@ -173,11 +173,11 @@ namespace PacketDotNet.LLDP
                     // get the address
                     arrAddress = new Byte[DataLength];
                     Array.Copy(tlvData.Bytes, DataOffset, arrAddress, 0, DataLength);
-                    PhysicalAddress address = new PhysicalAddress(arrAddress);
+                    var address = new PhysicalAddress(arrAddress);
                     return address;
                 case PortSubTypes.NetworkAddress:
                     // get the address
-                    AddressFamily addressFamily = (AddressFamily) tlvData.Bytes[DataLength];
+                    var addressFamily = (AddressFamily) tlvData.Bytes[DataLength];
                     return GetNetworkAddress(addressFamily);
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -209,7 +209,7 @@ namespace PacketDotNet.LLDP
         private void SetSubTypeValue(Byte[] val)
         {
             // does our current length match?
-            Int32 dataLength = Length - SubTypeLength;
+            var dataLength = Length - SubTypeLength;
             if (dataLength != val.Length)
             {
                 var headerLength = TLVTypeLength.TypeLengthLength + SubTypeLength;

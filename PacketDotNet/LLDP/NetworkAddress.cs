@@ -148,7 +148,7 @@ namespace PacketDotNet.LLDP
                 var length = LengthFromAddressFamily(AddressFamilyFromSocketAddress(value));
                 length += AddressFamilyLength;
 
-                if ((data == null) || data.Length != length)
+                if (data == null || data.Length != length)
                 {
                     var bytes = new Byte[length];
                     var offset = 0;

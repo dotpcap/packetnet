@@ -252,7 +252,7 @@ namespace PacketDotNet
             {
                 if (ipv4Packet.FragmentOffset > 0)
                 {
-                    payloadPacketOrData.TheByteArraySegment = payload;
+                    payloadPacketOrData.ByteArraySegment = payload;
                     return payloadPacketOrData;
                 }
             }
@@ -260,45 +260,45 @@ namespace PacketDotNet
             switch (ProtocolType)
             {
                 case IPProtocolType.TCP:
-                    payloadPacketOrData.ThePacket = new TcpPacket(payload,
-                                                                  ParentPacket);
+                    payloadPacketOrData.Packet = new TcpPacket(payload,
+                                                               ParentPacket);
                     break;
                 case IPProtocolType.UDP:
-                    payloadPacketOrData.ThePacket = new UdpPacket(payload,
-                                                                  ParentPacket);
+                    payloadPacketOrData.Packet = new UdpPacket(payload,
+                                                               ParentPacket);
                     break;
                 case IPProtocolType.ICMP:
-                    payloadPacketOrData.ThePacket = new ICMPv4Packet(payload,
-                                                                     ParentPacket);
+                    payloadPacketOrData.Packet = new ICMPv4Packet(payload,
+                                                                  ParentPacket);
                     break;
                 case IPProtocolType.ICMPV6:
-                    payloadPacketOrData.ThePacket = new ICMPv6Packet(payload,
-                                                                     ParentPacket);
+                    payloadPacketOrData.Packet = new ICMPv6Packet(payload,
+                                                                  ParentPacket);
                     break;
                 case IPProtocolType.IGMP:
-                    payloadPacketOrData.ThePacket = new IGMPv2Packet(payload,
-                                                                     ParentPacket);
+                    payloadPacketOrData.Packet = new IGMPv2Packet(payload,
+                                                                  ParentPacket);
                     break;
                 case IPProtocolType.OSPF:
-                    payloadPacketOrData.ThePacket = OSPFPacket.ConstructOSPFPacket(payload.Bytes,
-                                                                                   payload.Offset);
+                    payloadPacketOrData.Packet = OSPFPacket.ConstructOSPFPacket(payload.Bytes,
+                                                                                payload.Offset);
                     break;
                 case IPProtocolType.IPIP:
-                    payloadPacketOrData.ThePacket = new IPv4Packet(payload,
-                                                                   ParentPacket);
+                    payloadPacketOrData.Packet = new IPv4Packet(payload,
+                                                                ParentPacket);
                     break;
                 case IPProtocolType.IPV6:
-                    payloadPacketOrData.ThePacket = new IPv6Packet(payload,
-                                                                   ParentPacket);
+                    payloadPacketOrData.Packet = new IPv6Packet(payload,
+                                                                ParentPacket);
                     break;
                 case IPProtocolType.GRE:
-                    payloadPacketOrData.ThePacket = new GREPacket(payload,
-                                                                  ParentPacket);
+                    payloadPacketOrData.Packet = new GREPacket(payload,
+                                                               ParentPacket);
                     break;
 
                 // NOTE: new payload parsing entries go here
                 default:
-                    payloadPacketOrData.TheByteArraySegment = payload;
+                    payloadPacketOrData.ByteArraySegment = payload;
                     break;
             }
 

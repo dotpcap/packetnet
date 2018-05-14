@@ -59,7 +59,7 @@ namespace PacketDotNet
             catch (Exception)
             {
                 //it's not a PPP packet, just attach the data
-                PayloadPacketOrData.Value.TheByteArraySegment = payload;
+                PayloadPacketOrData.Value.ByteArraySegment = payload;
             }
 
             this.ParentPacket = ParentPacket;
@@ -102,15 +102,15 @@ namespace PacketDotNet
             }
         }
 
-        public virtual Int32 Version => (Header.Bytes[Header.Offset + 1] & 0x7);
+        public virtual Int32 Version => Header.Bytes[Header.Offset + 1] & 0x7;
 
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)

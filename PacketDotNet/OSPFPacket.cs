@@ -53,7 +53,7 @@ namespace PacketDotNet
         private static OSPFv2Packet ConstructV2Packet(Byte[] payload, Int32 offset)
         {
             OSPFv2Packet p;
-            OSPFPacketType type = (OSPFPacketType) payload[offset + OSPFv2Fields.TypePosition];
+            var type = (OSPFPacketType) payload[offset + OSPFv2Fields.TypePosition];
 
             switch (type)
             {

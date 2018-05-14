@@ -48,7 +48,7 @@ namespace PacketDotNet
 
             private Int32 GetOffsetForAddress(Int32 addressIndex)
             {
-                Int32 offset = Header.Offset;
+                var offset = Header.Offset;
 
                 offset += MacFields.Address1Position + MacFields.AddressLength * addressIndex;
 
@@ -67,7 +67,7 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if (Header.Length >= (MacFields.FrameControlPosition + MacFields.FrameControlLength))
+                    if (Header.Length >= MacFields.FrameControlPosition + MacFields.FrameControlLength)
                     {
                         return EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                                Header.Offset);
@@ -93,7 +93,7 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if (Header.Length >= (MacFields.DurationIDPosition + MacFields.DurationIDLength))
+                    if (Header.Length >= MacFields.DurationIDPosition + MacFields.DurationIDLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                                   Header.Offset + MacFields.DurationIDPosition);
@@ -194,9 +194,9 @@ namespace PacketDotNet
             /// </param>
             protected PhysicalAddress GetAddressByOffset(Int32 offset)
             {
-                if ((Header.Offset + Header.Length) >= (offset + MacFields.AddressLength))
+                if (Header.Offset + Header.Length >= offset + MacFields.AddressLength)
                 {
-                    Byte[] hwAddress = new Byte[MacFields.AddressLength];
+                    var hwAddress = new Byte[MacFields.AddressLength];
                     Array.Copy(Header.Bytes,
                                offset,
                                hwAddress,
@@ -220,7 +220,7 @@ namespace PacketDotNet
             public void UpdateFrameCheckSequence()
             {
                 var bytes = Bytes;
-                var length = (AppendFcs) ? bytes.Length - 4 : bytes.Length;
+                var length = AppendFcs ? bytes.Length - 4 : bytes.Length;
                 FrameCheckSequence = (UInt32) Crc32.Compute(Bytes, 0, length);
             }
 
@@ -245,8 +245,8 @@ namespace PacketDotNet
             /// </value>
             protected Int32 GetAvailablePayloadLength()
             {
-                Int32 payloadLength = Header.BytesLength - (Header.Offset + FrameSize);
-                return (payloadLength > 0) ? payloadLength : 0;
+                var payloadLength = Header.BytesLength - (Header.Offset + FrameSize);
+                return payloadLength > 0 ? payloadLength : 0;
             }
 
             /// <summary>
@@ -264,22 +264,22 @@ namespace PacketDotNet
             /// </remarks>
             public static MacFrame ParsePacketWithFcs(ByteArraySegment bas)
             {
-                if (bas.Length < (MacFields.FrameControlLength + MacFields.FrameCheckSequenceLength))
+                if (bas.Length < MacFields.FrameControlLength + MacFields.FrameCheckSequenceLength)
                 {
                     //There isn't enough data for there to be an FCS and a packet
                     return null;
                 }
 
                 //remove the FCS from the buffer that we will pass to the packet parsers
-                ByteArraySegment basWithoutFcs = new ByteArraySegment(bas.Bytes,
-                                                                      bas.Offset,
-                                                                      bas.Length - MacFields.FrameCheckSequenceLength,
-                                                                      bas.BytesLength - MacFields.FrameCheckSequenceLength);
+                var basWithoutFcs = new ByteArraySegment(bas.Bytes,
+                                                         bas.Offset,
+                                                         bas.Length - MacFields.FrameCheckSequenceLength,
+                                                         bas.BytesLength - MacFields.FrameCheckSequenceLength);
 
-                UInt32 fcs = EndianBitConverter.Big.ToUInt32(bas.Bytes,
-                                                             (bas.Offset + bas.Length) - MacFields.FrameCheckSequenceLength);
+                var fcs = EndianBitConverter.Big.ToUInt32(bas.Bytes,
+                                                          (bas.Offset + bas.Length) - MacFields.FrameCheckSequenceLength);
 
-                MacFrame frame = ParsePacket(basWithoutFcs);
+                var frame = ParsePacket(basWithoutFcs);
                 if (frame != null)
                 {
                     frame.AppendFcs = true;
@@ -312,8 +312,8 @@ namespace PacketDotNet
 
                 //this is a bit ugly as we will end up parsing the framecontrol field twice, once here and once
                 //inside the packet constructor. Could create the framecontrol and pass it to the packet but I think that is equally ugly
-                FrameControlField frameControl = new FrameControlField(
-                                                                       EndianBitConverter.Big.ToUInt16(bas.Bytes, bas.Offset));
+                var frameControl = new FrameControlField(
+                                                         EndianBitConverter.Big.ToUInt16(bas.Bytes, bas.Offset));
 
                 MacFrame macFrame = null;
 
@@ -499,7 +499,7 @@ namespace PacketDotNet
                 get
                 {
                     var packetBytes = Bytes;
-                    var packetLength = (AppendFcs) ? packetBytes.Length - MacFields.FrameCheckSequenceLength : packetBytes.Length;
+                    var packetLength = AppendFcs ? packetBytes.Length - MacFields.FrameCheckSequenceLength : packetBytes.Length;
                     return PerformFcsCheck(packetBytes, 0, packetLength, FrameCheckSequence);
                 }
             }
@@ -531,7 +531,7 @@ namespace PacketDotNet
                     // if we share memory with all of our sub packets we can take a
                     // higher performance path to retrieve the bytes
                     var totalPacketLength = TotalPacketLength;
-                    if (SharesMemoryWithSubPackets && (!AppendFcs || Header.Bytes.Length >= (Header.Offset + totalPacketLength + MacFields.FrameCheckSequenceLength)))
+                    if (SharesMemoryWithSubPackets && (!AppendFcs || Header.Bytes.Length >= Header.Offset + totalPacketLength + MacFields.FrameCheckSequenceLength))
                     {
                         var packetLength = totalPacketLength;
                         if (AppendFcs)

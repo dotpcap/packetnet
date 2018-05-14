@@ -71,7 +71,7 @@ namespace PacketDotNet
                 : new byte[0];
 
             // calculate the one's complement sum of the tcp header
-            Int32 cs = ChecksumUtils.OnesComplementSum(dataToChecksum, bytes);
+            var cs = ChecksumUtils.OnesComplementSum(dataToChecksum, bytes);
 
             // restore the checksum field value
             Checksum = originalChecksum;

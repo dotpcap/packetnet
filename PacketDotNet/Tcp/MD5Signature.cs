@@ -71,7 +71,7 @@ namespace PacketDotNet.Tcp
         {
             get
             {
-                Byte[] data = new Byte[Length - MD5DigestFieldOffset];
+                var data = new Byte[Length - MD5DigestFieldOffset];
                 Array.Copy(Bytes, MD5DigestFieldOffset, data, 0, data.Length);
                 return data;
             }

@@ -66,10 +66,10 @@ namespace PacketDotNet.Tcp
         {
             get
             {
-                Int32 numOfBlocks = (Length - SACKBlocksFieldOffset) / BlockLength;
-                UInt16[] blocks = new UInt16[numOfBlocks];
-                Int32 offset = 0;
-                for (Int32 i = 0; i < numOfBlocks; i++)
+                var numOfBlocks = (Length - SACKBlocksFieldOffset) / BlockLength;
+                var blocks = new UInt16[numOfBlocks];
+                var offset = 0;
+                for (var i = 0; i < numOfBlocks; i++)
                 {
                     offset = SACKBlocksFieldOffset + (i * BlockLength);
                     blocks[i] = EndianBitConverter.Big.ToUInt16(Bytes, offset);
@@ -92,9 +92,9 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override String ToString()
         {
-            String output = "[" + Kind + ": ";
+            var output = "[" + Kind + ": ";
 
-            for (Int32 i = 0; i < SACKBlocks.Length; i++)
+            for (var i = 0; i < SACKBlocks.Length; i++)
             {
                 output += "Block" + i + "=" + SACKBlocks[i] + " ";
             }

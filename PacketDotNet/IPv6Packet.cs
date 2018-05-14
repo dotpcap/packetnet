@@ -97,7 +97,7 @@ namespace PacketDotNet
         /// </summary>
         public virtual Int32 TrafficClass
         {
-            get => ((VersionTrafficClassFlowLabel >> 20) & 0xFF);
+            get => (VersionTrafficClassFlowLabel >> 20) & 0xFF;
 
             set
             {
@@ -105,7 +105,7 @@ namespace PacketDotNet
                 var field = (UInt32) VersionTrafficClassFlowLabel;
 
                 // mask in the new field
-                field = (field & 0xF00FFFFF) | (((UInt32) value) << 20) & 0x0FF00000;
+                field = (field & 0xF00FFFFF) | ((UInt32) value << 20) & 0x0FF00000;
 
                 // write the updated value back
                 VersionTrafficClassFlowLabel = (Int32) field;
@@ -117,7 +117,7 @@ namespace PacketDotNet
         /// </summary>
         public virtual Int32 FlowLabel
         {
-            get => (VersionTrafficClassFlowLabel & 0xFFFFF);
+            get => VersionTrafficClassFlowLabel & 0xFFFFF;
 
             set
             {
@@ -125,7 +125,7 @@ namespace PacketDotNet
                 var field = (UInt32) VersionTrafficClassFlowLabel;
 
                 // make the value in
-                field = (field & 0xFFF00000) | ((UInt32) (value) & 0x000FFFFF);
+                field = (field & 0xFFF00000) | ((UInt32) value & 0x000FFFFF);
 
                 // write the updated value back
                 VersionTrafficClassFlowLabel = (Int32) field;
@@ -153,7 +153,7 @@ namespace PacketDotNet
         /// </value>
         public override Int32 HeaderLength
         {
-            get => (IPv6Fields.HeaderLength / 4);
+            get => IPv6Fields.HeaderLength / 4;
 
             set => throw new NotImplementedException();
         }
@@ -174,7 +174,7 @@ namespace PacketDotNet
         /// </summary>
         public override IPProtocolType NextHeader
         {
-            get => (IPProtocolType) (Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition]);
+            get => (IPProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
 
             set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition] = (Byte) value;
         }
@@ -220,7 +220,7 @@ namespace PacketDotNet
 
             set
             {
-                Byte[] address = value.GetAddressBytes();
+                var address = value.GetAddressBytes();
                 Array.Copy(address,
                            0,
                            Header.Bytes,
@@ -240,7 +240,7 @@ namespace PacketDotNet
 
             set
             {
-                Byte[] address = value.GetAddressBytes();
+                var address = value.GetAddressBytes();
                 Array.Copy(address,
                            0,
                            Header.Bytes,
@@ -266,8 +266,8 @@ namespace PacketDotNet
             Log.Debug("");
 
             // allocate memory for this packet
-            Int32 offset = 0;
-            Int32 length = IPv6Fields.HeaderLength;
+            var offset = 0;
+            var length = IPv6Fields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
@@ -330,8 +330,8 @@ namespace PacketDotNet
 
         internal override byte[] GetPseudoIPHeader(int originalHeaderLength)
         {
-            MemoryStream ms = new MemoryStream();
-            BinaryWriter bw = new BinaryWriter(ms);
+            var ms = new MemoryStream();
+            var bw = new BinaryWriter(ms);
 
             // 0-16: ip src addr
             bw.Write(Header.Bytes,
@@ -362,8 +362,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -385,12 +385,12 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>();
-                String ipVersion = Convert.ToString((Int32) Version, 2).PadLeft(4, '0');
+                var properties = new Dictionary<String, String>();
+                var ipVersion = Convert.ToString((Int32) Version, 2).PadLeft(4, '0');
                 properties.Add("version", ipVersion + " .... .... .... .... .... .... .... = " + (Int32) Version);
-                String trafficClass = Convert.ToString(TrafficClass, 2).PadLeft(8, '0').Insert(4, " ");
+                var trafficClass = Convert.ToString(TrafficClass, 2).PadLeft(8, '0').Insert(4, " ");
                 properties.Add("traffic class", ".... " + trafficClass + " .... .... .... .... .... = 0x" + TrafficClass.ToString("x").PadLeft(8, '0'));
-                String flowLabel = Convert.ToString(FlowLabel, 2).PadLeft(20, '0').Insert(16, " ").Insert(12, " ").Insert(8, " ").Insert(4, " ");
+                var flowLabel = Convert.ToString(FlowLabel, 2).PadLeft(20, '0').Insert(16, " ").Insert(12, " ").Insert(8, " ").Insert(4, " ");
                 properties.Add("flow label", ".... .... .... " + flowLabel + " = 0x" + FlowLabel.ToString("x").PadLeft(8, '0'));
                 properties.Add("payload length", PayloadLength.ToString());
                 properties.Add("next header", NextHeader + " (0x" + NextHeader.ToString("x") + ")");
@@ -399,7 +399,7 @@ namespace PacketDotNet
                 properties.Add("destination", DestinationAddress.ToString());
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("IP:  ******* IP - \"Internet Protocol (Version 6)\" - offset=? length=" + TotalPacketLength);

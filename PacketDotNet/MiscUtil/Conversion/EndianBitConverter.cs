@@ -175,7 +175,7 @@ namespace MiscUtil.Conversion
         /// <returns>A character formed by two bytes beginning at startIndex.</returns>
         public Char ToChar(Byte[] value, Int32 startIndex)
         {
-            return unchecked((Char) (CheckedFromBytes(value, startIndex, 2)));
+            return unchecked((Char) CheckedFromBytes(value, startIndex, 2));
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace MiscUtil.Conversion
         /// <returns>A 16-bit signed integer formed by two bytes beginning at startIndex.</returns>
         public Int16 ToInt16(Byte[] value, Int32 startIndex)
         {
-            return unchecked((Int16) (CheckedFromBytes(value, startIndex, 2)));
+            return unchecked((Int16) CheckedFromBytes(value, startIndex, 2));
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace MiscUtil.Conversion
         /// <returns>A 32-bit signed integer formed by four bytes beginning at startIndex.</returns>
         public Int32 ToInt32(Byte[] value, Int32 startIndex)
         {
-            return unchecked((Int32) (CheckedFromBytes(value, startIndex, 4)));
+            return unchecked((Int32) CheckedFromBytes(value, startIndex, 4));
         }
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace MiscUtil.Conversion
         /// <returns>A 16-bit unsigned integer formed by two bytes beginning at startIndex.</returns>
         public UInt16 ToUInt16(Byte[] value, Int32 startIndex)
         {
-            return unchecked((UInt16) (CheckedFromBytes(value, startIndex, 2)));
+            return unchecked((UInt16) CheckedFromBytes(value, startIndex, 2));
         }
 
         /// <summary>
@@ -254,7 +254,7 @@ namespace MiscUtil.Conversion
         /// <returns>A 32-bit unsigned integer formed by four bytes beginning at startIndex.</returns>
         public UInt32 ToUInt32(Byte[] value, Int32 startIndex)
         {
-            return unchecked((UInt32) (CheckedFromBytes(value, startIndex, 4)));
+            return unchecked((UInt32) CheckedFromBytes(value, startIndex, 4));
         }
 
         /// <summary>
@@ -265,7 +265,7 @@ namespace MiscUtil.Conversion
         /// <returns>A 64-bit unsigned integer formed by eight bytes beginning at startIndex.</returns>
         public UInt64 ToUInt64(Byte[] value, Int32 startIndex)
         {
-            return unchecked((UInt64) (CheckedFromBytes(value, startIndex, 8)));
+            return unchecked((UInt64) CheckedFromBytes(value, startIndex, 8));
         }
 
         /// <summary>
@@ -383,8 +383,8 @@ namespace MiscUtil.Conversion
             // HACK: This always assumes four parts, each in their own endianness,
             // starting with the first part at the start of the byte array.
             // On the other hand, there's no real format specified...
-            Int32[] parts = new Int32[4];
-            for (Int32 i = 0; i < 4; i++)
+            var parts = new Int32[4];
+            for (var i = 0; i < 4; i++)
             {
                 parts[i] = ToInt32(value, startIndex + i * 4);
             }
@@ -399,9 +399,9 @@ namespace MiscUtil.Conversion
         /// <returns>An array of bytes with length 16.</returns>
         public Byte[] GetBytes(Decimal value)
         {
-            Byte[] bytes = new Byte[16];
-            Int32[] parts = Decimal.GetBits(value);
-            for (Int32 i = 0; i < 4; i++)
+            var bytes = new Byte[16];
+            var parts = Decimal.GetBits(value);
+            for (var i = 0; i < 4; i++)
             {
                 CopyBytesImpl(parts[i], 4, bytes, i * 4);
             }
@@ -418,8 +418,8 @@ namespace MiscUtil.Conversion
         /// <param name="index">The first index into the array to copy the bytes into</param>
         public void CopyBytes(Decimal value, Byte[] buffer, Int32 index)
         {
-            Int32[] parts = Decimal.GetBits(value);
-            for (Int32 i = 0; i < 4; i++)
+            var parts = Decimal.GetBits(value);
+            for (var i = 0; i < 4; i++)
             {
                 CopyBytesImpl(parts[i], 4, buffer, i * 4 + index);
             }
@@ -439,7 +439,7 @@ namespace MiscUtil.Conversion
         /// <param name="bytes">The number of significant bytes to return</param>
         Byte[] GetBytes(Int64 value, Int32 bytes)
         {
-            Byte[] buffer = new Byte[bytes];
+            var buffer = new Byte[bytes];
             CopyBytes(value, bytes, buffer, 0);
             return buffer;
         }

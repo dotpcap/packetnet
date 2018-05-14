@@ -108,7 +108,7 @@ namespace PacketDotNet
             set
             {
                 // range check
-                if ((value < 0) || (value > 8))
+                if (value < 0 || value > 8)
                 {
                     throw new InvalidOperationException("value of " + value + " out of range of 0 to 8");
                 }
@@ -158,8 +158,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -183,9 +183,9 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>
+                var properties = new Dictionary<String, String>
                 {
-                    {"type", Type + " (" + ((Int32) Type) + ")"},
+                    {"type", Type + " (" + (Int32) Type + ")"},
                     {"link layer address type", LinkLayerAddressType.ToString()},
                     {"link layer address length", LinkLayerAddressLength.ToString()},
                     {"source", BitConverter.ToString(LinkLayerAddress)},
@@ -194,7 +194,7 @@ namespace PacketDotNet
 
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("LCC:  ******* LinuxSLL - \"Linux Cooked Capture\" - offset=? length=" + TotalPacketLength);

@@ -118,7 +118,7 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public Boolean IsCapable(CapabilityOptions capability)
         {
-            UInt16 mask = (UInt16) capability;
+            var mask = (UInt16) capability;
             if ((Capabilities & mask) != 0)
             {
                 return true;
@@ -138,7 +138,7 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public Boolean IsEnabled(CapabilityOptions capability)
         {
-            UInt16 mask = (UInt16) capability;
+            var mask = (UInt16) capability;
             if ((Enabled & mask) != 0)
             {
                 return true;

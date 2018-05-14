@@ -64,18 +64,18 @@ namespace PacketDotNet
         /// <summary>
         /// Construct a new NullPacket from source and destination mac addresses
         /// </summary>
-        public NullPacket(NullPacketType TheType)
+        public NullPacket(NullPacketType nullPacketType)
         {
             Log.Debug("");
 
             // allocate memory for this packet
-            Int32 offset = 0;
-            Int32 length = NullFields.HeaderLength;
+            const int offset = 0;
+            var length = NullFields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
             // setup some typical values and default values
-            Protocol = TheType;
+            Protocol = nullPacketType;
         }
 
         /// <summary>
@@ -89,6 +89,7 @@ namespace PacketDotNet
             Log.Debug("");
 
             // slice off the header portion as our header
+            // ReSharper disable once UseObjectOrCollectionInitializer
             Header = new ByteArraySegment(bas);
             Header.Length = NullFields.HeaderLength;
 
@@ -98,29 +99,29 @@ namespace PacketDotNet
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes
         (
-            ByteArraySegment Header,
-            NullPacketType Protocol)
+            ByteArraySegment header,
+            NullPacketType protocol)
         {
             // slice off the payload
-            var payload = Header.EncapsulatedBytes();
+            var payload = header.EncapsulatedBytes();
 
-            Log.DebugFormat("Protocol: {0}, payload: {1}", Protocol, payload);
+            Log.DebugFormat("Protocol: {0}, payload: {1}", protocol, payload);
 
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
-            switch (Protocol)
+            switch (protocol)
             {
-                case NullPacketType.IpV4:
-                    payloadPacketOrData.ThePacket = new IPv4Packet(payload);
+                case NullPacketType.IPv4:
+                    payloadPacketOrData.Packet = new IPv4Packet(payload);
                     break;
-                case NullPacketType.IpV6:
-                case NullPacketType.IpV6_28:
-                case NullPacketType.IpV6_30:
-                    payloadPacketOrData.ThePacket = new IPv6Packet(payload);
+                case NullPacketType.IPv6:
+                case NullPacketType.IPv6_28:
+                case NullPacketType.IPv6_30:
+                    payloadPacketOrData.Packet = new IPv6Packet(payload);
                     break;
                 case NullPacketType.IPX:
                 default:
-                    throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");
+                    throw new NotImplementedException("Protocol of " + protocol + " is not implemented");
             }
 
             return payloadPacketOrData;

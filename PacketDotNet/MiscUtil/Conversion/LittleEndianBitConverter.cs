@@ -36,7 +36,7 @@ namespace MiscUtil.Conversion
         /// <param name="index">The index to start at</param>
         protected override void CopyBytesImpl(Int64 value, Int32 bytes, Byte[] buffer, Int32 index)
         {
-            for (Int32 i = 0; i < bytes; i++)
+            for (var i = 0; i < bytes; i++)
             {
                 buffer[i + index] = unchecked((Byte) (value & 0xff));
                 value = value >> 8;
@@ -54,7 +54,7 @@ namespace MiscUtil.Conversion
         protected override Int64 FromBytes(Byte[] buffer, Int32 startIndex, Int32 bytesToConvert)
         {
             Int64 ret = 0;
-            for (Int32 i = 0; i < bytesToConvert; i++)
+            for (var i = 0; i < bytesToConvert; i++)
             {
                 ret = unchecked((ret << 8) | buffer[startIndex + bytesToConvert - 1 - i]);
             }

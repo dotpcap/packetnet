@@ -56,9 +56,9 @@ namespace PacketDotNet
                 if (bas.Length > AssociationResponseFields.InformationElement1Position)
                 {
                     //create a segment that just refers to the info element section
-                    ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                                                (bas.Offset + AssociationResponseFields.InformationElement1Position),
-                                                                                (bas.Length - AssociationResponseFields.InformationElement1Position));
+                    var infoElementsSegment = new ByteArraySegment(bas.Bytes,
+                                                                   bas.Offset + AssociationResponseFields.InformationElement1Position,
+                                                                   bas.Length - AssociationResponseFields.InformationElement1Position);
 
                     InformationElements = new InformationElementList(infoElementsSegment);
                 }
@@ -125,14 +125,14 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override Int32 FrameSize => (MacFields.FrameControlLength +
-                                                MacFields.DurationIDLength +
-                                                (MacFields.AddressLength * 3) +
-                                                MacFields.SequenceControlLength +
-                                                AssociationResponseFields.CapabilityInformationLength +
-                                                AssociationResponseFields.StatusCodeLength +
-                                                AssociationResponseFields.AssociationIdLength +
-                                                InformationElements.Length);
+            public override Int32 FrameSize => MacFields.FrameControlLength +
+                                               MacFields.DurationIDLength +
+                                               (MacFields.AddressLength * 3) +
+                                               MacFields.SequenceControlLength +
+                                               AssociationResponseFields.CapabilityInformationLength +
+                                               AssociationResponseFields.StatusCodeLength +
+                                               AssociationResponseFields.AssociationIdLength +
+                                               InformationElements.Length;
 
             /// <summary>
             /// The information elements included in the frame
@@ -150,7 +150,7 @@ namespace PacketDotNet
                 {
                     if (Header.Length >= AssociationResponseFields.AssociationIdPosition + AssociationResponseFields.AssociationIdLength)
                     {
-                        UInt16 associationID = EndianBitConverter.Little.ToUInt16(Header.Bytes, Header.Offset + AssociationResponseFields.AssociationIdPosition);
+                        var associationID = EndianBitConverter.Little.ToUInt16(Header.Bytes, Header.Offset + AssociationResponseFields.AssociationIdPosition);
                         return (UInt16) (associationID & 0xCF);
                     }
 
@@ -159,7 +159,7 @@ namespace PacketDotNet
 
                 set
                 {
-                    UInt16 associationID = (UInt16) (value & 0xCF);
+                    var associationID = (UInt16) (value & 0xCF);
                     EndianBitConverter.Little.CopyBytes(associationID,
                                                         Header.Bytes,
                                                         Header.Offset + AssociationResponseFields.AssociationIdPosition);
@@ -174,7 +174,7 @@ namespace PacketDotNet
                 get
                 {
                     if (Header.Length >=
-                        (AssociationResponseFields.CapabilityInformationPosition + AssociationResponseFields.CapabilityInformationLength))
+                        AssociationResponseFields.CapabilityInformationPosition + AssociationResponseFields.CapabilityInformationLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                                   Header.Offset + AssociationResponseFields.CapabilityInformationPosition);
@@ -192,7 +192,7 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if (Header.Length >= (AssociationResponseFields.StatusCodePosition + AssociationResponseFields.StatusCodeLength))
+                    if (Header.Length >= AssociationResponseFields.StatusCodePosition + AssociationResponseFields.StatusCodeLength)
                     {
                         return (AuthenticationStatusCode) EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                                                              Header.Offset + AssociationResponseFields.StatusCodePosition);
@@ -213,7 +213,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
+                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
                 {
                     Header = new ByteArraySegment(new Byte[FrameSize]);
                 }

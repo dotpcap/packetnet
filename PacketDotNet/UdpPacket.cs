@@ -163,8 +163,8 @@ namespace PacketDotNet
             Log.Debug("");
 
             // allocate memory for this packet
-            Int32 offset = 0;
-            Int32 length = UdpFields.HeaderLength;
+            var offset = 0;
+            var length = UdpFields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
@@ -195,19 +195,19 @@ namespace PacketDotNet
                 const Int32 wakeOnLanPort1 = 9;
                 if (DestinationPort.Equals(wakeOnLanPort0) || DestinationPort.Equals(wakeOnLanPort1))
                 {
-                    result.ThePacket = new WakeOnLanPacket(Header.EncapsulatedBytes());
+                    result.Packet = new WakeOnLanPacket(Header.EncapsulatedBytes());
                 }
                 else
                 {
                     // store the payload bytes
-                    result.TheByteArraySegment = Header.EncapsulatedBytes();
+                    result.ByteArraySegment = Header.EncapsulatedBytes();
                 }
 
                 const Int32 l2TPport = 1701;
                 if (DestinationPort.Equals(l2TPport) && DestinationPort.Equals(l2TPport))
                 {
                     var payload = Header.EncapsulatedBytes();
-                    result.ThePacket = new L2TPPacket(payload, this);
+                    result.Packet = new L2TPPacket(payload, this);
                 }
 
                 return result;
@@ -253,8 +253,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -274,7 +274,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>
+                var properties = new Dictionary<String, String>
                 {
                     {"source", SourcePort.ToString()},
                     {"destination", DestinationPort.ToString()},
@@ -283,7 +283,7 @@ namespace PacketDotNet
                 };
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("UDP:  ******* UDP - \"User Datagram Protocol\" - offset=? length=" + TotalPacketLength);

@@ -68,10 +68,10 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if (Header.Length >= (MacFields.SequenceControlPosition + MacFields.SequenceControlLength))
+                    if (Header.Length >= MacFields.SequenceControlPosition + MacFields.SequenceControlLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                                  (Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+                                                                  Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3));
                     }
 
                     return 0;
@@ -79,7 +79,7 @@ namespace PacketDotNet
 
                 set => EndianBitConverter.Little.CopyBytes(value,
                                                            Header.Bytes,
-                                                           (Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+                                                           Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3));
             }
 
             /// <summary>
@@ -87,7 +87,7 @@ namespace PacketDotNet
             /// </summary>
             protected void AssignDefaultAddresses()
             {
-                PhysicalAddress zeroAddress = PhysicalAddress.Parse("000000000000");
+                var zeroAddress = PhysicalAddress.Parse("000000000000");
 
                 SourceAddress = zeroAddress;
                 DestinationAddress = zeroAddress;
@@ -105,19 +105,19 @@ namespace PacketDotNet
             /// </remarks>
             protected void ReadAddresses()
             {
-                if ((!FrameControl.ToDS) && (!FrameControl.FromDS))
+                if (!FrameControl.ToDS && !FrameControl.FromDS)
                 {
                     DestinationAddress = GetAddress(0);
                     SourceAddress = GetAddress(1);
                     BssId = GetAddress(2);
                 }
-                else if ((FrameControl.ToDS) && (!FrameControl.FromDS))
+                else if (FrameControl.ToDS && !FrameControl.FromDS)
                 {
                     BssId = GetAddress(0);
                     SourceAddress = GetAddress(1);
                     DestinationAddress = GetAddress(2);
                 }
-                else if ((!FrameControl.ToDS) && (FrameControl.FromDS))
+                else if (!FrameControl.ToDS && FrameControl.FromDS)
                 {
                     DestinationAddress = GetAddress(0);
                     BssId = GetAddress(1);
@@ -142,19 +142,19 @@ namespace PacketDotNet
             /// </remarks>
             protected void WriteAddressBytes()
             {
-                if ((!FrameControl.ToDS) && (!FrameControl.FromDS))
+                if (!FrameControl.ToDS && !FrameControl.FromDS)
                 {
                     SetAddress(0, DestinationAddress);
                     SetAddress(1, SourceAddress);
                     SetAddress(2, BssId);
                 }
-                else if ((FrameControl.ToDS) && (!FrameControl.FromDS))
+                else if (FrameControl.ToDS && !FrameControl.FromDS)
                 {
                     SetAddress(0, BssId);
                     SetAddress(1, SourceAddress);
                     SetAddress(2, DestinationAddress);
                 }
-                else if ((!FrameControl.ToDS) && (FrameControl.FromDS))
+                else if (!FrameControl.ToDS && FrameControl.FromDS)
                 {
                     SetAddress(0, DestinationAddress);
                     SetAddress(1, BssId);

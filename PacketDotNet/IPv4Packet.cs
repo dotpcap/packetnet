@@ -121,7 +121,7 @@ namespace PacketDotNet
         /// </param>
         public override Int32 HeaderLength
         {
-            get => (Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition]) & 0x0F;
+            get => Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] & 0x0F;
 
             set
             {
@@ -129,7 +129,7 @@ namespace PacketDotNet
                 var theByte = Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition];
 
                 // mask in the header length bits
-                theByte = (Byte) ((theByte & 0xF0) | (((Byte) value) & 0x0F));
+                theByte = (Byte) ((theByte & 0xF0) | ((Byte) value & 0x0F));
 
                 // write back the modified value
                 Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] = theByte;
@@ -164,7 +164,7 @@ namespace PacketDotNet
                                                                             Header.Offset + IPv4Fields.FragmentOffsetAndFlagsPosition);
 
                 // mask off the high flag bits
-                return (fragmentOffsetAndFlags & 0x1FFF);
+                return fragmentOffsetAndFlags & 0x1FFF;
             }
 
             set
@@ -191,7 +191,7 @@ namespace PacketDotNet
 
             set
             {
-                Byte[] address = value.GetAddressBytes();
+                var address = value.GetAddressBytes();
                 Array.Copy(address,
                            0,
                            Header.Bytes,
@@ -209,7 +209,7 @@ namespace PacketDotNet
 
             set
             {
-                Byte[] address = value.GetAddressBytes();
+                var address = value.GetAddressBytes();
                 Array.Copy(address,
                            0,
                            Header.Bytes,
@@ -419,14 +419,14 @@ namespace PacketDotNet
             IPAddress DestinationAddress)
         {
             // allocate memory for this packet
-            Int32 offset = 0;
-            Int32 length = IPv4Fields.HeaderLength;
+            var offset = 0;
+            var length = IPv4Fields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
             // set some default values to make this packet valid
             PayloadLength = 0;
-            HeaderLength = (HeaderMinimumLength / 4); // NOTE: HeaderLength is the number of 32bit words in the header
+            HeaderLength = HeaderMinimumLength / 4; // NOTE: HeaderLength is the number of 32bit words in the header
             TimeToLive = DefaultTimeToLive;
 
             // set instance values
@@ -503,8 +503,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -528,20 +528,20 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>
+                var properties = new Dictionary<String, String>
                 {
                     {"version", Version.ToString()},
                     // FIXME: Header length output is incorrect
                     {"header length", HeaderLength + " bytes"}
                 };
-                String diffServices = Convert.ToString(DifferentiatedServices, 2).PadLeft(8, '0').Insert(4, " ");
+                var diffServices = Convert.ToString(DifferentiatedServices, 2).PadLeft(8, '0').Insert(4, " ");
                 properties.Add("differentiated services", "0x" + DifferentiatedServices.ToString("x").PadLeft(2, '0'));
                 properties.Add("", diffServices.Substring(0, 7) + ".. = [" + (DifferentiatedServices >> 2) + "] code point");
                 properties.Add(" ", ".... .." + diffServices[6] + ". = [" + diffServices[6] + "] ECN");
                 properties.Add("  ", ".... ..." + diffServices[7] + " = [" + diffServices[7] + "] ECE");
                 properties.Add("total length", TotalLength.ToString());
                 properties.Add("identification", "0x" + Id.ToString("x") + " (" + Id + ")");
-                String flags = Convert.ToString(FragmentFlags, 2).PadLeft(8, '0').Substring(5, 3);
+                var flags = Convert.ToString(FragmentFlags, 2).PadLeft(8, '0').Substring(5, 3);
                 properties.Add("flags", "0x" + FragmentFlags.ToString("x").PadLeft(2, '0'));
                 properties.Add("   ", flags[0] + ".. = [" + flags[0] + "] reserved");
                 properties.Add("    ", "." + flags[1] + ". = [" + flags[1] + "] don't fragment");
@@ -554,7 +554,7 @@ namespace PacketDotNet
                 properties.Add("destination", DestinationAddress.ToString());
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("IP:  ******* IPv4 - \"Internet Protocol (Version 4)\" - offset=? length=" + TotalPacketLength);

@@ -50,7 +50,7 @@ namespace PacketDotNet
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
                 var result = new PacketOrByteArraySegment();
-                result.TheByteArraySegment = Header.EncapsulatedBytes();
+                result.ByteArraySegment = Header.EncapsulatedBytes();
                 return result;
             });
         }
@@ -80,8 +80,8 @@ namespace PacketDotNet
 
             set
             {
-                Byte[] theValue = BitConverter.GetBytes(value);
-                Array.Copy(theValue, 0, Header.Bytes, (Header.Offset + IGMPv2Fields.ChecksumPosition), 2);
+                var theValue = BitConverter.GetBytes(value);
+                Array.Copy(theValue, 0, Header.Bytes, Header.Offset + IGMPv2Fields.ChecksumPosition, 2);
             }
         }
 
@@ -115,8 +115,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -131,14 +131,14 @@ namespace PacketDotNet
                                     color,
                                     colorEscape,
                                     Type,
-                                    String.Format("{0:0.0}", (MaxResponseTime / 10)),
+                                    String.Format("{0:0.0}", MaxResponseTime / 10),
                                     GroupAddress);
             }
 
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>
+                var properties = new Dictionary<String, String>
                 {
                     {"type", Type + " (0x" + Type.ToString("x") + ")"},
                     {"max response time", String.Format("{0:0.0}", MaxResponseTime / 10) + " sec (0x" + MaxResponseTime.ToString("x") + ")"},
@@ -148,7 +148,7 @@ namespace PacketDotNet
                 };
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("IGMP:  ******* IGMPv2 - \"Internet Group Management Protocol (Version 2)\" - offset=? length=" + TotalPacketLength);

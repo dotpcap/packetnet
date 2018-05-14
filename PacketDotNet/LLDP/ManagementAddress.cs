@@ -164,7 +164,7 @@ namespace PacketDotNet.LLDP
         {
             get
             {
-                Int32 offset = ValueOffset + MgmtAddressLengthLength;
+                var offset = ValueOffset + MgmtAddressLengthLength;
 
                 return new NetworkAddress(tlvData.Bytes, offset, AddressLength);
             }
@@ -188,10 +188,10 @@ namespace PacketDotNet.LLDP
 
                     var newBytes = new Byte[newLength];
 
-                    Int32 headerLength = TLVTypeLength.TypeLengthLength + MgmtAddressLengthLength;
-                    Int32 oldStartOfAfterData = ValueOffset + MgmtAddressLengthLength + AddressLength;
-                    Int32 newStartOfAfterData = TLVTypeLength.TypeLengthLength + MgmtAddressLengthLength + value.Length;
-                    Int32 afterDataLength = InterfaceNumberSubTypeLength + InterfaceNumberLength + ObjectIdentifierLengthLength + ObjIdLength;
+                    var headerLength = TLVTypeLength.TypeLengthLength + MgmtAddressLengthLength;
+                    var oldStartOfAfterData = ValueOffset + MgmtAddressLengthLength + AddressLength;
+                    var newStartOfAfterData = TLVTypeLength.TypeLengthLength + MgmtAddressLengthLength + value.Length;
+                    var afterDataLength = InterfaceNumberSubTypeLength + InterfaceNumberLength + ObjectIdentifierLengthLength + ObjIdLength;
 
                     // copy the data before the mgmt address
                     Array.Copy(tlvData.Bytes,
@@ -273,7 +273,7 @@ namespace PacketDotNet.LLDP
 
             set
             {
-                Byte[] oid = Encoding.UTF8.GetBytes(value);
+                var oid = Encoding.UTF8.GetBytes(value);
 
                 // check for out-of-range sizes
                 if (oid.Length > maxObjectIdentifierLength)

@@ -57,9 +57,9 @@ namespace PacketDotNet
                 if (bas.Length > ProbeResponseFields.InformationElement1Position)
                 {
                     //create a segment that just refers to the info element section
-                    ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                                                (bas.Offset + ProbeResponseFields.InformationElement1Position),
-                                                                                (bas.Length - ProbeResponseFields.InformationElement1Position));
+                    var infoElementsSegment = new ByteArraySegment(bas.Bytes,
+                                                                   bas.Offset + ProbeResponseFields.InformationElement1Position,
+                                                                   bas.Length - ProbeResponseFields.InformationElement1Position);
 
                     InformationElements = new InformationElementList(infoElementsSegment);
                 }
@@ -125,14 +125,14 @@ namespace PacketDotNet
             /// This does not include the FCS, it represents only the header bytes that would
             /// would preceed any payload.
             /// </summary>
-            public override Int32 FrameSize => (MacFields.FrameControlLength +
-                                                MacFields.DurationIDLength +
-                                                (MacFields.AddressLength * 3) +
-                                                MacFields.SequenceControlLength +
-                                                ProbeResponseFields.TimestampLength +
-                                                ProbeResponseFields.BeaconIntervalLength +
-                                                ProbeResponseFields.CapabilityInformationLength +
-                                                InformationElements.Length);
+            public override Int32 FrameSize => MacFields.FrameControlLength +
+                                               MacFields.DurationIDLength +
+                                               (MacFields.AddressLength * 3) +
+                                               MacFields.SequenceControlLength +
+                                               ProbeResponseFields.TimestampLength +
+                                               ProbeResponseFields.BeaconIntervalLength +
+                                               ProbeResponseFields.CapabilityInformationLength +
+                                               InformationElements.Length;
 
             /// <summary>
             /// Gets or sets the information elements included in the frame.
@@ -155,7 +155,7 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if (Header.Length >= (ProbeResponseFields.BeaconIntervalPosition + ProbeResponseFields.BeaconIntervalLength))
+                    if (Header.Length >= ProbeResponseFields.BeaconIntervalPosition + ProbeResponseFields.BeaconIntervalLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes, Header.Offset + ProbeResponseFields.BeaconIntervalPosition);
                     }
@@ -176,7 +176,7 @@ namespace PacketDotNet
                 get
                 {
                     if (Header.Length >=
-                        (ProbeResponseFields.CapabilityInformationPosition + ProbeResponseFields.CapabilityInformationLength))
+                        ProbeResponseFields.CapabilityInformationPosition + ProbeResponseFields.CapabilityInformationLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                                   Header.Offset + ProbeResponseFields.CapabilityInformationPosition);
@@ -194,7 +194,7 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if (Header.Length >= (ProbeResponseFields.TimestampPosition + ProbeResponseFields.TimestampLength))
+                    if (Header.Length >= ProbeResponseFields.TimestampPosition + ProbeResponseFields.TimestampLength)
                     {
                         return EndianBitConverter.Little.ToUInt64(Header.Bytes, Header.Offset + ProbeResponseFields.TimestampPosition);
                     }
@@ -212,7 +212,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
+                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
                 {
                     Header = new ByteArraySegment(new Byte[FrameSize]);
                 }

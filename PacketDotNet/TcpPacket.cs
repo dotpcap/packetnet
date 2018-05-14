@@ -201,7 +201,7 @@ namespace PacketDotNet
         {
             get
             {
-                var flags = (DataOffsetAndFlags & 0x1FF);
+                var flags = DataOffsetAndFlags & 0x1FF;
                 return (UInt16) flags;
             }
 
@@ -217,15 +217,15 @@ namespace PacketDotNet
         /// <summary> Check the URG flag, flag indicates if the urgent pointer is valid.</summary>
         public Boolean Urg
         {
-            get => (AllFlags & TcpFields.TCP_URG_MASK) != 0;
-            set => SetFlag(value, TcpFields.TCP_URG_MASK);
+            get => (AllFlags & TcpFields.TCPUrgMask) != 0;
+            set => SetFlag(value, TcpFields.TCPUrgMask);
         }
 
         /// <summary> Check the ACK flag, flag indicates if the ack number is valid.</summary>
         public Boolean Ack
         {
-            get => (AllFlags & TcpFields.TCP_ACK_MASK) != 0;
-            set => SetFlag(value, TcpFields.TCP_ACK_MASK);
+            get => (AllFlags & TcpFields.TCPAckMask) != 0;
+            set => SetFlag(value, TcpFields.TCPAckMask);
         }
 
         /// <summary>
@@ -234,8 +234,8 @@ namespace PacketDotNet
         /// </summary>
         public Boolean Psh
         {
-            get => (AllFlags & TcpFields.TCP_PSH_MASK) != 0;
-            set => SetFlag(value, TcpFields.TCP_PSH_MASK);
+            get => (AllFlags & TcpFields.TCPPshMask) != 0;
+            set => SetFlag(value, TcpFields.TCPPshMask);
         }
 
         /// <summary>
@@ -244,8 +244,8 @@ namespace PacketDotNet
         /// </summary>
         public Boolean Rst
         {
-            get => (AllFlags & TcpFields.TCP_RST_MASK) != 0;
-            set => SetFlag(value, TcpFields.TCP_RST_MASK);
+            get => (AllFlags & TcpFields.TCPRstMask) != 0;
+            set => SetFlag(value, TcpFields.TCPRstMask);
         }
 
         /// <summary>
@@ -255,15 +255,15 @@ namespace PacketDotNet
         /// </summary>
         public Boolean Syn
         {
-            get => (AllFlags & TcpFields.TCP_SYN_MASK) != 0;
-            set => SetFlag(value, TcpFields.TCP_SYN_MASK);
+            get => (AllFlags & TcpFields.TCPSynMask) != 0;
+            set => SetFlag(value, TcpFields.TCPSynMask);
         }
 
         /// <summary> Check the FIN flag, flag indicates the sender is finished sending.</summary>
         public Boolean Fin
         {
-            get => (AllFlags & TcpFields.TCP_FIN_MASK) != 0;
-            set => SetFlag(value, TcpFields.TCP_FIN_MASK);
+            get => (AllFlags & TcpFields.TCPFinMask) != 0;
+            set => SetFlag(value, TcpFields.TCPFinMask);
         }
 
         /// <value>
@@ -271,8 +271,8 @@ namespace PacketDotNet
         /// </value>
         public Boolean ECN
         {
-            get => (AllFlags & TcpFields.TCP_ECN_MASK) != 0;
-            set => SetFlag(value, TcpFields.TCP_ECN_MASK);
+            get => (AllFlags & TcpFields.TCPEcnMask) != 0;
+            set => SetFlag(value, TcpFields.TCPEcnMask);
         }
 
         /// <value>
@@ -280,8 +280,8 @@ namespace PacketDotNet
         /// </value>
         public Boolean CWR
         {
-            get => (AllFlags & TcpFields.TCP_CWR_MASK) != 0;
-            set => SetFlag(value, TcpFields.TCP_CWR_MASK);
+            get => (AllFlags & TcpFields.TCPCwrMask) != 0;
+            set => SetFlag(value, TcpFields.TCPCwrMask);
         }
 
         /// <value>
@@ -289,8 +289,8 @@ namespace PacketDotNet
         /// </value>
         public Boolean NS
         {
-            get => (AllFlags & TcpFields.TCP_NS_MASK) != 0;
-            set => SetFlag(value, TcpFields.TCP_NS_MASK);
+            get => (AllFlags & TcpFields.TCPNsMask) != 0;
+            set => SetFlag(value, TcpFields.TCPNsMask);
         }
 
         private void SetFlag(Boolean on, Int32 mask)
@@ -315,8 +315,8 @@ namespace PacketDotNet
             Log.Debug("");
 
             // allocate memory for this packet
-            Int32 offset = 0;
-            Int32 length = TcpFields.HeaderLength;
+            var offset = 0;
+            var length = TcpFields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
@@ -347,7 +347,7 @@ namespace PacketDotNet
             // store the payload bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment {TheByteArraySegment = Header.EncapsulatedBytes()};
+                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.EncapsulatedBytes()};
                 return result;
             });
         }
@@ -379,7 +379,7 @@ namespace PacketDotNet
             // store the payload bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment {TheByteArraySegment = Header.EncapsulatedBytes()};
+                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.EncapsulatedBytes()};
 
                 // if the parent packet is an IPv4Packet we need to adjust
                 // the payload length because it is possible for us to have
@@ -397,12 +397,12 @@ namespace PacketDotNet
 
                     Log.DebugFormat("Header.Length {0}, Current payload length: {1}, new payload length {2}",
                                     Header.Length,
-                                    result.TheByteArraySegment.Length,
+                                    result.ByteArraySegment.Length,
                                     newTcpPayloadLength);
 
                     // the length of the payload is the total payload length
                     // above, minus the length of the tcp header
-                    result.TheByteArraySegment.Length = newTcpPayloadLength;
+                    result.ByteArraySegment.Length = newTcpPayloadLength;
                     DecodePayload(result);
                 }
 
@@ -421,15 +421,15 @@ namespace PacketDotNet
         /// <returns></returns>
         public TcpPacket DecodePayload(PacketOrByteArraySegment result)
         {
-            if (result.TheByteArraySegment == null)
+            if (result.ByteArraySegment == null)
                 return this;
 
 
-            if (result.TheByteArraySegment.Length >= DrdaDDMFields.DDMHeadTotalLength &&
-                result.TheByteArraySegment.Bytes[result.TheByteArraySegment.Offset + 2] == 0xD0)
+            if (result.ByteArraySegment.Length >= DrdaDDMFields.DDMHeadTotalLength &&
+                result.ByteArraySegment.Bytes[result.ByteArraySegment.Offset + 2] == 0xD0)
             {
-                var drdaPacket = new DrdaPacket(result.TheByteArraySegment, this);
-                result.ThePacket = drdaPacket;
+                var drdaPacket = new DrdaPacket(result.ByteArraySegment, this);
+                result.Packet = drdaPacket;
             }
 
             return this;
@@ -482,10 +482,10 @@ namespace PacketDotNet
                     throw new NotImplementedException("Urg == true not implemented yet");
                 }
 
-                Int32 optionsOffset = TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
-                Int32 optionsLength = (DataOffset * 4) - optionsOffset;
+                var optionsOffset = TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
+                var optionsLength = (DataOffset * 4) - optionsOffset;
 
-                Byte[] optionBytes = new Byte[optionsLength];
+                var optionBytes = new Byte[optionsLength];
                 Array.Copy(Header.Bytes,
                            Header.Offset + optionsOffset,
                            optionBytes,
@@ -507,9 +507,7 @@ namespace PacketDotNet
         /// </returns>
         private List<Option> ParseOptions(Byte[] optionBytes)
         {
-            Int32 offset = 0;
-            OptionTypes type;
-            Byte length;
+            var offset = 0;
 
             if (optionBytes.Length == 0)
                 return null;
@@ -521,13 +519,14 @@ namespace PacketDotNet
 
             while (offset < optionBytes.Length)
             {
-                type = (OptionTypes) optionBytes[offset + Option.KindFieldOffset];
+                var type = (OptionTypes) optionBytes[offset + Option.KindFieldOffset];
 
                 // some options have no length field, we cannot read
                 // the length field if it isn't present or we risk
                 // out-of-bounds issues
-                if ((type == OptionTypes.EndOfOptionList) ||
-                    (type == OptionTypes.NoOperation))
+                Byte length;
+                if (type == OptionTypes.EndOfOptionList ||
+                    type == OptionTypes.NoOperation)
                 {
                     length = 1;
                 }
@@ -612,8 +611,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -627,7 +626,7 @@ namespace PacketDotNet
                 case StringOutputType.Colored:
                 {
                     // build flagstring
-                    String flags = "{";
+                    var flags = "{";
                     if (Urg)
                         flags += "urg[0x" + Convert.ToString(UrgentPointer, 16) + "]|";
                     if (Ack)
@@ -654,7 +653,7 @@ namespace PacketDotNet
                 case StringOutputType.VerboseColored:
                 {
                     // collect the properties and their value
-                    Dictionary<String, String> properties = new Dictionary<String, String>
+                    var properties = new Dictionary<String, String>
                     {
                         {"source port", SourcePort.ToString()},
                         {"destination port", DestinationPort.ToString()},
@@ -664,7 +663,7 @@ namespace PacketDotNet
                         //properties.Add("header length", HeaderLength.ToString());
                         {"flags", "(0x" + AllFlags.ToString("x") + ")"}
                     };
-                    String flags = Convert.ToString(AllFlags, 2).PadLeft(8, '0');
+                    var flags = Convert.ToString(AllFlags, 2).PadLeft(8, '0');
                     properties.Add("", flags[0] + "... .... = [" + flags[0] + "] congestion window reduced");
                     properties.Add(" ", "." + flags[1] + ".. .... = [" + flags[1] + "] ECN - echo");
                     properties.Add("  ", ".." + flags[2] + ". .... = [" + flags[2] + "] urgent");
@@ -679,14 +678,14 @@ namespace PacketDotNet
                     var parsedOptions = OptionsCollection;
                     if (parsedOptions != null)
                     {
-                        for (Int32 i = 0; i < parsedOptions.Count; i++)
+                        for (var i = 0; i < parsedOptions.Count; i++)
                         {
                             properties.Add("option" + (i + 1), parsedOptions[i].ToString());
                         }
                     }
 
                     // calculate the padding needed to right-justify the property names
-                    Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                    var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                     // build the output string
                     buffer.AppendLine("TCP:  ******* TCP - \"Transmission Control Protocol\" - offset=? length=" + TotalPacketLength);

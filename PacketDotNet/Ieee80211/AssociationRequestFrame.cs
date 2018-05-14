@@ -55,9 +55,9 @@ namespace PacketDotNet
                 if (bas.Length > AssociationRequestFields.InformationElement1Position)
                 {
                     //create a segment that just refers to the info element section
-                    ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                                                (bas.Offset + AssociationRequestFields.InformationElement1Position),
-                                                                                (bas.Length - AssociationRequestFields.InformationElement1Position));
+                    var infoElementsSegment = new ByteArraySegment(bas.Bytes,
+                                                                   bas.Offset + AssociationRequestFields.InformationElement1Position,
+                                                                   bas.Length - AssociationRequestFields.InformationElement1Position);
 
                     InformationElements = new InformationElementList(infoElementsSegment);
                 }
@@ -119,13 +119,13 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override Int32 FrameSize => (MacFields.FrameControlLength +
-                                                MacFields.DurationIDLength +
-                                                (MacFields.AddressLength * 3) +
-                                                MacFields.SequenceControlLength +
-                                                AssociationRequestFields.CapabilityInformationLength +
-                                                AssociationRequestFields.ListenIntervalLength +
-                                                InformationElements.Length);
+            public override Int32 FrameSize => MacFields.FrameControlLength +
+                                               MacFields.DurationIDLength +
+                                               (MacFields.AddressLength * 3) +
+                                               MacFields.SequenceControlLength +
+                                               AssociationRequestFields.CapabilityInformationLength +
+                                               AssociationRequestFields.ListenIntervalLength +
+                                               InformationElements.Length;
 
             /// <summary>
             /// Gets or sets the information elements.
@@ -151,7 +151,7 @@ namespace PacketDotNet
                 get
                 {
                     if (Header.Length >=
-                        (AssociationRequestFields.CapabilityInformationPosition + AssociationRequestFields.CapabilityInformationLength))
+                        AssociationRequestFields.CapabilityInformationPosition + AssociationRequestFields.CapabilityInformationLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                                   Header.Offset + AssociationRequestFields.CapabilityInformationPosition);
@@ -169,7 +169,7 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if (Header.Length >= (AssociationRequestFields.ListenIntervalPosition + AssociationRequestFields.ListenIntervalLength))
+                    if (Header.Length >= AssociationRequestFields.ListenIntervalPosition + AssociationRequestFields.ListenIntervalLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                                   Header.Offset + AssociationRequestFields.ListenIntervalPosition);
@@ -188,7 +188,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
+                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
                 {
                     Header = new ByteArraySegment(new Byte[FrameSize]);
                 }

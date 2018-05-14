@@ -66,7 +66,7 @@ namespace PacketDotNet
                             item.Type);
 
             // if this is the first item and it isn't an End TLV we should add the end tlv
-            if ((Count == 0) && (item.Type != TLVTypes.EndOfLLDPU))
+            if (Count == 0 && item.Type != TLVTypes.EndOfLLDPU)
             {
                 Log.Debug("Inserting EndOfLLDPDU");
                 base.InsertItem(0, new EndOfLLDPDU());
@@ -88,7 +88,7 @@ namespace PacketDotNet
 
             // if we have no items insert the first item wherever
             // if we have items insert the item befor the last item as the last item is a EndOfLLDPDU
-            Int32 insertPosition = (Count == 0) ? 0 : Count - 1;
+            var insertPosition = Count == 0 ? 0 : Count - 1;
 
             Log.DebugFormat("Inserting item at position {0}", insertPosition);
 

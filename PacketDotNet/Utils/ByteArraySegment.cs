@@ -184,7 +184,7 @@ namespace PacketDotNet.Utils
             {
                 // we need a copy unless we are at the start of the byte[]
                 // and the length is the total byte[] length
-                var okWithoutCopy = ((Offset == 0) && (Length == Bytes.Length));
+                var okWithoutCopy = Offset == 0 && Length == Bytes.Length;
                 var retval = !okWithoutCopy;
 
                 Log.DebugFormat("retval {0}", retval);
@@ -221,7 +221,7 @@ namespace PacketDotNet.Utils
         {
             Log.DebugFormat("NewSegmentLength {0}", NewSegmentLength);
 
-            Int32 startingOffset = Offset + Length; // start at the end of the current segment
+            var startingOffset = Offset + Length; // start at the end of the current segment
             Log.DebugFormat("startingOffset({0}) = Offset({1}) + Length({2})",
                             startingOffset,
                             Offset,
@@ -232,7 +232,7 @@ namespace PacketDotNet.Utils
             NewSegmentLength = Math.Min(NewSegmentLength, BytesLength - startingOffset);
 
             // calculate the ByteLength property of the new ByteArraySegment
-            Int32 NewByteLength = startingOffset + NewSegmentLength;
+            var NewByteLength = startingOffset + NewSegmentLength;
 
             Log.DebugFormat("NewSegmentLength {0}, NewByteLength {1}, BytesLength {2}",
                             NewSegmentLength,

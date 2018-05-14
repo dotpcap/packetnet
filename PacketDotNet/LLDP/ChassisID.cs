@@ -241,15 +241,15 @@ namespace PacketDotNet.LLDP
         {
             var length = TLVTypeLength.TypeLengthLength + SubTypeLength;
             var bytes = new Byte[length];
-            Int32 offset = 0;
+            var offset = 0;
             tlvData = new ByteArraySegment(bytes, offset, length);
         }
 
         private Object GetSubTypeValue()
         {
             Byte[] val;
-            Int32 dataOffset = ValueOffset + SubTypeLength;
-            Int32 dataLength = Length - SubTypeLength;
+            var dataOffset = ValueOffset + SubTypeLength;
+            var dataLength = Length - SubTypeLength;
 
             switch (SubType)
             {

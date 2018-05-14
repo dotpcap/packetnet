@@ -60,11 +60,11 @@ namespace PacketDotNet
                 // set Type based on the type of the payload
                 if (value is IPv4Packet)
                 {
-                    Type = EthernetPacketType.IpV4;
+                    Type = EthernetPacketType.IPv4;
                 }
                 else if (value is IPv6Packet)
                 {
-                    Type = EthernetPacketType.IpV6;
+                    Type = EthernetPacketType.IPv6;
                 }
                 else if (value is ARPPacket)
                 {
@@ -90,7 +90,7 @@ namespace PacketDotNet
         {
             get
             {
-                Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
+                var hwAddress = new Byte[EthernetFields.MacAddressLength];
                 Array.Copy(Header.Bytes,
                            Header.Offset + EthernetFields.SourceMacPosition,
                            hwAddress,
@@ -101,7 +101,7 @@ namespace PacketDotNet
 
             set
             {
-                Byte[] hwAddress = value.GetAddressBytes();
+                var hwAddress = value.GetAddressBytes();
                 if (hwAddress.Length != EthernetFields.MacAddressLength)
                 {
                     throw new InvalidOperationException("address length " + hwAddress.Length + " not equal to the expected length of " + EthernetFields.MacAddressLength);
@@ -120,7 +120,7 @@ namespace PacketDotNet
         {
             get
             {
-                Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
+                var hwAddress = new Byte[EthernetFields.MacAddressLength];
                 Array.Copy(Header.Bytes,
                            Header.Offset + EthernetFields.DestinationMacPosition,
                            hwAddress,
@@ -131,7 +131,7 @@ namespace PacketDotNet
 
             set
             {
-                Byte[] hwAddress = value.GetAddressBytes();
+                var hwAddress = value.GetAddressBytes();
                 if (hwAddress.Length != EthernetFields.MacAddressLength)
                 {
                     throw new InvalidOperationException("address length " + hwAddress.Length + " not equal to the expected length of " + EthernetFields.MacAddressLength);
@@ -155,7 +155,7 @@ namespace PacketDotNet
 
             set
             {
-                Int16 val = (Int16) value;
+                var val = (Int16) value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  Header.Bytes,
                                                  Header.Offset + EthernetFields.TypePosition);
@@ -174,8 +174,8 @@ namespace PacketDotNet
             Log.Debug("");
 
             // allocate memory for this packet
-            Int32 offset = 0;
-            Int32 length = EthernetFields.HeaderLength;
+            var offset = 0;
+            var length = EthernetFields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
@@ -230,29 +230,29 @@ namespace PacketDotNet
             // parse the encapsulated bytes
             switch (Type)
             {
-                case EthernetPacketType.IpV4:
-                    payloadPacketOrData.ThePacket = new IPv4Packet(payload);
+                case EthernetPacketType.IPv4:
+                    payloadPacketOrData.Packet = new IPv4Packet(payload);
                     break;
-                case EthernetPacketType.IpV6:
-                    payloadPacketOrData.ThePacket = new IPv6Packet(payload);
+                case EthernetPacketType.IPv6:
+                    payloadPacketOrData.Packet = new IPv6Packet(payload);
                     break;
                 case EthernetPacketType.Arp:
-                    payloadPacketOrData.ThePacket = new ARPPacket(payload);
+                    payloadPacketOrData.Packet = new ARPPacket(payload);
                     break;
                 case EthernetPacketType.LLDP:
-                    payloadPacketOrData.ThePacket = new LLDPPacket(payload);
+                    payloadPacketOrData.Packet = new LLDPPacket(payload);
                     break;
                 case EthernetPacketType.PointToPointProtocolOverEthernetSessionStage:
-                    payloadPacketOrData.ThePacket = new PPPoEPacket(payload);
+                    payloadPacketOrData.Packet = new PPPoEPacket(payload);
                     break;
                 case EthernetPacketType.WakeOnLan:
-                    payloadPacketOrData.ThePacket = new WakeOnLanPacket(payload);
+                    payloadPacketOrData.Packet = new WakeOnLanPacket(payload);
                     break;
                 case EthernetPacketType.VLanTaggedFrame:
-                    payloadPacketOrData.ThePacket = new Ieee8021QPacket(payload);
+                    payloadPacketOrData.Packet = new Ieee8021QPacket(payload);
                     break;
                 default: // consider the sub-packet to be a byte array
-                    payloadPacketOrData.TheByteArraySegment = payload;
+                    payloadPacketOrData.ByteArraySegment = payload;
                     break;
             }
 
@@ -266,8 +266,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -289,7 +289,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>
+                var properties = new Dictionary<String, String>
                 {
                     {"destination", HexPrinter.PrintMACAddress(DestinationHwAddress)},
                     {"source", HexPrinter.PrintMACAddress(SourceHwAddress)},
@@ -297,7 +297,7 @@ namespace PacketDotNet
                 };
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Eth:  ******* Ethernet - \"Ethernet\" - offset=? length=" + TotalPacketLength);
@@ -327,8 +327,8 @@ namespace PacketDotNet
         {
             var rnd = new Random();
 
-            Byte[] srcPhysicalAddress = new Byte[EthernetFields.MacAddressLength];
-            Byte[] dstPhysicalAddress = new Byte[EthernetFields.MacAddressLength];
+            var srcPhysicalAddress = new Byte[EthernetFields.MacAddressLength];
+            var dstPhysicalAddress = new Byte[EthernetFields.MacAddressLength];
 
             rnd.NextBytes(srcPhysicalAddress);
             rnd.NextBytes(dstPhysicalAddress);

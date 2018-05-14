@@ -177,7 +177,7 @@ namespace PacketDotNet
                 LinkType = LinkTypeBytes;
                 PpiFields = ReadPpiFields();
 
-                PpiCommon commonField = FindFirstByType(PpiFieldType.PpiCommon) as PpiCommon;
+                var commonField = FindFirstByType(PpiFieldType.PpiCommon) as PpiCommon;
 
                 // parse the encapsulated bytes
                 PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, commonField));
@@ -256,7 +256,7 @@ namespace PacketDotNet
             /// </param>
             public Boolean Contains(PpiFieldType type)
             {
-                return (PpiFields.Find(field => field.FieldType == type) != null);
+                return PpiFields.Find(field => field.FieldType == type) != null;
             }
 
             /// <summary>
@@ -291,7 +291,7 @@ namespace PacketDotNet
             /// </param>
             public PpiField[] FindByType(PpiFieldType type)
             {
-                return PpiFields.FindAll(p => (p.FieldType == type)).ToArray();
+                return PpiFields.FindAll(p => p.FieldType == type).ToArray();
             }
 
             /// <summary cref="Packet.ToString(StringOutputType)" />
@@ -300,8 +300,8 @@ namespace PacketDotNet
                 PayloadPacketOrData.Evaluate();
 
                 var buffer = new StringBuilder();
-                String color = "";
-                String colorEscape = "";
+                var color = "";
+                var colorEscape = "";
 
                 if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
                 {
@@ -338,7 +338,7 @@ namespace PacketDotNet
                     }
 
                     // calculate the padding needed to right-justify the property names
-                    Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                    var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                     // build the output string
                     buffer.AppendLine("Ieee80211PpiPacket");
@@ -377,11 +377,11 @@ namespace PacketDotNet
 
                 //If aligned is true then fields must all start on 32bit boundaries so we might need
                 //to read some extra padding from the end of the header fields.
-                Boolean aligned = ((Flags & HeaderFlags.Alignment32Bit) == HeaderFlags.Alignment32Bit);
+                var aligned = (Flags & HeaderFlags.Alignment32Bit) == HeaderFlags.Alignment32Bit;
 
                 var totalFieldLength = Length;
 
-                if ((Header == null) || (totalFieldLength > Header.Length))
+                if (Header == null || totalFieldLength > Header.Length)
                 {
                     Header = new ByteArraySegment(new Byte[totalFieldLength]);
                 }
@@ -393,17 +393,17 @@ namespace PacketDotNet
                 LengthBytes = totalFieldLength;
                 LinkTypeBytes = LinkType;
 
-                MemoryStream ms = new MemoryStream(Header.Bytes,
-                                                   Header.Offset + PpiHeaderFields.FirstFieldPosition,
-                                                   totalFieldLength - PpiHeaderFields.FirstFieldPosition);
-                BinaryWriter writer = new BinaryWriter(ms);
+                var ms = new MemoryStream(Header.Bytes,
+                                          Header.Offset + PpiHeaderFields.FirstFieldPosition,
+                                          totalFieldLength - PpiHeaderFields.FirstFieldPosition);
+                var writer = new BinaryWriter(ms);
                 foreach (var field in PpiFields)
                 {
                     writer.Write((UInt16) field.FieldType);
                     writer.Write((UInt16) field.Length);
                     writer.Write(field.Bytes);
                     var paddingBytesRequired = GetDistanceTo32BitAlignment(field.Length);
-                    if (aligned && (paddingBytesRequired > 0))
+                    if (aligned && paddingBytesRequired > 0)
                     {
                         writer.Write(new Byte[paddingBytesRequired]);
                     }
@@ -422,7 +422,7 @@ namespace PacketDotNet
             {
                 //If aligned is true then fields must all start on 32bit boundaries so we might need
                 //to read some extra padding from the end of the header fields.
-                Boolean aligned = ((Flags & HeaderFlags.Alignment32Bit) == HeaderFlags.Alignment32Bit);
+                var aligned = (Flags & HeaderFlags.Alignment32Bit) == HeaderFlags.Alignment32Bit;
 
                 var retList = new List<PpiField>();
 
@@ -431,8 +431,8 @@ namespace PacketDotNet
                 var br = new BinaryReader(new MemoryStream(Header.Bytes,
                                                            offset,
                                                            Header.Length - offset));
-                Int32 type = 0;
-                Int32 length = PpiHeaderFields.FirstFieldPosition;
+                var type = 0;
+                var length = PpiHeaderFields.FirstFieldPosition;
                 while (length < Header.Length)
                 {
                     type = br.ReadUInt16();
@@ -441,7 +441,7 @@ namespace PacketDotNet
                     length += fieldLength + 4;
                     retList.Add(PpiField.Parse(type, br, fieldLength));
                     var paddingByteCount = GetDistanceTo32BitAlignment(fieldLength);
-                    if (aligned && (paddingByteCount > 0))
+                    if (aligned && paddingByteCount > 0)
                     {
                         br.ReadBytes(paddingByteCount);
                         length += paddingByteCount;
@@ -472,7 +472,7 @@ namespace PacketDotNet
 
                 if (commonField != null)
                 {
-                    Boolean fcsPresent = ((commonField.Flags & PpiCommon.CommonFlags.FcsIncludedInFrame) == PpiCommon.CommonFlags.FcsIncludedInFrame);
+                    var fcsPresent = (commonField.Flags & PpiCommon.CommonFlags.FcsIncludedInFrame) == PpiCommon.CommonFlags.FcsIncludedInFrame;
 
                     if (fcsPresent)
                     {
@@ -490,11 +490,11 @@ namespace PacketDotNet
 
                 if (frame == null)
                 {
-                    payloadPacketOrData.TheByteArraySegment = payload;
+                    payloadPacketOrData.ByteArraySegment = payload;
                 }
                 else
                 {
-                    payloadPacketOrData.ThePacket = frame;
+                    payloadPacketOrData.Packet = frame;
                 }
 
                 return payloadPacketOrData;
@@ -502,7 +502,7 @@ namespace PacketDotNet
 
             private Int32 GetDistanceTo32BitAlignment(Int32 length)
             {
-                return ((length % 4) == 0) ? 0 : 4 - (length % 4);
+                return length % 4 == 0 ? 0 : 4 - (length % 4);
             }
 
             #endregion Private Methods

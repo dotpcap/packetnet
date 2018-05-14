@@ -54,8 +54,7 @@ namespace PacketDotNet
             var firstNibble = bas.Bytes[0] >> 4;
             Protocol = (RawIPPacketProtocol) firstNibble;
 
-            Header = new ByteArraySegment(bas);
-            Header.Length = 0;
+            Header = new ByteArraySegment(bas) {Length = 0};
 
             // parse the encapsulated bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
@@ -64,10 +63,10 @@ namespace PacketDotNet
                 switch (Protocol)
                 {
                     case RawIPPacketProtocol.IPv4:
-                        result.ThePacket = new IPv4Packet(Header.EncapsulatedBytes());
+                        result.Packet = new IPv4Packet(Header.EncapsulatedBytes());
                         break;
                     case RawIPPacketProtocol.IPv6:
-                        result.ThePacket = new IPv6Packet(Header.EncapsulatedBytes());
+                        result.Packet = new IPv6Packet(Header.EncapsulatedBytes());
                         break;
                     default:
                         throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");
@@ -84,8 +83,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -105,13 +104,13 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>
+                var properties = new Dictionary<String, String>
                 {
                     {"protocol", Protocol + " (0x" + Protocol.ToString("x") + ")"}
                 };
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Raw:  ******* Raw - \"Raw IP Packet\" - offset=? length=" + TotalPacketLength);

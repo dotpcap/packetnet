@@ -32,6 +32,7 @@ namespace PacketDotNet
     /// Point to Point Protocol
     /// See http://tools.ietf.org/html/rfc2516
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     public class PPPoEPacket : Packet
     {
 #if DEBUG
@@ -75,7 +76,7 @@ namespace PacketDotNet
         /// </summary>
         public Byte Type
         {
-            get => (Byte) ((VersionType) & 0x0F);
+            get => (Byte) (VersionType & 0x0F);
 
             set
             {
@@ -144,20 +145,20 @@ namespace PacketDotNet
         /// </summary>
         public PPPoEPacket
         (
-            PPPoECode Code,
-            UInt16 SessionId)
+            PPPoECode code,
+            UInt16 sessionId)
         {
             Log.Debug("");
 
             // allocate memory for this packet
-            Int32 offset = 0;
-            Int32 length = PPPoEFields.HeaderLength;
+            const int offset = 0;
+            var length = PPPoEFields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
-            this.Code = Code;
-            this.SessionId = SessionId;
+            Code = code;
+            SessionId = sessionId;
 
             // setup some typical values and default values
             Version = 1;
@@ -176,6 +177,7 @@ namespace PacketDotNet
             Log.Debug("");
 
             // slice off the header portion
+            // ReSharper disable once UseObjectOrCollectionInitializer
             Header = new ByteArraySegment(bas);
             Header.Length = PPPoEFields.HeaderLength;
 
@@ -183,16 +185,17 @@ namespace PacketDotNet
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header));
         }
 
-        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment Header)
+        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment header)
         {
             // slice off the payload
-            var payload = Header.EncapsulatedBytes();
+            var payload = header.EncapsulatedBytes();
             Log.DebugFormat("payload {0}", payload);
 
+            // ReSharper disable once UseObjectOrCollectionInitializer
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
             // we assume that we have a PPPPacket as the payload
-            payloadPacketOrData.ThePacket = new PPPPacket(payload);
+            payloadPacketOrData.Packet = new PPPPacket(payload);
 
             return payloadPacketOrData;
         }
@@ -204,8 +207,8 @@ namespace PacketDotNet
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -213,53 +216,55 @@ namespace PacketDotNet
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            switch (outputFormat)
             {
-                // build the output string
-                buffer.AppendFormat("{0}[PPPoEPacket: Version={2}, Type={3}, Code={4}, SessionId={5}, Length={6}]{1}",
-                                    color,
-                                    colorEscape,
-                                    Version,
-                                    Type,
-                                    Code,
-                                    SessionId,
-                                    Length);
-            }
-
-            if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
-            {
-                // collect the properties and their value
-                Dictionary<String, String> properties = new Dictionary<String, String>
-                {
-                    // FIXME: The version output is incorrect
-                    {"", Convert.ToString(Version, 2).PadLeft(4, '0') + " .... = version: " + Version},
-                    {" ", ".... " + Convert.ToString(Type, 2).PadLeft(4, '0') + " = type: " + Type},
-                    // FIXME: The Code output is incorrect
-                    {"code", Code + " (0x" + Code.ToString("x") + ")"},
-                    {"session id", "0x" + SessionId.ToString("x")}
-                };
-                // TODO: Implement a PayloadLength property for PPPoE
-                //properties.Add("payload length", PayloadLength.ToString());
-
-                // calculate the padding needed to right-justify the property names
-                Int32 padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
-
-                // build the output string
-                buffer.AppendLine("PPPoE:  ******* PPPoE - \"Point-to-Point Protocol over Ethernet\" - offset=? length=" + TotalPacketLength);
-                buffer.AppendLine("PPPoE:");
-                foreach (var property in properties)
-                {
-                    if (property.Key.Trim() != "")
+                case StringOutputType.Normal:
+                case StringOutputType.Colored:
+                    // build the output string
+                    buffer.AppendFormat("{0}[PPPoEPacket: Version={2}, Type={3}, Code={4}, SessionId={5}, Length={6}]{1}",
+                                        color,
+                                        colorEscape,
+                                        Version,
+                                        Type,
+                                        Code,
+                                        SessionId,
+                                        Length);
+                    break;
+                case StringOutputType.Verbose:
+                case StringOutputType.VerboseColored:
+                    // collect the properties and their value
+                    var properties = new Dictionary<String, String>
                     {
-                        buffer.AppendLine("PPPoE: " + property.Key.PadLeft(padLength) + " = " + property.Value);
-                    }
-                    else
-                    {
-                        buffer.AppendLine("PPPoE: " + property.Key.PadLeft(padLength) + "   " + property.Value);
-                    }
-                }
+                        // FIXME: The version output is incorrect
+                        {"", Convert.ToString(Version, 2).PadLeft(4, '0') + " .... = version: " + Version},
+                        {" ", ".... " + Convert.ToString(Type, 2).PadLeft(4, '0') + " = type: " + Type},
+                        // FIXME: The Code output is incorrect
+                        {"code", Code + " (0x" + Code.ToString("x") + ")"},
+                        {"session id", "0x" + SessionId.ToString("x")}
+                    };
+                    // TODO: Implement a PayloadLength property for PPPoE
+                    //properties.Add("payload length", PayloadLength.ToString());
 
-                buffer.AppendLine("PPPoE:");
+                    // calculate the padding needed to right-justify the property names
+                    var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+
+                    // build the output string
+                    buffer.AppendLine("PPPoE:  ******* PPPoE - \"Point-to-Point Protocol over Ethernet\" - offset=? length=" + TotalPacketLength);
+                    buffer.AppendLine("PPPoE:");
+                    foreach (var property in properties)
+                    {
+                        if (property.Key.Trim() != "")
+                        {
+                            buffer.AppendLine("PPPoE: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                        }
+                        else
+                        {
+                            buffer.AppendLine("PPPoE: " + property.Key.PadLeft(padLength) + "   " + property.Value);
+                        }
+                    }
+
+                    buffer.AppendLine("PPPoE:");
+                    break;
             }
 
             // append the base output

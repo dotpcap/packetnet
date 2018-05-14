@@ -115,8 +115,8 @@ namespace PacketDotNet
             {
                 get
                 {
-                    MemoryStream ms = new MemoryStream();
-                    BinaryWriter writer = new BinaryWriter(ms);
+                    var ms = new MemoryStream();
+                    var writer = new BinaryWriter(ms);
                     writer.Write((UInt32) Flags);
                     writer.Write((UInt32) Errors);
                     return ms.ToArray();
@@ -423,8 +423,8 @@ namespace PacketDotNet
             {
                 get
                 {
-                    MemoryStream ms = new MemoryStream();
-                    BinaryWriter writer = new BinaryWriter(ms);
+                    var ms = new MemoryStream();
+                    var writer = new BinaryWriter(ms);
 
                     writer.Write(TSFTimer);
                     writer.Write((UInt16) Flags);
@@ -656,8 +656,8 @@ namespace PacketDotNet
             {
                 get
                 {
-                    MemoryStream ms = new MemoryStream();
-                    BinaryWriter writer = new BinaryWriter(ms);
+                    var ms = new MemoryStream();
+                    var writer = new BinaryWriter(ms);
 
                     writer.Write((UInt32) Flags);
                     writer.Write(AMpduId);
@@ -953,8 +953,8 @@ namespace PacketDotNet
             {
                 get
                 {
-                    MemoryStream ms = new MemoryStream();
-                    BinaryWriter writer = new BinaryWriter(ms);
+                    var ms = new MemoryStream();
+                    var writer = new BinaryWriter(ms);
 
                     writer.Write(AMpduId);
                     writer.Write(DelimiterCount);
@@ -1064,9 +1064,9 @@ namespace PacketDotNet
             {
                 get
                 {
-                    var processLength = (String.IsNullOrEmpty(ProcessPath)) ? 0 : Encoding.UTF8.GetByteCount(ProcessPath);
-                    var userLength = (String.IsNullOrEmpty(UserName)) ? 0 : Encoding.UTF8.GetByteCount(UserName);
-                    var groupLength = (String.IsNullOrEmpty(GroupName)) ? 0 : Encoding.UTF8.GetByteCount(GroupName);
+                    var processLength = String.IsNullOrEmpty(ProcessPath) ? 0 : Encoding.UTF8.GetByteCount(ProcessPath);
+                    var userLength = String.IsNullOrEmpty(UserName) ? 0 : Encoding.UTF8.GetByteCount(UserName);
+                    var groupLength = String.IsNullOrEmpty(GroupName) ? 0 : Encoding.UTF8.GetByteCount(GroupName);
                     return 19 + processLength + userLength + groupLength;
                 }
             }
@@ -1137,8 +1137,8 @@ namespace PacketDotNet
             {
                 get
                 {
-                    MemoryStream ms = new MemoryStream();
-                    BinaryWriter writer = new BinaryWriter(ms);
+                    var ms = new MemoryStream();
+                    var writer = new BinaryWriter(ms);
 
                     writer.Write(ProcessId);
                     writer.Write(ThreadId);
@@ -1377,8 +1377,8 @@ namespace PacketDotNet
             {
                 get
                 {
-                    MemoryStream ms = new MemoryStream();
-                    BinaryWriter writer = new BinaryWriter(ms);
+                    var ms = new MemoryStream();
+                    var writer = new BinaryWriter(ms);
 
                     writer.Write(StartingFrequency);
                     writer.Write(Resolution);

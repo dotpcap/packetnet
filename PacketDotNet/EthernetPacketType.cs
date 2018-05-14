@@ -34,7 +34,7 @@ namespace PacketDotNet
         /// <summary>
         /// Internet Protocol, Version 4 (IPv4)
         /// </summary>
-        IpV4 = 0x0800,
+        IPv4 = 0x0800,
 
         /// <summary>
         /// Address Resolution Protocol (ARP)
@@ -79,7 +79,7 @@ namespace PacketDotNet
         /// <summary>
         /// Internet Protocol, Version 6 (IPv6)
         /// </summary>
-        IpV6 = 0x86DD,
+        IPv6 = 0x86DD,
 
         /// <summary>
         /// MAC Control

@@ -48,9 +48,9 @@ namespace PacketDotNet.Utils
             Int32 Offset,
             Int32 Length)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
-            for (Int32 i = Offset; i < Offset + Length; i++)
+            for (var i = Offset; i < Offset + Length; i++)
             {
                 sb.AppendFormat("[{0:x2}]", Byte[i]);
             }
@@ -69,10 +69,10 @@ namespace PacketDotNet.Utils
         /// </returns>
         public static String PrintMACAddress(PhysicalAddress address)
         {
-            Byte[] bytes = address.GetAddressBytes();
-            String output = "";
+            var bytes = address.GetAddressBytes();
+            var output = "";
 
-            for (Int32 i = 0; i < bytes.Length; i++)
+            for (var i = 0; i < bytes.Length; i++)
             {
                 output += bytes[i].ToString("x").PadLeft(2, '0') + ":";
             }

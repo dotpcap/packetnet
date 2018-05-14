@@ -287,7 +287,7 @@ namespace MiscUtil.IO
         {
             if (value == null)
             {
-                throw (new ArgumentNullException("value"));
+                throw new ArgumentNullException("value");
             }
 
             WriteInternal(value, value.Length);
@@ -327,7 +327,7 @@ namespace MiscUtil.IO
             }
 
             CheckDisposed();
-            Byte[] data = Encoding.GetBytes(value, 0, value.Length);
+            var data = Encoding.GetBytes(value, 0, value.Length);
             WriteInternal(data, data.Length);
         }
 
@@ -344,7 +344,7 @@ namespace MiscUtil.IO
             }
 
             CheckDisposed();
-            Byte[] data = Encoding.GetBytes(value);
+            var data = Encoding.GetBytes(value);
             Write7BitEncodedInt(data.Length);
             WriteInternal(data, data.Length);
         }
@@ -363,7 +363,7 @@ namespace MiscUtil.IO
                 throw new ArgumentOutOfRangeException("value", "Value must be greater than or equal to 0.");
             }
 
-            Int32 index = 0;
+            var index = 0;
             while (value >= 128)
             {
                 buffer[index++] = (Byte) ((value & 0x7f) | 0x80);

@@ -78,8 +78,8 @@ namespace PacketDotNet.LLDP
             Log.Debug("");
 
             var bytes = new Byte[TLVTypeLength.TypeLengthLength + ValueLength];
-            Int32 offset = 0;
-            Int32 length = bytes.Length;
+            var offset = 0;
+            var length = bytes.Length;
             tlvData = new ByteArraySegment(bytes, offset, length);
 
             Type = TLVTypes.TimeToLive;

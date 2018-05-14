@@ -301,7 +301,7 @@ namespace MiscUtil.Conversion
             var stringBuilder = new StringBuilder();
             try
             {
-                for (Int32 i = offset; i < data.Length && i - offset < length; i++)
+                for (var i = offset; i < data.Length && i - offset < length; i++)
                 {
                     //0x00 Means blank, packet do have lots blank,ignore it
                     if (data[i] == 0x00)

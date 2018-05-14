@@ -31,9 +31,9 @@ namespace PacketDotNet
     [Serializable]
     public class PacketOrByteArraySegment
     {
-        private ByteArraySegment theByteArraySegment;
+        private ByteArraySegment _byteArraySegment;
 
-        private Packet thePacket;
+        private Packet _packet;
 
         /// <summary>
         /// Gets or sets the byte array segment.
@@ -41,14 +41,14 @@ namespace PacketDotNet
         /// <value>
         /// The byte array segment.
         /// </value>
-        public ByteArraySegment TheByteArraySegment
+        public ByteArraySegment ByteArraySegment
         {
-            get => theByteArraySegment;
+            get => _byteArraySegment;
 
             set
             {
-                thePacket = null;
-                theByteArraySegment = value;
+                _packet = null;
+                _byteArraySegment = value;
             }
         }
 
@@ -58,14 +58,14 @@ namespace PacketDotNet
         /// <value>
         /// The packet.
         /// </value>
-        public Packet ThePacket
+        public Packet Packet
         {
-            get => thePacket;
+            get => _packet;
 
             set
             {
-                theByteArraySegment = null;
-                thePacket = value;
+                _byteArraySegment = null;
+                _packet = value;
             }
         }
 
@@ -76,11 +76,11 @@ namespace PacketDotNet
         {
             get
             {
-                if (ThePacket != null)
+                if (Packet != null)
                     return PayloadType.Packet;
 
 
-                return TheByteArraySegment != null ? PayloadType.Bytes : PayloadType.None;
+                return ByteArraySegment != null ? PayloadType.Bytes : PayloadType.None;
             }
         }
 
@@ -94,14 +94,14 @@ namespace PacketDotNet
         /// </param>
         public void AppendToMemoryStream(MemoryStream ms)
         {
-            if (ThePacket != null)
+            if (Packet != null)
             {
-                var bytes = ThePacket.Bytes;
+                var bytes = Packet.Bytes;
                 ms.Write(bytes, 0, bytes.Length);
             }
-            else if (TheByteArraySegment != null)
+            else if (ByteArraySegment != null)
             {
-                var bytes = TheByteArraySegment.ActualBytes();
+                var bytes = ByteArraySegment.ActualBytes();
                 ms.Write(bytes, 0, bytes.Length);
             }
         }

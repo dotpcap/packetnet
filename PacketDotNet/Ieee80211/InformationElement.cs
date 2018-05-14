@@ -314,7 +314,7 @@ namespace PacketDotNet
                     }
 
                     //Decide if the current ByteArraySegement is big enough to hold the new info element
-                    Int32 newIeLength = ElementIdLength + ElementLengthLength + value.Length;
+                    var newIeLength = ElementIdLength + ElementLengthLength + value.Length;
                     if (bytes.Length < newIeLength)
                     {
                         var newIe = new Byte[newIeLength];
@@ -334,7 +334,7 @@ namespace PacketDotNet
             /// <value>
             /// The length.
             /// </value>
-            public Int32 ValueLength => Math.Min((bytes.Length - ElementValuePosition),
+            public Int32 ValueLength => Math.Min(bytes.Length - ElementValuePosition,
                                                  bytes.Bytes[bytes.Offset + ElementLengthPosition]);
 
             /// <summary>
@@ -354,8 +354,8 @@ namespace PacketDotNet
                     return false;
                 }
 
-                InformationElement ie = obj as InformationElement;
-                return ((Id == ie.Id) && (Value.SequenceEqual(ie.Value)));
+                var ie = obj as InformationElement;
+                return Id == ie.Id && Value.SequenceEqual(ie.Value);
             }
 
             /// <summary>

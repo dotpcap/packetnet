@@ -133,12 +133,12 @@ namespace PacketDotNet
             /// <summary>
             /// Length of the frame
             /// </summary>
-            public override Int32 FrameSize => (MacFields.FrameControlLength +
-                                                MacFields.DurationIDLength +
-                                                (MacFields.AddressLength * 2) +
-                                                BlockAcknowledgmentField.BlockAckRequestControlLength +
-                                                BlockAcknowledgmentField.BlockAckStartingSequenceControlLength +
-                                                GetBitmapLength());
+            public override Int32 FrameSize => MacFields.FrameControlLength +
+                                               MacFields.DurationIDLength +
+                                               (MacFields.AddressLength * 2) +
+                                               BlockAcknowledgmentField.BlockAckRequestControlLength +
+                                               BlockAcknowledgmentField.BlockAckStartingSequenceControlLength +
+                                               GetBitmapLength();
 
             /// <summary>
             /// Receiver address
@@ -154,11 +154,11 @@ namespace PacketDotNet
             {
                 get
                 {
-                    Byte[] bitmap = new Byte[GetBitmapLength()];
-                    if (Header.Length >= (BlockAcknowledgmentField.BlockAckBitmapPosition + GetBitmapLength()))
+                    var bitmap = new Byte[GetBitmapLength()];
+                    if (Header.Length >= BlockAcknowledgmentField.BlockAckBitmapPosition + GetBitmapLength())
                     {
                         Array.Copy(Header.Bytes,
-                                   (BlockAcknowledgmentField.BlockAckBitmapPosition),
+                                   BlockAcknowledgmentField.BlockAckBitmapPosition,
                                    bitmap,
                                    0,
                                    GetBitmapLength());
@@ -185,7 +185,7 @@ namespace PacketDotNet
                 get
                 {
                     if (Header.Length >=
-                        (BlockAcknowledgmentField.BlockAckRequestControlPosition + BlockAcknowledgmentField.BlockAckRequestControlLength))
+                        BlockAcknowledgmentField.BlockAckRequestControlPosition + BlockAcknowledgmentField.BlockAckRequestControlLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                                   Header.Offset + BlockAcknowledgmentField.BlockAckRequestControlPosition);
@@ -204,7 +204,7 @@ namespace PacketDotNet
                 get
                 {
                     if (Header.Length >=
-                        (BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition + BlockAcknowledgmentField.BlockAckStartingSequenceControlLength))
+                        BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition + BlockAcknowledgmentField.BlockAckStartingSequenceControlLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                                   Header.Offset + BlockAcknowledgmentField.BlockAckStartingSequenceControlPosition);
@@ -229,7 +229,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
+                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
                 {
                     Header = new ByteArraySegment(new Byte[FrameSize]);
                 }

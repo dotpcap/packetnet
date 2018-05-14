@@ -408,7 +408,7 @@ namespace PacketDotNet
             public RateRadioTapField(BinaryReader br)
             {
                 var u8 = br.ReadByte();
-                RateMbps = (0.5 * (u8 & 0x7f));
+                RateMbps = 0.5 * (u8 & 0x7f);
             }
 
             /// <summary>
@@ -961,8 +961,8 @@ namespace PacketDotNet
             /// </param>
             public RxFlagsRadioTapField(BinaryReader br)
             {
-                UInt16 flags = br.ReadUInt16();
-                PlcpCrcCheckFailed = ((flags & 0x2) == 0x2);
+                var flags = br.ReadUInt16();
+                PlcpCrcCheckFailed = (flags & 0x2) == 0x2;
             }
 
             /// <summary>
@@ -1006,7 +1006,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                UInt16 flags = (UInt16) ((PlcpCrcCheckFailed) ? 0x2 : 0x0);
+                var flags = (UInt16) (PlcpCrcCheckFailed ? 0x2 : 0x0);
                 EndianBitConverter.Little.CopyBytes(flags, dest, offset);
             }
 
@@ -1079,7 +1079,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                UInt16 absValue = (UInt16) Math.Abs(TxPower);
+                var absValue = (UInt16) Math.Abs(TxPower);
                 EndianBitConverter.Little.CopyBytes(absValue, dest, offset);
             }
 
@@ -1151,7 +1151,7 @@ namespace PacketDotNet
             /// </summary>
             public override void CopyTo(Byte[] dest, Int32 offset)
             {
-                UInt16 absValue = (UInt16) Math.Abs(TxPowerdB);
+                var absValue = (UInt16) Math.Abs(TxPowerdB);
                 EndianBitConverter.Little.CopyBytes(absValue, dest, offset);
             }
 

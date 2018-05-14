@@ -85,7 +85,7 @@ namespace PacketDotNet.Tcp
         {
             get
             {
-                Byte[] bytes = new Byte[optionData.Length];
+                var bytes = new Byte[optionData.Length];
                 Array.Copy(optionData.Bytes, optionData.Offset, bytes, 0, optionData.Length);
                 return bytes;
             }

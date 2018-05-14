@@ -61,10 +61,10 @@ namespace PacketDotNet
                 if (ddmList.Count > 0) return ddmList;
 
 
-                Int32 startOffset = Header.Offset;
+                var startOffset = Header.Offset;
                 while (startOffset < Header.BytesLength)
                 {
-                    UInt16 length = EndianBitConverter.Big.ToUInt16(Header.Bytes, startOffset);
+                    var length = EndianBitConverter.Big.ToUInt16(Header.Bytes, startOffset);
                     if (startOffset + length <= Header.BytesLength)
                     {
                         var ddmBas = new ByteArraySegment(Header.Bytes, startOffset, length);
@@ -93,7 +93,7 @@ namespace PacketDotNet
             // store the payload bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment {TheByteArraySegment = Header.EncapsulatedBytes()};
+                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.EncapsulatedBytes()};
                 return result;
             });
         }

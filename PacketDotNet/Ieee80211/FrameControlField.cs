@@ -284,13 +284,13 @@ namespace PacketDotNet
             /// </summary>
             public Boolean FromDS
             {
-                get => (((Field >> 1) & 0x1) == 1) ? true : false;
+                get => ((Field >> 1) & 0x1) == 1 ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x1);
+                        Field |= 1 << 0x1;
                     }
                     else
                     {
@@ -304,13 +304,13 @@ namespace PacketDotNet
             /// </summary>
             public Boolean MoreData
             {
-                get => (((Field >> 5) & 0x1) == 1) ? true : false;
+                get => ((Field >> 5) & 0x1) == 1 ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x5);
+                        Field |= 1 << 0x5;
                     }
                     else
                     {
@@ -325,13 +325,13 @@ namespace PacketDotNet
             /// </summary>
             public Boolean MoreFragments
             {
-                get => (((Field >> 2) & 0x1) == 1) ? true : false;
+                get => ((Field >> 2) & 0x1) == 1 ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x2);
+                        Field |= 1 << 0x2;
                     }
                     else
                     {
@@ -346,13 +346,13 @@ namespace PacketDotNet
             /// </summary>
             public Boolean Order
             {
-                get => (((Field >> 0x7) & 0x1) == 1) ? true : false;
+                get => ((Field >> 0x7) & 0x1) == 1 ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x7);
+                        Field |= 1 << 0x7;
                     }
                     else
                     {
@@ -366,13 +366,13 @@ namespace PacketDotNet
             /// </summary>
             public Boolean PowerManagement
             {
-                get => (((Field >> 4) & 0x1) == 1) ? true : false;
+                get => ((Field >> 4) & 0x1) == 1 ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x4);
+                        Field |= 1 << 0x4;
                     }
                     else
                     {
@@ -386,13 +386,13 @@ namespace PacketDotNet
             /// </summary>
             public Boolean Protected
             {
-                get => (((Field >> 6) & 0x1) == 1) ? true : false;
+                get => ((Field >> 6) & 0x1) == 1 ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x6);
+                        Field |= 1 << 0x6;
                     }
                     else
                     {
@@ -410,13 +410,13 @@ namespace PacketDotNet
 
                 set
                 {
-                    if ((value < 0) || (value > 3))
+                    if (value < 0 || value > 3)
                     {
                         throw new ArgumentException("Invalid protocol version value. Value must be in the range 0-3.");
                     }
 
                     //unset the two bits before setting them to the value
-                    Field &= unchecked((UInt16) ~(0x0300));
+                    Field &= unchecked((UInt16) ~0x0300);
                     Field |= (UInt16) (value << 0x8);
                 }
             }
@@ -427,13 +427,13 @@ namespace PacketDotNet
             /// </summary>
             public Boolean Retry
             {
-                get => (((Field >> 3) & 0x1) == 1) ? true : false;
+                get => ((Field >> 3) & 0x1) == 1 ? true : false;
 
                 set
                 {
                     if (value)
                     {
-                        Field |= (1 << 0x3);
+                        Field |= 1 << 0x3;
                     }
                     else
                     {
@@ -450,15 +450,15 @@ namespace PacketDotNet
             {
                 get
                 {
-                    Int32 typeAndSubtype = (Field >> 8); //get rid of the flags
-                    Int32 type = (((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4));
+                    var typeAndSubtype = Field >> 8; //get rid of the flags
+                    var type = ((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4);
                     return (FrameSubTypes) type;
                 }
 
                 set
                 {
-                    UInt32 val = (UInt32) value;
-                    UInt32 typeAndSubtype = ((val & 0x0F) << 4) | ((val >> 4) << 2);
+                    var val = (UInt32) value;
+                    var typeAndSubtype = ((val & 0x0F) << 4) | ((val >> 4) << 2);
                     //shift it into the right position in the field
                     typeAndSubtype = typeAndSubtype << 0x8;
                     //Unset all the bits related to the type and subtype
@@ -473,7 +473,7 @@ namespace PacketDotNet
             /// </summary>
             public Boolean ToDS
             {
-                get => ((Field & 0x1) == 1) ? true : false;
+                get => (Field & 0x1) == 1 ? true : false;
 
                 set
                 {
@@ -483,7 +483,7 @@ namespace PacketDotNet
                     }
                     else
                     {
-                        Field &= unchecked((UInt16) ~(0x1));
+                        Field &= unchecked((UInt16) ~0x1);
                     }
                 }
             }
@@ -498,8 +498,8 @@ namespace PacketDotNet
             {
                 get
                 {
-                    Int32 typeAndSubtype = (Field >> 8); //get rid of the flags
-                    Int32 type = ((typeAndSubtype & 0xC) >> 2);
+                    var typeAndSubtype = Field >> 8; //get rid of the flags
+                    var type = (typeAndSubtype & 0xC) >> 2;
                     return (FrameTypes) type;
                 }
             }

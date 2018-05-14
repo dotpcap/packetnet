@@ -58,9 +58,9 @@ namespace PacketDotNet
                 if (bas.Length > BeaconFields.InformationElement1Position)
                 {
                     //create a segment that just refers to the info element section
-                    ByteArraySegment infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                                                (bas.Offset + BeaconFields.InformationElement1Position),
-                                                                                (bas.Length - BeaconFields.InformationElement1Position));
+                    var infoElementsSegment = new ByteArraySegment(bas.Bytes,
+                                                                   bas.Offset + BeaconFields.InformationElement1Position,
+                                                                   bas.Length - BeaconFields.InformationElement1Position);
 
                     InformationElements = new InformationElementList(infoElementsSegment);
                 }
@@ -121,14 +121,14 @@ namespace PacketDotNet
             /// <value>
             /// The size of the frame.
             /// </value>
-            public override Int32 FrameSize => (MacFields.FrameControlLength +
-                                                MacFields.DurationIDLength +
-                                                (MacFields.AddressLength * 3) +
-                                                MacFields.SequenceControlLength +
-                                                BeaconFields.TimestampLength +
-                                                BeaconFields.BeaconIntervalLength +
-                                                BeaconFields.CapabilityInformationLength +
-                                                InformationElements.Length);
+            public override Int32 FrameSize => MacFields.FrameControlLength +
+                                               MacFields.DurationIDLength +
+                                               (MacFields.AddressLength * 3) +
+                                               MacFields.SequenceControlLength +
+                                               BeaconFields.TimestampLength +
+                                               BeaconFields.BeaconIntervalLength +
+                                               BeaconFields.CapabilityInformationLength +
+                                               InformationElements.Length;
 
             /// <summary>
             /// The information elements included in the frame
@@ -147,7 +147,7 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if (Header.Length >= (BeaconFields.BeaconIntervalPosition + BeaconFields.BeaconIntervalLength))
+                    if (Header.Length >= BeaconFields.BeaconIntervalPosition + BeaconFields.BeaconIntervalLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes, Header.Offset + BeaconFields.BeaconIntervalPosition);
                     }
@@ -167,7 +167,7 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if (Header.Length >= (BeaconFields.CapabilityInformationPosition + BeaconFields.CapabilityInformationLength))
+                    if (Header.Length >= BeaconFields.CapabilityInformationPosition + BeaconFields.CapabilityInformationLength)
                     {
                         return EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                                   Header.Offset + BeaconFields.CapabilityInformationPosition);
@@ -185,7 +185,7 @@ namespace PacketDotNet
             {
                 get
                 {
-                    if (Header.Length >= (BeaconFields.TimestampPosition + BeaconFields.TimestampLength))
+                    if (Header.Length >= BeaconFields.TimestampPosition + BeaconFields.TimestampLength)
                     {
                         return EndianBitConverter.Little.ToUInt64(Header.Bytes, Header.Offset + BeaconFields.TimestampPosition);
                     }
@@ -203,7 +203,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
+                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
                 {
                     //the backing buffer isnt big enough to accommodate the info elements so we need to resize it
                     Header = new ByteArraySegment(new Byte[FrameSize]);

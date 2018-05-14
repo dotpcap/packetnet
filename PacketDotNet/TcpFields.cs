@@ -29,15 +29,15 @@ namespace PacketDotNet
     {
 #pragma warning disable 1591
         // flag bitmasks
-        public static readonly Int32 TCP_NS_MASK = 0x0100;
-        public static readonly Int32 TCP_CWR_MASK = 0x0080;
-        public static readonly Int32 TCP_ECN_MASK = 0x0040;
-        public static readonly Int32 TCP_URG_MASK = 0x0020;
-        public static readonly Int32 TCP_ACK_MASK = 0x0010;
-        public static readonly Int32 TCP_PSH_MASK = 0x0008;
-        public static readonly Int32 TCP_RST_MASK = 0x0004;
-        public static readonly Int32 TCP_SYN_MASK = 0x0002;
-        public static readonly Int32 TCP_FIN_MASK = 0x0001;
+        public static readonly Int32 TCPNsMask = 0x0100;
+        public static readonly Int32 TCPCwrMask = 0x0080;
+        public static readonly Int32 TCPEcnMask = 0x0040;
+        public static readonly Int32 TCPUrgMask = 0x0020;
+        public static readonly Int32 TCPAckMask = 0x0010;
+        public static readonly Int32 TCPPshMask = 0x0008;
+        public static readonly Int32 TCPRstMask = 0x0004;
+        public static readonly Int32 TCPSynMask = 0x0002;
+        public static readonly Int32 TCPFinMask = 0x0001;
 #pragma warning restore 1591
 
         /// <summary> Length of a TCP port in bytes.</summary>

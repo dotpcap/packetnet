@@ -72,12 +72,12 @@ namespace PacketDotNet
                 get
                 {
                     //if we are in WDS mode then there are 4 addresses (normally it is just 3)
-                    Int32 numOfAddressFields = (FrameControl.ToDS && FrameControl.FromDS) ? 4 : 3;
+                    var numOfAddressFields = FrameControl.ToDS && FrameControl.FromDS ? 4 : 3;
 
-                    return (MacFields.FrameControlLength +
-                            MacFields.DurationIDLength +
-                            (MacFields.AddressLength * numOfAddressFields) +
-                            MacFields.SequenceControlLength);
+                    return MacFields.FrameControlLength +
+                           MacFields.DurationIDLength +
+                           (MacFields.AddressLength * numOfAddressFields) +
+                           MacFields.SequenceControlLength;
                 }
             }
 
@@ -86,7 +86,7 @@ namespace PacketDotNet
             /// </summary>
             public override void UpdateCalculatedValues()
             {
-                if ((Header == null) || (Header.Length > (Header.BytesLength - Header.Offset)) || (Header.Length < FrameSize))
+                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
                 {
                     Header = new ByteArraySegment(new Byte[FrameSize]);
                 }

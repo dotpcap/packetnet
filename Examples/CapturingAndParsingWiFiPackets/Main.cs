@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using SharpPcap;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
+
 using SharpPcap.AirPcap;
 
 namespace CapturingAndParsingWiFiPackets

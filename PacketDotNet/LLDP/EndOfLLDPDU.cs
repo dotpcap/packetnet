@@ -57,7 +57,7 @@ namespace PacketDotNet.LLDP
             var bytes = new Byte[TLVTypeLength.TypeLengthLength];
             var offset = 0;
             var length = bytes.Length;
-            tlvData = new ByteArraySegment(bytes, offset, length);
+            TLVData = new ByteArraySegment(bytes, offset, length);
 
             Type = 0;
             Length = 0;

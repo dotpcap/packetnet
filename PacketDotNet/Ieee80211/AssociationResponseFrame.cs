@@ -23,236 +23,213 @@ using System.Net.NetworkInformation;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    /// Format of an 802.11 management association response frame.
+    /// </summary>
+    public sealed class AssociationResponseFrame : ManagementFrame
     {
         /// <summary>
-        /// Format of an 802.11 management association response frame.
+        /// Constructor
         /// </summary>
-        public class AssociationResponseFrame : ManagementFrame
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment" />
+        /// </param>
+        public AssociationResponseFrame(ByteArraySegment bas)
         {
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment" />
-            /// </param>
-            public AssociationResponseFrame(ByteArraySegment bas)
+            Header = new ByteArraySegment(bas);
+
+            FrameControl = new FrameControlField(FrameControlBytes);
+            Duration = new DurationField(DurationBytes);
+            DestinationAddress = GetAddress(0);
+            SourceAddress = GetAddress(1);
+            BssId = GetAddress(2);
+            SequenceControl = new SequenceControlField(SequenceControlBytes);
+
+            CapabilityInformation = new CapabilityInformationField(CapabilityInformationBytes);
+            StatusCode = StatusCodeBytes;
+            AssociationId = AssociationIdBytes;
+
+            if (bas.Length > AssociationResponseFields.InformationElement1Position)
             {
-                Header = new ByteArraySegment(bas);
+                //create a segment that just refers to the info element section
+                var infoElementsSegment = new ByteArraySegment(bas.Bytes,
+                                                               bas.Offset + AssociationResponseFields.InformationElement1Position,
+                                                               bas.Length - AssociationResponseFields.InformationElement1Position);
 
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
-                DestinationAddress = GetAddress(0);
-                SourceAddress = GetAddress(1);
-                BssId = GetAddress(2);
-                SequenceControl = new SequenceControlField(SequenceControlBytes);
-
-                CapabilityInformation = new CapabilityInformationField(CapabilityInformationBytes);
-                StatusCode = StatusCodeBytes;
-                AssociationId = AssociationIdBytes;
-
-                if (bas.Length > AssociationResponseFields.InformationElement1Position)
-                {
-                    //create a segment that just refers to the info element section
-                    var infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                                   bas.Offset + AssociationResponseFields.InformationElement1Position,
-                                                                   bas.Length - AssociationResponseFields.InformationElement1Position);
-
-                    InformationElements = new InformationElementList(infoElementsSegment);
-                }
-                else
-                {
-                    InformationElements = new InformationElementList();
-                }
-
-                //cant set length until after we have handled the information elements
-                //as they vary in length
-                Header.Length = FrameSize;
+                InformationElements = new InformationElementList(infoElementsSegment);
+            }
+            else
+            {
+                InformationElements = new InformationElementList();
             }
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.AssociationResponseFrame" /> class.
-            /// </summary>
-            /// <param name='SourceAddress'>
-            /// Source address.
-            /// </param>
-            /// <param name='DestinationAddress'>
-            /// Destination address.
-            /// </param>
-            /// <param name='BssId'>
-            /// Bss identifier (MAC Address of Access Point).
-            /// </param>
-            /// <param name='InformationElements'>
-            /// Information elements.
-            /// </param>
-            public AssociationResponseFrame
-            (
-                PhysicalAddress SourceAddress,
-                PhysicalAddress DestinationAddress,
-                PhysicalAddress BssId,
-                InformationElementList InformationElements)
+            //cant set length until after we have handled the information elements
+            //as they vary in length
+            Header.Length = FrameSize;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssociationResponseFrame" /> class.
+        /// </summary>
+        /// <param name='sourceAddress'>
+        /// Source address.
+        /// </param>
+        /// <param name='destinationAddress'>
+        /// Destination address.
+        /// </param>
+        /// <param name='bssId'>
+        /// Bss identifier (MAC Address of Access Point).
+        /// </param>
+        /// <param name='informationElements'>
+        /// Information elements.
+        /// </param>
+        public AssociationResponseFrame
+        (
+            PhysicalAddress sourceAddress,
+            PhysicalAddress destinationAddress,
+            PhysicalAddress bssId,
+            InformationElementList informationElements)
+        {
+            FrameControl = new FrameControlField();
+            Duration = new DurationField();
+            DestinationAddress = destinationAddress;
+            SourceAddress = sourceAddress;
+            BssId = bssId;
+            SequenceControl = new SequenceControlField();
+            CapabilityInformation = new CapabilityInformationField();
+
+            InformationElements = new InformationElementList(informationElements);
+
+            FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementAssociationResponse;
+        }
+
+        /// <summary>
+        /// The id assigned to the station by the access point to assist in management and control functions.
+        /// Although this is a 16bit field only 14 of the bits are used to represent the id. Therefore the available values
+        /// for this field are inthe range 1-2,007.
+        /// </summary>
+        public UInt16 AssociationId { get; set; }
+
+        /// <summary>
+        /// The capability information field that describes the networks capabilities.
+        /// </summary>
+        public CapabilityInformationField CapabilityInformation { get; set; }
+
+        /// <summary>
+        /// Gets the size of the frame.
+        /// </summary>
+        /// <value>
+        /// The size of the frame.
+        /// </value>
+        public override Int32 FrameSize => MacFields.FrameControlLength +
+                                           MacFields.DurationIDLength +
+                                           (MacFields.AddressLength * 3) +
+                                           MacFields.SequenceControlLength +
+                                           AssociationResponseFields.CapabilityInformationLength +
+                                           AssociationResponseFields.StatusCodeLength +
+                                           AssociationResponseFields.AssociationIdLength +
+                                           InformationElements.Length;
+
+        /// <summary>
+        /// The information elements included in the frame
+        /// </summary>
+        public InformationElementList InformationElements { get; set; }
+
+        /// <summary>
+        /// Value indicating the success or failure of the association.
+        /// </summary>
+        public AuthenticationStatusCode StatusCode { get; set; }
+
+        private UInt16 AssociationIdBytes
+        {
+            get
             {
-                FrameControl = new FrameControlField();
-                Duration = new DurationField();
-                this.DestinationAddress = DestinationAddress;
-                this.SourceAddress = SourceAddress;
-                this.BssId = BssId;
-                SequenceControl = new SequenceControlField();
-                CapabilityInformation = new CapabilityInformationField();
-
-                this.InformationElements = new InformationElementList(InformationElements);
-
-                FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementAssociationResponse;
-            }
-
-            /// <summary>
-            /// The id assigned to the station by the access point to assist in management and control functions.
-            /// Although this is a 16bit field only 14 of the bits are used to represent the id. Therefore the available values
-            /// for this field are inthe range 1-2,007.
-            /// </summary>
-            public UInt16 AssociationId { get; set; }
-
-            /// <summary>
-            /// The capability information field that describes the networks capabilities.
-            /// </summary>
-            public CapabilityInformationField CapabilityInformation { get; set; }
-
-            /// <summary>
-            /// Gets the size of the frame.
-            /// </summary>
-            /// <value>
-            /// The size of the frame.
-            /// </value>
-            public override Int32 FrameSize => MacFields.FrameControlLength +
-                                               MacFields.DurationIDLength +
-                                               (MacFields.AddressLength * 3) +
-                                               MacFields.SequenceControlLength +
-                                               AssociationResponseFields.CapabilityInformationLength +
-                                               AssociationResponseFields.StatusCodeLength +
-                                               AssociationResponseFields.AssociationIdLength +
-                                               InformationElements.Length;
-
-            /// <summary>
-            /// The information elements included in the frame
-            /// </summary>
-            public InformationElementList InformationElements { get; set; }
-
-            /// <summary>
-            /// Value indicating the success or failure of the association.
-            /// </summary>
-            public AuthenticationStatusCode StatusCode { get; set; }
-
-            private UInt16 AssociationIdBytes
-            {
-                get
+                if (Header.Length >= AssociationResponseFields.AssociationIdPosition + AssociationResponseFields.AssociationIdLength)
                 {
-                    if (Header.Length >= AssociationResponseFields.AssociationIdPosition + AssociationResponseFields.AssociationIdLength)
-                    {
-                        var associationID = EndianBitConverter.Little.ToUInt16(Header.Bytes, Header.Offset + AssociationResponseFields.AssociationIdPosition);
-                        return (UInt16) (associationID & 0xCF);
-                    }
-
-                    return 0;
+                    var associationID = EndianBitConverter.Little.ToUInt16(Header.Bytes, Header.Offset + AssociationResponseFields.AssociationIdPosition);
+                    return (UInt16) (associationID & 0xCF);
                 }
 
-                set
-                {
-                    var associationID = (UInt16) (value & 0xCF);
-                    EndianBitConverter.Little.CopyBytes(associationID,
-                                                        Header.Bytes,
-                                                        Header.Offset + AssociationResponseFields.AssociationIdPosition);
-                }
+                return 0;
             }
 
-            /// <summary>
-            /// The raw capability information bytes
-            /// </summary>
-            private UInt16 CapabilityInformationBytes
+            set
             {
-                get
-                {
-                    if (Header.Length >=
-                        AssociationResponseFields.CapabilityInformationPosition + AssociationResponseFields.CapabilityInformationLength)
-                    {
-                        return EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                                  Header.Offset + AssociationResponseFields.CapabilityInformationPosition);
-                    }
-
-                    return 0;
-                }
-
-                set => EndianBitConverter.Little.CopyBytes(value,
-                                                           Header.Bytes,
-                                                           Header.Offset + AssociationResponseFields.CapabilityInformationPosition);
+                var associationID = (UInt16) (value & 0xCF);
+                EndianBitConverter.Little.CopyBytes(associationID,
+                                                    Header.Bytes,
+                                                    Header.Offset + AssociationResponseFields.AssociationIdPosition);
             }
+        }
 
-            private AuthenticationStatusCode StatusCodeBytes
+        /// <summary>
+        /// The raw capability information bytes
+        /// </summary>
+        private UInt16 CapabilityInformationBytes
+        {
+            get
             {
-                get
+                if (Header.Length >=
+                    AssociationResponseFields.CapabilityInformationPosition + AssociationResponseFields.CapabilityInformationLength)
                 {
-                    if (Header.Length >= AssociationResponseFields.StatusCodePosition + AssociationResponseFields.StatusCodeLength)
-                    {
-                        return (AuthenticationStatusCode) EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                                                             Header.Offset + AssociationResponseFields.StatusCodePosition);
-                    }
-
-                    //This seems the most sensible value to return when it is not possible
-                    //to extract a meaningful value
-                    return AuthenticationStatusCode.UnspecifiedFailure;
+                    return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                              Header.Offset + AssociationResponseFields.CapabilityInformationPosition);
                 }
 
-                set => EndianBitConverter.Little.CopyBytes((UInt16) value,
-                                                           Header.Bytes,
-                                                           Header.Offset + AssociationResponseFields.StatusCodePosition);
+                return 0;
             }
 
-            /// <summary>
-            /// Writes the current packet properties to the backing ByteArraySegment.
-            /// </summary>
-            public override void UpdateCalculatedValues()
+            set => EndianBitConverter.Little.CopyBytes(value,
+                                                       Header.Bytes,
+                                                       Header.Offset + AssociationResponseFields.CapabilityInformationPosition);
+        }
+
+        private AuthenticationStatusCode StatusCodeBytes
+        {
+            get
             {
-                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
+                if (Header.Length >= AssociationResponseFields.StatusCodePosition + AssociationResponseFields.StatusCodeLength)
                 {
-                    Header = new ByteArraySegment(new Byte[FrameSize]);
+                    return (AuthenticationStatusCode) EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                                                         Header.Offset + AssociationResponseFields.StatusCodePosition);
                 }
 
-                FrameControlBytes = FrameControl.Field;
-                DurationBytes = Duration.Field;
-                SetAddress(0, DestinationAddress);
-                SetAddress(1, SourceAddress);
-                SetAddress(2, BssId);
-                SequenceControlBytes = SequenceControl.Field;
-                CapabilityInformationBytes = CapabilityInformation.Field;
-                StatusCodeBytes = StatusCode;
-                AssociationIdBytes = AssociationId;
-
-                //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
-                InformationElements.CopyTo(Header, Header.Offset + AssociationResponseFields.InformationElement1Position);
-
-                Header.Length = FrameSize;
+                //This seems the most sensible value to return when it is not possible
+                //to extract a meaningful value
+                return AuthenticationStatusCode.UnspecifiedFailure;
             }
 
-            private class AssociationResponseFields
+            set => EndianBitConverter.Little.CopyBytes((UInt16) value,
+                                                       Header.Bytes,
+                                                       Header.Offset + AssociationResponseFields.StatusCodePosition);
+        }
+
+        /// <summary>
+        /// Writes the current packet properties to the backing ByteArraySegment.
+        /// </summary>
+        public override void UpdateCalculatedValues()
+        {
+            if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                public static readonly Int32 AssociationIdLength = 2;
-                public static readonly Int32 AssociationIdPosition;
-                public static readonly Int32 CapabilityInformationLength = 2;
-
-                public static readonly Int32 CapabilityInformationPosition;
-                public static readonly Int32 InformationElement1Position;
-                public static readonly Int32 StatusCodeLength = 2;
-                public static readonly Int32 StatusCodePosition;
-
-                static AssociationResponseFields()
-                {
-                    CapabilityInformationPosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
-                    StatusCodePosition = CapabilityInformationPosition + CapabilityInformationLength;
-                    AssociationIdPosition = StatusCodePosition + StatusCodeLength;
-                    InformationElement1Position = AssociationIdPosition + AssociationIdLength;
-                }
+                Header = new ByteArraySegment(new Byte[FrameSize]);
             }
+
+            FrameControlBytes = FrameControl.Field;
+            DurationBytes = Duration.Field;
+            SetAddress(0, DestinationAddress);
+            SetAddress(1, SourceAddress);
+            SetAddress(2, BssId);
+            SequenceControlBytes = SequenceControl.Field;
+            CapabilityInformationBytes = CapabilityInformation.Field;
+            StatusCodeBytes = StatusCode;
+            AssociationIdBytes = AssociationId;
+
+            //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
+            InformationElements.CopyTo(Header, Header.Offset + AssociationResponseFields.InformationElement1Position);
+
+            Header.Length = FrameSize;
         }
     }
 }

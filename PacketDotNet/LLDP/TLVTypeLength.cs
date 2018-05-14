@@ -49,14 +49,13 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public const Int32 TypeLengthLength = 2;
 
-        private const Int32 TypeBits = 7;
         private const Int32 TypeMask = 0xFE00;
         private const Int32 LengthBits = 9;
         private const Int32 LengthMask = 0x1FF;
 
         private const Int32 MaximumTLVLength = 511;
 
-        private readonly ByteArraySegment byteArraySegment;
+        private readonly ByteArraySegment _byteArraySegment;
 
         /// <summary>
         /// Construct a TLVTypeLength for a TLV
@@ -66,7 +65,7 @@ namespace PacketDotNet.LLDP
         /// </param>
         public TLVTypeLength(ByteArraySegment byteArraySegment)
         {
-            this.byteArraySegment = byteArraySegment;
+            _byteArraySegment = byteArraySegment;
         }
 
         /// <value>
@@ -118,12 +117,12 @@ namespace PacketDotNet.LLDP
 
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException("Length", "Length must be a positive value");
+                    throw new ArgumentOutOfRangeException(nameof(value), "Length must be a positive value");
                 }
 
                 if (value > MaximumTLVLength)
                 {
-                    throw new ArgumentOutOfRangeException("Length", "The maximum value for a TLV length is 511");
+                    throw new ArgumentOutOfRangeException(nameof(value), "The maximum value for a TLV length is 511");
                 }
 
                 // save the old type
@@ -138,9 +137,9 @@ namespace PacketDotNet.LLDP
         /// </value>
         private UInt16 TypeAndLength
         {
-            get => EndianBitConverter.Big.ToUInt16(byteArraySegment.Bytes, byteArraySegment.Offset);
+            get => EndianBitConverter.Big.ToUInt16(_byteArraySegment.Bytes, _byteArraySegment.Offset);
 
-            set => EndianBitConverter.Big.CopyBytes(value, byteArraySegment.Bytes, byteArraySegment.Offset);
+            set => EndianBitConverter.Big.CopyBytes(value, _byteArraySegment.Bytes, _byteArraySegment.Offset);
         }
     }
 }

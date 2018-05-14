@@ -23,188 +23,170 @@ using System.Net.NetworkInformation;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    /// Block acknowledgment request frame.
+    /// </summary>
+    public sealed class BlockAcknowledgmentRequestFrame : MacFrame
     {
         /// <summary>
-        /// Block acknowledgment request frame.
+        /// Constructor
         /// </summary>
-        public class BlockAcknowledgmentRequestFrame : MacFrame
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment" />
+        /// </param>
+        public BlockAcknowledgmentRequestFrame(ByteArraySegment bas)
         {
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment" />
-            /// </param>
-            public BlockAcknowledgmentRequestFrame(ByteArraySegment bas)
+            Header = new ByteArraySegment(bas);
+
+            FrameControl = new FrameControlField(FrameControlBytes);
+            Duration = new DurationField(DurationBytes);
+            ReceiverAddress = GetAddress(0);
+            TransmitterAddress = GetAddress(1);
+            BlockAcknowledgmentControl = new BlockAcknowledgmentControlField(BlockAckRequestControlBytes);
+            BlockAckStartingSequenceControl = BlockAckStartingSequenceControlBytes;
+
+            Header.Length = FrameSize;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BlockAcknowledgmentRequestFrame" /> class.
+        /// </summary>
+        /// <param name='transmitterAddress'>
+        /// Transmitter address.
+        /// </param>
+        /// <param name='receiverAddress'>
+        /// Receiver address.
+        /// </param>
+        public BlockAcknowledgmentRequestFrame
+        (
+            PhysicalAddress transmitterAddress,
+            PhysicalAddress receiverAddress)
+        {
+            FrameControl = new FrameControlField();
+            Duration = new DurationField();
+            ReceiverAddress = receiverAddress;
+            TransmitterAddress = transmitterAddress;
+            BlockAcknowledgmentControl = new BlockAcknowledgmentControlField();
+
+            FrameControl.SubType = FrameControlField.FrameSubTypes.ControlBlockAcknowledgmentRequest;
+        }
+
+        /// <summary>
+        /// Block acknowledgment control field
+        /// </summary>
+        public BlockAcknowledgmentControlField BlockAcknowledgmentControl { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sequence number of the first MSDU for which this
+        /// block acknowledgement request frame is sent
+        /// </summary>
+        /// <value>
+        /// The block ack starting sequence control field value
+        /// </value>
+        public UInt16 BlockAckStartingSequenceControl { get; set; }
+
+
+        /// <summary>
+        /// Length of the frame
+        /// </summary>
+        public override Int32 FrameSize => MacFields.FrameControlLength +
+                                           MacFields.DurationIDLength +
+                                           (MacFields.AddressLength * 2) +
+                                           BlockAckRequestFields.BlockAckRequestControlLength +
+                                           BlockAckRequestFields.BlockAckStartingSequenceControlLength;
+
+        /// <summary>
+        /// Receiver address
+        /// </summary>
+        public PhysicalAddress ReceiverAddress { get; set; }
+
+        /// <summary>
+        /// Transmitter address
+        /// </summary>
+        public PhysicalAddress TransmitterAddress { get; set; }
+
+        /// <summary>
+        /// Block acknowledgment control bytes are the first two bytes of the frame
+        /// </summary>
+        private UInt16 BlockAckRequestControlBytes
+        {
+            get
             {
-                Header = new ByteArraySegment(bas);
-
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
-                ReceiverAddress = GetAddress(0);
-                TransmitterAddress = GetAddress(1);
-                BlockAcknowledgmentControl = new BlockAcknowledgmentControlField(BlockAckRequestControlBytes);
-                BlockAckStartingSequenceControl = BlockAckStartingSequenceControlBytes;
-
-                Header.Length = FrameSize;
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.BlockAcknowledgmentRequestFrame" /> class.
-            /// </summary>
-            /// <param name='TransmitterAddress'>
-            /// Transmitter address.
-            /// </param>
-            /// <param name='ReceiverAddress'>
-            /// Receiver address.
-            /// </param>
-            public BlockAcknowledgmentRequestFrame
-            (
-                PhysicalAddress TransmitterAddress,
-                PhysicalAddress ReceiverAddress)
-            {
-                FrameControl = new FrameControlField();
-                Duration = new DurationField();
-                this.ReceiverAddress = ReceiverAddress;
-                this.TransmitterAddress = TransmitterAddress;
-                BlockAcknowledgmentControl = new BlockAcknowledgmentControlField();
-
-                FrameControl.SubType = FrameControlField.FrameSubTypes.ControlBlockAcknowledgmentRequest;
-            }
-
-            /// <summary>
-            /// Block acknowledgment control field
-            /// </summary>
-            public BlockAcknowledgmentControlField BlockAcknowledgmentControl { get; set; }
-
-            /// <summary>
-            /// Gets or sets the sequence number of the first MSDU for which this
-            /// block acknowledgement request frame is sent
-            /// </summary>
-            /// <value>
-            /// The block ack starting sequence control field value
-            /// </value>
-            public UInt16 BlockAckStartingSequenceControl { get; set; }
-
-
-            /// <summary>
-            /// Length of the frame
-            /// </summary>
-            public override Int32 FrameSize => MacFields.FrameControlLength +
-                                               MacFields.DurationIDLength +
-                                               (MacFields.AddressLength * 2) +
-                                               BlockAckRequestField.BlockAckRequestControlLength +
-                                               BlockAckRequestField.BlockAckStartingSequenceControlLength;
-
-            /// <summary>
-            /// Receiver address
-            /// </summary>
-            public PhysicalAddress ReceiverAddress { get; set; }
-
-            /// <summary>
-            /// Transmitter address
-            /// </summary>
-            public PhysicalAddress TransmitterAddress { get; set; }
-
-            /// <summary>
-            /// Block acknowledgment control bytes are the first two bytes of the frame
-            /// </summary>
-            private UInt16 BlockAckRequestControlBytes
-            {
-                get
+                if (Header.Length >=
+                    BlockAckRequestFields.BlockAckRequestControlPosition +
+                    BlockAckRequestFields.BlockAckRequestControlLength)
                 {
-                    if (Header.Length >=
-                        BlockAckRequestField.BlockAckRequestControlPosition +
-                        BlockAckRequestField.BlockAckRequestControlLength)
-                    {
-                        return EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                                  Header.Offset + BlockAckRequestField.BlockAckRequestControlPosition);
-                    }
-
-                    return 0;
+                    return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                              Header.Offset + BlockAckRequestFields.BlockAckRequestControlPosition);
                 }
 
-                set => EndianBitConverter.Little.CopyBytes(value,
-                                                           Header.Bytes,
-                                                           Header.Offset + BlockAckRequestField.BlockAckRequestControlPosition);
+                return 0;
             }
 
-            /// <summary>
-            /// Gets or sets the block ack starting sequence control.
-            /// </summary>
-            /// <value>
-            /// The block ack starting sequence control.
-            /// </value>
-            private UInt16 BlockAckStartingSequenceControlBytes
-            {
-                get
-                {
-                    if (Header.Length >=
-                        BlockAckRequestField.BlockAckStartingSequenceControlPosition +
-                        BlockAckRequestField.BlockAckStartingSequenceControlLength)
-                    {
-                        return EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                                  Header.Offset + BlockAckRequestField.BlockAckStartingSequenceControlPosition);
-                    }
+            set => EndianBitConverter.Little.CopyBytes(value,
+                                                       Header.Bytes,
+                                                       Header.Offset + BlockAckRequestFields.BlockAckRequestControlPosition);
+        }
 
-                    return 0;
+        /// <summary>
+        /// Gets or sets the block ack starting sequence control.
+        /// </summary>
+        /// <value>
+        /// The block ack starting sequence control.
+        /// </value>
+        private UInt16 BlockAckStartingSequenceControlBytes
+        {
+            get
+            {
+                if (Header.Length >=
+                    BlockAckRequestFields.BlockAckStartingSequenceControlPosition +
+                    BlockAckRequestFields.BlockAckStartingSequenceControlLength)
+                {
+                    return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                              Header.Offset + BlockAckRequestFields.BlockAckStartingSequenceControlPosition);
                 }
 
-                set => EndianBitConverter.Little.CopyBytes(value,
-                                                           Header.Bytes,
-                                                           Header.Offset + BlockAckRequestField.BlockAckStartingSequenceControlPosition);
+                return 0;
             }
 
-            /// <summary>
-            /// Writes the current packet properties to the backing ByteArraySegment.
-            /// </summary>
-            public override void UpdateCalculatedValues()
+            set => EndianBitConverter.Little.CopyBytes(value,
+                                                       Header.Bytes,
+                                                       Header.Offset + BlockAckRequestFields.BlockAckStartingSequenceControlPosition);
+        }
+
+        /// <summary>
+        /// Writes the current packet properties to the backing ByteArraySegment.
+        /// </summary>
+        public override void UpdateCalculatedValues()
+        {
+            if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
-                {
-                    Header = new ByteArraySegment(new Byte[FrameSize]);
-                }
-
-                FrameControlBytes = FrameControl.Field;
-                DurationBytes = Duration.Field;
-                SetAddress(0, ReceiverAddress);
-                SetAddress(1, TransmitterAddress);
-
-                BlockAckRequestControlBytes = BlockAcknowledgmentControl.Field;
-                BlockAckStartingSequenceControlBytes = BlockAckStartingSequenceControl;
-
-                Header.Length = FrameSize;
+                Header = new ByteArraySegment(new Byte[FrameSize]);
             }
 
-            /// <summary>
-            /// Returns a string with a description of the addresses used in the packet.
-            /// This is used as a compoent of the string returned by ToString().
-            /// </summary>
-            /// <returns>
-            /// The address string.
-            /// </returns>
-            protected override String GetAddressString()
-            {
-                return $"RA {ReceiverAddress} TA {TransmitterAddress}";
-            }
+            FrameControlBytes = FrameControl.Field;
+            DurationBytes = Duration.Field;
+            SetAddress(0, ReceiverAddress);
+            SetAddress(1, TransmitterAddress);
 
-            private class BlockAckRequestField
-            {
-                public static readonly Int32 BlockAckRequestControlLength = 2;
+            BlockAckRequestControlBytes = BlockAcknowledgmentControl.Field;
+            BlockAckStartingSequenceControlBytes = BlockAckStartingSequenceControl;
 
-                public static readonly Int32 BlockAckRequestControlPosition;
-                public static readonly Int32 BlockAckStartingSequenceControlLength = 2;
-                public static readonly Int32 BlockAckStartingSequenceControlPosition;
+            Header.Length = FrameSize;
+        }
 
-                static BlockAckRequestField()
-                {
-                    BlockAckRequestControlPosition = MacFields.DurationIDPosition + MacFields.DurationIDLength + (2 * MacFields.AddressLength);
-                    BlockAckStartingSequenceControlPosition = BlockAckRequestControlPosition + BlockAckRequestControlLength;
-                }
-            }
+        /// <summary>
+        /// Returns a string with a description of the addresses used in the packet.
+        /// This is used as a compoent of the string returned by ToString().
+        /// </summary>
+        /// <returns>
+        /// The address string.
+        /// </returns>
+        protected override String GetAddressString()
+        {
+            return $"RA {ReceiverAddress} TA {TransmitterAddress}";
         }
     }
 }

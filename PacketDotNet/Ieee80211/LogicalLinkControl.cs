@@ -19,125 +19,111 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Reflection;
-using log4net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    /// Logical link control.
+    /// See https://en.wikipedia.org/wiki/IEEE_802.2 and
+    /// https://en.wikipedia.org/wiki/Logical_link_control for additional information.
+    /// </summary>
+    public class LogicalLinkControl : Packet
     {
         /// <summary>
-        /// Logical link control.
-        /// See https://en.wikipedia.org/wiki/IEEE_802.2 and
-        /// https://en.wikipedia.org/wiki/Logical_link_control for additional information.
+        /// Initializes a new instance of the <see cref="T:PacketDotNet.Ieee80211.Ieee80211.LogicalLinkControl" /> class.
         /// </summary>
-        public class LogicalLinkControl : Packet
+        /// <param name="bas">Bas.</param>
+        public LogicalLinkControl(ByteArraySegment bas)
         {
-#if DEBUG
-            private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-#else
-// NOTE: No need to warn about lack of use, the compiler won't
-//       put any calls to 'log' here but we need 'log' to exist to compile
-#pragma warning disable 0169, 0649
-        private static readonly ILogInactive Log;
-#pragma warning restore 0169, 0649
-#endif
+            // set the header field, header field values are retrieved from this byte array
+            // ReSharper disable once UseObjectOrCollectionInitializer
+            Header = new ByteArraySegment(bas);
+            Header.Length = LogicalLinkControlFields.HeaderLength;
 
-            /// <summary>
-            /// Gets or sets the destination service access point.
-            /// </summary>
-            /// <value>The dsap.</value>
-            public Byte DSAP
+            // parse the payload via an EthernetPacket method
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header,
+                                                                                                                 Type));
+        }
+
+        /// <summary>
+        /// Gets or sets the control.
+        /// </summary>
+        /// <value>The control.</value>
+        public Byte Control
+        {
+            get => (Byte) ((ControlOrganizationCode >> 24) & 0xFF);
+
+            set => throw new NotImplementedException("Control setter not implemented");
+        }
+
+        /// <summary>
+        /// Gets or sets the destination service access point.
+        /// </summary>
+        /// <value>The dsap.</value>
+        public Byte DSAP
+        {
+            get => Header.Bytes[Header.Offset + LogicalLinkControlFields.DsapPosition];
+
+            set => Header.Bytes[Header.Offset + LogicalLinkControlFields.DsapPosition] = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the organization code.
+        /// </summary>
+        /// <value>The organization code.</value>
+        public UInt32 OrganizationCode
+        {
+            get => (Byte) (ControlOrganizationCode & 0x00FFFFFF);
+
+            set => throw new NotImplementedException("OrganizationCode setter not implemented");
+        }
+
+        /// <summary>
+        /// Gets or sets the source service access point.
+        /// </summary>
+        /// <value>The ssap.</value>
+        public Byte SSAP
+        {
+            get => Header.Bytes[Header.Offset + LogicalLinkControlFields.SsapPosition];
+
+            set => Header.Bytes[Header.Offset + LogicalLinkControlFields.SsapPosition] = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the type.
+        /// </summary>
+        /// <value>The type.</value>
+        public EthernetPacketType Type
+        {
+            get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
+                                                                       Header.Offset + LogicalLinkControlFields.TypePosition);
+
+            set
             {
-                get => Header.Bytes[Header.Offset + LogicalLinkControlFields.DsapPosition];
-
-                set => Header.Bytes[Header.Offset + LogicalLinkControlFields.DsapPosition] = value;
+                var val = (Int16) value;
+                EndianBitConverter.Big.CopyBytes(val,
+                                                 Header.Bytes,
+                                                 Header.Offset + LogicalLinkControlFields.TypePosition);
             }
+        }
 
-            /// <summary>
-            /// Gets or sets the source service access point.
-            /// </summary>
-            /// <value>The ssap.</value>
-            public Byte SSAP
+        /// <summary>
+        /// Gets or sets the control organization code.
+        /// </summary>
+        /// <value>The control organization code.</value>
+        protected UInt32 ControlOrganizationCode
+        {
+            get => EndianBitConverter.Big.ToUInt32(Header.Bytes,
+                                                   Header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
+
+            set
             {
-                get => Header.Bytes[Header.Offset + LogicalLinkControlFields.SsapPosition];
-
-                set => Header.Bytes[Header.Offset + LogicalLinkControlFields.SsapPosition] = value;
-            }
-
-            /// <summary>
-            /// Gets or sets the control organization code.
-            /// </summary>
-            /// <value>The control organization code.</value>
-            protected UInt32 ControlOrganizationCode
-            {
-                get => EndianBitConverter.Big.ToUInt32(Header.Bytes,
-                                                       Header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
-
-                set
-                {
-                    var val = value;
-                    EndianBitConverter.Big.CopyBytes(val,
-                                                     Header.Bytes,
-                                                     Header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
-                }
-            }
-
-            /// <summary>
-            /// Gets or sets the control.
-            /// </summary>
-            /// <value>The control.</value>
-            public Byte Control
-            {
-                get => (Byte) ((ControlOrganizationCode >> 24) & 0xFF);
-
-                set => throw new NotImplementedException("Control setter not implemented");
-            }
-
-            /// <summary>
-            /// Gets or sets the organization code.
-            /// </summary>
-            /// <value>The organization code.</value>
-            public UInt32 OrganizationCode
-            {
-                get => (Byte) (ControlOrganizationCode & 0x00FFFFFF);
-
-                set => throw new NotImplementedException("OrganizationCode setter not implemented");
-            }
-
-            /// <summary>
-            /// Gets or sets the type.
-            /// </summary>
-            /// <value>The type.</value>
-            public EthernetPacketType Type
-            {
-                get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
-                                                                           Header.Offset + LogicalLinkControlFields.TypePosition);
-
-                set
-                {
-                    var val = (Int16) value;
-                    EndianBitConverter.Big.CopyBytes(val,
-                                                     Header.Bytes,
-                                                     Header.Offset + LogicalLinkControlFields.TypePosition);
-                }
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="T:PacketDotNet.Ieee80211.LogicalLinkControl" /> class.
-            /// </summary>
-            /// <param name="bas">Bas.</param>
-            public LogicalLinkControl(ByteArraySegment bas)
-            {
-                // set the header field, header field values are retrieved from this byte array
-                Header = new ByteArraySegment(bas);
-                Header.Length = LogicalLinkControlFields.HeaderLength;
-
-                // parse the payload via an EthernetPacket method
-                PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header,
-                                                                                                                     Type));
+                var val = value;
+                EndianBitConverter.Big.CopyBytes(val,
+                                                 Header.Bytes,
+                                                 Header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
             }
         }
     }

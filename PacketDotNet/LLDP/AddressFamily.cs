@@ -19,12 +19,15 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet.LLDP
 {
     /// <summary>
     /// The IANA (Internet Assigned Numbers Authority) Address Family
     /// </summary>
     /// <remarks>Source http://www.iana.org/assignments/address-family-numbers/</remarks>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum AddressFamily
     {
         /// <summary>IP version 4</summary>

@@ -98,7 +98,7 @@ namespace PacketDotNet.LLDP
             var length = TLVTypeLength.TypeLengthLength + SubTypeLength;
             var bytes = new Byte[length];
             var offset = 0;
-            tlvData = new ByteArraySegment(bytes, offset, length);
+            TLVData = new ByteArraySegment(bytes, offset, length);
 
             Type = TLVTypes.PortID;
             SubType = PortSubTypes.NetworkAddress;
@@ -115,8 +115,8 @@ namespace PacketDotNet.LLDP
         /// </value>
         public PortSubTypes SubType
         {
-            get => (PortSubTypes) tlvData.Bytes[tlvData.Offset + TLVTypeLength.TypeLengthLength];
-            set => tlvData.Bytes[tlvData.Offset + TLVTypeLength.TypeLengthLength] = (Byte) value;
+            get => (PortSubTypes) TLVData.Bytes[TLVData.Offset + TLVTypeLength.TypeLengthLength];
+            set => TLVData.Bytes[TLVData.Offset + TLVTypeLength.TypeLengthLength] = (Byte) value;
         }
 
         /// <value>
@@ -151,7 +151,7 @@ namespace PacketDotNet.LLDP
             var length = TLVTypeLength.TypeLengthLength + SubTypeLength;
             var bytes = new Byte[length];
             var offset = 0;
-            tlvData = new ByteArraySegment(bytes, offset, length);
+            TLVData = new ByteArraySegment(bytes, offset, length);
         }
 
         private Object GetSubTypeValue()
@@ -167,18 +167,17 @@ namespace PacketDotNet.LLDP
                 case PortSubTypes.AgentCircuitID:
                     // get the address
                     arrAddress = new Byte[DataLength];
-                    Array.Copy(tlvData.Bytes, DataOffset, arrAddress, 0, DataLength);
+                    Array.Copy(TLVData.Bytes, DataOffset, arrAddress, 0, DataLength);
                     return arrAddress;
                 case PortSubTypes.MACAddress:
                     // get the address
                     arrAddress = new Byte[DataLength];
-                    Array.Copy(tlvData.Bytes, DataOffset, arrAddress, 0, DataLength);
+                    Array.Copy(TLVData.Bytes, DataOffset, arrAddress, 0, DataLength);
                     var address = new PhysicalAddress(arrAddress);
                     return address;
                 case PortSubTypes.NetworkAddress:
                     // get the address
-                    var addressFamily = (AddressFamily) tlvData.Bytes[DataLength];
-                    return GetNetworkAddress(addressFamily);
+                    return GetNetworkAddress();
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -217,31 +216,31 @@ namespace PacketDotNet.LLDP
                 var newBytes = new Byte[newLength];
 
                 // copy the header data over
-                Array.Copy(tlvData.Bytes,
-                           tlvData.Offset,
+                Array.Copy(TLVData.Bytes,
+                           TLVData.Offset,
                            newBytes,
                            0,
                            headerLength);
 
                 var offset = 0;
-                tlvData = new ByteArraySegment(newBytes, offset, newLength);
+                TLVData = new ByteArraySegment(newBytes, offset, newLength);
             }
 
             Array.Copy(val,
                        0,
-                       tlvData.Bytes,
+                       TLVData.Bytes,
                        ValueOffset + SubTypeLength,
                        val.Length);
         }
 
-        private NetworkAddress GetNetworkAddress(AddressFamily addressFamily)
+        private NetworkAddress GetNetworkAddress()
         {
             if (SubType != PortSubTypes.NetworkAddress)
             {
-                throw new ArgumentOutOfRangeException("SubType != PortSubTypes.NetworkAddress");
+                throw new ArgumentOutOfRangeException(nameof(SubType), "SubType != PortSubTypes.NetworkAddress");
             }
 
-            var networkAddress = new NetworkAddress(tlvData.Bytes, DataOffset, DataLength);
+            var networkAddress = new NetworkAddress(TLVData.Bytes, DataOffset, DataLength);
 
             return networkAddress;
         }

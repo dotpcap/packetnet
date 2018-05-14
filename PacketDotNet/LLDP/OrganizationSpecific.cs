@@ -85,7 +85,7 @@ namespace PacketDotNet.LLDP
             var length = TLVTypeLength.TypeLengthLength + OUILength + OUISubTypeLength;
             var bytes = new Byte[length];
             var offset = 0;
-            tlvData = new ByteArraySegment(bytes, offset, length);
+            TLVData = new ByteArraySegment(bytes, offset, length);
 
             Type = TLVTypes.OrganizationSpecific;
 
@@ -107,7 +107,7 @@ namespace PacketDotNet.LLDP
             get
             {
                 var oui = new Byte[OUILength];
-                Array.Copy(tlvData.Bytes,
+                Array.Copy(TLVData.Bytes,
                            ValueOffset,
                            oui,
                            0,
@@ -117,7 +117,7 @@ namespace PacketDotNet.LLDP
 
             set => Array.Copy(value,
                               0,
-                              tlvData.Bytes,
+                              TLVData.Bytes,
                               ValueOffset,
                               OUILength);
         }
@@ -127,8 +127,8 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public Int32 OrganizationDefinedSubType
         {
-            get => tlvData.Bytes[ValueOffset + OUILength];
-            set => tlvData.Bytes[ValueOffset + OUILength] = (Byte) value;
+            get => TLVData.Bytes[ValueOffset + OUILength];
+            set => TLVData.Bytes[ValueOffset + OUILength] = (Byte) value;
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace PacketDotNet.LLDP
                 var length = Length - (OUILength + OUISubTypeLength);
 
                 var bytes = new Byte[length];
-                Array.Copy(tlvData.Bytes,
+                Array.Copy(TLVData.Bytes,
                            ValueOffset + OUILength + OUISubTypeLength,
                            bytes,
                            0,
@@ -164,21 +164,21 @@ namespace PacketDotNet.LLDP
                     var bytes = new Byte[newLength];
 
                     // copy the header bytes over
-                    Array.Copy(tlvData.Bytes,
-                               tlvData.Offset,
+                    Array.Copy(TLVData.Bytes,
+                               TLVData.Offset,
                                bytes,
                                0,
                                headerLength);
 
                     // assign a new ByteArrayAndOffset to tlvData
                     var offset = 0;
-                    tlvData = new ByteArraySegment(bytes, offset, newLength);
+                    TLVData = new ByteArraySegment(bytes, offset, newLength);
                 }
 
                 // copy the byte array in
                 Array.Copy(value,
                            0,
-                           tlvData.Bytes,
+                           TLVData.Bytes,
                            ValueOffset + OUILength + OUISubTypeLength,
                            value.Length);
             }

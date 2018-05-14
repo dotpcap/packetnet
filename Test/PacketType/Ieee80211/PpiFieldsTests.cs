@@ -13,13 +13,13 @@ namespace Test.PacketType
             [Test]
             public void Test_Ppi802_3_Construction()
             {
-                Ppi802_3 field = new Ppi802_3(Ppi802_3.StandardFlags.FcsPresent,
-                                              Ppi802_3.ErrorFlags.InvalidFcs | Ppi802_3.ErrorFlags.SymbolError);
+                Ppi8023 field = new Ppi8023(Ppi8023.StandardFlags.FcsPresent,
+                                              Ppi8023.ErrorFlags.InvalidFcs | Ppi8023.ErrorFlags.SymbolError);
                 
-                Ppi802_3 recreatedField = new Ppi802_3(new BinaryReader(new MemoryStream(field.Bytes)));
+                Ppi8023 recreatedField = new Ppi8023(new BinaryReader(new MemoryStream(field.Bytes)));
                 
-                Assert.AreEqual(Ppi802_3.StandardFlags.FcsPresent, recreatedField.Flags);
-                Assert.AreEqual(Ppi802_3.ErrorFlags.InvalidFcs | Ppi802_3.ErrorFlags.SymbolError, recreatedField.Errors);
+                Assert.AreEqual(Ppi8023.StandardFlags.FcsPresent, recreatedField.Flags);
+                Assert.AreEqual(Ppi8023.ErrorFlags.InvalidFcs | Ppi8023.ErrorFlags.SymbolError, recreatedField.Errors);
             }
             
             [Test]

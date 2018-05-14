@@ -24,7 +24,6 @@ using PacketDotNet;
 using PacketDotNet.Ieee80211;
 using NUnit.Framework;
 using SharpPcap;
-using PacketDotNet.Utils;
 using System.Net.NetworkInformation;
 using PacketDotNet.MiscUtil.Conversion;
 

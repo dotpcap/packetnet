@@ -3,7 +3,7 @@ using System.Net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.LSA
 {
     /// <summary>
     /// Link state request, send by the LSR packets

@@ -471,7 +471,7 @@ namespace PacketDotNet
         /// Bytes that represent the tcp options
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String" />
+        /// A <see cref="string" />
         /// </returns>
         public Byte[] Options
         {

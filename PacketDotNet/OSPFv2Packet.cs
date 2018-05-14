@@ -173,9 +173,9 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2Packet" />.
+        /// Returns a <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2Packet" />.
         /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2Packet" />.</returns>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2Packet" />.</returns>
         public override String ToString()
         {
             var packet = new StringBuilder();

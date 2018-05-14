@@ -3,6 +3,7 @@ using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using System.Collections.Generic;
+using PacketDotNet.LSA;
 using SharpPcap;
 using PacketDotNet.Utils;
 

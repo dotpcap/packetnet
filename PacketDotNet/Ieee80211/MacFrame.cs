@@ -26,17 +26,15 @@ using log4net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    /// Base class of all 802.11 frame types
+    /// </summary>
+    public abstract class MacFrame : Packet
     {
-        /// <summary>
-        /// Base class of all 802.11 frame types
-        /// </summary>
-        public abstract class MacFrame : Packet
-        {
 #if DEBUG
-            private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
 // NOTE: No need to warn about lack of use, the compiler won't
 //       put any calls to 'log' here but we need 'log' to exist to compile
@@ -46,555 +44,554 @@ namespace PacketDotNet
 #endif
 
 
-            private Int32 GetOffsetForAddress(Int32 addressIndex)
+        private Int32 GetOffsetForAddress(Int32 addressIndex)
+        {
+            var offset = Header.Offset;
+
+            offset += MacFields.Address1Position + MacFields.AddressLength * addressIndex;
+
+            // the 4th address is AFTER the sequence control field so we need to skip past that
+            // field
+            if (addressIndex == 4)
+                offset += MacFields.SequenceControlLength;
+
+            return offset;
+        }
+
+        /// <summary>
+        /// Frame control bytes are the first two bytes of the frame
+        /// </summary>
+        protected UInt16 FrameControlBytes
+        {
+            get
             {
-                var offset = Header.Offset;
+                if (Header.Length >= MacFields.FrameControlPosition + MacFields.FrameControlLength)
+                {
+                    return EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                           Header.Offset);
+                }
 
-                offset += MacFields.Address1Position + MacFields.AddressLength * addressIndex;
-
-                // the 4th address is AFTER the sequence control field so we need to skip past that
-                // field
-                if (addressIndex == 4)
-                    offset += MacFields.SequenceControlLength;
-
-                return offset;
+                return 0;
             }
 
-            /// <summary>
-            /// Frame control bytes are the first two bytes of the frame
-            /// </summary>
-            protected UInt16 FrameControlBytes
-            {
-                get
-                {
-                    if (Header.Length >= MacFields.FrameControlPosition + MacFields.FrameControlLength)
-                    {
-                        return EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                               Header.Offset);
-                    }
+            set => EndianBitConverter.Big.CopyBytes(value,
+                                                    Header.Bytes,
+                                                    Header.Offset);
+        }
 
-                    return 0;
+        /// <summary>
+        /// Frame control field
+        /// </summary>
+        public FrameControlField FrameControl { get; set; }
+
+        /// <summary>
+        /// Duration bytes are the third and fourth bytes of the frame
+        /// </summary>
+        protected UInt16 DurationBytes
+        {
+            get
+            {
+                if (Header.Length >= MacFields.DurationIDPosition + MacFields.DurationIDLength)
+                {
+                    return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                              Header.Offset + MacFields.DurationIDPosition);
                 }
 
-                set => EndianBitConverter.Big.CopyBytes(value,
-                                                        Header.Bytes,
-                                                        Header.Offset);
+                return 0;
             }
 
-            /// <summary>
-            /// Frame control field
-            /// </summary>
-            public FrameControlField FrameControl { get; set; }
+            set => EndianBitConverter.Little.CopyBytes(value,
+                                                       Header.Bytes,
+                                                       Header.Offset + MacFields.DurationIDPosition);
+        }
 
-            /// <summary>
-            /// Duration bytes are the third and fourth bytes of the frame
-            /// </summary>
-            protected UInt16 DurationBytes
+        /// <summary>
+        /// Gets or sets the duration value. The value represents the number of microseconds
+        /// the the wireless medium is expected to remain busy.
+        /// </summary>
+        /// <value>
+        /// The duration field value
+        /// </value>
+        public DurationField Duration { get; set; }
+
+        /// <summary>
+        /// Writes the address into the specified address position.
+        /// </summary>
+        /// <remarks>
+        /// The number of valid address positions in a MAC frame is determined by
+        /// the type of frame. There are between 1 and 4 address fields in MAC frames
+        /// </remarks>
+        /// <param name="addressIndex">Zero based address to look up</param>
+        /// <param name="address"></param>
+        protected void SetAddress(Int32 addressIndex, PhysicalAddress address)
+        {
+            var offset = GetOffsetForAddress(addressIndex);
+            SetAddressByOffset(offset, address);
+        }
+
+
+        /// <summary>
+        /// Writes the provided address into the backing <see cref="PacketDotNet.Utils.ByteArraySegment" />
+        /// starting at the provided offset.
+        /// </summary>
+        /// <param name='offset'>
+        /// The position where the address should start to be copied
+        /// </param>
+        /// <param name='address'>
+        /// Address.
+        /// </param>
+        protected void SetAddressByOffset(Int32 offset, PhysicalAddress address)
+        {
+            Byte[] hwAddress = null;
+            //We will replace no address with a MAC of all zer
+            if (address == PhysicalAddress.None)
             {
-                get
-                {
-                    if (Header.Length >= MacFields.DurationIDPosition + MacFields.DurationIDLength)
-                    {
-                        return EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                                  Header.Offset + MacFields.DurationIDPosition);
-                    }
-
-                    return 0;
-                }
-
-                set => EndianBitConverter.Little.CopyBytes(value,
-                                                           Header.Bytes,
-                                                           Header.Offset + MacFields.DurationIDPosition);
+                hwAddress = new Byte[] {0, 0, 0, 0, 0, 0};
+            }
+            else
+            {
+                hwAddress = address.GetAddressBytes();
             }
 
-            /// <summary>
-            /// Gets or sets the duration value. The value represents the number of microseconds
-            /// the the wireless medium is expected to remain busy.
-            /// </summary>
-            /// <value>
-            /// The duration field value
-            /// </value>
-            public DurationField Duration { get; set; }
-
-            /// <summary>
-            /// Writes the address into the specified address position.
-            /// </summary>
-            /// <remarks>
-            /// The number of valid address positions in a MAC frame is determined by
-            /// the type of frame. There are between 1 and 4 address fields in MAC frames
-            /// </remarks>
-            /// <param name="addressIndex">Zero based address to look up</param>
-            /// <param name="address"></param>
-            protected void SetAddress(Int32 addressIndex, PhysicalAddress address)
+            // using the offset, set the address
+            if (hwAddress.Length != MacFields.AddressLength)
             {
-                var offset = GetOffsetForAddress(addressIndex);
-                SetAddressByOffset(offset, address);
+                throw new InvalidOperationException("address length " + hwAddress.Length + " not equal to the expected length of " + MacFields.AddressLength);
             }
 
+            Array.Copy(hwAddress,
+                       0,
+                       Header.Bytes,
+                       offset,
+                       hwAddress.Length);
+        }
 
-            /// <summary>
-            /// Writes the provided address into the backing <see cref="PacketDotNet.Utils.ByteArraySegment" />
-            /// starting at the provided offset.
-            /// </summary>
-            /// <param name='offset'>
-            /// The position where the address should start to be copied
-            /// </param>
-            /// <param name='address'>
-            /// Address.
-            /// </param>
-            protected void SetAddressByOffset(Int32 offset, PhysicalAddress address)
+        /// <summary>
+        /// Gets the address. There can be up to four addresses in a MacFrame depending on its type.
+        /// </summary>
+        /// <returns>
+        /// The address.
+        /// </returns>
+        /// <param name='addressIndex'>
+        /// Address index.
+        /// </param>
+        protected PhysicalAddress GetAddress(Int32 addressIndex)
+        {
+            var offset = GetOffsetForAddress(addressIndex);
+            return GetAddressByOffset(offset);
+        }
+
+        /// <summary>
+        /// Gets an address by offset.
+        /// </summary>
+        /// <returns>
+        /// The address as the specified index.
+        /// </returns>
+        /// <param name='offset'>
+        /// The offset into the packet buffer at which to start parsing the address.
+        /// </param>
+        protected PhysicalAddress GetAddressByOffset(Int32 offset)
+        {
+            if (Header.Offset + Header.Length >= offset + MacFields.AddressLength)
             {
-                Byte[] hwAddress = null;
-                //We will replace no address with a MAC of all zer
-                if (address == PhysicalAddress.None)
-                {
-                    hwAddress = new Byte[] {0, 0, 0, 0, 0, 0};
-                }
-                else
-                {
-                    hwAddress = address.GetAddressBytes();
-                }
-
-                // using the offset, set the address
-                if (hwAddress.Length != MacFields.AddressLength)
-                {
-                    throw new InvalidOperationException("address length " + hwAddress.Length + " not equal to the expected length of " + MacFields.AddressLength);
-                }
-
-                Array.Copy(hwAddress,
-                           0,
-                           Header.Bytes,
+                var hwAddress = new Byte[MacFields.AddressLength];
+                Array.Copy(Header.Bytes,
                            offset,
+                           hwAddress,
+                           0,
                            hwAddress.Length);
+                return new PhysicalAddress(hwAddress);
             }
 
-            /// <summary>
-            /// Gets the address. There can be up to four addresses in a MacFrame depending on its type.
-            /// </summary>
-            /// <returns>
-            /// The address.
-            /// </returns>
-            /// <param name='addressIndex'>
-            /// Address index.
-            /// </param>
-            protected PhysicalAddress GetAddress(Int32 addressIndex)
+            return PhysicalAddress.None;
+        }
+
+        /// <summary>
+        /// Frame check sequence, the last thing in the 802.11 mac packet
+        /// </summary>
+        public UInt32 FrameCheckSequence { get; set; }
+
+        /// <summary>
+        /// Recalculates and updates the frame check sequence.
+        /// </summary>
+        /// <remarks>After calling this method the FCS will be valud regardless of what the packet contains.</remarks>
+        public void UpdateFrameCheckSequence()
+        {
+            var bytes = Bytes;
+            var length = AppendFcs ? bytes.Length - 4 : bytes.Length;
+            FrameCheckSequence = (UInt32) Crc32.Compute(Bytes, 0, length);
+        }
+
+        /// <summary>
+        /// Length of the frame header.
+        /// This does not include the FCS, it represents only the header bytes that would
+        /// would preceed any payload.
+        /// </summary>
+        public abstract Int32 FrameSize { get; }
+
+        /// <summary>
+        /// Returns the number of bytes of payload data currently available in
+        /// the buffer.
+        /// </summary>
+        /// <remarks>
+        /// This method is used to work out how much space there is for the payload in the
+        /// underlying ByteArraySegment. To find out the length of
+        /// actual payload assigned to the packet use PayloadData.Length.
+        /// </remarks>
+        /// <value>
+        /// The number of bytes of space available after the header for payload data.
+        /// </value>
+        protected Int32 GetAvailablePayloadLength()
+        {
+            var payloadLength = Header.BytesLength - (Header.Offset + FrameSize);
+            return payloadLength > 0 ? payloadLength : 0;
+        }
+
+        /// <summary>
+        /// Parses the <see cref="PacketDotNet.Utils.ByteArraySegment" /> into a MacFrame.
+        /// </summary>
+        /// <returns>
+        /// The parsed MacFrame or null if it could not be parsed.
+        /// </returns>
+        /// <param name='bas'>
+        /// The bytes of the packet. bas.Offset should point to the first byte in the mac frame.
+        /// </param>
+        /// <remarks>
+        /// If the provided bytes dont contain the FCS then call <see cref="MacFrame.ParsePacket" /> instead. The presence of the
+        /// FCS is usually determined by configuration of the device used to capture the packets.
+        /// </remarks>
+        public static MacFrame ParsePacketWithFcs(ByteArraySegment bas)
+        {
+            if (bas.Length < MacFields.FrameControlLength + MacFields.FrameCheckSequenceLength)
             {
-                var offset = GetOffsetForAddress(addressIndex);
-                return GetAddressByOffset(offset);
+                //There isn't enough data for there to be an FCS and a packet
+                return null;
             }
 
-            /// <summary>
-            /// Gets an address by offset.
-            /// </summary>
-            /// <returns>
-            /// The address as the specified index.
-            /// </returns>
-            /// <param name='offset'>
-            /// The offset into the packet buffer at which to start parsing the address.
-            /// </param>
-            protected PhysicalAddress GetAddressByOffset(Int32 offset)
+            //remove the FCS from the buffer that we will pass to the packet parsers
+            var basWithoutFcs = new ByteArraySegment(bas.Bytes,
+                                                     bas.Offset,
+                                                     bas.Length - MacFields.FrameCheckSequenceLength,
+                                                     bas.BytesLength - MacFields.FrameCheckSequenceLength);
+
+            var fcs = EndianBitConverter.Big.ToUInt32(bas.Bytes,
+                                                      (bas.Offset + bas.Length) - MacFields.FrameCheckSequenceLength);
+
+            var frame = ParsePacket(basWithoutFcs);
+            if (frame != null)
             {
-                if (Header.Offset + Header.Length >= offset + MacFields.AddressLength)
+                frame.AppendFcs = true;
+                frame.FrameCheckSequence = fcs;
+            }
+
+            return frame;
+        }
+
+        /// <summary>
+        /// Parses the <see cref="PacketDotNet.Utils.ByteArraySegment" /> into a MacFrame.
+        /// </summary>
+        /// <returns>
+        /// The parsed MacFrame or null if it could not be parsed.
+        /// </returns>
+        /// <param name='bas'>
+        /// The bytes of the packet. bas.Offset should point to the first byte in the mac frame.
+        /// </param>
+        /// <remarks>
+        /// If the provided bytes contain the FCS then call <see cref="MacFrame.ParsePacketWithFcs" /> instead. The presence of the
+        /// FCS is usually determined by configuration of the device used to capture the packets.
+        /// </remarks>
+        public static MacFrame ParsePacket(ByteArraySegment bas)
+        {
+            if (bas.Length < MacFields.FrameControlLength)
+            {
+                //there isn't enough data to even try and work out what type of packet it is
+                return null;
+            }
+
+            //this is a bit ugly as we will end up parsing the framecontrol field twice, once here and once
+            //inside the packet constructor. Could create the framecontrol and pass it to the packet but I think that is equally ugly
+            var frameControl = new FrameControlField(
+                                                     EndianBitConverter.Big.ToUInt16(bas.Bytes, bas.Offset));
+
+            MacFrame macFrame = null;
+
+            Log.DebugFormat("SubType {0}", frameControl.SubType);
+
+            switch (frameControl.SubType)
+            {
+                case FrameControlField.FrameSubTypes.ManagementAssociationRequest:
                 {
-                    var hwAddress = new Byte[MacFields.AddressLength];
-                    Array.Copy(Header.Bytes,
-                               offset,
-                               hwAddress,
-                               0,
-                               hwAddress.Length);
-                    return new PhysicalAddress(hwAddress);
+                    macFrame = new AssociationRequestFrame(bas);
+                    break;
                 }
-
-                return PhysicalAddress.None;
-            }
-
-            /// <summary>
-            /// Frame check sequence, the last thing in the 802.11 mac packet
-            /// </summary>
-            public UInt32 FrameCheckSequence { get; set; }
-
-            /// <summary>
-            /// Recalculates and updates the frame check sequence.
-            /// </summary>
-            /// <remarks>After calling this method the FCS will be valud regardless of what the packet contains.</remarks>
-            public void UpdateFrameCheckSequence()
-            {
-                var bytes = Bytes;
-                var length = AppendFcs ? bytes.Length - 4 : bytes.Length;
-                FrameCheckSequence = (UInt32) Crc32.Compute(Bytes, 0, length);
-            }
-
-            /// <summary>
-            /// Length of the frame header.
-            /// This does not include the FCS, it represents only the header bytes that would
-            /// would preceed any payload.
-            /// </summary>
-            public abstract Int32 FrameSize { get; }
-
-            /// <summary>
-            /// Returns the number of bytes of payload data currently available in
-            /// the buffer.
-            /// </summary>
-            /// <remarks>
-            /// This method is used to work out how much space there is for the payload in the
-            /// underlying ByteArraySegment. To find out the length of
-            /// actual payload assigned to the packet use PayloadData.Length.
-            /// </remarks>
-            /// <value>
-            /// The number of bytes of space available after the header for payload data.
-            /// </value>
-            protected Int32 GetAvailablePayloadLength()
-            {
-                var payloadLength = Header.BytesLength - (Header.Offset + FrameSize);
-                return payloadLength > 0 ? payloadLength : 0;
-            }
-
-            /// <summary>
-            /// Parses the <see cref="PacketDotNet.Utils.ByteArraySegment" /> into a MacFrame.
-            /// </summary>
-            /// <returns>
-            /// The parsed MacFrame or null if it could not be parsed.
-            /// </returns>
-            /// <param name='bas'>
-            /// The bytes of the packet. bas.Offset should point to the first byte in the mac frame.
-            /// </param>
-            /// <remarks>
-            /// If the provided bytes dont contain the FCS then call <see cref="MacFrame.ParsePacket" /> instead. The presence of the
-            /// FCS is usually determined by configuration of the device used to capture the packets.
-            /// </remarks>
-            public static MacFrame ParsePacketWithFcs(ByteArraySegment bas)
-            {
-                if (bas.Length < MacFields.FrameControlLength + MacFields.FrameCheckSequenceLength)
+                case FrameControlField.FrameSubTypes.ManagementAssociationResponse:
                 {
-                    //There isn't enough data for there to be an FCS and a packet
-                    return null;
+                    macFrame = new AssociationResponseFrame(bas);
+                    break;
                 }
-
-                //remove the FCS from the buffer that we will pass to the packet parsers
-                var basWithoutFcs = new ByteArraySegment(bas.Bytes,
-                                                         bas.Offset,
-                                                         bas.Length - MacFields.FrameCheckSequenceLength,
-                                                         bas.BytesLength - MacFields.FrameCheckSequenceLength);
-
-                var fcs = EndianBitConverter.Big.ToUInt32(bas.Bytes,
-                                                          (bas.Offset + bas.Length) - MacFields.FrameCheckSequenceLength);
-
-                var frame = ParsePacket(basWithoutFcs);
-                if (frame != null)
+                case FrameControlField.FrameSubTypes.ManagementReassociationRequest:
                 {
-                    frame.AppendFcs = true;
-                    frame.FrameCheckSequence = fcs;
+                    macFrame = new ReassociationRequestFrame(bas);
+                    break;
                 }
-
-                return frame;
+                case FrameControlField.FrameSubTypes.ManagementReassociationResponse:
+                {
+                    macFrame = new AssociationResponseFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.ManagementProbeRequest:
+                {
+                    macFrame = new ProbeRequestFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.ManagementProbeResponse:
+                {
+                    macFrame = new ProbeResponseFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.ManagementReserved0:
+                    break; //TODO
+                case FrameControlField.FrameSubTypes.ManagementReserved1:
+                    break; //TODO
+                case FrameControlField.FrameSubTypes.ManagementBeacon:
+                {
+                    macFrame = new BeaconFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.ManagementATIM:
+                    break; //TODO
+                case FrameControlField.FrameSubTypes.ManagementDisassociation:
+                {
+                    macFrame = new DisassociationFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.ManagementAuthentication:
+                {
+                    macFrame = new AuthenticationFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.ManagementDeauthentication:
+                {
+                    macFrame = new DeauthenticationFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.ManagementAction:
+                {
+                    macFrame = new ActionFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.ManagementReserved3:
+                    break; //TODO
+                case FrameControlField.FrameSubTypes.ControlBlockAcknowledgmentRequest:
+                {
+                    macFrame = new BlockAcknowledgmentRequestFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.ControlBlockAcknowledgment:
+                {
+                    macFrame = new BlockAcknowledgmentFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.ControlPSPoll:
+                    break; //TODO
+                case FrameControlField.FrameSubTypes.ControlRTS:
+                {
+                    macFrame = new RtsFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.ControlCTS:
+                {
+                    macFrame = new CtsFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.ControlACK:
+                {
+                    macFrame = new AckFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.ControlCFEnd:
+                {
+                    macFrame = new ContentionFreeEndFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.ControlCFEndCFACK:
+                    break; //TODO
+                case FrameControlField.FrameSubTypes.Data:
+                case FrameControlField.FrameSubTypes.DataCFACK:
+                case FrameControlField.FrameSubTypes.DataCFPoll:
+                case FrameControlField.FrameSubTypes.DataCFAckCFPoll:
+                {
+                    macFrame = new DataDataFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.DataNullFunctionNoData:
+                case FrameControlField.FrameSubTypes.DataCFAckNoData:
+                case FrameControlField.FrameSubTypes.DataCFPollNoData:
+                case FrameControlField.FrameSubTypes.DataCFAckCFPollNoData:
+                {
+                    macFrame = new NullDataFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.QosData:
+                case FrameControlField.FrameSubTypes.QosDataAndCFAck:
+                case FrameControlField.FrameSubTypes.QosDataAndCFPoll:
+                case FrameControlField.FrameSubTypes.QosDataAndCFAckAndCFPoll:
+                {
+                    macFrame = new QosDataFrame(bas);
+                    break;
+                }
+                case FrameControlField.FrameSubTypes.QosNullData:
+                case FrameControlField.FrameSubTypes.QosCFAck:
+                case FrameControlField.FrameSubTypes.QosCFPoll:
+                case FrameControlField.FrameSubTypes.QosCFAckAndCFPoll:
+                {
+                    macFrame = new QosNullDataFrame(bas);
+                    break;
+                }
+                default:
+                    //this is an unsupported (and unknown) packet type
+                    break;
             }
 
-            /// <summary>
-            /// Parses the <see cref="PacketDotNet.Utils.ByteArraySegment" /> into a MacFrame.
-            /// </summary>
-            /// <returns>
-            /// The parsed MacFrame or null if it could not be parsed.
-            /// </returns>
-            /// <param name='bas'>
-            /// The bytes of the packet. bas.Offset should point to the first byte in the mac frame.
-            /// </param>
-            /// <remarks>
-            /// If the provided bytes contain the FCS then call <see cref="MacFrame.ParsePacketWithFcs" /> instead. The presence of the
-            /// FCS is usually determined by configuration of the device used to capture the packets.
-            /// </remarks>
-            public static MacFrame ParsePacket(ByteArraySegment bas)
+            return macFrame;
+        }
+
+        /// <summary>
+        /// Calculates the FCS value for the provided bytes and compates it to the FCS value passed to the method.
+        /// </summary>
+        /// <returns>
+        /// true if the FCS for the provided bytes matches the FCS passed in, false if not.
+        /// </returns>
+        /// <param name='data'>
+        /// The byte array for which the FCS will be calculated.
+        /// </param>
+        /// <param name='offset'>
+        /// The offset into data of the first byte to be covered by the FCS.
+        /// </param>
+        /// <param name='length'>
+        /// The number of bytes to calculate the FCS for.
+        /// </param>
+        /// <param name='fcs'>
+        /// The FCS to compare to the one calculated for the provided data.
+        /// </param>
+        /// <remarks>
+        /// This method can be used to check the validity of a packet before attempting to parse it with either
+        /// <see cref="MacFrame.ParsePacket" /> or <see cref="MacFrame.ParsePacketWithFcs" />. Attempting to parse a corrupted buffer
+        /// using these methods could cause unexpected exceptions.
+        /// </remarks>
+        public static Boolean PerformFcsCheck(Byte[] data, Int32 offset, Int32 length, UInt32 fcs)
+        {
+            // Cast to uint for proper comparison to FrameCheckSequence
+            var check = (UInt32) Crc32.Compute(data, offset, length);
+            return check == fcs;
+        }
+
+        /// <summary>
+        /// FCSs the valid.
+        /// </summary>
+        /// <returns>
+        /// The valid.
+        /// </returns>
+        public Boolean FCSValid
+        {
+            get
             {
-                if (bas.Length < MacFields.FrameControlLength)
-                {
-                    //there isn't enough data to even try and work out what type of packet it is
-                    return null;
-                }
-
-                //this is a bit ugly as we will end up parsing the framecontrol field twice, once here and once
-                //inside the packet constructor. Could create the framecontrol and pass it to the packet but I think that is equally ugly
-                var frameControl = new FrameControlField(
-                                                         EndianBitConverter.Big.ToUInt16(bas.Bytes, bas.Offset));
-
-                MacFrame macFrame = null;
-
-                Log.DebugFormat("SubType {0}", frameControl.SubType);
-
-                switch (frameControl.SubType)
-                {
-                    case FrameControlField.FrameSubTypes.ManagementAssociationRequest:
-                    {
-                        macFrame = new AssociationRequestFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ManagementAssociationResponse:
-                    {
-                        macFrame = new AssociationResponseFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ManagementReassociationRequest:
-                    {
-                        macFrame = new ReassociationRequestFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ManagementReassociationResponse:
-                    {
-                        macFrame = new AssociationResponseFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ManagementProbeRequest:
-                    {
-                        macFrame = new ProbeRequestFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ManagementProbeResponse:
-                    {
-                        macFrame = new ProbeResponseFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ManagementReserved0:
-                        break; //TODO
-                    case FrameControlField.FrameSubTypes.ManagementReserved1:
-                        break; //TODO
-                    case FrameControlField.FrameSubTypes.ManagementBeacon:
-                    {
-                        macFrame = new BeaconFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ManagementATIM:
-                        break; //TODO
-                    case FrameControlField.FrameSubTypes.ManagementDisassociation:
-                    {
-                        macFrame = new DisassociationFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ManagementAuthentication:
-                    {
-                        macFrame = new AuthenticationFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ManagementDeauthentication:
-                    {
-                        macFrame = new DeauthenticationFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ManagementAction:
-                    {
-                        macFrame = new ActionFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ManagementReserved3:
-                        break; //TODO
-                    case FrameControlField.FrameSubTypes.ControlBlockAcknowledgmentRequest:
-                    {
-                        macFrame = new BlockAcknowledgmentRequestFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ControlBlockAcknowledgment:
-                    {
-                        macFrame = new BlockAcknowledgmentFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ControlPSPoll:
-                        break; //TODO
-                    case FrameControlField.FrameSubTypes.ControlRTS:
-                    {
-                        macFrame = new RtsFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ControlCTS:
-                    {
-                        macFrame = new CtsFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ControlACK:
-                    {
-                        macFrame = new AckFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ControlCFEnd:
-                    {
-                        macFrame = new ContentionFreeEndFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.ControlCFEndCFACK:
-                        break; //TODO
-                    case FrameControlField.FrameSubTypes.Data:
-                    case FrameControlField.FrameSubTypes.DataCFACK:
-                    case FrameControlField.FrameSubTypes.DataCFPoll:
-                    case FrameControlField.FrameSubTypes.DataCFAckCFPoll:
-                    {
-                        macFrame = new DataDataFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.DataNullFunctionNoData:
-                    case FrameControlField.FrameSubTypes.DataCFAckNoData:
-                    case FrameControlField.FrameSubTypes.DataCFPollNoData:
-                    case FrameControlField.FrameSubTypes.DataCFAckCFPollNoData:
-                    {
-                        macFrame = new NullDataFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.QosData:
-                    case FrameControlField.FrameSubTypes.QosDataAndCFAck:
-                    case FrameControlField.FrameSubTypes.QosDataAndCFPoll:
-                    case FrameControlField.FrameSubTypes.QosDataAndCFAckAndCFPoll:
-                    {
-                        macFrame = new QosDataFrame(bas);
-                        break;
-                    }
-                    case FrameControlField.FrameSubTypes.QosNullData:
-                    case FrameControlField.FrameSubTypes.QosCFAck:
-                    case FrameControlField.FrameSubTypes.QosCFPoll:
-                    case FrameControlField.FrameSubTypes.QosCFAckAndCFPoll:
-                    {
-                        macFrame = new QosNullDataFrame(bas);
-                        break;
-                    }
-                    default:
-                        //this is an unsupported (and unknown) packet type
-                        break;
-                }
-
-                return macFrame;
+                var packetBytes = Bytes;
+                var packetLength = AppendFcs ? packetBytes.Length - MacFields.FrameCheckSequenceLength : packetBytes.Length;
+                return PerformFcsCheck(packetBytes, 0, packetLength, FrameCheckSequence);
             }
+        }
 
-            /// <summary>
-            /// Calculates the FCS value for the provided bytes and compates it to the FCS value passed to the method.
-            /// </summary>
-            /// <returns>
-            /// true if the FCS for the provided bytes matches the FCS passed in, false if not.
-            /// </returns>
-            /// <param name='data'>
-            /// The byte array for which the FCS will be calculated.
-            /// </param>
-            /// <param name='offset'>
-            /// The offset into data of the first byte to be covered by the FCS.
-            /// </param>
-            /// <param name='length'>
-            /// The number of bytes to calculate the FCS for.
-            /// </param>
-            /// <param name='fcs'>
-            /// The FCS to compare to the one calculated for the provided data.
-            /// </param>
-            /// <remarks>
-            /// This method can be used to check the validity of a packet before attempting to parse it with either
-            /// <see cref="MacFrame.ParsePacket" /> or <see cref="MacFrame.ParsePacketWithFcs" />. Attempting to parse a corrupted buffer
-            /// using these methods could cause unexpected exceptions.
-            /// </remarks>
-            public static Boolean PerformFcsCheck(Byte[] data, Int32 offset, Int32 length, UInt32 fcs)
-            {
-                // Cast to uint for proper comparison to FrameCheckSequence
-                var check = (UInt32) Crc32.Compute(data, offset, length);
-                return check == fcs;
-            }
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="MacFrame" /> should include an FCS at the end
+        /// of the array returned by Bytes.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if append FCS should be appended; otherwise, <c>false</c>.
+        /// </value>
+        public Boolean AppendFcs { get; set; }
 
-            /// <summary>
-            /// FCSs the valid.
-            /// </summary>
-            /// <returns>
-            /// The valid.
-            /// </returns>
-            public Boolean FCSValid
+
+        /// <value>
+        /// The option to return a ByteArraySegment means that this method
+        /// is higher performance as the data can start at an offset other than
+        /// the first byte.
+        /// </value>
+        public override ByteArraySegment BytesHighPerformance
+        {
+            get
             {
-                get
+                Log.Debug("");
+
+                // ensure calculated values are properly updated
+                RecursivelyUpdateCalculatedValues();
+
+                // if we share memory with all of our sub packets we can take a
+                // higher performance path to retrieve the bytes
+                var totalPacketLength = TotalPacketLength;
+                if (SharesMemoryWithSubPackets && (!AppendFcs || Header.Bytes.Length >= Header.Offset + totalPacketLength + MacFields.FrameCheckSequenceLength))
                 {
-                    var packetBytes = Bytes;
-                    var packetLength = AppendFcs ? packetBytes.Length - MacFields.FrameCheckSequenceLength : packetBytes.Length;
-                    return PerformFcsCheck(packetBytes, 0, packetLength, FrameCheckSequence);
-                }
-            }
-
-            /// <summary>
-            /// Gets or sets a value indicating whether this <see cref="PacketDotNet.Ieee80211.MacFrame" /> should include an FCS at the end
-            /// of the array returned by Bytes.
-            /// </summary>
-            /// <value>
-            /// <c>true</c> if append FCS should be appended; otherwise, <c>false</c>.
-            /// </value>
-            public Boolean AppendFcs { get; set; }
-
-
-            /// <value>
-            /// The option to return a ByteArraySegment means that this method
-            /// is higher performance as the data can start at an offset other than
-            /// the first byte.
-            /// </value>
-            public override ByteArraySegment BytesHighPerformance
-            {
-                get
-                {
-                    Log.Debug("");
-
-                    // ensure calculated values are properly updated
-                    RecursivelyUpdateCalculatedValues();
-
-                    // if we share memory with all of our sub packets we can take a
-                    // higher performance path to retrieve the bytes
-                    var totalPacketLength = TotalPacketLength;
-                    if (SharesMemoryWithSubPackets && (!AppendFcs || Header.Bytes.Length >= Header.Offset + totalPacketLength + MacFields.FrameCheckSequenceLength))
-                    {
-                        var packetLength = totalPacketLength;
-                        if (AppendFcs)
-                        {
-                            packetLength += MacFields.FrameCheckSequenceLength;
-                            //We need to update the FCS field because this couldn't be done during 
-                            //RecursivelyUpdateCalculatedValues because we didn't know where it would be
-                            EndianBitConverter.Big.CopyBytes(FrameCheckSequence,
-                                                             Header.Bytes,
-                                                             Header.Offset + totalPacketLength);
-                        }
-
-                        // The high performance path that is often taken because it is called on
-                        // packets that have not had their header, or any of their sub packets, resized
-                        var newByteArraySegment = new ByteArraySegment(Header.Bytes,
-                                                                       Header.Offset,
-                                                                       packetLength);
-                        Log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}",
-                                        newByteArraySegment);
-                        return newByteArraySegment;
-                    }
-
-                    Log.Debug("rebuilding the byte array");
-
-                    var ms = new MemoryStream();
-
-                    var headerCopy = HeaderData;
-                    ms.Write(headerCopy, 0, headerCopy.Length);
-
-                    PayloadPacketOrData.Value.AppendToMemoryStream(ms);
-
+                    var packetLength = totalPacketLength;
                     if (AppendFcs)
                     {
-                        var fcsBuffer = EndianBitConverter.Big.GetBytes(FrameCheckSequence);
-                        ms.Write(fcsBuffer, 0, fcsBuffer.Length);
+                        packetLength += MacFields.FrameCheckSequenceLength;
+                        //We need to update the FCS field because this couldn't be done during 
+                        //RecursivelyUpdateCalculatedValues because we didn't know where it would be
+                        EndianBitConverter.Big.CopyBytes(FrameCheckSequence,
+                                                         Header.Bytes,
+                                                         Header.Offset + totalPacketLength);
                     }
 
-                    var newBytes = ms.ToArray();
-
-                    return new ByteArraySegment(newBytes, 0, newBytes.Length);
+                    // The high performance path that is often taken because it is called on
+                    // packets that have not had their header, or any of their sub packets, resized
+                    var newByteArraySegment = new ByteArraySegment(Header.Bytes,
+                                                                   Header.Offset,
+                                                                   packetLength);
+                    Log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}",
+                                    newByteArraySegment);
+                    return newByteArraySegment;
                 }
+
+                Log.Debug("rebuilding the byte array");
+
+                var ms = new MemoryStream();
+
+                var headerCopy = HeaderData;
+                ms.Write(headerCopy, 0, headerCopy.Length);
+
+                PayloadPacketOrData.Value.AppendToMemoryStream(ms);
+
+                if (AppendFcs)
+                {
+                    var fcsBuffer = EndianBitConverter.Big.GetBytes(FrameCheckSequence);
+                    ms.Write(fcsBuffer, 0, fcsBuffer.Length);
+                }
+
+                var newBytes = ms.ToArray();
+
+                return new ByteArraySegment(newBytes, 0, newBytes.Length);
             }
-
-
-            /// <summary>
-            /// ToString() override
-            /// </summary>
-            /// <returns>
-            /// A <see cref="System.String" />
-            /// </returns>
-            public override String ToString()
-            {
-                return $"802.11 MacFrame: [{FrameControl}], {GetAddressString()} FCS {FrameCheckSequence}";
-            }
-
-            /// <summary>
-            /// Returns a string with a description of the addresses used in the packet.
-            /// This is used as a compoent of the string returned by ToString().
-            /// </summary>
-            /// <returns>
-            /// The address string.
-            /// </returns>
-            protected abstract String GetAddressString();
         }
+
+
+        /// <summary>
+        /// ToString() override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="string" />
+        /// </returns>
+        public override String ToString()
+        {
+            return $"802.11 MacFrame: [{FrameControl}], {GetAddressString()} FCS {FrameCheckSequence}";
+        }
+
+        /// <summary>
+        /// Returns a string with a description of the addresses used in the packet.
+        /// This is used as a compoent of the string returned by ToString().
+        /// </summary>
+        /// <returns>
+        /// The address string.
+        /// </returns>
+        protected abstract String GetAddressString();
     }
 }

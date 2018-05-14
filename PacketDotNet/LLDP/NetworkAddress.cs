@@ -35,7 +35,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         internal const Int32 AddressFamilyLength = 1;
 
-        internal ByteArraySegment data;
+        internal ByteArraySegment Data;
 
         internal Byte[] Bytes
         {
@@ -86,7 +86,7 @@ namespace PacketDotNet.LLDP
         /// </param>
         public NetworkAddress(Byte[] bytes, Int32 offset, Int32 length)
         {
-            data = new ByteArraySegment(bytes, offset, length);
+            Data = new ByteArraySegment(bytes, offset, length);
         }
 
         #endregion
@@ -97,8 +97,8 @@ namespace PacketDotNet.LLDP
         /// <summary>The format of the Network Address</summary>
         public AddressFamily AddressFamily
         {
-            get => (AddressFamily) data.Bytes[data.Offset];
-            set => data.Bytes[data.Offset] = (Byte) value;
+            get => (AddressFamily) Data.Bytes[Data.Offset];
+            set => Data.Bytes[Data.Offset] = (Byte) value;
         }
 
         private static Int32 LengthFromAddressFamily(AddressFamily addressFamily)
@@ -133,8 +133,8 @@ namespace PacketDotNet.LLDP
             {
                 var length = LengthFromAddressFamily(AddressFamily);
                 var bytes = new Byte[length];
-                Array.Copy(data.Bytes,
-                           data.Offset + AddressFamilyLength,
+                Array.Copy(Data.Bytes,
+                           Data.Offset + AddressFamilyLength,
                            bytes,
                            0,
                            bytes.Length);
@@ -148,13 +148,13 @@ namespace PacketDotNet.LLDP
                 var length = LengthFromAddressFamily(AddressFamilyFromSocketAddress(value));
                 length += AddressFamilyLength;
 
-                if (data == null || data.Length != length)
+                if (Data == null || Data.Length != length)
                 {
                     var bytes = new Byte[length];
                     var offset = 0;
 
                     // allocate enough memory for the new Address
-                    data = new ByteArraySegment(bytes, offset, length);
+                    Data = new ByteArraySegment(bytes, offset, length);
                 }
 
                 AddressFamily = AddressFamilyFromSocketAddress(value);
@@ -162,8 +162,8 @@ namespace PacketDotNet.LLDP
                 var addressBytes = value.GetAddressBytes();
                 Array.Copy(addressBytes,
                            0,
-                           data.Bytes,
-                           data.Offset + AddressFamilyLength,
+                           Data.Bytes,
+                           Data.Offset + AddressFamilyLength,
                            addressBytes.Length);
             }
         }
@@ -210,7 +210,7 @@ namespace PacketDotNet.LLDP
         /// ToString() override
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String" />
+        /// A <see cref="string" />
         /// </returns>
         public override String ToString()
         {

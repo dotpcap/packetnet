@@ -376,7 +376,7 @@ namespace PacketDotNet
         /// 0010  00 18 82 6c 7c 7f 00 c0  9f 77 a3 b0 88 64 11 00   ...1|... .w...d..
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String" />
+        /// A <see cref="string" />
         /// </returns>
         public String PrintHex()
         {

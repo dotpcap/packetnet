@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
-using log4net.Core;
 using NUnit.Framework;
 using PacketDotNet;
 

@@ -4,7 +4,7 @@ using System.Net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.LSA
 {
     /// <summary>
     /// AS-external-LSAs are the Type 5 LSAs.  These LSAs are originated by

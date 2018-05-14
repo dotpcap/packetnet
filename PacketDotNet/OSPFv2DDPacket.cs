@@ -46,7 +46,7 @@ namespace PacketDotNet
         /// Constructs an OSPFv2 DD packet with LSA headers
         /// </summary>
         /// <param name="lsas">List of the LSA headers</param>
-        public OSPFv2DDPacket(List<LSA> lsas)
+        public OSPFv2DDPacket(List<LSA.LSA> lsas)
         {
             var length = lsas.Count * OSPFv2Fields.LSAHeaderLength;
             var offset = OSPFv2Fields.LSAHeaderPosition;
@@ -124,11 +124,11 @@ namespace PacketDotNet
         /// </summary>
         /// See
         /// <see cref="PacketDotNet.LSA" />
-        public List<LSA> LSAHeader
+        public List<LSA.LSA> LSAHeader
         {
             get
             {
-                var ret = new List<LSA>();
+                var ret = new List<LSA.LSA>();
                 var bytesNeeded = PacketLength - OSPFv2Fields.LSAHeaderPosition;
 
                 if (bytesNeeded % OSPFv2Fields.LSAHeaderLength != 0)
@@ -141,7 +141,7 @@ namespace PacketDotNet
 
                 for (var i = 0; i < headerCount; i++)
                 {
-                    var l = new LSA(Header.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
+                    var l = new LSA.LSA(Header.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
                     offset += OSPFv2Fields.LSAHeaderLength;
                     ret.Add(l);
                 }
@@ -151,9 +151,9 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2DDPacket" />.
+        /// Returns a <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2DDPacket" />.
         /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2DDPacket" />.</returns>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2DDPacket" />.</returns>
         public override String ToString()
         {
             var packet = new StringBuilder();

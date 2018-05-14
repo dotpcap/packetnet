@@ -24,7 +24,7 @@ using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.LSA
 {
     /// <summary>
     /// The LSA header. All LSAs begin with a common 20 byte header.  This header contains
@@ -180,9 +180,9 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents the current <see cref="PacketDotNet.LSA" />.
+        /// Returns a <see cref="string" /> that represents the current <see cref="PacketDotNet.LSA" />.
         /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents the current <see cref="PacketDotNet.LSA" />.</returns>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="PacketDotNet.LSA" />.</returns>
         public override String ToString()
         {
             var builder = new StringBuilder();

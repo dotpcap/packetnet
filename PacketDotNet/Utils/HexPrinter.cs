@@ -40,7 +40,7 @@ namespace PacketDotNet.Utils
         /// A <see cref="System.Int32" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.String" />
+        /// A <see cref="string" />
         /// </returns>
         public static String GetString
         (
@@ -65,7 +65,7 @@ namespace PacketDotNet.Utils
         /// A <see cref="PhysicalAddress" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.String" />
+        /// A <see cref="string" />
         /// </returns>
         public static String PrintMACAddress(PhysicalAddress address)
         {

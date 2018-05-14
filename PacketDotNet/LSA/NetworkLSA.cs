@@ -4,7 +4,7 @@ using System.Net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.LSA
 {
     /// <summary>
     /// Network-LSAs are the Type 2 LSAs. The LSA describes all routers

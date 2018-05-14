@@ -23,7 +23,6 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
 using PacketDotNet;
-using PacketDotNet.Utils;
 using SharpPcap;
 using SharpPcap.LibPcap;
 

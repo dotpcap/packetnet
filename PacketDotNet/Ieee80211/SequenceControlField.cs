@@ -20,74 +20,71 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    /// The Sequence control field occurs in management and data frames and is used to
+    /// relate together fragmented payloads carried in multiple 802.11 frames.
+    /// </summary>
+    public class SequenceControlField
     {
         /// <summary>
-        /// The Sequence control field occurs in management and data frames and is used to
-        /// relate together fragmented payloads carried in multiple 802.11 frames.
+        /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.SequenceControlField" /> class.
         /// </summary>
-        public class SequenceControlField
+        public SequenceControlField()
+        { }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="field">
+        /// A <see cref="ushort" />
+        /// </param>
+        public SequenceControlField(UInt16 field)
         {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.SequenceControlField" /> class.
-            /// </summary>
-            public SequenceControlField()
-            { }
+            Field = field;
+        }
 
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="field">
-            /// A <see cref="ushort" />
-            /// </param>
-            public SequenceControlField(UInt16 field)
+        /// <summary>
+        /// Gets or sets the field that backs all the other properties in the class.
+        /// </summary>
+        /// <value>
+        /// The field.
+        /// </value>
+        public UInt16 Field { get; set; }
+
+        /// <summary>
+        /// Gets or sets the fragment number.
+        /// </summary>
+        /// <value>
+        /// The fragment number.
+        /// </value>
+        public Byte FragmentNumber
+        {
+            get => (Byte) (Field & 0x000F);
+
+            set
             {
-                Field = field;
+                Field &= unchecked((UInt16) ~0xF);
+                Field |= (UInt16) (value & 0x0F);
             }
+        }
 
-            /// <summary>
-            /// Gets or sets the field that backs all the other properties in the class.
-            /// </summary>
-            /// <value>
-            /// The field.
-            /// </value>
-            public UInt16 Field { get; set; }
+        /// <summary>
+        /// Gets or sets the sequence number.
+        /// </summary>
+        /// <value>
+        /// The sequence number.
+        /// </value>
+        public Int16 SequenceNumber
+        {
+            get => (Int16) (Field >> 4);
 
-            /// <summary>
-            /// Gets or sets the fragment number.
-            /// </summary>
-            /// <value>
-            /// The fragment number.
-            /// </value>
-            public Byte FragmentNumber
+            set
             {
-                get => (Byte) (Field & 0x000F);
-
-                set
-                {
-                    Field &= unchecked((UInt16) ~0xF);
-                    Field |= (UInt16) (value & 0x0F);
-                }
-            }
-
-            /// <summary>
-            /// Gets or sets the sequence number.
-            /// </summary>
-            /// <value>
-            /// The sequence number.
-            /// </value>
-            public Int16 SequenceNumber
-            {
-                get => (Int16) (Field >> 4);
-
-                set
-                {
-                    //Use the & mask to make sure we only overwrite the sequence number part of the field
-                    Field &= 0xF;
-                    Field |= (UInt16) (value << 4);
-                }
+                //Use the & mask to make sure we only overwrite the sequence number part of the field
+                Field &= 0xF;
+                Field |= (UInt16) (value << 4);
             }
         }
     }

@@ -22,85 +22,82 @@ using System;
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    /// Format of an ACK frame
+    /// </summary>
+    public sealed class AckFrame : MacFrame
     {
         /// <summary>
-        /// Format of an ACK frame
+        /// Constructor
         /// </summary>
-        public class AckFrame : MacFrame
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment" />
+        /// </param>
+        public AckFrame(ByteArraySegment bas)
         {
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment" />
-            /// </param>
-            public AckFrame(ByteArraySegment bas)
+            Header = new ByteArraySegment(bas);
+
+            FrameControl = new FrameControlField(FrameControlBytes);
+            Duration = new DurationField(DurationBytes);
+            ReceiverAddress = GetAddress(0);
+
+            Header.Length = FrameSize;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AckFrame" /> class.
+        /// </summary>
+        /// <param name='receiverAddress'>
+        /// Receiver address.
+        /// </param>
+        public AckFrame(PhysicalAddress receiverAddress)
+        {
+            FrameControl = new FrameControlField();
+            Duration = new DurationField();
+            ReceiverAddress = receiverAddress;
+
+            FrameControl.SubType = FrameControlField.FrameSubTypes.ControlACK;
+        }
+
+        /// <summary>
+        /// Length of the frame
+        /// </summary>
+        public override Int32 FrameSize => MacFields.FrameControlLength +
+                                           MacFields.DurationIDLength +
+                                           MacFields.AddressLength;
+
+        /// <summary>
+        /// Receiver address
+        /// </summary>
+        public PhysicalAddress ReceiverAddress { get; set; }
+
+        /// <summary>
+        /// Writes the current packet properties to the backing ByteArraySegment.
+        /// </summary>
+        public override void UpdateCalculatedValues()
+        {
+            if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(bas);
-
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
-                ReceiverAddress = GetAddress(0);
-
-                Header.Length = FrameSize;
+                Header = new ByteArraySegment(new Byte[FrameSize]);
             }
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.AckFrame" /> class.
-            /// </summary>
-            /// <param name='ReceiverAddress'>
-            /// Receiver address.
-            /// </param>
-            public AckFrame(PhysicalAddress ReceiverAddress)
-            {
-                FrameControl = new FrameControlField();
-                Duration = new DurationField();
-                this.ReceiverAddress = ReceiverAddress;
+            FrameControlBytes = FrameControl.Field;
+            DurationBytes = Duration.Field;
+            SetAddress(0, ReceiverAddress);
+        }
 
-                FrameControl.SubType = FrameControlField.FrameSubTypes.ControlACK;
-            }
-
-            /// <summary>
-            /// Length of the frame
-            /// </summary>
-            public override Int32 FrameSize => MacFields.FrameControlLength +
-                                               MacFields.DurationIDLength +
-                                               MacFields.AddressLength;
-
-            /// <summary>
-            /// Receiver address
-            /// </summary>
-            public PhysicalAddress ReceiverAddress { get; set; }
-
-            /// <summary>
-            /// Writes the current packet properties to the backing ByteArraySegment.
-            /// </summary>
-            public override void UpdateCalculatedValues()
-            {
-                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
-                {
-                    Header = new ByteArraySegment(new Byte[FrameSize]);
-                }
-
-                FrameControlBytes = FrameControl.Field;
-                DurationBytes = Duration.Field;
-                SetAddress(0, ReceiverAddress);
-            }
-
-            /// <summary>
-            /// Returns a string with a description of the addresses used in the packet.
-            /// This is used as a compoent of the string returned by ToString().
-            /// </summary>
-            /// <returns>
-            /// The address string.
-            /// </returns>
-            protected override String GetAddressString()
-            {
-                return $"RA {ReceiverAddress}";
-            }
+        /// <summary>
+        /// Returns a string with a description of the addresses used in the packet.
+        /// This is used as a compoent of the string returned by ToString().
+        /// </summary>
+        /// <returns>
+        /// The address string.
+        /// </returns>
+        protected override String GetAddressString()
+        {
+            return $"RA {ReceiverAddress}";
         }
     }
 }

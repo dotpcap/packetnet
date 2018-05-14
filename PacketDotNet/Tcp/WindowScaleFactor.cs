@@ -81,7 +81,7 @@ namespace PacketDotNet.Tcp
         /// The multiplier is equal to a value of 1 left-shifted by the scale factor
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String" />
+        /// A <see cref="string" />
         /// </returns>
         public override String ToString()
         {

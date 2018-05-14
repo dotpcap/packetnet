@@ -22,101 +22,98 @@ using System;
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    /// Contention free end frame.
+    /// </summary>
+    public sealed class ContentionFreeEndFrame : MacFrame
     {
         /// <summary>
-        /// Contention free end frame.
+        /// Constructor
         /// </summary>
-        public class ContentionFreeEndFrame : MacFrame
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment" />
+        /// </param>
+        public ContentionFreeEndFrame(ByteArraySegment bas)
         {
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment" />
-            /// </param>
-            public ContentionFreeEndFrame(ByteArraySegment bas)
+            Header = new ByteArraySegment(bas);
+
+            FrameControl = new FrameControlField(FrameControlBytes);
+            Duration = new DurationField(DurationBytes);
+            ReceiverAddress = GetAddress(0);
+            BssId = GetAddress(1);
+
+            Header.Length = FrameSize;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContentionFreeEndFrame" /> class.
+        /// </summary>
+        /// <param name='receiverAddress'>
+        /// Receiver address.
+        /// </param>
+        /// <param name='bssId'>
+        /// Bss identifier (MAC Address of the Access Point).
+        /// </param>
+        public ContentionFreeEndFrame
+        (
+            PhysicalAddress receiverAddress,
+            PhysicalAddress bssId)
+        {
+            FrameControl = new FrameControlField();
+            Duration = new DurationField();
+            ReceiverAddress = receiverAddress;
+            BssId = bssId;
+
+            FrameControl.SubType = FrameControlField.FrameSubTypes.ControlCFEnd;
+        }
+
+        /// <summary>
+        /// BSS ID
+        /// </summary>
+        public PhysicalAddress BssId { get; set; }
+
+        /// <summary>
+        /// Length of the frame
+        /// </summary>
+        public override Int32 FrameSize => MacFields.FrameControlLength +
+                                           MacFields.DurationIDLength +
+                                           (MacFields.AddressLength * 2);
+
+        /// <summary>
+        /// Receiver address
+        /// </summary>
+        public PhysicalAddress ReceiverAddress { get; set; }
+
+        /// <summary>
+        /// Writes the current packet properties to the backing ByteArraySegment.
+        /// </summary>
+        public override void UpdateCalculatedValues()
+        {
+            if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(bas);
-
-                FrameControl = new FrameControlField(FrameControlBytes);
-                Duration = new DurationField(DurationBytes);
-                ReceiverAddress = GetAddress(0);
-                BssId = GetAddress(1);
-
-                Header.Length = FrameSize;
+                Header = new ByteArraySegment(new Byte[FrameSize]);
             }
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.ContentionFreeEndFrame" /> class.
-            /// </summary>
-            /// <param name='ReceiverAddress'>
-            /// Receiver address.
-            /// </param>
-            /// <param name='BssId'>
-            /// Bss identifier (MAC Address of the Access Point).
-            /// </param>
-            public ContentionFreeEndFrame
-            (
-                PhysicalAddress ReceiverAddress,
-                PhysicalAddress BssId)
-            {
-                FrameControl = new FrameControlField();
-                Duration = new DurationField();
-                this.ReceiverAddress = ReceiverAddress;
-                this.BssId = BssId;
+            FrameControlBytes = FrameControl.Field;
+            DurationBytes = Duration.Field;
+            SetAddress(0, ReceiverAddress);
+            SetAddress(1, BssId);
 
-                FrameControl.SubType = FrameControlField.FrameSubTypes.ControlCFEnd;
-            }
+            Header.Length = FrameSize;
+        }
 
-            /// <summary>
-            /// BSS ID
-            /// </summary>
-            public PhysicalAddress BssId { get; set; }
-
-            /// <summary>
-            /// Length of the frame
-            /// </summary>
-            public override Int32 FrameSize => MacFields.FrameControlLength +
-                                               MacFields.DurationIDLength +
-                                               (MacFields.AddressLength * 2);
-
-            /// <summary>
-            /// Receiver address
-            /// </summary>
-            public PhysicalAddress ReceiverAddress { get; set; }
-
-            /// <summary>
-            /// Writes the current packet properties to the backing ByteArraySegment.
-            /// </summary>
-            public override void UpdateCalculatedValues()
-            {
-                if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
-                {
-                    Header = new ByteArraySegment(new Byte[FrameSize]);
-                }
-
-                FrameControlBytes = FrameControl.Field;
-                DurationBytes = Duration.Field;
-                SetAddress(0, ReceiverAddress);
-                SetAddress(1, BssId);
-
-                Header.Length = FrameSize;
-            }
-
-            /// <summary>
-            /// Returns a string with a description of the addresses used in the packet.
-            /// This is used as a compoent of the string returned by ToString().
-            /// </summary>
-            /// <returns>
-            /// The address string.
-            /// </returns>
-            protected override String GetAddressString()
-            {
-                return $"RA {ReceiverAddress} BSSID {BssId}";
-            }
+        /// <summary>
+        /// Returns a string with a description of the addresses used in the packet.
+        /// This is used as a compoent of the string returned by ToString().
+        /// </summary>
+        /// <returns>
+        /// The address string.
+        /// </returns>
+        protected override String GetAddressString()
+        {
+            return $"RA {ReceiverAddress} BSSID {BssId}";
         }
     }
 }

@@ -56,14 +56,14 @@ namespace PacketDotNet
         {
             get
             {
-                var val = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + ASExternalLinkFields.TOSPosition);
+                var val = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
                 return (Byte) ((val >> 31) & 0xFF);
             }
             set
             {
-                var original = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + ASExternalLinkFields.TOSPosition);
+                var original = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
                 var val = (UInt32) ((value & 1) << 31) | original;
-                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + ASExternalLinkFields.TOSPosition);
+                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
             }
         }
 
@@ -72,8 +72,8 @@ namespace PacketDotNet
         /// </summary>
         public UInt32 ExternalRouteTag
         {
-            get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
+            get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.ExternalRouteTagPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.ExternalRouteTagPosition);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace PacketDotNet
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + ASExternalLinkFields.ForwardingAddressPosition);
+                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.ForwardingAddressPosition);
                 return new IPAddress(val);
             }
             set
@@ -92,7 +92,7 @@ namespace PacketDotNet
                 Array.Copy(address,
                            0,
                            Header.Bytes,
-                           Header.Offset + ASExternalLinkFields.ForwardingAddressPosition,
+                           Header.Offset + LSA.ASExternalLinkFields.ForwardingAddressPosition,
                            address.Length);
             }
         }
@@ -105,14 +105,14 @@ namespace PacketDotNet
         {
             get
             {
-                var val = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + ASExternalLinkFields.TOSPosition);
+                var val = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
                 return val & 0x00FFFFFF;
             }
             set
             {
-                var original = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + ASExternalLinkFields.TOSPosition);
+                var original = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
                 var val = value & 0x00FFFFFF | original;
-                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + ASExternalLinkFields.TOSPosition);
+                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
             }
         }
 
@@ -123,14 +123,14 @@ namespace PacketDotNet
         {
             get
             {
-                var val = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + ASExternalLinkFields.TOSPosition);
+                var val = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
                 return (Byte) ((val >> 24) & 0x7F);
             }
             set
             {
-                var original = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + ASExternalLinkFields.TOSPosition);
+                var original = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
                 var val = (Byte) ((value & 0x7F) << 24) | original;
-                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + ASExternalLinkFields.TOSPosition);
+                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
             }
         }
     }

@@ -4,7 +4,7 @@ using System.Net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.LSA
 {
     /// <summary>
     /// Summary-LSAs are the Type 3 and 4 LSAs.  These LSAs are originated

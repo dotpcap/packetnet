@@ -23,9 +23,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using log4net;
-using PacketDotNet.LLDP;
 
-namespace PacketDotNet
+namespace PacketDotNet.LLDP
 {
     /// <summary>
     /// Custom collection for TLV types

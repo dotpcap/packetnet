@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using PacketDotNet.LSA;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -79,7 +80,7 @@ namespace PacketDotNet
         /// A list of link state requests, contained in this packet
         /// </summary>
         /// See
-        /// <see cref="PacketDotNet.LinkStateRequest" />
+        /// <see cref="LinkStateRequest" />
         public List<LinkStateRequest> LinkStateRequests
         {
             get
@@ -106,9 +107,9 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2LSRequestPacket" />.
+        /// Returns a <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2LSRequestPacket" />.
         /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2LSRequestPacket" />.</returns>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2LSRequestPacket" />.</returns>
         public override String ToString()
         {
             var packet = new StringBuilder();

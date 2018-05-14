@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using PacketDotNet.LSA;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
@@ -35,7 +36,7 @@ namespace PacketDotNet
         /// Constructs an OSPFv2 link state update with LSAs
         /// </summary>
         /// <param name="lsas">List of the LSA headers</param>
-        public OSPFv2LSUpdatePacket(List<LSA> lsas)
+        public OSPFv2LSUpdatePacket(List<LSA.LSA> lsas)
         {
             var length = 0;
             var offset = OSPFv2Fields.HeaderLength + OSPFv2Fields.LSANumberLength;
@@ -101,16 +102,16 @@ namespace PacketDotNet
         /// </summary>
         /// See
         /// <see cref="PacketDotNet.LSA" />
-        public List<LSA> LSAUpdates
+        public List<LSA.LSA> LSAUpdates
         {
             get
             {
-                var ret = new List<LSA>();
+                var ret = new List<LSA.LSA>();
 
                 var offset = Header.Offset + OSPFv2Fields.LSAUpdatesPositon;
                 for (var i = 0; i < LSANumber; i++)
                 {
-                    var l = new LSA(Header.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
+                    var l = new LSA.LSA(Header.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
                     switch (l.LSType)
                     {
                         case LSAType.ASExternal:
@@ -136,9 +137,9 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2LSUpdatePacket" />.
+        /// Returns a <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2LSUpdatePacket" />.
         /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents the current <see cref="PacketDotNet.OSPFv2LSUpdatePacket" />.</returns>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2LSUpdatePacket" />.</returns>
         public override String ToString()
         {
             var packet = new StringBuilder();

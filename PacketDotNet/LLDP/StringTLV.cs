@@ -52,17 +52,17 @@ namespace PacketDotNet.LLDP
         /// <param name="tlvType">
         /// A <see cref="TLVTypes" />
         /// </param>
-        /// <param name="StringValue">
-        /// A <see cref="System.String" />
+        /// <param name="stringValue">
+        /// A <see cref="string" />
         /// </param>
-        public StringTLV(TLVTypes tlvType, String StringValue)
+        public StringTLV(TLVTypes tlvType, String stringValue)
         {
             var bytes = new Byte[TLVTypeLength.TypeLengthLength];
-            var offset = 0;
-            tlvData = new ByteArraySegment(bytes, offset, bytes.Length);
+            const int offset = 0;
+            TLVData = new ByteArraySegment(bytes, offset, bytes.Length);
 
             Type = tlvType;
-            this.StringValue = StringValue;
+            StringValue = stringValue;
         }
 
         #endregion
@@ -75,7 +75,7 @@ namespace PacketDotNet.LLDP
         /// </value>
         public String StringValue
         {
-            get => Encoding.ASCII.GetString(tlvData.Bytes,
+            get => Encoding.ASCII.GetString(TLVData.Bytes,
                                             ValueOffset,
                                             Length);
 
@@ -85,26 +85,26 @@ namespace PacketDotNet.LLDP
                 var length = TLVTypeLength.TypeLengthLength + bytes.Length;
 
                 // is the tlv the correct size?
-                if (tlvData.Length != length)
+                if (TLVData.Length != length)
                 {
                     // allocate new memory for this tlv
                     var newTLVBytes = new Byte[length];
                     var offset = 0;
 
                     // copy header over
-                    Array.Copy(tlvData.Bytes,
-                               tlvData.Offset,
+                    Array.Copy(TLVData.Bytes,
+                               TLVData.Offset,
                                newTLVBytes,
                                0,
                                TLVTypeLength.TypeLengthLength);
 
-                    tlvData = new ByteArraySegment(newTLVBytes, offset, length);
+                    TLVData = new ByteArraySegment(newTLVBytes, offset, length);
                 }
 
                 // set the description
                 Array.Copy(bytes,
                            0,
-                           tlvData.Bytes,
+                           TLVData.Bytes,
                            ValueOffset,
                            bytes.Length);
             }

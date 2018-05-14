@@ -4,7 +4,7 @@ using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.LSA
 {
     /// <summary>
     /// Router-LSAs are the Type 1 LSAs. The LSA describes the state and cost of
@@ -146,9 +146,9 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String" /> that represents the current <see cref="PacketDotNet.RouterLSA" />.
+        /// Returns a <see cref="string" /> that represents the current <see cref="RouterLSA" />.
         /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents the current <see cref="PacketDotNet.RouterLSA" />.</returns>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="RouterLSA" />.</returns>
         public override String ToString()
         {
             var ret = new StringBuilder();

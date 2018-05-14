@@ -246,7 +246,7 @@ namespace PacketDotNet.Utils
         /// Format the class information as a string
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String" />
+        /// A <see cref="string" />
         /// </returns>
         public override String ToString()
         {

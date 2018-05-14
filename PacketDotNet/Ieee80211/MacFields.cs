@@ -20,39 +20,36 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    /// NOTE: All positions are not defined here because the frame type changes
+    /// whether some address fields are present or not, causing the sequence control
+    /// field to move. In addition the payload size determines where the frame control
+    /// sequence value is as it is after the payload bytes, if any payload is present
+    /// </summary>
+    class MacFields
     {
+        public static readonly Int32 Address1Position;
+        public static readonly Int32 AddressLength = EthernetFields.MacAddressLength;
+        public static readonly Int32 DurationIDLength = 2;
+        public static readonly Int32 DurationIDPosition;
+        public static readonly Int32 FrameCheckSequenceLength = 4;
+        public static readonly Int32 FrameControlLength = 2;
+
+        public static readonly Int32 FrameControlPosition = 0;
+        public static readonly Int32 SequenceControlLength = 2;
+
         /// <summary>
-        /// NOTE: All positions are not defined here because the frame type changes
-        /// whether some address fields are present or not, causing the sequence control
-        /// field to move. In addition the payload size determines where the frame control
-        /// sequence value is as it is after the payload bytes, if any payload is present
+        /// Not all MAC Frames contain a sequence control field. The value of this field is only meaningful when they do.
         /// </summary>
-        class MacFields
+        public static readonly Int32 SequenceControlPosition;
+
+        static MacFields()
         {
-            public static readonly Int32 Address1Position;
-            public static readonly Int32 AddressLength = EthernetFields.MacAddressLength;
-            public static readonly Int32 DurationIDLength = 2;
-            public static readonly Int32 DurationIDPosition;
-            public static readonly Int32 FrameCheckSequenceLength = 4;
-            public static readonly Int32 FrameControlLength = 2;
-
-            public static readonly Int32 FrameControlPosition = 0;
-            public static readonly Int32 SequenceControlLength = 2;
-
-            /// <summary>
-            /// Not all MAC Frames contain a sequence control field. The value of this field is only meaningful when they do.
-            /// </summary>
-            public static readonly Int32 SequenceControlPosition;
-
-            static MacFields()
-            {
-                DurationIDPosition = FrameControlPosition + FrameControlLength;
-                Address1Position = DurationIDPosition + DurationIDLength;
-                SequenceControlPosition = Address1Position + (AddressLength * 3);
-            }
+            DurationIDPosition = FrameControlPosition + FrameControlLength;
+            Address1Position = DurationIDPosition + DurationIDLength;
+            SequenceControlPosition = Address1Position + (AddressLength * 3);
         }
     }
 }

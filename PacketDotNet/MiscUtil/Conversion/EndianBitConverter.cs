@@ -569,7 +569,7 @@ namespace PacketDotNet.MiscUtil.Conversion
 
             if (buffer.Length < index + bytes)
             {
-                throw new ArgumentOutOfRangeException(nameof(buffer),"Buffer not big enough for value");
+                throw new ArgumentOutOfRangeException(nameof(buffer), "Buffer not big enough for value");
             }
 
             CopyBytesImpl(value, bytes, buffer, index);

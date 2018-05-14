@@ -28,7 +28,8 @@ namespace PacketDotNet.MiscUtil.Conversion
     /// </summary>
     public class StringConverter
     {
-        private static readonly Int32[] E2ATable = {
+        private static readonly Int32[] E2ATable =
+        {
             0,
             1,
             2,

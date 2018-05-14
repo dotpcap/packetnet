@@ -90,8 +90,8 @@ namespace PacketDotNet
 
         /// <summary> Fetch the IGMP group address.</summary>
         public IPAddress GroupAddress => IPPacket.GetIPAddress(AddressFamily.InterNetwork,
-                                                                       Header.Offset + IGMPv2Fields.GroupAddressPosition,
-                                                                       Header.Bytes);
+                                                               Header.Offset + IGMPv2Fields.GroupAddressPosition,
+                                                               Header.Bytes);
 
         /// <summary> Fetch the IGMP max response time.</summary>
         public Byte MaxResponseTime

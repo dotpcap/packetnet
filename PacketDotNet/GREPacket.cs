@@ -74,7 +74,7 @@ namespace PacketDotNet
 
         public Boolean HasSequence => 1 == (Header.Bytes[Header.Offset + 1] & 0x1);
 
-        public EthernetPacketType Protocol => (EthernetPacketType)EndianBitConverter.Big.ToUInt16(Header.Bytes,
+        public EthernetPacketType Protocol => (EthernetPacketType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                                                                    Header.Offset + GREFields.FlagsLength);
 
 

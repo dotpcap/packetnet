@@ -25,7 +25,7 @@ namespace PacketDotNet.MiscUtil.Conversion
             var tmp = x.ToString(CultureInfo.InvariantCulture);
             _digits = new Byte[tmp.Length];
             for (var i = 0; i < tmp.Length; i++)
-                _digits[i] = (Byte)(tmp[i] - '0');
+                _digits[i] = (Byte) (tmp[i] - '0');
             Normalize();
         }
 
@@ -39,8 +39,8 @@ namespace PacketDotNet.MiscUtil.Conversion
             for (var i = _digits.Length - 1; i >= 0; i--)
             {
                 var resultDigit = _digits[i] * amount + result[i + 1];
-                result[i] = (Byte)(resultDigit / 10);
-                result[i + 1] = (Byte)(resultDigit % 10);
+                result[i] = (Byte) (resultDigit / 10);
+                result[i + 1] = (Byte) (resultDigit % 10);
             }
 
             if (result[0] != 0)
@@ -102,7 +102,7 @@ namespace PacketDotNet.MiscUtil.Conversion
         {
             var digitString = new Char[_digits.Length];
             for (var i = 0; i < _digits.Length; i++)
-                digitString[i] = (Char)(_digits[i] + '0');
+                digitString[i] = (Char) (_digits[i] + '0');
 
             // Simplest case - nothing after the decimal point,
             // and last real digit is non-zero, eg value=35

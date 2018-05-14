@@ -339,7 +339,9 @@ namespace PacketDotNet
             Log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            Header = new ByteArraySegment(bas) {Length = DataOffset * 4};
+            // ReSharper disable once UseObjectOrCollectionInitializer
+            Header = new ByteArraySegment(bas);
+            Header.Length = DataOffset * 4;
 
             // NOTE: we update the Length field AFTER the header field because
             // we need the header to be valid to retrieve the value of DataOffset

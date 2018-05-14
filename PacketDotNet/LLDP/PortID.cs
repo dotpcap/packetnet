@@ -254,7 +254,7 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public override String ToString()
         {
-            return String.Format("[PortID: SubType={0}, SubTypeValue={1}]", SubType, SubTypeValue);
+            return $"[PortID: SubType={SubType}, SubTypeValue={SubTypeValue}]";
         }
 
         #endregion

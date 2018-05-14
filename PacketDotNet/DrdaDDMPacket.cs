@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using log4net;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -32,7 +32,7 @@ namespace PacketDotNet
     /// DrdaPacket
     /// See: https://en.wikipedia.org/wiki/DRDA
     /// </summary>
-    public class DrdaDDMPacket : Packet
+    public sealed class DrdaDDMPacket : Packet
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -74,7 +74,7 @@ namespace PacketDotNet
         /// </summary>
         public DrdaCodepointType CodePoint => (DrdaCodepointType) EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.CodePointPosition);
 
-        private List<DrdaDDMParameter> paramters;
+        private List<DrdaDDMParameter> _parameters;
 
         /// <summary>
         /// Decode Parameters field
@@ -83,8 +83,8 @@ namespace PacketDotNet
         {
             get
             {
-                if (paramters == null) paramters = new List<DrdaDDMParameter>();
-                if (paramters.Count > 0) return paramters;
+                if (_parameters == null) _parameters = new List<DrdaDDMParameter>();
+                if (_parameters.Count > 0) return _parameters;
 
 
                 var offset = Header.Offset + DrdaDDMFields.DDMHeadTotalLength;
@@ -119,13 +119,13 @@ namespace PacketDotNet
                             parameter.Data = StringConverter.EbcdicToAscii(Header.Bytes, startIndex, strLength).Trim();
                         }
 
-                        paramters.Add(parameter);
+                        _parameters.Add(parameter);
                     }
 
                     offset += length;
                 }
 
-                return paramters;
+                return _parameters;
             }
         }
 
@@ -145,12 +145,12 @@ namespace PacketDotNet
         /// Constructor
         /// </summary>
         /// <param name="bas">Payload Bytes</param>
-        /// <param name="ParentPacket">Parent Packet</param>
-        public DrdaDDMPacket(ByteArraySegment bas, Packet ParentPacket) : this(bas)
+        /// <param name="parentPacket">Parent Packet</param>
+        public DrdaDDMPacket(ByteArraySegment bas, Packet parentPacket) : this(bas)
         {
-            Log.DebugFormat("ParentPacket.GetType() {0}", ParentPacket.GetType());
+            Log.DebugFormat("ParentPacket.GetType() {0}", parentPacket.GetType());
 
-            this.ParentPacket = ParentPacket;
+            ParentPacket = parentPacket;
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />

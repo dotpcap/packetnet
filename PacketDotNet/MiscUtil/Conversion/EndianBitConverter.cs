@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace MiscUtil.Conversion
+namespace PacketDotNet.MiscUtil.Conversion
 {
     /// <summary>
     /// Equivalent of System.BitConverter, but with either endianness.
@@ -278,16 +278,17 @@ namespace MiscUtil.Conversion
         /// <exception cref="ArgumentOutOfRangeException">
         /// startIndex is less than zero or greater than the length of value minus bytesRequired.
         /// </exception>
+        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         static void CheckByteArgument(Byte[] value, Int32 startIndex, Int32 bytesRequired)
         {
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             if (startIndex < 0 || startIndex > value.Length - bytesRequired)
             {
-                throw new ArgumentOutOfRangeException("startIndex");
+                throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
         }
 
@@ -563,12 +564,12 @@ namespace MiscUtil.Conversion
         {
             if (buffer == null)
             {
-                throw new ArgumentNullException("buffer", "Byte array must not be null");
+                throw new ArgumentNullException(nameof(buffer), "Byte array must not be null");
             }
 
             if (buffer.Length < index + bytes)
             {
-                throw new ArgumentOutOfRangeException("Buffer not big enough for value");
+                throw new ArgumentOutOfRangeException(nameof(buffer),"Buffer not big enough for value");
             }
 
             CopyBytesImpl(value, bytes, buffer, index);

@@ -39,7 +39,7 @@ namespace Test.Performance
             var ethernetPacket = EthernetPacket.RandomPacket();
 
             // build an ip packet
-            var ipPacket = IpPacket.RandomPacket(IpVersion.IPv6);
+            var ipPacket = IPPacket.RandomPacket(IPVersion.IPv6);
 
             ethernetPacket.PayloadPacket = ipPacket;
 

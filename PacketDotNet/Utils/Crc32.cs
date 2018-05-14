@@ -28,11 +28,11 @@ namespace PacketDotNet.Utils
         /// <remarks>The default polynomial is a bit-reflected version of the standard polynomial 0x04C11DB7 used by WinZip, Ethernet, etc.</remarks>
         public static readonly UInt32 DefaultPolynomial = 0xEDB88320; // Bitwise reflection of 0x04C11DB7;
 
-        private const UInt32 _allOnes = 0xffffffff;
+        private const UInt32 AllOnes = 0xffffffff;
         private UInt32 _crc;
         private readonly UInt32[] _crc32Table;
-        private static readonly Hashtable _crc32TablesCache;
-        private static readonly Crc32 _defaultCRC;
+        private static readonly Hashtable CRC32TablesCache;
+        private static readonly Crc32 DefaultCRC;
 
         #endregion Fields
 
@@ -49,11 +49,11 @@ namespace PacketDotNet.Utils
         public Crc32(UInt32 polynomial)
         {
             HashSizeValue = 32;
-            _crc32Table = (UInt32[]) _crc32TablesCache[polynomial];
+            _crc32Table = (UInt32[]) CRC32TablesCache[polynomial];
             if (_crc32Table == null)
             {
                 _crc32Table = BuildCrc32Table(polynomial);
-                _crc32TablesCache.Add(polynomial, _crc32Table);
+                CRC32TablesCache.Add(polynomial, _crc32Table);
             }
 
             Initialize();
@@ -62,8 +62,8 @@ namespace PacketDotNet.Utils
         // static constructor
         static Crc32()
         {
-            _crc32TablesCache = Hashtable.Synchronized(new Hashtable());
-            _defaultCRC = new Crc32();
+            CRC32TablesCache = Hashtable.Synchronized(new Hashtable());
+            DefaultCRC = new Crc32();
         }
 
         #endregion Constructors
@@ -74,29 +74,29 @@ namespace PacketDotNet.Utils
         /// <summary>Computes the CRC32 value for the given ASCII string using the <see cref="DefaultPolynomial" />.</summary>
         public static Int32 Compute(String asciiString)
         {
-            _defaultCRC.Initialize();
-            return ToInt32(_defaultCRC.ComputeHash(asciiString));
+            DefaultCRC.Initialize();
+            return ToInt32(DefaultCRC.ComputeHash(asciiString));
         }
 
         /// <summary>Computes the CRC32 value for the given input stream using the <see cref="DefaultPolynomial" />.</summary>
         public static Int32 Compute(Stream inputStream)
         {
-            _defaultCRC.Initialize();
-            return ToInt32(_defaultCRC.ComputeHash(inputStream));
+            DefaultCRC.Initialize();
+            return ToInt32(DefaultCRC.ComputeHash(inputStream));
         }
 
         /// <summary>Computes the CRC32 value for the input data using the <see cref="DefaultPolynomial" />.</summary>
         public static Int32 Compute(Byte[] buffer)
         {
-            _defaultCRC.Initialize();
-            return ToInt32(_defaultCRC.ComputeHash(buffer));
+            DefaultCRC.Initialize();
+            return ToInt32(DefaultCRC.ComputeHash(buffer));
         }
 
         /// <summary>Computes the hash value for the input data using the <see cref="DefaultPolynomial" />.</summary>
         public static Int32 Compute(Byte[] buffer, Int32 offset, Int32 count)
         {
-            _defaultCRC.Initialize();
-            return ToInt32(_defaultCRC.ComputeHash(buffer, offset, count));
+            DefaultCRC.Initialize();
+            return ToInt32(DefaultCRC.ComputeHash(buffer, offset, count));
         }
 
         /// <summary>Computes the hash value for the given ASCII string.</summary>
@@ -139,7 +139,7 @@ namespace PacketDotNet.Utils
         /// <summary>Initializes an implementation of HashAlgorithm.</summary>
         public sealed override void Initialize()
         {
-            _crc = _allOnes;
+            _crc = AllOnes;
         }
 
         #endregion Public Methods
@@ -162,7 +162,7 @@ namespace PacketDotNet.Utils
         protected override Byte[] HashFinal()
         {
             var finalHash = new Byte[4];
-            UInt64 finalCrc = _crc ^ _allOnes;
+            UInt64 finalCrc = _crc ^ AllOnes;
 
             finalHash[3] = (Byte) ((finalCrc >> 0) & 0xFF);
             finalHash[2] = (Byte) ((finalCrc >> 8) & 0xFF);

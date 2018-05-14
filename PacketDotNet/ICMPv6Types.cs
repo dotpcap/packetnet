@@ -18,12 +18,15 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet
 {
     /// <summary>
     /// ICMPv6 types, see http://en.wikipedia.org/wiki/ICMPv6 and
     /// http://www.iana.org/assignments/icmpv6-parameters
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum ICMPv6Types : byte
     {
 #pragma warning disable 1591

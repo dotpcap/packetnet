@@ -76,9 +76,7 @@ namespace PacketDotNet
             /// </returns>
             protected override String GetAddressString()
             {
-                return String.Format("RA {0} TA {1}",
-                                     ReceiverAddress,
-                                     TransmitterAddress);
+                return $"RA {ReceiverAddress} TA {TransmitterAddress}";
             }
         }
     }

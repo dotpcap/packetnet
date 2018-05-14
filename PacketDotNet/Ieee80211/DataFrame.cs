@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Net.NetworkInformation;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 
 namespace PacketDotNet
 {
@@ -181,18 +181,11 @@ namespace PacketDotNet
                 String addresses = null;
                 if (FrameControl.ToDS && FrameControl.FromDS)
                 {
-                    addresses = String.Format("SA {0} DA {1} TA {2} RA {3}",
-                                              SourceAddress,
-                                              DestinationAddress,
-                                              TransmitterAddress,
-                                              ReceiverAddress);
+                    addresses = $"SA {SourceAddress} DA {DestinationAddress} TA {TransmitterAddress} RA {ReceiverAddress}";
                 }
                 else
                 {
-                    addresses = String.Format("SA {0} DA {1} BSSID {2}",
-                                              SourceAddress,
-                                              DestinationAddress,
-                                              BssId);
+                    addresses = $"SA {SourceAddress} DA {DestinationAddress} BSSID {BssId}";
                 }
 
                 return addresses;

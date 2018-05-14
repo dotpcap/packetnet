@@ -32,7 +32,7 @@ namespace PacketDotNet
     /// An IGMP packet.
     /// </summary>
     [Serializable]
-    public class IGMPv2Packet : InternetPacket
+    public sealed class IGMPv2Packet : InternetPacket
     {
         /// <summary>
         /// Constructor
@@ -43,14 +43,14 @@ namespace PacketDotNet
         public IGMPv2Packet(ByteArraySegment bas)
         {
             // set the header field, header field values are retrieved from this byte array
+            // ReSharper disable once UseObjectOrCollectionInitializer
             Header = new ByteArraySegment(bas);
             Header.Length = UdpFields.HeaderLength;
 
             // store the payload bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment();
-                result.ByteArraySegment = Header.EncapsulatedBytes();
+                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.EncapsulatedBytes()};
                 return result;
             });
         }
@@ -61,19 +61,19 @@ namespace PacketDotNet
         /// <param name="bas">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        /// <param name="ParentPacket">
+        /// <param name="parentPacket">
         /// A <see cref="Packet" />
         /// </param>
         public IGMPv2Packet
         (
             ByteArraySegment bas,
-            Packet ParentPacket) : this(bas)
+            Packet parentPacket) : this(bas)
         {
-            this.ParentPacket = ParentPacket;
+            ParentPacket = parentPacket;
         }
 
         /// <summary> Fetch the IGMP header checksum.</summary>
-        public virtual Int16 Checksum
+        public Int16 Checksum
         {
             get => BitConverter.ToInt16(Header.Bytes,
                                         Header.Offset + IGMPv2Fields.ChecksumPosition);
@@ -89,12 +89,12 @@ namespace PacketDotNet
         public override String Color => AnsiEscapeSequences.Brown;
 
         /// <summary> Fetch the IGMP group address.</summary>
-        public virtual IPAddress GroupAddress => IpPacket.GetIPAddress(AddressFamily.InterNetwork,
+        public IPAddress GroupAddress => IPPacket.GetIPAddress(AddressFamily.InterNetwork,
                                                                        Header.Offset + IGMPv2Fields.GroupAddressPosition,
                                                                        Header.Bytes);
 
         /// <summary> Fetch the IGMP max response time.</summary>
-        public virtual Byte MaxResponseTime
+        public Byte MaxResponseTime
         {
             get => Header.Bytes[Header.Offset + IGMPv2Fields.MaxResponseTimePosition];
 
@@ -104,7 +104,7 @@ namespace PacketDotNet
         /// <value>
         /// The type of IGMP message
         /// </value>
-        public virtual IGMPMessageType Type
+        public IGMPMessageType Type
         {
             get => (IGMPMessageType) Header.Bytes[Header.Offset + IGMPv2Fields.TypePosition];
 
@@ -131,7 +131,7 @@ namespace PacketDotNet
                                     color,
                                     colorEscape,
                                     Type,
-                                    String.Format("{0:0.0}", MaxResponseTime / 10),
+                                    $"{MaxResponseTime / 10:0.0}",
                                     GroupAddress);
             }
 
@@ -141,7 +141,7 @@ namespace PacketDotNet
                 var properties = new Dictionary<String, String>
                 {
                     {"type", Type + " (0x" + Type.ToString("x") + ")"},
-                    {"max response time", String.Format("{0:0.0}", MaxResponseTime / 10) + " sec (0x" + MaxResponseTime.ToString("x") + ")"},
+                    {"max response time", $"{MaxResponseTime / 10:0.0}" + " sec (0x" + MaxResponseTime.ToString("x") + ")"},
                     // TODO: Implement checksum validation for IGMPv2
                     {"header checksum", "0x" + Checksum.ToString("x")},
                     {"group address", GroupAddress.ToString()}

@@ -30,22 +30,22 @@ namespace PacketDotNet.Utils
         /// Generate a random ip address
         /// </summary>
         /// <param name="version">
-        /// A <see cref="IpVersion" />
+        /// A <see cref="IPVersion" />
         /// </param>
         /// <returns>
         /// A <see cref="System.Net.IPAddress" />
         /// </returns>
-        public static IPAddress GetIPAddress(IpVersion version)
+        public static IPAddress GetIPAddress(IPVersion version)
         {
             var rnd = new Random();
             Byte[] randomAddressBytes;
 
-            if (version == IpVersion.IPv4)
+            if (version == IPVersion.IPv4)
             {
                 randomAddressBytes = new Byte[IPv4Fields.AddressLength];
                 rnd.NextBytes(randomAddressBytes);
             }
-            else if (version == IpVersion.IPv6)
+            else if (version == IPVersion.IPv6)
             {
                 randomAddressBytes = new Byte[IPv6Fields.AddressLength];
                 rnd.NextBytes(randomAddressBytes);
@@ -71,11 +71,11 @@ namespace PacketDotNet.Utils
         {
             var longest = "";
 
-            foreach (var L in stringsList)
+            foreach (var l in stringsList)
             {
-                if (L.Length > longest.Length)
+                if (l.Length > longest.Length)
                 {
-                    longest = L;
+                    longest = l;
                 }
             }
 

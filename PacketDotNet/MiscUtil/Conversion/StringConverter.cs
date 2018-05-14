@@ -21,15 +21,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Text;
 
-namespace MiscUtil.Conversion
+namespace PacketDotNet.MiscUtil.Conversion
 {
     /// <summary>
     /// String encoding converter
     /// </summary>
     public class StringConverter
     {
-        static readonly Int32[] e2aTable = new Int32[256]
-        {
+        private static readonly Int32[] E2ATable = {
             0,
             1,
             2,
@@ -299,28 +298,17 @@ namespace MiscUtil.Conversion
         public static String EbcdicToAscii(Byte[] data, Int32 offset, Int32 length)
         {
             var stringBuilder = new StringBuilder();
-            try
+            for (var i = offset; i < data.Length && i - offset < length; i++)
             {
-                for (var i = offset; i < data.Length && i - offset < length; i++)
-                {
-                    //0x00 Means blank, packet do have lots blank,ignore it
-                    if (data[i] == 0x00)
-                        continue;
+                //0x00 Means blank, packet do have lots blank,ignore it
+                if (data[i] == 0x00)
+                    continue;
 
 
-                    stringBuilder.Append(Convert.ToChar(e2aTable[data[i]]));
-                }
+                stringBuilder.Append(Convert.ToChar(E2ATable[data[i]]));
+            }
 
-                return stringBuilder.ToString();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                stringBuilder = null;
-            }
+            return stringBuilder.ToString();
         }
     }
 }

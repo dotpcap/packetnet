@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Text;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 
-namespace MiscUtil.IO
+namespace PacketDotNet.MiscUtil.IO
 {
     /// <summary>
     /// Equivalent of System.IO.BinaryWriter, but with either endianness, depending on
@@ -74,22 +74,22 @@ namespace MiscUtil.IO
         {
             if (bitConverter == null)
             {
-                throw new ArgumentNullException("bitConverter");
+                throw new ArgumentNullException(nameof(bitConverter));
             }
 
             if (stream == null)
             {
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
             }
 
             if (encoding == null)
             {
-                throw new ArgumentNullException("encoding");
+                throw new ArgumentNullException(nameof(encoding));
             }
 
             if (!stream.CanWrite)
             {
-                throw new ArgumentException("Stream isn't writable", "stream");
+                throw new ArgumentException("Stream isn't writable", nameof(stream));
             }
 
             BaseStream = stream;
@@ -287,7 +287,7 @@ namespace MiscUtil.IO
         {
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             WriteInternal(value, value.Length);
@@ -323,7 +323,7 @@ namespace MiscUtil.IO
         {
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             CheckDisposed();
@@ -340,7 +340,7 @@ namespace MiscUtil.IO
         {
             if (value == null)
             {
-                throw new ArgumentNullException("value");
+                throw new ArgumentNullException(nameof(value));
             }
 
             CheckDisposed();
@@ -360,7 +360,7 @@ namespace MiscUtil.IO
             CheckDisposed();
             if (value < 0)
             {
-                throw new ArgumentOutOfRangeException("value", "Value must be greater than or equal to 0.");
+                throw new ArgumentOutOfRangeException(nameof(value), "Value must be greater than or equal to 0.");
             }
 
             var index = 0;

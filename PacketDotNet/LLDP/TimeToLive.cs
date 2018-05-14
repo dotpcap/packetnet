@@ -22,7 +22,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Reflection;
 using log4net;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet.LLDP
@@ -114,7 +114,7 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public override String ToString()
         {
-            return String.Format("[TimeToLive: Seconds={0}]", Seconds);
+            return $"[TimeToLive: Seconds={Seconds}]";
         }
 
         #endregion

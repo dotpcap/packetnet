@@ -42,9 +42,9 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32" />
         /// </param>
-        public Option(Byte[] bytes, Int32 offset, Int32 length)
+        protected Option(Byte[] bytes, Int32 offset, Int32 length)
         {
-            optionData = new ByteArraySegment(bytes, offset, length);
+            _optionData = new ByteArraySegment(bytes, offset, length);
         }
 
         #endregion
@@ -85,8 +85,8 @@ namespace PacketDotNet.Tcp
         {
             get
             {
-                var bytes = new Byte[optionData.Length];
-                Array.Copy(optionData.Bytes, optionData.Offset, bytes, 0, optionData.Length);
+                var bytes = new Byte[_optionData.Length];
+                Array.Copy(_optionData.Bytes, _optionData.Offset, bytes, 0, _optionData.Length);
                 return bytes;
             }
         }
@@ -97,7 +97,7 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // stores the data/length/offset of the option
-        private readonly ByteArraySegment optionData;
+        private readonly ByteArraySegment _optionData;
 
         /// <summary>The length (in bytes) of the Kind field</summary>
         internal const Int32 KindFieldLength = 1;

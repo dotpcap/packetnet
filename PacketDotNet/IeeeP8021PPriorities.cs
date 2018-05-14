@@ -18,12 +18,15 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2013 Chris Morgan <chmorgan@gmail.com>
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet
 {
     /// <summary>
     /// Ieee p8021 P priorities.
     /// http://en.wikipedia.org/wiki/IEEE_802.1p
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum IeeeP8021PPriorities : byte
     {
         /// <summary>

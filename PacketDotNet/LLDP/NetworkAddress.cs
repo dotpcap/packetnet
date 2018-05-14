@@ -214,9 +214,7 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public override String ToString()
         {
-            return String.Format("[NetworkAddress: AddressFamily={0}, Address={1}]",
-                                 AddressFamily,
-                                 Address);
+            return $"[NetworkAddress: AddressFamily={AddressFamily}, Address={Address}]";
         }
 
         #endregion

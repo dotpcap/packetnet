@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 
 namespace PacketDotNet
 {
@@ -233,10 +233,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("FrequencyMHz {0}, Channel {1}, Flags {2}",
-                                     FrequencyMHz,
-                                     Channel,
-                                     Flags);
+                return $"FrequencyMHz {FrequencyMHz}, Channel {Channel}, Flags {Flags}";
             }
         }
 
@@ -318,9 +315,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("ChannelHoppingSet {0}, Pattern {1}",
-                                     ChannelHoppingSet,
-                                     Pattern);
+                return $"ChannelHoppingSet {ChannelHoppingSet}, Pattern {Pattern}";
             }
         }
 
@@ -390,7 +385,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("Flags {0}", Flags);
+                return $"Flags {Flags}";
             }
         }
 
@@ -460,7 +455,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("RateMbps {0}", RateMbps);
+                return $"RateMbps {RateMbps}";
             }
         }
 
@@ -529,7 +524,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("SignalStrengthdB {0}", SignalStrengthdB);
+                return $"SignalStrengthdB {SignalStrengthdB}";
             }
         }
 
@@ -598,7 +593,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("AntennaNoisedB {0}", AntennaNoisedB);
+                return $"AntennaNoisedB {AntennaNoisedB}";
             }
         }
 
@@ -667,7 +662,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("Antenna {0}", Antenna);
+                return $"Antenna {Antenna}";
             }
         }
 
@@ -736,7 +731,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("AntennaSignalDbm {0}", AntennaSignalDbm);
+                return $"AntennaSignalDbm {AntennaSignalDbm}";
             }
         }
 
@@ -805,7 +800,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("AntennaNoisedBm {0}", AntennaNoisedBm);
+                return $"AntennaNoisedBm {AntennaNoisedBm}";
             }
         }
 
@@ -875,7 +870,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("SignalQuality {0}", SignalQuality);
+                return $"SignalQuality {SignalQuality}";
             }
         }
 
@@ -944,7 +939,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("TimestampUsec {0}", TimestampUsec);
+                return $"TimestampUsec {TimestampUsec}";
             }
         }
 
@@ -1018,7 +1013,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("PlcpCrcCheckFailed {0}", PlcpCrcCheckFailed);
+                return $"PlcpCrcCheckFailed {PlcpCrcCheckFailed}";
             }
         }
 
@@ -1091,7 +1086,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("TxPower {0}", TxPower);
+                return $"TxPower {TxPower}";
             }
         }
 
@@ -1163,7 +1158,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("TxPowerdB {0}", TxPowerdB);
+                return $"TxPowerdB {TxPowerdB}";
             }
         }
 
@@ -1234,7 +1229,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("TxPowerdBm {0}", TxPowerdBm);
+                return $"TxPowerdBm {TxPowerdBm}";
             }
         }
 

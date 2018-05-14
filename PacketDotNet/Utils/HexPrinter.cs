@@ -33,10 +33,10 @@ namespace PacketDotNet.Utils
         /// <param name="Byte">
         /// A <see cref="System.Byte" />
         /// </param>
-        /// <param name="Offset">
+        /// <param name="offset">
         /// A <see cref="System.Int32" />
         /// </param>
-        /// <param name="Length">
+        /// <param name="length">
         /// A <see cref="System.Int32" />
         /// </param>
         /// <returns>
@@ -45,12 +45,12 @@ namespace PacketDotNet.Utils
         public static String GetString
         (
             Byte[] Byte,
-            Int32 Offset,
-            Int32 Length)
+            Int32 offset,
+            Int32 length)
         {
             var sb = new StringBuilder();
 
-            for (var i = Offset; i < Offset + Length; i++)
+            for (var i = offset; i < offset + length; i++)
             {
                 sb.AppendFormat("[{0:x2}]", Byte[i]);
             }
@@ -72,9 +72,9 @@ namespace PacketDotNet.Utils
             var bytes = address.GetAddressBytes();
             var output = "";
 
-            for (var i = 0; i < bytes.Length; i++)
+            foreach (var t in bytes)
             {
-                output += bytes[i].ToString("x").PadLeft(2, '0') + ":";
+                output += t.ToString("x").PadLeft(2, '0') + ":";
             }
 
             return output.TrimEnd(':');

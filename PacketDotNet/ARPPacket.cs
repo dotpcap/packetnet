@@ -26,7 +26,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using log4net;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -35,7 +35,7 @@ namespace PacketDotNet
     /// An ARP protocol packet.
     /// </summary>
     [Serializable]
-    public class ARPPacket : InternetLinkLayerPacket
+    public sealed class ARPPacket : InternetLinkLayerPacket
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -50,7 +50,7 @@ namespace PacketDotNet
         /// <value>
         /// Also known as HardwareType
         /// </value>
-        public virtual LinkLayers HardwareAddressType
+        public LinkLayers HardwareAddressType
         {
             get => (LinkLayers) EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                                 Header.Offset + ARPFields.HardwareAddressTypePosition);
@@ -67,7 +67,7 @@ namespace PacketDotNet
         /// <value>
         /// Also known as ProtocolType
         /// </value>
-        public virtual EthernetPacketType ProtocolAddressType
+        public EthernetPacketType ProtocolAddressType
         {
             get => (EthernetPacketType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                                         Header.Offset + ARPFields.ProtocolAddressTypePosition);
@@ -84,7 +84,7 @@ namespace PacketDotNet
         /// <value>
         /// Hardware address length field
         /// </value>
-        public virtual Int32 HardwareAddressLength
+        public Int32 HardwareAddressLength
         {
             get => Header.Bytes[Header.Offset + ARPFields.HardwareAddressLengthPosition];
 
@@ -94,7 +94,7 @@ namespace PacketDotNet
         /// <value>
         /// Protocol address length field
         /// </value>
-        public virtual Int32 ProtocolAddressLength
+        public Int32 ProtocolAddressLength
         {
             get => Header.Bytes[Header.Offset + ARPFields.ProtocolAddressLengthPosition];
 
@@ -109,7 +109,7 @@ namespace PacketDotNet
         /// Sets the operation code.
         /// Usually one of ARPFields.{ARP_OP_REQ_CODE, ARP_OP_REP_CODE}.
         /// </summary>
-        public virtual ARPOperation Operation
+        public ARPOperation Operation
         {
             get => (ARPOperation) EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                                  Header.Offset + ARPFields.OperationPosition);
@@ -126,9 +126,9 @@ namespace PacketDotNet
         /// <value>
         /// Upper layer protocol address of the sender, arp is used for IPv4, IPv6 uses NDP
         /// </value>
-        public virtual IPAddress SenderProtocolAddress
+        public IPAddress SenderProtocolAddress
         {
-            get => IpPacket.GetIPAddress(AddressFamily.InterNetwork,
+            get => IPPacket.GetIPAddress(AddressFamily.InterNetwork,
                                          Header.Offset + ARPFields.SenderProtocolAddressPosition,
                                          Header.Bytes);
 
@@ -151,9 +151,9 @@ namespace PacketDotNet
         /// <value>
         /// Upper layer protocol address of the target, arp is used for IPv4, IPv6 uses NDP
         /// </value>
-        public virtual IPAddress TargetProtocolAddress
+        public IPAddress TargetProtocolAddress
         {
-            get => IpPacket.GetIPAddress(AddressFamily.InterNetwork,
+            get => IPPacket.GetIPAddress(AddressFamily.InterNetwork,
                                          Header.Offset + ARPFields.TargetProtocolAddressPosition,
                                          Header.Bytes);
 
@@ -176,7 +176,7 @@ namespace PacketDotNet
         /// <value>
         /// Sender hardware address, usually an ethernet mac address
         /// </value>
-        public virtual PhysicalAddress SenderHardwareAddress
+        public PhysicalAddress SenderHardwareAddress
         {
             get
             {
@@ -213,7 +213,7 @@ namespace PacketDotNet
         /// <value>
         /// Target hardware address, usually an ethernet mac address
         /// </value>
-        public virtual PhysicalAddress TargetHardwareAddress
+        public PhysicalAddress TargetHardwareAddress
         {
             get
             {
@@ -252,42 +252,42 @@ namespace PacketDotNet
         /// <summary>
         /// Create an ARPPacket from values
         /// </summary>
-        /// <param name="Operation">
+        /// <param name="operation">
         /// A <see cref="ARPOperation" />
         /// </param>
-        /// <param name="TargetHardwareAddress">
+        /// <param name="targetHardwareAddress">
         /// A <see cref="PhysicalAddress" />
         /// </param>
-        /// <param name="TargetProtocolAddress">
+        /// <param name="targetProtocolAddress">
         /// A <see cref="System.Net.IPAddress" />
         /// </param>
-        /// <param name="SenderHardwareAddress">
+        /// <param name="senderHardwareAddress">
         /// A <see cref="PhysicalAddress" />
         /// </param>
-        /// <param name="SenderProtocolAddress">
+        /// <param name="senderProtocolAddress">
         /// A <see cref="System.Net.IPAddress" />
         /// </param>
         public ARPPacket
         (
-            ARPOperation Operation,
-            PhysicalAddress TargetHardwareAddress,
-            IPAddress TargetProtocolAddress,
-            PhysicalAddress SenderHardwareAddress,
-            IPAddress SenderProtocolAddress)
+            ARPOperation operation,
+            PhysicalAddress targetHardwareAddress,
+            IPAddress targetProtocolAddress,
+            PhysicalAddress senderHardwareAddress,
+            IPAddress senderProtocolAddress)
         {
             Log.Debug("");
 
             // allocate memory for this packet
-            var offset = 0;
+            const int offset = 0;
             var length = ARPFields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
-            this.Operation = Operation;
-            this.TargetHardwareAddress = TargetHardwareAddress;
-            this.TargetProtocolAddress = TargetProtocolAddress;
-            this.SenderHardwareAddress = SenderHardwareAddress;
-            this.SenderProtocolAddress = SenderProtocolAddress;
+            Operation = operation;
+            TargetHardwareAddress = targetHardwareAddress;
+            TargetProtocolAddress = targetProtocolAddress;
+            SenderHardwareAddress = senderHardwareAddress;
+            SenderProtocolAddress = senderProtocolAddress;
 
             // set some internal properties to fully define the packet
             HardwareAddressType = LinkLayers.Ethernet;
@@ -305,6 +305,7 @@ namespace PacketDotNet
         /// </param>
         public ARPPacket(ByteArraySegment bas)
         {
+            // ReSharper disable once UseObjectOrCollectionInitializer
             Header = new ByteArraySegment(bas);
             Header.Length = ARPFields.HeaderLength;
 

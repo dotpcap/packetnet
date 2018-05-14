@@ -22,7 +22,7 @@ using System;
 using System.Reflection;
 using System.Text;
 using log4net;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet

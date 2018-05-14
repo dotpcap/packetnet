@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Net.NetworkInformation;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 
 namespace PacketDotNet
 {
@@ -82,10 +82,7 @@ namespace PacketDotNet
             /// </returns>
             protected override String GetAddressString()
             {
-                return String.Format("SA {0} DA {1} BSSID {2}",
-                                     SourceAddress,
-                                     DestinationAddress,
-                                     BssId);
+                return $"SA {SourceAddress} DA {DestinationAddress} BSSID {BssId}";
             }
         }
     }

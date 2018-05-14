@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet.LLDP
@@ -155,7 +155,7 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public override String ToString()
         {
-            return String.Format("[SystemCapabilities: Capabilities={0}, Enabled={1}]", Capabilities, Enabled);
+            return $"[SystemCapabilities: Capabilities={Capabilities}, Enabled={Enabled}]";
         }
 
         #endregion

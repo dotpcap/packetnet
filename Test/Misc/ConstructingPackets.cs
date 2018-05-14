@@ -34,7 +34,7 @@ namespace Test.Misc
         public void BuildEthernetPacket()
         {
             var tcpPacket = TcpPacket.RandomPacket();
-            var ipPacket = IpPacket.RandomPacket(IpVersion.IPv4);
+            var ipPacket = IPPacket.RandomPacket(IPVersion.IPv4);
             var ethernetPacket = EthernetPacket.RandomPacket();
 
             // put these all together into a single packet

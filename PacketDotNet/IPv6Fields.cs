@@ -25,6 +25,7 @@ namespace PacketDotNet
     /// <summary>
     /// A struct containing length and position information about IPv6 Fields.
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     public struct IPv6Fields
     {
         /// <summary>

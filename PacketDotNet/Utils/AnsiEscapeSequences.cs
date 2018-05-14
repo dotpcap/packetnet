@@ -69,9 +69,9 @@ namespace PacketDotNet.Utils
             LightGrayBackground = BuildValue("0;47");
         }
 
-        private static String BuildValue(String ColorCode)
+        private static String BuildValue(String colorCode)
         {
-            return EscapeBegin + ColorCode + EscapeEnd;
+            return EscapeBegin + colorCode + EscapeEnd;
         }
 
 #pragma warning disable 1591

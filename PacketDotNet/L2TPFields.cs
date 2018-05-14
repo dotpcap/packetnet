@@ -23,6 +23,7 @@ using System;
 namespace PacketDotNet
 {
     /// <summary> L2TP protocol field encoding information. </summary>
+    // ReSharper disable once InconsistentNaming
     public class L2TPFields
     {
         /// <summary> Length of the Flags in bytes.</summary>

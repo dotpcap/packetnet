@@ -64,10 +64,10 @@ namespace PacketDotNet
             Checksum = 0;
 
             // copy the tcp section with data
-            var dataToChecksum = ((IpPacket) ParentPacket).PayloadPacket.BytesHighPerformance;
+            var dataToChecksum = ((IPPacket) ParentPacket).PayloadPacket.BytesHighPerformance;
 
             var bytes = option == TransportChecksumOption.IncludePseudoIPHeader
-                ? ((IpPacket) ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
+                ? ((IPPacket) ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
                 : new byte[0];
 
             // calculate the one's complement sum of the tcp header
@@ -90,10 +90,10 @@ namespace PacketDotNet
         /// </returns>
         public virtual Boolean IsValidChecksum(TransportChecksumOption option)
         {
-            var dataToChecksum = ((IpPacket) ParentPacket).PayloadPacket.BytesHighPerformance;
+            var dataToChecksum = ((IPPacket) ParentPacket).PayloadPacket.BytesHighPerformance;
 
             var bytes = option == TransportChecksumOption.IncludePseudoIPHeader
-                ? ((IpPacket) ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
+                ? ((IPPacket) ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
                 : new byte[0];
 
             var onesSum = ChecksumUtils.OnesSum(dataToChecksum, bytes);

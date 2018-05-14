@@ -192,10 +192,8 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public override String ToString()
         {
-            return String.Format("[OrganizationSpecific: OrganizationUniqueID={0}, OrganizationDefinedSubType={1}, OrganizationDefinedInfoString={2}]",
-                                 OrganizationUniqueID,
-                                 OrganizationDefinedSubType,
-                                 OrganizationDefinedInfoString);
+            return
+                $"[OrganizationSpecific: OrganizationUniqueID={OrganizationUniqueID}, OrganizationDefinedSubType={OrganizationDefinedSubType}, OrganizationDefinedInfoString={OrganizationDefinedInfoString}]";
         }
 
         #endregion

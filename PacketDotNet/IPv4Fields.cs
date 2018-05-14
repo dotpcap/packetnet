@@ -25,6 +25,7 @@ namespace PacketDotNet
     /// <summary>
     /// IP protocol field encoding information.
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     public struct IPv4Fields
     {
         /// <summary> Width of the IP version and header length field in bytes.</summary>

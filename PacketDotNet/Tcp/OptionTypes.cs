@@ -19,6 +19,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet.Tcp
 {
     /// <summary>
@@ -29,6 +31,7 @@ namespace PacketDotNet.Tcp
     /// http://en.wikipedia.org/wiki/Transmission_Control_Protocol#TCP_Timestamps
     /// http://www.networksorcery.com/enp/default1101.htm
     /// </remarks>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum OptionTypes : byte
     {
         /// <summary>End Of List</summary>

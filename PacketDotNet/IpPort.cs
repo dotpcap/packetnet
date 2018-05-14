@@ -21,7 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet
 {
     /// <summary> Code constants for ip ports. </summary>
-    public enum IpPort : ushort
+    public enum IPPort : ushort
     {
 #pragma warning disable 1591
         Echo = 7,

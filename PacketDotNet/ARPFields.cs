@@ -54,6 +54,7 @@ namespace PacketDotNet
         public static readonly Int32 HeaderLength; // == 28
 
         /// <summary> Type code for MAC addresses.</summary>
+        // ReSharper disable once InconsistentNaming
         public static readonly Int32 IPv4ProtocolType = 0x0800;
 
         /// <summary> Operation type length in bytes.</summary>

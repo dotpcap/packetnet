@@ -23,7 +23,7 @@ using System;
 using System.Reflection;
 using System.Text;
 using log4net;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet.LLDP
@@ -324,14 +324,8 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public override String ToString()
         {
-            return String.Format("[ManagementAddress: AddressLength={0}, AddressSubType={1}, MgmtAddress={2}, InterfaceSubType={3}, InterfaceNumber={4}, ObjIdLength={5}, ObjectIdentifier={6}]",
-                                 AddressLength,
-                                 AddressSubType,
-                                 MgmtAddress,
-                                 InterfaceSubType,
-                                 InterfaceNumber,
-                                 ObjIdLength,
-                                 ObjectIdentifier);
+            return
+                $"[ManagementAddress: AddressLength={AddressLength}, AddressSubType={AddressSubType}, MgmtAddress={MgmtAddress}, InterfaceSubType={InterfaceSubType}, InterfaceNumber={InterfaceNumber}, ObjIdLength={ObjIdLength}, ObjectIdentifier={ObjectIdentifier}]";
         }
 
         #endregion

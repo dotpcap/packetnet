@@ -19,7 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 
 namespace PacketDotNet.Tcp
 {
@@ -68,10 +68,9 @@ namespace PacketDotNet.Tcp
             {
                 var numOfBlocks = (Length - SACKBlocksFieldOffset) / BlockLength;
                 var blocks = new UInt16[numOfBlocks];
-                var offset = 0;
                 for (var i = 0; i < numOfBlocks; i++)
                 {
-                    offset = SACKBlocksFieldOffset + (i * BlockLength);
+                    var offset = SACKBlocksFieldOffset + (i * BlockLength);
                     blocks[i] = EndianBitConverter.Big.ToUInt16(Bytes, offset);
                 }
 
@@ -99,7 +98,7 @@ namespace PacketDotNet.Tcp
                 output += "Block" + i + "=" + SACKBlocks[i] + " ";
             }
 
-            output.TrimEnd();
+            output = output.TrimEnd();
             output += "]";
 
             return output;

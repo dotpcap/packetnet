@@ -118,7 +118,7 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public override String ToString()
         {
-            return String.Format("[{0}: Description={1}]", Type, StringValue);
+            return $"[{Type}: Description={StringValue}]";
         }
 
         #endregion

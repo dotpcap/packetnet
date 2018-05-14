@@ -24,7 +24,7 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
 using log4net;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -33,7 +33,7 @@ namespace PacketDotNet
     /// See http://en.wikipedia.org/wiki/Ethernet#Ethernet_frame_types_and_the_EtherType_field
     /// </summary>
     [Serializable]
-    public class EthernetPacket : InternetLinkLayerPacket
+    public sealed class EthernetPacket : InternetLinkLayerPacket
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -57,36 +57,34 @@ namespace PacketDotNet
             {
                 base.PayloadPacket = value;
 
-                // set Type based on the type of the payload
-                if (value is IPv4Packet)
+                switch (value)
                 {
-                    Type = EthernetPacketType.IPv4;
-                }
-                else if (value is IPv6Packet)
-                {
-                    Type = EthernetPacketType.IPv6;
-                }
-                else if (value is ARPPacket)
-                {
-                    Type = EthernetPacketType.Arp;
-                }
-                else if (value is LLDPPacket)
-                {
-                    Type = EthernetPacketType.LLDP;
-                }
-                else if (value is PPPoEPacket)
-                {
-                    Type = EthernetPacketType.PointToPointProtocolOverEthernetSessionStage;
-                }
-                else // NOTE: new types should be inserted here
-                {
-                    Type = EthernetPacketType.None;
+                    // set Type based on the type of the payload
+                    case IPv4Packet _:
+                        Type = EthernetPacketType.IPv4;
+                        break;
+                    case IPv6Packet _:
+                        Type = EthernetPacketType.IPv6;
+                        break;
+                    case ARPPacket _:
+                        Type = EthernetPacketType.Arp;
+                        break;
+                    case LLDPPacket _:
+                        Type = EthernetPacketType.LLDP;
+                        break;
+                    // NOTE: new types should be inserted here
+                    case PPPoEPacket _:
+                        Type = EthernetPacketType.PointToPointProtocolOverEthernetSessionStage;
+                        break;
+                    default:
+                        Type = EthernetPacketType.None;
+                        break;
                 }
             }
         }
 
         /// <summary> MAC address of the host where the packet originated from.</summary>
-        public virtual PhysicalAddress SourceHwAddress
+        public PhysicalAddress SourceHwAddress
         {
             get
             {
@@ -116,7 +114,7 @@ namespace PacketDotNet
         }
 
         /// <summary> MAC address of the host where the packet originated from.</summary>
-        public virtual PhysicalAddress DestinationHwAddress
+        public PhysicalAddress DestinationHwAddress
         {
             get
             {
@@ -148,7 +146,7 @@ namespace PacketDotNet
         /// <value>
         /// Type of packet that this ethernet packet encapsulates
         /// </value>
-        public virtual EthernetPacketType Type
+        public EthernetPacketType Type
         {
             get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                                        Header.Offset + EthernetFields.TypePosition);
@@ -167,21 +165,21 @@ namespace PacketDotNet
         /// </summary>
         public EthernetPacket
         (
-            PhysicalAddress SourceHwAddress,
-            PhysicalAddress DestinationHwAddress,
+            PhysicalAddress sourceHwAddress,
+            PhysicalAddress destinationHwAddress,
             EthernetPacketType ethernetPacketType)
         {
             Log.Debug("");
 
             // allocate memory for this packet
-            var offset = 0;
+            const int offset = 0;
             var length = EthernetFields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
-            this.SourceHwAddress = SourceHwAddress;
-            this.DestinationHwAddress = DestinationHwAddress;
+            SourceHwAddress = sourceHwAddress;
+            DestinationHwAddress = destinationHwAddress;
             Type = ethernetPacketType;
         }
 
@@ -196,6 +194,7 @@ namespace PacketDotNet
             Log.Debug("");
 
             // slice off the header portion
+            // ReSharper disable once UseObjectOrCollectionInitializer
             Header = new ByteArraySegment(bas);
             Header.Length = EthernetFields.HeaderLength;
 
@@ -207,10 +206,10 @@ namespace PacketDotNet
         /// Used by the EthernetPacket constructor. Located here because the LinuxSLL constructor
         /// also needs to perform the same operations as it contains an ethernet type
         /// </summary>
-        /// <param name="Header">
+        /// <param name="header">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        /// <param name="Type">
+        /// <param name="type">
         /// A <see cref="EthernetPacketType" />
         /// </param>
         /// <returns>
@@ -218,17 +217,17 @@ namespace PacketDotNet
         /// </returns>
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes
         (
-            ByteArraySegment Header,
-            EthernetPacketType Type)
+            ByteArraySegment header,
+            EthernetPacketType type)
         {
             // slice off the payload
-            var payload = Header.EncapsulatedBytes();
+            var payload = header.EncapsulatedBytes();
             Log.DebugFormat("payload {0}", payload);
 
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
             // parse the encapsulated bytes
-            switch (Type)
+            switch (type)
             {
                 case EthernetPacketType.IPv4:
                     payloadPacketOrData.Packet = new IPv4Packet(payload);

@@ -35,15 +35,15 @@ namespace Test.PacketType
         [Test]
         public void ConstructingFromValues()
         {
-            var sourceAddress = RandomUtils.GetIPAddress(IpVersion.IPv4);
-            var destinationAddress = RandomUtils.GetIPAddress(IpVersion.IPv4);
+            var sourceAddress = RandomUtils.GetIPAddress(IPVersion.IPv4);
+            var destinationAddress = RandomUtils.GetIPAddress(IPVersion.IPv4);
             var ip = new IPv4Packet(sourceAddress, destinationAddress);
 
             Assert.AreEqual(sourceAddress, ip.SourceAddress);
             Assert.AreEqual(destinationAddress, ip.DestinationAddress);
 
             // make sure the version is what we expect
-            Assert.AreEqual(IPv4Packet.ipVersion, ip.Version);
+            Assert.AreEqual(IPv4Packet.IPVersion, ip.Version);
 
             // retrieve the bytes for this IPv4Packet and construct another IPv4 packet from
             // these bytes

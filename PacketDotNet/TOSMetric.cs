@@ -1,5 +1,5 @@
 using System;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 
 namespace PacketDotNet
 {

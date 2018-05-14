@@ -115,7 +115,7 @@ namespace PacketDotNet
             /// </returns>
             protected override String GetAddressString()
             {
-                return String.Format("RA {0} BSSID {1}", ReceiverAddress, BssId);
+                return $"RA {ReceiverAddress} BSSID {BssId}";
             }
         }
     }

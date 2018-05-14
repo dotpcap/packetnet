@@ -32,7 +32,7 @@ namespace PacketDotNet
     /// functionality that both of these classes has in common
     /// </summary>
     [Serializable]
-    public abstract class IpPacket : InternetPacket
+    public abstract class IPPacket : InternetPacket
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -112,7 +112,7 @@ namespace PacketDotNet
         /// <value>
         /// The IP version
         /// </value>
-        public abstract IpVersion Version { get; set; }
+        public abstract IPVersion Version { get; set; }
 
         /// <value>
         /// The protocol of the ip packet's payload
@@ -224,10 +224,10 @@ namespace PacketDotNet
         /// <param name="payload">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        /// <param name="ProtocolType">
+        /// <param name="protocolType">
         /// A <see cref="IPProtocolType" />
         /// </param>
-        /// <param name="ParentPacket">
+        /// <param name="parentPacket">
         /// A <see cref="Packet" />
         /// </param>
         /// <returns>
@@ -236,19 +236,19 @@ namespace PacketDotNet
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes
         (
             ByteArraySegment payload,
-            IPProtocolType ProtocolType,
-            Packet ParentPacket)
+            IPProtocolType protocolType,
+            Packet parentPacket)
         {
             Log.DebugFormat("payload: {0}, ParentPacket.GetType() {1}",
                             payload,
-                            ParentPacket.GetType());
+                            parentPacket.GetType());
 
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
             // if we are an ipv4 packet with a non-zero FragementOffset we shouldn't attempt
             // to decode the content, it is a continuation of a previous packet so it won't
             // have the proper headers for its type, that was in the first packet fragment
-            if (ParentPacket is IPv4Packet ipv4Packet)
+            if (parentPacket is IPv4Packet ipv4Packet)
             {
                 if (ipv4Packet.FragmentOffset > 0)
                 {
@@ -257,27 +257,27 @@ namespace PacketDotNet
                 }
             }
 
-            switch (ProtocolType)
+            switch (protocolType)
             {
                 case IPProtocolType.TCP:
                     payloadPacketOrData.Packet = new TcpPacket(payload,
-                                                               ParentPacket);
+                                                               parentPacket);
                     break;
                 case IPProtocolType.UDP:
                     payloadPacketOrData.Packet = new UdpPacket(payload,
-                                                               ParentPacket);
+                                                               parentPacket);
                     break;
                 case IPProtocolType.ICMP:
                     payloadPacketOrData.Packet = new ICMPv4Packet(payload,
-                                                                  ParentPacket);
+                                                                  parentPacket);
                     break;
                 case IPProtocolType.ICMPV6:
                     payloadPacketOrData.Packet = new ICMPv6Packet(payload,
-                                                                  ParentPacket);
+                                                                  parentPacket);
                     break;
                 case IPProtocolType.IGMP:
                     payloadPacketOrData.Packet = new IGMPv2Packet(payload,
-                                                                  ParentPacket);
+                                                                  parentPacket);
                     break;
                 case IPProtocolType.OSPF:
                     payloadPacketOrData.Packet = OSPFPacket.ConstructOSPFPacket(payload.Bytes,
@@ -285,15 +285,15 @@ namespace PacketDotNet
                     break;
                 case IPProtocolType.IPIP:
                     payloadPacketOrData.Packet = new IPv4Packet(payload,
-                                                                ParentPacket);
+                                                                parentPacket);
                     break;
                 case IPProtocolType.IPV6:
                     payloadPacketOrData.Packet = new IPv6Packet(payload,
-                                                                ParentPacket);
+                                                                parentPacket);
                     break;
                 case IPProtocolType.GRE:
                     payloadPacketOrData.Packet = new GREPacket(payload,
-                                                               ParentPacket);
+                                                               parentPacket);
                     break;
 
                 // NOTE: new payload parsing entries go here
@@ -309,23 +309,21 @@ namespace PacketDotNet
         /// Generate a random packet of a specific ip version
         /// </summary>
         /// <param name="version">
-        /// A <see cref="IpVersion" />
+        /// A <see cref="IPVersion" />
         /// </param>
         /// <returns>
-        /// A <see cref="IpPacket" />
+        /// A <see cref="IPPacket" />
         /// </returns>
-        public static IpPacket RandomPacket(IpVersion version)
+        public static IPPacket RandomPacket(IPVersion version)
         {
             Log.DebugFormat("version {0}", version);
 
-            if (version == IpVersion.IPv4)
+            switch (version)
             {
-                return IPv4Packet.RandomPacket();
-            }
-
-            if (version == IpVersion.IPv6)
-            {
-                return IPv6Packet.RandomPacket();
+                case IPVersion.IPv4:
+                    return IPv4Packet.RandomPacket();
+                case IPVersion.IPv6:
+                    return IPv6Packet.RandomPacket();
             }
 
             throw new InvalidOperationException("Unknown version of " + version);

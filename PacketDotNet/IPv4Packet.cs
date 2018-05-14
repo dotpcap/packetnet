@@ -25,7 +25,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using log4net;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -35,7 +35,8 @@ namespace PacketDotNet
     /// See http://en.wikipedia.org/wiki/IPv4 for into
     /// </summary>
     [Serializable]
-    public class IPv4Packet : IpPacket
+    // ReSharper disable once InconsistentNaming
+    public sealed class IPv4Packet : IPPacket
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -52,41 +53,15 @@ namespace PacketDotNet
         /// </value>
         public const Int32 HeaderMinimumLength = 20;
 
-        /// <summary>
-        /// Type of service code constants for IP. Type of service describes
-        /// how a packet should be handled.
-        /// <p>
-        /// TOS is an 8-bit record in an IP header which contains a 3-bit
-        /// precendence field, 4 TOS bit fields and a 0 bit.
-        /// </p>
-        /// <p>
-        /// The following constants are bit masks which can be logically and'ed
-        /// with the 8-bit IP TOS field to determine what type of service is set.
-        /// </p>
-        /// <p>
-        /// Taken from TCP/IP Illustrated V1 by Richard Stevens, p34.
-        /// </p>
-        /// </summary>
-        public struct TypesOfService_Fields
-        {
-#pragma warning disable 1591
-            public static readonly Int32 MINIMIZE_DELAY = 0x10;
-            public static readonly Int32 MAXIMIZE_THROUGHPUT = 0x08;
-            public static readonly Int32 MAXIMIZE_RELIABILITY = 0x04;
-            public static readonly Int32 MINIMIZE_MONETARY_COST = 0x02;
-            public static readonly Int32 UNUSED = 0x01;
-#pragma warning restore 1591
-        }
-
         /// <value>
         /// Version number of the IP protocol being used
         /// </value>
-        public static IpVersion ipVersion = IpVersion.IPv4;
+        public static IPVersion IPVersion = IPVersion.IPv4;
 
         /// <summary> Get the IP version code.</summary>
-        public override IpVersion Version
+        public override IPVersion Version
         {
-            get => (IpVersion) ((Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] >> 4) & 0x0F);
+            get => (IPVersion) ((Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] >> 4) & 0x0F);
 
             set
             {
@@ -116,9 +91,6 @@ namespace PacketDotNet
         /// four-bit value.  The high order bits beyond the fourth bit
         /// will be ignored.
         /// </summary>
-        /// <param name="length">
-        /// The length of the IP header in 32-bit words.
-        /// </param>
         public override Int32 HeaderLength
         {
             get => Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] & 0x0F;
@@ -141,7 +113,7 @@ namespace PacketDotNet
         /// increments by one each time a datagram is sent by a host.
         /// A 16-bit unsigned integer.
         /// </summary>
-        public virtual UInt16 Id
+        public UInt16 Id
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + IPv4Fields.IdPosition);
@@ -156,7 +128,7 @@ namespace PacketDotNet
         /// The offset specifies a number of octets (i.e., bytes).
         /// A 13-bit unsigned integer.
         /// </summary>
-        public virtual Int32 FragmentOffset
+        public Int32 FragmentOffset
         {
             get
             {
@@ -219,7 +191,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the header checksum.</summary>
-        public virtual UInt16 Checksum
+        public UInt16 Checksum
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + IPv4Fields.ChecksumPosition);
@@ -234,7 +206,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Check if the IP packet is valid, checksum-wise.</summary>
-        public virtual Boolean ValidChecksum => ValidIPChecksum;
+        public Boolean ValidChecksum => ValidIPChecksum;
 
         /// <summary>
         /// Check if the IP packet header is valid, checksum-wise.
@@ -308,8 +280,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch fragment flags.</summary>
-        /// <param name="flags">A 3-bit unsigned integer.</param>
-        public virtual Int32 FragmentFlags
+        public Int32 FragmentFlags
         {
             get
             {
@@ -415,11 +386,11 @@ namespace PacketDotNet
         /// </summary>
         public IPv4Packet
         (
-            IPAddress SourceAddress,
-            IPAddress DestinationAddress)
+            IPAddress sourceAddress,
+            IPAddress destinationAddress)
         {
             // allocate memory for this packet
-            var offset = 0;
+            const int offset = 0;
             var length = IPv4Fields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
@@ -430,9 +401,9 @@ namespace PacketDotNet
             TimeToLive = DefaultTimeToLive;
 
             // set instance values
-            this.SourceAddress = SourceAddress;
-            this.DestinationAddress = DestinationAddress;
-            Version = ipVersion;
+            SourceAddress = sourceAddress;
+            DestinationAddress = destinationAddress;
+            Version = IPVersion;
         }
 
         /// <summary>
@@ -487,15 +458,15 @@ namespace PacketDotNet
         /// <param name="bas">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        /// <param name="ParentPacket">
+        /// <param name="parentPacket">
         /// A <see cref="Packet" />
         /// </param>
         public IPv4Packet
         (
             ByteArraySegment bas,
-            Packet ParentPacket) : this(bas)
+            Packet parentPacket) : this(bas)
         {
-            this.ParentPacket = ParentPacket;
+            ParentPacket = parentPacket;
         }
 
 
@@ -588,8 +559,8 @@ namespace PacketDotNet
         /// </returns>
         public static IPv4Packet RandomPacket()
         {
-            var srcAddress = RandomUtils.GetIPAddress(ipVersion);
-            var dstAddress = RandomUtils.GetIPAddress(ipVersion);
+            var srcAddress = RandomUtils.GetIPAddress(IPVersion);
+            var dstAddress = RandomUtils.GetIPAddress(IPVersion);
             return new IPv4Packet(srcAddress, dstAddress);
         }
 

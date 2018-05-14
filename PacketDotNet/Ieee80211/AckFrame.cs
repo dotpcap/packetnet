@@ -99,7 +99,7 @@ namespace PacketDotNet
             /// </returns>
             protected override String GetAddressString()
             {
-                return String.Format("RA {0}", ReceiverAddress);
+                return $"RA {ReceiverAddress}";
             }
         }
     }

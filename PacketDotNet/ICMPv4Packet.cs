@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using log4net;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -33,7 +33,7 @@ namespace PacketDotNet
     /// See http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol
     /// </summary>
     [Serializable]
-    public class ICMPv4Packet : InternetPacket
+    public sealed class ICMPv4Packet : InternetPacket
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -48,7 +48,7 @@ namespace PacketDotNet
         /// <value>
         /// The Type/Code enum value
         /// </value>
-        public virtual ICMPv4TypeCodes TypeCode
+        public ICMPv4TypeCodes TypeCode
         {
             get
             {
@@ -133,6 +133,7 @@ namespace PacketDotNet
         {
             Log.Debug("");
 
+            // ReSharper disable once UseObjectOrCollectionInitializer
             Header = new ByteArraySegment(bas);
             Header.Length = ICMPv4Fields.HeaderLength;
 
@@ -151,15 +152,15 @@ namespace PacketDotNet
         /// <param name="bas">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        /// <param name="ParentPacket">
+        /// <param name="parentPacket">
         /// A <see cref="Packet" />
         /// </param>
         public ICMPv4Packet
         (
             ByteArraySegment bas,
-            Packet ParentPacket) : this(bas)
+            Packet parentPacket) : this(bas)
         {
-            this.ParentPacket = ParentPacket;
+            ParentPacket = parentPacket;
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
@@ -178,39 +179,41 @@ namespace PacketDotNet
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            switch (outputFormat)
             {
-                // build the output string
-                buffer.AppendFormat("{0}[ICMPPacket: TypeCode={2}]{1}",
-                                    color,
-                                    colorEscape,
-                                    TypeCode);
-            }
+                case StringOutputType.Normal:
+                case StringOutputType.Colored:
+                    // build the output string
+                    buffer.AppendFormat("{0}[ICMPPacket: TypeCode={2}]{1}",
+                                        color,
+                                        colorEscape,
+                                        TypeCode);
+                    break;
+                case StringOutputType.Verbose:
+                case StringOutputType.VerboseColored:
+                    // collect the properties and their value
+                    var properties = new Dictionary<String, String>
+                    {
+                        {"type/code", TypeCode + " (0x" + TypeCode.ToString("x") + ")"},
+                        // TODO: Implement checksum verification for ICMPv4
+                        {"checksum", Checksum.ToString("x")},
+                        {"identifier", "0x" + ID.ToString("x")},
+                        {"sequence number", Sequence + " (0x" + Sequence.ToString("x") + ")"}
+                    };
 
-            if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
-            {
-                // collect the properties and their value
-                var properties = new Dictionary<String, String>
-                {
-                    {"type/code", TypeCode + " (0x" + TypeCode.ToString("x") + ")"},
-                    // TODO: Implement checksum verification for ICMPv4
-                    {"checksum", Checksum.ToString("x")},
-                    {"identifier", "0x" + ID.ToString("x")},
-                    {"sequence number", Sequence + " (0x" + Sequence.ToString("x") + ")"}
-                };
+                    // calculate the padding needed to right-justify the property names
+                    var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
-                // calculate the padding needed to right-justify the property names
-                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                    // build the output string
+                    buffer.AppendLine("ICMP:  ******* ICMPv4 - \"Internet Control Message Protocol (Version 4)\" - offset=? length=" + TotalPacketLength);
+                    buffer.AppendLine("ICMP:");
+                    foreach (var property in properties)
+                    {
+                        buffer.AppendLine("ICMP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    }
 
-                // build the output string
-                buffer.AppendLine("ICMP:  ******* ICMPv4 - \"Internet Control Message Protocol (Version 4)\" - offset=? length=" + TotalPacketLength);
-                buffer.AppendLine("ICMP:");
-                foreach (var property in properties)
-                {
-                    buffer.AppendLine("ICMP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
-                }
-
-                buffer.AppendLine("ICMP:");
+                    buffer.AppendLine("ICMP:");
+                    break;
             }
 
             // append the base string output

@@ -4,11 +4,14 @@
 // http://www.mozilla.org/NPL/MPL-1.1.txt                                *
 // *************************************************************************
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet
 {
     /// <summary>
     /// The protocol encapsulated inside of the IP packet
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum IPProtocolType : byte
     {
         /// <summary> Dummy protocol for TCP. </summary>

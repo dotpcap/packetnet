@@ -23,7 +23,7 @@ using System.IO;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using log4net;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -584,10 +584,7 @@ namespace PacketDotNet
             /// </returns>
             public override String ToString()
             {
-                return String.Format("802.11 MacFrame: [{0}], {1} FCS {2}",
-                                     FrameControl,
-                                     GetAddressString(),
-                                     FrameCheckSequence);
+                return $"802.11 MacFrame: [{FrameControl}], {GetAddressString()} FCS {FrameCheckSequence}";
             }
 
             /// <summary>

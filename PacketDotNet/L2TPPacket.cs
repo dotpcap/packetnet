@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Text;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -29,20 +29,21 @@ namespace PacketDotNet
     /// An L2TP packet.
     /// </summary>
     [Serializable]
-    public class L2TPPacket : Packet
+    // ReSharper disable once InconsistentNaming
+    public sealed class L2TPPacket : Packet
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
-        /// A <see cref="ByteArraySegment" />
-        /// </param>
-        public L2TPPacket(ByteArraySegment bas, Packet ParentPacket)
+        /// <param name="bas">A <see cref="ByteArraySegment" /></param>
+        /// <param name="parentPacket">The parent packet.</param>
+        public L2TPPacket(ByteArraySegment bas, Packet parentPacket)
         {
             // slice off the header portion
+            // ReSharper disable once UseObjectOrCollectionInitializer
             Header = new ByteArraySegment(bas);
-
             Header.Length = L2TPFields.HeaderLength;
+
             if (HasLength)
                 Header.Length += L2TPFields.LengthsLength;
             if (HasSequence)
@@ -53,8 +54,7 @@ namespace PacketDotNet
             var payload = Header.EncapsulatedBytes();
             try
             {
-                PayloadPacket = new PPPPacket(payload);
-                PayloadPacket.ParentPacket = this;
+                PayloadPacket = new PPPPacket(payload) {ParentPacket = this};
             }
             catch (Exception)
             {
@@ -62,47 +62,27 @@ namespace PacketDotNet
                 PayloadPacketOrData.Value.ByteArraySegment = payload;
             }
 
-            this.ParentPacket = ParentPacket;
+            ParentPacket = parentPacket;
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override String Color => AnsiEscapeSequences.DarkGray;
 
-        public virtual Boolean DataMessage => 8 == (Header.Bytes[Header.Offset] & 0x8);
+        public Boolean DataMessage => 8 == (Header.Bytes[Header.Offset] & 0x8);
 
-        public virtual Boolean HasLength => 4 == (Header.Bytes[Header.Offset] & 0x4);
+        public Boolean HasLength => 4 == (Header.Bytes[Header.Offset] & 0x4);
 
-        public virtual Boolean HasOffset => 2 == (Header.Bytes[Header.Offset] & 0x2);
+        public Boolean HasOffset => 2 == (Header.Bytes[Header.Offset] & 0x2);
 
-        public virtual Boolean HasSequence => 2 == (Header.Bytes[Header.Offset] & 0x2);
+        public Boolean HasSequence => 2 == (Header.Bytes[Header.Offset] & 0x2);
 
-        public virtual Boolean IsPriority => 2 == (Header.Bytes[Header.Offset] & 0x2);
+        public Boolean IsPriority => 2 == (Header.Bytes[Header.Offset] & 0x2);
 
-        public virtual Int32 SessionID
-        {
-            get
-            {
-                if (HasLength)
-                    return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 5);
+        public Int32 SessionID => HasLength ? EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 5) : EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 4);
 
+        public Int32 TunnelID => HasLength ? EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 3) : EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 2);
 
-                return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 4);
-            }
-        }
-
-        public virtual Int32 TunnelID
-        {
-            get
-            {
-                if (HasLength)
-                    return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 3);
-
-
-                return EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 2);
-            }
-        }
-
-        public virtual Int32 Version => Header.Bytes[Header.Offset + 1] & 0x7;
+        public Int32 Version => Header.Bytes[Header.Offset + 1] & 0x7;
 
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
@@ -110,21 +90,18 @@ namespace PacketDotNet
         {
             var buffer = new StringBuilder();
             var color = "";
-            var colorEscape = "";
 
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
                 color = Color;
-                colorEscape = AnsiEscapeSequences.Reset;
             }
 
             if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
                 buffer.AppendFormat("{0}[L2TPPacket",
-                                    color,
-                                    colorEscape);
+                                    color);
             }
 
 

@@ -370,7 +370,7 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public override String ToString()
         {
-            return String.Format("[ChassisID: SubType={0}, SubTypeValue={1}]", SubType, SubTypeValue);
+            return $"[ChassisID: SubType={SubType}, SubTypeValue={SubTypeValue}]";
         }
 
         #endregion

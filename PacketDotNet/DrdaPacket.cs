@@ -22,7 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using log4net;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -32,7 +32,7 @@ namespace PacketDotNet
     /// See: https://en.wikipedia.org/wiki/Distributed_Data_Management_Architecture
     /// </summary>
     [Serializable]
-    public class DrdaPacket : Packet
+    public sealed class DrdaPacket : Packet
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -44,7 +44,7 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        private List<DrdaDDMPacket> ddmList;
+        private List<DrdaDDMPacket> _ddmList;
 
         /// <summary>
         /// Decde DDM Packet into List
@@ -53,12 +53,12 @@ namespace PacketDotNet
         {
             get
             {
-                if (ddmList == null)
+                if (_ddmList == null)
                 {
-                    ddmList = new List<DrdaDDMPacket>();
+                    _ddmList = new List<DrdaDDMPacket>();
                 }
 
-                if (ddmList.Count > 0) return ddmList;
+                if (_ddmList.Count > 0) return _ddmList;
 
 
                 var startOffset = Header.Offset;
@@ -68,14 +68,14 @@ namespace PacketDotNet
                     if (startOffset + length <= Header.BytesLength)
                     {
                         var ddmBas = new ByteArraySegment(Header.Bytes, startOffset, length);
-                        ddmList.Add(new DrdaDDMPacket(ddmBas, this));
+                        _ddmList.Add(new DrdaDDMPacket(ddmBas, this));
                     }
 
                     startOffset += length;
                 }
 
-                Log.DebugFormat("DrdaDDMPacket.Count {0}", ddmList.Count);
-                return ddmList;
+                Log.DebugFormat("DrdaDDMPacket.Count {0}", _ddmList.Count);
+                return _ddmList;
             }
         }
 
@@ -102,21 +102,12 @@ namespace PacketDotNet
         /// Constructor
         /// </summary>
         /// <param name="bas"></param>
-        /// <param name="ParentPacket"></param>
-        public DrdaPacket(ByteArraySegment bas, Packet ParentPacket) : this(bas)
+        /// <param name="parentPacket"></param>
+        public DrdaPacket(ByteArraySegment bas, Packet parentPacket) : this(bas)
         {
-            Log.DebugFormat("ParentPacket.GetType() {0}", ParentPacket.GetType());
+            Log.DebugFormat("ParentPacket.GetType() {0}", parentPacket.GetType());
 
-            this.ParentPacket = ParentPacket;
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="outputFormat"></param>
-        /// <returns></returns>
-        public override String ToString(StringOutputType outputFormat)
-        {
-            return base.ToString(outputFormat);
+            ParentPacket = parentPacket;
         }
     }
 }

@@ -27,7 +27,7 @@ using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
 using log4net;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -40,7 +40,8 @@ namespace PacketDotNet
     /// http://en.wikipedia.org/wiki/IPv6
     /// </summary>
     [Serializable]
-    public class IPv6Packet : IpPacket
+    // ReSharper disable once InconsistentNaming
+    public sealed class IPv6Packet : IPPacket
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -60,7 +61,7 @@ namespace PacketDotNet
         /// <value>
         /// The version of the IP protocol. The '6' in IPv6 indicates the version of the protocol
         /// </value>
-        public static IpVersion ipVersion = IpVersion.IPv6;
+        public static IPVersion IPVersion = IPVersion.IPv6;
 
         private Int32 VersionTrafficClassFlowLabel
         {
@@ -73,9 +74,9 @@ namespace PacketDotNet
         /// <summary>
         /// The version field of the IPv6 Packet.
         /// </summary>
-        public override IpVersion Version
+        public override IPVersion Version
         {
-            get => (IpVersion) ((VersionTrafficClassFlowLabel >> 28) & 0xF);
+            get => (IPVersion) ((VersionTrafficClassFlowLabel >> 28) & 0xF);
 
             set
             {
@@ -95,7 +96,7 @@ namespace PacketDotNet
         /// <summary>
         /// The traffic class field of the IPv6 Packet.
         /// </summary>
-        public virtual Int32 TrafficClass
+        public Int32 TrafficClass
         {
             get => (VersionTrafficClassFlowLabel >> 20) & 0xFF;
 
@@ -115,7 +116,7 @@ namespace PacketDotNet
         /// <summary>
         /// The flow label field of the IPv6 Packet.
         /// </summary>
-        public virtual Int32 FlowLabel
+        public Int32 FlowLabel
         {
             get => VersionTrafficClassFlowLabel & 0xFFFFF;
 
@@ -252,21 +253,21 @@ namespace PacketDotNet
         /// <summary>
         /// Create an IPv6 packet from values
         /// </summary>
-        /// <param name="SourceAddress">
+        /// <param name="sourceAddress">
         /// A <see cref="System.Net.IPAddress" />
         /// </param>
-        /// <param name="DestinationAddress">
+        /// <param name="destinationAddress">
         /// A <see cref="System.Net.IPAddress" />
         /// </param>
         public IPv6Packet
         (
-            IPAddress SourceAddress,
-            IPAddress DestinationAddress)
+            IPAddress sourceAddress,
+            IPAddress destinationAddress)
         {
             Log.Debug("");
 
             // allocate memory for this packet
-            var offset = 0;
+            const int offset = 0;
             var length = IPv6Fields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
@@ -276,9 +277,9 @@ namespace PacketDotNet
             TimeToLive = DefaultTimeToLive;
 
             // set instance values
-            this.SourceAddress = SourceAddress;
-            this.DestinationAddress = DestinationAddress;
-            Version = ipVersion;
+            SourceAddress = sourceAddress;
+            DestinationAddress = destinationAddress;
+            Version = IPVersion;
         }
 
         /// <summary>
@@ -292,6 +293,7 @@ namespace PacketDotNet
             Log.Debug(bas.ToString());
 
             // slice off the header
+            // ReSharper disable once UseObjectOrCollectionInitializer
             Header = new ByteArraySegment(bas);
             Header.Length = HeaderMinimumLength;
 
@@ -316,15 +318,15 @@ namespace PacketDotNet
         /// <param name="bas">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        /// <param name="ParentPacket">
+        /// <param name="parentPacket">
         /// A <see cref="Packet" />
         /// </param>
         public IPv6Packet
         (
             ByteArraySegment bas,
-            Packet ParentPacket) : this(bas)
+            Packet parentPacket) : this(bas)
         {
-            this.ParentPacket = ParentPacket;
+            ParentPacket = parentPacket;
         }
 
 
@@ -436,8 +438,8 @@ namespace PacketDotNet
         /// </returns>
         public static IPv6Packet RandomPacket()
         {
-            var srcAddress = RandomUtils.GetIPAddress(ipVersion);
-            var dstAddress = RandomUtils.GetIPAddress(ipVersion);
+            var srcAddress = RandomUtils.GetIPAddress(IPVersion);
+            var dstAddress = RandomUtils.GetIPAddress(IPVersion);
             return new IPv6Packet(srcAddress, dstAddress);
         }
     }

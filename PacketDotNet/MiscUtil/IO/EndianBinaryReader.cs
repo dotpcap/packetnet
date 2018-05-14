@@ -1,9 +1,9 @@
 using System;
 using System.IO;
 using System.Text;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 
-namespace MiscUtil.IO
+namespace PacketDotNet.MiscUtil.IO
 {
     /// <summary>
     /// Equivalent of System.IO.BinaryReader, but with either endianness, depending on
@@ -84,22 +84,22 @@ namespace MiscUtil.IO
         {
             if (bitConverter == null)
             {
-                throw new ArgumentNullException("bitConverter");
+                throw new ArgumentNullException(nameof(bitConverter));
             }
 
             if (stream == null)
             {
-                throw new ArgumentNullException("stream");
+                throw new ArgumentNullException(nameof(stream));
             }
 
             if (encoding == null)
             {
-                throw new ArgumentNullException("encoding");
+                throw new ArgumentNullException(nameof(encoding));
             }
 
             if (!stream.CanRead)
             {
-                throw new ArgumentException("Stream isn't writable", "stream");
+                throw new ArgumentException("Stream isn't writable", nameof(stream));
             }
 
             BaseStream = stream;
@@ -325,12 +325,12 @@ namespace MiscUtil.IO
 
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
 
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
 
             if (count + index > data.Length)
@@ -402,17 +402,17 @@ namespace MiscUtil.IO
             CheckDisposed();
             if (buffer == null)
             {
-                throw new ArgumentNullException("buffer");
+                throw new ArgumentNullException(nameof(buffer));
             }
 
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
 
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException("index");
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
 
             if (count + index > buffer.Length)
@@ -450,7 +450,7 @@ namespace MiscUtil.IO
             CheckDisposed();
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException("count");
+                throw new ArgumentOutOfRangeException(nameof(count));
             }
 
             var ret = new Byte[count];
@@ -596,9 +596,7 @@ namespace MiscUtil.IO
                 if (read == 0)
                 {
                     throw new EndOfStreamException
-                        (String.Format("End of stream reached with {0} byte{1} left to read.",
-                                       size - index,
-                                       size - index == 1 ? "s" : ""));
+                        ($"End of stream reached with {size - index} byte{(size - index == 1 ? "s" : "")} left to read.");
                 }
 
                 index += read;

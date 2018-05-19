@@ -20,7 +20,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
-using log4net.Core;
 using PacketDotNet;
 
 namespace Test.Performance
@@ -39,7 +38,7 @@ namespace Test.Performance
             var ethernetPacket = EthernetPacket.RandomPacket();
 
             // build an ip packet
-            var ipPacket = IpPacket.RandomPacket(IpVersion.IPv6);
+            var ipPacket = IPPacket.RandomPacket(IPVersion.IPv6);
 
             ethernetPacket.PayloadPacket = ipPacket;
 

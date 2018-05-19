@@ -17,42 +17,50 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
+
 using System;
-using MiscUtil.Conversion;
-using PacketDotNet.Utils;
 
 namespace PacketDotNet.Tcp
 {
     /// <summary>
     /// MD5 Signature
-    ///  Carries the MD5 Digest used by the BGP protocol to
-    ///   ensure security between two endpoints
+    /// Carries the MD5 Digest used by the BGP protocol to
+    /// ensure security between two endpoints
     /// </summary>
     /// <remarks>
     /// References:
-    ///  http://datatracker.ietf.org/doc/rfc2385/
+    /// http://datatracker.ietf.org/doc/rfc2385/
     /// </remarks>
     public class MD5Signature : Option
     {
+        #region Members
+
+        // the offset (in bytes) of the MD5 Digest field
+        const Int32 MD5DigestFieldOffset = 2;
+
+        #endregion
+
+
         #region Constructors
 
         /// <summary>
         /// Creates a MD5 Signature Option
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="T:System.Byte[]"/>
+        /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         public MD5Signature(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
         { }
 
         #endregion
+
 
         #region Properties
 
@@ -63,7 +71,7 @@ namespace PacketDotNet.Tcp
         {
             get
             {
-                Byte[] data = new Byte[Length - MD5DigestFieldOffset];
+                var data = new Byte[Length - MD5DigestFieldOffset];
                 Array.Copy(Bytes, MD5DigestFieldOffset, data, 0, data.Length);
                 return data;
             }
@@ -71,25 +79,19 @@ namespace PacketDotNet.Tcp
 
         #endregion
 
+
         #region Methods
 
         /// <summary>
         /// Returns the Option info as a string
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/>
+        /// A <see cref="string" />
         /// </returns>
         public override String ToString()
         {
-            return "[" + Kind.ToString() + ": MD5Digest=0x" + MD5Digest.ToString() + "]";
+            return "[" + Kind + ": MD5Digest=0x" + MD5Digest + "]";
         }
-
-        #endregion
-
-        #region Members
-
-        // the offset (in bytes) of the MD5 Digest field
-        const Int32 MD5DigestFieldOffset = 2;
 
         #endregion
     }

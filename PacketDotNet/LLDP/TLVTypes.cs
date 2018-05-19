@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 namespace PacketDotNet.LLDP
 {
     /// <summary>
@@ -36,6 +37,7 @@ namespace PacketDotNet.LLDP
         /// </description>
         /// <remarks>Source: IETF RFC 802.1AB</remarks>
         EndOfLLDPU = 0,
+
         /// <summary>A Chassis Identifier</summary>
         /// <description>
         /// A mandatory TLV that identifies the chassis
@@ -44,6 +46,7 @@ namespace PacketDotNet.LLDP
         /// </description>
         /// <remarks>Source: IETF RFC 802.1AB</remarks>
         ChassisID = 1,
+
         /// <summary>A Port Identifier</summary>
         /// <description>
         /// A mandatory TLV that identifies the
@@ -52,18 +55,19 @@ namespace PacketDotNet.LLDP
         /// </description>
         /// <remarks>Source: IETF RFC 802.1AB</remarks>
         PortID = 2,
+
         /// <summary>Specifies the Time to Live</summary>
         /// <description>
         /// Indicates the number of seconds that the
         /// recipient LLDP agent is to regard the information
         /// associated with this MSAP identifier to be valid
-        ///
         /// A value of 0 signals that this source is no longer
         /// available and all information associated with it
         /// should be deleted.
         /// </description>
         /// <remarks>Source: IETF RFC 802.1AB</remarks>
         TimeToLive = 3,
+
         /// <summary>A Description of the Port</summary>
         /// <description>
         /// The port description field shall contain an
@@ -72,6 +76,7 @@ namespace PacketDotNet.LLDP
         /// </description>
         /// <remarks>Source: IETF RFC 802.1AB</remarks>
         PortDescription = 4,
+
         /// <summary>The System's Assigned Name</summary>
         /// <description>
         /// The System Name TLV allows network management
@@ -79,6 +84,7 @@ namespace PacketDotNet.LLDP
         /// </description>
         /// <remarks>Source: IETF RFC 802.1AB</remarks>
         SystemName = 5,
+
         /// <summary>A Description of the System</summary>
         /// <description>
         /// The System Description TLV allows network
@@ -86,6 +92,7 @@ namespace PacketDotNet.LLDP
         /// </description>
         /// <remarks>Source: IETF RFC 802.1AB</remarks>
         SystemDescription = 6,
+
         /// <summary>A bitmap containing the System's capabilities</summary>
         /// <description>
         /// The System Capabilities TLV is an optional TLV
@@ -95,6 +102,7 @@ namespace PacketDotNet.LLDP
         /// </description>
         /// <remarks>Source: IETF RFC 802.1AB</remarks>
         SystemCapabilities = 7,
+
         /// <summary>The Management Address</summary>
         /// <description>
         /// The Management Address TLV identifies an address
@@ -104,6 +112,7 @@ namespace PacketDotNet.LLDP
         /// </description>
         /// <remarks>Source: IETF RFC 802.1AB</remarks>
         ManagementAddress = 8,
+
         /// <summary>A vendor-specifid TLV</summary>
         /// <description>
         /// This TLV category is provided to allow different
@@ -114,5 +123,5 @@ namespace PacketDotNet.LLDP
         /// </description>
         /// <remarks>Source: IETF RFC 802.1AB</remarks>
         OrganizationSpecific = 127
-    };
+    }
 }

@@ -35,15 +35,15 @@ namespace Test.PacketType
         [Test]
         public void ConstructingFromValues()
         {
-            var sourceAddress = RandomUtils.GetIPAddress(IpVersion.IPv4);
-            var destinationAddress = RandomUtils.GetIPAddress(IpVersion.IPv4);
+            var sourceAddress = RandomUtils.GetIPAddress(IPVersion.IPv4);
+            var destinationAddress = RandomUtils.GetIPAddress(IPVersion.IPv4);
             var ip = new IPv4Packet(sourceAddress, destinationAddress);
 
             Assert.AreEqual(sourceAddress, ip.SourceAddress);
             Assert.AreEqual(destinationAddress, ip.DestinationAddress);
 
             // make sure the version is what we expect
-            Assert.AreEqual(IPv4Packet.ipVersion, ip.Version);
+            Assert.AreEqual(IPv4Packet.IPVersion, ip.Version);
 
             // retrieve the bytes for this IPv4Packet and construct another IPv4 packet from
             // these bytes
@@ -127,7 +127,7 @@ namespace Test.PacketType
                 Assert.AreEqual(ipv4.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(ipv4.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(ipv4.Color, fromFile.Color);
-                Assert.AreEqual(ipv4.Header, fromFile.Header);
+                Assert.AreEqual(ipv4.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ipv4.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(ipv4.DestinationAddress, fromFile.DestinationAddress);
                 Assert.AreEqual(ipv4.HeaderLength, fromFile.HeaderLength);

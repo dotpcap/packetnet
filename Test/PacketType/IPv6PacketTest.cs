@@ -48,11 +48,11 @@ namespace Test.PacketType
                 Assert.AreEqual(PhysicalAddress.Parse("33-33-00-00-00-02"), e.DestinationHwAddress);
             }
 
-            var ip = (IpPacket)p.Extract (typeof(IpPacket));
+            var ip = (IPPacket)p.Extract (typeof(IPPacket));
             Console.WriteLine("ip {0}", ip.ToString());
             Assert.AreEqual(System.Net.IPAddress.Parse("fe80::2a0:ccff:fed9:4175"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("ff02::2"), ip.DestinationAddress);
-            Assert.AreEqual(IpVersion.IPv6, ip.Version);
+            Assert.AreEqual(IPVersion.IPv6, ip.Version);
             Assert.AreEqual(IPProtocolType.ICMPV6, ip.Protocol);
             Assert.AreEqual(16,  ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
             Assert.AreEqual(255, ip.HopLimit);
@@ -156,8 +156,8 @@ namespace Test.PacketType
         [Test]
         public void ConstructFromValues()
         {
-            var sourceAddress = RandomUtils.GetIPAddress(IpVersion.IPv6);
-            var destinationAddress = RandomUtils.GetIPAddress(IpVersion.IPv6);
+            var sourceAddress = RandomUtils.GetIPAddress(IPVersion.IPv6);
+            var destinationAddress = RandomUtils.GetIPAddress(IPVersion.IPv6);
             var ipPacket = new IPv6Packet(sourceAddress, destinationAddress);
 
             Assert.AreEqual(sourceAddress, ipPacket.SourceAddress);
@@ -237,7 +237,7 @@ namespace Test.PacketType
                 Assert.AreEqual(ipv6.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(ipv6.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(ipv6.Color, fromFile.Color);
-                Assert.AreEqual(ipv6.Header, fromFile.Header);
+                Assert.AreEqual(ipv6.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ipv6.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(ipv6.DestinationAddress, fromFile.DestinationAddress);
                 Assert.AreEqual(ipv6.HeaderLength, fromFile.HeaderLength);

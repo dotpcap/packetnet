@@ -18,10 +18,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
   */
+
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
-using MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -30,64 +32,25 @@ namespace PacketDotNet
     /// An IGMP packet.
     /// </summary>
     [Serializable]
-    public class IGMPv2Packet : InternetPacket
+    public sealed class IGMPv2Packet : InternetPacket
     {
-        /// <value>
-        /// The type of IGMP message
-        /// </value>
-        public virtual IGMPMessageType Type
-        {
-            get => (IGMPMessageType)header.Bytes[header.Offset + IGMPv2Fields.TypePosition];
-
-            set => header.Bytes[header.Offset + IGMPv2Fields.TypePosition] = (Byte)value;
-        }
-
-        /// <summary> Fetch the IGMP max response time.</summary>
-        public virtual Byte MaxResponseTime
-        {
-            get => header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition];
-
-            set => header.Bytes[header.Offset + IGMPv2Fields.MaxResponseTimePosition] = value;
-        }
-
-        /// <summary> Fetch the IGMP header checksum.</summary>
-        public virtual Int16 Checksum
-        {
-            get => BitConverter.ToInt16(header.Bytes,
-                header.Offset + IGMPv2Fields.ChecksumPosition);
-
-            set
-            {
-                Byte[] theValue = BitConverter.GetBytes(value);
-                Array.Copy(theValue, 0, header.Bytes, (header.Offset + IGMPv2Fields.ChecksumPosition), 2);
-            }
-        }
-
-        /// <summary> Fetch the IGMP group address.</summary>
-        public virtual System.Net.IPAddress GroupAddress => IpPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
-            header.Offset + IGMPv2Fields.GroupAddressPosition,
-            header.Bytes);
-
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color => AnsiEscapeSequences.Brown;
-
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
         public IGMPv2Packet(ByteArraySegment bas)
         {
             // set the header field, header field values are retrieved from this byte array
-            header = new ByteArraySegment(bas);
-            header.Length = UdpFields.HeaderLength;
+            // ReSharper disable once UseObjectOrCollectionInitializer
+            Header = new ByteArraySegment(bas);
+            Header.Length = UdpFields.HeaderLength;
 
             // store the payload bytes
-            payloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment();
-                result.TheByteArraySegment = header.EncapsulatedBytes();
+                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.EncapsulatedBytes()};
                 return result;
             });
         }
@@ -96,53 +59,96 @@ namespace PacketDotNet
         /// Constructor with parent
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
-        /// <param name="ParentPacket">
-        /// A <see cref="Packet"/>
+        /// <param name="parentPacket">
+        /// A <see cref="Packet" />
         /// </param>
-        public IGMPv2Packet(ByteArraySegment bas,
-                            Packet ParentPacket) : this(bas)
+        public IGMPv2Packet
+        (
+            ByteArraySegment bas,
+            Packet parentPacket) : this(bas)
         {
-            this.ParentPacket = ParentPacket;
+            ParentPacket = parentPacket;
+        }
+
+        /// <summary> Fetch the IGMP header checksum.</summary>
+        public Int16 Checksum
+        {
+            get => BitConverter.ToInt16(Header.Bytes,
+                                        Header.Offset + IGMPv2Fields.ChecksumPosition);
+
+            set
+            {
+                var theValue = BitConverter.GetBytes(value);
+                Array.Copy(theValue, 0, Header.Bytes, Header.Offset + IGMPv2Fields.ChecksumPosition, 2);
+            }
+        }
+
+        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override String Color => AnsiEscapeSequences.Brown;
+
+        /// <summary> Fetch the IGMP group address.</summary>
+        public IPAddress GroupAddress => IPPacket.GetIPAddress(AddressFamily.InterNetwork,
+                                                               Header.Offset + IGMPv2Fields.GroupAddressPosition,
+                                                               Header.Bytes);
+
+        /// <summary> Fetch the IGMP max response time.</summary>
+        public Byte MaxResponseTime
+        {
+            get => Header.Bytes[Header.Offset + IGMPv2Fields.MaxResponseTimePosition];
+
+            set => Header.Bytes[Header.Offset + IGMPv2Fields.MaxResponseTimePosition] = value;
+        }
+
+        /// <value>
+        /// The type of IGMP message
+        /// </value>
+        public IGMPMessageType Type
+        {
+            get => (IGMPMessageType) Header.Bytes[Header.Offset + IGMPv2Fields.TypePosition];
+
+            set => Header.Bytes[Header.Offset + IGMPv2Fields.TypePosition] = (Byte) value;
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
-            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
                 buffer.AppendFormat("{0}[IGMPv2Packet: Type={2}, MaxResponseTime={3}, GroupAddress={4}]{1}",
-                    color,
-                    colorEscape,
-                    Type,
-                    String.Format("{0:0.0}", (MaxResponseTime / 10)),
-                    GroupAddress);
+                                    color,
+                                    colorEscape,
+                                    Type,
+                                    $"{MaxResponseTime / 10:0.0}",
+                                    GroupAddress);
             }
 
-            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<String,String> properties = new Dictionary<String,String>();
-                properties.Add("type", Type + " (0x" + Type.ToString("x") + ")");
-                properties.Add("max response time", String.Format("{0:0.0}", MaxResponseTime / 10) + " sec (0x" + MaxResponseTime.ToString("x") + ")");
-                // TODO: Implement checksum validation for IGMPv2
-                properties.Add("header checksum", "0x" + Checksum.ToString("x"));
-                properties.Add("group address", GroupAddress.ToString());
+                var properties = new Dictionary<String, String>
+                {
+                    {"type", Type + " (0x" + Type.ToString("x") + ")"},
+                    {"max response time", $"{MaxResponseTime / 10:0.0}" + " sec (0x" + MaxResponseTime.ToString("x") + ")"},
+                    // TODO: Implement checksum validation for IGMPv2
+                    {"header checksum", "0x" + Checksum.ToString("x")},
+                    {"group address", GroupAddress.ToString()}
+                };
 
                 // calculate the padding needed to right-justify the property names
-                Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("IGMP:  ******* IGMPv2 - \"Internet Group Management Protocol (Version 2)\" - offset=? length=" + TotalPacketLength);
@@ -151,6 +157,7 @@ namespace PacketDotNet
                 {
                     buffer.AppendLine("IGMP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
                 }
+
                 buffer.AppendLine("IGMP:");
             }
 

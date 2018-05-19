@@ -230,7 +230,7 @@ namespace Test.PacketType
                 Assert.AreEqual(tcpPacket.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(tcpPacket.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(tcpPacket.Color, fromFile.Color);
-                Assert.AreEqual(tcpPacket.Header, fromFile.Header);
+                Assert.AreEqual(tcpPacket.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(tcpPacket.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(tcpPacket.Ack, fromFile.Ack);
                 Assert.AreEqual(tcpPacket.AcknowledgmentNumber, fromFile.AcknowledgmentNumber);

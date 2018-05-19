@@ -24,7 +24,6 @@ using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
-using PacketDotNet.Utils;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -141,7 +140,7 @@ namespace Test.PacketType
                 Assert.AreEqual(igmp.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(igmp.Checksum, fromFile.Checksum);
                 Assert.AreEqual(igmp.Color, fromFile.Color);
-                Assert.AreEqual(igmp.Header, fromFile.Header);
+                Assert.AreEqual(igmp.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(igmp.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(igmp.Type, fromFile.Type);
                 Assert.AreEqual(igmp.GroupAddress.GetAddressBytes(), fromFile.GroupAddress.GetAddressBytes());

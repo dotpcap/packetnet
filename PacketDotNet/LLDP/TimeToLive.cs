@@ -18,8 +18,11 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
-using MiscUtil.Conversion;
+using System.Reflection;
+using log4net;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet.LLDP
@@ -31,12 +34,12 @@ namespace PacketDotNet.LLDP
     public class TimeToLive : TLV
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-        // NOTE: No need to warn about lack of use, the compiler won't
-        //       put any calls to 'log' here but we need 'log' to exist to compile
+// NOTE: No need to warn about lack of use, the compiler won't
+//       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
@@ -44,6 +47,7 @@ namespace PacketDotNet.LLDP
         /// Number of bytes in the value portion of this tlv
         /// </summary>
         private const Int32 ValueLength = 2;
+
 
         #region Constructors
 
@@ -59,7 +63,7 @@ namespace PacketDotNet.LLDP
         public TimeToLive(Byte[] bytes, Int32 offset) :
             base(bytes, offset)
         {
-            log.Debug("");
+            Log.Debug("");
         }
 
         /// <summary>
@@ -71,12 +75,12 @@ namespace PacketDotNet.LLDP
         /// </param>
         public TimeToLive(UInt16 seconds)
         {
-            log.Debug("");
+            Log.Debug("");
 
             var bytes = new Byte[TLVTypeLength.TypeLengthLength + ValueLength];
-            Int32 offset = 0;
-            Int32 length = bytes.Length;
-            tlvData = new ByteArraySegment(bytes, offset, length);
+            var offset = 0;
+            var length = bytes.Length;
+            TLVData = new ByteArraySegment(bytes, offset, length);
 
             Type = TLVTypes.TimeToLive;
             Seconds = seconds;
@@ -84,22 +88,22 @@ namespace PacketDotNet.LLDP
 
         #endregion
 
+
         #region Properties
 
         /// <value>
         /// The number of seconds until the LLDP needs
         /// to be refreshed
-        ///
         /// A value of 0 means that the LLDP source is
         /// closed and should no longer be refreshed
         /// </value>
         public UInt16 Seconds
         {
-            get => BigEndianBitConverter.Big.ToUInt16(tlvData.Bytes,
-                tlvData.Offset + TLVTypeLength.TypeLengthLength);
+            get => EndianBitConverter.Big.ToUInt16(TLVData.Bytes,
+                                                   TLVData.Offset + TLVTypeLength.TypeLengthLength);
             set => EndianBitConverter.Big.CopyBytes(value,
-                tlvData.Bytes,
-                tlvData.Offset + TLVTypeLength.TypeLengthLength);
+                                                    TLVData.Bytes,
+                                                    TLVData.Offset + TLVTypeLength.TypeLengthLength);
         }
 
         /// <summary>
@@ -108,9 +112,9 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A human readable string
         /// </returns>
-        public override String ToString ()
+        public override String ToString()
         {
-            return String.Format("[TimeToLive: Seconds={0}]", Seconds);
+            return $"[TimeToLive: Seconds={Seconds}]";
         }
 
         #endregion

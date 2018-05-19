@@ -97,7 +97,7 @@ namespace PacketDotNet.Utils
         public static Int32 OnesSum(Byte[] bytes, Int32 start, Int32 len, bool padOddBytesToLeft = true)
         {
             var sum = 0;
-            for (int i = start; i < start + len - 1; i += 2)
+            for (var i = start; i < start + len - 1; i += 2)
             {
                 sum += bytes[i] << 8 | bytes[i + 1];
             }
@@ -131,7 +131,7 @@ namespace PacketDotNet.Utils
         public static int OnesSum(ByteArraySegment byteArraySegment, byte[] prefixedBytes, bool padOddBytesToLeft = true)
         {
             var sum = 0;
-            for (int i = 0; i < prefixedBytes.Length; i += 2)
+            for (var i = 0; i < prefixedBytes.Length; i += 2)
             {
                 sum += prefixedBytes[i] << 8 | prefixedBytes[i + 1];
             }
@@ -148,7 +148,7 @@ namespace PacketDotNet.Utils
 
             var byteArraySegmentStart = byteArraySegmentStartOffset + byteArraySegment.Offset;
             var byteArraySegmentEnd = byteArraySegment.Length + byteArraySegment.Offset - 1;
-            for (int i = byteArraySegmentStart; i < byteArraySegmentEnd; i += 2)
+            for (var i = byteArraySegmentStart; i < byteArraySegmentEnd; i += 2)
             {
                 sum += byteArraySegment.Bytes[i] << 8 |
                        byteArraySegment.Bytes[i + 1];

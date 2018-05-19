@@ -23,24 +23,28 @@ using System;
 namespace PacketDotNet
 {
     /// <summary> L2TP protocol field encoding information. </summary>
+    // ReSharper disable once InconsistentNaming
     public class L2TPFields
     {
+        /// <summary> Length of the Flags in bytes.</summary>
+        public static readonly Int32 FlagsLength = 2;
 
         /// <summary> Length of the Base Header in bytes.</summary>
         public static readonly Int32 HeaderLength = 2;
-        /// <summary> Length of the Flags in bytes.</summary>
-        public static readonly Int32 FlagsLength = 2;
+
         /// <summary> Length of the Length in bytes.</summary>
         public static readonly Int32 LengthsLength = 2;
-        /// <summary> Length of the Ns in bytes.</summary>
-        public static readonly Int32 NsLength = 2;
+
         /// <summary> Length of the Nr in bytes.</summary>
         public static readonly Int32 NrLength = 2;
-        /// <summary> Length of the Offset Size in bytes (Optional).</summary>      
-        public static readonly Int32 OffsetSizeLength = 2;
+
+        /// <summary> Length of the Ns in bytes.</summary>
+        public static readonly Int32 NsLength = 2;
+
         /// <summary> Length of the Offset Pad in bytes (Optional).</summary>
         public static readonly Int32 OffsetPadLength = 2;
 
-
+        /// <summary> Length of the Offset Size in bytes (Optional).</summary>
+        public static readonly Int32 OffsetSizeLength = 2;
     }
 }

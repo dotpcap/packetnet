@@ -17,12 +17,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
+
 namespace PacketDotNet
 {
-    /// <summary> Code constants for IGMP message types.
-    ///
+    /// <summary>
+    /// Code constants for IGMP message types.
     /// From RFC #2236.
-    ///
     /// </summary>
     public enum IGMPMessageType : byte
     {

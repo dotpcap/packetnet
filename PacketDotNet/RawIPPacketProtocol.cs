@@ -19,20 +19,22 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Cameron Elliott <cameron/at/cameronelliott/dot/com>
  *  
  */
-using System;
+
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet
 {
     /// <summary>
     /// Indicates the protocol encapsulated by the PPP packet
     /// See http://www.iana.org/assignments/ppp-numbers
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum RawIPPacketProtocol : ushort
     {
         /// <summary> IPv4 </summary>
         IPv4 = 4,
 
         /// <summary> IPv6 </summary>
-        IPv6 = 6,
+        IPv6 = 6
     }
 }
-

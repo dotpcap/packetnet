@@ -19,92 +19,85 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    /// Data data frame.
+    /// </summary>
+    public class DataDataFrame : DataFrame
     {
         /// <summary>
-        /// Data data frame.
+        /// Initializes a new instance of the <see cref="DataDataFrame" /> class.
         /// </summary>
-        public class DataDataFrame : DataFrame
+        /// <param name='bas'>
+        /// Bas.
+        /// </param>
+        public DataDataFrame(ByteArraySegment bas)
         {
-            /// <summary>
-            /// Gets the size of the frame.
-            /// </summary>
-            /// <value>
-            /// The size of the frame.
-            /// </value>
-            public override Int32 FrameSize
-            {
-                get
-                {
-                    //if we are in WDS mode then there are 4 addresses (normally it is just 3)
-                    Int32 numOfAddressFields = (FrameControl.ToDS && FrameControl.FromDS) ? 4 : 3;
+            Header = new ByteArraySegment(bas);
 
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * numOfAddressFields) +
-                        MacFields.SequenceControlLength);
-                }
+            FrameControl = new FrameControlField(FrameControlBytes);
+            Duration = new DurationField(DurationBytes);
+            SequenceControl = new SequenceControlField(SequenceControlBytes);
+            ReadAddresses(); //must do this after reading FrameControl
+
+            Header.Length = FrameSize;
+            var availablePayloadLength = GetAvailablePayloadLength();
+            if (availablePayloadLength > 0)
+            {
+                PayloadPacketOrData.Value.ByteArraySegment = Header.EncapsulatedBytes(availablePayloadLength);
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataDataFrame" /> class.
+        /// </summary>
+        public DataDataFrame()
+        {
+            FrameControl = new FrameControlField();
+            Duration = new DurationField();
+            SequenceControl = new SequenceControlField();
+            AssignDefaultAddresses();
+
+            FrameControl.SubType = FrameControlField.FrameSubTypes.Data;
+        }
+
+        /// <summary>
+        /// Gets the size of the frame.
+        /// </summary>
+        /// <value>
+        /// The size of the frame.
+        /// </value>
+        public sealed override Int32 FrameSize
+        {
+            get
+            {
+                //if we are in WDS mode then there are 4 addresses (normally it is just 3)
+                var numOfAddressFields = FrameControl.ToDS && FrameControl.FromDS ? 4 : 3;
+
+                return MacFields.FrameControlLength +
+                       MacFields.DurationIDLength +
+                       (MacFields.AddressLength * numOfAddressFields) +
+                       MacFields.SequenceControlLength;
+            }
+        }
+
+        /// <summary>
+        /// Writes the current packet properties to the backing ByteArraySegment.
+        /// </summary>
+        public override void UpdateCalculatedValues()
+        {
+            if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
+            {
+                Header = new ByteArraySegment(new Byte[FrameSize]);
             }
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DataDataFrame"/> class.
-            /// </summary>
-            /// <param name='bas'>
-            /// Bas.
-            /// </param>
-            public DataDataFrame (ByteArraySegment bas)
-            {
-                header = new ByteArraySegment (bas);
-
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                SequenceControl = new SequenceControlField (SequenceControlBytes);
-                ReadAddresses (); //must do this after reading FrameControl
-
-                header.Length = FrameSize; 
-                var availablePayloadLength = GetAvailablePayloadLength();
-				if(availablePayloadLength > 0)
-				{
-					payloadPacketOrData.Value.TheByteArraySegment = header.EncapsulatedBytes (availablePayloadLength);
-				}
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DataDataFrame"/> class.
-            /// </summary>
-            public DataDataFrame ()
-            {
-                this.FrameControl = new FrameControlField ();
-                this.Duration = new DurationField ();
-                this.SequenceControl = new SequenceControlField ();
-                AssignDefaultAddresses ();
-                
-                FrameControl.SubType = FrameControlField.FrameSubTypes.Data;
-            }
-            
-            /// <summary>
-            /// Writes the current packet properties to the backing ByteArraySegment.
-            /// </summary>
-            public override void UpdateCalculatedValues ()
-            {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
-                {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
-                }
-                
-                this.FrameControlBytes = this.FrameControl.Field;
-                this.DurationBytes = this.Duration.Field;
-                this.SequenceControlBytes = this.SequenceControl.Field;
-                WriteAddressBytes ();
-            }
-
-        } 
+            FrameControlBytes = FrameControl.Field;
+            DurationBytes = Duration.Field;
+            SequenceControlBytes = SequenceControl.Field;
+            WriteAddressBytes();
+        }
     }
 }

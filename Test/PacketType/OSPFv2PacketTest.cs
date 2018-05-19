@@ -3,6 +3,7 @@ using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using System.Collections.Generic;
+using PacketDotNet.LSA;
 using SharpPcap;
 using PacketDotNet.Utils;
 
@@ -434,9 +435,9 @@ namespace Test.PacketType
             Assert.AreEqual(0x80000004, rl.LSSequenceNumber);
             Assert.AreEqual(0x7caa, rl.Checksum);
             Assert.AreEqual(48, rl.Length);
-            Assert.AreEqual(0, rl.vBit);
-            Assert.AreEqual(0, rl.eBit);
-            Assert.AreEqual(0, rl.bBit);
+            Assert.AreEqual(0, rl.VBit);
+            Assert.AreEqual(0, rl.EBit);
+            Assert.AreEqual(0, rl.BBit);
             Assert.AreEqual(2, rl.RouterLinks.Count);
 
             RouterLink rlink = rl.RouterLinks[0];
@@ -464,9 +465,9 @@ namespace Test.PacketType
             Assert.AreEqual(0x80000006, rl.LSSequenceNumber);
             Assert.AreEqual(0x36b1, rl.Checksum);
             Assert.AreEqual(36, rl.Length);
-            Assert.AreEqual(0, rl.vBit);
-            Assert.AreEqual(0, rl.eBit);
-            Assert.AreEqual(1, rl.bBit);
+            Assert.AreEqual(0, rl.VBit);
+            Assert.AreEqual(0, rl.EBit);
+            Assert.AreEqual(1, rl.BBit);
             Assert.AreEqual(1, rl.RouterLinks.Count);
 
             rlink = rl.RouterLinks[0];
@@ -548,7 +549,7 @@ namespace Test.PacketType
             Assert.AreEqual(36, al.Length);
 
             ASExternalLink aslink = al.ASExternalLinks[0];
-            Assert.AreEqual(aslink.eBit, 1);
+            Assert.AreEqual(aslink.EBit, 1);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
             Assert.AreEqual(0, aslink.TOS);
@@ -569,7 +570,7 @@ namespace Test.PacketType
             Assert.AreEqual(36, al.Length);
 
             aslink = al.ASExternalLinks[0];
-            Assert.AreEqual(aslink.eBit, 1);
+            Assert.AreEqual(aslink.EBit, 1);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
             Assert.AreEqual(0, aslink.TOS);
@@ -831,9 +832,9 @@ namespace Test.PacketType
             rl.AdvertisingRouter = System.Net.IPAddress.Parse("2.2.2.2");
             rl.LSSequenceNumber = 0x80000001;
             rl.Checksum = 0xaaaa;
-            rl.vBit = 1;
-            rl.eBit = 0;
-            rl.bBit = 1;
+            rl.VBit = 1;
+            rl.EBit = 0;
+            rl.BBit = 1;
 
 
             Assert.AreEqual(333, rl.LSAge);
@@ -844,9 +845,9 @@ namespace Test.PacketType
             Assert.AreEqual(0x80000001, rl.LSSequenceNumber);
             Assert.AreEqual(0xaaaa, rl.Checksum);
             Assert.AreEqual(24, rl.Length);
-            Assert.AreEqual(1, rl.vBit);
-            Assert.AreEqual(0, rl.eBit);
-            Assert.AreEqual(1, rl.bBit);
+            Assert.AreEqual(1, rl.VBit);
+            Assert.AreEqual(0, rl.EBit);
+            Assert.AreEqual(1, rl.BBit);
             Assert.AreEqual(0, rl.RouterLinks.Count);
 
             List<RouterLink> rlist = new List<RouterLink>();
@@ -876,9 +877,9 @@ namespace Test.PacketType
             rl.AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5");
             rl.LSSequenceNumber = 0x80000004;
             rl.Checksum = 0x7caa;
-            rl.vBit = 0;
-            rl.eBit = 0;
-            rl.bBit = 0;
+            rl.VBit = 0;
+            rl.EBit = 0;
+            rl.BBit = 0;
 
             Assert.AreEqual(446, rl.LSAge);
             Assert.AreEqual(0x22, rl.Options);
@@ -888,9 +889,9 @@ namespace Test.PacketType
             Assert.AreEqual(0x80000004, rl.LSSequenceNumber);
             Assert.AreEqual(0x7caa, rl.Checksum);
             Assert.AreEqual(48, rl.Length);
-            Assert.AreEqual(0, rl.vBit);
-            Assert.AreEqual(0, rl.eBit);
-            Assert.AreEqual(0, rl.bBit);
+            Assert.AreEqual(0, rl.VBit);
+            Assert.AreEqual(0, rl.EBit);
+            Assert.AreEqual(0, rl.BBit);
             Assert.AreEqual(2, rl.RouterLinks.Count);
 
             rlink = rl.RouterLinks[0];
@@ -1064,7 +1065,7 @@ namespace Test.PacketType
 
             //ctor 2;
             ASExternalLink aslink = new ASExternalLink();
-            aslink.eBit = 1;
+            aslink.EBit = 1;
             aslink.Metric = 100;
             aslink.ExternalRouteTag = 0;
             aslink.TOS = 0;
@@ -1097,7 +1098,7 @@ namespace Test.PacketType
             Assert.AreEqual(36, al.Length);
 
             aslink = al.ASExternalLinks[0];
-            Assert.AreEqual(1, aslink.eBit);
+            Assert.AreEqual(1, aslink.EBit);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
             Assert.AreEqual(0, aslink.TOS);
@@ -1164,9 +1165,9 @@ namespace Test.PacketType
             rl.AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5");
             rl.LSSequenceNumber = 0x80000004;
             rl.Checksum = 0x7caa;
-            rl.vBit = 0;
-            rl.eBit = 0;
-            rl.bBit = 0;
+            rl.VBit = 0;
+            rl.EBit = 0;
+            rl.BBit = 0;
 
             //add network lsa
             List<System.Net.IPAddress> rtrs = new List<System.Net.IPAddress>();
@@ -1211,7 +1212,7 @@ namespace Test.PacketType
 
             //add AS External LSA
             ASExternalLink aslink = new ASExternalLink();
-            aslink.eBit = 1;
+            aslink.EBit = 1;
             aslink.Metric = 100;
             aslink.ExternalRouteTag = 0;
             aslink.TOS = 0;
@@ -1262,9 +1263,9 @@ namespace Test.PacketType
             Assert.AreEqual(0x80000004, rl.LSSequenceNumber);
             Assert.AreEqual(0x7caa, rl.Checksum);
             Assert.AreEqual(48, rl.Length);
-            Assert.AreEqual(0, rl.vBit);
-            Assert.AreEqual(0, rl.eBit);
-            Assert.AreEqual(0, rl.bBit);
+            Assert.AreEqual(0, rl.VBit);
+            Assert.AreEqual(0, rl.EBit);
+            Assert.AreEqual(0, rl.BBit);
             Assert.AreEqual(2, rl.RouterLinks.Count);
 
             rlink = rl.RouterLinks[0];
@@ -1328,7 +1329,7 @@ namespace Test.PacketType
             Assert.AreEqual(36, al.Length);
 
             aslink = al.ASExternalLinks[0];
-            Assert.AreEqual(1, aslink.eBit);
+            Assert.AreEqual(1, aslink.EBit);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
             Assert.AreEqual(0, aslink.TOS);

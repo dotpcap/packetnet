@@ -25,6 +25,7 @@ namespace PacketDotNet
     /// <summary>
     /// A struct containing length and position information about IPv6 Fields.
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     public struct IPv6Fields
     {
         /// <summary>
@@ -92,7 +93,7 @@ namespace PacketDotNet
         /// <summary>
         /// Commutes the field positions.
         /// </summary>
-        static IPv6Fields( )
+        static IPv6Fields()
         {
             PayloadLengthPosition = VersionTrafficClassFlowLabelPosition + VersionTrafficClassFlowLabelLength;
             NextHeaderPosition = PayloadLengthPosition + PayloadLengthLength;

@@ -19,14 +19,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Text;
 using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Collections.Generic;
+using PacketDotNet.MiscUtil.Conversion;
 
 namespace Test.PacketType
 {
@@ -205,7 +203,7 @@ namespace Test.PacketType
         public void TestStringConverter()
         {
             var bytes = new Byte[] { 0xd8, 0xc4, 0xc2, 0xf2, 0x61, 0xd1, 0xe5, 0xd4 };
-            Assert.AreEqual("QDB2/JVM", MiscUtil.Conversion.StringConverter.EbcdicToAscii(bytes, 0, bytes.Length));
+            Assert.AreEqual("QDB2/JVM", StringConverter.EbcdicToAscii(bytes, 0, bytes.Length));
         }
     }
 }

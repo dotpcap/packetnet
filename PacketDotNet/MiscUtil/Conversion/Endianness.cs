@@ -1,5 +1,4 @@
-
-namespace MiscUtil.Conversion
+namespace PacketDotNet.MiscUtil.Conversion
 {
     /// <summary>
     /// Endianness of a converter
@@ -10,6 +9,7 @@ namespace MiscUtil.Conversion
         /// Little endian - least significant byte first
         /// </summary>
         LittleEndian,
+
         /// <summary>
         /// Big endian - most significant byte first
         /// </summary>

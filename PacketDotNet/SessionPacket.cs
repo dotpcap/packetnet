@@ -18,19 +18,11 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
-using PacketDotNet.Utils;
-
-﻿namespace PacketDotNet
+namespace PacketDotNet
 {
     /// <summary>
     /// Session layer packet
     /// </summary>
     public abstract class SessionPacket : Packet
-    {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public SessionPacket()
-        {}
-    }
+    { }
 }

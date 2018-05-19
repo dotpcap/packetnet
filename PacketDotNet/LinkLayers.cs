@@ -18,11 +18,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PacketDotNet
 {
-    /// <summary> Link-layer type codes.
+    /// <summary>
+    /// Link-layer type codes.
     /// <p>
     /// Taken from libpcap/bpf/net/bpf.h and pcap/net/bpf.h.
     /// </p>
@@ -40,6 +41,7 @@ namespace PacketDotNet
     /// are not encapsulated in any ethernet header.
     /// </p>
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum LinkLayers : byte
     {
         /// <summary> no link-layer encapsulation </summary>
@@ -117,6 +119,6 @@ namespace PacketDotNet
         /// DLT_ requested by Gianluca Varenni &lt;gianluca.varenni@cacetech.com&gt;.
         /// See http://www.cacetech.com/documents/PPI%20Header%20format%201.0.7.pdf
         /// </summary>
-        PerPacketInformation = 192,
+        PerPacketInformation = 192
     }
 }

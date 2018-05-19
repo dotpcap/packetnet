@@ -17,22 +17,21 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
+
 using System;
-using MiscUtil.Conversion;
-using PacketDotNet.Utils;
+using PacketDotNet.MiscUtil.Conversion;
 
 namespace PacketDotNet.Tcp
 {
     /// <summary>
     /// A Time Stamp Option
-    ///  Used for RTTM (Round Trip Time Measurement)
-    ///  and PAWS (Protect Against Wrapped Sequences)
-    ///
-    ///  Opsoletes the Echo and EchoReply option fields
+    /// Used for RTTM (Round Trip Time Measurement)
+    /// and PAWS (Protect Against Wrapped Sequences)
+    /// Opsoletes the Echo and EchoReply option fields
     /// </summary>
     /// <remarks>
     /// References:
-    ///  http://datatracker.ietf.org/doc/rfc1323/
+    /// http://datatracker.ietf.org/doc/rfc1323/
     /// </remarks>
     public class TimeStamp : Option
     {
@@ -42,19 +41,36 @@ namespace PacketDotNet.Tcp
         /// Creates a Timestamp Option
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="T:System.Byte[]"/>
+        /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32"/>
+        /// A <see cref="System.Int32" />
         /// </param>
         public TimeStamp(Byte[] bytes, Int32 offset, Int32 length) :
             base(bytes, offset, length)
         { }
 
         #endregion
+
+
+        #region Methods
+
+        /// <summary>
+        /// Returns the Option info as a string
+        /// </summary>
+        /// <returns>
+        /// A <see cref="string" />
+        /// </returns>
+        public override String ToString()
+        {
+            return "[" + Kind + ": Value=" + Value + " EchoReply=" + EchoReply + "]";
+        }
+
+        #endregion
+
 
         #region Properties
 
@@ -70,20 +86,6 @@ namespace PacketDotNet.Tcp
 
         #endregion
 
-        #region Methods
-
-        /// <summary>
-        /// Returns the Option info as a string
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/>
-        /// </returns>
-        public override String ToString()
-        {
-            return "[" + Kind.ToString() + ": Value=" + Value.ToString() + " EchoReply=" + EchoReply.ToString() + "]";
-        }
-
-        #endregion
 
         #region Members
 

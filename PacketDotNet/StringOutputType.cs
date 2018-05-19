@@ -14,7 +14,7 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
-using System;
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -26,14 +26,17 @@ namespace PacketDotNet
         /// Outputs the packet info on a single line
         /// </summary>
         Normal,
+
         /// <summary>
         /// Outputs the packet info on a single line with coloring
         /// </summary>
         Colored,
+
         /// <summary>
         /// Outputs the detailed packet info
         /// </summary>
         Verbose,
+
         /// <summary>
         /// Outputs the detailed packet info with coloring
         /// </summary>

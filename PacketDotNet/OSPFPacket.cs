@@ -37,7 +37,7 @@ namespace PacketDotNet
         /// <returns>an OSPF packet</returns>
         public static OSPFPacket ConstructOSPFPacket(Byte[] payload, Int32 offset)
         {
-            var v = (OSPFVersion)payload[offset + OSPFv2Fields.VersionPosition];
+            var v = (OSPFVersion) payload[offset + OSPFv2Fields.VersionPosition];
 
             switch (v)
             {
@@ -53,7 +53,7 @@ namespace PacketDotNet
         private static OSPFv2Packet ConstructV2Packet(Byte[] payload, Int32 offset)
         {
             OSPFv2Packet p;
-            OSPFPacketType type = (OSPFPacketType)payload[offset + OSPFv2Fields.TypePosition];
+            var type = (OSPFPacketType) payload[offset + OSPFv2Fields.TypePosition];
 
             switch (type)
             {
@@ -70,7 +70,7 @@ namespace PacketDotNet
                     p = new OSPFv2LSRequestPacket(payload, offset);
                     break;
                 case OSPFPacketType.LinkStateUpdate:
-                    p = new OSPFv2LSUpdatePacket(payload,offset);
+                    p = new OSPFv2LSUpdatePacket(payload, offset);
                     break;
                 default:
                     throw new Exception("Malformed OSPF packet");

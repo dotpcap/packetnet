@@ -1,13 +1,15 @@
+// ReSharper disable once RedundantUsingDirective
 using System;
+
 #if DEBUG
-using log4net.Core;
+
 #endif
 
 namespace PacketDotNet
 {
 #if !DEBUG
-    // For Release builds we disable logging by using this class
-    // in place of a log4net logger
+// For Release builds we disable logging by using this class
+// in place of a log4net logger
     internal class ILogInactive
     {
 #if false

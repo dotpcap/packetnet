@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of PacketDotNet
 
 PacketDotNet is free software: you can redistribute it and/or modify
@@ -15,24 +15,33 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- *  Copyright 2011 Georgi Baychev <georgi.baychev@gmail.com>
+ *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    /// <summary>
-    /// The different LSA types
-    /// </summary>
-    public enum LSAType : byte
+    public partial class FrameControlField
     {
-#pragma warning disable 1591
-        Router = 0x01,
-        Network = 0x02,
-        Summary = 0x03,
-        SummaryASBR = 0x04,
-        ASExternal = 0x05
-#pragma warning restore 1591
+        /// <summary>
+        /// Specifies the main frame type: Control, Management or Data.
+        /// </summary>
+        public enum FrameTypes
+        {
+            /// <summary>
+            /// Management frame.
+            /// </summary>
+            Management = 0,
+
+            /// <summary>
+            /// Control frame.
+            /// </summary>
+            Control = 1,
+
+            /// <summary>
+            /// Data frame.
+            /// </summary>
+            Data = 2
+        }
     }
 }

@@ -46,10 +46,10 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var ip = (IpPacket)p.Extract(typeof(IpPacket));
+            var ip = (IPPacket)p.Extract(typeof(IPPacket));
             Console.WriteLine(ip.GetType());
 
-            Assert.AreEqual(20, ip.Header.Length, "Header.Length doesn't match expected length");
+            Assert.AreEqual(20, ip.HeaderData.Length, "Header.Length doesn't match expected length");
             Console.WriteLine(ip.ToString());
         }
 
@@ -66,7 +66,7 @@ namespace Test.PacketType
             // Act
             Packet.ParsePacket(firstRawPacket.LinkLayerType, firstRawPacket.Data); // read and discard first packet
             var secondPacket = Packet.ParsePacket(secondRawPacket.LinkLayerType, secondRawPacket.Data);
-            var ipFragmentPacket = secondPacket.Extract(typeof(IpPacket)) as IpPacket;
+            var ipFragmentPacket = secondPacket.Extract(typeof(IPPacket)) as IPPacket;
 
             // Assert
             Assert.IsNotNull(ipFragmentPacket, "The second packet should contain an IP packet within");
@@ -86,7 +86,7 @@ namespace Test.PacketType
 
             // Act
             var firstPacket = Packet.ParsePacket(firstRawPacket.LinkLayerType, firstRawPacket.Data);
-            var ipPacket = firstPacket.Extract(typeof(IpPacket)) as IpPacket;
+            var ipPacket = firstPacket.Extract(typeof(IPPacket)) as IPPacket;
             var udpPacket = ipPacket.Extract(typeof (UdpPacket)) as UdpPacket;
 
             // Assert
@@ -108,7 +108,7 @@ namespace Test.PacketType
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var ip = (IpPacket)p.Extract(typeof(IpPacket));
+                var ip = (IPPacket)p.Extract(typeof(IPPacket));
                 if (ip == null)
                 {
                     continue;
@@ -121,7 +121,7 @@ namespace Test.PacketType
 
                 memoryStream.Seek (0, SeekOrigin.Begin);
                 BinaryFormatter deserializer = new BinaryFormatter();
-                IpPacket fromFile = (IpPacket)deserializer.Deserialize(memoryStream);
+                IPPacket fromFile = (IPPacket)deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(ip.Bytes, fromFile.Bytes);
                 Assert.AreEqual(ip.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
@@ -130,7 +130,7 @@ namespace Test.PacketType
                 Assert.AreEqual(ip.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(ip.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(ip.Color, fromFile.Color);
-                Assert.AreEqual(ip.Header, fromFile.Header);
+                Assert.AreEqual(ip.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ip.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(ip.DestinationAddress, fromFile.DestinationAddress);
                 Assert.AreEqual(ip.HeaderLength, fromFile.HeaderLength);

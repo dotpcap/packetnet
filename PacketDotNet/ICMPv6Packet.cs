@@ -17,10 +17,13 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Text;
-using MiscUtil.Conversion;
+using log4net;
+using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -30,34 +33,34 @@ namespace PacketDotNet
     /// See http://en.wikipedia.org/wiki/ICMPv6
     /// </summary>
     [Serializable]
-    public class ICMPv6Packet : InternetPacket
+    public sealed class ICMPv6Packet : InternetPacket
     {
 #if DEBUG
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-        // NOTE: No need to warn about lack of use, the compiler won't
-        //       put any calls to 'log' here but we need 'log' to exist to compile
+// NOTE: No need to warn about lack of use, the compiler won't
+//       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
-        private static readonly ILogInactive log;
+        private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
         /// <value>
         /// The Type value
         /// </value>
-        public virtual ICMPv6Types Type
+        public ICMPv6Types Type
         {
-            get => (ICMPv6Types)header.Bytes[header.Offset + ICMPv6Fields.TypePosition];
+            get => (ICMPv6Types) Header.Bytes[Header.Offset + ICMPv6Fields.TypePosition];
 
-            set => header.Bytes[header.Offset + ICMPv6Fields.TypePosition] = (Byte)value;
+            set => Header.Bytes[Header.Offset + ICMPv6Fields.TypePosition] = (Byte) value;
         }
 
         /// <summary> Fetch the ICMP code </summary>
-        public virtual Byte Code
+        public Byte Code
         {
-            get => header.Bytes[header.Offset + ICMPv6Fields.CodePosition];
+            get => Header.Bytes[Header.Offset + ICMPv6Fields.CodePosition];
 
-            set => header.Bytes[header.Offset + ICMPv6Fields.CodePosition] = (Byte)value;
+            set => Header.Bytes[Header.Offset + ICMPv6Fields.CodePosition] = value;
         }
 
         /// <value>
@@ -65,15 +68,15 @@ namespace PacketDotNet
         /// </value>
         public UInt16 Checksum
         {
-            get => EndianBitConverter.Big.ToUInt16(header.Bytes,
-                header.Offset + ICMPv6Fields.ChecksumPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                   Header.Offset + ICMPv6Fields.ChecksumPosition);
 
             set
             {
                 var theValue = value;
                 EndianBitConverter.Big.CopyBytes(theValue,
-                                                 header.Bytes,
-                                                 header.Offset + ICMPv6Fields.ChecksumPosition);
+                                                 Header.Bytes,
+                                                 Header.Offset + ICMPv6Fields.ChecksumPosition);
             }
         }
 
@@ -81,49 +84,52 @@ namespace PacketDotNet
         /// Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
         public ICMPv6Packet(ByteArraySegment bas)
         {
-            log.Debug("");
+            Log.Debug("");
 
-            header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(bas);
         }
 
         /// <summary>
         /// Constructor with parent packet
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
-        /// <param name="ParentPacket">
-        /// A <see cref="Packet"/>
-        /// </param>        
-        public ICMPv6Packet(ByteArraySegment bas,
-                            Packet ParentPacket) : this(bas)
+        /// <param name="parentPacket">
+        /// A <see cref="Packet" />
+        /// </param>
+        public ICMPv6Packet
+        (
+            ByteArraySegment bas,
+            Packet parentPacket) : this(bas)
         {
-            this.ParentPacket = ParentPacket;
+            ParentPacket = parentPacket;
         }
 
         /// <summary>
         /// Used to prevent a recursive stack overflow
         /// when recalculating in UpdateCalculatedValues()
         /// </summary>
-        private Boolean skipUpdating = false;
+        private Boolean _skipUpdating;
 
         /// <summary>
         /// Recalculate the checksum
         /// </summary>
-        public override void UpdateCalculatedValues ()
+        public override void UpdateCalculatedValues()
         {
-            if(skipUpdating)
+            if (_skipUpdating)
                 return;
+
 
             // prevent us from entering this routine twice
             // by setting this flag, the act of retrieving the Bytes
             // property will cause this routine to be called which will
             // retrieve Bytes recursively and overflow the stack
-            skipUpdating = true;
+            _skipUpdating = true;
 
             // start with this packet with a zeroed out checksum field
             Checksum = 0;
@@ -134,56 +140,61 @@ namespace PacketDotNet
             Checksum = (ushort) ChecksumUtils.OnesComplementSum(dataToChecksum, ipv6Parent?.GetPseudoIPHeader(dataToChecksum.Length) ?? new byte[0]);
 
             // clear the skip variable
-            skipUpdating = false;
+            _skipUpdating = false;
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color => AnsiEscapeSequences.LightBlue;
+        public override String Color => AnsiEscapeSequences.LightBlue;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            String color = "";
-            String colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
-            if(outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if(outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            switch (outputFormat)
             {
-                // build the output string
-                buffer.AppendFormat("{0}[ICMPPacket: Type={2}, Code={3}]{1}",
-                    color,
-                    colorEscape,
-                    Type,
-                    Code);
-            }
+                case StringOutputType.Normal:
+                case StringOutputType.Colored:
+                    // build the output string
+                    buffer.AppendFormat("{0}[ICMPPacket: Type={2}, Code={3}]{1}",
+                                        color,
+                                        colorEscape,
+                                        Type,
+                                        Code);
+                    break;
+                case StringOutputType.Verbose:
+                case StringOutputType.VerboseColored:
+                    // collect the properties and their value
+                    var properties = new Dictionary<String, String>
+                    {
+                        {"type", Type + " (" + (Int32) Type + ")"},
+                        {"code", Code.ToString()},
+                        // TODO: Implement a checksum verification for ICMPv6
+                        {"checksum", "0x" + Checksum.ToString("x")}
+                    };
+                    // TODO: Implement ICMPv6 Option fields here?
 
-            if(outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
-            {
-                // collect the properties and their value
-                Dictionary<String,String> properties = new Dictionary<String,String>();
-                properties.Add("type", Type.ToString() + " (" + (Int32)Type + ")");
-                properties.Add("code", Code.ToString());
-                // TODO: Implement a checksum verification for ICMPv6
-                properties.Add("checksum", "0x" + Checksum.ToString("x"));
-                // TODO: Implement ICMPv6 Option fields here?
+                    // calculate the padding needed to right-justify the property names
+                    var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
-                // calculate the padding needed to right-justify the property names
-                Int32 padLength = Utils.RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                    // build the output string
+                    buffer.AppendLine("ICMP:  ******* ICMPv6 - \"Internet Control Message Protocol (Version 6)\"- offset=? length=" + TotalPacketLength);
+                    buffer.AppendLine("ICMP:");
+                    foreach (var property in properties)
+                    {
+                        buffer.AppendLine("ICMP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    }
 
-                // build the output string
-                buffer.AppendLine("ICMP:  ******* ICMPv6 - \"Internet Control Message Protocol (Version 6)\"- offset=? length=" + TotalPacketLength);
-                buffer.AppendLine("ICMP:");
-                foreach (var property in properties)
-                {
-                    buffer.AppendLine("ICMP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
-                }
-                buffer.AppendLine("ICMP:");
+                    buffer.AppendLine("ICMP:");
+                    break;
             }
 
             // append the base string output

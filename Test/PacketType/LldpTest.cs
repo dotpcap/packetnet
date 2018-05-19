@@ -19,7 +19,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 using System;
 using System.Net;
-using System.Net.NetworkInformation;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
@@ -332,7 +331,7 @@ namespace Test.PacketType
                 Assert.AreEqual(lldp.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(lldp.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(lldp.Color, fromFile.Color);
-                Assert.AreEqual(lldp.Header, fromFile.Header);
+                Assert.AreEqual(lldp.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(lldp.PayloadData, fromFile.PayloadData);
 
                 for (Int32 i = 0; i < lldp.TlvCollection.Count; i++)

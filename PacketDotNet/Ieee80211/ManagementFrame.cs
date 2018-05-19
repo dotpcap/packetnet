@@ -19,81 +19,68 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net.NetworkInformation;
-using MiscUtil.Conversion;
-using PacketDotNet.Utils;
+using PacketDotNet.MiscUtil.Conversion;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    /// Format of a CTS or an ACK frame
+    /// </summary>
+    public abstract class ManagementFrame : MacFrame
     {
         /// <summary>
-        /// Format of a CTS or an ACK frame
+        /// BssID
         /// </summary>
-        public abstract class ManagementFrame : MacFrame
+        public PhysicalAddress BssId { get; set; }
+
+        /// <summary>
+        /// DestinationAddress
+        /// </summary>
+        public PhysicalAddress DestinationAddress { get; set; }
+
+        /// <summary>
+        /// Sequence control field
+        /// </summary>
+        public SequenceControlField SequenceControl { get; set; }
+
+        /// <summary>
+        /// SourceAddress
+        /// </summary>
+        public PhysicalAddress SourceAddress { get; set; }
+
+
+        /// <summary>
+        /// Frame control bytes are the first two bytes of the frame
+        /// </summary>
+        protected UInt16 SequenceControlBytes
         {
-            /// <summary>
-            /// DestinationAddress
-            /// </summary>
-            public PhysicalAddress DestinationAddress {get; set;}
-
-            /// <summary>
-            /// SourceAddress
-            /// </summary>
-            public PhysicalAddress SourceAddress {get; set;}
-
-            /// <summary>
-            /// BssID
-            /// </summary>
-            public PhysicalAddress BssId {get; set;}
-
-
-            /// <summary>
-            /// Frame control bytes are the first two bytes of the frame
-            /// </summary>
-            protected UInt16 SequenceControlBytes
+            get
             {
-                get
+                if (Header.Length >= MacFields.SequenceControlPosition + MacFields.SequenceControlLength)
                 {
-					if(header.Length >= (MacFields.SequenceControlPosition + MacFields.SequenceControlLength))
-					{
-						return EndianBitConverter.Little.ToUInt16(header.Bytes,
-						                                          (header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
-					}
-					else
-					{
-						return 0;
-					}
+                    return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                              Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3));
                 }
 
-                set => EndianBitConverter.Little.CopyBytes(value,
-                    header.Bytes,
-                    (header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3)));
+                return 0;
             }
 
-            /// <summary>
-            /// Sequence control field
-            /// </summary>
-            public SequenceControlField SequenceControl {get; set;}
-            
-            /// <summary>
-            /// Returns a string with a description of the addresses used in the packet.
-            /// This is used as a compoent of the string returned by ToString().
-            /// </summary>
-            /// <returns>
-            /// The address string.
-            /// </returns>
-            protected override String GetAddressString()
-            {
-                return String.Format("SA {0} DA {1} BSSID {2}",
-                                     SourceAddress, 
-                                     DestinationAddress, 
-                                     BssId);
-            }
-        } 
+            set => EndianBitConverter.Little.CopyBytes(value,
+                                                       Header.Bytes,
+                                                       Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3));
+        }
+
+        /// <summary>
+        /// Returns a string with a description of the addresses used in the packet.
+        /// This is used as a compoent of the string returned by ToString().
+        /// </summary>
+        /// <returns>
+        /// The address string.
+        /// </returns>
+        protected override String GetAddressString()
+        {
+            return $"SA {SourceAddress} DA {DestinationAddress} BSSID {BssId}";
+        }
     }
-
 }

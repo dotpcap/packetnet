@@ -171,7 +171,7 @@ namespace PacketDotNet
             get
             {
                 // IPv6 has no checksum so only the TCP checksum needs evaluation
-                if (ParentPacket.GetType() == typeof(IPv6Packet))
+                if (ParentPacket is IPv6Packet)
                     return ValidTCPChecksum;
 
 
@@ -315,7 +315,8 @@ namespace PacketDotNet
             Log.Debug("");
 
             // allocate memory for this packet
-            var offset = 0;
+            const int offset = 0;
+
             var length = TcpFields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);

@@ -424,12 +424,19 @@ namespace PacketDotNet
         /// <returns></returns>
         public TcpPacket DecodePayload(PacketOrByteArraySegment result)
         {
-            if (result.ByteArraySegment == null)
+            if (result.ByteArraySegment == null || result.ByteArraySegment.Length < DrdaDDMFields.DDMHeadTotalLength)
                 return this;
 
 
-            if (result.ByteArraySegment.Length >= DrdaDDMFields.DDMHeadTotalLength &&
-                result.ByteArraySegment.Bytes[result.ByteArraySegment.Offset + 2] == 0xD0)
+            // Based on https://github.com/wireshark/wireshark/blob/fe219637a6748130266a0b0278166046e60a2d68/epan/dissectors/packet-drda.c#L757.
+
+            var outerLength = EndianBitConverter.Big.ToUInt16(result.ByteArraySegment.Bytes,
+                                                              result.ByteArraySegment.Offset + 0);
+            var innerLength = EndianBitConverter.Big.ToUInt16(result.ByteArraySegment.Bytes,
+                                                              result.ByteArraySegment.Offset + 6);
+
+            // The first header is 6 bytes long, so the length in the second header should be 6 bytes less.
+            if (result.ByteArraySegment.Bytes[result.ByteArraySegment.Offset + 2] == 0xD0 && outerLength - innerLength == 6)
             {
                 var drdaPacket = new DrdaPacket(result.ByteArraySegment, this);
                 result.Packet = drdaPacket;

@@ -430,16 +430,20 @@ namespace PacketDotNet
 
             // Based on https://github.com/wireshark/wireshark/blob/fe219637a6748130266a0b0278166046e60a2d68/epan/dissectors/packet-drda.c#L757.
 
-            var outerLength = EndianBitConverter.Big.ToUInt16(result.ByteArraySegment.Bytes,
-                                                              result.ByteArraySegment.Offset + 0);
-            var innerLength = EndianBitConverter.Big.ToUInt16(result.ByteArraySegment.Bytes,
-                                                              result.ByteArraySegment.Offset + 6);
+
 
             // The first header is 6 bytes long, so the length in the second header should be 6 bytes less.
-            if (result.ByteArraySegment.Bytes[result.ByteArraySegment.Offset + 2] == 0xD0 && outerLength - innerLength == 6)
+            if (result.ByteArraySegment.Bytes[result.ByteArraySegment.Offset + 2] == 0xD0)
             {
-                var drdaPacket = new DrdaPacket(result.ByteArraySegment, this);
-                result.Packet = drdaPacket;
+                var outerLength = EndianBitConverter.Big.ToUInt16(result.ByteArraySegment.Bytes,
+                                                                  result.ByteArraySegment.Offset + 0);
+                var innerLength = EndianBitConverter.Big.ToUInt16(result.ByteArraySegment.Bytes,
+                                                                  result.ByteArraySegment.Offset + 6);
+                if (outerLength - innerLength == 6)
+                {
+                    var drdaPacket = new DrdaPacket(result.ByteArraySegment, this);
+                    result.Packet = drdaPacket;
+                }
             }
 
             return this;

@@ -34,7 +34,7 @@ namespace PacketDotNet
     /// See: http://en.wikipedia.org/wiki/Transmission_Control_Protocol
     /// </summary>
     [Serializable]
-    public sealed class TcpPacket : TransportPacket
+    public sealed class TcpPacket : TransportPacket, ISourceDestinationPort
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

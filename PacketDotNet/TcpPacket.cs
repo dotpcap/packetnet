@@ -52,7 +52,7 @@ namespace PacketDotNet
         public const Int32 HeaderMinimumLength = 20;
 
         /// <summary> Fetch the port number on the source host.</summary>
-        public UInt16 SourcePort
+        public override UInt16 SourcePort
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + TcpFields.SourcePortPosition);
@@ -67,7 +67,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetches the port number on the destination host.</summary>
-        public UInt16 DestinationPort
+        public override UInt16 DestinationPort
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + TcpFields.DestinationPortPosition);

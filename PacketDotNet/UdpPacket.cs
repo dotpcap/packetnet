@@ -33,8 +33,8 @@ namespace PacketDotNet
     /// See http://en.wikipedia.org/wiki/Udp
     /// </summary>
     [Serializable]
-    public sealed class UdpPacket : TransportPacket
-    {
+    public sealed class UdpPacket : TransportPacket, ISourceDestinationPort
+  {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else

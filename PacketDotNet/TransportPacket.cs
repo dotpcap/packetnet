@@ -43,17 +43,23 @@ namespace PacketDotNet
         /// </value>
         public abstract UInt16 Checksum { get; set; }
 
-        /// <summary>
-        /// Calculates the transport layer checksum, either for the
-        /// tcp or udp packet
-        /// </summary>
-        /// <param name="option">
-        ///     <see cref="TransportPacket.TransportChecksumOption" />
-        /// </param>
-        /// <returns>
-        /// A <see cref="System.Int32" />
-        /// </returns>
-        internal Int32 CalculateChecksum(TransportChecksumOption option)
+    /// <summary> Fetch the port number on the target host.</summary>
+        public abstract UInt16 DestinationPort { get; set; }
+
+    /// <summary> Fetch the port number on the source host.</summary>
+        public abstract UInt16 SourcePort { get; set; }
+
+    /// <summary>
+    /// Calculates the transport layer checksum, either for the
+    /// tcp or udp packet
+    /// </summary>
+    /// <param name="option">
+    ///     <see cref="TransportPacket.TransportChecksumOption" />
+    /// </param>
+    /// <returns>
+    /// A <see cref="System.Int32" />
+    /// </returns>
+    internal Int32 CalculateChecksum(TransportChecksumOption option)
         {
             // save the checksum field value so it can be restored, altering the checksum is not
             // an intended side effect of this method

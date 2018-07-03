@@ -46,7 +46,7 @@ namespace PacketDotNet
 #endif
 
         /// <summary> Fetch the port number on the source host.</summary>
-        public UInt16 SourcePort
+        public override UInt16 SourcePort
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
 
@@ -58,7 +58,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the port number on the target host.</summary>
-        public UInt16 DestinationPort
+        public override UInt16 DestinationPort
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + UdpFields.DestinationPortPosition);

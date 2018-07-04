@@ -39,8 +39,8 @@ namespace PacketDotNet
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-// NOTE: No need to warn about lack of use, the compiler won't
-//       put any calls to 'log' here but we need 'log' to exist to compile
+        // NOTE: No need to warn about lack of use, the compiler won't
+        //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
@@ -55,17 +55,14 @@ namespace PacketDotNet
         /// Used internally when building new packet dissectors
         /// </summary>
         protected Lazy<PacketOrByteArraySegment> PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>();
-
-
+        
         /// <summary>
-        /// Gets the total length of the packet.
-        /// Recursively finds the length of this packet and all of the packets
-        /// encapsulated by this packet
+        /// Gets the total length of the packet by recursively finding the length of this packet and all of the packets encapsulated by this packet.
         /// </summary>
         /// <value>
         /// The total length of the packet.
         /// </value>
-        protected Int32 TotalPacketLength
+        public Int32 TotalPacketLength
         {
             get
             {
@@ -155,9 +152,14 @@ namespace PacketDotNet
         public virtual Packet ParentPacket { get; set; }
 
         /// <value>
-        /// Returns a
+        /// Gets the header's data.
         /// </value>
         public virtual Byte[] HeaderData => Header.ActualBytes();
+
+        /// <summary>
+        /// Gets the header's data high performance.
+        /// </summary>
+        public virtual ByteArraySegment HeaderDataHighPerformance => Header.EncapsulatedBytes();
 
         /// <summary>
         /// Packet that this packet carries if one is present.
@@ -185,6 +187,22 @@ namespace PacketDotNet
         /// </summary>
         public Byte[] PayloadData
         {
+            get => PayloadDataHighPerformance?.ActualBytes();
+            set
+            {
+                Log.DebugFormat("value.Length {0}", value.Length);
+
+                PayloadDataHighPerformance = new ByteArraySegment(value, 0, value.Length);
+            }
+        }
+
+        /// <summary>
+        /// Payload if one is present.
+        /// Note that the packet MAY have a null PayloadData but a
+        /// non-null PayloadPacket
+        /// </summary>
+        public ByteArraySegment PayloadDataHighPerformance
+        {
             get
             {
                 if (PayloadPacketOrData.Value.ByteArraySegment == null)
@@ -193,17 +211,11 @@ namespace PacketDotNet
                     return null;
                 }
 
-                var retval = PayloadPacketOrData.Value.ByteArraySegment.ActualBytes();
-                Log.DebugFormat("retval.Length: {0}", retval.Length);
-                return retval;
+                Log.DebugFormat("retval.Length: {0}", PayloadPacketOrData.Value.ByteArraySegment.Length);
+                return PayloadPacketOrData.Value.ByteArraySegment;
             }
 
-            set
-            {
-                Log.DebugFormat("value.Length {0}", value.Length);
-
-                PayloadPacketOrData.Value.ByteArraySegment = new ByteArraySegment(value, 0, value.Length);
-            }
+            set => PayloadPacketOrData.Value.ByteArraySegment = value;
         }
 
         /// <summary>
@@ -244,11 +256,29 @@ namespace PacketDotNet
                 // higher performance path to retrieve the bytes
                 if (SharesMemoryWithSubPackets)
                 {
+                    ByteArraySegment byteArraySegment;
+
                     // The high performance path that is often taken because it is called on
                     // packets that have not had their header, or any of their sub packets, resized
-                    var byteArraySegment = new ByteArraySegment(Header.Bytes,
+                    if (PayloadPacketOrData.IsValueCreated && PayloadPacketOrData.Value.Type == PayloadType.Packet && PayloadPacket != null)
+                    {
+                        byteArraySegment = new ByteArraySegment(Header.Bytes,
+                                                                Header.Offset,
+                                                                Header.Length + PayloadPacket.TotalPacketLength);
+                    }
+                    else if (PayloadPacketOrData.IsValueCreated && PayloadPacketOrData.Value.Type == PayloadType.Bytes && PayloadDataHighPerformance != null)
+                    {
+                        byteArraySegment = new ByteArraySegment(Header.Bytes,
+                                                                Header.Offset,
+                                                                Header.Length + PayloadDataHighPerformance.Length);
+                    }
+                    else
+                    {
+                        byteArraySegment = new ByteArraySegment(Header.Bytes,
                                                                 Header.Offset,
                                                                 Header.BytesLength - Header.Offset);
+                    }
+
                     Log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}", byteArraySegment);
                     return byteArraySegment;
                 }
@@ -402,7 +432,7 @@ namespace PacketDotNet
                 }
                 else
                 {
-                    ascii += Encoding.ASCII.GetString(new[] {data[i - 1]});
+                    ascii += Encoding.ASCII.GetString(new[] { data[i - 1] });
                 }
 
                 // add an additional space to split the bytes into

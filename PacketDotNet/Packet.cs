@@ -432,7 +432,7 @@ namespace PacketDotNet
                 }
                 else
                 {
-                    ascii += Encoding.ASCII.GetString(new[] { data[i - 1] });
+                    ascii += Encoding.ASCII.GetString(new[] {data[i - 1]});
                 }
 
                 // add an additional space to split the bytes into

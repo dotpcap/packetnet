@@ -258,11 +258,29 @@ namespace PacketDotNet
                 // higher performance path to retrieve the bytes
                 if (SharesMemoryWithSubPackets)
                 {
+                    ByteArraySegment byteArraySegment;
+
                     // The high performance path that is often taken because it is called on
                     // packets that have not had their header, or any of their sub packets, resized
-                    var byteArraySegment = new ByteArraySegment(Header.Bytes,
+                    if (PayloadPacketOrData.IsValueCreated && PayloadPacketOrData.Value.Type == PayloadType.Packet && PayloadPacket != null)
+                    {
+                        byteArraySegment = new ByteArraySegment(Header.Bytes,
+                                                                Header.Offset,
+                                                                Header.Length + PayloadPacket.TotalPacketLength);
+                    }
+                    else if (PayloadPacketOrData.IsValueCreated && PayloadPacketOrData.Value.Type == PayloadType.Bytes && PayloadDataHighPerformance != null)
+                    {
+                        byteArraySegment = new ByteArraySegment(Header.Bytes,
+                                                                Header.Offset,
+                                                                Header.Length + PayloadDataHighPerformance.Length);
+                    }
+                    else
+                    {
+                        byteArraySegment = new ByteArraySegment(Header.Bytes,
                                                                 Header.Offset,
                                                                 Header.BytesLength - Header.Offset);
+                    }
+
                     Log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}", byteArraySegment);
                     return byteArraySegment;
                 }

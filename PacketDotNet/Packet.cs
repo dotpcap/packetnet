@@ -57,9 +57,7 @@ namespace PacketDotNet
         protected Lazy<PacketOrByteArraySegment> PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>();
 
         /// <summary>
-        /// Gets the total length of the packet.
-        /// Recursively finds the length of this packet and all of the packets
-        /// encapsulated by this packet
+        /// Gets the total length of the packet by recursively finding the length of this packet and all of the packets encapsulated by this packet.
         /// </summary>
         /// <value>
         /// The total length of the packet.

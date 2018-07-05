@@ -56,7 +56,6 @@ namespace PacketDotNet
         /// </summary>
         protected Lazy<PacketOrByteArraySegment> PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>();
 
-
         /// <summary>
         /// Gets the total length of the packet.
         /// Recursively finds the length of this packet and all of the packets
@@ -153,11 +152,16 @@ namespace PacketDotNet
         /// The packet that is carrying this one
         /// </summary>
         public virtual Packet ParentPacket { get; set; }
-
+        
         /// <value>
-        /// Returns a
+        /// Gets the header's data.
         /// </value>
         public virtual Byte[] HeaderData => Header.ActualBytes();
+
+        /// <summary>
+        /// Gets the header's data high performance.
+        /// </summary>
+        public virtual ByteArraySegment HeaderDataHighPerformance => Header.EncapsulatedBytes();
 
         /// <summary>
         /// Packet that this packet carries if one is present.
@@ -185,6 +189,22 @@ namespace PacketDotNet
         /// </summary>
         public Byte[] PayloadData
         {
+            get => PayloadDataHighPerformance?.ActualBytes();
+            set
+            {
+                Log.DebugFormat("value.Length {0}", value.Length);
+
+                PayloadDataHighPerformance = new ByteArraySegment(value, 0, value.Length);
+            }
+        }
+
+        /// <summary>
+        /// Payload if one is present.
+        /// Note that the packet MAY have a null PayloadData but a
+        /// non-null PayloadPacket
+        /// </summary>
+        public ByteArraySegment PayloadDataHighPerformance
+        {
             get
             {
                 if (PayloadPacketOrData.Value.ByteArraySegment == null)
@@ -193,17 +213,11 @@ namespace PacketDotNet
                     return null;
                 }
 
-                var retval = PayloadPacketOrData.Value.ByteArraySegment.ActualBytes();
-                Log.DebugFormat("retval.Length: {0}", retval.Length);
-                return retval;
+                Log.DebugFormat("retval.Length: {0}", PayloadPacketOrData.Value.ByteArraySegment.Length);
+                return PayloadPacketOrData.Value.ByteArraySegment;
             }
 
-            set
-            {
-                Log.DebugFormat("value.Length {0}", value.Length);
-
-                PayloadPacketOrData.Value.ByteArraySegment = new ByteArraySegment(value, 0, value.Length);
-            }
+            set => PayloadPacketOrData.Value.ByteArraySegment = value;
         }
 
         /// <summary>

@@ -65,7 +65,7 @@ namespace PacketDotNet
         /// <value>
         /// The total length of the packet.
         /// </value>
-        protected Int32 TotalPacketLength
+        public Int32 TotalPacketLength
         {
             get
             {

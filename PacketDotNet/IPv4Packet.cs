@@ -145,7 +145,7 @@ namespace PacketDotNet
                 var fragmentOffsetAndFlags = EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                                             Header.Offset + IPv4Fields.FragmentOffsetAndFlagsPosition);
 
-                // mask the fragementation offset in
+                // mask the fragmentation offset in
                 fragmentOffsetAndFlags = (Int16) ((fragmentOffsetAndFlags & 0xE000) | (value & 0x1FFF));
 
                 EndianBitConverter.Big.CopyBytes(fragmentOffsetAndFlags,
@@ -164,11 +164,9 @@ namespace PacketDotNet
             set
             {
                 var address = value.GetAddressBytes();
-                Array.Copy(address,
-                           0,
-                           Header.Bytes,
-                           Header.Offset + IPv4Fields.SourcePosition,
-                           address.Length);
+
+                for (int i = 0; i < address.Length; i++)
+                    Header.Bytes[Header.Offset + IPv4Fields.SourcePosition + i] = address[i];
             }
         }
 
@@ -182,11 +180,9 @@ namespace PacketDotNet
             set
             {
                 var address = value.GetAddressBytes();
-                Array.Copy(address,
-                           0,
-                           Header.Bytes,
-                           Header.Offset + IPv4Fields.DestinationPosition,
-                           address.Length);
+
+                for (int i = 0; i < address.Length; i++)
+                    Header.Bytes[Header.Offset + IPv4Fields.DestinationPosition + i] = address[i];
             }
         }
 

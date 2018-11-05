@@ -89,11 +89,10 @@ namespace PacketDotNet
             get
             {
                 var hwAddress = new Byte[EthernetFields.MacAddressLength];
-                Array.Copy(Header.Bytes,
-                           Header.Offset + EthernetFields.SourceMacPosition,
-                           hwAddress,
-                           0,
-                           hwAddress.Length);
+
+                for (int i = 0; i < EthernetFields.MacAddressLength; i++)
+                    hwAddress[i] = Header.Bytes[Header.Offset + EthernetFields.SourceMacPosition + i];
+
                 return new PhysicalAddress(hwAddress);
             }
 
@@ -105,11 +104,8 @@ namespace PacketDotNet
                     throw new InvalidOperationException("address length " + hwAddress.Length + " not equal to the expected length of " + EthernetFields.MacAddressLength);
                 }
 
-                Array.Copy(hwAddress,
-                           0,
-                           Header.Bytes,
-                           Header.Offset + EthernetFields.SourceMacPosition,
-                           hwAddress.Length);
+                for (int i = 0; i < EthernetFields.MacAddressLength; i++)
+                    Header.Bytes[Header.Offset + EthernetFields.SourceMacPosition + i] = hwAddress[i];
             }
         }
 
@@ -119,11 +115,10 @@ namespace PacketDotNet
             get
             {
                 var hwAddress = new Byte[EthernetFields.MacAddressLength];
-                Array.Copy(Header.Bytes,
-                           Header.Offset + EthernetFields.DestinationMacPosition,
-                           hwAddress,
-                           0,
-                           hwAddress.Length);
+
+                for (int i = 0; i < EthernetFields.MacAddressLength; i++)
+                    hwAddress[i] = Header.Bytes[Header.Offset + EthernetFields.DestinationMacPosition + i];
+
                 return new PhysicalAddress(hwAddress);
             }
 
@@ -135,11 +130,8 @@ namespace PacketDotNet
                     throw new InvalidOperationException("address length " + hwAddress.Length + " not equal to the expected length of " + EthernetFields.MacAddressLength);
                 }
 
-                Array.Copy(hwAddress,
-                           0,
-                           Header.Bytes,
-                           Header.Offset + EthernetFields.DestinationMacPosition,
-                           hwAddress.Length);
+                for (int i = 0; i < EthernetFields.MacAddressLength; i++)
+                    Header.Bytes[Header.Offset + EthernetFields.DestinationMacPosition + i] = hwAddress[i];
             }
         }
 

@@ -198,30 +198,26 @@ namespace PacketDotNet
             switch (ipType)
             {
                 case AddressFamily.InterNetwork:
-                    {
-                        // IPv4: it's possible to avoid a copy by doing the same as IPAddress.
-                        // --> m_Address = ((address[3] << 24 | address[2] <<16 | address[1] << 8| address[0]) & 0x0FFFFFFFF);
-                        var address = ((bytes[3 + fieldOffset] << 24 | bytes[2 + fieldOffset] << 16 | bytes[1 + fieldOffset] << 8 | bytes[fieldOffset]) & 0x0FFFFFFFF);
-                        return new IPAddress(address);
-                    }
+                {
+                    // IPv4: it's possible to avoid a copy by doing the same as IPAddress.
+                    // --> m_Address = ((address[3] << 24 | address[2] <<16 | address[1] << 8| address[0]) & 0x0FFFFFFFF);
+                    var address = ((bytes[3 + fieldOffset] << 24 | bytes[2 + fieldOffset] << 16 | bytes[1 + fieldOffset] << 8 | bytes[fieldOffset]) & 0x0FFFFFFFF);
+                    return new IPAddress(address);
+                }
                 case AddressFamily.InterNetworkV6:
-                    {
-                        // IPv6: not possible due to not accepting parameters for it.
-                        var address = new Byte[IPv6Fields.AddressLength];
+                {
+                    // IPv6: not possible due to not accepting parameters for it.
+                    var address = new Byte[IPv6Fields.AddressLength];
+                    for (int i = 0; i < IPv6Fields.AddressLength; i++)
+                        address[i] = bytes[fieldOffset + i];
 
-                        Array.Copy(bytes,
-                                   fieldOffset,
-                                   address,
-                                   0,
-                                   address.Length);
-
-                        return new IPAddress(address);
-                    }
+                    return new IPAddress(address);
+                }
                 default:
                     throw new InvalidOperationException("ipType " + ipType + " unknown");
             }
         }
-
+        
         /// <summary>
         /// Called by IPv4 and IPv6 packets to parse their packet payload
         /// </summary>

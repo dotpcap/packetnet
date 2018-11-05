@@ -222,11 +222,9 @@ namespace PacketDotNet
             set
             {
                 var address = value.GetAddressBytes();
-                Array.Copy(address,
-                           0,
-                           Header.Bytes,
-                           Header.Offset + IPv6Fields.SourceAddressPosition,
-                           address.Length);
+
+                for (int i = 0; i < address.Length; i++)
+                    Header.Bytes[Header.Offset + IPv6Fields.SourceAddressPosition + i] = address[i];
             }
         }
 
@@ -242,11 +240,9 @@ namespace PacketDotNet
             set
             {
                 var address = value.GetAddressBytes();
-                Array.Copy(address,
-                           0,
-                           Header.Bytes,
-                           Header.Offset + IPv6Fields.DestinationAddressPosition,
-                           address.Length);
+            
+                for (int i = 0; i < address.Length; i++)
+                    Header.Bytes[Header.Offset + IPv6Fields.DestinationAddressPosition + i] = address[i];
             }
         }
 

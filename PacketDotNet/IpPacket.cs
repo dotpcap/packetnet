@@ -93,7 +93,7 @@ namespace PacketDotNet
 
                 // update the payload length based on the size
                 // of the payload packet
-                var newPayloadLength = (UInt16) base.PayloadPacket.BytesHighPerformance.Length;
+                var newPayloadLength = (UInt16)base.PayloadPacket.BytesHighPerformance.Length;
                 Log.DebugFormat("newPayloadLength {0}", newPayloadLength);
                 PayloadLength = newPayloadLength;
             }
@@ -195,27 +195,31 @@ namespace PacketDotNet
             Int32 fieldOffset,
             Byte[] bytes)
         {
-            Byte[] address;
-            if (ipType == AddressFamily.InterNetwork) // ipv4
+            switch (ipType)
             {
-                address = new Byte[IPv4Fields.AddressLength];
-            }
-            else if (ipType == AddressFamily.InterNetworkV6)
-            {
-                address = new Byte[IPv6Fields.AddressLength];
-            }
-            else
-            {
-                throw new InvalidOperationException("ipType " + ipType + " unknown");
-            }
+                case AddressFamily.InterNetwork:
+                    {
+                        // IPv4: it's possible to avoid a copy by doing the same as IPAddress.
+                        // --> m_Address = ((address[3] << 24 | address[2] <<16 | address[1] << 8| address[0]) & 0x0FFFFFFFF);
+                        var address = ((bytes[3 + fieldOffset] << 24 | bytes[2 + fieldOffset] << 16 | bytes[1 + fieldOffset] << 8 | bytes[fieldOffset]) & 0x0FFFFFFFF);
+                        return new IPAddress(address);
+                    }
+                case AddressFamily.InterNetworkV6:
+                    {
+                        // IPv6: not possible due to not accepting parameters for it.
+                        var address = new Byte[IPv6Fields.AddressLength];
 
-            Array.Copy(bytes,
-                       fieldOffset,
-                       address,
-                       0,
-                       address.Length);
+                        Array.Copy(bytes,
+                                   fieldOffset,
+                                   address,
+                                   0,
+                                   address.Length);
 
-            return new IPAddress(address);
+                        return new IPAddress(address);
+                    }
+                default:
+                    throw new InvalidOperationException("ipType " + ipType + " unknown");
+            }
         }
 
         /// <summary>

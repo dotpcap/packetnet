@@ -91,7 +91,11 @@ namespace PacketDotNet.Tcp
         public UInt16 Timeout => (UInt16) (Values & TimeoutMask);
 
         // a convenient property to grab the value fields for further processing
-        private UInt16 Values => EndianBitConverter.Big.ToUInt16(Bytes, ValuesFieldOffset);
+        public UInt16 Values
+        {
+            get => EndianBitConverter.Big.ToUInt16(OptionData.Bytes, OptionData.Offset + ValuesFieldOffset);
+            set => EndianBitConverter.Big.CopyBytes(value, OptionData.Bytes, OptionData.Offset + ValuesFieldOffset);
+        }
 
         #endregion
 

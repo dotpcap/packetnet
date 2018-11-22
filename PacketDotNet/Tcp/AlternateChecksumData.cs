@@ -72,9 +72,10 @@ namespace PacketDotNet.Tcp
             get
             {
                 var data = new Byte[Length - DataFieldOffset];
-                Array.Copy(Bytes, DataFieldOffset, data, 0, data.Length);
+                Array.Copy(OptionData.Bytes, OptionData.Offset + DataFieldOffset, data, 0, data.Length);
                 return data;
             }
+            set => Array.Copy(value, 0, OptionData.Bytes, OptionData.Offset + DataFieldOffset, value.Length);
         }
 
         #endregion

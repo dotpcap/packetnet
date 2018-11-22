@@ -44,7 +44,7 @@ namespace PacketDotNet.Tcp
         /// </param>
         protected Option(Byte[] bytes, Int32 offset, Int32 length)
         {
-            _optionData = new ByteArraySegment(bytes, offset, length);
+            OptionData = new ByteArraySegment(bytes, offset, length);
         }
 
         #endregion
@@ -69,25 +69,38 @@ namespace PacketDotNet.Tcp
         #region Properties
 
         /// <summary>
-        /// The Length of the Option type
+        /// Gets or sets the length of the option.
         /// </summary>
-        public virtual Byte Length => Bytes[LengthFieldOffset];
+        public virtual Byte Length
+        {
+            get => OptionData.Bytes[OptionData.Offset + LengthFieldOffset];
+            set => OptionData.Bytes[OptionData.Offset + LengthFieldOffset] = value;
+        }
 
         /// <summary>
-        /// The Kind of option
+        /// Gets or sets the option kind.
         /// </summary>
-        public OptionTypes Kind => (OptionTypes) Bytes[KindFieldOffset];
+        public OptionTypes Kind
+        {
+            get => (OptionTypes)OptionData.Bytes[OptionData.Offset + KindFieldOffset];
+            set => OptionData.Bytes[OptionData.Offset + KindFieldOffset] = (byte)value;
+        }
 
         /// <summary>
-        /// Returns a TLV that contains the Option
+        /// Gets or sets a the underlying bytes.
         /// </summary>
         public Byte[] Bytes
         {
             get
             {
-                var bytes = new Byte[_optionData.Length];
-                Array.Copy(_optionData.Bytes, _optionData.Offset, bytes, 0, _optionData.Length);
+                var bytes = new Byte[OptionData.Length];
+                Array.Copy(OptionData.Bytes, OptionData.Offset, bytes, 0, OptionData.Length);
                 return bytes;
+            }
+            set
+            {
+                for (int i = 0; i < value.Length; i++)
+                    OptionData.Bytes[OptionData.Offset + i] = value[i];
             }
         }
 
@@ -97,7 +110,7 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // stores the data/length/offset of the option
-        private readonly ByteArraySegment _optionData;
+        protected readonly ByteArraySegment OptionData;
 
         /// <summary>The length (in bytes) of the Kind field</summary>
         internal const Int32 KindFieldLength = 1;

@@ -28,12 +28,12 @@ namespace PacketDotNet.Tcp
     /// References:
     /// http://datatracker.ietf.org/doc/rfc1146/
     /// </remarks>
-    public enum ChecksumAlgorighmType
+    public enum ChecksumAlgorithmType
     {
         /// <summary>Standard TCP Checksum Algorithm</summary>
         TCPChecksum = 0,
 
-        /// <summary>8-bit Fletchers Algorighm</summary>
+        /// <summary>8-bit Fletchers Algorithm</summary>
         EightBitFletchersAlgorithm = 1,
 
         /// <summary>16-bit Fletchers Algorithm</summary>

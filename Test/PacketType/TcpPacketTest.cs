@@ -19,12 +19,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using PacketDotNet.Tcp;
 using SharpPcap;
 
 namespace Test.PacketType
@@ -142,6 +144,30 @@ namespace Test.PacketType
             Byte[] expectedOptions = new Byte[] { 0x1, 0x1, 0x8, 0xa, 0x0, 0x14,
                                                   0x3d, 0xe5, 0x1d, 0xf5, 0xf8, 0x84 };
             Assert.AreEqual(expectedOptions, t.Options);
+
+            var options = t.OptionsCollection;
+            foreach (var option in options)
+            {
+                if (option is TimeStamp timeStamp)
+                {
+                    Assert.AreEqual(1326565, timeStamp.Value);
+
+                    timeStamp.Value = 1234321;
+
+                    Assert.AreEqual(1234321, timeStamp.Value);
+                }
+            }
+
+            var optionsCollection = new List<Option>(options);
+            t.OptionsCollection = optionsCollection;
+
+            foreach (var option in t.OptionsCollection)
+            {
+                if (option is TimeStamp timeStamp)
+                {
+                    Assert.AreEqual(1234321, timeStamp.Value);
+                }
+            }
 
             dev.Close();
         }

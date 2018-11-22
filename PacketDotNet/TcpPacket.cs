@@ -492,9 +492,8 @@ namespace PacketDotNet
             get
             {
                 if (Urg)
-                {
                     throw new NotImplementedException("Urg == true not implemented yet");
-                }
+
 
                 var optionsOffset = TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
                 var optionsLength = (DataOffset * 4) - optionsOffset;
@@ -508,6 +507,53 @@ namespace PacketDotNet
 
                 return optionBytes;
             }
+            set
+            {
+                var optionsOffset = Header.Offset + TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
+                Array.Copy(value, 0, Header.Bytes, optionsOffset, value.Length);
+
+            }
+        }
+
+        /// <summary>
+        /// Gets the options high performance.
+        /// </summary>
+        /// <value>
+        /// The options high performance.
+        /// </value>
+        /// <exception cref="NotImplementedException">Urg == true not implemented yet</exception>
+        public ByteArraySegment OptionsHighPerformance
+        {
+            get
+            {
+                if (Urg)
+                    throw new NotImplementedException("Urg == true not implemented yet");
+
+
+                var optionsOffset = Header.Offset + TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
+                var optionsLength = (DataOffset * 4) - optionsOffset;
+                
+                return new ByteArraySegment(Header.Bytes, optionsOffset, optionsLength);
+            }
+        }
+
+        /// <summary>
+        /// Contains the Options list attached to the TCP header
+        /// </summary>
+        public List<Option> OptionsCollection
+        {
+            get => ParseOptions(Options);
+            set
+            {
+                var optionsOffset = Header.Offset + TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
+
+                foreach (var option in value)
+                {
+                    var optionBytes = option.Bytes;
+                    Array.Copy(optionBytes, 0, Header.Bytes, optionsOffset, optionBytes.Length);
+                    optionsOffset += optionBytes.Length;
+                }
+            }
         }
 
         /// <summary>
@@ -519,7 +565,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="List&lt;Option&gt;" />
         /// </returns>
-        private List<Option> ParseOptions(Byte[] optionBytes)
+        private static List<Option> ParseOptions(Byte[] optionBytes)
         {
             var offset = 0;
 
@@ -529,7 +575,7 @@ namespace PacketDotNet
 
             // reset the OptionsCollection list to prepare
             //  to be re-populated with new data
-            var retval = new List<Option>();
+            var options = new List<Option>();
 
             while (offset < optionBytes.Length)
             {
@@ -552,59 +598,59 @@ namespace PacketDotNet
                 switch (type)
                 {
                     case OptionTypes.EndOfOptionList:
-                        retval.Add(new EndOfOptions(optionBytes, offset, length));
+                        options.Add(new EndOfOptions(optionBytes, offset, length));
                         offset += EndOfOptions.OptionLength;
                         break;
                     case OptionTypes.NoOperation:
-                        retval.Add(new NoOperation(optionBytes, offset, length));
+                        options.Add(new NoOperation(optionBytes, offset, length));
                         offset += NoOperation.OptionLength;
                         break;
                     case OptionTypes.MaximumSegmentSize:
-                        retval.Add(new MaximumSegmentSize(optionBytes, offset, length));
+                        options.Add(new MaximumSegmentSize(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.WindowScaleFactor:
-                        retval.Add(new WindowScaleFactor(optionBytes, offset, length));
+                        options.Add(new WindowScaleFactor(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.SACKPermitted:
-                        retval.Add(new SACKPermitted(optionBytes, offset, length));
+                        options.Add(new SACKPermitted(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.SACK:
-                        retval.Add(new SACK(optionBytes, offset, length));
+                        options.Add(new SACK(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.Echo:
-                        retval.Add(new Echo(optionBytes, offset, length));
+                        options.Add(new Echo(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.EchoReply:
-                        retval.Add(new EchoReply(optionBytes, offset, length));
+                        options.Add(new EchoReply(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.Timestamp:
-                        retval.Add(new TimeStamp(optionBytes, offset, length));
+                        options.Add(new TimeStamp(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.AlternateChecksumRequest:
-                        retval.Add(new AlternateChecksumRequest(optionBytes, offset, length));
+                        options.Add(new AlternateChecksumRequest(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.AlternateChecksumData:
-                        retval.Add(new AlternateChecksumData(optionBytes, offset, length));
+                        options.Add(new AlternateChecksumData(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.MD5Signature:
-                        retval.Add(new MD5Signature(optionBytes, offset, length));
+                        options.Add(new MD5Signature(optionBytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.UserTimeout:
-                        retval.Add(new UserTimeout(optionBytes, offset, length));
+                        options.Add(new UserTimeout(optionBytes, offset, length));
                         offset += length;
                         break;
                     // these fields aren't supported because they're still considered
-                    //  experimental in their respecive RFC specifications
+                    //  experimental in their respective RFC specifications
                     case OptionTypes.POConnectionPermitted:
                     case OptionTypes.POServiceProfile:
                     case OptionTypes.ConnectionCount:
@@ -618,7 +664,7 @@ namespace PacketDotNet
                 }
             }
 
-            return retval;
+            return options;
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
@@ -639,7 +685,7 @@ namespace PacketDotNet
                 case StringOutputType.Normal:
                 case StringOutputType.Colored:
                 {
-                    // build flagstring
+                    // build flag string
                     var flags = "{";
                     if (Urg)
                         flags += "urg[0x" + Convert.ToString(UrgentPointer, 16) + "]|";
@@ -744,10 +790,5 @@ namespace PacketDotNet
 
             return tcpPacket;
         }
-
-        /// <summary>
-        /// Contains the Options list attached to the TCP header
-        /// </summary>
-        public List<Option> OptionsCollection => ParseOptions(Options);
     }
 }

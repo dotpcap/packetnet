@@ -66,7 +66,11 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The Checksum
         /// </summary>
-        public ChecksumAlgorighmType Checksum => (ChecksumAlgorighmType) Bytes[ChecksumFieldOffset];
+        public ChecksumAlgorithmType Checksum
+        {
+            get => (ChecksumAlgorithmType) OptionData.Bytes[OptionData.Offset + ChecksumFieldOffset];
+            set => OptionData.Bytes[OptionData.Offset + ChecksumFieldOffset] = (byte) value;
+        }
 
         #endregion
 

@@ -530,10 +530,10 @@ namespace PacketDotNet
                     throw new NotImplementedException("Urg == true not implemented yet");
 
 
-                var optionsOffset = Header.Offset + TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
+                var optionsOffset = TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
                 var optionsLength = (DataOffset * 4) - optionsOffset;
                 
-                return new ByteArraySegment(Header.Bytes, optionsOffset, optionsLength);
+                return new ByteArraySegment(Header.Bytes, Header.Offset + optionsOffset, optionsLength);
             }
         }
 
@@ -542,15 +542,15 @@ namespace PacketDotNet
         /// </summary>
         public List<Option> OptionsCollection
         {
-            get => ParseOptions(Options);
+            get => ParseOptions(OptionsHighPerformance);
             set
             {
-                var optionsOffset = Header.Offset + TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
+                var optionsOffset = TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
 
                 foreach (var option in value)
                 {
                     var optionBytes = option.Bytes;
-                    Array.Copy(optionBytes, 0, Header.Bytes, optionsOffset, optionBytes.Length);
+                    Array.Copy(optionBytes, 0, Header.Bytes, Header.Offset + optionsOffset, optionBytes.Length);
                     optionsOffset += optionBytes.Length;
                 }
             }
@@ -565,9 +565,9 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="List&lt;Option&gt;" />
         /// </returns>
-        private static List<Option> ParseOptions(Byte[] optionBytes)
+        private static List<Option> ParseOptions(ByteArraySegment optionBytes)
         {
-            var offset = 0;
+            var offset = optionBytes.Offset;
 
             if (optionBytes.Length == 0)
                 return null;
@@ -577,9 +577,9 @@ namespace PacketDotNet
             //  to be re-populated with new data
             var options = new List<Option>();
 
-            while (offset < optionBytes.Length)
+            while (offset < optionBytes.Offset + optionBytes.Length)
             {
-                var type = (OptionTypes) optionBytes[offset + Option.KindFieldOffset];
+                var type = (OptionTypes) optionBytes.Bytes[offset + Option.KindFieldOffset];
 
                 // some options have no length field, we cannot read
                 // the length field if it isn't present or we risk
@@ -592,61 +592,61 @@ namespace PacketDotNet
                 }
                 else
                 {
-                    length = optionBytes[offset + Option.LengthFieldOffset];
+                    length = optionBytes.Bytes[offset + Option.LengthFieldOffset];
                 }
 
                 switch (type)
                 {
                     case OptionTypes.EndOfOptionList:
-                        options.Add(new EndOfOptions(optionBytes, offset, length));
+                        options.Add(new EndOfOptions(optionBytes.Bytes, offset, length));
                         offset += EndOfOptions.OptionLength;
                         break;
                     case OptionTypes.NoOperation:
-                        options.Add(new NoOperation(optionBytes, offset, length));
+                        options.Add(new NoOperation(optionBytes.Bytes, offset, length));
                         offset += NoOperation.OptionLength;
                         break;
                     case OptionTypes.MaximumSegmentSize:
-                        options.Add(new MaximumSegmentSize(optionBytes, offset, length));
+                        options.Add(new MaximumSegmentSize(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.WindowScaleFactor:
-                        options.Add(new WindowScaleFactor(optionBytes, offset, length));
+                        options.Add(new WindowScaleFactor(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.SACKPermitted:
-                        options.Add(new SACKPermitted(optionBytes, offset, length));
+                        options.Add(new SACKPermitted(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.SACK:
-                        options.Add(new SACK(optionBytes, offset, length));
+                        options.Add(new SACK(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.Echo:
-                        options.Add(new Echo(optionBytes, offset, length));
+                        options.Add(new Echo(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.EchoReply:
-                        options.Add(new EchoReply(optionBytes, offset, length));
+                        options.Add(new EchoReply(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.Timestamp:
-                        options.Add(new TimeStamp(optionBytes, offset, length));
+                        options.Add(new TimeStamp(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.AlternateChecksumRequest:
-                        options.Add(new AlternateChecksumRequest(optionBytes, offset, length));
+                        options.Add(new AlternateChecksumRequest(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.AlternateChecksumData:
-                        options.Add(new AlternateChecksumData(optionBytes, offset, length));
+                        options.Add(new AlternateChecksumData(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.MD5Signature:
-                        options.Add(new MD5Signature(optionBytes, offset, length));
+                        options.Add(new MD5Signature(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     case OptionTypes.UserTimeout:
-                        options.Add(new UserTimeout(optionBytes, offset, length));
+                        options.Add(new UserTimeout(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     // these fields aren't supported because they're still considered

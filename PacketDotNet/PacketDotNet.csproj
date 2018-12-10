@@ -2,14 +2,11 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <Version>0.19.2</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Copyright></Copyright>
     <Description>.Net assembly for dissecting and constructing network packets</Description>
     <Authors>Chris Morgan (chmorgan@gmail.com)</Authors>
-    <Company />
-    <Product />	
+    <Version>0.19.3</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

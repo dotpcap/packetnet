@@ -219,6 +219,31 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Gets a value indicating whether this packet has payload data.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this packet has payload data; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool HasPayloadData => PayloadPacketOrData.Value.Type == PayloadType.Bytes;
+
+        /// <summary>
+        /// Gets a value indicating whether this packet has a payload packet.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this packet has a payload packet; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool HasPayloadPacket => PayloadPacketOrData.Value.Type == PayloadType.Packet;
+
+        /// <summary>
+        /// Gets a value indicating whether the payload is initialized.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the payload is initialized; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool IsPayloadInitialized => PayloadPacketOrData.IsValueCreated;
+
+
+        /// <summary>
         /// byte[] containing this packet and its payload
         /// NOTE: Use 'public virtual ByteArraySegment BytesHighPerformance' for highest performance
         /// </summary>

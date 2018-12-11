@@ -28,6 +28,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
@@ -179,7 +180,7 @@ namespace PacketDotNet.Ieee80211
             var commonField = FindFirstByType(PpiFieldType.PpiCommon) as PpiCommon;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, commonField));
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, commonField), LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary>

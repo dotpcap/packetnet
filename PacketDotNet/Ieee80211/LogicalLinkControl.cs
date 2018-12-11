@@ -19,6 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
@@ -44,7 +45,7 @@ namespace PacketDotNet.Ieee80211
 
             // parse the payload via an EthernetPacket method
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header,
-                                                                                                                 Type));
+                                                                                                                 Type), LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary>

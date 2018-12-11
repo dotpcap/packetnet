@@ -24,6 +24,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using log4net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
@@ -444,7 +445,7 @@ namespace PacketDotNet
                 return ParseEncapsulatedBytes(payload,
                                               NextHeader,
                                               this);
-            });
+            }, LazyThreadSafetyMode.PublicationOnly);
         }
 
 

@@ -25,6 +25,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using log4net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
@@ -135,7 +136,7 @@ namespace PacketDotNet.Ieee80211
             //Before we attempt to parse the payload we need to work out if 
             //the FCS was valid and if it will be present at the end of the frame
             var flagsField = this[RadioTapType.Flags] as FlagsRadioTapField;
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header.EncapsulatedBytes(), flagsField));
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header.EncapsulatedBytes(), flagsField), LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />

@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -52,7 +53,7 @@ namespace PacketDotNet
             {
                 var result = new PacketOrByteArraySegment {ByteArraySegment = Header.EncapsulatedBytes()};
                 return result;
-            });
+            }, LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary>

@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using log4net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
@@ -191,7 +192,7 @@ namespace PacketDotNet
             Header.Length = EthernetFields.HeaderLength;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, Type));
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, Type), LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary>

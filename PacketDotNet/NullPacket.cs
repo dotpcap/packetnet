@@ -21,6 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using log4net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
@@ -94,7 +95,7 @@ namespace PacketDotNet
             Header.Length = NullFields.HeaderLength;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, Protocol));
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, Protocol), LazyThreadSafetyMode.PublicationOnly);
         }
 
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes

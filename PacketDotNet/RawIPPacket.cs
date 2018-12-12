@@ -22,6 +22,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -73,7 +74,7 @@ namespace PacketDotNet
                 }
 
                 return result;
-            });
+            }, LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>

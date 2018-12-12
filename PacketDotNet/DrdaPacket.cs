@@ -21,6 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using log4net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
@@ -95,7 +96,7 @@ namespace PacketDotNet
             {
                 var result = new PacketOrByteArraySegment {ByteArraySegment = Header.EncapsulatedBytes()};
                 return result;
-            });
+            }, LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary>

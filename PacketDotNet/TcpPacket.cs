@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using log4net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Tcp;
@@ -352,7 +353,7 @@ namespace PacketDotNet
             {
                 var result = new PacketOrByteArraySegment {ByteArraySegment = Header.EncapsulatedBytes()};
                 return result;
-            });
+            }, LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary>
@@ -410,7 +411,7 @@ namespace PacketDotNet
                 }
 
                 return result;
-            });
+            }, LazyThreadSafetyMode.PublicationOnly);
 
             Log.DebugFormat("ParentPacket.GetType() {0}", parentPacket.GetType());
 

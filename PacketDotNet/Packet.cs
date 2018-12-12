@@ -20,9 +20,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
-using System.Reflection;
 using System.Text;
-using log4net;
+using System.Threading;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
 
@@ -54,7 +53,7 @@ namespace PacketDotNet
         /// <summary>
         /// Used internally when building new packet dissectors
         /// </summary>
-        protected Lazy<PacketOrByteArraySegment> PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>();
+        protected Lazy<PacketOrByteArraySegment> PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(LazyThreadSafetyMode.None);
 
         /// <summary>
         /// Gets the total length of the packet by recursively finding the length of this packet and all of the packets encapsulated by this packet.
@@ -217,6 +216,31 @@ namespace PacketDotNet
 
             set => PayloadPacketOrData.Value.ByteArraySegment = value;
         }
+
+        /// <summary>
+        /// Gets a value indicating whether this packet has payload data.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this packet has payload data; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool HasPayloadData => PayloadPacketOrData.Value.Type == PayloadType.Bytes;
+
+        /// <summary>
+        /// Gets a value indicating whether this packet has a payload packet.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this packet has a payload packet; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool HasPayloadPacket => PayloadPacketOrData.Value.Type == PayloadType.Packet;
+
+        /// <summary>
+        /// Gets a value indicating whether the payload is initialized.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if the payload is initialized; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool IsPayloadInitialized => PayloadPacketOrData.IsValueCreated;
+
 
         /// <summary>
         /// byte[] containing this packet and its payload

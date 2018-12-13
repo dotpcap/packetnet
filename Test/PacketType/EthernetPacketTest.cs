@@ -42,10 +42,10 @@ namespace Test.PacketType
             Assert.AreEqual(PhysicalAddress.Parse("00-13-10-03-71-47"), e.SourceHwAddress);
             Assert.AreEqual(PhysicalAddress.Parse("00-E0-4C-E5-73-AD"), e.DestinationHwAddress);
 
-            IpPacket ip = (IpPacket)e.PayloadPacket;
+            IPPacket ip = (IPPacket)e.PayloadPacket;
             Assert.AreEqual(System.Net.IPAddress.Parse("82.165.240.134"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.221"), ip.DestinationAddress);
-            Assert.AreEqual(IpVersion.IPv4, ip.Version);
+            Assert.AreEqual(IPVersion.IPv4, ip.Version);
             Assert.AreEqual(IPProtocolType.TCP, ip.Protocol);
             Assert.AreEqual(254, ip.TimeToLive);
             Assert.AreEqual(0x0df8, ((IPv4Packet)ip).CalculateIPChecksum());
@@ -72,7 +72,7 @@ namespace Test.PacketType
             Assert.AreEqual("0016CFC91E29", e.SourceHwAddress.ToString());
             Assert.AreEqual("0014BFF2EF0A", e.DestinationHwAddress.ToString());
 
-            IpPacket ip = (IpPacket)p.PayloadPacket;
+            IPPacket ip = (IPPacket)p.PayloadPacket;
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.104"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("86.42.196.13"), ip.DestinationAddress);
             Assert.AreEqual(64, ip.TimeToLive);
@@ -99,10 +99,10 @@ namespace Test.PacketType
             Assert.AreEqual("0014BFF2EF0A", e.SourceHwAddress.ToString());
             Assert.AreEqual("0016CFC91E29", e.DestinationHwAddress.ToString());
 
-            var ip = (IpPacket)p.Extract (typeof(IpPacket));
+            var ip = (IPPacket)p.Extract (typeof(IPPacket));
             Assert.AreEqual(System.Net.IPAddress.Parse("172.210.164.56"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.104"), ip.DestinationAddress);
-            Assert.AreEqual(IpVersion.IPv4, ip.Version);
+            Assert.AreEqual(IPVersion.IPv4, ip.Version);
             Assert.AreEqual(IPProtocolType.UDP, ip.Protocol);
             Assert.AreEqual(112, ip.TimeToLive);
             Assert.AreEqual(0xe0a2, ((IPv4Packet)ip).CalculateIPChecksum());
@@ -124,7 +124,7 @@ namespace Test.PacketType
             Assert.AreEqual("0016CFC91E29", e.SourceHwAddress.ToString());
             Assert.AreEqual("0014BFF2EF0A", e.DestinationHwAddress.ToString());
 
-            var ip = (IpPacket)p.Extract (typeof(IpPacket));
+            var ip = (IPPacket)p.Extract (typeof(IPPacket));
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.172"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("66.189.0.29"), ip.DestinationAddress);
             Assert.AreEqual(IPProtocolType.UDP, ip.Protocol);
@@ -154,7 +154,7 @@ namespace Test.PacketType
             Assert.AreEqual("0016CFC91E29", e.SourceHwAddress.ToString());
             Assert.AreEqual("0014BFF2EF0A", e.DestinationHwAddress.ToString());
 
-            var ip = (IpPacket)p.Extract (typeof(IpPacket));
+            var ip = (IPPacket)p.Extract (typeof(IPPacket));
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.104"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("85.195.52.22"), ip.DestinationAddress);
         }
@@ -170,7 +170,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            int packetIndex = 0;
+            Int32 packetIndex = 0;
             while((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType,
@@ -210,15 +210,15 @@ namespace Test.PacketType
         public void EthernetConstructorFromMacAddresses()
         {
             var srcHwAddressBytes = new Byte[EthernetFields.MacAddressLength];
-            for(int i = 0; i < srcHwAddressBytes.Length; i++)
+            for(Int32 i = 0; i < srcHwAddressBytes.Length; i++)
             {
-                srcHwAddressBytes[i] = (byte)i;
+                srcHwAddressBytes[i] = (Byte)i;
             }
 
             var dstHwAddressBytes = new Byte[EthernetFields.MacAddressLength];
-            for(int i = 0; i < dstHwAddressBytes.Length; i++)
+            for(Int32 i = 0; i < dstHwAddressBytes.Length; i++)
             {
-                dstHwAddressBytes[i] = (byte)(dstHwAddressBytes.Length - i);
+                dstHwAddressBytes[i] = (Byte)(dstHwAddressBytes.Length - i);
             }
 
             var srcHwAddress = new PhysicalAddress(srcHwAddressBytes);
@@ -227,7 +227,7 @@ namespace Test.PacketType
                                                     dstHwAddress,
                                                     EthernetPacketType.None);
 
-            int expectedLength = 14;
+            Int32 expectedLength = 14;
             Assert.AreEqual(expectedLength, ethernetPacket.Bytes.Length);
             //TODO: improve this here
             Console.WriteLine("ethernetPacket.ToString() {0}",
@@ -249,7 +249,7 @@ namespace Test.PacketType
             Assert.AreEqual(PhysicalAddress.Parse("00-13-10-03-71-47"), e.SourceHwAddress);
             Assert.AreEqual(PhysicalAddress.Parse("00-E0-4C-E5-73-AD"), e.DestinationHwAddress);
 
-            Assert.AreEqual(EthernetPacketType.IpV4, e.Type);
+            Assert.AreEqual(EthernetPacketType.IPv4, e.Type);
 
             dev.Close();
         }
@@ -303,7 +303,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            bool foundEthernet = false;
+            Boolean foundEthernet = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var ethernetPacket = new EthernetPacket(new ByteArraySegment(rawCapture.Data));
@@ -329,7 +329,7 @@ namespace Test.PacketType
                 Assert.AreEqual(ethernetPacket.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(ethernetPacket.Color, fromFile.Color);
                 Assert.AreEqual(ethernetPacket.DestinationHwAddress, fromFile.DestinationHwAddress);
-                Assert.AreEqual(ethernetPacket.Header, fromFile.Header);
+                Assert.AreEqual(ethernetPacket.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ethernetPacket.ParentPacket, fromFile.ParentPacket);
                 Assert.AreEqual(ethernetPacket.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(ethernetPacket.SourceHwAddress, fromFile.SourceHwAddress);

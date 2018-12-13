@@ -12,3 +12,13 @@ build:
   publish_nuget_symbols: true
   include_nuget_references: true
   verbosity: minimal
+artifacts:
+- path: PacketDotNet*.nupkg
+deploy:
+- provider: NuGet
+  server: https://www.nuget.org/api/v2/package
+  api_key:
+    secure: Vz22GODJfRHksqmnnMPyrzW8kBVb2Stvk/Gf9fu7wBg2+U5SsHQHKzx6tzJdWI6H
+  on:
+    branch: master
+

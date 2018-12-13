@@ -17,13 +17,16 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
-using System;
+
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet
 {
     /// <summary>
     /// Indicates the protocol encapsulated by the PPP packet
     /// See http://www.iana.org/assignments/ppp-numbers
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum PPPProtocol : ushort
     {
         /// <summary> Padding </summary>
@@ -33,8 +36,6 @@ namespace PacketDotNet
         IPv4 = 0x21,
 
         /// <summary> IPv6 </summary>
-        IPv6 = 0x57,
-
+        IPv6 = 0x57
     }
 }
-

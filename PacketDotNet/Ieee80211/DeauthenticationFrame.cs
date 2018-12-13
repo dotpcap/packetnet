@@ -19,151 +19,123 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using PacketDotNet.Utils;
-using MiscUtil.Conversion;
 using System.Net.NetworkInformation;
+using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    /// Deauthentication frame.
+    /// </summary>
+    public sealed class DeauthenticationFrame : ManagementFrame
     {
         /// <summary>
-        /// Deauthentication frame.
+        /// Constructor
         /// </summary>
-        public class DeauthenticationFrame : ManagementFrame
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment" />
+        /// </param>
+        public DeauthenticationFrame(ByteArraySegment bas)
         {
-            private class DeauthenticationFields
+            Header = new ByteArraySegment(bas);
+
+            FrameControl = new FrameControlField(FrameControlBytes);
+            Duration = new DurationField(DurationBytes);
+            DestinationAddress = GetAddress(0);
+            SourceAddress = GetAddress(1);
+            BssId = GetAddress(2);
+            SequenceControl = new SequenceControlField(SequenceControlBytes);
+            Reason = ReasonBytes;
+
+            Header.Length = FrameSize;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeauthenticationFrame" /> class.
+        /// </summary>
+        /// <param name='sourceAddress'>
+        /// Source address.
+        /// </param>
+        /// <param name='destinationAddress'>
+        /// Destination address.
+        /// </param>
+        /// <param name='bssId'>
+        /// Bss identifier (MAC Address of the Access Point).
+        /// </param>
+        public DeauthenticationFrame
+        (
+            PhysicalAddress sourceAddress,
+            PhysicalAddress destinationAddress,
+            PhysicalAddress bssId)
+        {
+            FrameControl = new FrameControlField();
+            Duration = new DurationField();
+            DestinationAddress = destinationAddress;
+            SourceAddress = sourceAddress;
+            BssId = bssId;
+            SequenceControl = new SequenceControlField();
+
+            FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementDeauthentication;
+        }
+
+        /// <summary>
+        /// Gets the size of the frame.
+        /// </summary>
+        /// <value>
+        /// The size of the frame.
+        /// </value>
+        public override Int32 FrameSize => MacFields.FrameControlLength +
+                                           MacFields.DurationIDLength +
+                                           (MacFields.AddressLength * 3) +
+                                           MacFields.SequenceControlLength +
+                                           DeauthenticationFields.ReasonCodeLength;
+
+        /// <summary>
+        /// Gets the reason for deauthentication.
+        /// </summary>
+        /// <value>
+        /// The reason.
+        /// </value>
+        public ReasonCode Reason { get; set; }
+
+        private ReasonCode ReasonBytes
+        {
+            get
             {
-                public readonly static int ReasonCodeLength = 2;
-
-                public readonly static int ReasonCodePosition;
-
-                static DeauthenticationFields()
+                if (Header.Length >= DeauthenticationFields.ReasonCodePosition + DeauthenticationFields.ReasonCodeLength)
                 {
-                    ReasonCodePosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
+                    return (ReasonCode) EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                                           Header.Offset + DeauthenticationFields.ReasonCodePosition);
                 }
-            }
-   
-            /// <summary>
-            /// Gets the reason for deauthentication.
-            /// </summary>
-            /// <value>
-            /// The reason.
-            /// </value>
-            public ReasonCode Reason { get; set;}
-            
-            private ReasonCode ReasonBytes
-            {
-                get
-                {
-					if(header.Length >= (DeauthenticationFields.ReasonCodePosition + DeauthenticationFields.ReasonCodeLength))
-					{
-						return (ReasonCode)EndianBitConverter.Little.ToUInt16 (header.Bytes,
-						                                                       header.Offset + DeauthenticationFields.ReasonCodePosition);
-					}
-					else
-					{
-						return ReasonCode.Unspecified;
-					}
-                }
-                
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes ((UInt16)value,
-                        header.Bytes,
-                        header.Offset + DeauthenticationFields.ReasonCodePosition);
-                }
+
+                return ReasonCode.Unspecified;
             }
 
-            /// <summary>
-            /// Gets the size of the frame.
-            /// </summary>
-            /// <value>
-            /// The size of the frame.
-            /// </value>
-            public override int FrameSize
+            set => EndianBitConverter.Little.CopyBytes((UInt16) value,
+                                                       Header.Bytes,
+                                                       Header.Offset + DeauthenticationFields.ReasonCodePosition);
+        }
+
+        /// <summary>
+        /// Writes the current packet properties to the backing ByteArraySegment.
+        /// </summary>
+        public override void UpdateCalculatedValues()
+        {
+            if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        DeauthenticationFields.ReasonCodeLength);
-                }
+                Header = new ByteArraySegment(new Byte[FrameSize]);
             }
 
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public DeauthenticationFrame (ByteArraySegment bas)
-            {
-                header = new ByteArraySegment (bas);
+            FrameControlBytes = FrameControl.Field;
+            DurationBytes = Duration.Field;
+            SetAddress(0, DestinationAddress);
+            SetAddress(1, SourceAddress);
+            SetAddress(2, BssId);
+            SequenceControlBytes = SequenceControl.Field;
+            ReasonBytes = Reason;
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                DestinationAddress = GetAddress (0);
-                SourceAddress = GetAddress (1);
-                BssId = GetAddress (2);
-                SequenceControl = new SequenceControlField (SequenceControlBytes);
-                Reason = ReasonBytes;
-
-                header.Length = FrameSize;
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.DeauthenticationFrame"/> class.
-            /// </summary>
-            /// <param name='SourceAddress'>
-            /// Source address.
-            /// </param>
-            /// <param name='DestinationAddress'>
-            /// Destination address.
-            /// </param>
-            /// <param name='BssId'>
-            /// Bss identifier (MAC Address of the Access Point).
-            /// </param>
-            public DeauthenticationFrame (PhysicalAddress SourceAddress,
-                                          PhysicalAddress DestinationAddress,
-                                          PhysicalAddress BssId)
-            {
-                this.FrameControl = new FrameControlField ();
-                this.Duration = new DurationField ();
-                this.DestinationAddress = DestinationAddress;
-                this.SourceAddress = SourceAddress;
-                this.BssId = BssId;
-                this.SequenceControl = new SequenceControlField ();
-                
-                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementDeauthentication;
-            }
-            
-            /// <summary>
-            /// Writes the current packet properties to the backing ByteArraySegment.
-            /// </summary>
-            public override void UpdateCalculatedValues ()
-            {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
-                {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
-                }
-                
-                this.FrameControlBytes = this.FrameControl.Field;
-                this.DurationBytes = this.Duration.Field;
-                SetAddress (0, DestinationAddress);
-                SetAddress (1, SourceAddress);
-                SetAddress (2, BssId);
-                this.SequenceControlBytes = this.SequenceControl.Field;
-                this.ReasonBytes = this.Reason;
-                
-                header.Length = FrameSize;
-            }
-
-        } 
+            Header.Length = FrameSize;
+        }
     }
 }

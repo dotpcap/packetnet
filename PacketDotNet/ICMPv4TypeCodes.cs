@@ -17,6 +17,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
+
+using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -25,36 +28,37 @@ namespace PacketDotNet
     /// Note that these values represent the combined
     /// type and code fields, where the type field is the upper byte
     /// </summary>
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum ICMPv4TypeCodes : ushort
     {
 #pragma warning disable 1591
         EchoReply = 0x0000,
         Unassigned1 = 0x0100,
         Unassigned2 = 0x0200,
-        Unreachable_Net = 0x0300,
-        Unreachable_Host = 0x0301,
-        Unreachable_Protocol = 0x0302,
-        Unreachable_Port = 0x0303,
-        Unreachable_FragmentationNeeded = 0x0304,
-        Unreachable_SourceRouteFailed = 0x0305,
-        Unreachable_DestinationNetworkUnknown = 0x0306,
-        Unreachable_DestinationHostUnknown = 0x0307,
-        Unreachable_SourceHostIsolated = 0x0308,
-        Unreachable_NetworkProhibited = 0x0309,
-        Unreachable_HostProhibited = 0x030A,
-        Unreachable_NetworkUnreachableForServiceType = 0x030B,
-        Unreachable_HostUnreachableForServiceType = 0x030C,
-        Unreachable_CommunicationProhibited = 0x030D,
-        Unreachable_HostPrecedenceViolation = 0x030E,
-        Unreachable_PrecedenceCutoffInEffect = 0x030F,
+        UnreachableNet = 0x0300,
+        UnreachableHost = 0x0301,
+        UnreachableProtocol = 0x0302,
+        UnreachablePort = 0x0303,
+        UnreachableFragmentationNeeded = 0x0304,
+        UnreachableSourceRouteFailed = 0x0305,
+        UnreachableDestinationNetworkUnknown = 0x0306,
+        UnreachableDestinationHostUnknown = 0x0307,
+        UnreachableSourceHostIsolated = 0x0308,
+        UnreachableNetworkProhibited = 0x0309,
+        UnreachableHostProhibited = 0x030A,
+        UnreachableNetworkUnreachableForServiceType = 0x030B,
+        UnreachableHostUnreachableForServiceType = 0x030C,
+        UnreachableCommunicationProhibited = 0x030D,
+        UnreachableHostPrecedenceViolation = 0x030E,
+        UnreachablePrecedenceCutoffInEffect = 0x030F,
 
         SourceQuench = 0x0400,
 
         AlternateHostAddress = 0x0500, // preserved for backwards compatibility
-        Redirect_Network = 0x0500,
-        Redirect_Host = 0x0501,
-        Redirect_TypeOfServiceAndNetwork = 0x0502,
-        Redirect_TypeOfServiceAndHost = 0x0503,
+        RedirectNetwork = 0x0500,
+        RedirectHost = 0x0501,
+        RedirectTypeOfServiceAndNetwork = 0x0502,
+        RedirectTypeOfServiceAndHost = 0x0503,
 
         Unassigned3 = 0x0700,
         EchoRequest = 0x0800,
@@ -62,9 +66,9 @@ namespace PacketDotNet
         RouterSelection = 0x0A00,
         TimeExceeded = 0x0B00,
 
-        Param_PointerIndicatesError = 0x0C00,
-        Param_MissingRequiredOption = 0x0C01,
-        Param_BadLength = 0x0C02,
+        ParamPointerIndicatesError = 0x0C00,
+        ParamMissingRequiredOption = 0x0C01,
+        ParamBadLength = 0x0C02,
 
         Timestamp = 0x0D00,
         TimestampReply = 0x0E00,
@@ -74,32 +78,32 @@ namespace PacketDotNet
         AddressMaskReply = 0x1200,
 
         Reserved4Security = 0x1300,
-        Reserved4robustnessExperiment1 = 0x1400,
-        Reserved4robustnessExperiment2 = 0x1500,
-        Reserved4robustnessExperiment3 = 0x1600,
-        Reserved4robustnessExperiment4 = 0x1700,
-        Reserved4robustnessExperiment5 = 0x1800,
-        Reserved4robustnessExperiment6 = 0x1900,
-        Reserved4robustnessExperiment7 = 0x1A00,
-        Reserved4robustnessExperiment8 = 0x1B00,
-        Reserved4robustnessExperiment9 = 0x1C00,
-        Reserved4robustnessExperiment10 = 0x1D00,
+        Reserved4RobustnessExperiment1 = 0x1400,
+        Reserved4RobustnessExperiment2 = 0x1500,
+        Reserved4RobustnessExperiment3 = 0x1600,
+        Reserved4RobustnessExperiment4 = 0x1700,
+        Reserved4RobustnessExperiment5 = 0x1800,
+        Reserved4RobustnessExperiment6 = 0x1900,
+        Reserved4RobustnessExperiment7 = 0x1A00,
+        Reserved4RobustnessExperiment8 = 0x1B00,
+        Reserved4RobustnessExperiment9 = 0x1C00,
+        Reserved4RobustnessExperiment10 = 0x1D00,
 
         Traceroute = 0x1E00,
         DatagramConversionError = 0x1F00,
         MobileHostRedirect = 0x2000,
-        IPv6WhereAreYou = 0x2100,
-        IPv6IAmHere = 0x2200,
+        Pv6WhereAreYou = 0x2100,
+        Pv6IAmHere = 0x2200,
         MobileReqistrationRequest = 0x2300,
         MobileRegistrationReply = 0x2400,
         Skip = 0x2500,
 
-        Photuri_BadSPI = 0x2600,
-        Photuri_AuthenticationFailed = 0x2601,
-        Photuri_DecompressionFailed = 0x2602,
-        Photuri_DecryptionFailed = 0x2603,
-        Photuri_NeedAuthentication = 0x2604,
-        Photuri_NeedAuthorization = 0x2605,
+        PhoturiBadSPI = 0x2600,
+        PhoturiAuthenticationFailed = 0x2601,
+        PhoturiDecompressionFailed = 0x2602,
+        PhoturiDecryptionFailed = 0x2603,
+        PhoturiNeedAuthentication = 0x2604,
+        PhoturiNeedAuthorization = 0x2605,
 #pragma warning restore 1591
 
         //TODO: continue this list as user requested

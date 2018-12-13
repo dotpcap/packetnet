@@ -17,7 +17,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -30,16 +32,17 @@ namespace PacketDotNet
         /// Length of the Protocol field in bytes, the field is of type
         /// PPPProtocol
         /// </summary>
-        public static readonly int ProtocolLength = 2;
-
-        /// <summary>
-        /// Offset from the start of the PPP packet where the Protocol field is located
-        /// </summary>
-        public static readonly int ProtocolPosition = 0;
+        public static readonly Int32 ProtocolLength = 2;
 
         /// <summary>
         /// The length of the header
         /// </summary>
-        public static readonly int HeaderLength = ProtocolLength;
+        public static readonly Int32 HeaderLength = ProtocolLength;
+
+
+        /// <summary>
+        /// Offset from the start of the PPP packet where the Protocol field is located
+        /// </summary>
+        public static readonly Int32 ProtocolPosition = 0;
     }
 }

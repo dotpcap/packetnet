@@ -17,21 +17,28 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2013 Chris Morgan <chmorgan@gmail.com>
  */
+
+using System;
+
 namespace PacketDotNet
 {
     /// <summary> 802.1Q fields </summary>
     public class Ieee8021QFields
     {
-        /// <summary> Length of the ethertype value in bytes.</summary>
-        public readonly static int TypeLength = 2;
-        /// <summary> Length of the tag control information in bytes. </summary>
-        public readonly static int TagControlInformationLength = 2;
-        /// <summary> Position of the tag control information </summary>
-        public readonly static int TagControlInformationPosition = 0;
-        /// <summary> Position of the type field </summary>
-        public readonly static int TypePosition;
         /// <summary> Length in bytes of a Ieee8021Q header.</summary>
-        public readonly static int HeaderLength; // 4
+        public static readonly Int32 HeaderLength; // 4
+
+        /// <summary> Length of the tag control information in bytes. </summary>
+        public static readonly Int32 TagControlInformationLength = 2;
+
+        /// <summary> Position of the tag control information </summary>
+        public static readonly Int32 TagControlInformationPosition = 0;
+
+        /// <summary> Length of the ethertype value in bytes.</summary>
+        public static readonly Int32 TypeLength = 2;
+
+        /// <summary> Position of the type field </summary>
+        public static readonly Int32 TypePosition;
 
         static Ieee8021QFields()
         {

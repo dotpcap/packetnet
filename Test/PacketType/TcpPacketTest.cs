@@ -19,12 +19,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Collections.Generic;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using PacketDotNet.Tcp;
 using SharpPcap;
 
 namespace Test.PacketType
@@ -61,7 +63,7 @@ namespace Test.PacketType
             // even though the packet has 6 bytes of extra data, the ip packet shows a size of
             // 40 and the ip header has a length of 20. The TCP header is also 20 bytes so
             // there should be zero bytes in the TCPData value
-            int expectedTcpDataLength = 0;
+            Int32 expectedTcpDataLength = 0;
             Assert.AreEqual(expectedTcpDataLength, t.PayloadData.Length);
 
             dev.Close();
@@ -92,7 +94,7 @@ namespace Test.PacketType
         public void PayloadModification()
         {
             String s = "-++++=== HELLLLOOO ===++++-";
-            byte[] data = System.Text.Encoding.UTF8.GetBytes(s);
+            Byte[] data = System.Text.Encoding.UTF8.GetBytes(s);
 
             //create random pkt
             var p = TcpPacket.RandomPacket();
@@ -139,9 +141,33 @@ namespace Test.PacketType
             Assert.IsNotNull(t, "Expected t to not be null");
 
             // verify that the options byte match what we expect
-            byte[] expectedOptions = new byte[] { 0x1, 0x1, 0x8, 0xa, 0x0, 0x14,
+            Byte[] expectedOptions = new Byte[] { 0x1, 0x1, 0x8, 0xa, 0x0, 0x14,
                                                   0x3d, 0xe5, 0x1d, 0xf5, 0xf8, 0x84 };
             Assert.AreEqual(expectedOptions, t.Options);
+
+            var options = t.OptionsCollection;
+            foreach (var option in options)
+            {
+                if (option is TimeStamp timeStamp)
+                {
+                    Assert.AreEqual(1326565, timeStamp.Value);
+
+                    timeStamp.Value = 1234321;
+
+                    Assert.AreEqual(1234321, timeStamp.Value);
+                }
+            }
+
+            var optionsCollection = new List<Option>(options);
+            t.OptionsCollection = optionsCollection;
+
+            foreach (var option in t.OptionsCollection)
+            {
+                if (option is TimeStamp timeStamp)
+                {
+                    Assert.AreEqual(1234321, timeStamp.Value);
+                }
+            }
 
             dev.Close();
         }
@@ -149,8 +175,8 @@ namespace Test.PacketType
         [Test]
         public void TCPConstructorFromValues()
         {
-            ushort sourcePort = 100;
-            ushort destinationPort = 101;
+            UInt16 sourcePort = 100;
+            UInt16 destinationPort = 101;
             var tcpPacket = new TcpPacket(sourcePort, destinationPort);
 
             Assert.AreEqual(sourcePort, tcpPacket.SourcePort);
@@ -203,7 +229,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            bool foundtcpPacket = false;
+            Boolean foundtcpPacket = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = PacketDotNet.Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
@@ -230,7 +256,7 @@ namespace Test.PacketType
                 Assert.AreEqual(tcpPacket.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(tcpPacket.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(tcpPacket.Color, fromFile.Color);
-                Assert.AreEqual(tcpPacket.Header, fromFile.Header);
+                Assert.AreEqual(tcpPacket.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(tcpPacket.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(tcpPacket.Ack, fromFile.Ack);
                 Assert.AreEqual(tcpPacket.AcknowledgmentNumber, fromFile.AcknowledgmentNumber);

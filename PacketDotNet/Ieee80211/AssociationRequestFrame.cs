@@ -19,233 +19,186 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using PacketDotNet.Utils;
-using MiscUtil.Conversion;
 using System.Net.NetworkInformation;
+using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    /// Format of an 802.11 management association frame.
+    /// </summary>
+    public sealed class AssociationRequestFrame : ManagementFrame
     {
         /// <summary>
-        /// Format of an 802.11 management association frame.
+        /// Constructor
         /// </summary>
-        public class AssociationRequestFrame : ManagementFrame
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment" />
+        /// </param>
+        public AssociationRequestFrame(ByteArraySegment bas)
         {
-            private class AssociationRequestFields
+            Header = new ByteArraySegment(bas);
+
+            FrameControl = new FrameControlField(FrameControlBytes);
+            Duration = new DurationField(DurationBytes);
+            DestinationAddress = GetAddress(0);
+            SourceAddress = GetAddress(1);
+            BssId = GetAddress(2);
+            SequenceControl = new SequenceControlField(SequenceControlBytes);
+
+            CapabilityInformation = new CapabilityInformationField(CapabilityInformationBytes);
+            ListenInterval = ListenIntervalBytes;
+
+            if (bas.Length > AssociationRequestFields.InformationElement1Position)
             {
-                public readonly static int CapabilityInformationLength = 2;
-                public readonly static int ListenIntervalLength = 2;
+                //create a segment that just refers to the info element section
+                var infoElementsSegment = new ByteArraySegment(bas.Bytes,
+                                                               bas.Offset + AssociationRequestFields.InformationElement1Position,
+                                                               bas.Length - AssociationRequestFields.InformationElement1Position);
 
-                public readonly static int CapabilityInformationPosition;
-                public readonly static int ListenIntervalPosition;
-                public readonly static int InformationElement1Position;
+                InformationElements = new InformationElementList(infoElementsSegment);
+            }
+            else
+            {
+                InformationElements = new InformationElementList();
+            }
 
-                static AssociationRequestFields()
+            //cant set length until after we have handled the information elements
+            //as they vary in length
+            Header.Length = FrameSize;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AssociationRequestFrame" /> class.
+        /// </summary>
+        /// <param name='sourceAddress'>
+        /// Source address.
+        /// </param>
+        /// <param name='destinationAddress'>
+        /// Destination address.
+        /// </param>
+        /// <param name='bssId'>
+        /// Bss identifier (MAC Address of Access Point).
+        /// </param>
+        /// <param name='informationElements'>
+        /// Information elements.
+        /// </param>
+        public AssociationRequestFrame
+        (
+            PhysicalAddress sourceAddress,
+            PhysicalAddress destinationAddress,
+            PhysicalAddress bssId,
+            InformationElementList informationElements)
+        {
+            FrameControl = new FrameControlField();
+            Duration = new DurationField();
+            DestinationAddress = destinationAddress;
+            SourceAddress = sourceAddress;
+            BssId = bssId;
+            SequenceControl = new SequenceControlField();
+            CapabilityInformation = new CapabilityInformationField();
+            InformationElements = new InformationElementList(informationElements);
+
+            FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementAssociationRequest;
+        }
+
+        /// <summary>
+        /// Gets or sets the capability information.
+        /// </summary>
+        /// <value>
+        /// The capability information.
+        /// </value>
+        public CapabilityInformationField CapabilityInformation { get; set; }
+
+        /// <summary>
+        /// Gets the size of the frame.
+        /// </summary>
+        /// <value>
+        /// The size of the frame.
+        /// </value>
+        public override Int32 FrameSize => MacFields.FrameControlLength +
+                                           MacFields.DurationIDLength +
+                                           (MacFields.AddressLength * 3) +
+                                           MacFields.SequenceControlLength +
+                                           AssociationRequestFields.CapabilityInformationLength +
+                                           AssociationRequestFields.ListenIntervalLength +
+                                           InformationElements.Length;
+
+        /// <summary>
+        /// Gets or sets the information elements.
+        /// </summary>
+        /// <value>
+        /// The information elements.
+        /// </value>
+        public InformationElementList InformationElements { get; set; }
+
+        /// <summary>
+        /// Gets or sets the listen interval.
+        /// </summary>
+        /// <value>
+        /// The listen interval.
+        /// </value>
+        public UInt16 ListenInterval { get; set; }
+
+        /// <summary>
+        /// Frame control bytes are the first two bytes of the frame
+        /// </summary>
+        private UInt16 CapabilityInformationBytes
+        {
+            get
+            {
+                if (Header.Length >=
+                    AssociationRequestFields.CapabilityInformationPosition + AssociationRequestFields.CapabilityInformationLength)
                 {
-                    CapabilityInformationPosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
-                    ListenIntervalPosition = CapabilityInformationPosition + CapabilityInformationLength;
-                    InformationElement1Position = ListenIntervalPosition + ListenIntervalLength;
+                    return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                              Header.Offset + AssociationRequestFields.CapabilityInformationPosition);
                 }
+
+                return 0;
             }
 
-            /// <summary>
-            /// Frame control bytes are the first two bytes of the frame
-            /// </summary>
-            private UInt16 CapabilityInformationBytes
+            set => EndianBitConverter.Little.CopyBytes(value,
+                                                       Header.Bytes,
+                                                       Header.Offset + AssociationRequestFields.CapabilityInformationPosition);
+        }
+
+        private UInt16 ListenIntervalBytes
+        {
+            get
             {
-                get
+                if (Header.Length >= AssociationRequestFields.ListenIntervalPosition + AssociationRequestFields.ListenIntervalLength)
                 {
-                    if(header.Length >= 
-                        (AssociationRequestFields.CapabilityInformationPosition + AssociationRequestFields.CapabilityInformationLength))
-                    {
-                        return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                                  header.Offset + AssociationRequestFields.CapabilityInformationPosition);
-                    }
-                    else
-                    {
-                        return 0;
-                    }
+                    return EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                              Header.Offset + AssociationRequestFields.ListenIntervalPosition);
                 }
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                        header.Bytes,
-                        header.Offset + AssociationRequestFields.CapabilityInformationPosition);
-                }
+                return 0;
             }
+        }
 
-            /// <summary>
-            /// Gets or sets the capability information.
-            /// </summary>
-            /// <value>
-            /// The capability information.
-            /// </value>
-            public CapabilityInformationField CapabilityInformation
+        /// <summary>
+        /// Writes the current packet properties to the backing ByteArraySegment.
+        /// </summary>
+        public override void UpdateCalculatedValues()
+        {
+            if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                get;
-                set;
+                Header = new ByteArraySegment(new Byte[FrameSize]);
             }
 
-            /// <summary>
-            /// Gets or sets the listen interval.
-            /// </summary>
-            /// <value>
-            /// The listen interval.
-            /// </value>
-            public UInt16 ListenInterval {get; set;}
-            
-            private UInt16 ListenIntervalBytes
-            {
-                get
-                {
-                    if(header.Length >= (AssociationRequestFields.ListenIntervalPosition + AssociationRequestFields.ListenIntervalLength))
-                    {
-                        return EndianBitConverter.Little.ToUInt16(header.Bytes,
-                                                                  header.Offset + AssociationRequestFields.ListenIntervalPosition);
-                    }
-                    else
-                    {
-                        return 0;
-                    }
-                }
+            FrameControlBytes = FrameControl.Field;
+            DurationBytes = Duration.Field;
+            SetAddress(0, DestinationAddress);
+            SetAddress(1, SourceAddress);
+            SetAddress(2, BssId);
+            SequenceControlBytes = SequenceControl.Field;
+            CapabilityInformationBytes = CapabilityInformation.Field;
 
-                set
-                {
-                    EndianBitConverter.Little.CopyBytes(value,
-                        header.Bytes,
-                        header.Offset + AssociationRequestFields.ListenIntervalPosition);
-                }
-            }
-   
-            /// <summary>
-            /// Gets or sets the information elements.
-            /// </summary>
-            /// <value>
-            /// The information elements.
-            /// </value>
-            public InformationElementList InformationElements { get; set; }
+            //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
+            InformationElements.CopyTo(Header, Header.Offset + AssociationRequestFields.InformationElement1Position);
 
-            /// <summary>
-            /// Gets the size of the frame.
-            /// </summary>
-            /// <value>
-            /// The size of the frame.
-            /// </value>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 3) +
-                        MacFields.SequenceControlLength +
-                        AssociationRequestFields.CapabilityInformationLength +
-                        AssociationRequestFields.ListenIntervalLength +
-                        InformationElements.Length);
-                }
-            }
-
-
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public AssociationRequestFrame (ByteArraySegment bas)
-            {
-                header = new ByteArraySegment (bas);
-
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                DestinationAddress = GetAddress (0);
-                SourceAddress = GetAddress (1);
-                BssId = GetAddress (2);
-                SequenceControl = new SequenceControlField (SequenceControlBytes);
-
-                CapabilityInformation = new CapabilityInformationField (CapabilityInformationBytes);
-                ListenInterval = ListenIntervalBytes;
-				
-				if(bas.Length > AssociationRequestFields.InformationElement1Position)
-				{
-                	//create a segment that just refers to the info element section
-                	ByteArraySegment infoElementsSegment = new ByteArraySegment (bas.Bytes,
-                    	(bas.Offset + AssociationRequestFields.InformationElement1Position),
-                    	(bas.Length - AssociationRequestFields.InformationElement1Position));
-				
-					InformationElements = new InformationElementList (infoElementsSegment);
-				}
-				else
-				{
-					InformationElements = new InformationElementList();
-				}
-
-                //cant set length until after we have handled the information elements
-                //as they vary in length
-                header.Length = FrameSize;
-            }
-            
-            /// <summary>
-            /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.AssociationRequestFrame"/> class.
-            /// </summary>
-            /// <param name='SourceAddress'>
-            /// Source address.
-            /// </param>
-            /// <param name='DestinationAddress'>
-            /// Destination address.
-            /// </param>
-            /// <param name='BssId'>
-            /// Bss identifier (MAC Address of Access Point).
-            /// </param>
-            /// <param name='InformationElements'>
-            /// Information elements.
-            /// </param>
-            public AssociationRequestFrame (PhysicalAddress SourceAddress,
-                                            PhysicalAddress DestinationAddress,
-                                            PhysicalAddress BssId,
-                                            InformationElementList InformationElements)
-            {
-                this.FrameControl = new FrameControlField ();
-                this.Duration = new DurationField ();
-                this.DestinationAddress = DestinationAddress;
-                this.SourceAddress = SourceAddress;
-                this.BssId = BssId;
-                this.SequenceControl = new SequenceControlField ();
-                this.CapabilityInformation = new CapabilityInformationField ();
-                this.InformationElements = new InformationElementList (InformationElements);
-                
-                this.FrameControl.SubType = FrameControlField.FrameSubTypes.ManagementAssociationRequest;
-            }
-            
-            /// <summary>
-            /// Writes the current packet properties to the backing ByteArraySegment.
-            /// </summary>
-            public override void UpdateCalculatedValues ()
-            {
-                if ((header == null) || (header.Length > (header.BytesLength - header.Offset)) || (header.Length < FrameSize))
-                {
-                    header = new ByteArraySegment (new Byte[FrameSize]);
-                }
-                
-                this.FrameControlBytes = this.FrameControl.Field;
-                this.DurationBytes = this.Duration.Field;
-                SetAddress (0, DestinationAddress);
-                SetAddress (1, SourceAddress);
-                SetAddress (2, BssId);
-                this.SequenceControlBytes = this.SequenceControl.Field;
-                this.CapabilityInformationBytes = this.CapabilityInformation.Field;
-                
-                //we now know the backing buffer is big enough to contain the info elements so we can safely copy them in
-                this.InformationElements.CopyTo (header, header.Offset + AssociationRequestFields.InformationElement1Position);
-                
-                header.Length = FrameSize;
-            }
-            
-        } 
+            Header.Length = FrameSize;
+        }
     }
 }

@@ -19,76 +19,62 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.Ieee80211
 {
-    namespace Ieee80211
+    /// <summary>
+    /// RTS Frame has a ReceiverAddress[6], TransmitterAddress[6] and a FrameCheckSequence[4],
+    /// these fields follow the common FrameControl[2] and DurationId[2] fields
+    /// </summary>
+    public sealed class RtsFrame : MacFrame
     {
         /// <summary>
-        /// RTS Frame has a ReceiverAddress[6], TransmitterAddress[6] and a FrameCheckSequence[4],
-        /// these fields follow the common FrameControl[2] and DurationId[2] fields
+        /// Constructor
         /// </summary>
-        public class RtsFrame : MacFrame
+        /// <param name="bas">
+        /// A <see cref="ByteArraySegment" />
+        /// </param>
+        public RtsFrame(ByteArraySegment bas)
         {
-            /// <summary>
-            /// ReceiverAddress
-            /// </summary>
-            public PhysicalAddress ReceiverAddress {get; set;}
+            Header = new ByteArraySegment(bas);
 
-            /// <summary>
-            /// TransmitterAddress
-            /// </summary>
-            public PhysicalAddress TransmitterAddress {get; set;}
+            FrameControl = new FrameControlField(FrameControlBytes);
+            Duration = new DurationField(DurationBytes);
+            ReceiverAddress = GetAddress(0);
+            TransmitterAddress = GetAddress(1);
 
-            /// <summary>
-            /// Length of the frame
-            /// </summary>
-            public override int FrameSize
-            {
-                get
-                {
-                    return (MacFields.FrameControlLength +
-                        MacFields.DurationIDLength +
-                        (MacFields.AddressLength * 2));
-                }
-            }
+            Header.Length = FrameSize;
+        }
 
-            /// <summary>
-            /// Constructor
-            /// </summary>
-            /// <param name="bas">
-            /// A <see cref="ByteArraySegment"/>
-            /// </param>
-            public RtsFrame (ByteArraySegment bas)
-            {
-                header = new ByteArraySegment (bas);
+        /// <summary>
+        /// Length of the frame
+        /// </summary>
+        public override Int32 FrameSize => MacFields.FrameControlLength +
+                                           MacFields.DurationIDLength +
+                                           (MacFields.AddressLength * 2);
 
-                FrameControl = new FrameControlField (FrameControlBytes);
-                Duration = new DurationField (DurationBytes);
-                ReceiverAddress = GetAddress (0);
-                TransmitterAddress = GetAddress(1);
-				
-				header.Length = FrameSize;
-            }
-   
-            /// <summary>
-            /// Returns a string with a description of the addresses used in the packet.
-            /// This is used as a compoent of the string returned by ToString().
-            /// </summary>
-            /// <returns>
-            /// The address string.
-            /// </returns>
-            protected override String GetAddressString()
-            {
-                return String.Format("RA {0} TA {1}",
-                                     ReceiverAddress, 
-                                     TransmitterAddress);
-            }
-        } 
+        /// <summary>
+        /// ReceiverAddress
+        /// </summary>
+        public PhysicalAddress ReceiverAddress { get; set; }
+
+        /// <summary>
+        /// TransmitterAddress
+        /// </summary>
+        public PhysicalAddress TransmitterAddress { get; set; }
+
+        /// <summary>
+        /// Returns a string with a description of the addresses used in the packet.
+        /// This is used as a compoent of the string returned by ToString().
+        /// </summary>
+        /// <returns>
+        /// The address string.
+        /// </returns>
+        protected override String GetAddressString()
+        {
+            return $"RA {ReceiverAddress} TA {TransmitterAddress}";
+        }
     }
 }

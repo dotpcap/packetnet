@@ -24,9 +24,8 @@ using PacketDotNet;
 using PacketDotNet.Ieee80211;
 using NUnit.Framework;
 using SharpPcap;
-using PacketDotNet.Utils;
 using System.Net.NetworkInformation;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
 
 namespace Test.PacketType
 {
@@ -121,7 +120,7 @@ namespace Test.PacketType
                 dataFrame.BssId = PhysicalAddress.Parse("AABBCCDDEEFF");
                 dataFrame.SourceAddress = PhysicalAddress.Parse("AABBCCDDEEFF");
                 dataFrame.DestinationAddress = PhysicalAddress.Parse("112233445566");
-                dataFrame.PayloadData = new byte[]{0x1, 0x2, 0x3, 0x4};
+                dataFrame.PayloadData = new Byte[]{0x1, 0x2, 0x3, 0x4};
                 
                 //Force it to recalculate the FCS and include it when serialised
                 dataFrame.UpdateFrameCheckSequence();
@@ -130,7 +129,7 @@ namespace Test.PacketType
                 
                 var expectedLength = dataFrame.FrameSize + dataFrame.PayloadData.Length + 4;
                 
-                byte[] frameBytes = dataFrame.Bytes;
+                Byte[] frameBytes = dataFrame.Bytes;
                 
                 Assert.AreEqual(expectedLength, frameBytes.Length);
                 Assert.AreEqual(dataFrame.FrameCheckSequence.ToString("X"),
@@ -150,7 +149,7 @@ namespace Test.PacketType
                 dataFrame.BssId = PhysicalAddress.Parse("AABBCCDDEEFF");
                 dataFrame.SourceAddress = PhysicalAddress.Parse("AABBCCDDEEFF");
                 dataFrame.DestinationAddress = PhysicalAddress.Parse("112233445566");
-                dataFrame.PayloadData = new byte[]{0x01, 0x02, 0x03, 0x04};
+                dataFrame.PayloadData = new Byte[]{0x01, 0x02, 0x03, 0x04};
                 
                 //Force it to recalculate the FCS but don't include it when serialised
                 dataFrame.UpdateFrameCheckSequence();

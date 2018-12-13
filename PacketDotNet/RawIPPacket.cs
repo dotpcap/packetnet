@@ -18,11 +18,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  *  Copyright 2016 Cameron Elliott <cameron@cameronelliott.com>
  */
+
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using PacketDotNet.Utils;
-using MiscUtil.Conversion;
 
 namespace PacketDotNet
 {
@@ -36,16 +37,15 @@ namespace PacketDotNet
         /// <summary>
         /// </summary>
         public RawIPPacketProtocol Protocol;
-       
+
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="bas">
-        /// A <see cref="ByteArraySegment"/>
+        /// A <see cref="ByteArraySegment" />
         /// </param>
         public RawIPPacket(ByteArraySegment bas)
         {
-
             // Pcap raw link layer format does not have any header
             // you need to identify whether you have ipv4 or ipv6
             // directly by checking the IP version number.
@@ -53,42 +53,39 @@ namespace PacketDotNet
             // If the first nibble is 0x06, then you have IP v6
             // The RawIPPacketProtocol enum has been defined to match this.
             var firstNibble = bas.Bytes[0] >> 4;
-            Protocol = (RawIPPacketProtocol)firstNibble;
+            Protocol = (RawIPPacketProtocol) firstNibble;
 
-            header = new ByteArraySegment(bas);
-            header.Length = 0;
+            Header = new ByteArraySegment(bas) {Length = 0};
 
             // parse the encapsulated bytes
-            payloadPacketOrData = new PacketOrByteArraySegment();
-
-            switch (Protocol)
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-            case RawIPPacketProtocol.IPv4:
-                payloadPacketOrData.ThePacket = new IPv4Packet(header.EncapsulatedBytes());
-                break;
-            case RawIPPacketProtocol.IPv6:
-                payloadPacketOrData.ThePacket = new IPv6Packet(header.EncapsulatedBytes());
-                break;
-            default:
-                throw new System.NotImplementedException("Protocol of " + Protocol + " is not implemented");
-            }
+                var result = new PacketOrByteArraySegment();
+                switch (Protocol)
+                {
+                    case RawIPPacketProtocol.IPv4:
+                        result.Packet = new IPv4Packet(Header.EncapsulatedBytes());
+                        break;
+                    case RawIPPacketProtocol.IPv6:
+                        result.Packet = new IPv6Packet(Header.EncapsulatedBytes());
+                        break;
+                    default:
+                        throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");
+                }
+
+                return result;
+            }, LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override System.String Color
-        {
-            get
-            {
-                return AnsiEscapeSequences.DarkGray;
-            }
-        }
+        public override String Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override string ToString(StringOutputType outputFormat)
+        public override String ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
-            string color = "";
-            string colorEscape = "";
+            var color = "";
+            var colorEscape = "";
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -100,19 +97,21 @@ namespace PacketDotNet
             {
                 // build the output string
                 buffer.AppendFormat("{0}[RawPacket: Protocol={2}]{1}",
-                    color,
-                    colorEscape,
-                    Protocol);
+                                    color,
+                                    colorEscape,
+                                    Protocol);
             }
 
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                Dictionary<string, string> properties = new Dictionary<string, string>();
-                properties.Add("protocol", Protocol.ToString() + " (0x" + Protocol.ToString("x") + ")");
+                var properties = new Dictionary<String, String>
+                {
+                    {"protocol", Protocol + " (0x" + Protocol.ToString("x") + ")"}
+                };
 
                 // calculate the padding needed to right-justify the property names
-                int padLength = Utils.RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Raw:  ******* Raw - \"Raw IP Packet\" - offset=? length=" + TotalPacketLength);
@@ -121,6 +120,7 @@ namespace PacketDotNet
                 {
                     buffer.AppendLine("Raw: " + property.Key.PadLeft(padLength) + " = " + property.Value);
                 }
+
                 buffer.AppendLine("Raw:");
             }
 
@@ -131,4 +131,3 @@ namespace PacketDotNet
         }
     }
 }
-

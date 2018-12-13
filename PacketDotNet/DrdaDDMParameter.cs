@@ -17,6 +17,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2017 Andrew <pandipd@outlook.com>
  */
+
 using System;
 
 namespace PacketDotNet
@@ -27,9 +28,9 @@ namespace PacketDotNet
     public class DrdaDDMParameter
     {
         /// <summary>
-        /// The Length field
+        /// The Other Data field
         /// </summary>
-        public int Length { set; get; }
+        public String Data { set; get; }
 
         /// <summary>
         /// The Drda Code Point Type field
@@ -37,8 +38,8 @@ namespace PacketDotNet
         public DrdaCodepointType DrdaCodepoint { set; get; }
 
         /// <summary>
-        /// The Other Data field
+        /// The Length field
         /// </summary>
-        public string Data { set; get; }
+        public Int32 Length { set; get; }
     }
 }

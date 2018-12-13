@@ -23,7 +23,6 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
 using PacketDotNet;
-using PacketDotNet.Utils;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
@@ -77,7 +76,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            bool foundPPP = false;
+            Boolean foundPPP = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
@@ -104,7 +103,7 @@ namespace Test.PacketType
                 Assert.AreEqual(ppp.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
                 Assert.AreEqual(ppp.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
                 Assert.AreEqual(ppp.Color, fromFile.Color);
-                Assert.AreEqual(ppp.Header, fromFile.Header);
+                Assert.AreEqual(ppp.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ppp.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(ppp.Protocol, fromFile.Protocol);
 

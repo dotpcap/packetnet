@@ -17,6 +17,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
+
+using System;
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -25,20 +28,26 @@ namespace PacketDotNet
     /// </summary>
     public class ICMPv6Fields
     {
-        /// <summary> Length of the ICMP message type code in bytes.</summary>
-        public readonly static int TypeLength = 1;
-        /// <summary> Length of the ICMP subcode in bytes.</summary>
-        public readonly static int CodeLength = 1;
         /// <summary> Length of the ICMP header checksum in bytes.</summary>
-        public readonly static int ChecksumLength = 2;
-        /// <summary> Position of the ICMP message type.</summary>
-        public readonly static int TypePosition = 0;
-        /// <summary> Position of the ICMP message subcode.</summary>
-        public readonly static int CodePosition;
+        public static readonly Int32 ChecksumLength = 2;
+
         /// <summary> Position of the ICMP header checksum.</summary>
-        public readonly static int ChecksumPosition;
+        public static readonly Int32 ChecksumPosition;
+
+        /// <summary> Length of the ICMP subcode in bytes.</summary>
+        public static readonly Int32 CodeLength = 1;
+
+        /// <summary> Position of the ICMP message subcode.</summary>
+        public static readonly Int32 CodePosition;
+
         /// <summary> Length in bytes of an ICMP header.</summary>
-        public readonly static int HeaderLength; // == 4
+        public static readonly Int32 HeaderLength; // == 4
+
+        /// <summary> Length of the ICMP message type code in bytes.</summary>
+        public static readonly Int32 TypeLength = 1;
+
+        /// <summary> Position of the ICMP message type.</summary>
+        public static readonly Int32 TypePosition = 0;
 
         static ICMPv6Fields()
         {

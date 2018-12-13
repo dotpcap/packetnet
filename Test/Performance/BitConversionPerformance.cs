@@ -22,8 +22,8 @@ using System;
 using System.Net;
 using System.IO;
 using NUnit.Framework;
-using MiscUtil.IO;
-using MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.MiscUtil.IO;
 
 namespace Test.Performance
 {
@@ -40,16 +40,16 @@ namespace Test.Performance
             LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
 
 
-            byte[] bytes;
-            int testRuns;
-            int startIndex;
-            int expectedValue;
+            Byte[] bytes;
+            Int32 testRuns;
+            Int32 startIndex;
+            Int32 expectedValue;
             ByteSetupMethods.Setup(out bytes, out testRuns, out startIndex,
                                    out expectedValue);
 
             var startTime = DateTime.Now;
 
-            for(int i = 0; i < testRuns; i++)
+            for(Int32 i = 0; i < testRuns; i++)
             {
                 var actualValue = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(bytes, startIndex));
 
@@ -82,10 +82,10 @@ namespace Test.Performance
             // disable logging to improve performance
             LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
 
-            byte[] bytes;
-            int testRuns;
-            int startIndex;
-            int expectedValue;
+            Byte[] bytes;
+            Int32 testRuns;
+            Int32 startIndex;
+            Int32 expectedValue;
             ByteSetupMethods.Setup(out bytes, out testRuns, out startIndex,
                                    out expectedValue);
 
@@ -94,7 +94,7 @@ namespace Test.Performance
 
             var startTime = DateTime.Now;
 
-            for(int i = 0; i < testRuns; i++)
+            for(Int32 i = 0; i < testRuns; i++)
             {
                 endianReader.Seek(startIndex, SeekOrigin.Begin);
                 var actualValue = endianReader.ReadInt32();
@@ -128,18 +128,18 @@ namespace Test.Performance
             // disable logging to improve performance
             LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
 
-            byte[] bytes;
-            int testRuns;
-            int startIndex;
-            int expectedValue;
+            Byte[] bytes;
+            Int32 testRuns;
+            Int32 startIndex;
+            Int32 expectedValue;
             ByteSetupMethods.Setup(out bytes, out testRuns, out startIndex,
                                    out expectedValue);
 
             var startTime = DateTime.Now;
 
-            for(int i = 0; i < testRuns; i++)
+            for(Int32 i = 0; i < testRuns; i++)
             {
-                var actualValue = MiscUtil.Conversion.EndianBitConverter.Big.ToInt32(bytes, startIndex);
+                var actualValue = EndianBitConverter.Big.ToInt32(bytes, startIndex);
 
                 // NOTE: Assert.AreEqual() significantly slows, by a factor of ~6x
                 //       the execution of this loop, so we perform ourself and

@@ -20,7 +20,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
-using log4net.Core;
 using PacketDotNet;
 
 namespace Test.Performance
@@ -39,7 +38,7 @@ namespace Test.Performance
             var ethernetPacket = EthernetPacket.RandomPacket();
 
             // build an ip packet
-            var ipPacket = IpPacket.RandomPacket(IpVersion.IPv6);
+            var ipPacket = IPPacket.RandomPacket(IPVersion.IPv6);
 
             ethernetPacket.PayloadPacket = ipPacket;
 
@@ -59,7 +58,7 @@ namespace Test.Performance
 
             // used to make sure we get the same byte[] reference returned each time
             // because thats what we expect
-            byte[] theByteArray = null;
+            Byte[] theByteArray = null;
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
@@ -70,7 +69,7 @@ namespace Test.Performance
             // now benchmark retrieving the byte[] for several seconds
             var startTime = DateTime.Now;
             var endTime = startTime.Add(new TimeSpan(0, 0, 2));
-            int testRuns = 0;
+            Int32 testRuns = 0;
             while(DateTime.Now < endTime)
             {
                 var theBytes = contiguousEthernetPacket.Bytes;
@@ -104,7 +103,7 @@ namespace Test.Performance
         {
             var ethernetPacket = BuildNonContiguousEthernetPacket();
 
-            byte[] lastByteArray = null;
+            Byte[] lastByteArray = null;
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
@@ -115,7 +114,7 @@ namespace Test.Performance
             // now benchmark retrieving the byte[] for several seconds
             var startTime = DateTime.Now;
             var endTime = startTime.Add(new TimeSpan(0, 0, 2));
-            int testRuns = 0;
+            Int32 testRuns = 0;
             while(DateTime.Now < endTime)
             {
                 var theBytes = ethernetPacket.Bytes;

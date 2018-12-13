@@ -19,9 +19,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using PacketDotNet;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
@@ -123,7 +120,7 @@ namespace Test.PacketType
 			public void Test_ConstructorWithCorruptBuffer ()
 			{
 				//buffer is way too short for frame. We are just checking it doesn't throw
-				byte[] corruptBuffer = new byte[]{0x01};
+				Byte[] corruptBuffer = new Byte[]{0x01};
 				DeauthenticationFrame frame = new DeauthenticationFrame(new ByteArraySegment(corruptBuffer));
 				Assert.IsFalse(frame.FCSValid);
 			}

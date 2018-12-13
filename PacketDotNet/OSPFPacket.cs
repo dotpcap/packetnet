@@ -35,32 +35,25 @@ namespace PacketDotNet
         /// <param name="payload">The bytes from which the packet is conctructed</param>
         /// <param name="offset">The offset of this packet from the parent packet</param>
         /// <returns>an OSPF packet</returns>
-        public static OSPFPacket ConstructOSPFPacket(byte[] payload, int offset)
+        public static OSPFPacket ConstructOSPFPacket(Byte[] payload, Int32 offset)
         {
-            byte v = payload[offset + OSPFv2Fields.VersionPosition];
+            var v = (OSPFVersion) payload[offset + OSPFv2Fields.VersionPosition];
 
-            if (!Enum.IsDefined(typeof(OSPFVersion), v))
-            {
-                throw new Exception("No such OSPF version: " + v);
-            }
-
-            switch ((OSPFVersion)v)
+            switch (v)
             {
                 case OSPFVersion.OSPFv2:
                     return ConstructV2Packet(payload, offset);
                 case OSPFVersion.OSPFv3:
                     return ConstructV3Packet(payload, offset);
-
-                //we've already checked whether the version is correct, but the compiler wont shut up
                 default:
-                    return null;
+                    throw new InvalidOperationException("No such OSPF version: " + v);
             }
         }
 
-        private static OSPFv2Packet ConstructV2Packet(byte[] payload, int offset)
+        private static OSPFv2Packet ConstructV2Packet(Byte[] payload, Int32 offset)
         {
             OSPFv2Packet p;
-            OSPFPacketType type = (OSPFPacketType)payload[offset + OSPFv2Fields.TypePosition];
+            var type = (OSPFPacketType) payload[offset + OSPFv2Fields.TypePosition];
 
             switch (type)
             {
@@ -77,7 +70,7 @@ namespace PacketDotNet
                     p = new OSPFv2LSRequestPacket(payload, offset);
                     break;
                 case OSPFPacketType.LinkStateUpdate:
-                    p = new OSPFv2LSUpdatePacket(payload,offset);
+                    p = new OSPFv2LSUpdatePacket(payload, offset);
                     break;
                 default:
                     throw new Exception("Malformed OSPF packet");
@@ -86,7 +79,7 @@ namespace PacketDotNet
             return p;
         }
 
-        private static OSPFPacket ConstructV3Packet(byte[] payload, int offset)
+        private static OSPFPacket ConstructV3Packet(Byte[] payload, Int32 offset)
         {
             throw new NotImplementedException("OSPFv3 is not supported yet");
         }

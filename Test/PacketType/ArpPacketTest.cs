@@ -23,7 +23,6 @@ using System.Net;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
-using PacketDotNet.Utils;
 using SharpPcap;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -45,8 +44,8 @@ namespace Test.PacketType
             Assert.AreEqual(senderIp, arpPacket.SenderProtocolAddress);
             Assert.AreEqual(targetIp, arpPacket.TargetProtocolAddress);
 
-            string senderMacAddress = "000461990154";
-            string targetMacAddress = "000000000000";
+            String senderMacAddress = "000461990154";
+            String targetMacAddress = "000000000000";
             Assert.AreEqual(senderMacAddress, arpPacket.SenderHardwareAddress.ToString());
             Assert.AreEqual(targetMacAddress, arpPacket.TargetHardwareAddress.ToString());
         }
@@ -63,8 +62,8 @@ namespace Test.PacketType
             Assert.AreEqual(senderIp, arpPacket.SenderProtocolAddress);
             Assert.AreEqual(targetIp, arpPacket.TargetProtocolAddress);
 
-            string senderMacAddress = "00216A020854";
-            string targetMacAddress = "000461990154";
+            String senderMacAddress = "00216A020854";
+            String targetMacAddress = "000461990154";
             Assert.AreEqual(senderMacAddress, arpPacket.SenderHardwareAddress.ToString());
             Assert.AreEqual(targetMacAddress, arpPacket.TargetHardwareAddress.ToString());
         }
@@ -76,7 +75,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            int packetIndex = 0;
+            Int32 packetIndex = 0;
             while((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
@@ -108,10 +107,10 @@ namespace Test.PacketType
         [Test]
         public void ConstructingFromValues()
         {
-            var localIPBytes = new byte[4] {124, 10, 10, 20};
+            var localIPBytes = new Byte[4] {124, 10, 10, 20};
             var localIP = new System.Net.IPAddress(localIPBytes);
 
-            var destinationIPBytes = new byte[4] {192, 168, 1, 10};
+            var destinationIPBytes = new Byte[4] {192, 168, 1, 10};
             var destinationIP = new System.Net.IPAddress(destinationIPBytes);
 
             var localMac = System.Net.NetworkInformation.PhysicalAddress.Parse("AA-BB-CC-DD-EE-FF");
@@ -166,7 +165,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            bool foundARP = false;
+            Boolean foundARP = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = PacketDotNet.Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
@@ -195,7 +194,7 @@ namespace Test.PacketType
                 Assert.AreEqual(arpPacket.Color, fromFile.Color);
                 Assert.AreEqual(arpPacket.HardwareAddressLength, fromFile.HardwareAddressLength);
                 Assert.AreEqual(arpPacket.HardwareAddressType, fromFile.HardwareAddressType);
-                CollectionAssert.AreEqual(arpPacket.Header, fromFile.Header);
+                CollectionAssert.AreEqual(arpPacket.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(arpPacket.Operation, fromFile.Operation);
                 Assert.AreEqual(arpPacket.ParentPacket, fromFile.ParentPacket);
                 CollectionAssert.AreEqual(arpPacket.PayloadData, fromFile.PayloadData);

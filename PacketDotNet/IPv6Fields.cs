@@ -17,79 +17,83 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
+
+using System;
+
 namespace PacketDotNet
 {
     /// <summary>
     /// A struct containing length and position information about IPv6 Fields.
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     public struct IPv6Fields
     {
         /// <summary>
         /// The IP Version, Traffic Class, and Flow Label field length. These must be in one
         /// field due to boundary crossings.
         /// </summary>
-        public readonly static int VersionTrafficClassFlowLabelLength = 4;
+        public static readonly Int32 VersionTrafficClassFlowLabelLength = 4;
 
         /// <summary>
         /// The payload length field length.
         /// </summary>
-        public readonly static int PayloadLengthLength = 2;
+        public static readonly Int32 PayloadLengthLength = 2;
 
         /// <summary>
         /// The next header field length, identifies protocol encapsulated by the packet
         /// </summary>
-        public readonly static int NextHeaderLength = 1;
+        public static readonly Int32 NextHeaderLength = 1;
 
         /// <summary>
         /// The hop limit field length.
         /// </summary>
-        public readonly static int HopLimitLength = 1;
+        public static readonly Int32 HopLimitLength = 1;
 
         /// <summary>
         /// Address field length
         /// </summary>
-        public readonly static int AddressLength = 16;
+        public static readonly Int32 AddressLength = 16;
 
         /// <summary>
         /// The byte position of the field line in the IPv6 header.
         /// This is where the IP version, Traffic Class, and Flow Label fields are.
         /// </summary>
-        public readonly static int VersionTrafficClassFlowLabelPosition = 0;
+        public static readonly Int32 VersionTrafficClassFlowLabelPosition = 0;
 
         /// <summary>
         /// The byte position of the payload length field.
         /// </summary>
-        public readonly static int PayloadLengthPosition;
+        public static readonly Int32 PayloadLengthPosition;
 
         /// <summary>
         /// The byte position of the next header field. (Replaces the ipv4 protocol field)
         /// </summary>
-        public readonly static int NextHeaderPosition;
+        public static readonly Int32 NextHeaderPosition;
 
         /// <summary>
         /// The byte position of the hop limit field.
         /// </summary>
-        public readonly static int HopLimitPosition;
+        public static readonly Int32 HopLimitPosition;
 
         /// <summary>
         /// The byte position of the source address field.
         /// </summary>
-        public readonly static int SourceAddressPosition;
+        public static readonly Int32 SourceAddressPosition;
 
         /// <summary>
         /// The byte position of the destination address field.
         /// </summary>
-        public readonly static int DestinationAddressPosition;
+        public static readonly Int32 DestinationAddressPosition;
 
         /// <summary>
         /// The byte length of the IPv6 Header
         /// </summary>
-        public readonly static int HeaderLength; // == 40
+        public static readonly Int32 HeaderLength; // == 40
 
         /// <summary>
         /// Commutes the field positions.
         /// </summary>
-        static IPv6Fields( )
+        static IPv6Fields()
         {
             PayloadLengthPosition = VersionTrafficClassFlowLabelPosition + VersionTrafficClassFlowLabelLength;
             NextHeaderPosition = PayloadLengthPosition + PayloadLengthLength;

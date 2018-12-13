@@ -19,9 +19,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using PacketDotNet;
 using SharpPcap.LibPcap;
@@ -116,7 +113,7 @@ namespace Test.PacketType
                 frame.SourceAddress = PhysicalAddress.Parse ("222222222222");
                 frame.BssId = PhysicalAddress.Parse ("333333333333");
                 
-                frame.PayloadData = new byte[]{0x01, 0x02, 0x03, 0x04, 0x05};
+                frame.PayloadData = new Byte[]{0x01, 0x02, 0x03, 0x04, 0x05};
                 
                 frame.UpdateFrameCheckSequence ();
                 UInt32 fcs = frame.FrameCheckSequence;
@@ -142,7 +139,7 @@ namespace Test.PacketType
                 Assert.AreEqual ("222222222222", recreatedFrame.SourceAddress.ToString ().ToUpper ());
                 Assert.AreEqual ("333333333333", recreatedFrame.BssId.ToString ().ToUpper ());
                 
-                CollectionAssert.AreEqual (new byte[]{0x01, 0x02, 0x03, 0x04, 0x05}, recreatedFrame.PayloadData);
+                CollectionAssert.AreEqual (new Byte[]{0x01, 0x02, 0x03, 0x04, 0x05}, recreatedFrame.PayloadData);
                 
                 Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
             }
@@ -151,7 +148,7 @@ namespace Test.PacketType
 			public void Test_ConstructorWithCorruptBuffer ()
 			{
 				//buffer is way too short for frame. We are just checking it doesn't throw
-				byte[] corruptBuffer = new byte[]{0x01};
+				Byte[] corruptBuffer = new Byte[]{0x01};
 				QosDataFrame frame = new QosDataFrame(new ByteArraySegment(corruptBuffer));
 				Assert.IsFalse(frame.FCSValid);
 			}

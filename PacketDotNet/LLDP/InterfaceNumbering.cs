@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 namespace PacketDotNet.LLDP
 {
     /// <summary>
@@ -28,9 +29,11 @@ namespace PacketDotNet.LLDP
     {
         /// <summary>Unknown</summary>
         Unknown,
+
         /// <summary>Interface Index</summary>
-        ifIndex,
+        IfIndex,
+
         /// <summary>System Port Number</summary>
         SystemPortNumber
-    };
+    }
 }

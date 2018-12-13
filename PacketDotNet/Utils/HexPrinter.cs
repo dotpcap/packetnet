@@ -31,24 +31,26 @@ namespace PacketDotNet.Utils
         /// text form
         /// </summary>
         /// <param name="Byte">
-        /// A <see cref="System.Byte"/>
+        /// A <see cref="System.Byte" />
         /// </param>
-        /// <param name="Offset">
-        /// A <see cref="System.Int32"/>
+        /// <param name="offset">
+        /// A <see cref="System.Int32" />
         /// </param>
-        /// <param name="Length">
-        /// A <see cref="System.Int32"/>
+        /// <param name="length">
+        /// A <see cref="System.Int32" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.String"/>
+        /// A <see cref="string" />
         /// </returns>
-        public static string GetString(byte[] Byte,
-                                       int Offset,
-                                       int Length)
+        public static String GetString
+        (
+            Byte[] Byte,
+            Int32 offset,
+            Int32 length)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
-            for(int i = Offset; i < Offset + Length; i++)
+            for (var i = offset; i < offset + length; i++)
             {
                 sb.AppendFormat("[{0:x2}]", Byte[i]);
             }
@@ -60,20 +62,21 @@ namespace PacketDotNet.Utils
         /// Creates a string from a Physical address in the format "xx:xx:xx:xx:xx:xx"
         /// </summary>
         /// <param name="address">
-        /// A <see cref="PhysicalAddress"/>
+        /// A <see cref="PhysicalAddress" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.String"/>
+        /// A <see cref="string" />
         /// </returns>
-        public static string PrintMACAddress(PhysicalAddress address)
+        public static String PrintMACAddress(PhysicalAddress address)
         {
-            byte[] bytes = address.GetAddressBytes();
-            string output = "";
+            var bytes = address.GetAddressBytes();
+            var output = "";
 
-            for(int i = 0; i < bytes.Length; i++)
+            foreach (var t in bytes)
             {
-                output += bytes[i].ToString("x").PadLeft(2, '0') + ":";
+                output += t.ToString("x").PadLeft(2, '0') + ":";
             }
+
             return output.TrimEnd(':');
         }
     }

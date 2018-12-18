@@ -43,7 +43,7 @@ namespace Test.PacketType
             {
                 PcapStream ps = new PcapStream();
                 ps.Initialize(fsin);
-                p = ps.GetPacket().packet;
+                p = ps.GetPacket().Packet;
             }
 
             Assert.IsNotNull(p);

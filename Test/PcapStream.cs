@@ -3,26 +3,25 @@ namespace Test
 {
     public class PcapStream
     {
-        BinaryReader buffer;
-        public PcapMagic pcapMagic;
-        public PcapHeader pcapHeader;
+        private BinaryReader _buffer;
+        private PcapMagic _pcapMagic;
+        private PcapHeader _pcapHeader;
 
         public void Initialize(Stream inputStream)
         {
-            pcapMagic = new PcapMagic(inputStream);
+            _pcapMagic = new PcapMagic(inputStream);
 
-            if (pcapMagic.byteInOrder)
-                buffer = new BinaryReader(inputStream);
+            if (_pcapMagic.ByteInOrder)
+                _buffer = new BinaryReader(inputStream);
             else
-                buffer = new ByteSwappedBinaryReader(inputStream);
+                _buffer = new ByteSwappedBinaryReader(inputStream);
 
-            pcapHeader = new PcapHeader(buffer);
+            _pcapHeader = new PcapHeader(_buffer);
         }
 
         public PcapPacket GetPacket()
         {
-            return PcapPacket.GetPacket(buffer, pcapHeader.linkType);
+            return PcapPacket.GetPacket(_buffer, _pcapHeader.LinkType);
         }
-
     }
 }

@@ -77,11 +77,10 @@ namespace Test.PacketType
                 Int32 packetIndex = 0;
                 while (p != null)
                 {
-                    Console.WriteLine("got packet");
                     switch (packetIndex)
                     {
                         case 0:
-                            VerifyPacket0(p.packet, linkLayer);
+                            VerifyPacket0(p.Packet, linkLayer);
                             break;
                         default:
                             Assert.Fail("didn't expect to get to packetIndex " + packetIndex);

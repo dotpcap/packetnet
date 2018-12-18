@@ -34,12 +34,10 @@ namespace Test.PacketType
     public class IPv6PacketTest
     {
         // icmpv6
-        public void VerifyPacket0(Packet p, RawCapture rawCapture, LinkLayers linkLayer)
+        public void VerifyPacket0(Packet p, LinkLayers linkLayer)
         {
             Assert.IsNotNull(p);
             Console.WriteLine(p.ToString());
-
-            Assert.AreEqual(linkLayer, rawCapture.LinkLayerType);
 
             if (linkLayer == LinkLayers.Ethernet)
             {
@@ -59,8 +57,6 @@ namespace Test.PacketType
             Assert.AreEqual(255, ip.TimeToLive);
             Assert.AreEqual(0x3a, (Byte)ip.NextHeader);
             Console.WriteLine("Failed: ip.ComputeIPChecksum() not implemented.");
-            Assert.AreEqual(1221145299, rawCapture.Timeval.Seconds);
-            Assert.AreEqual(453568.000, rawCapture.Timeval.MicroSeconds);
         }
 
         // Test that we can load and parse an IPv6 packet
@@ -70,28 +66,33 @@ namespace Test.PacketType
         public void IPv6PacketTestParsing(String pcapPath, LinkLayers linkLayer)
         {
             var dev = new CaptureFileReaderDevice(pcapPath);
-            dev.Open();
-
-            RawCapture rawCapture;
-            Int32 packetIndex = 0;
-            while((rawCapture = dev.GetNextPacket()) != null)
+            PcapPacket p;
+            using (FileStream fsin = File.Open(pcapPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                Console.WriteLine("got packet");
-                switch(packetIndex)
+                PcapStream ps = new PcapStream();
+                ps.Initialize(fsin);
+                p = ps.GetPacket();
+
+
+                Int32 packetIndex = 0;
+                while (p != null)
                 {
-                case 0:
-                    VerifyPacket0(p, rawCapture, linkLayer);
-                    break;
-                default:
-                    Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
-                    break;
+                    Console.WriteLine("got packet");
+                    switch (packetIndex)
+                    {
+                        case 0:
+                            VerifyPacket0(p.packet, linkLayer);
+                            break;
+                        default:
+                            Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
+                            break;
+                    }
+
+                    packetIndex++;
+                    p = ps.GetPacket();
+
                 }
-
-                packetIndex++;
             }
-
-            dev.Close();
         }
 
         /// <summary>

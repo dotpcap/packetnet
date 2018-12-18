@@ -38,16 +38,15 @@ namespace Test.PacketType
         [TestCase("../../CaptureFiles/ICMPv4_raw_linklayer.pcap", LinkLayers.Raw)]
         public void ICMPv4Parsing(String pcapPath, LinkLayers linkLayer)
         {
-            var dev = new CaptureFileReaderDevice(pcapPath);
-            dev.Open();
-            var rawCapture = dev.GetNextPacket();
-            dev.Close();
-
-            // Parse an icmp request
-            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            Packet p;
+            using (FileStream fsin = File.Open(pcapPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                PcapStream ps = new PcapStream();
+                ps.Initialize(fsin);
+                p = ps.GetPacket().packet;
+            }
 
             Assert.IsNotNull(p);
-            Assert.AreEqual(linkLayer, rawCapture.LinkLayerType);
 
             var icmp = (ICMPv4Packet)p.Extract (typeof(ICMPv4Packet));
             Console.WriteLine(icmp.GetType());

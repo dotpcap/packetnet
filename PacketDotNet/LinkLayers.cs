@@ -77,12 +77,6 @@ namespace PacketDotNet
         /// <summary> FDDI </summary>
         Fddi = 10,
 
-        /// <summary> LLC/SNAP encapsulated atm </summary>
-        AtmRfc1483 = 11,
-
-        /// <summary> raw IP </summary>
-        Raw = 12,
-
         /// <summary> BSD Slip.</summary>
         SlipBSD = 15,
 
@@ -94,6 +88,13 @@ namespace PacketDotNet
 
         /// <summary> PPP over HDLC.</summary>
         PppSerial = 50,
+
+        /// Updated Raw using http://www.tcpdump.org/linktypes.html
+        /// <summary> LLC/SNAP encapsulated atm </summary>
+        AtmRfc1483 = 100,
+
+        /// <summary> raw IP </summary>
+        Raw = 101,
 
         /// <summary> Cisco HDLC.</summary>
         CiscoHDLC = 104,

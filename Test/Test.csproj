@@ -47,6 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ByteSwappedBinaryReader.cs" />
     <Compile Include="PacketType\DrdaPacketTest.cs" />
     <Compile Include="PacketType\L2TPPacketTest.cs" />
     <Compile Include="PacketType\Ieee80211\CapabilityInformationFieldTest.cs" />
@@ -73,6 +74,10 @@
     <Compile Include="PacketType\Ieee80211\ProbeResponseTest.cs" />
     <Compile Include="PacketType\GREIPv6PacketTest.cs" />
     <Compile Include="PacketType\OSPFv2PacketTest.cs" />
+    <Compile Include="PcapHeader.cs" />
+    <Compile Include="PcapMagic.cs" />
+    <Compile Include="PcapPacket.cs" />
+    <Compile Include="PcapStream.cs" />
     <Compile Include="Rate.cs" />
     <Compile Include="ByteSetupMethods.cs" />
     <Compile Include="NUnitSetupClass.cs" />

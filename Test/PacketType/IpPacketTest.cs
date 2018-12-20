@@ -135,7 +135,6 @@ namespace Test.PacketType
                 Assert.AreEqual(ip.DestinationAddress, fromFile.DestinationAddress);
                 Assert.AreEqual(ip.HeaderLength, fromFile.HeaderLength);
                 Assert.AreEqual(ip.HopLimit, fromFile.HopLimit);
-                Assert.AreEqual(ip.NextHeader, fromFile.NextHeader);
                 Assert.AreEqual(ip.PayloadLength, fromFile.PayloadLength);
                 Assert.AreEqual(ip.Protocol, fromFile.Protocol);
                 Assert.AreEqual(ip.SourceAddress, fromFile.SourceAddress);

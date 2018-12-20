@@ -171,10 +171,12 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Identifies the protocol encapsulated by this packet
-        /// Replaces IPv4's 'protocol' field, has compatible values
+        /// The NextHeader, this can either
+        /// - identifie the protocol encapsulated by this packet
+        /// - Or an extension header
         /// </summary>
-        public override IPProtocolType NextHeader
+        /// 
+        public IPProtocolType NextHeader
         {
             get => (IPProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
 
@@ -184,11 +186,9 @@ namespace PacketDotNet
         /// <value>
         /// The protocol of the packet encapsulated in this ip packet
         /// </value>
-        public override IPProtocolType Protocol
-        {
-            get => NextHeader;
-            set => NextHeader = value;
-        }
+        /// 
+
+        public override IPProtocolType Protocol { get; set; }
 
         /// <summary>
         /// The hop limit field of the IPv6 Packet.
@@ -241,7 +241,7 @@ namespace PacketDotNet
             set
             {
                 var address = value.GetAddressBytes();
-            
+
                 for (int i = 0; i < address.Length; i++)
                     Header.Bytes[Header.Offset + IPv6Fields.DestinationAddressPosition + i] = address[i];
             }
@@ -299,14 +299,34 @@ namespace PacketDotNet
             Log.DebugFormat("PayloadLength: {0}", PayloadLength);
             Header.Length = bas.Length - PayloadLength;
 
-            // parse the payload
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            Protocol = (IPProtocolType)Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
+
+
+            if (PayloadLength > 0)
             {
-                var payload = Header.EncapsulatedBytes(PayloadLength);
-                return ParseEncapsulatedBytes(payload,
-                                              NextHeader,
-                                              this);
-            }, LazyThreadSafetyMode.PublicationOnly);
+
+                //Strip off the Extension headers
+                //https://en.wikipedia.org/wiki/IPv6_packet#Hop-by-hop_options_and_destination_options
+
+                int plLength = PayloadLength;
+                while (Protocol == IPProtocolType.HOPOPTS
+                    || Protocol == IPProtocolType.ROUTING
+                    || Protocol == IPProtocolType.FRAGMENT)
+                {
+                    Protocol = (IPProtocolType)Header.Bytes[Header.BytesLength - plLength];
+                    plLength = plLength - 8 * (1 + Header.Bytes[Header.BytesLength - plLength + 1]);
+                }
+
+                // parse the payload
+                PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+                {
+                    var payload = Header.EncapsulatedBytes(plLength);
+                    return ParseEncapsulatedBytes(payload,
+                                                  Protocol,
+                                                  this);
+                }, LazyThreadSafetyMode.PublicationOnly);
+            }
+
         }
 
         /// <summary>
@@ -350,8 +370,8 @@ namespace PacketDotNet
             bw.Write((Byte) 0);
             bw.Write((Byte) 0);
 
-            // 40: Next header
-            bw.Write((Byte) NextHeader);
+            // 40: Protocol
+            bw.Write((Byte) Protocol);
 
             // prefix the pseudoHeader to the header+data
             return ms.ToArray();
@@ -378,21 +398,21 @@ namespace PacketDotNet
                                     colorEscape,
                                     SourceAddress,
                                     DestinationAddress,
-                                    NextHeader);
+                                    Protocol);
             }
 
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
                 var properties = new Dictionary<String, String>();
-                var ipVersion = Convert.ToString((Int32) Version, 2).PadLeft(4, '0');
-                properties.Add("version", ipVersion + " .... .... .... .... .... .... .... = " + (Int32) Version);
+                var ipVersion = Convert.ToString((Int32)Version, 2).PadLeft(4, '0');
+                properties.Add("version", ipVersion + " .... .... .... .... .... .... .... = " + (Int32)Version);
                 var trafficClass = Convert.ToString(TrafficClass, 2).PadLeft(8, '0').Insert(4, " ");
                 properties.Add("traffic class", ".... " + trafficClass + " .... .... .... .... .... = 0x" + TrafficClass.ToString("x").PadLeft(8, '0'));
                 var flowLabel = Convert.ToString(FlowLabel, 2).PadLeft(20, '0').Insert(16, " ").Insert(12, " ").Insert(8, " ").Insert(4, " ");
                 properties.Add("flow label", ".... .... .... " + flowLabel + " = 0x" + FlowLabel.ToString("x").PadLeft(8, '0'));
                 properties.Add("payload length", PayloadLength.ToString());
-                properties.Add("next header", NextHeader + " (0x" + NextHeader.ToString("x") + ")");
+                properties.Add("Protocol", Protocol + " (0x" + Protocol.ToString("x") + ")");
                 properties.Add("hop limit", HopLimit.ToString());
                 properties.Add("source", SourceAddress.ToString());
                 properties.Add("destination", DestinationAddress.ToString());

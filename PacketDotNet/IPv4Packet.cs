@@ -443,7 +443,7 @@ namespace PacketDotNet
             {
                 var payload = Header.EncapsulatedBytes(PayloadLength);
                 return ParseEncapsulatedBytes(payload,
-                                              NextHeader,
+                                              Protocol,
                                               this);
             }, LazyThreadSafetyMode.PublicationOnly);
         }

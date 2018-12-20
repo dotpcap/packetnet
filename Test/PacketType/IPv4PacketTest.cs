@@ -132,7 +132,6 @@ namespace Test.PacketType
                 Assert.AreEqual(ipv4.DestinationAddress, fromFile.DestinationAddress);
                 Assert.AreEqual(ipv4.HeaderLength, fromFile.HeaderLength);
                 Assert.AreEqual(ipv4.HopLimit, fromFile.HopLimit);
-                Assert.AreEqual(ipv4.NextHeader, fromFile.NextHeader);
                 Assert.AreEqual(ipv4.PayloadLength, fromFile.PayloadLength);
                 Assert.AreEqual(ipv4.Protocol, fromFile.Protocol);
                 Assert.AreEqual(ipv4.SourceAddress, fromFile.SourceAddress);

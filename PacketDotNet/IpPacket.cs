@@ -64,31 +64,31 @@ namespace PacketDotNet
                 // set NextHeader (Protocol) based on the type of this packet
                 if (value is TcpPacket)
                 {
-                    NextHeader = IPProtocolType.TCP;
+                    Protocol = IPProtocolType.TCP;
                 }
                 else if (value is UdpPacket)
                 {
-                    NextHeader = IPProtocolType.UDP;
+                    Protocol = IPProtocolType.UDP;
                 }
                 else if (value is ICMPv6Packet)
                 {
-                    NextHeader = IPProtocolType.ICMPV6;
+                    Protocol = IPProtocolType.ICMPV6;
                 }
                 else if (value is ICMPv4Packet)
                 {
-                    NextHeader = IPProtocolType.ICMP;
+                    Protocol = IPProtocolType.ICMP;
                 }
                 else if (value is IGMPv2Packet)
                 {
-                    NextHeader = IPProtocolType.IGMP;
+                    Protocol = IPProtocolType.IGMP;
                 }
                 else if (value is OSPFPacket)
                 {
-                    NextHeader = IPProtocolType.OSPF;
+                    Protocol = IPProtocolType.OSPF;
                 }
                 else // NOTE: new checks go here
                 {
-                    NextHeader = IPProtocolType.NONE;
+                    Protocol = IPProtocolType.NONE;
                 }
 
                 // update the payload length based on the size
@@ -116,20 +116,9 @@ namespace PacketDotNet
 
         /// <value>
         /// The protocol of the ip packet's payload
-        /// Named 'Protocol' in IPv4
-        /// Named 'NextHeader' in IPv6'
         /// </value>
         public abstract IPProtocolType Protocol { get; set; }
 
-        /// <value>
-        /// The protocol of the ip packet's payload
-        /// Included along side Protocol for user convienence
-        /// </value>
-        public virtual IPProtocolType NextHeader
-        {
-            get => Protocol;
-            set => Protocol = value;
-        }
 
         /// <value>
         /// The number of hops remaining before this packet is discarded
@@ -198,26 +187,26 @@ namespace PacketDotNet
             switch (ipType)
             {
                 case AddressFamily.InterNetwork:
-                {
-                    // IPv4: it's possible to avoid a copy by doing the same as IPAddress.
-                    // --> m_Address = ((address[3] << 24 | address[2] <<16 | address[1] << 8| address[0]) & 0x0FFFFFFFF);
-                    var address = ((bytes[3 + fieldOffset] << 24 | bytes[2 + fieldOffset] << 16 | bytes[1 + fieldOffset] << 8 | bytes[fieldOffset]) & 0x0FFFFFFFF);
-                    return new IPAddress(address);
-                }
+                    {
+                        // IPv4: it's possible to avoid a copy by doing the same as IPAddress.
+                        // --> m_Address = ((address[3] << 24 | address[2] <<16 | address[1] << 8| address[0]) & 0x0FFFFFFFF);
+                        var address = ((bytes[3 + fieldOffset] << 24 | bytes[2 + fieldOffset] << 16 | bytes[1 + fieldOffset] << 8 | bytes[fieldOffset]) & 0x0FFFFFFFF);
+                        return new IPAddress(address);
+                    }
                 case AddressFamily.InterNetworkV6:
-                {
-                    // IPv6: not possible due to not accepting parameters for it.
-                    var address = new Byte[IPv6Fields.AddressLength];
-                    for (int i = 0; i < IPv6Fields.AddressLength; i++)
-                        address[i] = bytes[fieldOffset + i];
+                    {
+                        // IPv6: not possible due to not accepting parameters for it.
+                        var address = new Byte[IPv6Fields.AddressLength];
+                        for (int i = 0; i < IPv6Fields.AddressLength; i++)
+                            address[i] = bytes[fieldOffset + i];
 
-                    return new IPAddress(address);
-                }
+                        return new IPAddress(address);
+                    }
                 default:
                     throw new InvalidOperationException("ipType " + ipType + " unknown");
             }
         }
-        
+
         /// <summary>
         /// Called by IPv4 and IPv6 packets to parse their packet payload
         /// </summary>

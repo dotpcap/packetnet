@@ -39,6 +39,7 @@ namespace Test.PacketType
             Assert.IsNotNull(p);
             Console.WriteLine(p.ToString());
 
+
             if (linkLayer == LinkLayers.Ethernet)
             {
                 EthernetPacket e = (EthernetPacket)p;
@@ -46,17 +47,47 @@ namespace Test.PacketType
                 Assert.AreEqual(PhysicalAddress.Parse("33-33-00-00-00-02"), e.DestinationHwAddress);
             }
 
-            var ip = (IPPacket)p.Extract (typeof(IPPacket));
+            var ip = (IPPacket)p.Extract(typeof(IPPacket));
             Console.WriteLine("ip {0}", ip.ToString());
             Assert.AreEqual(System.Net.IPAddress.Parse("fe80::2a0:ccff:fed9:4175"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("ff02::2"), ip.DestinationAddress);
             Assert.AreEqual(IPVersion.IPv6, ip.Version);
             Assert.AreEqual(IPProtocolType.ICMPV6, ip.Protocol);
-            Assert.AreEqual(16,  ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
+            Assert.AreEqual(16, ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
             Assert.AreEqual(255, ip.HopLimit);
             Assert.AreEqual(255, ip.TimeToLive);
-            Assert.AreEqual(0x3a, (Byte)ip.NextHeader);
+            Assert.AreEqual(0x3a, (Byte)ip.Protocol);
             Console.WriteLine("Failed: ip.ComputeIPChecksum() not implemented.");
+        }
+
+
+        public void VerifyPacket1(Packet p, RawCapture rawCapture, LinkLayers linkLayer)
+        {
+            Assert.IsNotNull(p);
+            Console.WriteLine(p.ToString());
+
+            Assert.AreEqual(linkLayer, rawCapture.LinkLayerType);
+
+            if (linkLayer == LinkLayers.Ethernet)
+            {
+                EthernetPacket e = (EthernetPacket)p;
+                Assert.AreEqual(PhysicalAddress.Parse("F894C22EFAD1"), e.SourceHwAddress);
+                Assert.AreEqual(PhysicalAddress.Parse("333300000016"), e.DestinationHwAddress);
+            }
+
+            var ip = (IPv6Packet)p.Extract(typeof(IPv6Packet));
+            Console.WriteLine("ip {0}", ip.ToString());
+            Assert.AreEqual(System.Net.IPAddress.Parse("fe80::d802:3589:15cf:3128"), ip.SourceAddress);
+            Assert.AreEqual(System.Net.IPAddress.Parse("ff02::16"), ip.DestinationAddress);
+            Assert.AreEqual(IPVersion.IPv6, ip.Version);
+            Assert.AreEqual(IPProtocolType.ICMPV6, ip.Protocol);
+            Assert.AreEqual(28, ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
+            Assert.AreEqual(1, ip.HopLimit);
+            Assert.AreEqual(1, ip.TimeToLive);
+            Assert.AreEqual(0x3a, (Byte)ip.Protocol);
+            Console.WriteLine("Failed: ip.ComputeIPChecksum() not implemented.");
+            Assert.AreEqual(1543415539, rawCapture.Timeval.Seconds);
+            Assert.AreEqual(841441.000, rawCapture.Timeval.MicroSeconds);
         }
 
         // Test that we can load and parse an IPv6 packet
@@ -65,7 +96,7 @@ namespace Test.PacketType
         [TestCase("../../CaptureFiles/ipv6_icmpv6_packet_raw_linklayer.pcap", LinkLayers.Raw)]
         public void IPv6PacketTestParsing(String pcapPath, LinkLayers linkLayer)
         {
-            var dev = new CaptureFileReaderDevice(pcapPath);
+
             PcapPacket p;
             using (FileStream fsin = File.Open(pcapPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -92,7 +123,39 @@ namespace Test.PacketType
 
                 }
             }
+
         }
+
+        // Test that we can load and parse an with IPv6 packet with Hop by Hop option
+        [TestCase("../../CaptureFiles/ipv6_icmpv6_hopbyhop_packet.pcap", LinkLayers.Ethernet)]
+        public void IPv6PacketHopByHopTestParsing(String pcapPath, LinkLayers linkLayer)
+        {
+            var dev = new CaptureFileReaderDevice(pcapPath);
+            dev.Open();
+
+            RawCapture rawCapture;
+            Int32 packetIndex = 0;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                switch (packetIndex)
+                {
+                    case 0:
+                        VerifyPacket1(p, rawCapture, linkLayer);
+                        break;
+                    default:
+                        Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
+                        break;
+                }
+
+                packetIndex++;
+            }
+
+            dev.Close();
+        }
+
+
+
 
         /// <summary>
         /// Test that we can load and parse an IPv6 TCP packet and that
@@ -226,7 +289,7 @@ namespace Test.PacketType
                 BinaryFormatter serializer = new BinaryFormatter();
                 serializer.Serialize(memoryStream, ipv6);
 
-                memoryStream.Seek (0, SeekOrigin.Begin);
+                memoryStream.Seek(0, SeekOrigin.Begin);
                 BinaryFormatter deserializer = new BinaryFormatter();
                 IPv6Packet fromFile = (IPv6Packet)deserializer.Deserialize(memoryStream);
 
@@ -242,7 +305,6 @@ namespace Test.PacketType
                 Assert.AreEqual(ipv6.DestinationAddress, fromFile.DestinationAddress);
                 Assert.AreEqual(ipv6.HeaderLength, fromFile.HeaderLength);
                 Assert.AreEqual(ipv6.HopLimit, fromFile.HopLimit);
-                Assert.AreEqual(ipv6.NextHeader, fromFile.NextHeader);
                 Assert.AreEqual(ipv6.PayloadLength, fromFile.PayloadLength);
                 Assert.AreEqual(ipv6.Protocol, fromFile.Protocol);
                 Assert.AreEqual(ipv6.SourceAddress, fromFile.SourceAddress);

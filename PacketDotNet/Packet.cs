@@ -25,6 +25,11 @@ using System.Threading;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
 
+#if DEBUG
+using System.Reflection;
+using log4net;
+#endif
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -149,7 +154,7 @@ namespace PacketDotNet
         /// The packet that is carrying this one
         /// </summary>
         public virtual Packet ParentPacket { get; set; }
-        
+
         /// <value>
         /// Gets the header's data.
         /// </value>

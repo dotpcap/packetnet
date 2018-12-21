@@ -66,7 +66,7 @@ namespace Test.PacketType
         // Test that we can load and parse an IPv6 packet
         // for multiple LinkLayerType types
         [TestCase("../../CaptureFiles/ipv6_icmpv6_packet.pcap", LinkLayers.Ethernet)]
-        [TestCase("../../CaptureFiles/ipv6_icmpv6_packet_raw_linklayer.pcap", LinkLayers.Raw)]
+        [TestCase("../../CaptureFiles/ipv6_icmpv6_packet_raw_linklayer.pcap", LinkLayers.RawLegacy)]
         public void IPv6PacketTestParsing(String pcapPath, LinkLayers linkLayer)
         {
             var dev = new CaptureFileReaderDevice(pcapPath);

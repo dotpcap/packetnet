@@ -123,7 +123,7 @@ namespace PacketDotNet
 
         /// <value>
         /// The protocol of the ip packet's payload
-        /// Included along side Protocol for user convienence
+        /// Included along side Protocol for user convenience
         /// </value>
         public virtual IPProtocolType NextHeader
         {
@@ -140,7 +140,7 @@ namespace PacketDotNet
 
         /// <value>
         /// The number of hops remaining for this packet
-        /// Included along side of TimeToLive for user convienence
+        /// Included along side of TimeToLive for user convenience
         /// </value>
         public virtual Int32 HopLimit
         {
@@ -245,7 +245,7 @@ namespace PacketDotNet
 
             var payloadPacketOrData = new PacketOrByteArraySegment();
 
-            // if we are an ipv4 packet with a non-zero FragementOffset we shouldn't attempt
+            // if we are an ipv4 packet with a non-zero FragmentOffset we shouldn't attempt
             // to decode the content, it is a continuation of a previous packet so it won't
             // have the proper headers for its type, that was in the first packet fragment
             if (parentPacket is IPv4Packet ipv4Packet)

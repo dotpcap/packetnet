@@ -211,8 +211,35 @@ namespace PacketDotNet
                     result.Packet = new L2TPPacket(payload, this);
                 }
 
+                const Int32 teredoPort = 3544;
+
+                // Teredo that encapsulates IPv6 traffic into UDP packets.
+                // We try to parse out the bytes in the payload into packets. If it contains a IPV6 packet
+                // we will assign it to this current packet as a payload. https://tools.ietf.org/html/rfc4380#section-5.1.1
+                if ((DestinationPort == teredoPort || SourcePort == teredoPort)
+                        && EvaluateAsIPV6Packet(Header.EncapsulatedBytes().ActualBytes()))
+                {
+                    try
+                    {
+                        result.Packet = new IPv6Packet(result.ByteArraySegment);
+                    }
+                    catch (Exception)
+                    {
+                        // Unable to parse payload
+                    }
+                }
+
                 return result;
             }, LazyThreadSafetyMode.PublicationOnly);
+        }
+
+        private bool EvaluateAsIPV6Packet(byte[] packetBytes)
+        {
+            // Packet bytes must be greater than or equal to the IPV6 header length, start with the version number, 
+            // and be greater in length than the payload length + the header length
+            return (packetBytes.Length >= IPv6Packet.HeaderMinimumLength
+                    && packetBytes[0] >> 4 == (int)RawIPPacketProtocol.IPv6
+                    && packetBytes.Length >= IPv6Packet.HeaderMinimumLength + packetBytes[IPv6Fields.PayloadLengthPosition]);
         }
 
         /// <summary>

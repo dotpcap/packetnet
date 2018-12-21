@@ -64,6 +64,16 @@ namespace PacketDotNet
         /// </value>
         public static IPVersion IPVersion = IPVersion.IPv6;
 
+        /// <value>
+        /// The lenght of all the extension headers
+        /// </value>
+        private int TotalExtensionHeaderLength = 0;
+
+        /// <value>
+        /// The position of the byte the contains the encapsulated protocol
+        /// </value>
+        private int ProtocalPosition = 0;
+
         private Int32 VersionTrafficClassFlowLabel
         {
             get => EndianBitConverter.Big.ToInt32(Header.Bytes,
@@ -138,6 +148,7 @@ namespace PacketDotNet
         /// The payload lengeth field of the IPv6 Packet
         /// NOTE: Differs from the IPv4 'Total length' field that includes the length of the header as
         /// payload length is ONLY the size of the payload.
+        /// This also includes any extended headers
         /// </summary>
         public override UInt16 PayloadLength
         {
@@ -149,13 +160,14 @@ namespace PacketDotNet
                                                     Header.Offset + IPv6Fields.PayloadLengthPosition);
         }
 
+
         /// <value>
         /// Backwards compatibility property for IPv4.HeaderLength
         /// NOTE: This field is the number of 32bit words
         /// </value>
         public override Int32 HeaderLength
         {
-            get => IPv6Fields.HeaderLength / 4;
+            get => IPv6Fields.FixedHeaderLength / 4;
 
             set => throw new NotImplementedException();
         }
@@ -171,23 +183,34 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Identifies the protocol encapsulated by this packet
-        /// Replaces IPv4's 'protocol' field, has compatible values
+        /// Identifies the NextHeader, will be the protocal of the encapsulated in this ip packet unless there are extended headers
         /// </summary>
-        public override IPProtocolType NextHeader
+        public IPProtocolType NextHeader
         {
             get => (IPProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
 
             set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition] = (Byte) value;
         }
 
+        
+
         /// <value>
         /// The protocol of the packet encapsulated in this ip packet
         /// </value>
         public override IPProtocolType Protocol
         {
-            get => NextHeader;
-            set => NextHeader = value;
+            get {
+                if (TotalExtensionHeaderLength == 0)
+                {
+                    return (IPProtocolType)Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
+                } else
+                {
+                    return (IPProtocolType)Header.Bytes[ProtocalPosition];
+                }
+            }
+                
+
+            set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition + TotalExtensionHeaderLength] = (Byte)value;
         }
 
         /// <summary>
@@ -265,7 +288,7 @@ namespace PacketDotNet
 
             // allocate memory for this packet
             const int offset = 0;
-            var length = IPv6Fields.HeaderLength;
+            var length = IPv6Fields.FixedHeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
@@ -299,14 +322,27 @@ namespace PacketDotNet
             Log.DebugFormat("PayloadLength: {0}", PayloadLength);
             Header.Length = bas.Length - PayloadLength;
 
-            // parse the payload
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            if (PayloadLength > 0)
             {
-                var payload = Header.EncapsulatedBytes(PayloadLength);
-                return ParseEncapsulatedBytes(payload,
-                                              NextHeader,
-                                              this);
-            }, LazyThreadSafetyMode.PublicationOnly);
+                // parse the payload
+                PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+                {
+                    //Strip off the Extension headers
+                    while (IPv6ExtensionHeader.extensionHeaderTypes.Contains(Protocol) )
+                    {
+                        ProtocalPosition = Header.Offset + IPv6Fields.FixedHeaderLength + TotalExtensionHeaderLength;
+                        var ExtensionHeader = new IPv6ExtensionHeader(Header.EncapsulatedBytes(PayloadLength));
+                        TotalExtensionHeaderLength += ExtensionHeader.Length;
+                        Header.Length += ExtensionHeader.Length;
+                    }
+
+                    var payload = Header.EncapsulatedBytes(PayloadLength);
+                    return ParseEncapsulatedBytes(payload,
+                                                  Protocol,
+                                                  this);
+                }, LazyThreadSafetyMode.PublicationOnly);
+
+            }
         }
 
         /// <summary>

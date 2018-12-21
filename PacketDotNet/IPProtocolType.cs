@@ -14,8 +14,6 @@ namespace PacketDotNet
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum IPProtocolType : byte
     {
-        /// <summary> Dummy protocol for TCP. </summary>
-        IP = 0,
 
         /// <summary> IPv6 Hop-by-Hop options. </summary>
         HOPOPTS = 0,
@@ -91,6 +89,15 @@ namespace PacketDotNet
 
         /// <summary> Compression Header Protocol. </summary>
         COMP = 108,
+
+        /// <summary> Mobility Header Protocol. </summary>
+        MOBILITY = 135,
+
+        /// <summary> Host Identity Protocol. </summary>
+        HOSTIDENTITY = 139,
+
+        /// <summary> Shim6 Protocol. </summary>
+        SHIM6 = 140,
 
         /// <summary> Raw IP packets. </summary>
         RAW = 255,

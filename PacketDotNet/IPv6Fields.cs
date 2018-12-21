@@ -54,6 +54,8 @@ namespace PacketDotNet
         /// </summary>
         public static readonly Int32 AddressLength = 16;
 
+
+
         /// <summary>
         /// The byte position of the field line in the IPv6 header.
         /// This is where the IP version, Traffic Class, and Flow Label fields are.
@@ -88,7 +90,7 @@ namespace PacketDotNet
         /// <summary>
         /// The byte length of the IPv6 Header
         /// </summary>
-        public static readonly Int32 HeaderLength; // == 40
+        public static readonly Int32 FixedHeaderLength; // == 40
 
         /// <summary>
         /// Commutes the field positions.
@@ -100,7 +102,7 @@ namespace PacketDotNet
             HopLimitPosition = NextHeaderPosition + NextHeaderLength;
             SourceAddressPosition = HopLimitPosition + HopLimitLength;
             DestinationAddressPosition = SourceAddressPosition + AddressLength;
-            HeaderLength = DestinationAddressPosition + AddressLength;
+            FixedHeaderLength = DestinationAddressPosition + AddressLength;
         }
     }
 }

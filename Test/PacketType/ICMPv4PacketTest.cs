@@ -35,7 +35,7 @@ namespace Test.PacketType
         /// Test that we can parse a icmp v4 request and reply
         /// </summary>
         [TestCase("../../CaptureFiles/ICMPv4.pcap", LinkLayers.Ethernet)]
-        [TestCase("../../CaptureFiles/ICMPv4_raw_linklayer.pcap", LinkLayers.Raw)]
+        [TestCase("../../CaptureFiles/ICMPv4_raw_linklayer.pcap", LinkLayers.RawLegacy)]
         public void ICMPv4Parsing(String pcapPath, LinkLayers linkLayer)
         {
             var dev = new CaptureFileReaderDevice(pcapPath);

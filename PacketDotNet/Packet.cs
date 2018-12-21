@@ -20,8 +20,10 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Threading;
+using log4net;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
 
@@ -367,6 +369,7 @@ namespace PacketDotNet
                     p = new PpiPacket(bas);
                     break;
                 case LinkLayers.Raw:
+                case LinkLayers.RawLegacy:
                     p = new RawIPPacket(bas);
                     break;
                 default:

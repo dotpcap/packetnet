@@ -114,7 +114,7 @@ namespace PacketDotNet
             get
             {
                 // IPv6 has no checksum so only the TCP checksum needs evaluation
-                if (ParentPacket.GetType() == typeof(IPv6Packet))
+                if (ParentPacket is IPv6Packet)
                     return ValidUDPChecksum;
                 // For IPv4 both the IP layer and the TCP layer contain checksums
 
@@ -182,64 +182,75 @@ namespace PacketDotNet
         /// </param>
         public UdpPacket(ByteArraySegment bas)
         {
-            Log.DebugFormat("bas {0}", bas);
+            Log.DebugFormat("ByteArraySegment {0}", bas);
 
             // set the header field, header field values are retrieved from this byte array
-            Header = new ByteArraySegment(bas);
-            Header.Length = UdpFields.HeaderLength;
+            Header = new ByteArraySegment(bas)
+            {
+                Length = UdpFields.HeaderLength
+            };
 
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment();
-                // is this packet going to port 7 or 9? if so it might be a WakeOnLan packet
-                const Int32 wakeOnLanPort0 = 7;
-                const Int32 wakeOnLanPort1 = 9;
-                if (DestinationPort.Equals(wakeOnLanPort0) || DestinationPort.Equals(wakeOnLanPort1))
-                {
-                    result.Packet = new WakeOnLanPacket(Header.EncapsulatedBytes());
-                }
-                else
-                {
-                    // store the payload bytes
-                    result.ByteArraySegment = Header.EncapsulatedBytes();
-                }
-
-                const Int32 l2TPport = 1701;
-                if (DestinationPort.Equals(l2TPport) && DestinationPort.Equals(l2TPport))
-                {
-                    var payload = Header.EncapsulatedBytes();
-                    result.Packet = new L2TPPacket(payload, this);
-                }
-
+                const Int32 wakeOnLanPort0 = 0;
+                const Int32 wakeOnLanPort7 = 7;
+                const Int32 wakeOnLanPort9 = 9;
+                const Int32 l2TpPort = 1701;
                 const Int32 teredoPort = 3544;
 
-                // Teredo that encapsulates IPv6 traffic into UDP packets.
-                // We try to parse out the bytes in the payload into packets. If it contains a IPV6 packet
-                // we will assign it to this current packet as a payload. https://tools.ietf.org/html/rfc4380#section-5.1.1
-                if ((DestinationPort == teredoPort || SourcePort == teredoPort)
-                        && EvaluateAsIPV6Packet(Header.EncapsulatedBytes().ActualBytes()))
+                var result = new PacketOrByteArraySegment();
+                var destinationPort = DestinationPort;
+                var sourcePort = SourcePort;
+                var payload = Header.EncapsulatedBytes();
+
+                // If this packet is going to port 0, 7 or 9, then it might be a WakeOnLan packet.
+                if (destinationPort == wakeOnLanPort0 || destinationPort == wakeOnLanPort7 || destinationPort == wakeOnLanPort9)
                 {
-                    try
+                    if (WakeOnLanPacket.IsValid(payload))
                     {
-                        result.Packet = new IPv6Packet(result.ByteArraySegment);
+                        result.Packet = new WakeOnLanPacket(payload);
+                        return result;
                     }
-                    catch (Exception)
+                }
+                
+                if (destinationPort == l2TpPort || sourcePort == l2TpPort)
+                {
+                    result.Packet = new L2TPPacket(payload, this);
+                    return result;
+                }
+                
+                // Teredo encapsulates IPv6 traffic into UDP packets, parse out the bytes in the payload into packets.
+                // If it contains a IPV6 packet, it to this current packet as a payload.
+                // https://tools.ietf.org/html/rfc4380#section-5.1.1
+                if (destinationPort == teredoPort || sourcePort == teredoPort)
+                {
+                    if (ContainsIPv6Packet(payload))
                     {
-                        // Unable to parse payload
+                        result.Packet = new IPv6Packet(payload);
+                        return result;
                     }
                 }
 
+                // store the payload bytes
+                result.ByteArraySegment = payload;
                 return result;
             }, LazyThreadSafetyMode.PublicationOnly);
         }
 
-        private bool EvaluateAsIPV6Packet(byte[] packetBytes)
+        /// <summary>
+        /// Determines whether the specified byte array segment contains an IPv6 packet.
+        /// </summary>
+        /// <param name="packetBytes">The packet bytes.</param>
+        /// <returns>
+        ///   <c>true</c> if it contains an IPv6 packet; otherwise, <c>false</c>.
+        /// </returns>
+        private static bool ContainsIPv6Packet(ByteArraySegment packetBytes)
         {
             // Packet bytes must be greater than or equal to the IPV6 header length, start with the version number, 
-            // and be greater in length than the payload length + the header length
-            return (packetBytes.Length >= IPv6Packet.HeaderMinimumLength
-                    && packetBytes[0] >> 4 == (int)RawIPPacketProtocol.IPv6
-                    && packetBytes.Length >= IPv6Packet.HeaderMinimumLength + packetBytes[IPv6Fields.PayloadLengthPosition]);
+            // and be greater in length than the payload length + the header length.
+            return packetBytes.Length >= IPv6Packet.HeaderMinimumLength
+                   && packetBytes.Bytes[packetBytes.Offset] >> 4 == (int)RawIPPacketProtocol.IPv6
+                   && packetBytes.Length >= IPv6Packet.HeaderMinimumLength + packetBytes.Bytes[packetBytes.Offset + IPv6Fields.PayloadLengthPosition];
         }
 
         /// <summary>

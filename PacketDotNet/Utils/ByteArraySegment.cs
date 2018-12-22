@@ -48,7 +48,7 @@ namespace PacketDotNet.Utils
 
         /// <value>
         /// The maximum number of bytes we should treat Bytes as having, allows
-        /// for controling the number of bytes produced by EncapsulatedBytes()
+        /// for controlling the number of bytes produced by EncapsulatedBytes()
         /// </value>
         public Int32 BytesLength { get; }
 

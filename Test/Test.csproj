@@ -73,6 +73,7 @@
     <Compile Include="PacketType\Ieee80211\ProbeResponseTest.cs" />
     <Compile Include="PacketType\GREIPv6PacketTest.cs" />
     <Compile Include="PacketType\OSPFv2PacketTest.cs" />
+    <Compile Include="PacketType\TeredoPacketTest.cs" />
     <Compile Include="Rate.cs" />
     <Compile Include="ByteSetupMethods.cs" />
     <Compile Include="NUnitSetupClass.cs" />

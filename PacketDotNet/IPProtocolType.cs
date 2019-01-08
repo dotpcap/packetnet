@@ -99,6 +99,13 @@ namespace PacketDotNet
         /// <summary> Shim6 Protocol. </summary>
         SHIM6 = 140,
 
+        /// <summary> reserved type 253, used in IPv6 Extionson Header. </summary>
+        RESERVEDTYPE253 = 253,
+
+        /// <summary> reserved type 254, used in IPv6 Extionson Header. </summary>
+        RESERVEDTYPE254 = 254,
+
+
         /// <summary> Raw IP packets. </summary>
         RAW = 255,
 

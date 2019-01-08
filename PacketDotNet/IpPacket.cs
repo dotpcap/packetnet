@@ -122,6 +122,17 @@ namespace PacketDotNet
         public abstract IPProtocolType Protocol { get; set; }
 
         /// <value>
+        /// The protocol of the ip packet's payload
+        /// Included along side Protocol for user convenience
+        /// 
+        /// </value>
+        public virtual IPProtocolType NextHeader
+        {
+            get => Protocol;
+            set => Protocol = value;
+        }
+
+        /// <value>
         /// The number of hops remaining before this packet is discarded
         /// Named 'TimeToLive' in IPv4
         /// Named 'HopLimit' in IPv6

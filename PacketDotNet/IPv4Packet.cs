@@ -109,6 +109,21 @@ namespace PacketDotNet
             }
         }
 
+        /// <value>
+        /// The protocol of the ip packet's payload
+        /// Included along side Protocol for user convenience
+        /// 
+        /// </value>
+        [Obsolete("Use Protocol instead of NextHeader for IPv4 Packets.")]
+#pragma warning disable 0809
+        public override IPProtocolType NextHeader
+#pragma warning restore 0809
+        {
+            get => Protocol;
+            set => Protocol = value;
+        }
+
+
         /// <summary>
         /// The unique ID of this IP datagram. The ID normally
         /// increments by one each time a datagram is sent by a host.

@@ -29,7 +29,7 @@ namespace PacketDotNet
     [Serializable]
     internal class IPv6ExtensionHeader
     {
-        static public List<IPProtocolType> extensionHeaderTypes = new List<IPProtocolType>{ IPProtocolType.HOPOPTS,
+        public static HashSet<IPProtocolType> extensionHeaderTypes = new HashSet<IPProtocolType>{ IPProtocolType.HOPOPTS,
             IPProtocolType.DSTOPTS,
             IPProtocolType.ROUTING,
             IPProtocolType.FRAGMENT,
@@ -38,10 +38,12 @@ namespace PacketDotNet
             IPProtocolType.DSTOPTS,
             IPProtocolType.MOBILITY,
             IPProtocolType.HOSTIDENTITY,
-            IPProtocolType.SHIM6 };
+            IPProtocolType.SHIM6,
+            IPProtocolType.RESERVEDTYPE253,
+            IPProtocolType.RESERVEDTYPE254};
 
 
-        protected ByteArraySegment Header;
+        protected ByteArraySegment Header { get; set; }
 
 
         public IPv6ExtensionHeader(ByteArraySegment bas)
@@ -59,6 +61,15 @@ namespace PacketDotNet
                                                     Header.Offset + IPv6Fields.PayloadLengthPosition);
         }
 
+        public IPProtocolType NextHeader
+        {
+            get => (IPProtocolType)EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                                    Header.Offset);
+
+            set => EndianBitConverter.Big.CopyBytes((Byte)value,
+                                                    Header.Bytes,
+                                                    Header.Offset);
+        }
 
         public UInt16 Length
         {

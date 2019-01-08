@@ -65,14 +65,14 @@ namespace PacketDotNet
         public static IPVersion IPVersion = IPVersion.IPv6;
 
         /// <value>
-        /// The lenght of all the extension headers
+        /// The length of all the extension headers
         /// </value>
-        private int TotalExtensionHeaderLength = 0;
+        private int _totalExtensionHeaderLength = 0;
 
         /// <value>
         /// The position of the byte the contains the encapsulated protocol
         /// </value>
-        private int ProtocalPosition = 0;
+        private int _protocolPosition = 0;
 
         private Int32 VersionTrafficClassFlowLabel
         {
@@ -183,9 +183,9 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Identifies the NextHeader, will be the protocal of the encapsulated in this ip packet unless there are extended headers
+        /// Identifies the NextHeader, will be the protocol of the encapsulated in this ip packet unless there are extended headers
         /// </summary>
-        public IPProtocolType NextHeader
+        public override IPProtocolType NextHeader
         {
             get => (IPProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
 
@@ -200,17 +200,17 @@ namespace PacketDotNet
         public override IPProtocolType Protocol
         {
             get {
-                if (TotalExtensionHeaderLength == 0)
+                if (_totalExtensionHeaderLength == 0)
                 {
                     return (IPProtocolType)Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
                 } else
                 {
-                    return (IPProtocolType)Header.Bytes[ProtocalPosition];
+                    return (IPProtocolType)Header.Bytes[_protocolPosition];
                 }
             }
                 
 
-            set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition + TotalExtensionHeaderLength] = (Byte)value;
+            set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition + _totalExtensionHeaderLength] = (Byte)value;
         }
 
         /// <summary>
@@ -330,9 +330,9 @@ namespace PacketDotNet
                     //Strip off the Extension headers
                     while (IPv6ExtensionHeader.extensionHeaderTypes.Contains(Protocol) )
                     {
-                        ProtocalPosition = Header.Offset + IPv6Fields.FixedHeaderLength + TotalExtensionHeaderLength;
+                        _protocolPosition = Header.Offset + IPv6Fields.FixedHeaderLength + _totalExtensionHeaderLength;
                         var ExtensionHeader = new IPv6ExtensionHeader(Header.EncapsulatedBytes(PayloadLength));
-                        TotalExtensionHeaderLength += ExtensionHeader.Length;
+                        _totalExtensionHeaderLength += ExtensionHeader.Length;
                         Header.Length += ExtensionHeader.Length;
                     }
 
@@ -386,8 +386,8 @@ namespace PacketDotNet
             bw.Write((Byte) 0);
             bw.Write((Byte) 0);
 
-            // 40: Next header
-            bw.Write((Byte) NextHeader);
+            // 40: Protocol
+            bw.Write((Byte) Protocol);
 
             // prefix the pseudoHeader to the header+data
             return ms.ToArray();
@@ -414,7 +414,7 @@ namespace PacketDotNet
                                     colorEscape,
                                     SourceAddress,
                                     DestinationAddress,
-                                    NextHeader);
+                                    Protocol);
             }
 
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
@@ -428,7 +428,7 @@ namespace PacketDotNet
                 var flowLabel = Convert.ToString(FlowLabel, 2).PadLeft(20, '0').Insert(16, " ").Insert(12, " ").Insert(8, " ").Insert(4, " ");
                 properties.Add("flow label", ".... .... .... " + flowLabel + " = 0x" + FlowLabel.ToString("x").PadLeft(8, '0'));
                 properties.Add("payload length", PayloadLength.ToString());
-                properties.Add("next header", NextHeader + " (0x" + NextHeader.ToString("x") + ")");
+                properties.Add("protocol", Protocol + " (0x" + Protocol.ToString("x") + ")");
                 properties.Add("hop limit", HopLimit.ToString());
                 properties.Add("source", SourceAddress.ToString());
                 properties.Add("destination", DestinationAddress.ToString());

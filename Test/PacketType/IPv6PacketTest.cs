@@ -89,6 +89,9 @@ namespace Test.PacketType
             Console.WriteLine("Failed: ip.ComputeIPChecksum() not implemented.");
             Assert.AreEqual(1543415539, rawCapture.Timeval.Seconds);
             Assert.AreEqual(841441.000, rawCapture.Timeval.MicroSeconds);
+            Assert.AreEqual(1, ip.ExtensionHeaders.Count);
+            Assert.AreEqual(0, ip.ExtensionHeaders[0].OptionsAndPadding.Length);
+
         }
 
         // Test that we can load and parse an IPv6 packet
@@ -150,7 +153,7 @@ namespace Test.PacketType
 
             dev.Close();
         }
-
+        
         /// <summary>
         /// Test that we can load and parse an IPv6 TCP packet and that
         /// the computed tcp checksum matches the expected checksum

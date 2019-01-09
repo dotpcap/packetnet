@@ -270,6 +270,21 @@ namespace PacketDotNet
             }
         }
 
+
+
+        /// <summary>
+        /// The extension headers of the IPv6 Packet.
+        /// </summary>
+        public List<IPv6ExtensionHeader> ExtensionHeaders
+        {
+            get
+            {
+                return _extensionHeaders;
+            }
+        }
+
+        private readonly List<IPv6ExtensionHeader> _extensionHeaders = new List<IPv6ExtensionHeader>();
+
         /// <summary>
         /// Create an IPv6 packet from values
         /// </summary>
@@ -331,9 +346,10 @@ namespace PacketDotNet
                     while (IPv6ExtensionHeader.extensionHeaderTypes.Contains(Protocol) )
                     {
                         _protocolPosition = Header.Offset + IPv6Fields.FixedHeaderLength + _totalExtensionHeaderLength;
-                        var ExtensionHeader = new IPv6ExtensionHeader(Header.EncapsulatedBytes(PayloadLength));
-                        _totalExtensionHeaderLength += ExtensionHeader.Length;
-                        Header.Length += ExtensionHeader.Length;
+                        var extensionHeader = new IPv6ExtensionHeader(Header.EncapsulatedBytes(PayloadLength));
+                        _extensionHeaders.Add(extensionHeader);
+                        _totalExtensionHeaderLength += extensionHeader.Length;
+                        Header.Length += extensionHeader.Length;
                     }
 
                     var payload = Header.EncapsulatedBytes(PayloadLength);

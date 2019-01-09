@@ -27,7 +27,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet
 {
     [Serializable]
-    internal class IPv6ExtensionHeader
+    public class IPv6ExtensionHeader
     {
         public static HashSet<IPProtocolType> extensionHeaderTypes = new HashSet<IPProtocolType>{ IPProtocolType.HOPOPTS,
             IPProtocolType.DSTOPTS,
@@ -74,6 +74,14 @@ namespace PacketDotNet
         public UInt16 Length
         {
             get => (ushort)((PayloadLength + 1) * 8);
+        }
+
+        public ByteArraySegment OptionsAndPadding
+        {
+            get
+            {
+                return new ByteArraySegment(Header.Bytes, Header.Offset + 16, PayloadLength - 8);
+            }
         }
 
 

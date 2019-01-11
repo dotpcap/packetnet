@@ -4,11 +4,43 @@ Packet.Net
 Packet.Net is a high performance .Net assembly for dissecting and constructing
 network packets such as ethernet, ip, tcp, udp etc.
 
-Author: Chris Morgan <chmorgan@gmail.com>
+Originally created by Chris Morgan <chmorgan@gmail.com>
 
 https://github.com/chmorgan/packetnet
 
 Code is found in the PacketDotNet namespace.
+
+Performance
+======
+Packet.Net has been designed for the highest performance possible. As such we aim to perform the most minimal amount of data processing in order to fully determine the datagram nesting.
+
+For example a TCP packet would be parsed into a series of linked objects like: Ethernet -> IPv4 -> TCP but no further data processing is performed until particular fields are accessed. In addition the objects point to packet memory in-place, avoiding allocation and copying of the packet contents unless necessary, such as when altering data payloads or resizing variable length fields.
+
+Test suite
+=====
+Packet.Net has a comprehensive suite of tests for each of the supported packet types, see the 'Test' subdirectory.
+
+Supported packet formats
+=====
+* Ethernet
+* IPv4 / IPv6
+* TCP
+* UDP
+* ICMP v4 and v6
+* IGMP
+* L2TP
+* PPPoE
+* OSPF
+* Wake-on-lan
+* IEEE 802.1Q
+* IEEE 802.11
+* DRDA
+* ARP
+* LLDP
+* LSA
+* Linux SSL
+* PPP
+* and probably more, see the source code for the latest list
 
 NuGet
 =====

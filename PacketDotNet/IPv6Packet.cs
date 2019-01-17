@@ -54,6 +54,19 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
+        private static HashSet<IPProtocolType> extensionHeaderTypes = new HashSet<IPProtocolType>{ IPProtocolType.HOPOPTS,
+            IPProtocolType.DSTOPTS,
+            IPProtocolType.ROUTING,
+            IPProtocolType.FRAGMENT,
+            IPProtocolType.AH,
+            IPProtocolType.ENCAP,
+            IPProtocolType.DSTOPTS,
+            IPProtocolType.MOBILITY,
+            IPProtocolType.HOSTIDENTITY,
+            IPProtocolType.SHIM6,
+            IPProtocolType.RESERVEDTYPE253,
+            IPProtocolType.RESERVEDTYPE254};
+
         /// <value>
         /// Minimum number of bytes in an IPv6 header
         /// </value>
@@ -72,7 +85,7 @@ namespace PacketDotNet
         /// <value>
         /// The position of the byte the contains the encapsulated protocol
         /// </value>
-        private int _protocolPosition = 0;
+        private int _protocolOffset = 0;
 
         private Int32 VersionTrafficClassFlowLabel
         {
@@ -167,7 +180,7 @@ namespace PacketDotNet
         /// </value>
         public override Int32 HeaderLength
         {
-            get => IPv6Fields.FixedHeaderLength / 4;
+            get => IPv6Fields.HeaderLength / 4;
 
             set => throw new NotImplementedException();
         }
@@ -205,7 +218,7 @@ namespace PacketDotNet
                     return (IPProtocolType)Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
                 } else
                 {
-                    return (IPProtocolType)Header.Bytes[_protocolPosition];
+                    return (IPProtocolType)Header.Bytes[_protocolOffset];
                 }
             }
                 
@@ -303,7 +316,7 @@ namespace PacketDotNet
 
             // allocate memory for this packet
             const int offset = 0;
-            var length = IPv6Fields.FixedHeaderLength;
+            var length = IPv6Fields.HeaderLength;
             var headerBytes = new Byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
@@ -342,15 +355,22 @@ namespace PacketDotNet
                 // parse the payload
                 PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
                 {
+                    int nextHeaderPosition = Header.Offset + IPv6Fields.NextHeaderPosition;
+                    int extensionHeaderLength = 0;
+
                     //Strip off the Extension headers
-                    while (IPv6ExtensionHeader.extensionHeaderTypes.Contains(Protocol) )
+                    while (extensionHeaderTypes.Contains((IPProtocolType)Header.Bytes[nextHeaderPosition]) )
                     {
-                        _protocolPosition = Header.Offset + IPv6Fields.FixedHeaderLength + _totalExtensionHeaderLength;
+                        nextHeaderPosition = Header.Offset + IPv6Fields.HeaderLength + extensionHeaderLength;
                         var extensionHeader = new IPv6ExtensionHeader(Header.EncapsulatedBytes(PayloadLength));
+
                         _extensionHeaders.Add(extensionHeader);
-                        _totalExtensionHeaderLength += extensionHeader.Length;
+                        extensionHeaderLength += extensionHeader.Length;
                         Header.Length += extensionHeader.Length;
                     }
+
+                    _protocolOffset = nextHeaderPosition;
+                    _totalExtensionHeaderLength = extensionHeaderLength;
 
                     var payload = Header.EncapsulatedBytes(PayloadLength);
                     return ParseEncapsulatedBytes(payload,

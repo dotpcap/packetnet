@@ -29,19 +29,6 @@ namespace PacketDotNet
     [Serializable]
     public class IPv6ExtensionHeader
     {
-        public static HashSet<IPProtocolType> extensionHeaderTypes = new HashSet<IPProtocolType>{ IPProtocolType.HOPOPTS,
-            IPProtocolType.DSTOPTS,
-            IPProtocolType.ROUTING,
-            IPProtocolType.FRAGMENT,
-            IPProtocolType.AH,
-            IPProtocolType.ENCAP,
-            IPProtocolType.DSTOPTS,
-            IPProtocolType.MOBILITY,
-            IPProtocolType.HOSTIDENTITY,
-            IPProtocolType.SHIM6,
-            IPProtocolType.RESERVEDTYPE253,
-            IPProtocolType.RESERVEDTYPE254};
-
 
         protected ByteArraySegment Header { get; set; }
 

@@ -24,9 +24,12 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using log4net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
+#if DEBUG
+using log4net;
+#endif
 
 namespace PacketDotNet
 {

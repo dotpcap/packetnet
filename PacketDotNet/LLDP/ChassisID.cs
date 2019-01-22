@@ -23,8 +23,11 @@ using System;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
-using log4net;
 using PacketDotNet.Utils;
+
+#if DEBUG
+using log4net;
+#endif
 
 namespace PacketDotNet.LLDP
 {

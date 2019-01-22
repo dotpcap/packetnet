@@ -23,9 +23,12 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using log4net;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
+
+#if DEBUG
+using log4net;
+#endif
 
 namespace PacketDotNet
 {

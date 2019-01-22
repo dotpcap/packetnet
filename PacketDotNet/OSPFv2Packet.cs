@@ -22,9 +22,12 @@ using System;
 using System.Net;
 using System.Reflection;
 using System.Text;
-using log4net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
+#if DEBUG
+using log4net;
+#endif
 
 namespace PacketDotNet
 {

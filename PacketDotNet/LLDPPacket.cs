@@ -27,9 +27,12 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using log4net;
 using PacketDotNet.LLDP;
 using PacketDotNet.Utils;
+
+#if DEBUG
+using log4net;
+#endif
 
 namespace PacketDotNet
 {

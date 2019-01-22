@@ -89,7 +89,7 @@ namespace PacketDotNet
         /// The byte length of the IPv6 Header
         /// </summary>
         public static readonly Int32 HeaderLength; // == 40
-        
+
         /// <summary>
         /// Commutes the field positions.
         /// </summary>

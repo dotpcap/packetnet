@@ -174,7 +174,7 @@ namespace PacketDotNet
                                                     Header.Bytes,
                                                     Header.Offset + IPv6Fields.PayloadLengthPosition);
         }
-        
+
         /// <value>
         /// Backwards compatibility property for IPv4.HeaderLength
         /// NOTE: This field is the number of 32bit words

@@ -64,31 +64,31 @@ namespace PacketDotNet
                 // set NextHeader (Protocol) based on the type of this packet
                 if (value is TcpPacket)
                 {
-                    NextHeader = IPProtocolType.TCP;
+                    Protocol = IPProtocolType.TCP;
                 }
                 else if (value is UdpPacket)
                 {
-                    NextHeader = IPProtocolType.UDP;
+                    Protocol = IPProtocolType.UDP;
                 }
                 else if (value is ICMPv6Packet)
                 {
-                    NextHeader = IPProtocolType.ICMPV6;
+                    Protocol = IPProtocolType.ICMPV6;
                 }
                 else if (value is ICMPv4Packet)
                 {
-                    NextHeader = IPProtocolType.ICMP;
+                    Protocol = IPProtocolType.ICMP;
                 }
                 else if (value is IGMPv2Packet)
                 {
-                    NextHeader = IPProtocolType.IGMP;
+                    Protocol = IPProtocolType.IGMP;
                 }
                 else if (value is OSPFPacket)
                 {
-                    NextHeader = IPProtocolType.OSPF;
+                    Protocol = IPProtocolType.OSPF;
                 }
                 else // NOTE: new checks go here
                 {
-                    NextHeader = IPProtocolType.NONE;
+                    Protocol = IPProtocolType.NONE;
                 }
 
                 // update the payload length based on the size

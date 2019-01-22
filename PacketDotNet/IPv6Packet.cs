@@ -54,6 +54,19 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
+        private static readonly HashSet<IPProtocolType> ExtensionHeaderTypes = new HashSet<IPProtocolType>{ IPProtocolType.HOPOPTS,
+            IPProtocolType.DSTOPTS,
+            IPProtocolType.ROUTING,
+            IPProtocolType.FRAGMENT,
+            IPProtocolType.AH,
+            IPProtocolType.ENCAP,
+            IPProtocolType.DSTOPTS,
+            IPProtocolType.MOBILITY,
+            IPProtocolType.HOSTIDENTITY,
+            IPProtocolType.SHIM6,
+            IPProtocolType.RESERVEDTYPE253,
+            IPProtocolType.RESERVEDTYPE254};
+
         /// <value>
         /// Minimum number of bytes in an IPv6 header
         /// </value>
@@ -63,6 +76,18 @@ namespace PacketDotNet
         /// The version of the IP protocol. The '6' in IPv6 indicates the version of the protocol
         /// </value>
         public static IPVersion IPVersion = IPVersion.IPv6;
+
+        /// <value>
+        /// The length of all the extension headers
+        /// </value>
+        private int _totalExtensionHeadersLength = -1;
+
+        /// <value>
+        /// The position of the byte the contains the encapsulated protocol
+        /// </value>
+        private int _protocolOffset;
+
+        private List<IPv6ExtensionHeader> _extensionHeaders;
 
         private Int32 VersionTrafficClassFlowLabel
         {
@@ -135,9 +160,10 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// The payload lengeth field of the IPv6 Packet
+        /// The payload length field of the IPv6 Packet
         /// NOTE: Differs from the IPv4 'Total length' field that includes the length of the header as
         /// payload length is ONLY the size of the payload.
+        /// This also includes any extended headers
         /// </summary>
         public override UInt16 PayloadLength
         {
@@ -171,8 +197,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Identifies the protocol encapsulated by this packet
-        /// Replaces IPv4's 'protocol' field, has compatible values
+        /// Identifies the NextHeader, will be the protocol of the encapsulated in this ip packet unless there are extended headers
         /// </summary>
         public override IPProtocolType NextHeader
         {
@@ -186,8 +211,19 @@ namespace PacketDotNet
         /// </value>
         public override IPProtocolType Protocol
         {
-            get => NextHeader;
-            set => NextHeader = value;
+            get
+            {
+                if (_totalExtensionHeadersLength == -1)
+                    CalculateExtensionHeaders();
+
+                if (_totalExtensionHeadersLength == 0)
+                    return (IPProtocolType)Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
+
+
+                return (IPProtocolType)Header.Bytes[_protocolOffset];
+            }
+                
+            set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition + _totalExtensionHeadersLength] = (Byte)value;
         }
 
         /// <summary>
@@ -208,6 +244,7 @@ namespace PacketDotNet
         public override Int32 TimeToLive
         {
             get => HopLimit;
+
             set => HopLimit = value;
         }
 
@@ -244,6 +281,20 @@ namespace PacketDotNet
             
                 for (int i = 0; i < address.Length; i++)
                     Header.Bytes[Header.Offset + IPv6Fields.DestinationAddressPosition + i] = address[i];
+            }
+        }
+
+        /// <summary>
+        /// The extension headers of the IPv6 Packet.
+        /// </summary>
+        public List<IPv6ExtensionHeader> ExtensionHeaders
+        {
+            get
+            {
+                if (_totalExtensionHeadersLength == -1)
+                    CalculateExtensionHeaders();
+
+                return _extensionHeaders;
             }
         }
 
@@ -299,14 +350,46 @@ namespace PacketDotNet
             Log.DebugFormat("PayloadLength: {0}", PayloadLength);
             Header.Length = bas.Length - PayloadLength;
 
-            // parse the payload
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+            if (PayloadLength > 0)
             {
-                var payload = Header.EncapsulatedBytes(PayloadLength);
-                return ParseEncapsulatedBytes(payload,
-                                              NextHeader,
-                                              this);
-            }, LazyThreadSafetyMode.PublicationOnly);
+                // parse the payload
+                PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+                {
+                    if (_totalExtensionHeadersLength == -1)
+                        CalculateExtensionHeaders();
+
+                    var payload = Header.EncapsulatedBytes(PayloadLength);
+                    return ParseEncapsulatedBytes(payload,
+                                                  Protocol,
+                                                  this);
+                }, LazyThreadSafetyMode.PublicationOnly);
+            }
+        }
+
+        /// <summary>
+        /// Calculates the extension headers.
+        /// </summary>
+        private void CalculateExtensionHeaders()
+        {
+            _extensionHeaders = new List<IPv6ExtensionHeader>();
+
+            var nextHeaderPosition = Header.Offset + IPv6Fields.NextHeaderPosition;
+            var extensionHeaderLength = 0;
+
+            // Strip off the extension headers.
+            while (ExtensionHeaderTypes.Contains((IPProtocolType) Header.Bytes[nextHeaderPosition]))
+            {
+                nextHeaderPosition = Header.Offset + IPv6Fields.HeaderLength + extensionHeaderLength;
+
+                var extensionHeader = new IPv6ExtensionHeader(Header.EncapsulatedBytes(PayloadLength));
+                _extensionHeaders.Add(extensionHeader);
+
+                extensionHeaderLength += extensionHeader.Length;
+                Header.Length += extensionHeader.Length;
+            }
+
+            _protocolOffset = nextHeaderPosition;
+            _totalExtensionHeadersLength = extensionHeaderLength;
         }
 
         /// <summary>
@@ -350,8 +433,8 @@ namespace PacketDotNet
             bw.Write((Byte) 0);
             bw.Write((Byte) 0);
 
-            // 40: Next header
-            bw.Write((Byte) NextHeader);
+            // 40: Protocol
+            bw.Write((Byte) Protocol);
 
             // prefix the pseudoHeader to the header+data
             return ms.ToArray();
@@ -378,7 +461,7 @@ namespace PacketDotNet
                                     colorEscape,
                                     SourceAddress,
                                     DestinationAddress,
-                                    NextHeader);
+                                    Protocol);
             }
 
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
@@ -392,7 +475,7 @@ namespace PacketDotNet
                 var flowLabel = Convert.ToString(FlowLabel, 2).PadLeft(20, '0').Insert(16, " ").Insert(12, " ").Insert(8, " ").Insert(4, " ");
                 properties.Add("flow label", ".... .... .... " + flowLabel + " = 0x" + FlowLabel.ToString("x").PadLeft(8, '0'));
                 properties.Add("payload length", PayloadLength.ToString());
-                properties.Add("next header", NextHeader + " (0x" + NextHeader.ToString("x") + ")");
+                properties.Add("protocol", Protocol + " (0x" + Protocol.ToString("x") + ")");
                 properties.Add("hop limit", HopLimit.ToString());
                 properties.Add("source", SourceAddress.ToString());
                 properties.Add("destination", DestinationAddress.ToString());

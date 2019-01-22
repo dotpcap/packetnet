@@ -1,10 +1,4 @@
-﻿using PacketDotNet.MiscUtil.Conversion;
-using PacketDotNet.Utils;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-/*
+﻿/*
 This file is part of PacketDotNet
 
 PacketDotNet is free software: you can redistribute it and/or modify
@@ -24,20 +18,55 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2018 Steven Haufe<haufes@hotmail.com>
  */
 
+using System;
+using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.Utils;
+
+// ReSharper disable InconsistentNaming
+
 namespace PacketDotNet
 {
     [Serializable]
     public class IPv6ExtensionHeader
     {
-
-        protected ByteArraySegment Header { get; set; }
-
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="IPv6ExtensionHeader" /> class.
+        /// </summary>
+        /// <param name="bas">The bas.</param>
         public IPv6ExtensionHeader(ByteArraySegment bas)
         {
             Header = bas;
         }
 
+        /// <summary>
+        /// Gets the length.
+        /// </summary>
+        public UInt16 Length => (ushort) ((PayloadLength + 1) * 8);
+
+        /// <summary>
+        /// Gets or sets the next header.
+        /// </summary>
+        public IPProtocolType NextHeader
+        {
+            get => (IPProtocolType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                                    Header.Offset);
+
+            set => EndianBitConverter.Big.CopyBytes((Byte) value,
+                                                    Header.Bytes,
+                                                    Header.Offset);
+        }
+
+        /// <summary>
+        /// Gets the options and padding.
+        /// </summary>
+        public ByteArraySegment OptionsAndPadding => new ByteArraySegment(Header.Bytes, Header.Offset + 16, PayloadLength - 8);
+
+        /// <summary>
+        /// Gets or sets the length of the payload.
+        /// </summary>
+        /// <value>
+        /// The length of the payload.
+        /// </value>
         public UInt16 PayloadLength
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
@@ -48,29 +77,9 @@ namespace PacketDotNet
                                                     Header.Offset + IPv6Fields.PayloadLengthPosition);
         }
 
-        public IPProtocolType NextHeader
-        {
-            get => (IPProtocolType)EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                                    Header.Offset);
-
-            set => EndianBitConverter.Big.CopyBytes((Byte)value,
-                                                    Header.Bytes,
-                                                    Header.Offset);
-        }
-
-        public UInt16 Length
-        {
-            get => (ushort)((PayloadLength + 1) * 8);
-        }
-
-        public ByteArraySegment OptionsAndPadding
-        {
-            get
-            {
-                return new ByteArraySegment(Header.Bytes, Header.Offset + 16, PayloadLength - 8);
-            }
-        }
-
-
+        /// <summary>
+        /// Gets or sets the header.
+        /// </summary>
+        protected ByteArraySegment Header { get; set; }
     }
 }

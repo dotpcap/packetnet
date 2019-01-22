@@ -54,7 +54,7 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        private static HashSet<IPProtocolType> extensionHeaderTypes = new HashSet<IPProtocolType>{ IPProtocolType.HOPOPTS,
+        private static readonly HashSet<IPProtocolType> ExtensionHeaderTypes = new HashSet<IPProtocolType>{ IPProtocolType.HOPOPTS,
             IPProtocolType.DSTOPTS,
             IPProtocolType.ROUTING,
             IPProtocolType.FRAGMENT,
@@ -80,12 +80,14 @@ namespace PacketDotNet
         /// <value>
         /// The length of all the extension headers
         /// </value>
-        private int _totalExtensionHeaderLength = 0;
+        private int _totalExtensionHeadersLength = -1;
 
         /// <value>
         /// The position of the byte the contains the encapsulated protocol
         /// </value>
-        private int _protocolOffset = 0;
+        private int _protocolOffset;
+
+        private List<IPv6ExtensionHeader> _extensionHeaders;
 
         private Int32 VersionTrafficClassFlowLabel
         {
@@ -158,7 +160,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// The payload lengeth field of the IPv6 Packet
+        /// The payload length field of the IPv6 Packet
         /// NOTE: Differs from the IPv4 'Total length' field that includes the length of the header as
         /// payload length is ONLY the size of the payload.
         /// This also includes any extended headers
@@ -205,25 +207,24 @@ namespace PacketDotNet
             set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition] = (Byte) value;
         }
 
-        
-
         /// <value>
         /// The protocol of the packet encapsulated in this ip packet
         /// </value>
         public override IPProtocolType Protocol
         {
-            get {
-                if (_totalExtensionHeaderLength == 0)
-                {
+            get
+            {
+                if (_totalExtensionHeadersLength == -1)
+                    CalculateExtensionHeaders();
+
+                if (_totalExtensionHeadersLength == 0)
                     return (IPProtocolType)Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
-                } else
-                {
-                    return (IPProtocolType)Header.Bytes[_protocolOffset];
-                }
+
+
+                return (IPProtocolType)Header.Bytes[_protocolOffset];
             }
                 
-
-            set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition + _totalExtensionHeaderLength] = (Byte)value;
+            set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition + _totalExtensionHeadersLength] = (Byte)value;
         }
 
         /// <summary>
@@ -244,6 +245,7 @@ namespace PacketDotNet
         public override Int32 TimeToLive
         {
             get => HopLimit;
+
             set => HopLimit = value;
         }
 
@@ -283,8 +285,6 @@ namespace PacketDotNet
             }
         }
 
-
-
         /// <summary>
         /// The extension headers of the IPv6 Packet.
         /// </summary>
@@ -292,11 +292,12 @@ namespace PacketDotNet
         {
             get
             {
+                if (_totalExtensionHeadersLength == -1)
+                    CalculateExtensionHeaders();
+
                 return _extensionHeaders;
             }
         }
-
-        private readonly List<IPv6ExtensionHeader> _extensionHeaders = new List<IPv6ExtensionHeader>();
 
         /// <summary>
         /// Create an IPv6 packet from values
@@ -355,30 +356,41 @@ namespace PacketDotNet
                 // parse the payload
                 PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
                 {
-                    int nextHeaderPosition = Header.Offset + IPv6Fields.NextHeaderPosition;
-                    int extensionHeaderLength = 0;
-
-                    //Strip off the Extension headers
-                    while (extensionHeaderTypes.Contains((IPProtocolType)Header.Bytes[nextHeaderPosition]) )
-                    {
-                        nextHeaderPosition = Header.Offset + IPv6Fields.HeaderLength + extensionHeaderLength;
-                        var extensionHeader = new IPv6ExtensionHeader(Header.EncapsulatedBytes(PayloadLength));
-
-                        _extensionHeaders.Add(extensionHeader);
-                        extensionHeaderLength += extensionHeader.Length;
-                        Header.Length += extensionHeader.Length;
-                    }
-
-                    _protocolOffset = nextHeaderPosition;
-                    _totalExtensionHeaderLength = extensionHeaderLength;
+                    if (_totalExtensionHeadersLength == -1)
+                        CalculateExtensionHeaders();
 
                     var payload = Header.EncapsulatedBytes(PayloadLength);
                     return ParseEncapsulatedBytes(payload,
                                                   Protocol,
                                                   this);
                 }, LazyThreadSafetyMode.PublicationOnly);
-
             }
+        }
+
+        /// <summary>
+        /// Calculates the extension headers.
+        /// </summary>
+        private void CalculateExtensionHeaders()
+        {
+            _extensionHeaders = new List<IPv6ExtensionHeader>();
+
+            var nextHeaderPosition = Header.Offset + IPv6Fields.NextHeaderPosition;
+            var extensionHeaderLength = 0;
+
+            // Strip off the extension headers.
+            while (ExtensionHeaderTypes.Contains((IPProtocolType) Header.Bytes[nextHeaderPosition]))
+            {
+                nextHeaderPosition = Header.Offset + IPv6Fields.HeaderLength + extensionHeaderLength;
+
+                var extensionHeader = new IPv6ExtensionHeader(Header.EncapsulatedBytes(PayloadLength));
+                _extensionHeaders.Add(extensionHeader);
+
+                extensionHeaderLength += extensionHeader.Length;
+                Header.Length += extensionHeader.Length;
+            }
+
+            _protocolOffset = nextHeaderPosition;
+            _totalExtensionHeadersLength = extensionHeaderLength;
         }
 
         /// <summary>

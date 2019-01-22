@@ -124,7 +124,6 @@ namespace PacketDotNet
         /// <value>
         /// The protocol of the ip packet's payload
         /// Included along side Protocol for user convenience
-        /// 
         /// </value>
         public virtual IPProtocolType NextHeader
         {

@@ -35,7 +35,7 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the offset (in bytes) of the ScaleFactor Field
-        const Int32 ScaleFactorFieldOffset = 2;
+        private const Int32 ScaleFactorFieldOffset = 2;
 
         #endregion
 

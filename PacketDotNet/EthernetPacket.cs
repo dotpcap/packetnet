@@ -104,9 +104,7 @@ namespace PacketDotNet
             {
                 var hwAddress = value.GetAddressBytes();
                 if (hwAddress.Length != EthernetFields.MacAddressLength)
-                {
-                    throw new InvalidOperationException("address length " + hwAddress.Length + " not equal to the expected length of " + EthernetFields.MacAddressLength);
-                }
+                    ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
 
                 for (int i = 0; i < EthernetFields.MacAddressLength; i++)
                     Header.Bytes[Header.Offset + EthernetFields.SourceMacPosition + i] = hwAddress[i];
@@ -130,9 +128,7 @@ namespace PacketDotNet
             {
                 var hwAddress = value.GetAddressBytes();
                 if (hwAddress.Length != EthernetFields.MacAddressLength)
-                {
-                    throw new InvalidOperationException("address length " + hwAddress.Length + " not equal to the expected length of " + EthernetFields.MacAddressLength);
-                }
+                    ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
 
                 for (int i = 0; i < EthernetFields.MacAddressLength; i++)
                     Header.Bytes[Header.Offset + EthernetFields.DestinationMacPosition + i] = hwAddress[i];

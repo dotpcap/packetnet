@@ -36,7 +36,7 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the offset (in bytes) of the Data Field
-        const Int32 DataFieldOffset = 2;
+        private const Int32 DataFieldOffset = 2;
 
         #endregion
 

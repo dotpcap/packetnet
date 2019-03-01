@@ -496,7 +496,7 @@ namespace PacketDotNet
             get
             {
                 if (Urg)
-                    throw new NotImplementedException("Urg == true not implemented yet");
+                    ThrowHelper.ThrowNotImplementedException(ExceptionDescription.UrgentPointerSet);
 
 
                 var optionsOffset = TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
@@ -515,7 +515,6 @@ namespace PacketDotNet
             {
                 var optionsOffset = Header.Offset + TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
                 Array.Copy(value, 0, Header.Bytes, optionsOffset, value.Length);
-
             }
         }
 
@@ -531,7 +530,7 @@ namespace PacketDotNet
             get
             {
                 if (Urg)
-                    throw new NotImplementedException("Urg == true not implemented yet");
+                    ThrowHelper.ThrowNotImplementedException(ExceptionDescription.UrgentPointerSet);
 
 
                 var optionsOffset = TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
@@ -577,27 +576,20 @@ namespace PacketDotNet
                 return null;
 
 
-            // reset the OptionsCollection list to prepare
-            //  to be re-populated with new data
+            // Reset the OptionsCollection list to prepare to be re-populated with new data.
             var options = new List<Option>();
 
             while (offset < optionBytes.Offset + optionBytes.Length)
             {
                 var type = (OptionTypes) optionBytes.Bytes[offset + Option.KindFieldOffset];
 
-                // some options have no length field, we cannot read
-                // the length field if it isn't present or we risk
-                // out-of-bounds issues
+                // Some options have no length field, we cannot read the length field if it isn't present or we risk out-of-bounds issues.
                 Byte length;
-                if (type == OptionTypes.EndOfOptionList ||
-                    type == OptionTypes.NoOperation)
-                {
+
+                if (type == OptionTypes.EndOfOptionList || type == OptionTypes.NoOperation)
                     length = 1;
-                }
                 else
-                {
                     length = optionBytes.Bytes[offset + Option.LengthFieldOffset];
-                }
 
                 switch (type)
                 {
@@ -653,18 +645,25 @@ namespace PacketDotNet
                         options.Add(new UserTimeout(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
-                    // these fields aren't supported because they're still considered
-                    //  experimental in their respective RFC specifications
+                    // These fields aren't supported because they're still considered experimental in their respective RFC specifications.
                     case OptionTypes.POConnectionPermitted:
                     case OptionTypes.POServiceProfile:
                     case OptionTypes.ConnectionCount:
                     case OptionTypes.ConnectionCountNew:
                     case OptionTypes.ConnectionCountEcho:
                     case OptionTypes.QuickStartResponse:
-                        throw new NotSupportedException("Option: " + type + " is not supported because its RFC specification is still experimental");
-                    // add more options types here
+                    {
+                        options.Add(new Unsupported(optionBytes.Bytes, offset, length));
+                        offset += length;
+                        break;
+                    }
+                    // Add more options types here.
                     default:
-                        throw new NotImplementedException("Option: " + type + " not supported in Packet.Net yet");
+                    {
+                        options.Add(new Unsupported(optionBytes.Bytes, offset, length));
+                        offset += length;
+                        break;
+                    }
                 }
             }
 

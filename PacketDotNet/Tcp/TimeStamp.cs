@@ -94,10 +94,10 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the offset (in bytes) of the Value Field
-        const Int32 ValueFieldOffset = 2;
+        private const Int32 ValueFieldOffset = 2;
 
         // the offset (in bytes) of the Echo Reply Field
-        const Int32 EchoReplyFieldOffset = 6;
+        private const Int32 EchoReplyFieldOffset = 6;
 
         #endregion
     }

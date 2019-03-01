@@ -444,7 +444,7 @@ namespace PacketDotNet
             // Check that the TotalLength is valid, at least HeaderMinimumLength long
             if (totalLength < HeaderMinimumLength)
             {
-                throw new InvalidOperationException("TotalLength " + TotalLength + " < HeaderMinimumLength " + HeaderMinimumLength);
+                ThrowHelper.ThrowInvalidOperationException(ExceptionDescription.TotalLengthBelowMinimumHeaderLength);
             }
 
             // update the header length with the correct value

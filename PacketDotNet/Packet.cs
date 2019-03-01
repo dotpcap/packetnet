@@ -145,7 +145,10 @@ namespace PacketDotNet
                         Log.Debug("PayloadType.None, returning true");
                         return true;
                     default:
-                        throw new NotImplementedException();
+                    {
+                        ThrowHelper.ThrowNotImplementedException();
+                        return false;
+                    }
                 }
             }
         }
@@ -176,7 +179,7 @@ namespace PacketDotNet
             set
             {
                 if (this == value)
-                    throw new InvalidOperationException("A packet cannot have itself as its payload.");
+                    ThrowHelper.ThrowInvalidOperationException(ExceptionDescription.PacketAsPayloadPacket);
 
 
                 PayloadPacketOrData.Value.Packet = value;
@@ -376,7 +379,9 @@ namespace PacketDotNet
                     p = new RawIPPacket(bas);
                     break;
                 default:
-                    throw new NotImplementedException("LinkLayer of " + linkLayer + " is not implemented");
+                    ThrowHelper.ThrowNotImplementedException(ExceptionArgument.linkLayer);
+                    p = null;
+                    break;
             }
 
             return p;

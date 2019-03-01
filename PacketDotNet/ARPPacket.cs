@@ -139,7 +139,7 @@ namespace PacketDotNet
             {
                 // check that the address family is ipv4
                 if (value.AddressFamily != AddressFamily.InterNetwork)
-                    throw new InvalidOperationException("Family != IPv4, ARP is used for IPv4, NDP for IPv6");
+                    ThrowHelper.ThrowInvalidAddressFamilyException(value.AddressFamily);
 
 
                 var address = value.GetAddressBytes();
@@ -164,7 +164,7 @@ namespace PacketDotNet
             {
                 // check that the address family is ipv4
                 if (value.AddressFamily != AddressFamily.InterNetwork)
-                    throw new InvalidOperationException("Family != IPv4, ARP is used for IPv4, NDP for IPv6");
+                    ThrowHelper.ThrowInvalidAddressFamilyException(value.AddressFamily);
 
 
                 var address = value.GetAddressBytes();
@@ -198,12 +198,9 @@ namespace PacketDotNet
             {
                 var hwAddress = value.GetAddressBytes();
 
-                // for now we only support ethernet addresses even though the arp protocol
-                // makes provisions for varying length addresses
+                // for now we only support ethernet addresses even though the arp protocol makes provisions for varying length addresses
                 if (hwAddress.Length != EthernetFields.MacAddressLength)
-                {
-                    throw new InvalidOperationException("expected physical address length of " + EthernetFields.MacAddressLength + " but it was " + hwAddress.Length);
-                }
+                    ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
 
                 Array.Copy(hwAddress,
                            0,
@@ -234,12 +231,9 @@ namespace PacketDotNet
             {
                 var hwAddress = value.GetAddressBytes();
 
-                // for now we only support ethernet addresses even though the arp protocol
-                // makes provisions for varying length addresses
+                // for now we only support ethernet addresses even though the arp protocol makes provisions for varying length addresses
                 if (hwAddress.Length != EthernetFields.MacAddressLength)
-                {
-                    throw new InvalidOperationException("expected physical address length of " + EthernetFields.MacAddressLength + " but it was " + hwAddress.Length);
-                }
+                    ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
 
                 Array.Copy(hwAddress,
                            0,

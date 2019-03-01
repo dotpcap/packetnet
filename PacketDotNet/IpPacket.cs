@@ -217,7 +217,10 @@ namespace PacketDotNet
                     return new IPAddress(address);
                 }
                 default:
-                    throw new InvalidOperationException("ipType " + ipType + " unknown");
+                {
+                    ThrowHelper.ThrowInvalidAddressFamilyException(ipType);
+                    return null;
+                }
             }
         }
         

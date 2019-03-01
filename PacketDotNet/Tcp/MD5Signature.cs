@@ -36,7 +36,7 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the offset (in bytes) of the MD5 Digest field
-        const Int32 MD5DigestFieldOffset = 2;
+        private const Int32 MD5DigestFieldOffset = 2;
 
         #endregion
 

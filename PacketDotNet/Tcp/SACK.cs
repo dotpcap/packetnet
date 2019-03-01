@@ -110,10 +110,10 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the length (in bytes) of a SACK block
-        const Int32 BlockLength = 2;
+        private const Int32 BlockLength = 2;
 
         // the offset (in bytes) of the ScaleFactor Field
-        const Int32 SACKBlocksFieldOffset = 2;
+        private const Int32 SACKBlocksFieldOffset = 2;
 
         #endregion
     }

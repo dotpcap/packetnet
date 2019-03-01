@@ -186,7 +186,7 @@ namespace PacketDotNet
         {
             get => IPv6Fields.HeaderLength / 4;
 
-            set => throw new NotImplementedException();
+            set => ThrowHelper.ThrowNotImplementedException();
         }
 
         /// <value>

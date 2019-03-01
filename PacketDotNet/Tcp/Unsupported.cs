@@ -1,4 +1,4 @@
-/*
+﻿/*
 This file is part of PacketDotNet
 
 PacketDotNet is free software: you can redistribute it and/or modify
@@ -14,40 +14,31 @@ GNU Lesser General Public License for more details.
 You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
-/*
- *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
- */
 
 using System;
 
 namespace PacketDotNet.Tcp
 {
-    /// <summary>
-    /// An Echo Option
-    /// throws an exception because Echo Options
-    /// are obsolete as per their spec
-    /// </summary>
-    public class Echo : Option
+    public class Unsupported : Option
     {
-        #region Constructors
-
         /// <summary>
-        /// Creates an Echo Option
+        /// Creates an Option that is not yet supported by PacketDotNet.
         /// </summary>
-        /// <param name="bytes">
-        /// A <see cref="T:System.Byte[]" />
-        /// </param>
-        /// <param name="offset">
-        /// A <see cref="System.Int32" />
-        /// </param>
-        /// <param name="length">
-        /// A <see cref="System.Int32" />
-        /// </param>
-        [Obsolete]
-        public Echo(Byte[] bytes, Int32 offset, Int32 length) :
-            base(bytes, offset, length)
+        /// <param name="bytes">A <see cref="T:System.Byte[]" /></param>
+        /// <param name="offset">A <see cref="T:System.Int32" /></param>
+        /// <param name="length">A <see cref="T:System.Int32" /></param>
+        public Unsupported(byte[] bytes, int offset, int length) : base(bytes, offset, length)
         { }
 
-        #endregion
+        /// <summary>
+        /// Returns the Option info as a string
+        /// </summary>
+        /// <returns>
+        /// A <see cref="string" />
+        /// </returns>
+        public override String ToString()
+        {
+            return "[" + Kind + ": Currently unsupported by PacketDotNet]";
+        }
     }
 }

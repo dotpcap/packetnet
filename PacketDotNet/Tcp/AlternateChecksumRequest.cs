@@ -30,7 +30,7 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the offset (in bytes) of the Checksum field
-        const Int32 ChecksumFieldOffset = 2;
+        private const Int32 ChecksumFieldOffset = 2;
 
         #endregion
 

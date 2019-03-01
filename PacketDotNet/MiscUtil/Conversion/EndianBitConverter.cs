@@ -282,14 +282,10 @@ namespace PacketDotNet.MiscUtil.Conversion
         static void CheckByteArgument(Byte[] value, Int32 startIndex, Int32 bytesRequired)
         {
             if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+                ThrowHelper.ThrowArgumentNullException(ExceptionArgument.value);
 
             if (startIndex < 0 || startIndex > value.Length - bytesRequired)
-            {
-                throw new ArgumentOutOfRangeException(nameof(startIndex));
-            }
+                ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.startIndex);
         }
 
         /// <summary>
@@ -560,17 +556,13 @@ namespace PacketDotNet.MiscUtil.Conversion
         /// <param name="bytes">The number of significant bytes to copy</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
-        void CopyBytes(Int64 value, Int32 bytes, Byte[] buffer, Int32 index)
+        private void CopyBytes(Int64 value, Int32 bytes, Byte[] buffer, Int32 index)
         {
             if (buffer == null)
-            {
-                throw new ArgumentNullException(nameof(buffer), "Byte array must not be null");
-            }
+                ThrowHelper.ThrowArgumentNullException(ExceptionArgument.buffer);
 
             if (buffer.Length < index + bytes)
-            {
-                throw new ArgumentOutOfRangeException(nameof(buffer), "Buffer not big enough for value");
-            }
+                ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.buffer);
 
             CopyBytesImpl(value, bytes, buffer, index);
         }

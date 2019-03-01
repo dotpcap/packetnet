@@ -103,11 +103,11 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the offset (in bytes) of the Value Fields
-        const Int32 ValuesFieldOffset = 2;
+        private const Int32 ValuesFieldOffset = 2;
 
         // the mask used to strip the Granularity field from the
         //  Values filed to expose the UserTimeout field
-        const Int32 TimeoutMask = 0x7FFF;
+        private const Int32 TimeoutMask = 0x7FFF;
 
         #endregion
     }

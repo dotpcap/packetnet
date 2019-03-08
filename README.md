@@ -1,6 +1,11 @@
 [![NuGet](https://img.shields.io/nuget/v/PacketDotNet.svg)](https://www.nuget.org/packages/PacketDotNet/)
 [![master branch build status](https://ci.appveyor.com/api/projects/status/4vjrt4farp86upb0/branch/master?svg=true)](https://ci.appveyor.com/project/chmorgan/packetnet/branch/master)
 
+New!
+==========
+The newly released [PacketDotNet.Connections](http://github.com/chmorgan/packetnet-connections) is a supplement to Packet.NET that
+adds connection tracking and http following support.
+
 Packet.Net
 ==========
 

@@ -90,7 +90,7 @@ namespace Test.PacketType
             Assert.AreEqual(1543415539, rawCapture.Timeval.Seconds);
             Assert.AreEqual(841441.000, rawCapture.Timeval.MicroSeconds);
             Assert.AreEqual(1, ip.ExtensionHeaders.Count);
-            Assert.AreEqual(0, ip.ExtensionHeaders[0].OptionsAndPadding.Length);
+            Assert.AreEqual(6, ip.ExtensionHeaders[0].Payload.Length);
 
         }
 

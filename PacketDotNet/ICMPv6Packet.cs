@@ -167,7 +167,7 @@ namespace PacketDotNet
                 case StringOutputType.Normal:
                 case StringOutputType.Colored:
                     // build the output string
-                    buffer.AppendFormat("{0}[ICMPPacket: Type={2}, Code={3}]{1}",
+                    buffer.AppendFormat("{0}[ICMPv6Packet: Type={2}, Code={3}]{1}",
                                         color,
                                         colorEscape,
                                         Type,

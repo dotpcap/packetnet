@@ -188,7 +188,7 @@ namespace PacketDotNet
                 case StringOutputType.Normal:
                 case StringOutputType.Colored:
                     // build the output string
-                    buffer.AppendFormat("{0}[ICMPPacket: TypeCode={2}]{1}",
+                    buffer.AppendFormat("{0}[ICMPv4Packet: TypeCode={2}]{1}",
                                         color,
                                         colorEscape,
                                         TypeCode);

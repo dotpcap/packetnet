@@ -35,6 +35,16 @@ namespace PacketDotNet
         public static readonly Int32 VersionTrafficClassFlowLabelLength = 4;
 
         /// <summary>
+        /// The header extension length position.
+        /// </summary>
+        public static readonly Int32 HeaderExtensionLengthPosition = 1;
+
+        /// <summary>
+        /// The header extension data position.
+        /// </summary>
+        public static readonly Int32 HeaderExtensionDataPosition = 2;
+
+        /// <summary>
         /// The payload length field length.
         /// </summary>
         public static readonly Int32 PayloadLengthLength = 2;

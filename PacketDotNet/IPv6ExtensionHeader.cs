@@ -19,7 +19,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 // ReSharper disable InconsistentNaming
@@ -29,57 +28,66 @@ namespace PacketDotNet
     [Serializable]
     public class IPv6ExtensionHeader
     {
+        private ByteArraySegment _data;
+        protected ByteArraySegment _encapsulatedBytes;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="IPv6ExtensionHeader" /> class.
+        /// Gets the payload of the extension header.
         /// </summary>
-        /// <param name="bas">The bas.</param>
-        public IPv6ExtensionHeader(ByteArraySegment bas)
+        public ByteArraySegment Payload => _data ?? (_data = new ByteArraySegment(_encapsulatedBytes.Bytes, _encapsulatedBytes.Offset + IPv6Fields.HeaderExtensionDataPosition, Length - IPv6Fields.HeaderExtensionDataPosition));
+
+        /// <summary>
+        /// Gets the header.
+        /// </summary>
+        public IPProtocolType Header { get; }
+
+        /// <summary>
+        /// Gets or sets the length of the header extension in 8-octets (bytes) units, not including the first 8 octets.
+        /// </summary>
+        public int HeaderExtensionLength
         {
-            Header = bas;
+            get
+            {
+                if (Header == IPProtocolType.FRAGMENT)
+                    return 0;
+
+
+                return _encapsulatedBytes.Bytes[_encapsulatedBytes.Offset + IPv6Fields.HeaderExtensionLengthPosition];
+            }
+            set
+            {
+                if (Header == IPProtocolType.FRAGMENT)
+                    return;
+
+
+                _encapsulatedBytes.Bytes[_encapsulatedBytes.Offset + IPv6Fields.HeaderExtensionLengthPosition] = (byte) value;
+            }
         }
 
         /// <summary>
         /// Gets the length.
         /// </summary>
-        public UInt16 Length => (ushort) ((PayloadLength + 1) * 8);
+        public UInt16 Length => (UInt16) ((HeaderExtensionLength + 1) * 8);
 
         /// <summary>
         /// Gets or sets the next header.
         /// </summary>
         public IPProtocolType NextHeader
         {
-            get => (IPProtocolType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                                    Header.Offset);
+            get => (IPProtocolType)_encapsulatedBytes.Bytes[_encapsulatedBytes.Offset];
 
-            set => EndianBitConverter.Big.CopyBytes((Byte) value,
-                                                    Header.Bytes,
-                                                    Header.Offset);
+            set => _encapsulatedBytes.Bytes[_encapsulatedBytes.Offset] = (byte) value;
         }
-
+        
         /// <summary>
-        /// Gets the options and padding.
+        /// Initializes a new instance of the <see cref="IPv6ExtensionHeader" /> class.
         /// </summary>
-        public ByteArraySegment OptionsAndPadding => new ByteArraySegment(Header.Bytes, Header.Offset + 16, PayloadLength - 8);
-
-        /// <summary>
-        /// Gets or sets the length of the payload.
-        /// </summary>
-        /// <value>
-        /// The length of the payload.
-        /// </value>
-        public UInt16 PayloadLength
+        /// <param name="header">The header.</param>
+        /// <param name="byteArraySegment">The byte array segment.</param>
+        public IPv6ExtensionHeader(IPProtocolType header, ByteArraySegment byteArraySegment)
         {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + IPv6Fields.PayloadLengthPosition);
-
-            set => EndianBitConverter.Big.CopyBytes(value,
-                                                    Header.Bytes,
-                                                    Header.Offset + IPv6Fields.PayloadLengthPosition);
+            Header = header;
+            _encapsulatedBytes = byteArraySegment;
         }
-
-        /// <summary>
-        /// Gets or sets the header.
-        /// </summary>
-        protected ByteArraySegment Header { get; set; }
     }
 }

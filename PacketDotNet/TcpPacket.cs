@@ -566,7 +566,7 @@ namespace PacketDotNet
         /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <returns>
-        /// A <see cref="List&lt;Option&gt;" />
+        /// A <see cref="List{Option}" />
         /// </returns>
         private static List<Option> ParseOptions(ByteArraySegment optionBytes)
         {
@@ -579,7 +579,11 @@ namespace PacketDotNet
             // Reset the OptionsCollection list to prepare to be re-populated with new data.
             var options = new List<Option>();
 
-            while (offset < optionBytes.Offset + optionBytes.Length)
+            // The TCP options should be bound by their options offset + length.
+            var maxOffset = optionBytes.Offset + optionBytes.Length;
+
+            // Include a basic check against the available length of the options buffer for invalid TCP packet data in the data offset field.
+            while (offset < maxOffset && offset < optionBytes.Bytes.Length - Option.LengthFieldOffset)
             {
                 var type = (OptionTypes) optionBytes.Bytes[offset + Option.KindFieldOffset];
 
@@ -594,70 +598,90 @@ namespace PacketDotNet
                 switch (type)
                 {
                     case OptionTypes.EndOfOptionList:
+                    {
                         options.Add(new EndOfOptions(optionBytes.Bytes, offset, length));
                         offset += EndOfOptions.OptionLength;
                         break;
+                    }
                     case OptionTypes.NoOperation:
+                    {
                         options.Add(new NoOperation(optionBytes.Bytes, offset, length));
                         offset += NoOperation.OptionLength;
                         break;
+                    }
                     case OptionTypes.MaximumSegmentSize:
+                    {
                         options.Add(new MaximumSegmentSize(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
+                    }
                     case OptionTypes.WindowScaleFactor:
+                    {
                         options.Add(new WindowScaleFactor(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
+                    }
                     case OptionTypes.SACKPermitted:
+                    {
                         options.Add(new SACKPermitted(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
+                    }
                     case OptionTypes.SACK:
+                    {
                         options.Add(new SACK(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
+                    }
                     case OptionTypes.Echo:
+                    {
                         options.Add(new Echo(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
+                    }
                     case OptionTypes.EchoReply:
+                    {
                         options.Add(new EchoReply(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
+                    }
                     case OptionTypes.Timestamp:
+                    {
                         options.Add(new TimeStamp(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
+                    }
                     case OptionTypes.AlternateChecksumRequest:
+                    {
                         options.Add(new AlternateChecksumRequest(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
+                    }
                     case OptionTypes.AlternateChecksumData:
+                    {
                         options.Add(new AlternateChecksumData(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
+                    }
                     case OptionTypes.MD5Signature:
+                    {
                         options.Add(new MD5Signature(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
+                    }
                     case OptionTypes.UserTimeout:
+                    {
                         options.Add(new UserTimeout(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
-                    // These fields aren't supported because they're still considered experimental in their respective RFC specifications.
-                    case OptionTypes.POConnectionPermitted:
-                    case OptionTypes.POServiceProfile:
-                    case OptionTypes.ConnectionCount:
-                    case OptionTypes.ConnectionCountNew:
-                    case OptionTypes.ConnectionCountEcho:
-                    case OptionTypes.QuickStartResponse:
-                    {
-                        options.Add(new Unsupported(optionBytes.Bytes, offset, length));
-                        offset += length;
-                        break;
                     }
-                    // Add more options types here.
+                    // These fields aren't supported because they're still considered experimental in their respective RFC specifications.
+                    //case OptionTypes.POConnectionPermitted:
+                    //case OptionTypes.POServiceProfile:
+                    //case OptionTypes.ConnectionCount:
+                    //case OptionTypes.ConnectionCountNew:
+                    //case OptionTypes.ConnectionCountEcho:
+                    //case OptionTypes.QuickStartResponse:
                     default:
                     {
                         options.Add(new Unsupported(optionBytes.Bytes, offset, length));

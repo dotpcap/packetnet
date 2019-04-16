@@ -163,10 +163,8 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// The payload length field of the IPv6 Packet
-        /// NOTE: Differs from the IPv4 'Total length' field that includes the length of the header as
-        /// payload length is ONLY the size of the payload.
-        /// This also includes any extended headers
+        /// The size of the payload in octets, including any extension headers.
+        /// This differs from the IPv4's Total Length, which also includes the length of the header.
         /// </summary>
         public override UInt16 PayloadLength
         {
@@ -351,7 +349,7 @@ namespace PacketDotNet
             // set the actual length, we need to do this because we need to set
             // header to something valid above before we can retrieve the PayloadLength
             Log.DebugFormat("PayloadLength: {0}", PayloadLength);
-            Header.Length = bas.Length - PayloadLength;
+            Header.Length = IPv6Fields.HeaderLength;
 
             if (PayloadLength > 0)
             {
@@ -377,22 +375,28 @@ namespace PacketDotNet
             _extensionHeaders = new List<IPv6ExtensionHeader>();
 
             var nextHeaderPosition = Header.Offset + IPv6Fields.NextHeaderPosition;
-            var extensionHeaderLength = 0;
+            var totalExtensionHeadersLength = 0;
+
+            var nextHeader = (IPProtocolType) Header.Bytes[nextHeaderPosition];
 
             // Strip off the extension headers.
-            while (ExtensionHeaderTypes.Contains((IPProtocolType) Header.Bytes[nextHeaderPosition]))
+            while (ExtensionHeaderTypes.Contains(nextHeader) && nextHeader != IPProtocolType.NONE)
             {
-                nextHeaderPosition = Header.Offset + IPv6Fields.HeaderLength + extensionHeaderLength;
+                nextHeaderPosition = Header.Offset + IPv6Fields.HeaderLength + totalExtensionHeadersLength;
 
-                var extensionHeader = new IPv6ExtensionHeader(Header.EncapsulatedBytes(PayloadLength));
+                var extensionHeader = new IPv6ExtensionHeader(nextHeader, Header.EncapsulatedBytes(PayloadLength));
                 _extensionHeaders.Add(extensionHeader);
 
-                extensionHeaderLength += extensionHeader.Length;
-                Header.Length += extensionHeader.Length;
+                var extensionHeaderLength = extensionHeader.Length;
+
+                totalExtensionHeadersLength += extensionHeaderLength;
+                Header.Length += extensionHeaderLength;
+                
+                nextHeader = (IPProtocolType)Header.Bytes[nextHeaderPosition];
             }
 
             _protocolOffset = nextHeaderPosition;
-            _totalExtensionHeadersLength = extensionHeaderLength;
+            _totalExtensionHeadersLength = totalExtensionHeadersLength;
         }
 
         /// <summary>

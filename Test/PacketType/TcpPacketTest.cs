@@ -25,6 +25,7 @@ using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using PacketDotNet.Tcp;
 using SharpPcap;
@@ -146,6 +147,9 @@ namespace Test.PacketType
             Assert.AreEqual(expectedOptions, t.Options);
 
             var options = t.OptionsCollection;
+
+            Assert.AreEqual(true, options.Any(x => x is TimeStamp));
+
             foreach (var option in options)
             {
                 if (option is TimeStamp timeStamp)

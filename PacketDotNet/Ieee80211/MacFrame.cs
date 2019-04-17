@@ -145,7 +145,7 @@ namespace PacketDotNet.Ieee80211
         /// </param>
         protected void SetAddressByOffset(Int32 offset, PhysicalAddress address)
         {
-            Byte[] hwAddress = null;
+            Byte[] hwAddress;
             //We will replace no address with a MAC of all zer
             if (address == PhysicalAddress.None)
             {
@@ -451,9 +451,6 @@ namespace PacketDotNet.Ieee80211
                     macFrame = new QosNullDataFrame(bas);
                     break;
                 }
-                default:
-                    //this is an unsupported (and unknown) packet type
-                    break;
             }
 
             return macFrame;

@@ -5,7 +5,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Description>.Net assembly for dissecting and constructing network packets</Description>
     <Authors>Chris Morgan (chmorgan@gmail.com)</Authors>
-    <Version>0.21.0</Version>
+    <Version>0.21.2</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE;RELEASE;</DefineConstants>

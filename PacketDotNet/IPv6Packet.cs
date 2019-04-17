@@ -69,12 +69,7 @@ namespace PacketDotNet
             IPProtocolType.SHIM6,
             IPProtocolType.RESERVEDTYPE253,
             IPProtocolType.RESERVEDTYPE254};
-
-        /// <value>
-        /// Minimum number of bytes in an IPv6 header
-        /// </value>
-        public const Int32 HeaderMinimumLength = 40;
-
+        
         /// <value>
         /// The version of the IP protocol. The '6' in IPv6 indicates the version of the protocol
         /// </value>
@@ -300,6 +295,20 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Gets the length in bytes of the extension headers.
+        /// </summary>
+        public int ExtensionHeadersLength
+        {
+            get
+            {
+                if (_totalExtensionHeadersLength == -1)
+                    CalculateExtensionHeaders();
+
+                return _totalExtensionHeadersLength;
+            }
+        }
+
+        /// <summary>
         /// Create an IPv6 packet from values
         /// </summary>
         /// <param name="sourceAddress">
@@ -341,15 +350,13 @@ namespace PacketDotNet
         {
             Log.Debug(bas.ToString());
 
-            // slice off the header
-            // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
-            Header.Length = HeaderMinimumLength;
+            // IPv6 headers have a fixed length.
+            Header = new ByteArraySegment(bas)
+            {
+                Length = IPv6Fields.HeaderLength
+            };
 
-            // set the actual length, we need to do this because we need to set
-            // header to something valid above before we can retrieve the PayloadLength
             Log.DebugFormat("PayloadLength: {0}", PayloadLength);
-            Header.Length = IPv6Fields.HeaderLength;
 
             if (PayloadLength > 0)
             {
@@ -359,7 +366,12 @@ namespace PacketDotNet
                     if (_totalExtensionHeadersLength == -1)
                         CalculateExtensionHeaders();
 
-                    var payload = Header.EncapsulatedBytes(PayloadLength);
+                    var startingOffset = Header.Offset + Header.Length + _totalExtensionHeadersLength;
+                    var segmentLength = Math.Min(PayloadLength, Header.BytesLength - startingOffset);
+                    var bytesLength = startingOffset + segmentLength;
+
+                    var payload = new ByteArraySegment(Header.Bytes, startingOffset, segmentLength, bytesLength);
+
                     return ParseEncapsulatedBytes(payload,
                                                   Protocol,
                                                   this);
@@ -387,10 +399,7 @@ namespace PacketDotNet
                 var extensionHeader = new IPv6ExtensionHeader(nextHeader, Header.EncapsulatedBytes(PayloadLength));
                 _extensionHeaders.Add(extensionHeader);
 
-                var extensionHeaderLength = extensionHeader.Length;
-
-                totalExtensionHeadersLength += extensionHeaderLength;
-                Header.Length += extensionHeaderLength;
+                totalExtensionHeadersLength += extensionHeader.Length;
                 
                 nextHeader = (IPProtocolType)Header.Bytes[nextHeaderPosition];
             }

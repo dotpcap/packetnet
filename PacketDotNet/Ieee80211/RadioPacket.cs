@@ -288,7 +288,7 @@ namespace PacketDotNet.Ieee80211
         {
             var bitmasks = Present;
 
-            var retval = new SortedDictionary<RadioTapType, RadioTapField>();
+            var result = new SortedDictionary<RadioTapType, RadioTapField>();
 
             var bitIndex = 0;
 
@@ -319,7 +319,7 @@ namespace PacketDotNet.Ieee80211
                         var field = RadioTapField.Parse(bitIndex, br);
                         if (field != null)
                         {
-                            retval[field.FieldType] = field;
+                            result[field.FieldType] = field;
                         }
                         else
                         {
@@ -344,7 +344,7 @@ namespace PacketDotNet.Ieee80211
             //much there is but this will ensure we get up to the end of the buffer
             UnhandledFieldBytes = br.ReadBytes(UInt16.MaxValue);
 
-            return retval;
+            return result;
         }
 
         /// <summary>

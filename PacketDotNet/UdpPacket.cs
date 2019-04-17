@@ -134,9 +134,9 @@ namespace PacketDotNet
             get
             {
                 Log.Debug("ValidUDPChecksum");
-                var retval = IsValidChecksum(TransportChecksumOption.IncludePseudoIPHeader);
-                Log.DebugFormat("ValidUDPChecksum {0}", retval);
-                return retval;
+                var result = IsValidChecksum(TransportChecksumOption.IncludePseudoIPHeader);
+                Log.DebugFormat("ValidUDPChecksum {0}", result);
+                return result;
             }
         }
 
@@ -251,9 +251,9 @@ namespace PacketDotNet
         {
             // Packet bytes must be greater than or equal to the IPV6 header length, start with the version number, 
             // and be greater in length than the payload length + the header length.
-            return packetBytes.Length >= IPv6Packet.HeaderMinimumLength
+            return packetBytes.Length >= IPv6Fields.HeaderLength
                    && packetBytes.Bytes[packetBytes.Offset] >> 4 == (int)RawIPPacketProtocol.IPv6
-                   && packetBytes.Length >= IPv6Packet.HeaderMinimumLength + packetBytes.Bytes[packetBytes.Offset + IPv6Fields.PayloadLengthPosition];
+                   && packetBytes.Length >= IPv6Fields.HeaderLength + packetBytes.Bytes[packetBytes.Offset + IPv6Fields.PayloadLengthPosition];
         }
 
         /// <summary>

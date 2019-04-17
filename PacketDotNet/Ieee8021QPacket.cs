@@ -63,7 +63,7 @@ namespace PacketDotNet
             {
                 var tci = TagControlInformation;
                 tci >>= 12;
-                return (tci & 0x1) == 1 ? true : false;
+                return (tci & 0x1) == 1;
             }
 
             set

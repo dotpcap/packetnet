@@ -247,12 +247,12 @@ namespace PacketDotNet
                 Log.DebugFormat(HexPrinter.GetString(Header.ActualBytes(), 0, Header.Length));
 
                 const Int32 expectedHeaderOnesSum = 0xFFFF;
-                var retval = headerOnesSum == expectedHeaderOnesSum;
+                var result = headerOnesSum == expectedHeaderOnesSum;
 
-                Log.DebugFormat("headerOnesSum: {0}, expectedHeaderOnesSum {1}, returning {2}", headerOnesSum, expectedHeaderOnesSum, retval);
+                Log.DebugFormat("headerOnesSum: {0}, expectedHeaderOnesSum {1}, returning {2}", headerOnesSum, expectedHeaderOnesSum, result);
                 Log.DebugFormat("Header.Length {0}", Header.Length);
 
-                return retval;
+                return result;
             }
         }
 

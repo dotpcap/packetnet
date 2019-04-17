@@ -130,9 +130,9 @@ namespace PacketDotNet
                             Header.Offset + Header.Length == PayloadPacketOrData.Value?.Packet.Header.Offset)
                         {
                             // and does the sub packet share memory with its sub packets?
-                            var retval = PayloadPacketOrData.Value.Packet.SharesMemoryWithSubPackets;
-                            Log.DebugFormat("PayloadType.Packet retval {0}", retval);
-                            return retval;
+                            var result = PayloadPacketOrData.Value.Packet.SharesMemoryWithSubPackets;
+                            Log.DebugFormat("PayloadType.Packet result {0}", result);
+                            return result;
                         }
                         else
                         {
@@ -218,7 +218,7 @@ namespace PacketDotNet
                     return null;
                 }
 
-                Log.DebugFormat("retval.Length: {0}", PayloadPacketOrData.Value.ByteArraySegment.Length);
+                Log.DebugFormat("result.Length: {0}", PayloadPacketOrData.Value.ByteArraySegment.Length);
                 return PayloadPacketOrData.Value.ByteArraySegment;
             }
 

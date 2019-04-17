@@ -192,9 +192,9 @@ namespace PacketDotNet
             get
             {
                 Log.Debug("ValidTCPChecksum");
-                var retval = IsValidChecksum(TransportChecksumOption.IncludePseudoIPHeader);
-                Log.DebugFormat("ValidTCPChecksum {0}", retval);
-                return retval;
+                var result = IsValidChecksum(TransportChecksumOption.IncludePseudoIPHeader);
+                Log.DebugFormat("ValidTCPChecksum {0}", result);
+                return result;
             }
         }
 

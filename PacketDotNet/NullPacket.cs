@@ -123,7 +123,7 @@ namespace PacketDotNet
                 case NullPacketType.IPv6_30:
                     payloadPacketOrData.Packet = new IPv6Packet(payload);
                     break;
-                case NullPacketType.IPX:
+                //case NullPacketType.IPX:
                 default:
                     throw new NotImplementedException("Protocol of " + protocol + " is not implemented");
             }

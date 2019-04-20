@@ -49,22 +49,6 @@ namespace PacketDotNet
 #endif
 
         /// <summary>
-        /// See http://www.tcpdump.org/linktypes.html
-        /// </summary>
-        public NullPacketType Protocol
-        {
-            get => (NullPacketType) EndianBitConverter.Little.ToUInt32(Header.Bytes,
-                                                                       Header.Offset + NullFields.ProtocolPosition);
-            set
-            {
-                var val = (uint) value;
-                EndianBitConverter.Little.CopyBytes(val,
-                                                    Header.Bytes,
-                                                    Header.Offset + NullFields.ProtocolPosition);
-            }
-        }
-
-        /// <summary>
         /// Construct a new NullPacket from source and destination mac addresses
         /// </summary>
         public NullPacket(NullPacketType nullPacketType)
@@ -98,6 +82,25 @@ namespace PacketDotNet
 
             // parse the encapsulated bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header, Protocol), LazyThreadSafetyMode.PublicationOnly);
+        }
+
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override string Color => AnsiEscapeSequences.LightPurple;
+
+        /// <summary>
+        /// See http://www.tcpdump.org/linktypes.html
+        /// </summary>
+        public NullPacketType Protocol
+        {
+            get => (NullPacketType) EndianBitConverter.Little.ToUInt32(Header.Bytes,
+                                                                       Header.Offset + NullFields.ProtocolPosition);
+            set
+            {
+                var val = (uint) value;
+                EndianBitConverter.Little.CopyBytes(val,
+                                                    Header.Bytes,
+                                                    Header.Offset + NullFields.ProtocolPosition);
+            }
         }
 
         internal static PacketOrByteArraySegment ParseNextSegment
@@ -135,9 +138,6 @@ namespace PacketDotNet
 
             return payloadPacketOrData;
         }
-
-        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override string Color => AnsiEscapeSequences.LightPurple;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)

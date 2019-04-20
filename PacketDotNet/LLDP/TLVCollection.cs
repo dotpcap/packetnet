@@ -30,13 +30,13 @@ using log4net;
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// Custom collection for TLV types
+    /// Custom collection for Tlv types
     /// Special behavior includes:
     /// - Preventing an EndOfLLDPDU tlv from being added out of place
     /// - Checking and throwing exceptions if one-per-LLDP packet TLVs are added multiple times
     /// </summary>
     [Serializable]
-    public class TLVCollection : Collection<TLV>
+    public class TlvCollection : Collection<Tlv>
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -58,17 +58,17 @@ namespace PacketDotNet.LLDP
         /// A <see cref="int" />
         /// </param>
         /// <param name="item">
-        /// A <see cref="TLV" />
+        /// A <see cref="Tlv" />
         /// </param>
-        protected override void InsertItem(int index, TLV item)
+        protected override void InsertItem(int index, Tlv item)
         {
-            Log.DebugFormat("index {0}, TLV.GetType {1}, TLV.Type {2}",
+            Log.DebugFormat("index {0}, Tlv.GetType {1}, Tlv.Type {2}",
                             index,
                             item.GetType(),
                             item.Type);
 
-            // if this is the first item and it isn't an End TLV we should add the end tlv
-            if (Count == 0 && item.Type != TLVTypes.EndOfLLDPU)
+            // if this is the first item and it isn't an End Tlv we should add the end tlv
+            if (Count == 0 && item.Type != TlvTypes.EndOfLLDPU)
             {
                 Log.Debug("Inserting EndOfLLDPDU");
                 base.InsertItem(0, new EndOfLLDPDU());
@@ -77,7 +77,7 @@ namespace PacketDotNet.LLDP
             {
                 // if the user is adding their own End tlv we should replace ours
                 // with theirs
-                if (item.Type == TLVTypes.EndOfLLDPU)
+                if (item.Type == TlvTypes.EndOfLLDPU)
                 {
                     Log.DebugFormat("Replacing {0} with user provided {1}, Type {2}",
                                     this[Count - 1].GetType(),

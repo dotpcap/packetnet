@@ -21,24 +21,25 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// An End Of LLDPDU TLV
+    /// An End Of LLDPDU Tlv
     /// </summary>
     [Serializable]
-    public class EndOfLLDPDU : TLV
+    public class EndOfLLDPDU : Tlv
     {
         #region Constructors
 
         /// <summary>
-        /// Parses bytes into an End Of LLDPDU TLV
+        /// Parses bytes into an End Of LLDPDU Tlv
         /// </summary>
         /// <param name="bytes">
-        /// TLV bytes
+        /// Tlv bytes
         /// </param>
         /// <param name="offset">
-        /// The End Of LLDPDU TLV's offset from the
+        /// The End Of LLDPDU Tlv's offset from the
         /// origin of the LLDP
         /// </param>
         public EndOfLLDPDU(byte[] bytes, int offset) :
@@ -49,7 +50,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Creates an End Of LLDPDU TLV
+        /// Creates an End Of LLDPDU Tlv
         /// </summary>
         public EndOfLLDPDU()
         {
@@ -63,7 +64,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Convert this TTL TLV to a string.
+        /// Convert this TTL Tlv to a string.
         /// </summary>
         /// <returns>
         /// A human readable string

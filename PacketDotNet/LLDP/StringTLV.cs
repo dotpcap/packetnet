@@ -22,23 +22,24 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Text;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// Base class for several TLV types that all contain strings
+    /// Base class for several Tlv types that all contain strings
     /// </summary>
     [Serializable]
-    public class StringTLV : TLV
+    public class StringTLV : Tlv
     {
         #region Constructors
 
         /// <summary>
-        /// Creates a String TLV
+        /// Creates a String Tlv
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The Port Description TLV's offset from the
+        /// The Port Description Tlv's offset from the
         /// origin of the LLDP
         /// </param>
         public StringTLV(byte[] bytes, int offset) :
@@ -49,12 +50,12 @@ namespace PacketDotNet.LLDP
         /// Create from a type and string value
         /// </summary>
         /// <param name="tlvType">
-        /// A <see cref="TLVTypes" />
+        /// A <see cref="TlvTypes" />
         /// </param>
         /// <param name="stringValue">
         /// A <see cref="string" />
         /// </param>
-        public StringTLV(TLVTypes tlvType, string stringValue)
+        public StringTLV(TlvTypes tlvType, string stringValue)
         {
             var bytes = new byte[TLVTypeLength.TypeLengthLength];
             const int offset = 0;
@@ -109,7 +110,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Convert this Port Description TLV to a string.
+        /// Convert this Port Description Tlv to a string.
         /// </summary>
         /// <returns>
         /// A human readable string

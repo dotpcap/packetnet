@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.LSA;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -11,17 +12,17 @@ namespace PacketDotNet
     /// neighbor's database that are more up-to-date.
     /// See http://www.ietf.org/rfc/rfc2328.txt for details.
     /// </summary>
-    public sealed class OSPFv2LSRequestPacket : OSPFv2Packet
+    public sealed class OspfV2LinkStateRequestPacket : OspfV2Packet
     {
         /// <value>
         /// The packet type
         /// </value>
-        public static OSPFPacketType PacketType = OSPFPacketType.LinkStateRequest;
+        public static OspfPacketType PacketType = OspfPacketType.LinkStateRequest;
 
         /// <summary>
         /// Constructs an OSPFv2 LSR packet
         /// </summary>
-        public OSPFv2LSRequestPacket()
+        public OspfV2LinkStateRequestPacket()
         {
             Type = PacketType;
             PacketLength = (ushort) Header.Bytes.Length;
@@ -30,15 +31,15 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs an OSPFv2 LSR packet with link state requests
         /// </summary>
-        /// <param name="lsrs">List of the link state requests</param>
-        public OSPFv2LSRequestPacket(List<LinkStateRequest> lsrs)
+        /// <param name="linkStateRequests">List of the link state requests</param>
+        public OspfV2LinkStateRequestPacket(List<LinkStateRequest> linkStateRequests)
         {
-            var length = lsrs.Count * LinkStateRequest.Length;
-            var offset = OSPFv2Fields.HeaderLength;
-            var bytes = new byte[length + OSPFv2Fields.HeaderLength];
+            var length = linkStateRequests.Count * LinkStateRequest.Length;
+            var offset = OspfV2Fields.HeaderLength;
+            var bytes = new byte[length + OspfV2Fields.HeaderLength];
 
             Array.Copy(Header.Bytes, bytes, Header.Length);
-            foreach (var t in lsrs)
+            foreach (var t in linkStateRequests)
             {
                 Array.Copy(t.Bytes, 0, bytes, offset, LinkStateRequest.Length);
                 offset += LinkStateRequest.Length;
@@ -55,7 +56,7 @@ namespace PacketDotNet
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public OSPFv2LSRequestPacket(ByteArraySegment byteArraySegment)
+        public OspfV2LinkStateRequestPacket(ByteArraySegment byteArraySegment)
         {
             Header = new ByteArraySegment(byteArraySegment.Bytes);
         }
@@ -69,7 +70,7 @@ namespace PacketDotNet
         /// <param name="offset">
         /// A <see cref="int" />
         /// </param>
-        public OSPFv2LSRequestPacket(byte[] bytes, int offset) :
+        public OspfV2LinkStateRequestPacket(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Type = PacketType;
@@ -80,18 +81,18 @@ namespace PacketDotNet
         /// </summary>
         /// See
         /// <see cref="LinkStateRequest" />
-        public List<LinkStateRequest> LinkStateRequests
+        public List<LinkStateRequest> Requests
         {
             get
             {
-                var bytesNeeded = PacketLength - OSPFv2Fields.LSRStart;
+                var bytesNeeded = PacketLength - OspfV2Fields.LSRStart;
                 if (bytesNeeded % LinkStateRequest.Length != 0)
                 {
                     throw new Exception("Malformed LSR packet - bad size for the LS requests");
                 }
 
                 var ret = new List<LinkStateRequest>();
-                var offset = Header.Offset + OSPFv2Fields.LSRStart;
+                var offset = Header.Offset + OspfV2Fields.LSRStart;
                 var lsrCount = bytesNeeded / LinkStateRequest.Length;
 
                 for (var i = 0; i < lsrCount; i++)
@@ -106,15 +107,15 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns a <see cref="string" /> that represents the current <see cref="OSPFv2LSRequestPacket" />.
+        /// Returns a <see cref="string" /> that represents the current <see cref="OspfV2LinkStateRequestPacket" />.
         /// </summary>
-        /// <returns>A <see cref="string" /> that represents the current <see cref="OSPFv2LSRequestPacket" />.</returns>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="OspfV2LinkStateRequestPacket" />.</returns>
         public override string ToString()
         {
             var packet = new StringBuilder();
             packet.Append(base.ToString());
             packet.Append(" ");
-            packet.AppendFormat("LSR count: {0} ", LinkStateRequests.Count);
+            packet.AppendFormat("LSR count: {0} ", Requests.Count);
             return packet.ToString();
         }
 

@@ -22,6 +22,7 @@ using System;
 using NUnit.Framework;
 using PacketDotNet;
 using SharpPcap.LibPcap;
+
 namespace Test.PacketType
 {
     [TestFixture]
@@ -49,7 +50,7 @@ namespace Test.PacketType
             var vlanTag = p.Extract<Ieee8021QPacket>();
             Assert.AreEqual(IeeeP8021PPriorities.BestEffort_1, vlanTag.PriorityControlPoint);
             var tagId = 102;
-            Assert.AreEqual(tagId, vlanTag.VLANIdentifier);
+            Assert.AreEqual(tagId, vlanTag.VlanIdentifier);
             Assert.AreEqual(false, vlanTag.CanonicalFormatIndicator);
         }
     }

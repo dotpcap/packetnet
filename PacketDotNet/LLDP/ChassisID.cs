@@ -32,10 +32,10 @@ using log4net;
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// A Chassis ID TLV
+    /// A Chassis ID Tlv
     /// </summary>
     [Serializable]
-    public class ChassisID : TLV
+    public class ChassisID : Tlv
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -56,12 +56,12 @@ namespace PacketDotNet.LLDP
         #region Constructors
 
         /// <summary>
-        /// Creates a Chassis ID TLV by parsing a byte[]
+        /// Creates a Chassis ID Tlv by parsing a byte[]
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The Chassis ID TLV's offset from the
+        /// The Chassis ID Tlv's offset from the
         /// origin of the LLDP
         /// </param>
         public ChassisID(byte[] bytes, int offset) :
@@ -71,7 +71,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Creates a Chassis ID TLV and sets it value
+        /// Creates a Chassis ID Tlv and sets it value
         /// </summary>
         /// <param name="subType">
         /// The ChassisID subtype
@@ -85,7 +85,7 @@ namespace PacketDotNet.LLDP
 
             EmptyTLVDataInit();
 
-            Type = TLVTypes.ChassisID;
+            Type = TlvTypes.ChassisID;
 
             SubType = subType;
 
@@ -105,7 +105,7 @@ namespace PacketDotNet.LLDP
 
             EmptyTLVDataInit();
 
-            Type = TLVTypes.ChassisID;
+            Type = TlvTypes.ChassisID;
             SubType = ChassisSubTypes.MACAddress;
 
             SubTypeValue = macAddress;
@@ -124,7 +124,7 @@ namespace PacketDotNet.LLDP
 
             EmptyTLVDataInit();
 
-            Type = TLVTypes.ChassisID;
+            Type = TlvTypes.ChassisID;
             SubType = ChassisSubTypes.InterfaceName;
 
             SetSubTypeValue(interfaceName);
@@ -136,7 +136,7 @@ namespace PacketDotNet.LLDP
         #region Properties
 
         /// <value>
-        /// The type of the TLV subtype
+        /// The type of the Tlv subtype
         /// </value>
         public ChassisSubTypes SubType
         {
@@ -145,7 +145,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <value>
-        /// The TLV subtype value
+        /// The Tlv subtype value
         /// </value>
         public object SubTypeValue
         {
@@ -383,7 +383,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Convert this Chassis ID TLV to a string.
+        /// Convert this Chassis ID Tlv to a string.
         /// </summary>
         /// <returns>
         /// A human readable string

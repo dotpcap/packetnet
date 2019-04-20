@@ -22,7 +22,7 @@ namespace PacketDotNet
 {
     /// <summary>L2TP protocol field encoding information. </summary>
     // ReSharper disable once InconsistentNaming
-    public class L2TPFields
+    public class L2tpFields
     {
         /// <summary>Length of the Flags in bytes.</summary>
         public static readonly int FlagsLength = 2;

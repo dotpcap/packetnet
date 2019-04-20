@@ -22,17 +22,17 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// The TLV Types
+    /// The Tlv Types
     /// </summary>
     /// <remarks>
     /// See IETF RFC 802.1AB for more info
     /// </remarks>
-    public enum TLVTypes
+    public enum TlvTypes
     {
         /// <summary>Signifies the end of a LLDPU</summary>
         /// <description>
-        /// The End Of LLDPDU TLV is a 2-octet, all-zero
-        /// TLV that is used to mark the end of the TLV
+        /// The End Of LLDPDU Tlv is a 2-octet, all-zero
+        /// Tlv that is used to mark the end of the Tlv
         /// sequence in LLDPDUs
         /// </description>
         /// <remarks>Source: IETF RFC 802.1AB</remarks>
@@ -40,7 +40,7 @@ namespace PacketDotNet.LLDP
 
         /// <summary>A Chassis Identifier</summary>
         /// <description>
-        /// A mandatory TLV that identifies the chassis
+        /// A mandatory Tlv that identifies the chassis
         /// containing the IEEE 802 LAN station
         /// associated with the transmitting LLDP agent
         /// </description>
@@ -49,7 +49,7 @@ namespace PacketDotNet.LLDP
 
         /// <summary>A Port Identifier</summary>
         /// <description>
-        /// A mandatory TLV that identifies the
+        /// A mandatory Tlv that identifies the
         /// port component of the MSAP identifier associated
         /// with the transmitting LLDP agent.
         /// </description>
@@ -79,7 +79,7 @@ namespace PacketDotNet.LLDP
 
         /// <summary>The System's Assigned Name</summary>
         /// <description>
-        /// The System Name TLV allows network management
+        /// The System Name Tlv allows network management
         /// to advertise the system’s assigned name.
         /// </description>
         /// <remarks>Source: IETF RFC 802.1AB</remarks>
@@ -87,7 +87,7 @@ namespace PacketDotNet.LLDP
 
         /// <summary>A Description of the System</summary>
         /// <description>
-        /// The System Description TLV allows network
+        /// The System Description Tlv allows network
         /// management to advertise the system’s description
         /// </description>
         /// <remarks>Source: IETF RFC 802.1AB</remarks>
@@ -95,7 +95,7 @@ namespace PacketDotNet.LLDP
 
         /// <summary>A bitmap containing the System's capabilities</summary>
         /// <description>
-        /// The System Capabilities TLV is an optional TLV
+        /// The System Capabilities Tlv is an optional Tlv
         /// that identifies the primary function(s) of the
         /// system and whether or not these primary functions
         /// are enabled.
@@ -105,7 +105,7 @@ namespace PacketDotNet.LLDP
 
         /// <summary>The Management Address</summary>
         /// <description>
-        /// The Management Address TLV identifies an address
+        /// The Management Address Tlv identifies an address
         /// associated with the local LLDP agent that may be
         /// used to reach higher layer entities to assist
         /// discovery by network management.
@@ -113,9 +113,9 @@ namespace PacketDotNet.LLDP
         /// <remarks>Source: IETF RFC 802.1AB</remarks>
         ManagementAddress = 8,
 
-        /// <summary>A vendor-specifid TLV</summary>
+        /// <summary>A vendor-specifid Tlv</summary>
         /// <description>
-        /// This TLV category is provided to allow different
+        /// This Tlv category is provided to allow different
         /// organizations, such as IEEE 802.1, IEEE 802.3, IETF,
         /// as well as individual software and equipment vendors,
         /// to define TLVs that advertise information to remote

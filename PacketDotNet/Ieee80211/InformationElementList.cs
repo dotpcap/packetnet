@@ -22,6 +22,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>

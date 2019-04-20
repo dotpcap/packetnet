@@ -21,6 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+
 namespace PacketDotNet.Utils
 {
     /// <summary>

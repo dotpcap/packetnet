@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using PacketDotNet.Ieee80211;
+
 namespace Test.PacketType
 {
     namespace Ieee80211

@@ -22,6 +22,7 @@ using System;
 using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -29,28 +30,28 @@ namespace PacketDotNet
     /// </summary>
     [Serializable]
     // ReSharper disable once InconsistentNaming
-    public sealed class L2TPPacket : Packet
+    public sealed class L2tpPacket : Packet
     {
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="byteArraySegment">A <see cref="ByteArraySegment" /></param>
         /// <param name="parentPacket">The parent packet.</param>
-        public L2TPPacket(ByteArraySegment byteArraySegment, Packet parentPacket)
+        public L2tpPacket(ByteArraySegment byteArraySegment, Packet parentPacket)
         {
             // slice off the header portion
             // ReSharper disable once UseObjectOrCollectionInitializer
             Header = new ByteArraySegment(byteArraySegment);
-            Header.Length = L2TPFields.HeaderLength;
+            Header.Length = L2tpFields.HeaderLength;
 
             if (HasLength)
-                Header.Length += L2TPFields.LengthsLength;
+                Header.Length += L2tpFields.LengthsLength;
 
             if (HasSequence)
-                Header.Length += L2TPFields.NsLength + L2TPFields.NrLength;
+                Header.Length += L2tpFields.NsLength + L2tpFields.NrLength;
 
             if (HasOffset)
-                Header.Length += L2TPFields.OffsetSizeLength + L2TPFields.OffsetPadLength;
+                Header.Length += L2tpFields.OffsetSizeLength + L2tpFields.OffsetPadLength;
 
             var payload = Header.NextSegment();
             try
@@ -99,7 +100,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
-                buffer.AppendFormat("{0}[L2TPPacket",
+                buffer.AppendFormat("{0}[L2tpPacket",
                                     color);
             }
 

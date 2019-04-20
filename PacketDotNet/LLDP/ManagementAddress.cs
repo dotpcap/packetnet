@@ -32,12 +32,12 @@ using log4net;
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// A Time to Live TLV
-    /// [TLV Type Length : 2][Mgmt Addr length : 1][Mgmt Addr Subtype : 1][Mgmt Addr : 1-31]
+    /// A Time to Live Tlv
+    /// [Tlv Type Length : 2][Mgmt Addr length : 1][Mgmt Addr Subtype : 1][Mgmt Addr : 1-31]
     /// [Interface Subtype : 1][Interface number : 4][OID length : 1][OID : 0-128]
     /// </summary>
     [Serializable]
-    public class ManagementAddress : TLV
+    public class ManagementAddress : Tlv
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -78,13 +78,13 @@ namespace PacketDotNet.LLDP
         #region Constructors
 
         /// <summary>
-        /// Creates a Management Address TLV
+        /// Creates a Management Address Tlv
         /// </summary>
         /// <param name="bytes">
         /// The LLDP Data unit being modified
         /// </param>
         /// <param name="offset">
-        /// The Management Address TLV's offset from the
+        /// The Management Address Tlv's offset from the
         /// origin of the LLDP
         /// </param>
         public ManagementAddress(byte[] bytes, int offset) :
@@ -94,7 +94,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Creates a Management Address TLV and sets it value
+        /// Creates a Management Address Tlv and sets it value
         /// </summary>
         /// <param name="managementAddress">
         /// The Management Address
@@ -133,7 +133,7 @@ namespace PacketDotNet.LLDP
             AddressLength = 0;
             ObjIdLength = 0;
 
-            Type = TLVTypes.ManagementAddress;
+            Type = TlvTypes.ManagementAddress;
 
             MgmtAddress = managementAddress;
             InterfaceSubType = interfaceSubType;
@@ -319,7 +319,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Convert this Management Address TLV to a string.
+        /// Convert this Management Address Tlv to a string.
         /// </summary>
         /// <returns>
         /// A human readable string

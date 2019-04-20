@@ -23,9 +23,13 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using log4net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
+#if DEBUG
+using log4net;
+#endif
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -107,7 +111,7 @@ namespace PacketDotNet
 
                                                                          if ((destinationPort == l2TpPort) || (sourcePort == l2TpPort))
                                                                          {
-                                                                             result.Packet = new L2TPPacket(payload, this);
+                                                                             result.Packet = new L2tpPacket(payload, this);
                                                                              return result;
                                                                          }
 

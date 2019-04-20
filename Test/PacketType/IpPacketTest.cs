@@ -25,6 +25,7 @@ using PacketDotNet;
 using SharpPcap;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+
 namespace Test.PacketType
 {
     [TestFixture]

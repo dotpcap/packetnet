@@ -31,10 +31,10 @@ using log4net;
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// A Time to Live TLV
+    /// A Time to Live Tlv
     /// </summary>
     [Serializable]
-    public class TimeToLive : TLV
+    public class TimeToLive : Tlv
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -55,12 +55,12 @@ namespace PacketDotNet.LLDP
         #region Constructors
 
         /// <summary>
-        /// Creates a TTL TLV
+        /// Creates a TTL Tlv
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The TTL TLV's offset from the
+        /// The TTL Tlv's offset from the
         /// origin of the LLDP
         /// </param>
         public TimeToLive(byte[] bytes, int offset) :
@@ -70,7 +70,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Creates a TTL TLV and sets it value
+        /// Creates a TTL Tlv and sets it value
         /// </summary>
         /// <param name="seconds">
         /// The length in seconds until the LLDP
@@ -85,7 +85,7 @@ namespace PacketDotNet.LLDP
             var length = bytes.Length;
             TLVData = new ByteArraySegment(bytes, offset, length);
 
-            Type = TLVTypes.TimeToLive;
+            Type = TlvTypes.TimeToLive;
             Seconds = seconds;
         }
 
@@ -110,7 +110,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Convert this TTL TLV to a string.
+        /// Convert this TTL Tlv to a string.
         /// </summary>
         /// <returns>
         /// A human readable string

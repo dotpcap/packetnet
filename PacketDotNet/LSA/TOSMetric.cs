@@ -1,4 +1,5 @@
 using PacketDotNet.MiscUtil.Conversion;
+
 namespace PacketDotNet
 {
     /// <summary>

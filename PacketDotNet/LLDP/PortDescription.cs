@@ -29,7 +29,7 @@ using log4net;
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// A Port Description TLV
+    /// A Port Description Tlv
     /// </summary>
     [Serializable]
     public class PortDescription : StringTLV
@@ -48,12 +48,12 @@ namespace PacketDotNet.LLDP
         #region Constructors
 
         /// <summary>
-        /// Creates a Port Description TLV
+        /// Creates a Port Description Tlv
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The Port Description TLV's offset from the
+        /// The Port Description Tlv's offset from the
         /// origin of the LLDP
         /// </param>
         public PortDescription(byte[] bytes, int offset) :
@@ -63,12 +63,12 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Creates a Port Description TLV and sets it value
+        /// Creates a Port Description Tlv and sets it value
         /// </summary>
         /// <param name="description">
         /// A textual description of the port
         /// </param>
-        public PortDescription(string description) : base(TLVTypes.PortDescription, description)
+        public PortDescription(string description) : base(TlvTypes.PortDescription, description)
         {
             Log.Debug("");
         }

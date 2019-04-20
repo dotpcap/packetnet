@@ -24,6 +24,7 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -31,7 +32,7 @@ namespace PacketDotNet
     /// received when capturing on an 'any' device
     /// See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
     /// </summary>
-    public class LinuxSLLPacket : InternetLinkLayerPacket
+    public class LinuxSllPacket : InternetLinkLayerPacket
     {
         /// <summary>
         /// Constructor
@@ -39,9 +40,9 @@ namespace PacketDotNet
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public LinuxSLLPacket(ByteArraySegment byteArraySegment)
+        public LinuxSllPacket(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(byteArraySegment) { Length = LinuxSLLFields.SLLHeaderLength };
+            Header = new ByteArraySegment(byteArraySegment) { Length = LinuxSllFields.SLLHeaderLength };
 
             // parse the payload via an EthernetPacket method
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header,
@@ -55,13 +56,13 @@ namespace PacketDotNet
         public EthernetPacketType EthernetProtocolType
         {
             get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
-                                                                       Header.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
+                                                                       Header.Offset + LinuxSllFields.EthernetProtocolTypePosition);
             set
             {
                 var theValue = (short) value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  Header.Bytes,
-                                                 Header.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
+                                                 Header.Offset + LinuxSllFields.EthernetProtocolTypePosition);
             }
         }
 
@@ -75,7 +76,7 @@ namespace PacketDotNet
                 var headerLength = LinkLayerAddressLength;
                 var theHeader = new byte[headerLength];
                 Array.Copy(Header.Bytes,
-                           Header.Offset + LinuxSLLFields.LinkLayerAddressPosition,
+                           Header.Offset + LinuxSllFields.LinkLayerAddressPosition,
                            theHeader,
                            0,
                            headerLength);
@@ -92,7 +93,7 @@ namespace PacketDotNet
                 Array.Copy(value,
                            0,
                            Header.Bytes,
-                           Header.Offset + LinuxSLLFields.LinkLayerAddressPosition,
+                           Header.Offset + LinuxSllFields.LinkLayerAddressPosition,
                            value.Length);
             }
         }
@@ -103,7 +104,7 @@ namespace PacketDotNet
         public int LinkLayerAddressLength
         {
             get => EndianBitConverter.Big.ToInt16(Header.Bytes,
-                                                  Header.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
+                                                  Header.Offset + LinuxSllFields.LinkLayerAddressLengthPosition);
             set
             {
                 // range check
@@ -115,7 +116,7 @@ namespace PacketDotNet
                 var theValue = (short) value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  Header.Bytes,
-                                                 Header.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
+                                                 Header.Offset + LinuxSllFields.LinkLayerAddressLengthPosition);
             }
         }
 
@@ -125,29 +126,29 @@ namespace PacketDotNet
         public int LinkLayerAddressType
         {
             get => EndianBitConverter.Big.ToInt16(Header.Bytes,
-                                                  Header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
+                                                  Header.Offset + LinuxSllFields.LinkLayerAddressTypePosition);
             set
             {
                 var theValue = (short) value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  Header.Bytes,
-                                                 Header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
+                                                 Header.Offset + LinuxSllFields.LinkLayerAddressTypePosition);
             }
         }
 
         /// <value>
         /// Information about the packet direction
         /// </value>
-        public LinuxSLLType Type
+        public LinuxSllType Type
         {
-            get => (LinuxSLLType) EndianBitConverter.Big.ToInt16(Header.Bytes,
-                                                                 Header.Offset + LinuxSLLFields.PacketTypePosition);
+            get => (LinuxSllType) EndianBitConverter.Big.ToInt16(Header.Bytes,
+                                                                 Header.Offset + LinuxSllFields.PacketTypePosition);
             set
             {
                 var theValue = (short) value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  Header.Bytes,
-                                                 Header.Offset + LinuxSLLFields.PacketTypePosition);
+                                                 Header.Offset + LinuxSllFields.PacketTypePosition);
             }
         }
 
@@ -167,7 +168,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
-                buffer.AppendFormat("[{0}LinuxSLLPacket{1}: Type={2}, LinkLayerAddressType={3}, LinkLayerAddressLength={4}, Source={5}, ProtocolType={6}]",
+                buffer.AppendFormat("[{0}LinuxSllPacket{1}: Type={2}, LinkLayerAddressType={3}, LinkLayerAddressLength={4}, Source={5}, ProtocolType={6}]",
                                     color,
                                     colorEscape,
                                     Type,

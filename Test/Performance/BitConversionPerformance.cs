@@ -23,6 +23,7 @@ using System.Net;
 using System.IO;
 using NUnit.Framework;
 using PacketDotNet.MiscUtil.Conversion;
+
 namespace Test.Performance
 {
     [TestFixture]

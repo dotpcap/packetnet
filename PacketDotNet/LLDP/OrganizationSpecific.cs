@@ -30,12 +30,12 @@ using log4net;
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// An Organization Specific TLV
-    /// [TLV Type Length : 2][Organizationally Unique Identifier OUI : 3]
+    /// An Organization Specific Tlv
+    /// [Tlv Type Length : 2][Organizationally Unique Identifier OUI : 3]
     /// [Organizationally Defined Subtype : 1][Organizationally Defined Information String : 0 - 507]
     /// </summary>
     [Serializable]
-    public class OrganizationSpecific : TLV
+    public class OrganizationSpecific : Tlv
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -54,13 +54,13 @@ namespace PacketDotNet.LLDP
         #region Constructors
 
         /// <summary>
-        /// Creates an Organization Specific TLV
+        /// Creates an Organization Specific Tlv
         /// </summary>
         /// <param name="bytes">
         /// The LLDP Data unit being modified
         /// </param>
         /// <param name="offset">
-        /// The Organization Specific TLV's offset from the
+        /// The Organization Specific Tlv's offset from the
         /// origin of the LLDP
         /// </param>
         public OrganizationSpecific(byte[] bytes, int offset) :
@@ -70,7 +70,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Creates an Organization Specific TLV and sets it value
+        /// Creates an Organization Specific Tlv and sets it value
         /// </summary>
         /// <param name="oui">
         /// An Organizationally Unique Identifier
@@ -90,7 +90,7 @@ namespace PacketDotNet.LLDP
             var offset = 0;
             TLVData = new ByteArraySegment(bytes, offset, length);
 
-            Type = TLVTypes.OrganizationSpecific;
+            Type = TlvTypes.OrganizationSpecific;
 
             OrganizationUniqueID = oui;
             OrganizationDefinedSubType = subType;
@@ -188,7 +188,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Convert this Organization Specific TLV to a string.
+        /// Convert this Organization Specific Tlv to a string.
         /// </summary>
         /// <returns>
         /// A human readable string

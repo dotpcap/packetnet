@@ -1,4 +1,5 @@
 using System.IO;
+
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>

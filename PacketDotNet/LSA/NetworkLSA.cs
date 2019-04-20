@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet.LSA
 {
     /// <summary>
@@ -75,7 +76,7 @@ namespace PacketDotNet.LSA
             get
             {
                 var ret = new List<IPAddress>();
-                var routerCount = Length - NetworkMaskLength - OSPFv2Fields.LSAHeaderLength;
+                var routerCount = Length - NetworkMaskLength - OspfV2Fields.LSAHeaderLength;
                 if (routerCount % IPv4BytesCount != 0)
                 {
                     throw new Exception("Mallformed NetworkLSA - routerCount should be aligned to 4");

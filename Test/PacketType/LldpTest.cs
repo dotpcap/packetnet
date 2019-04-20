@@ -27,6 +27,7 @@ using PacketDotNet.Utils;
 using SharpPcap;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+
 namespace Test.PacketType
 {
     [TestFixture]
@@ -52,7 +53,7 @@ namespace Test.PacketType
             var expectedOrganizationSubType = 2;
             var expectedOrganizationSpecificBytes = new byte[4] { 0xBA, 0xAD, 0xF0, 0x0D };
 
-            var valuesLLDPPacket = new LLDPPacket();
+            var valuesLLDPPacket = new LldpPacket();
             Console.WriteLine("valuesLLDPPacket.ToString() {0}", valuesLLDPPacket.ToString());
             valuesLLDPPacket.TlvCollection.Add(new ChassisID(expectedChassisIDType, expectedChassisIDNetworkAddress));
             Console.WriteLine("valuesLLDPPacket.ToString() {0}", valuesLLDPPacket.ToString());
@@ -77,7 +78,7 @@ namespace Test.PacketType
             Console.WriteLine("valuesLLDPPacket.ToString() {0}", valuesLLDPPacket.ToString());
 
             // reparse these bytes back into a lldp packet
-            var lldpPacket = new LLDPPacket(new ByteArraySegment(lldpBytes));
+            var lldpPacket = new LldpPacket(new ByteArraySegment(lldpBytes));
 
             Console.WriteLine("lldpPacket.ToString() {0}", lldpPacket.ToString());
 
@@ -85,7 +86,7 @@ namespace Test.PacketType
             Assert.AreEqual(expectedTlvCount, lldpPacket.TlvCollection.Count);
 
             int count = 1;
-            foreach (TLV tlv in lldpPacket.TlvCollection)
+            foreach (Tlv tlv in lldpPacket.TlvCollection)
             {
                 Console.WriteLine("Type: " + tlv.GetType().ToString());
                 switch(count)
@@ -177,11 +178,11 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var l = p.Extract<LLDPPacket>();
+            var l = p.Extract<LldpPacket>();
 
             int count = 1;
             Console.WriteLine(l.TlvCollection.Count.ToString());
-            foreach (TLV tlv in l.TlvCollection)
+            foreach (Tlv tlv in l.TlvCollection)
             {
                 Console.WriteLine("Type: " + tlv.GetType().ToString());
                 switch(count)
@@ -260,7 +261,7 @@ namespace Test.PacketType
         [Test]
         public void RandomPacket()
         {
-            LLDPPacket.RandomPacket();
+            LldpPacket.RandomPacket();
         }
 
         [Test]
@@ -274,7 +275,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var l = p.Extract<LLDPPacket>();
+            var l = p.Extract<LldpPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(l.ToString());
@@ -291,7 +292,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var l = p.Extract<LLDPPacket>();
+            var l = p.Extract<LldpPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(l.ToString(StringOutputType.Verbose));
@@ -308,7 +309,7 @@ namespace Test.PacketType
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var l = p.Extract<LLDPPacket>();
+                var l = p.Extract<LldpPacket>();
                 if (l == null)
                 {
                     continue;
@@ -321,7 +322,7 @@ namespace Test.PacketType
 
                 memoryStream.Seek (0, SeekOrigin.Begin);
                 BinaryFormatter deserializer = new BinaryFormatter();
-                LLDPPacket fromFile = (LLDPPacket)deserializer.Deserialize(memoryStream);
+                LldpPacket fromFile = (LldpPacket)deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(l.Bytes, fromFile.Bytes);
                 Assert.AreEqual(l.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);

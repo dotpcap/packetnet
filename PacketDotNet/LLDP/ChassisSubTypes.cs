@@ -22,7 +22,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// The Chassis ID TLV subtypes
+    /// The Chassis ID Tlv subtypes
     /// </summary>
     public enum ChassisSubTypes
     {

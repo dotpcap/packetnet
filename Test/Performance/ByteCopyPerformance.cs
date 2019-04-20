@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using PacketDotNet;
+
 namespace Test.Performance
 {
     [TestFixture]

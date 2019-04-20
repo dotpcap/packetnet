@@ -20,6 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>

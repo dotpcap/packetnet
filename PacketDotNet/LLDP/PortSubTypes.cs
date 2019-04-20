@@ -22,7 +22,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// The Port ID TLV subtypes
+    /// The Port ID Tlv subtypes
     /// </summary>
     public enum PortSubTypes
     {

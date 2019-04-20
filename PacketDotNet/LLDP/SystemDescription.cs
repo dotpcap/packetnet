@@ -29,7 +29,7 @@ using log4net;
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// A System Description TLV
+    /// A System Description Tlv
     /// </summary>
     [Serializable]
     public class SystemDescription : StringTLV
@@ -48,12 +48,12 @@ namespace PacketDotNet.LLDP
         #region Constructors
 
         /// <summary>
-        /// Creates a System Description TLV
+        /// Creates a System Description Tlv
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The System Description TLV's offset from the
+        /// The System Description Tlv's offset from the
         /// origin of the LLDP
         /// </param>
         public SystemDescription(byte[] bytes, int offset) :
@@ -63,12 +63,12 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Creates a System Description TLV and sets it value
+        /// Creates a System Description Tlv and sets it value
         /// </summary>
         /// <param name="description">
         /// A textual Description of the system
         /// </param>
-        public SystemDescription(string description) : base(TLVTypes.SystemDescription,
+        public SystemDescription(string description) : base(TlvTypes.SystemDescription,
                                                             description)
         {
             Log.Debug("");

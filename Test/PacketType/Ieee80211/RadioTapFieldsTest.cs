@@ -2,6 +2,7 @@ using System;
 using NUnit.Framework;
 using PacketDotNet.Ieee80211;
 using System.IO;
+
 namespace Test.PacketType.Ieee80211
 {
     [TestFixture]

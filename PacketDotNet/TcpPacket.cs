@@ -23,10 +23,14 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using log4net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Tcp;
 using PacketDotNet.Utils;
+
+#if DEBUG
+using log4net;
+#endif
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -262,7 +266,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Flags, 9 bits
+        /// The flags consisting of 9 bits.
         /// </summary>
         public ushort Flags
         {

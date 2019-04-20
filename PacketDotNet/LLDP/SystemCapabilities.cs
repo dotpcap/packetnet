@@ -22,14 +22,15 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// A System Capabilities TLV
+    /// A System Capabilities Tlv
     /// [TLVTypeLength - 2 bytes][System Capabilities - 2 bytes][Enabled Capabilities - 2 bytes]
     /// </summary>
     [Serializable]
-    public class SystemCapabilities : TLV
+    public class SystemCapabilities : Tlv
     {
         private const int EnabledCapabilitiesLength = 2;
         private const int SystemCapabilitiesLength = 2;
@@ -38,12 +39,12 @@ namespace PacketDotNet.LLDP
         #region Constructors
 
         /// <summary>
-        /// Creates a System Capabilities TLV
+        /// Creates a System Capabilities Tlv
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The System Capabilities TLV's offset from the
+        /// The System Capabilities Tlv's offset from the
         /// origin of the LLDP
         /// </param>
         public SystemCapabilities(byte[] bytes, int offset) :
@@ -51,7 +52,7 @@ namespace PacketDotNet.LLDP
         { }
 
         /// <summary>
-        /// Creates a System Capabilities TLV and sets the value
+        /// Creates a System Capabilities Tlv and sets the value
         /// </summary>
         /// <param name="capabilities">
         /// A bitmap containing the available System Capabilities
@@ -66,7 +67,7 @@ namespace PacketDotNet.LLDP
             var offset = 0;
             TLVData = new ByteArraySegment(bytes, offset, length);
 
-            Type = TLVTypes.SystemCapabilities;
+            Type = TlvTypes.SystemCapabilities;
             Capabilities = capabilities;
             Enabled = enabled;
         }
@@ -146,7 +147,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Convert this System Capabilities TLV to a string.
+        /// Convert this System Capabilities Tlv to a string.
         /// </summary>
         /// <returns>
         /// A human readable string

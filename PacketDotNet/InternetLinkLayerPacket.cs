@@ -19,11 +19,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Reflection;
-
-#if DEBUG
-using log4net;
-#endif
 
 namespace PacketDotNet
 {
@@ -33,50 +28,5 @@ namespace PacketDotNet
     /// </summary>
     [Serializable]
     public class InternetLinkLayerPacket : Packet
-    {
-#if DEBUG
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-#else
-// NOTE: No need to warn about lack of use, the compiler won't
-//       put any calls to 'log' here but we need 'log' to exist to compile
-#pragma warning disable 0169, 0649
-        private static readonly ILogInactive Log;
-#pragma warning restore 0169, 0649
-#endif
-
-        /// <summary>
-        /// Look for the innermost payload. This method is useful because
-        /// while some packets are LinuxSSL->IpPacket or
-        /// EthernetPacket->IpPacket, there are some packets that are
-        /// EthernetPacket->PppoePacket->PppPacket->IpPacket, and for these cases
-        /// we really want to get to the IpPacket
-        /// </summary>
-        /// <returns>
-        /// A <see cref="Packet" />
-        /// </returns>
-        public static Packet GetInnerPayload(InternetLinkLayerPacket packet)
-        {
-            // is this an ethernet packet?
-            if (packet is EthernetPacket)
-            {
-                Log.Debug("packet is EthernetPacket");
-
-                var thePayload = packet.PayloadPacket;
-
-                // is this packets payload a PppoePacket? If so,
-                // the PppoePacket payload should be a PppPacket and we want
-                // the payload of the PPPPpacket
-                if (thePayload is PppoePacket)
-                {
-                    Log.Debug("thePayload is PppoePacket");
-                    return thePayload.PayloadPacket.PayloadPacket;
-                }
-
-                return thePayload;
-            }
-
-            Log.Debug("else");
-            return packet.PayloadPacket;
-        }
-    }
+    { }
 }

@@ -117,7 +117,6 @@ namespace PacketDotNet.LLDP
                            OUILength);
                 return oui;
             }
-
             set => Array.Copy(value,
                               0,
                               TLVData.Bytes,

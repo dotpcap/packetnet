@@ -21,9 +21,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Net.NetworkInformation;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
+using PacketDotNet.Utils.Converters;
 #if DEBUG
 using log4net;
 using System.Reflection;

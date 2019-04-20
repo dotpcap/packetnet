@@ -1,15 +1,15 @@
-namespace PacketDotNet.MiscUtil.Conversion
+namespace PacketDotNet.Utils.Converters
 {
     /// <summary>
-    /// Implementation of EndianBitConverter which converts to/from little-endian
+    /// Implementation of EndianBitConverter which converts to/from big-endian
     /// byte arrays.
     /// </summary>
-    public sealed class LittleEndianBitConverter : EndianBitConverter
+    public sealed class BigEndianBitConverter : EndianBitConverter
     {
         /// <summary>
         /// Indicates the byte order ("endianness") in which data is converted using this class.
         /// </summary>
-        public override Endianness Endianness => Endianness.LittleEndian;
+        public override Endianness Endianness => Endianness.BigEndian;
 
         /// <summary>
         /// Copies the specified number of bytes from value to buffer, starting at index.
@@ -20,9 +20,10 @@ namespace PacketDotNet.MiscUtil.Conversion
         /// <param name="index">The index to start at</param>
         protected override void CopyBytesImpl(long value, int bytes, byte[] buffer, int index)
         {
+            var endOffset = index + bytes - 1;
             for (var i = 0; i < bytes; i++)
             {
-                buffer[i + index] = unchecked((byte) (value & 0xff));
+                buffer[endOffset - i] = unchecked((byte) (value & 0xff));
                 value = value >> 8;
             }
         }
@@ -40,7 +41,7 @@ namespace PacketDotNet.MiscUtil.Conversion
             long ret = 0;
             for (var i = 0; i < bytesToConvert; i++)
             {
-                ret = unchecked((ret << 8) | buffer[startIndex + bytesToConvert - 1 - i]);
+                ret = unchecked((ret << 8) | buffer[startIndex + i]);
             }
 
             return ret;

@@ -22,7 +22,7 @@ using System;
 using System.Net;
 using System.IO;
 using NUnit.Framework;
-using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.Utils.Converters;
 
 namespace Test.Performance
 {

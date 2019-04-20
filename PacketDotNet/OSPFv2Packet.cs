@@ -22,9 +22,8 @@ using System;
 using System.Net;
 using System.Reflection;
 using System.Text;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
+using PacketDotNet.Utils.Converters;
 #if DEBUG
 using log4net;
 #endif

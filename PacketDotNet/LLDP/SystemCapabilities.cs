@@ -23,7 +23,7 @@ using System;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
     /// A System Capabilities Tlv
@@ -35,16 +35,13 @@ namespace PacketDotNet.LLDP
         private const int EnabledCapabilitiesLength = 2;
         private const int SystemCapabilitiesLength = 2;
 
-
-        #region Constructors
-
         /// <summary>
         /// Creates a System Capabilities Tlv
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The System Capabilities Tlv's offset from the
+        /// The System Capabilities TLV's offset from the
         /// origin of the LLDP
         /// </param>
         public SystemCapabilities(byte[] bytes, int offset) :
@@ -52,7 +49,7 @@ namespace PacketDotNet.LLDP
         { }
 
         /// <summary>
-        /// Creates a System Capabilities Tlv and sets the value
+        /// Creates a System Capabilities TLV and sets the value
         /// </summary>
         /// <param name="capabilities">
         /// A bitmap containing the available System Capabilities
@@ -62,20 +59,15 @@ namespace PacketDotNet.LLDP
         /// </param>
         public SystemCapabilities(ushort capabilities, ushort enabled)
         {
-            var length = TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength + EnabledCapabilitiesLength;
+            const int length = TlvTypeLength.TypeLengthLength + SystemCapabilitiesLength + EnabledCapabilitiesLength;
             var bytes = new byte[length];
-            var offset = 0;
-            TLVData = new ByteArraySegment(bytes, offset, length);
 
-            Type = TlvTypes.SystemCapabilities;
+            TLVData = new ByteArraySegment(bytes, 0, length);
+
+            Type = TlvType.SystemCapabilities;
             Capabilities = capabilities;
             Enabled = enabled;
         }
-
-        #endregion
-
-
-        #region Properties
 
         /// <value>
         /// A bitmap containing the available System Capabilities
@@ -83,10 +75,10 @@ namespace PacketDotNet.LLDP
         public ushort Capabilities
         {
             get => EndianBitConverter.Big.ToUInt16(TLVData.Bytes,
-                                                   TLVData.Offset + TLVTypeLength.TypeLengthLength);
+                                                   TLVData.Offset + TlvTypeLength.TypeLengthLength);
             set => EndianBitConverter.Big.CopyBytes(value,
                                                     TLVData.Bytes,
-                                                    TLVData.Offset + TLVTypeLength.TypeLengthLength);
+                                                    TLVData.Offset + TlvTypeLength.TypeLengthLength);
         }
 
         /// <value>
@@ -95,16 +87,11 @@ namespace PacketDotNet.LLDP
         public ushort Enabled
         {
             get => EndianBitConverter.Big.ToUInt16(TLVData.Bytes,
-                                                   TLVData.Offset + TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength);
+                                                   TLVData.Offset + TlvTypeLength.TypeLengthLength + SystemCapabilitiesLength);
             set => EndianBitConverter.Big.CopyBytes(value,
                                                     TLVData.Bytes,
                                                     ValueOffset + SystemCapabilitiesLength);
         }
-
-        #endregion
-
-
-        #region Methods
 
         /// <summary>
         /// Checks whether the system is capable of a certain function
@@ -147,7 +134,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Convert this System Capabilities Tlv to a string.
+        /// Convert this System Capabilities TLV to a string.
         /// </summary>
         /// <returns>
         /// A human readable string
@@ -156,7 +143,5 @@ namespace PacketDotNet.LLDP
         {
             return $"[SystemCapabilities: Capabilities={Capabilities}, Enabled={Enabled}]";
         }
-
-        #endregion
     }
 }

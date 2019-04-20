@@ -21,14 +21,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
     /// The IANA (Internet Assigned Numbers Authority) Address Family
     /// </summary>
     /// <remarks>Source http://www.iana.org/assignments/address-family-numbers/</remarks>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public enum AddressFamily
+    public enum IanaAddressFamily
     {
         /// <summary>IP version 4</summary>
         IPv4 = 1,
@@ -37,13 +37,13 @@ namespace PacketDotNet.LLDP
         IPv6 = 2,
 
         /// <summary>NSAP</summary>
-        NSAP = 3,
+        Nsap = 3,
 
         /// <summary>HDLC</summary>
-        HDLC = 4,
+        Hdlc = 4,
 
         /// <summary>BBN 1822</summary>
-        BBN1822 = 5,
+        Bbn1822 = 5,
 
         /// <summary>802 (includes all 802 media plus Ethernet "canonical format")</summary>
         Eth802 = 6,

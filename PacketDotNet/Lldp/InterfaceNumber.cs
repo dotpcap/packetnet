@@ -19,13 +19,13 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
     /// Interface Numbering Types
     /// </summary>
     /// <remarks>Source IETF RFC 802.1AB</remarks>
-    public enum InterfaceNumbering
+    public enum InterfaceNumber
     {
         /// <summary>Unknown</summary>
         Unknown,

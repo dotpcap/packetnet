@@ -22,27 +22,25 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
     /// An End Of LLDPDU Tlv
     /// </summary>
     [Serializable]
-    public class EndOfLLDPDU : Tlv
+    public class EndOfLldpdu : Tlv
     {
-        #region Constructors
-
         /// <summary>
         /// Parses bytes into an End Of LLDPDU Tlv
         /// </summary>
         /// <param name="bytes">
-        /// Tlv bytes
+        /// TLV bytes
         /// </param>
         /// <param name="offset">
-        /// The End Of LLDPDU Tlv's offset from the
+        /// The End Of LLDPDU TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public EndOfLLDPDU(byte[] bytes, int offset) :
+        public EndOfLldpdu(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Type = 0;
@@ -52,28 +50,25 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Creates an End Of LLDPDU Tlv
         /// </summary>
-        public EndOfLLDPDU()
+        public EndOfLldpdu()
         {
-            var bytes = new byte[TLVTypeLength.TypeLengthLength];
-            var offset = 0;
+            var bytes = new byte[TlvTypeLength.TypeLengthLength];
             var length = bytes.Length;
-            TLVData = new ByteArraySegment(bytes, offset, length);
+            TLVData = new ByteArraySegment(bytes, 0, length);
 
             Type = 0;
             Length = 0;
         }
 
         /// <summary>
-        /// Convert this TTL Tlv to a string.
+        /// Convert this TTL TLV to a string.
         /// </summary>
         /// <returns>
         /// A human readable string
         /// </returns>
         public override string ToString()
         {
-            return "[EndOfLLDPDU]";
+            return "[EndOfLldpdu]";
         }
-
-        #endregion
     }
 }

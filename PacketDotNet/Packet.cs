@@ -20,13 +20,13 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
 
 #if DEBUG
+using System.Reflection;
 using log4net;
 #endif
 

@@ -25,7 +25,6 @@ using SharpPcap.LibPcap;
 using PacketDotNet.Utils;
 using PacketDotNet.Ieee80211;
 using System.Net.NetworkInformation;
-
 namespace Test.PacketType
 {
     namespace Ieee80211
@@ -86,7 +85,7 @@ namespace Test.PacketType
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
 
                 // test that we can access the lowest level tcp packet
-                var t = p.Extract(typeof(TcpPacket));
+                var t = p.Extract<TcpPacket>();
                 Assert.IsNotNull(t, "Expected t not to be null");
 
                 Console.WriteLine(p.ToString(StringOutputType.Verbose));

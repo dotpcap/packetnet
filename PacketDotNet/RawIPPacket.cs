@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using PacketDotNet.Utils;
-
 namespace PacketDotNet
 {
     /// <summary>
@@ -34,10 +33,6 @@ namespace PacketDotNet
     [Serializable]
     public class RawIPPacket : Packet
     {
-        /// <summary>
-        /// </summary>
-        public RawIPPacketProtocol Protocol;
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -78,8 +73,13 @@ namespace PacketDotNet
                                                                      LazyThreadSafetyMode.PublicationOnly);
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.DarkGray;
+
+        /// <summary>
+        /// Gets or sets the protocol.
+        /// </summary>
+        public RawIPPacketProtocol Protocol { get; set; }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)

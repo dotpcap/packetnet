@@ -25,9 +25,9 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 #if DEBUG
 using log4net;
-
 #endif
 
 namespace PacketDotNet
@@ -159,7 +159,7 @@ namespace PacketDotNet
             ParentPacket = parentPacket;
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.LightBlue;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />

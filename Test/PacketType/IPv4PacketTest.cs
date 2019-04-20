@@ -26,7 +26,6 @@ using PacketDotNet;
 using PacketDotNet.Utils;
 using SharpPcap;
 using SharpPcap.LibPcap;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -66,7 +65,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var ip = (IPv4Packet)p.Extract(typeof(IPv4Packet));
+            var ip = p.Extract<IPv4Packet>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ip.ToString());
@@ -83,7 +82,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var ip = (IPv4Packet)p.Extract(typeof(IPv4Packet));
+            var ip = p.Extract<IPv4Packet>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ip.ToString(StringOutputType.Verbose));
@@ -105,8 +104,8 @@ namespace Test.PacketType
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var ipv4 = (IPv4Packet)p.Extract(typeof(IPv4Packet));
-                if (ipv4 == null)
+                var ip = p.Extract<IPv4Packet>();
+                if (ip == null)
                 {
                     continue;
                 }
@@ -114,45 +113,45 @@ namespace Test.PacketType
 
                 var memoryStream = new MemoryStream();
                 BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, ipv4);
+                serializer.Serialize(memoryStream, ip);
 
                 memoryStream.Seek (0, SeekOrigin.Begin);
                 BinaryFormatter deserializer = new BinaryFormatter();
                 IPv4Packet fromFile = (IPv4Packet)deserializer.Deserialize(memoryStream);
 
-                Assert.AreEqual(ipv4.Bytes, fromFile.Bytes);
-                Assert.AreEqual(ipv4.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
-                Assert.AreEqual(ipv4.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
-                Assert.AreEqual(ipv4.BytesSegment.Length, fromFile.BytesSegment.Length);
-                Assert.AreEqual(ipv4.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
-                Assert.AreEqual(ipv4.BytesSegment.Offset, fromFile.BytesSegment.Offset);
-                Assert.AreEqual(ipv4.Color, fromFile.Color);
-                Assert.AreEqual(ipv4.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(ipv4.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(ipv4.DestinationAddress, fromFile.DestinationAddress);
-                Assert.AreEqual(ipv4.HeaderLength, fromFile.HeaderLength);
-                Assert.AreEqual(ipv4.HopLimit, fromFile.HopLimit);
-                Assert.AreEqual(ipv4.PayloadLength, fromFile.PayloadLength);
-                Assert.AreEqual(ipv4.Protocol, fromFile.Protocol);
-                Assert.AreEqual(ipv4.SourceAddress, fromFile.SourceAddress);
-                Assert.AreEqual(ipv4.TimeToLive, fromFile.TimeToLive);
-                Assert.AreEqual(ipv4.TotalLength, fromFile.TotalLength);
-                Assert.AreEqual(ipv4.Version, fromFile.Version);
-                Assert.AreEqual(ipv4.DifferentiatedServices, fromFile.DifferentiatedServices);
-                Assert.AreEqual(ipv4.FragmentFlags, fromFile.FragmentFlags);
-                Assert.AreEqual(ipv4.FragmentOffset, fromFile.FragmentOffset);
-                Assert.AreEqual(ipv4.Id, fromFile.Id);
-                Assert.AreEqual(ipv4.TypeOfService, fromFile.TypeOfService);
-                Assert.AreEqual(ipv4.ValidChecksum, fromFile.ValidChecksum);
-                Assert.AreEqual(ipv4.ValidIPChecksum, fromFile.ValidIPChecksum);
+                Assert.AreEqual(ip.Bytes, fromFile.Bytes);
+                Assert.AreEqual(ip.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(ip.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(ip.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(ip.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(ip.BytesSegment.Offset, fromFile.BytesSegment.Offset);
+                Assert.AreEqual(ip.Color, fromFile.Color);
+                Assert.AreEqual(ip.HeaderData, fromFile.HeaderData);
+                Assert.AreEqual(ip.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(ip.DestinationAddress, fromFile.DestinationAddress);
+                Assert.AreEqual(ip.HeaderLength, fromFile.HeaderLength);
+                Assert.AreEqual(ip.HopLimit, fromFile.HopLimit);
+                Assert.AreEqual(ip.PayloadLength, fromFile.PayloadLength);
+                Assert.AreEqual(ip.Protocol, fromFile.Protocol);
+                Assert.AreEqual(ip.SourceAddress, fromFile.SourceAddress);
+                Assert.AreEqual(ip.TimeToLive, fromFile.TimeToLive);
+                Assert.AreEqual(ip.TotalLength, fromFile.TotalLength);
+                Assert.AreEqual(ip.Version, fromFile.Version);
+                Assert.AreEqual(ip.DifferentiatedServices, fromFile.DifferentiatedServices);
+                Assert.AreEqual(ip.FragmentFlags, fromFile.FragmentFlags);
+                Assert.AreEqual(ip.FragmentOffset, fromFile.FragmentOffset);
+                Assert.AreEqual(ip.Id, fromFile.Id);
+                Assert.AreEqual(ip.TypeOfService, fromFile.TypeOfService);
+                Assert.AreEqual(ip.ValidChecksum, fromFile.ValidChecksum);
+                Assert.AreEqual(ip.ValidIPChecksum, fromFile.ValidIPChecksum);
 
                 //Method Invocations to make sure that a deserialized packet does not cause 
                 //additional errors.
 
-                ipv4.CalculateIPChecksum();
-                ipv4.PrintHex();
-                ipv4.UpdateCalculatedValues();
-                ipv4.UpdateIPChecksum();
+                ip.CalculateIPChecksum();
+                ip.PrintHex();
+                ip.UpdateCalculatedValues();
+                ip.UpdateIPChecksum();
             }
 
             dev.Close();

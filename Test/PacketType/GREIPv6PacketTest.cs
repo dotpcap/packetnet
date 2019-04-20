@@ -22,7 +22,6 @@ using System;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -41,11 +40,9 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var gerp = (GREPacket)p.Extract(typeof(GREPacket));
+            var gerp = p.Extract<GREPacket>();
             Assert.AreEqual(gerp.Protocol, PacketDotNet.EthernetPacketType.IPv6);
             Console.WriteLine(gerp.GetType());
-
-
         }        
     }
 }

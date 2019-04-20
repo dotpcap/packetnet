@@ -26,55 +26,55 @@ namespace PacketDotNet.LSA
     /// </summary>
     public class LSAFields
     {
-        /// <summary> The length of the AdvertisingRouterID field in bytes</summary>
+        /// <summary>The length of the AdvertisingRouterID field in bytes</summary>
         public static readonly int AdvertisingRouterIDLength = 4;
 
-        /// <summary> The relative postion of the AdvertisingRouterID field</summary>
+        /// <summary>The relative postion of the AdvertisingRouterID field</summary>
         public static readonly int AdvertisingRouterIDPosition;
 
-        /// <summary> The length of the Checksum field in bytes</summary>
+        /// <summary>The length of the Checksum field in bytes</summary>
         public static readonly int ChecksumLength = 2;
 
-        /// <summary> The relative postion of the Checksum field</summary>
+        /// <summary>The relative postion of the Checksum field</summary>
         public static readonly int ChecksumPosition;
 
-        /// <summary> The relative postion of the header's end</summary>
+        /// <summary>The relative postion of the header's end</summary>
         public static readonly int HeaderEnd;
 
-        /// <summary> The length of the LinkStateID field in bytes</summary>
+        /// <summary>The length of the LinkStateID field in bytes</summary>
         public static readonly int LinkStateIDLength = 4;
 
-        /// <summary> The relative postion of the LinkStateID field</summary>
+        /// <summary>The relative postion of the LinkStateID field</summary>
         public static readonly int LinkStateIDPosition;
 
-        /// <summary> The length of the LSAge field in bytes</summary>
+        /// <summary>The length of the LSAge field in bytes</summary>
         public static readonly int LSAgeLength = 2;
 
-        /// <summary> The relative postion of the LSAge field</summary>
+        /// <summary>The relative postion of the LSAge field</summary>
         public static readonly int LSAgePosition = 0;
 
-        /// <summary> The length of the LSSeqeunceNumber field in bytes</summary>
+        /// <summary>The length of the LSSeqeunceNumber field in bytes</summary>
         public static readonly int LSSequenceNumberLength = 4;
 
-        /// <summary> The relative postion of the LSSequenceNumber field</summary>
+        /// <summary>The relative postion of the LSSequenceNumber field</summary>
         public static readonly int LSSequenceNumberPosition;
 
-        /// <summary> The length of the LSType field in bytes</summary>
+        /// <summary>The length of the LSType field in bytes</summary>
         public static readonly int LSTypeLength = 1;
 
-        /// <summary> The relative postion of the LSType field</summary>
+        /// <summary>The relative postion of the LSType field</summary>
         public static readonly int LSTypePosition;
 
-        /// <summary> The length of the Options field in bytes</summary>
+        /// <summary>The length of the Options field in bytes</summary>
         public static readonly int OptionsLength = 1;
 
-        /// <summary> The relative postion of the Option field</summary>
+        /// <summary>The relative postion of the Option field</summary>
         public static readonly int OptionsPosition;
 
-        /// <summary> The length of the Length field in bytes</summary>
+        /// <summary>The length of the Length field in bytes</summary>
         public static readonly int PacketLength = 2;
 
-        /// <summary> The relative postion of the Length field</summary>
+        /// <summary>The relative postion of the Length field</summary>
         public static readonly int PacketLengthPosition;
 
         static LSAFields()

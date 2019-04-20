@@ -22,7 +22,6 @@ using System;
 using PacketDotNet.Utils;
 
 // ReSharper disable InconsistentNaming
-
 namespace PacketDotNet
 {
     [Serializable]

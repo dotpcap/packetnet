@@ -29,9 +29,9 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 #if DEBUG
 using log4net;
-
 #endif
 
 namespace PacketDotNet
@@ -363,7 +363,7 @@ namespace PacketDotNet
 
                                                                              var payload = new ByteArraySegment(Header.Bytes, startingOffset, segmentLength, bytesLength);
 
-                                                                             return ParseEncapsulatedBytes(payload,
+                                                                             return ParseNextSegment(payload,
                                                                                                            Protocol,
                                                                                                            this);
                                                                          },
@@ -514,7 +514,7 @@ namespace PacketDotNet
             return buffer.ToString();
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.White;
 
         /// <summary>

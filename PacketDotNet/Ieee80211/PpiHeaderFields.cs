@@ -21,8 +21,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 #endregion Header
-
-
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>

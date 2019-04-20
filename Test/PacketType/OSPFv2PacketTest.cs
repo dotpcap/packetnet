@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using PacketDotNet.LSA;
 using SharpPcap;
 using PacketDotNet.Utils;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -45,7 +44,7 @@ namespace Test.PacketType
 
             while ((raw = dev.GetNextPacket()) != null)
             {
-                OSPFv2Packet p = (OSPFv2Packet)Packet.ParsePacket(raw.LinkLayerType, raw.Data).Extract (typeof(OSPFv2Packet));
+                OSPFv2Packet p = Packet.ParsePacket(raw.LinkLayerType, raw.Data).Extract<OSPFv2Packet>();
 
                 switch (packetIndex)
                 {
@@ -588,7 +587,7 @@ namespace Test.PacketType
             dev.Open();
             while ((raw = dev.GetNextPacket()) != null && i < 4)
             {
-                testSubjects[i] = (OSPFv2HelloPacket)Packet.ParsePacket(raw.LinkLayerType, raw.Data).Extract(typeof(OSPFv2HelloPacket));
+                testSubjects[i] = Packet.ParsePacket(raw.LinkLayerType, raw.Data).Extract<OSPFv2HelloPacket>();
                 i++;
             }
             dev.Close();

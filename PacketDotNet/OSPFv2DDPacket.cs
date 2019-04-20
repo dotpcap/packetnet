@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 namespace PacketDotNet
 {
     /// <summary>

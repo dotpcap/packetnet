@@ -25,7 +25,6 @@ using SharpPcap.LibPcap;
 using PacketDotNet;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -49,7 +48,7 @@ namespace Test.PacketType
             Assert.IsNotNull(p);
             Assert.AreEqual(linkLayer, rawCapture.LinkLayerType);
 
-            var icmp = (ICMPv4Packet)p.Extract (typeof(ICMPv4Packet));
+            var icmp = p.Extract<ICMPv4Packet>();
             Console.WriteLine(icmp.GetType());
 
             Assert.AreEqual(ICMPv4TypeCodes.EchoRequest, icmp.TypeCode);
@@ -75,7 +74,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var icmp = (ICMPv4Packet)p.Extract(typeof(ICMPv4Packet));
+            var icmp = p.Extract<ICMPv4Packet>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(icmp.ToString());
@@ -93,7 +92,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var icmp = (ICMPv4Packet)p.Extract (typeof(ICMPv4Packet));
+            var icmp = p.Extract<ICMPv4Packet>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(icmp.ToString(StringOutputType.Verbose));
@@ -109,7 +108,7 @@ namespace Test.PacketType
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var icmp = (ICMPv4Packet)p.Extract(typeof(ICMPv4Packet));
+                var icmp = p.Extract<ICMPv4Packet>();
                 if (icmp == null)
                 {
                     continue;

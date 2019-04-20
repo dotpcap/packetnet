@@ -23,9 +23,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using PacketDotNet.Utils;
+
 #if DEBUG
 using log4net;
-
 #endif
 
 namespace PacketDotNet
@@ -238,7 +238,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="PacketOrByteArraySegment" />
         /// </returns>
-        internal static PacketOrByteArraySegment ParseEncapsulatedBytes
+        internal static PacketOrByteArraySegment ParseNextSegment
         (
             ByteArraySegment payload,
             IPProtocolType protocolType,

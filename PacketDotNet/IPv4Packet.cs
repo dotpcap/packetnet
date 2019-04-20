@@ -27,9 +27,9 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 #if DEBUG
 using log4net;
-
 #endif
 
 namespace PacketDotNet
@@ -62,7 +62,7 @@ namespace PacketDotNet
         /// </value>
         public static IPVersion IPVersion = IPVersion.IPv4;
 
-        /// <summary> Get the IP version code.</summary>
+        /// <summary>Get the IP version code.</summary>
         public override IPVersion Version
         {
             get => (IPVersion) ((Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] >> 4) & 0x0F);
@@ -167,7 +167,7 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Fetch the IP address of the host where the packet originated from.</summary>
+        /// <summary>Fetch the IP address of the host where the packet originated from.</summary>
         public override IPAddress SourceAddress
         {
             get => GetIPAddress(AddressFamily.InterNetwork,
@@ -182,7 +182,7 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Fetch the IP address of the host where the packet is destined.</summary>
+        /// <summary>Fetch the IP address of the host where the packet is destined.</summary>
         public override IPAddress DestinationAddress
         {
             get => GetIPAddress(AddressFamily.InterNetwork,
@@ -197,7 +197,7 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Fetch the header checksum.</summary>
+        /// <summary>Fetch the header checksum.</summary>
         public ushort Checksum
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
@@ -211,7 +211,7 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Check if the IP packet is valid, checksum-wise.</summary>
+        /// <summary>Check if the IP packet is valid, checksum-wise.</summary>
         public bool ValidChecksum => ValidIPChecksum;
 
         /// <summary>
@@ -246,10 +246,10 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.White;
 
-        /// <summary> Fetch the type of service. </summary>
+        /// <summary>Fetch the type of service. </summary>
         public int DifferentiatedServices
         {
             get => Header.Bytes[Header.Offset + IPv4Fields.DifferentiatedServicesPosition];
@@ -282,7 +282,7 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Fetch fragment flags.</summary>
+        /// <summary>Fetch fragment flags.</summary>
         public int FragmentFlags
         {
             get
@@ -322,7 +322,7 @@ namespace PacketDotNet
             set => Header.Bytes[Header.Offset + IPv4Fields.TtlPosition] = (byte) value;
         }
 
-        /// <summary> Fetch the code indicating the type of protocol embedded in the IP</summary>
+        /// <summary>Fetch the code indicating the type of protocol embedded in the IP</summary>
         /// <seealso cref="IPProtocolType">
         /// </seealso>
         public override IPProtocolType Protocol
@@ -446,7 +446,7 @@ namespace PacketDotNet
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
                                                                      {
                                                                          var payload = Header.NextSegment(PayloadLength);
-                                                                         return ParseEncapsulatedBytes(payload,
+                                                                         return ParseNextSegment(payload,
                                                                                                        Protocol,
                                                                                                        this);
                                                                      },
@@ -509,7 +509,7 @@ namespace PacketDotNet
                 var diffServices = Convert.ToString(DifferentiatedServices, 2).PadLeft(8, '0').Insert(4, " ");
                 properties.Add("differentiated services", "0x" + DifferentiatedServices.ToString("x").PadLeft(2, '0'));
                 properties.Add("", diffServices.Substring(0, 7) + ".. = [" + (DifferentiatedServices >> 2) + "] code point");
-                properties.Add(" ", ".... .." + diffServices[6] + ". = [" + diffServices[6] + "] ECN");
+                properties.Add(" ", ".... .." + diffServices[6] + ". = [" + diffServices[6] + "] Ecn");
                 properties.Add("  ", ".... ..." + diffServices[7] + " = [" + diffServices[7] + "] ECE");
                 properties.Add("total length", TotalLength.ToString());
                 properties.Add("identification", "0x" + Id.ToString("x") + " (" + Id + ")");

@@ -25,10 +25,10 @@ namespace PacketDotNet
     /// </summary>
     public class EthernetFields
     {
-        /// <summary> Position of the destination MAC address within the ethernet header.</summary>
+        /// <summary>Position of the destination MAC address within the ethernet header.</summary>
         public static readonly int DestinationMacPosition = 0;
 
-        /// <summary> Total length of an ethernet header in bytes.</summary>
+        /// <summary>Total length of an ethernet header in bytes.</summary>
         public static readonly int HeaderLength; // == 14
 
         /// <summary>
@@ -36,13 +36,13 @@ namespace PacketDotNet
         /// </summary>
         public static readonly int MacAddressLength = 6;
 
-        /// <summary> Position of the source MAC address within the ethernet header.</summary>
+        /// <summary>Position of the source MAC address within the ethernet header.</summary>
         public static readonly int SourceMacPosition;
 
-        /// <summary> Width of the ethernet type code in bytes.</summary>
+        /// <summary>Width of the ethernet type code in bytes.</summary>
         public static readonly int TypeLength = 2;
 
-        /// <summary> Position of the ethernet type field within the ethernet header.</summary>
+        /// <summary>Position of the ethernet type field within the ethernet header.</summary>
         public static readonly int TypePosition;
 
         static EthernetFields()

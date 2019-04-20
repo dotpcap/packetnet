@@ -23,7 +23,6 @@ using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -32,7 +31,7 @@ namespace Test.PacketType
         private void VerifyPacket0(Packet p)
         {
             // expect an arp packet
-            var arpPacket = (ARPPacket)p.Extract(typeof(ARPPacket));
+            var arpPacket = p.Extract<ARPPacket>();
             Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             // validate some of the LinuxSSLPacket fields
@@ -53,13 +52,13 @@ namespace Test.PacketType
         private void VerifyPacket1(Packet p)
         {
             // expect a udp packet
-            Assert.IsNotNull((UdpPacket)p.Extract(typeof(UdpPacket)), "expected a udp packet");
+            Assert.IsNotNull(p.Extract<UdpPacket>(), "expected a udp packet");
         }
 
         private void VerifyPacket2(Packet p)
         {
             // expecting a tcp packet
-            Assert.IsNotNull((TcpPacket)p.Extract(typeof(TcpPacket)), "expected a tcp packet");
+            Assert.IsNotNull(p.Extract<TcpPacket>(), "expected a tcp packet");
         }
 
         [Test]

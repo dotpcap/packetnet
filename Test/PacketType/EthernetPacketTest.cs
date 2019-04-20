@@ -27,7 +27,6 @@ using PacketDotNet;
 using PacketDotNet.Utils;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -99,7 +98,7 @@ namespace Test.PacketType
             Assert.AreEqual("0014BFF2EF0A", e.SourceHwAddress.ToString());
             Assert.AreEqual("0016CFC91E29", e.DestinationHwAddress.ToString());
 
-            var ip = (IPPacket)p.Extract (typeof(IPPacket));
+            var ip = p.Extract<IPPacket>();
             Assert.AreEqual(System.Net.IPAddress.Parse("172.210.164.56"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.104"), ip.DestinationAddress);
             Assert.AreEqual(IPVersion.IPv4, ip.Version);
@@ -109,7 +108,7 @@ namespace Test.PacketType
             Assert.AreEqual(1171483602, rawCapture.Timeval.Seconds);
             Assert.AreEqual(578641.000, rawCapture.Timeval.MicroSeconds);
 
-            var udp = (UdpPacket)p.Extract(typeof(UdpPacket));
+            var udp = p.Extract<UdpPacket>();
             Assert.AreEqual(52886, udp.SourcePort);
             Assert.AreEqual(56924, udp.DestinationPort);
             Assert.AreEqual(71, udp.Length);
@@ -124,13 +123,13 @@ namespace Test.PacketType
             Assert.AreEqual("0016CFC91E29", e.SourceHwAddress.ToString());
             Assert.AreEqual("0014BFF2EF0A", e.DestinationHwAddress.ToString());
 
-            var ip = (IPPacket)p.Extract (typeof(IPPacket));
+            var ip = p.Extract<IPPacket>();
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.172"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("66.189.0.29"), ip.DestinationAddress);
             Assert.AreEqual(IPProtocolType.UDP, ip.Protocol);
             Assert.AreEqual(0x7988, ((IPv4Packet)ip).CalculateIPChecksum());
 
-            var udp = (UdpPacket)p.Extract (typeof(UdpPacket));
+            var udp = p.Extract<UdpPacket>();
             Assert.AreEqual(3619, udp.SourcePort);
             Assert.AreEqual(53, udp.DestinationPort);
             Assert.AreEqual(47, udp.Length);
@@ -154,7 +153,7 @@ namespace Test.PacketType
             Assert.AreEqual("0016CFC91E29", e.SourceHwAddress.ToString());
             Assert.AreEqual("0014BFF2EF0A", e.DestinationHwAddress.ToString());
 
-            var ip = (IPPacket)p.Extract (typeof(IPPacket));
+            var ip = p.Extract<IPPacket>();
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.104"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("85.195.52.22"), ip.DestinationAddress);
         }

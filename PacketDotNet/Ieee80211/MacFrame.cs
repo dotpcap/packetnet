@@ -24,9 +24,9 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 #if DEBUG
 using log4net;
-
 #endif
 
 namespace PacketDotNet.Ieee80211

@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Text;
-
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>

@@ -39,44 +39,44 @@ namespace PacketDotNet
         /// </summary>
         public static readonly int AddressTypeLength = 2;
 
-        /// <summary> Type code for ethernet addresses.</summary>
+        /// <summary>Type code for ethernet addresses.</summary>
         public static readonly int EthernetProtocolType = 0x0001;
 
-        /// <summary> Position of the hardware address length.</summary>
+        /// <summary>Position of the hardware address length.</summary>
         public static readonly int HardwareAddressLengthPosition;
 
-        /// <summary> Position of the hardware address type.</summary>
+        /// <summary>Position of the hardware address type.</summary>
         public static readonly int HardwareAddressTypePosition = 0;
 
-        /// <summary> Total length in bytes of an ARP header.</summary>
+        /// <summary>Total length in bytes of an ARP header.</summary>
         public static readonly int HeaderLength; // == 28
 
-        /// <summary> Type code for MAC addresses.</summary>
+        /// <summary>Type code for MAC addresses.</summary>
         // ReSharper disable once InconsistentNaming
         public static readonly int IPv4ProtocolType = 0x0800;
 
-        /// <summary> Operation type length in bytes.</summary>
+        /// <summary>Operation type length in bytes.</summary>
         public static readonly int OperationLength = 2;
 
-        /// <summary> Position of the operation type.</summary>
+        /// <summary>Position of the operation type.</summary>
         public static readonly int OperationPosition;
 
-        /// <summary> Position of the protocol address length.</summary>
+        /// <summary>Position of the protocol address length.</summary>
         public static readonly int ProtocolAddressLengthPosition;
 
-        /// <summary> Position of the protocol address type.</summary>
+        /// <summary>Position of the protocol address type.</summary>
         public static readonly int ProtocolAddressTypePosition;
 
-        /// <summary> Position of the sender hardware address.</summary>
+        /// <summary>Position of the sender hardware address.</summary>
         public static readonly int SenderHardwareAddressPosition;
 
-        /// <summary> Position of the sender protocol address.</summary>
+        /// <summary>Position of the sender protocol address.</summary>
         public static readonly int SenderProtocolAddressPosition;
 
-        /// <summary> Position of the target hardware address.</summary>
+        /// <summary>Position of the target hardware address.</summary>
         public static readonly int TargetHardwareAddressPosition;
 
-        /// <summary> Position of the target protocol address.</summary>
+        /// <summary>Position of the target protocol address.</summary>
         public static readonly int TargetProtocolAddressPosition;
 
         static ARPFields()

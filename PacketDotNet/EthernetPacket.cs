@@ -26,9 +26,9 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 #if DEBUG
 using log4net;
-
 #endif
 
 namespace PacketDotNet
@@ -76,7 +76,7 @@ namespace PacketDotNet
                         Type = EthernetPacketType.LLDP;
                         break;
                     // NOTE: new types should be inserted here
-                    case PPPoEPacket _:
+                    case PppoePacket _:
                         Type = EthernetPacketType.PointToPointProtocolOverEthernetSessionStage;
                         break;
                     default:
@@ -86,7 +86,7 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> MAC address of the host where the packet originated from.</summary>
+        /// <summary>MAC address of the host where the packet originated from.</summary>
         public PhysicalAddress SourceHwAddress
         {
             get
@@ -110,7 +110,7 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> MAC address of the host where the packet originated from.</summary>
+        /// <summary>MAC address of the host where the packet originated from.</summary>
         public PhysicalAddress DestinationHwAddress
         {
             get
@@ -189,7 +189,7 @@ namespace PacketDotNet
             Header.Length = EthernetFields.HeaderLength;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, Type), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header, Type), LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="PacketOrByteArraySegment" />
         /// </returns>
-        internal static PacketOrByteArraySegment ParseEncapsulatedBytes
+        internal static PacketOrByteArraySegment ParseNextSegment
         (
             ByteArraySegment header,
             EthernetPacketType type)
@@ -232,7 +232,7 @@ namespace PacketDotNet
                     payloadPacketOrData.Packet = new LLDPPacket(payload);
                     break;
                 case EthernetPacketType.PointToPointProtocolOverEthernetSessionStage:
-                    payloadPacketOrData.Packet = new PPPoEPacket(payload);
+                    payloadPacketOrData.Packet = new PppoePacket(payload);
                     break;
                 case EthernetPacketType.WakeOnLan:
                     payloadPacketOrData.Packet = new WakeOnLanPacket(payload);
@@ -248,7 +248,7 @@ namespace PacketDotNet
             return payloadPacketOrData;
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />

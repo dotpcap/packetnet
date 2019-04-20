@@ -25,7 +25,6 @@ using NUnit.Framework;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -44,7 +43,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var ppp = (PPPPacket)p.Extract (typeof(PPPPacket));
+            var ppp = p.Extract<PppPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ppp.ToString());
@@ -63,7 +62,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var ppp = (PPPPacket)p.Extract (typeof(PPPPacket));
+            var ppp = p.Extract<PppPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ppp.ToString(StringOutputType.Verbose));
@@ -80,7 +79,7 @@ namespace Test.PacketType
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var ppp = (PPPPacket)p.Extract(typeof(PPPPacket));
+                var ppp = p.Extract<PppPacket>();
 
                 if (ppp == null)
                 {
@@ -94,7 +93,7 @@ namespace Test.PacketType
 
                 memoryStream.Seek (0, SeekOrigin.Begin);
                 BinaryFormatter deserializer = new BinaryFormatter();
-                PPPPacket fromFile = (PPPPacket)deserializer.Deserialize(memoryStream);
+                PppPacket fromFile = (PppPacket)deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(ppp.Bytes, fromFile.Bytes);
                 Assert.AreEqual(ppp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);

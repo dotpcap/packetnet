@@ -23,7 +23,6 @@ using NUnit.Framework;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -41,13 +40,13 @@ namespace Test.PacketType
             // first packet is a udp packet
             rawCapture = dev.GetNextPacket();
             packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-            var udpPacket = (UdpPacket)packet.Extract(typeof(UdpPacket));
+            var udpPacket = packet.Extract<UdpPacket>();
             Assert.IsNotNull(udpPacket, "Expected a valid udp packet for the first packet");
 
             // second packet is the PPPoe Ptp packet
             rawCapture = dev.GetNextPacket();
             packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-            var anotherUdpPacket = (UdpPacket)packet.Extract(typeof(UdpPacket));
+            var anotherUdpPacket = packet.Extract<UdpPacket>();
             Assert.IsNotNull(anotherUdpPacket, "Expected a valid udp packet for the second packet as well");
 
             dev.Close();
@@ -66,7 +65,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var pppoe = (PPPoEPacket)p.Extract(typeof(PPPoEPacket));
+            var pppoe = p.Extract<PppoePacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(pppoe.ToString());
@@ -85,7 +84,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var pppoe = (PPPoEPacket)p.Extract(typeof(PPPoEPacket));
+            var pppoe = p.Extract<PppoePacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(pppoe.ToString(StringOutputType.Verbose));

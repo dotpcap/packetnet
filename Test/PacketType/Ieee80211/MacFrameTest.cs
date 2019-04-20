@@ -26,7 +26,6 @@ using NUnit.Framework;
 using SharpPcap;
 using System.Net.NetworkInformation;
 using PacketDotNet.MiscUtil.Conversion;
-
 namespace Test.PacketType
 {
     namespace Ieee80211

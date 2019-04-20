@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using NUnit.Framework;
 using PacketDotNet;
-
 namespace Test.Misc
 {
     /// <summary>

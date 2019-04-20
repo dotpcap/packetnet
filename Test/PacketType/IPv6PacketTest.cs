@@ -27,7 +27,6 @@ using PacketDotNet;
 using PacketDotNet.Utils;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -48,7 +47,7 @@ namespace Test.PacketType
                 Assert.AreEqual(PhysicalAddress.Parse("33-33-00-00-00-02"), e.DestinationHwAddress);
             }
 
-            var ip = (IPPacket)p.Extract (typeof(IPPacket));
+            var ip = p.Extract<IPPacket>();
             Console.WriteLine("ip {0}", ip.ToString());
             Assert.AreEqual(System.Net.IPAddress.Parse("fe80::2a0:ccff:fed9:4175"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("ff02::2"), ip.DestinationAddress);
@@ -76,7 +75,7 @@ namespace Test.PacketType
                 Assert.AreEqual(PhysicalAddress.Parse("333300000016"), e.DestinationHwAddress);
             }
 
-            var ip = (IPv6Packet)p.Extract(typeof(IPv6Packet));
+            var ip = p.Extract<IPv6Packet>();
             Console.WriteLine("ip {0}", ip.ToString());
             Assert.AreEqual(System.Net.IPAddress.Parse("fe80::d802:3589:15cf:3128"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("ff02::16"), ip.DestinationAddress);
@@ -181,7 +180,7 @@ namespace Test.PacketType
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var t = (TcpPacket)p.Extract(typeof(TcpPacket));
+                var t = p.Extract<TcpPacket>();
                 Assert.IsNotNull(t, "Expected t to not be null");
                 Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
 
@@ -235,7 +234,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var ip = (IPv6Packet)p.Extract(typeof(IPv6Packet));
+            var ip = p.Extract<IPv6Packet>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ip.ToString());
@@ -252,7 +251,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var ip = (IPv6Packet)p.Extract(typeof(IPv6Packet));
+            var ip = p.Extract<IPv6Packet>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ip.ToString(StringOutputType.Verbose));
@@ -275,8 +274,8 @@ namespace Test.PacketType
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var ipv6 = (IPv6Packet)p.Extract(typeof(IPv6Packet));
-                if (ipv6 == null)
+                var ip = p.Extract<IPv6Packet>();
+                if (ip == null)
                 {
                     continue;
                 }
@@ -284,39 +283,39 @@ namespace Test.PacketType
 
                 var memoryStream = new MemoryStream();
                 BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, ipv6);
+                serializer.Serialize(memoryStream, ip);
 
                 memoryStream.Seek (0, SeekOrigin.Begin);
                 BinaryFormatter deserializer = new BinaryFormatter();
                 IPv6Packet fromFile = (IPv6Packet)deserializer.Deserialize(memoryStream);
 
-                Assert.AreEqual(ipv6.Bytes, fromFile.Bytes);
-                Assert.AreEqual(ipv6.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
-                Assert.AreEqual(ipv6.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
-                Assert.AreEqual(ipv6.BytesSegment.Length, fromFile.BytesSegment.Length);
-                Assert.AreEqual(ipv6.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
-                Assert.AreEqual(ipv6.BytesSegment.Offset, fromFile.BytesSegment.Offset);
-                Assert.AreEqual(ipv6.Color, fromFile.Color);
-                Assert.AreEqual(ipv6.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(ipv6.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(ipv6.DestinationAddress, fromFile.DestinationAddress);
-                Assert.AreEqual(ipv6.HeaderLength, fromFile.HeaderLength);
-                Assert.AreEqual(ipv6.HopLimit, fromFile.HopLimit);
-                Assert.AreEqual(ipv6.NextHeader, fromFile.NextHeader);
-                Assert.AreEqual(ipv6.PayloadLength, fromFile.PayloadLength);
-                Assert.AreEqual(ipv6.Protocol, fromFile.Protocol);
-                Assert.AreEqual(ipv6.SourceAddress, fromFile.SourceAddress);
-                Assert.AreEqual(ipv6.TimeToLive, fromFile.TimeToLive);
-                Assert.AreEqual(ipv6.TotalLength, fromFile.TotalLength);
-                Assert.AreEqual(ipv6.Version, fromFile.Version);
-                Assert.AreEqual(ipv6.FlowLabel, fromFile.FlowLabel);
-                Assert.AreEqual(ipv6.TrafficClass, fromFile.TrafficClass);
+                Assert.AreEqual(ip.Bytes, fromFile.Bytes);
+                Assert.AreEqual(ip.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(ip.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(ip.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(ip.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(ip.BytesSegment.Offset, fromFile.BytesSegment.Offset);
+                Assert.AreEqual(ip.Color, fromFile.Color);
+                Assert.AreEqual(ip.HeaderData, fromFile.HeaderData);
+                Assert.AreEqual(ip.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(ip.DestinationAddress, fromFile.DestinationAddress);
+                Assert.AreEqual(ip.HeaderLength, fromFile.HeaderLength);
+                Assert.AreEqual(ip.HopLimit, fromFile.HopLimit);
+                Assert.AreEqual(ip.NextHeader, fromFile.NextHeader);
+                Assert.AreEqual(ip.PayloadLength, fromFile.PayloadLength);
+                Assert.AreEqual(ip.Protocol, fromFile.Protocol);
+                Assert.AreEqual(ip.SourceAddress, fromFile.SourceAddress);
+                Assert.AreEqual(ip.TimeToLive, fromFile.TimeToLive);
+                Assert.AreEqual(ip.TotalLength, fromFile.TotalLength);
+                Assert.AreEqual(ip.Version, fromFile.Version);
+                Assert.AreEqual(ip.FlowLabel, fromFile.FlowLabel);
+                Assert.AreEqual(ip.TrafficClass, fromFile.TrafficClass);
 
                 //Method Invocations to make sure that a deserialized packet does not cause 
                 //additional errors.
 
-                ipv6.PrintHex();
-                ipv6.UpdateCalculatedValues();
+                ip.PrintHex();
+                ip.UpdateCalculatedValues();
             }
 
             dev.Close();

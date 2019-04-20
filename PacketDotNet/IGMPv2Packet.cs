@@ -26,7 +26,6 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using PacketDotNet.Utils;
-
 namespace PacketDotNet
 {
     /// <summary>
@@ -74,7 +73,7 @@ namespace PacketDotNet
             ParentPacket = parentPacket;
         }
 
-        /// <summary> Fetch the IGMP header checksum.</summary>
+        /// <summary>Fetch the IGMP header checksum.</summary>
         public short Checksum
         {
             get => BitConverter.ToInt16(Header.Bytes,
@@ -86,15 +85,15 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.Brown;
 
-        /// <summary> Fetch the IGMP group address.</summary>
+        /// <summary>Fetch the IGMP group address.</summary>
         public IPAddress GroupAddress => IPPacket.GetIPAddress(AddressFamily.InterNetwork,
                                                                Header.Offset + IGMPv2Fields.GroupAddressPosition,
                                                                Header.Bytes);
 
-        /// <summary> Fetch the IGMP max response time.</summary>
+        /// <summary>Fetch the IGMP max response time.</summary>
         public byte MaxResponseTime
         {
             get => Header.Bytes[Header.Offset + IGMPv2Fields.MaxResponseTimePosition];

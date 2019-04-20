@@ -23,12 +23,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using log4net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-#if DEBUG
-using log4net;
-
-#endif
 
 namespace PacketDotNet
 {
@@ -37,7 +34,7 @@ namespace PacketDotNet
     /// See http://en.wikipedia.org/wiki/Point-to-Point_Protocol
     /// </summary>
     [Serializable]
-    public class PPPPacket : Packet
+    public class PppPacket : Packet
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -48,38 +45,21 @@ namespace PacketDotNet
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
-
         /// <summary>
-        /// See http://www.iana.org/assignments/ppp-numbers
+        /// Construct a new PppPacket from source and destination mac addresses
         /// </summary>
-        public PPPProtocol Protocol
-        {
-            get => (PPPProtocol) EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                                 Header.Offset + PPPFields.ProtocolPosition);
-            set
-            {
-                var val = (ushort) value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 Header.Bytes,
-                                                 Header.Offset + PPPFields.ProtocolPosition);
-            }
-        }
-
-        /// <summary>
-        /// Construct a new PPPPacket from source and destination mac addresses
-        /// </summary>
-        public PPPPacket()
+        public PppPacket()
         {
             Log.Debug("");
 
             // allocate memory for this packet
             const int offset = 0;
-            var length = PPPFields.HeaderLength;
+            var length = PppFields.HeaderLength;
             var headerBytes = new byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
             // setup some typical values and default values
-            Protocol = PPPProtocol.Padding;
+            Protocol = PppProtocol.Padding;
         }
 
         /// <summary>
@@ -88,23 +68,48 @@ namespace PacketDotNet
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public PPPPacket(ByteArraySegment byteArraySegment)
+        public PppPacket(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
             // slice off the header portion as our header
             // ReSharper disable once UseObjectOrCollectionInitializer
             Header = new ByteArraySegment(byteArraySegment);
-            Header.Length = PPPFields.HeaderLength;
+            Header.Length = PppFields.HeaderLength;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, Protocol), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header, Protocol), LazyThreadSafetyMode.PublicationOnly);
         }
 
-        internal static PacketOrByteArraySegment ParseEncapsulatedBytes
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override string Color => AnsiEscapeSequences.DarkGray;
+
+        /// <summary>
+        /// See http://www.iana.org/assignments/ppp-numbers
+        /// </summary>
+        public PppProtocol Protocol
+        {
+            get => (PppProtocol) EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                                 Header.Offset + PppFields.ProtocolPosition);
+            set
+            {
+                var val = (ushort) value;
+                EndianBitConverter.Big.CopyBytes(val,
+                                                 Header.Bytes,
+                                                 Header.Offset + PppFields.ProtocolPosition);
+            }
+        }
+
+        /// <summary>
+        /// Parses the next segment.
+        /// </summary>
+        /// <param name="header">The header.</param>
+        /// <param name="protocol">The protocol.</param>
+        /// <returns><see cref="PacketOrByteArraySegment"/>.</returns>
+        private static PacketOrByteArraySegment ParseNextSegment
         (
             ByteArraySegment header,
-            PPPProtocol protocol)
+            PppProtocol protocol)
         {
             // slice off the payload
             var payload = header.NextSegment();
@@ -115,10 +120,10 @@ namespace PacketDotNet
 
             switch (protocol)
             {
-                case PPPProtocol.IPv4:
+                case PppProtocol.IPv4:
                     payloadPacketOrData.Packet = new IPv4Packet(payload);
                     break;
-                case PPPProtocol.IPv6:
+                case PppProtocol.IPv6:
                     payloadPacketOrData.Packet = new IPv6Packet(payload);
                     break;
                 default:
@@ -129,9 +134,6 @@ namespace PacketDotNet
 
             return payloadPacketOrData;
         }
-
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override string Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
@@ -149,7 +151,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
-                buffer.AppendFormat("{0}[PPPPacket: Protocol={2}]{1}",
+                buffer.AppendFormat("{0}[PppPacket: Protocol={2}]{1}",
                                     color,
                                     colorEscape,
                                     Protocol);
@@ -181,17 +183,6 @@ namespace PacketDotNet
             buffer.Append(base.ToString(outputFormat));
 
             return buffer.ToString();
-        }
-
-        /// <summary>
-        /// Generate a random PPPoEPacket
-        /// </summary>
-        /// <returns>
-        /// A <see cref="PPPoEPacket" />
-        /// </returns>
-        public static PPPoEPacket RandomPacket()
-        {
-            throw new NotImplementedException();
         }
     }
 }

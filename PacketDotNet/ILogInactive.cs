@@ -2,10 +2,6 @@
 
 using System;
 
-#if DEBUG
-
-#endif
-
 namespace PacketDotNet
 {
 #if !DEBUG

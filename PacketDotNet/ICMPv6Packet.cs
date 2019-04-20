@@ -24,9 +24,9 @@ using System.Reflection;
 using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 #if DEBUG
 using log4net;
-
 #endif
 
 namespace PacketDotNet
@@ -57,7 +57,7 @@ namespace PacketDotNet
             set => Header.Bytes[Header.Offset + ICMPv6Fields.TypePosition] = (byte) value;
         }
 
-        /// <summary> Fetch the ICMP code </summary>
+        /// <summary>Fetch the ICMP code </summary>
         public byte Code
         {
             get => Header.Bytes[Header.Offset + ICMPv6Fields.CodePosition];
@@ -143,7 +143,7 @@ namespace PacketDotNet
             _skipUpdating = false;
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.LightBlue;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />

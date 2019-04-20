@@ -22,7 +22,6 @@ using System;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
@@ -44,7 +43,7 @@ namespace PacketDotNet.Ieee80211
             Header.Length = LogicalLinkControlFields.HeaderLength;
 
             // parse the payload via an EthernetPacket method
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header,
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header,
                                                                                                                  Type),
                                                                      LazyThreadSafetyMode.PublicationOnly);
         }

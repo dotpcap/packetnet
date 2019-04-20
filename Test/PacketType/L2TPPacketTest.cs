@@ -22,7 +22,6 @@ using System;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -41,11 +40,10 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var l2tp = (L2TPPacket)p.Extract(typeof(L2TPPacket));
+            var l2tp = p.Extract<L2TPPacket>();
             Assert.AreEqual(l2tp.TunnelID, 18994);
             Assert.AreEqual(l2tp.SessionID, 54110);
             Console.WriteLine(l2tp.GetType());
-
         }        
     }
 }

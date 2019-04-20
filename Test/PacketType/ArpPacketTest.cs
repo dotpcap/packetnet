@@ -26,7 +26,6 @@ using PacketDotNet;
 using SharpPcap;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -35,7 +34,7 @@ namespace Test.PacketType
         // arp request
         private void VerifyPacket0(Packet p)
         {
-            var arpPacket = (ARPPacket)p.Extract(typeof(ARPPacket));
+            var arpPacket = p.Extract<ARPPacket>();
             Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             IPAddress senderIp = IPAddress.Parse("192.168.1.202");
@@ -53,19 +52,19 @@ namespace Test.PacketType
         // arp response
         private void VerifyPacket1(Packet p)
         {
-            var arpPacket = (ARPPacket)p.Extract (typeof(ARPPacket));
-            Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
+            var arp = p.Extract<ARPPacket>();
+            Assert.IsNotNull(arp, "Expected arpPacket to not be null");
 
             IPAddress senderIp = IPAddress.Parse("192.168.1.214");
             IPAddress targetIp = IPAddress.Parse("192.168.1.202");
 
-            Assert.AreEqual(senderIp, arpPacket.SenderProtocolAddress);
-            Assert.AreEqual(targetIp, arpPacket.TargetProtocolAddress);
+            Assert.AreEqual(senderIp, arp.SenderProtocolAddress);
+            Assert.AreEqual(targetIp, arp.TargetProtocolAddress);
 
             string senderMacAddress = "00216A020854";
             string targetMacAddress = "000461990154";
-            Assert.AreEqual(senderMacAddress, arpPacket.SenderHardwareAddress.ToString());
-            Assert.AreEqual(targetMacAddress, arpPacket.TargetHardwareAddress.ToString());
+            Assert.AreEqual(senderMacAddress, arp.SenderHardwareAddress.ToString());
+            Assert.AreEqual(targetMacAddress, arp.TargetHardwareAddress.ToString());
         }
 
         [Test]
@@ -134,7 +133,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var arp = (ARPPacket)p.Extract(typeof(ARPPacket));
+            var arp = p.Extract<ARPPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(arp.ToString());
@@ -152,7 +151,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var arp = (ARPPacket)p.Extract (typeof(ARPPacket));
+            var arp = p.Extract<ARPPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(arp.ToString(StringOutputType.Verbose));
@@ -170,8 +169,8 @@ namespace Test.PacketType
             {
                 var p = PacketDotNet.Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
-                var arpPacket = (ARPPacket)p.Extract(typeof(ARPPacket));
-                if (arpPacket == null)
+                var arp = p.Extract<ARPPacket>();
+                if (arp == null)
                 {
                     continue;
                 }
@@ -179,38 +178,38 @@ namespace Test.PacketType
 
                 var memoryStream = new MemoryStream();
                 BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, arpPacket);
+                serializer.Serialize(memoryStream, arp);
 
                 memoryStream.Seek (0, SeekOrigin.Begin);
                 BinaryFormatter deserializer = new BinaryFormatter();
                 ARPPacket fromFile = (ARPPacket)deserializer.Deserialize(memoryStream);
 
-                CollectionAssert.AreEqual(arpPacket.Bytes, fromFile.Bytes);
-                Assert.AreEqual(arpPacket.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
-                Assert.AreEqual(arpPacket.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
-                Assert.AreEqual(arpPacket.BytesSegment.Length, fromFile.BytesSegment.Length);
-                Assert.AreEqual(arpPacket.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
-                Assert.AreEqual(arpPacket.BytesSegment.Offset, fromFile.BytesSegment.Offset);
-                Assert.AreEqual(arpPacket.Color, fromFile.Color);
-                Assert.AreEqual(arpPacket.HardwareAddressLength, fromFile.HardwareAddressLength);
-                Assert.AreEqual(arpPacket.HardwareAddressType, fromFile.HardwareAddressType);
-                CollectionAssert.AreEqual(arpPacket.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(arpPacket.Operation, fromFile.Operation);
-                Assert.AreEqual(arpPacket.ParentPacket, fromFile.ParentPacket);
-                CollectionAssert.AreEqual(arpPacket.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(arpPacket.PayloadPacket, fromFile.PayloadPacket);
-                Assert.AreEqual(arpPacket.ProtocolAddressLength, fromFile.ProtocolAddressLength);
-                Assert.AreEqual(arpPacket.ProtocolAddressType, fromFile.ProtocolAddressType);
-                Assert.AreEqual(arpPacket.SenderHardwareAddress, fromFile.SenderHardwareAddress);
-                Assert.AreEqual(arpPacket.SenderProtocolAddress, fromFile.SenderProtocolAddress);
-                Assert.AreEqual(arpPacket.TargetHardwareAddress, fromFile.TargetHardwareAddress);
-                Assert.AreEqual(arpPacket.TargetProtocolAddress, fromFile.TargetProtocolAddress);
+                CollectionAssert.AreEqual(arp.Bytes, fromFile.Bytes);
+                Assert.AreEqual(arp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(arp.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(arp.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(arp.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(arp.BytesSegment.Offset, fromFile.BytesSegment.Offset);
+                Assert.AreEqual(arp.Color, fromFile.Color);
+                Assert.AreEqual(arp.HardwareAddressLength, fromFile.HardwareAddressLength);
+                Assert.AreEqual(arp.HardwareAddressType, fromFile.HardwareAddressType);
+                CollectionAssert.AreEqual(arp.HeaderData, fromFile.HeaderData);
+                Assert.AreEqual(arp.Operation, fromFile.Operation);
+                Assert.AreEqual(arp.ParentPacket, fromFile.ParentPacket);
+                CollectionAssert.AreEqual(arp.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(arp.PayloadPacket, fromFile.PayloadPacket);
+                Assert.AreEqual(arp.ProtocolAddressLength, fromFile.ProtocolAddressLength);
+                Assert.AreEqual(arp.ProtocolAddressType, fromFile.ProtocolAddressType);
+                Assert.AreEqual(arp.SenderHardwareAddress, fromFile.SenderHardwareAddress);
+                Assert.AreEqual(arp.SenderProtocolAddress, fromFile.SenderProtocolAddress);
+                Assert.AreEqual(arp.TargetHardwareAddress, fromFile.TargetHardwareAddress);
+                Assert.AreEqual(arp.TargetProtocolAddress, fromFile.TargetProtocolAddress);
 
                 //Method Invocations to make sure that a deserialized packet does not cause 
                 //additional errors.
 
-                arpPacket.PrintHex();
-                arpPacket.UpdateCalculatedValues();
+                arp.PrintHex();
+                arp.UpdateCalculatedValues();
             }
 
             dev.Close();

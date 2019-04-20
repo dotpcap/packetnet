@@ -21,7 +21,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using PacketDotNet.Utils;
-
 namespace PacketDotNet
 {
     /// <summary>
@@ -29,7 +28,7 @@ namespace PacketDotNet
     /// a ByteArraySegment but not both
     /// </summary>
     [Serializable]
-    public class PacketOrByteArraySegment
+    public sealed class PacketOrByteArraySegment
     {
         private ByteArraySegment _byteArraySegment;
 
@@ -38,9 +37,6 @@ namespace PacketDotNet
         /// <summary>
         /// Gets or sets the byte array segment.
         /// </summary>
-        /// <value>
-        /// The byte array segment.
-        /// </value>
         public ByteArraySegment ByteArraySegment
         {
             get => _byteArraySegment;
@@ -54,9 +50,6 @@ namespace PacketDotNet
         /// <summary>
         /// Gets or sets the packet.
         /// </summary>
-        /// <value>
-        /// The packet.
-        /// </value>
         public Packet Packet
         {
             get => _packet;
@@ -83,24 +76,22 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Appends to the MemoryStream either the byte[] represented by TheByteArray, or
-        /// if ThePacket is non-null, the Packet.Bytes will be appended to the memory stream
-        /// which will append ThePacket's header and any encapsulated packets it contains
+        /// Appends either the byte array or the packet, if non-null, to the <see cref="MemoryStream"/>.
         /// </summary>
-        /// <param name="ms">
+        /// <param name="memoryStream">
         /// A <see cref="MemoryStream" />
         /// </param>
-        public void AppendToMemoryStream(MemoryStream ms)
+        public void AppendToMemoryStream(MemoryStream memoryStream)
         {
             if (Packet != null)
             {
                 var bytes = Packet.Bytes;
-                ms.Write(bytes, 0, bytes.Length);
+                memoryStream.Write(bytes, 0, bytes.Length);
             }
             else if (ByteArraySegment != null)
             {
-                var bytes = ByteArraySegment.ActualBytes();
-                ms.Write(bytes, 0, bytes.Length);
+                foreach (var b in ByteArraySegment)
+                    memoryStream.WriteByte(b);
             }
         }
     }

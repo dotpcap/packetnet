@@ -20,7 +20,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
-
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>

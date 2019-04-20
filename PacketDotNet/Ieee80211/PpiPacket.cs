@@ -31,7 +31,6 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
@@ -176,7 +175,7 @@ namespace PacketDotNet.Ieee80211
             var commonField = FindFirstByType(PpiFieldType.PpiCommon) as PpiCommon;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, commonField), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header, commonField), LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary>
@@ -460,7 +459,7 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="PacketOrByteArraySegment" />
         /// </returns>
-        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment header, PpiCommon commonField)
+        internal static PacketOrByteArraySegment ParseNextSegment(ByteArraySegment header, PpiCommon commonField)
         {
             // slice off the payload
             var payload = header.NextSegment();

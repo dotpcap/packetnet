@@ -26,31 +26,31 @@ namespace PacketDotNet
     /// </summary>
     public class ICMPv4Fields
     {
-        /// <summary> Length of the ICMP header checksum in bytes.</summary>
+        /// <summary>Length of the ICMP header checksum in bytes.</summary>
         public static readonly int ChecksumLength = 2;
 
-        /// <summary> Position of the ICMP header checksum.</summary>
+        /// <summary>Position of the ICMP header checksum.</summary>
         public static readonly int ChecksumPosition;
 
-        /// <summary> Length in bytes of an ICMP header.</summary>
+        /// <summary>Length in bytes of an ICMP header.</summary>
         public static readonly int HeaderLength;
 
-        /// <summary> Length of the ICMP ID field in bytes.</summary>
+        /// <summary>Length of the ICMP ID field in bytes.</summary>
         public static readonly int IDLength = 2;
 
-        /// <summary> Position of the ICMP ID field </summary>
+        /// <summary>Position of the ICMP ID field </summary>
         public static readonly int IDPosition;
 
-        /// <summary> Length of the ICMP Sequence field in bytes </summary>
+        /// <summary>Length of the ICMP Sequence field in bytes </summary>
         public static readonly int SequenceLength = 2;
 
-        /// <summary> Position of the Sequence field </summary>
+        /// <summary>Position of the Sequence field </summary>
         public static readonly int SequencePosition;
 
-        /// <summary> Length of the ICMP message type code in bytes.</summary>
+        /// <summary>Length of the ICMP message type code in bytes.</summary>
         public static readonly int TypeCodeLength = 2;
 
-        /// <summary> Position of the ICMP message type/code.</summary>
+        /// <summary>Position of the ICMP message type/code.</summary>
         public static readonly int TypeCodePosition;
 
         static ICMPv4Fields()

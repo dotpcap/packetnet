@@ -50,13 +50,13 @@ namespace PacketDotNet.Tcp
         /// <remarks>See RFC 1323</remarks>
         WindowScaleFactor = 3,
 
-        /// <summary>SACK (Selective Ack) Permitted</summary>
+        /// <summary>SelectiveAck (Selective Ack) Permitted</summary>
         /// <remarks>See RFC 2018</remarks>
-        SACKPermitted = 4,
+        SelectiveAckPermitted = 4,
 
-        /// <summary>SACK (Selective Ack)</summary>
+        /// <summary>SelectiveAck (Selective Ack)</summary>
         /// <remarks>See RFC 2018 and RFC 2883</remarks>
-        SACK = 5,
+        SelectiveAck = 5,
 
         /// <summary>Echo (obsolete)</summary>
         /// <remarks>See RFC 1072</remarks>

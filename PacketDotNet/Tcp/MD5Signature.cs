@@ -33,15 +33,8 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class MD5Signature : Option
     {
-        #region Members
-
         // the offset (in bytes) of the MD5 Digest field
         private const int MD5DigestFieldOffset = 2;
-
-        #endregion
-
-
-        #region Constructors
 
         /// <summary>
         /// Creates a MD5 Signature Option
@@ -59,11 +52,6 @@ namespace PacketDotNet.Tcp
             base(bytes, offset, length)
         { }
 
-        #endregion
-
-
-        #region Properties
-
         /// <summary>
         /// The MD5 Digest
         /// </summary>
@@ -78,11 +66,6 @@ namespace PacketDotNet.Tcp
             set => Array.Copy(value, 0, OptionData.Bytes, OptionData.Offset + MD5DigestFieldOffset, value.Length);
         }
 
-        #endregion
-
-
-        #region Methods
-
         /// <summary>
         /// Returns the Option info as a string
         /// </summary>
@@ -93,7 +76,5 @@ namespace PacketDotNet.Tcp
         {
             return "[" + Kind + ": MD5Digest=0x" + MD5Digest + "]";
         }
-
-        #endregion
     }
 }

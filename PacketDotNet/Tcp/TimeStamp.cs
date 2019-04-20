@@ -34,7 +34,11 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class TimeStamp : Option
     {
-        #region Constructors
+        // the offset (in bytes) of the Echo Reply Field
+        private const int EchoReplyFieldOffset = 6;
+
+        // the offset (in bytes) of the Value Field
+        private const int ValueFieldOffset = 2;
 
         /// <summary>
         /// Creates a Timestamp Option
@@ -52,26 +56,10 @@ namespace PacketDotNet.Tcp
             base(bytes, offset, length)
         { }
 
-        #endregion
-
-
-        #region Methods
-
         /// <summary>
-        /// Returns the Option info as a string
+        /// The Echo Reply
         /// </summary>
-        /// <returns>
-        /// A <see cref="string" />
-        /// </returns>
-        public override string ToString()
-        {
-            return "[" + Kind + ": Value=" + Value + " EchoReply=" + EchoReply + "]";
-        }
-
-        #endregion
-
-
-        #region Properties
+        public uint EchoReply => EndianBitConverter.Big.ToUInt32(OptionData.Bytes, OptionData.Offset + EchoReplyFieldOffset);
 
         /// <summary>
         /// The Timestamp value
@@ -83,21 +71,14 @@ namespace PacketDotNet.Tcp
         }
 
         /// <summary>
-        /// The Echo Reply
+        /// Returns the Option info as a string
         /// </summary>
-        public uint EchoReply => EndianBitConverter.Big.ToUInt32(OptionData.Bytes, OptionData.Offset + EchoReplyFieldOffset);
-
-        #endregion
-
-
-        #region Members
-
-        // the offset (in bytes) of the Value Field
-        private const int ValueFieldOffset = 2;
-
-        // the offset (in bytes) of the Echo Reply Field
-        private const int EchoReplyFieldOffset = 6;
-
-        #endregion
+        /// <returns>
+        /// A <see cref="string" />
+        /// </returns>
+        public override string ToString()
+        {
+            return "[" + Kind + ": Value=" + Value + " EchoReply=" + EchoReply + "]";
+        }
     }
 }

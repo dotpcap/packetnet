@@ -33,8 +33,6 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class EchoReply : Option
     {
-        #region Constructors
-
         /// <summary>
         /// Creates an Echo Reply Option
         /// </summary>
@@ -51,7 +49,5 @@ namespace PacketDotNet.Tcp
         public EchoReply(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
-
-        #endregion
     }
 }

@@ -30,17 +30,10 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class NoOperation : Option
     {
-        #region Members
-
         /// <summary>
         /// The length (in bytes) of the NoOperation option
         /// </summary>
         internal const int OptionLength = 1;
-
-        #endregion
-
-
-        #region Constructors
 
         /// <summary>
         /// Creates a No Operation Option
@@ -58,11 +51,6 @@ namespace PacketDotNet.Tcp
             base(bytes, offset, length)
         { }
 
-        #endregion
-
-
-        #region Properties
-
         /// <summary>
         /// The length of the NoOperation field
         /// Returns 1 as opposed to returning the length field because
@@ -70,7 +58,5 @@ namespace PacketDotNet.Tcp
         /// contain a length field
         /// </summary>
         public override byte Length => OptionLength;
-
-        #endregion
     }
 }

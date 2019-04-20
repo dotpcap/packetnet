@@ -33,15 +33,8 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class AlternateChecksumData : Option
     {
-        #region Members
-
         // the offset (in bytes) of the Data Field
         private const int DataFieldOffset = 2;
-
-        #endregion
-
-
-        #region Constructors
 
         /// <summary>
         /// Creates an Alternate Checksum Data Option
@@ -59,11 +52,6 @@ namespace PacketDotNet.Tcp
             base(bytes, offset, length)
         { }
 
-        #endregion
-
-
-        #region Properties
-
         /// <summary>
         /// The array of attached Checksum
         /// </summary>
@@ -78,11 +66,6 @@ namespace PacketDotNet.Tcp
             set => Array.Copy(value, 0, OptionData.Bytes, OptionData.Offset + DataFieldOffset, value.Length);
         }
 
-        #endregion
-
-
-        #region Methods
-
         /// <summary>
         /// Returns the Option info as a string
         /// </summary>
@@ -93,7 +76,5 @@ namespace PacketDotNet.Tcp
         {
             return "[" + Kind + ": Data=0x" + Data + "]";
         }
-
-        #endregion
     }
 }

@@ -610,15 +610,15 @@ namespace PacketDotNet
                         offset += length;
                         break;
                     }
-                    case OptionTypes.SACKPermitted:
+                    case OptionTypes.SelectiveAckPermitted:
                     {
-                        options.Add(new SACKPermitted(optionBytes.Bytes, offset, length));
+                        options.Add(new SelectiveAckPermitted(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }
-                    case OptionTypes.SACK:
+                    case OptionTypes.SelectiveAck:
                     {
-                        options.Add(new SACK(optionBytes.Bytes, offset, length));
+                        options.Add(new SelectiveAck(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }

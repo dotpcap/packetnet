@@ -33,15 +33,8 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class MaximumSegmentSize : Option
     {
-        #region Members
-
         // the offset (in bytes) of the Value Field
         private const int ValueFieldOffset = 2;
-
-        #endregion
-
-
-        #region Constructors
 
         /// <summary>
         /// Creates a Maximum Segment Size Option
@@ -59,11 +52,6 @@ namespace PacketDotNet.Tcp
             base(bytes, offset, length)
         { }
 
-        #endregion
-
-
-        #region Properties
-
         /// <summary>
         /// The Maximum Segment Size
         /// </summary>
@@ -72,11 +60,6 @@ namespace PacketDotNet.Tcp
             get => EndianBitConverter.Big.ToUInt16(OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
             set => EndianBitConverter.Big.CopyBytes(value, OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
         }
-
-        #endregion
-
-
-        #region Methods
 
         /// <summary>
         /// Returns the Option info as a string
@@ -88,7 +71,5 @@ namespace PacketDotNet.Tcp
         {
             return "[" + Kind + ": Value=" + Value + " bytes]";
         }
-
-        #endregion
     }
 }

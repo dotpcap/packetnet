@@ -29,8 +29,6 @@ namespace PacketDotNet.Tcp
     /// </summary>
     public class Echo : Option
     {
-        #region Constructors
-
         /// <summary>
         /// Creates an Echo Option
         /// </summary>
@@ -47,7 +45,5 @@ namespace PacketDotNet.Tcp
         public Echo(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
-
-        #endregion
     }
 }

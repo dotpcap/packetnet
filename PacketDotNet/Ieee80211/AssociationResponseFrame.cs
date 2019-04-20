@@ -153,7 +153,6 @@ namespace PacketDotNet.Ieee80211
 
                 return 0;
             }
-
             set
             {
                 var associationID = (ushort) (value & 0xCF);

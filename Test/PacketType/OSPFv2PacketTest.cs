@@ -87,7 +87,7 @@ namespace Test.PacketType
             Assert.IsNotNull(helloPacket);
             Assert.AreEqual(helloPacket is OspfV2HelloPacket, true);
             hp = (OspfV2HelloPacket)helloPacket;
-            Assert.AreEqual(OspfVersion.OSPFv2, helloPacket.Version);
+            Assert.AreEqual(OspfVersion.OspfV2, helloPacket.Version);
             Assert.AreEqual(OspfPacketType.Hello, helloPacket.Type);
             Assert.AreEqual(0x273b, helloPacket.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.0"), hp.NetworkMask);
@@ -100,7 +100,7 @@ namespace Test.PacketType
         {
             OspfV2DatabaseDescriptorPacket dp = null;
             Assert.IsNotNull(ddPacket);
-            Assert.AreEqual(OspfVersion.OSPFv2, ddPacket.Version);
+            Assert.AreEqual(OspfVersion.OspfV2, ddPacket.Version);
             Assert.AreEqual(OspfPacketType.DatabaseDescription, ddPacket.Type);
             Assert.AreEqual(ddPacket is OspfV2DatabaseDescriptorPacket, true);
             Assert.AreEqual(0xa052, ddPacket.Checksum);
@@ -114,7 +114,7 @@ namespace Test.PacketType
         {
             OspfV2LinkStateUpdatePacket lp = null;
             Assert.IsNotNull(lsuPacket);
-            Assert.AreEqual(OspfVersion.OSPFv2, lsuPacket.Version);
+            Assert.AreEqual(OspfVersion.OspfV2, lsuPacket.Version);
             Assert.AreEqual(OspfPacketType.LinkStateUpdate, lsuPacket.Type);
             Assert.AreEqual(0x961f, lsuPacket.Checksum);
             Assert.AreEqual(lsuPacket is OspfV2LinkStateUpdatePacket, true);
@@ -131,7 +131,7 @@ namespace Test.PacketType
         {
             OspfV2LinkStateRequestPacket lp = null;
             Assert.IsNotNull(lsrPacket);
-            Assert.AreEqual(OspfVersion.OSPFv2, lsrPacket.Version);
+            Assert.AreEqual(OspfVersion.OspfV2, lsrPacket.Version);
             Assert.AreEqual(OspfPacketType.LinkStateRequest, lsrPacket.Type);
             Assert.AreEqual(0x7595, lsrPacket.Checksum);
             Assert.AreEqual(lsrPacket is OspfV2LinkStateRequestPacket, true);
@@ -143,7 +143,7 @@ namespace Test.PacketType
         public void TestLSAPacket()
         {
             Assert.IsNotNull(lsaPacket);
-            Assert.AreEqual(OspfVersion.OSPFv2, lsaPacket.Version);
+            Assert.AreEqual(OspfVersion.OspfV2, lsaPacket.Version);
             Assert.AreEqual(OspfPacketType.LinkStateAcknowledgment, lsaPacket.Type);
             Assert.AreEqual(0xe95e, lsaPacket.Checksum);
             Assert.AreEqual(284, lsaPacket.PacketLength);
@@ -287,7 +287,7 @@ namespace Test.PacketType
         {
             OspfV2DatabaseDescriptorPacket dp = null;
             Assert.IsNotNull(ddLSAPacket);
-            Assert.AreEqual(OspfVersion.OSPFv2, ddLSAPacket.Version);
+            Assert.AreEqual(OspfVersion.OspfV2, ddLSAPacket.Version);
             Assert.AreEqual(OspfPacketType.DatabaseDescription, ddLSAPacket.Type);
             Assert.AreEqual(0xf067, ddLSAPacket.Checksum);
             dp = (OspfV2DatabaseDescriptorPacket)ddLSAPacket;
@@ -618,7 +618,7 @@ namespace Test.PacketType
             p.DesignatedRouterId = System.Net.IPAddress.Parse("192.168.1.1");
             p.BackupRouterId = System.Net.IPAddress.Parse("10.1.1.2");
 
-            Assert.AreEqual(OspfVersion.OSPFv2, p.Version);
+            Assert.AreEqual(OspfVersion.OspfV2, p.Version);
             Assert.AreEqual(OspfPacketType.Hello, p.Type);
             Assert.AreEqual(0x02, p.HelloOptions);
             Assert.AreEqual(2, p.HelloInterval);
@@ -634,7 +634,7 @@ namespace Test.PacketType
             byte[] bytes = p.Bytes;
             OspfV2HelloPacket hp = new OspfV2HelloPacket(new ByteArraySegment(bytes));
 
-            Assert.AreEqual(OspfVersion.OSPFv2, hp.Version);
+            Assert.AreEqual(OspfVersion.OspfV2, hp.Version);
             Assert.AreEqual(OspfPacketType.Hello, hp.Type);
             Assert.AreEqual(0x02, p.HelloOptions);
             Assert.AreEqual(2, hp.HelloInterval);
@@ -759,7 +759,7 @@ namespace Test.PacketType
             p.RouterId = System.Net.IPAddress.Parse("192.168.255.255");
             p.AreaId = System.Net.IPAddress.Parse("192.168.255.252");
 
-            Assert.AreEqual(OspfVersion.OSPFv2, p.Version);
+            Assert.AreEqual(OspfVersion.OspfV2, p.Version);
             Assert.AreEqual(OspfPacketType.LinkStateRequest, p.Type);
 
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.255.255"), p.RouterId);
@@ -769,7 +769,7 @@ namespace Test.PacketType
             byte[] bytes = p.Bytes;
             OspfV2LinkStateRequestPacket lp = new OspfV2LinkStateRequestPacket(new ByteArraySegment(bytes));
 
-            Assert.AreEqual(OspfVersion.OSPFv2, lp.Version);
+            Assert.AreEqual(OspfVersion.OspfV2, lp.Version);
             Assert.AreEqual(OspfPacketType.LinkStateRequest, lp.Type);
 
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.255.255"), lp.RouterId);
@@ -801,7 +801,7 @@ namespace Test.PacketType
             lp2.RouterId = System.Net.IPAddress.Parse("10.0.1.255");
             lp2.AreaId = System.Net.IPAddress.Parse("10.0.2.252");
 
-            Assert.AreEqual(OspfVersion.OSPFv2, lp2.Version);
+            Assert.AreEqual(OspfVersion.OspfV2, lp2.Version);
             Assert.AreEqual(OspfPacketType.LinkStateRequest, lp2.Type);
 
             Assert.AreEqual(System.Net.IPAddress.Parse("10.0.1.255"), lp2.RouterId);
@@ -1119,7 +1119,7 @@ namespace Test.PacketType
             p.RouterId = System.Net.IPAddress.Parse("192.168.255.255");
             p.AreaId = System.Net.IPAddress.Parse("192.168.255.252");
 
-            Assert.AreEqual(OspfVersion.OSPFv2, p.Version);
+            Assert.AreEqual(OspfVersion.OspfV2, p.Version);
             Assert.AreEqual(OspfPacketType.LinkStateUpdate, p.Type);
 
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.255.255"), p.RouterId);
@@ -1131,7 +1131,7 @@ namespace Test.PacketType
             byte[] bytes = p.Bytes;
             OspfV2LinkStateUpdatePacket lp = new OspfV2LinkStateUpdatePacket(new ByteArraySegment(bytes));
 
-            Assert.AreEqual(OspfVersion.OSPFv2, lp.Version);
+            Assert.AreEqual(OspfVersion.OspfV2, lp.Version);
             Assert.AreEqual(OspfPacketType.LinkStateUpdate, lp.Type);
 
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.255.255"), lp.RouterId);
@@ -1244,7 +1244,7 @@ namespace Test.PacketType
             p.RouterId = System.Net.IPAddress.Parse("192.168.255.255");
             p.AreaId = System.Net.IPAddress.Parse("192.168.255.252");
 
-            Assert.AreEqual(OspfVersion.OSPFv2, p.Version);
+            Assert.AreEqual(OspfVersion.OspfV2, p.Version);
             Assert.AreEqual(OspfPacketType.LinkStateUpdate, p.Type);
 
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.255.255"), p.RouterId);

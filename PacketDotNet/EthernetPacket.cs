@@ -105,7 +105,6 @@ namespace PacketDotNet
 
                 return new PhysicalAddress(hwAddress);
             }
-
             set
             {
                 var hwAddress = value.GetAddressBytes();
@@ -178,7 +177,6 @@ namespace PacketDotNet
 
                 return new PhysicalAddress(hwAddress);
             }
-
             set
             {
                 var hwAddress = value.GetAddressBytes();

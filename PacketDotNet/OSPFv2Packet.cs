@@ -58,7 +58,7 @@ namespace PacketDotNet
             var headerBytes = new byte[length];
             Header = new ByteArraySegment(headerBytes, 0, length);
 
-            Version = OspfVersion.OSPFv2;
+            Version = OspfVersion.OspfV2;
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace PacketDotNet
         {
             Log.Debug("");
             Header = new ByteArraySegment(bytes, offset, OspfV2Fields.HeaderLength);
-            Version = OspfVersion.OSPFv2;
+            Version = OspfVersion.OspfV2;
         }
 
         /// <summary>

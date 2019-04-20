@@ -87,7 +87,7 @@ namespace PacketDotNet.Lldp
             }
 
             // Length set is internal as the length of a TLV is automatically set based on
-            // the tlvs content
+            // the TLVs content
             internal set
             {
                 Log.DebugFormat("value {0}", value);
@@ -121,7 +121,6 @@ namespace PacketDotNet.Lldp
                 // remove the length info
                 return (TlvType) (typeAndLength >> LengthBits);
             }
-
             set
             {
                 Log.DebugFormat("value of {0}", value);

@@ -33,7 +33,7 @@ namespace PacketDotNet
         /// <summary>
         /// The Drda Code Point Type field
         /// </summary>
-        public DrdaCodepointType DrdaCodepoint { set; get; }
+        public DrdaCodePointType DrdaCodepoint { set; get; }
 
         /// <summary>
         /// The Length field

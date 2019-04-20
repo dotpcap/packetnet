@@ -119,7 +119,7 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary>
-        /// Finds all <see cref="InformationElement">InformatonElements</see> in the lists
+        /// Finds all <see cref="InformationElement"></see> in the lists
         /// with the provided id.
         /// </summary>
         /// <returns>

@@ -199,7 +199,6 @@ namespace PacketDotNet
                 // shift off the fragment offset bits
                 return fragmentOffsetAndFlags >> (16 - 3);
             }
-
             set
             {
                 // retrieve the value
@@ -230,7 +229,6 @@ namespace PacketDotNet
                 // mask off the high flag bits
                 return fragmentOffsetAndFlags & 0x1FFF;
             }
-
             set
             {
                 // retrieve the value

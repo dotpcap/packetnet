@@ -87,7 +87,7 @@ namespace PacketDotNet
             Header = new ByteArraySegment(byteArraySegment);
 
             // Initiate the TLV list from the existing data
-            ParseByteArrayIntoTlvs(Header.Bytes, Header.Offset);
+            ParseByteArrayIntoTLVs(Header.Bytes, Header.Offset);
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace PacketDotNet
         /// <summary>
         /// Parse byte[] into TLVs
         /// </summary>
-        public void ParseByteArrayIntoTlvs(byte[] bytes, int offset)
+        public void ParseByteArrayIntoTLVs(byte[] bytes, int offset)
         {
             Log.DebugFormat("bytes.Length {0}, offset {1}", bytes.Length, offset);
 
@@ -297,25 +297,25 @@ namespace PacketDotNet
                 case StringOutputType.Normal:
                 case StringOutputType.Colored:
                 {
-                    // build the string of tlvs
-                    var tlvs = "{";
+                    // build the string of TLVs
+                    var TLVs = "{";
                     var r = new Regex(@"[^(\.)]([^\.]*)$");
                     foreach (var tlv in TlvCollection)
                     {
                         // regex trim the parent namespaces from the class type
                         //   (ex. "PacketDotNet.LLDP.TimeToLive" becomes "TimeToLive")
                         var m = r.Match(tlv.GetType().ToString());
-                        tlvs += m.Groups[0].Value + "|";
+                        TLVs += m.Groups[0].Value + "|";
                     }
 
-                    tlvs = tlvs.TrimEnd('|');
-                    tlvs += "}";
+                    TLVs = TLVs.TrimEnd('|');
+                    TLVs += "}";
 
                     // build the output string
                     buffer.AppendFormat("{0}[LldpPacket: TLVs={2}]{1}",
                                         color,
                                         colorEscape,
-                                        tlvs);
+                                        TLVs);
 
                     break;
                 }

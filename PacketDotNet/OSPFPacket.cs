@@ -41,11 +41,11 @@ namespace PacketDotNet
 
             switch (v)
             {
-                case OspfVersion.OSPFv2:
+                case OspfVersion.OspfV2:
                 {
                     return ConstructV2Packet(payload, offset);
                 }
-                case OspfVersion.OSPFv3:
+                case OspfVersion.OspfV3:
                 {
                     return ConstructV3Packet();
                 }

@@ -142,16 +142,15 @@ namespace PacketDotNet
         /// <value>
         /// The Type/Code enum value
         /// </value>
-        public IcmpV4TypeCodes TypeCode
+        public IcmpV4TypeCode TypeCode
         {
             get
             {
                 var val = EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                           Header.Offset + IcmpV4Fields.TypeCodePosition);
 
-                return (IcmpV4TypeCodes) val;
+                return (IcmpV4TypeCode) val;
             }
-
             set
             {
                 var theValue = (ushort) value;

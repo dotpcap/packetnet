@@ -75,7 +75,7 @@ namespace PacketDotNet
         /// <summary>
         /// The Code Point field
         /// </summary>
-        public DrdaCodepointType CodePoint => (DrdaCodepointType) EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDdmFields.CodePointPosition);
+        public DrdaCodePointType CodePoint => (DrdaCodePointType) EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDdmFields.CodePointPosition);
 
         /// <summary>
         /// The CorrelId field
@@ -128,13 +128,13 @@ namespace PacketDotNet
                         var parameter = new DrdaDdmParameter
                         {
                             Length = length,
-                            DrdaCodepoint = (DrdaCodepointType) EndianBitConverter.Big.ToUInt16(Header.Bytes, offset + DrdaDdmFields.ParameterLengthLength)
+                            DrdaCodepoint = (DrdaCodePointType) EndianBitConverter.Big.ToUInt16(Header.Bytes, offset + DrdaDdmFields.ParameterLengthLength)
                         };
 
                         var startIndex = offset + DrdaDdmFields.ParameterLengthLength + DrdaDdmFields.ParameterCodePointLength;
                         var strLength = length - 4;
                         //For Type=Data or Type=QryDta,Decode bytes as utf-8 ascii string
-                        if (parameter.DrdaCodepoint == DrdaCodepointType.DATA || parameter.DrdaCodepoint == DrdaCodepointType.QRYDTA)
+                        if (parameter.DrdaCodepoint == DrdaCodePointType.DATA || parameter.DrdaCodepoint == DrdaCodePointType.QRYDTA)
                         {
                             startIndex++;
                             strLength -= 2;
@@ -181,15 +181,15 @@ namespace PacketDotNet
                                     Length2,
                                     CodePoint);
 
-                buffer.Append(" Paramters:{");
-                foreach (var paramter in Parameters)
+                buffer.Append(" Parameters:{");
+                foreach (var parameter in Parameters)
                 {
                     buffer.AppendFormat("{0}[DrdaDdmParameter: Length={2}, CodePoint={3}, Data='{4}']{1}",
                                         color,
                                         colorEscape,
-                                        paramter.Length,
-                                        paramter.DrdaCodepoint,
-                                        paramter.Data);
+                                        parameter.Length,
+                                        parameter.DrdaCodepoint,
+                                        parameter.Data);
                 }
 
                 buffer.Append("}");

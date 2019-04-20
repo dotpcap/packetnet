@@ -222,7 +222,6 @@ namespace PacketDotNet.Ieee80211
                 var type = ((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4);
                 return (FrameSubTypes) type;
             }
-
             set
             {
                 var val = (uint) value;

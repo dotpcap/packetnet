@@ -26,7 +26,7 @@ namespace PacketDotNet
     /// Drda Code Point Type
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public enum DrdaCodepointType : ushort
+    public enum DrdaCodePointType : ushort
     {
 #pragma warning disable 1591
         DATA = 0x0000,

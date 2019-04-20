@@ -147,7 +147,6 @@ namespace PacketDotNet.Ieee80211
 
                 return valueArray;
             }
-
             set
             {
                 if (value.Length > Byte.MaxValue)
@@ -155,7 +154,7 @@ namespace PacketDotNet.Ieee80211
                     throw new ArgumentException("The provided value is too long. Maximum allowed length is 255 bytes.");
                 }
 
-                //Decide if the current ByteArraySegement is big enough to hold the new info element
+                //Decide if the current ByteArraySegment is big enough to hold the new info element
                 var newIeLength = ElementIdLength + ElementLengthLength + value.Length;
                 if (_bytes.Length < newIeLength)
                 {

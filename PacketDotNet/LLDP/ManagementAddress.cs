@@ -183,7 +183,6 @@ namespace PacketDotNet.Lldp
 
                 return new NetworkAddress(TLVData.Bytes, offset, AddressLength);
             }
-
             set
             {
                 var valueLength = value.Length;

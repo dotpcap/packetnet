@@ -83,7 +83,6 @@ namespace PacketDotNet
 
                 return theHeader;
             }
-
             set
             {
                 // update the link layer length

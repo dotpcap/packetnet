@@ -25,13 +25,14 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
+
 #if DEBUG
 using log4net;
+using System.Reflection;
 #endif
 
 namespace PacketDotNet
@@ -306,7 +307,6 @@ namespace PacketDotNet
 
                 return (ProtocolType) Header.Bytes[_protocolOffset];
             }
-
             set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition + _totalExtensionHeadersLength] = (byte) value;
         }
 

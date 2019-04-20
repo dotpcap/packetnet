@@ -74,7 +74,7 @@ namespace PacketDotNet.Lsa
                 var routerCount = Length - NetworkMaskLength - OspfV2Fields.LSAHeaderLength;
                 if (routerCount % IPv4BytesCount != 0)
                 {
-                    throw new Exception("Mallformed NetworkLinksAdvertisement - routerCount should be aligned to 4");
+                    throw new Exception("Malformed NetworkLinksAdvertisement - routerCount should be aligned to 4");
                 }
 
                 routerCount /= IPv4BytesCount;

@@ -355,7 +355,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length < Length)
             {
-                //the backing buffer isnt big enough to accommodate the info elements so we need to resize it
+                //the backing buffer isn't big enough to accommodate the info elements so we need to resize it
                 Header = new ByteArraySegment(new byte[Length]);
             }
 

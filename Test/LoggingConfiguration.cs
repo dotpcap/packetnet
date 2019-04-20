@@ -32,7 +32,6 @@ namespace Test
                 Logger rootLogger = ((Hierarchy)LogManager.GetRepository()).Root;
                 return rootLogger.Level;
             }
-
             set
             {
                 Logger rootLogger = ((Hierarchy)LogManager.GetRepository()).Root;

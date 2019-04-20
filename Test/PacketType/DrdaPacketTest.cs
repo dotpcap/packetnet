@@ -60,25 +60,25 @@ namespace Test.PacketType
                     {
                         switch (ddm.CodePoint)
                         {
-                            case DrdaCodepointType.EXCSAT:
+                            case DrdaCodePointType.EXCSAT:
                                 excsatPacket = ddm;
                                 break;
-                            case DrdaCodepointType.ACCRDB:
+                            case DrdaCodePointType.ACCRDB:
                                 accrdbPacket = ddm;
                                 break;
-                            case DrdaCodepointType.SECCHK:
+                            case DrdaCodePointType.SECCHK:
                                 secchkPacket = ddm;
                                 break;
-                            case DrdaCodepointType.ACCRDBRM:
+                            case DrdaCodePointType.ACCRDBRM:
                                 accrdbrmPacket = ddm;
                                 break;
-                            case DrdaCodepointType.SQLSTT:
+                            case DrdaCodePointType.SQLSTT:
                                 sqlsttPackets.Add(ddm);
                                 break;
-                            case DrdaCodepointType.PRPSQLSTT:
+                            case DrdaCodePointType.PRPSQLSTT:
                                 prpsqlsttPacket = ddm;
                                 break;
-                            case DrdaCodepointType.SQLATTR:
+                            case DrdaCodePointType.SQLATTR:
                                 sqlattrPacket = ddm;
                                 break;
                             //Still have SQLCARD and QRYDTA decode work to do
@@ -97,21 +97,21 @@ namespace Test.PacketType
         {
             Assert.IsNotNull(excsatPacket);
             Assert.IsNotNull(excsatPacket.Parameters);
-            Assert.AreEqual(DrdaCodepointType.EXCSAT, excsatPacket.CodePoint);
+            Assert.AreEqual(DrdaCodePointType.EXCSAT, excsatPacket.CodePoint);
             foreach (var parameter in excsatPacket.Parameters)
             {
                 switch (parameter.DrdaCodepoint)
                 {
-                    case DrdaCodepointType.EXTNAM:
+                    case DrdaCodePointType.EXTNAM:
                         Assert.IsTrue(parameter.Data.Contains("db2jcc_application"));
                         break;
-                    case DrdaCodepointType.SRVNAM:
+                    case DrdaCodePointType.SRVNAM:
                         Assert.AreEqual("192.168.137.1", parameter.Data);
                         break;
-                    case DrdaCodepointType.SRVRLSLV:
+                    case DrdaCodePointType.SRVRLSLV:
                         Assert.AreEqual("JCC03670", parameter.Data);
                         break;
-                    case DrdaCodepointType.SRVCLSNM:
+                    case DrdaCodePointType.SRVCLSNM:
                         Assert.AreEqual("QDB2/JVM", parameter.Data);
                         break;
                     default: /* do nothing */break;
@@ -124,18 +124,18 @@ namespace Test.PacketType
         {
             Assert.IsNotNull(accrdbPacket);
             Assert.IsNotNull(accrdbPacket.Parameters);
-            Assert.AreEqual(DrdaCodepointType.ACCRDB, accrdbPacket.CodePoint);
+            Assert.AreEqual(DrdaCodePointType.ACCRDB, accrdbPacket.CodePoint);
             foreach (var parameter in accrdbPacket.Parameters)
             {
                 switch (parameter.DrdaCodepoint)
                 {
-                    case DrdaCodepointType.RDBNAM:
+                    case DrdaCodePointType.RDBNAM:
                         Assert.AreEqual("SAMPLE", parameter.Data);
                         break;
-                    case DrdaCodepointType.PRDID:
+                    case DrdaCodePointType.PRDID:
                         Assert.AreEqual("JCC03670", parameter.Data);
                         break;
-                    case DrdaCodepointType.TYPDEFNAM:
+                    case DrdaCodePointType.TYPDEFNAM:
                         Assert.AreEqual("QTDSQLASC", parameter.Data);
                         break;
                     default: /* do nothing */break;
@@ -148,18 +148,18 @@ namespace Test.PacketType
         {
             Assert.IsNotNull(secchkPacket);
             Assert.IsNotNull(secchkPacket.Parameters);
-            Assert.AreEqual(DrdaCodepointType.SECCHK, secchkPacket.CodePoint);
+            Assert.AreEqual(DrdaCodePointType.SECCHK, secchkPacket.CodePoint);
             foreach (var parameter in accrdbPacket.Parameters)
             {
                 switch (parameter.DrdaCodepoint)
                 {
-                    case DrdaCodepointType.RDBNAM:
+                    case DrdaCodePointType.RDBNAM:
                         Assert.AreEqual("SAMPLE", parameter.Data);
                         break;
-                    case DrdaCodepointType.USRID:
+                    case DrdaCodePointType.USRID:
                         Assert.AreEqual("db2inst1", parameter.Data);
                         break;
-                    case DrdaCodepointType.PASSWORD:
+                    case DrdaCodePointType.PASSWORD:
                         Assert.AreEqual("db2inst1", parameter.Data);
                         break;
                     default: /* do nothing */break;
@@ -175,8 +175,8 @@ namespace Test.PacketType
             {
                 Assert.IsNotNull(packet);
                 Assert.IsNotNull(packet.Parameters);
-                Assert.AreEqual(DrdaCodepointType.SQLSTT, packet.CodePoint);
-                if (packet.Parameters[0].DrdaCodepoint == DrdaCodepointType.DATA)
+                Assert.AreEqual(DrdaCodePointType.SQLSTT, packet.CodePoint);
+                if (packet.Parameters[0].DrdaCodepoint == DrdaCodePointType.DATA)
                 {
                     if (packetIndex == 0)
                         Assert.AreEqual("SET CLIENT WRKSTNNAME '192.168.137.1'", packet.Parameters[0].Data);
@@ -192,8 +192,8 @@ namespace Test.PacketType
         {
             Assert.IsNotNull(sqlattrPacket);
             Assert.IsNotNull(sqlattrPacket.Parameters);
-            Assert.AreEqual(DrdaCodepointType.SQLATTR, sqlattrPacket.CodePoint);
-            if (sqlattrPacket.Parameters[0].DrdaCodepoint == DrdaCodepointType.DATA)
+            Assert.AreEqual(DrdaCodePointType.SQLATTR, sqlattrPacket.CodePoint);
+            if (sqlattrPacket.Parameters[0].DrdaCodepoint == DrdaCodePointType.DATA)
             {
                 Assert.AreEqual("FOR READ ONLY", sqlattrPacket.Parameters[0].Data);
             }

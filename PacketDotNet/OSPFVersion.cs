@@ -24,9 +24,9 @@ namespace PacketDotNet
     public enum OspfVersion : byte
     {
         /// <summary>OSPF protocol version 2.</summary>
-        OSPFv2 = 2,
+        OspfV2 = 2,
 
         /// <summary>OSPF protocol version 3.</summary>
-        OSPFv3 = 3
+        OspfV3 = 3
     }
 }

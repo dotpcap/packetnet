@@ -29,13 +29,13 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace Test.PacketType
 {
     [TestFixture]
-    public class ICMPv6PacketTest
+    public class IcmpV6PacketTest
     {
         /// <summary>
         /// Test that we can parse a icmp v4 request and reply
         /// </summary>
         [Test]
-        public void ICMPv6Parsing ()
+        public void IcmpV6Parsing ()
         {
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
             dev.Open();

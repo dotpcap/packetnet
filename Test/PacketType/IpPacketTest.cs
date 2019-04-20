@@ -29,7 +29,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace Test.PacketType
 {
     [TestFixture]
-    public class IpPacketTest
+    public class IPPacketTest
     {
         /// <summary>
         /// Test that parsing an ip packet yields the proper field values

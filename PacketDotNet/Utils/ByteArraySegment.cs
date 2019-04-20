@@ -45,15 +45,15 @@ namespace PacketDotNet.Utils
         private Int32 _length;
 
         /// <value>
-        /// Gets the byte array.
+        /// Gets the underlying byte array.
         /// </value>
         public Byte[] Bytes { get; }
 
         /// <value>
-        /// Gets the maximum number of bytes we should treat <see cref="Bytes"/> as having.
+        /// Gets or sets the maximum number of bytes we should treat <see cref="Bytes"/> as having.
         /// This allows for controlling the number of bytes produced by <see cref="EncapsulatedBytes()"/>.
         /// </value>
-        public Int32 BytesLength { get; }
+        public Int32 BytesLength { get; set; }
 
         /// <value>
         /// Gets or sets the number of bytes beyond the offset into <see cref="Bytes"/>. 
@@ -77,9 +77,9 @@ namespace PacketDotNet.Utils
         }
 
         /// <value>
-        /// Gets the offset into <see cref="Bytes"/>.
+        /// Gets or sets the offset into <see cref="Bytes"/>.
         /// </value>
-        public Int32 Offset { get; }
+        public Int32 Offset { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ByteArraySegment"/> class.

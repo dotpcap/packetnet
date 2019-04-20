@@ -319,7 +319,7 @@ namespace PacketDotNet
                 }
                 case IPProtocolType.GRE:
                 {
-                    payloadPacketOrData.Packet = new GREPacket(payload,
+                    payloadPacketOrData.Packet = new GrePacket(payload,
                                                                parentPacket);
 
                     break;

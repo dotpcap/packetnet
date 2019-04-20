@@ -21,7 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet
 {
     /// <summary>GRE protocol field encoding information. </summary>
-    public class GREFields
+    public class GreFields
     {
         /// <summary>Length of the Checksum in bytes (Optional).</summary>
         public static readonly int ChecksumLength = 2;

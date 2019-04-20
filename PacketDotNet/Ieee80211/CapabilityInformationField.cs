@@ -54,7 +54,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean CfPollable
         {
             get => GetBitFieldValue(2);
-
             set => SetBitFieldValue(2, value);
         }
 
@@ -68,7 +67,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean CfPollRequest
         {
             get => GetBitFieldValue(3);
-
             set => SetBitFieldValue(3, value);
         }
 
@@ -82,7 +80,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean ChannelAgility
         {
             get => GetBitFieldValue(7);
-
             set => SetBitFieldValue(7, value);
         }
 
@@ -96,7 +93,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean DssOfdm
         {
             get => GetBitFieldValue(13);
-
             set => SetBitFieldValue(13, value);
         }
 
@@ -115,7 +111,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean IsEss
         {
             get => GetBitFieldValue(0);
-
             set => SetBitFieldValue(0, value);
         }
 
@@ -126,7 +121,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean IsIbss
         {
             get => GetBitFieldValue(1);
-
             set => SetBitFieldValue(1, value);
         }
 
@@ -140,7 +134,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean Pbcc
         {
             get => GetBitFieldValue(6);
-
             set => SetBitFieldValue(6, value);
         }
 
@@ -154,7 +147,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean Privacy
         {
             get => GetBitFieldValue(4);
-
             set => SetBitFieldValue(4, value);
         }
 
@@ -168,7 +160,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean ShortPreamble
         {
             get => GetBitFieldValue(5);
-
             set => SetBitFieldValue(5, value);
         }
 
@@ -182,7 +173,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean ShortTimeSlot
         {
             get => GetBitFieldValue(10);
-
             set => SetBitFieldValue(10, value);
         }
 

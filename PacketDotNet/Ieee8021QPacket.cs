@@ -112,7 +112,6 @@ namespace PacketDotNet
         {
             get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                                        Header.Offset + Ieee8021QFields.TypePosition);
-
             set
             {
                 var val = (Int16) value;
@@ -150,7 +149,6 @@ namespace PacketDotNet
         {
             get => (UInt16) EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                            Header.Offset + Ieee8021QFields.TagControlInformationPosition);
-
             set
             {
                 var val = (Int16) value;

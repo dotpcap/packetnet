@@ -96,7 +96,6 @@ namespace PacketDotNet.LLDP
         {
             get => EndianBitConverter.Big.ToUInt16(TLVData.Bytes,
                                                    TLVData.Offset + TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength);
-
             set => EndianBitConverter.Big.CopyBytes(value,
                                                     TLVData.Bytes,
                                                     ValueOffset + SystemCapabilitiesLength);

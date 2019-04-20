@@ -141,7 +141,6 @@ namespace PacketDotNet.LLDP
         public ChassisSubTypes SubType
         {
             get => (ChassisSubTypes) TLVData.Bytes[ValueOffset];
-
             set => TLVData.Bytes[ValueOffset] = (Byte) value;
         }
 

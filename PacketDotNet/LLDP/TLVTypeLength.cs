@@ -141,7 +141,6 @@ namespace PacketDotNet.LLDP
         private UInt16 TypeAndLength
         {
             get => EndianBitConverter.Big.ToUInt16(_byteArraySegment.Bytes, _byteArraySegment.Offset);
-
             set => EndianBitConverter.Big.CopyBytes(value, _byteArraySegment.Bytes, _byteArraySegment.Offset);
         }
     }

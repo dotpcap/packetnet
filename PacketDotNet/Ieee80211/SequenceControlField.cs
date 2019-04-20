@@ -62,7 +62,6 @@ namespace PacketDotNet.Ieee80211
         public Byte FragmentNumber
         {
             get => (Byte) (Field & 0x000F);
-
             set
             {
                 Field &= unchecked((UInt16) ~0xF);
@@ -79,7 +78,6 @@ namespace PacketDotNet.Ieee80211
         public Int16 SequenceNumber
         {
             get => (Int16) (Field >> 4);
-
             set
             {
                 //Use the & mask to make sure we only overwrite the sequence number part of the field

@@ -59,7 +59,6 @@ namespace PacketDotNet
         public override Packet PayloadPacket
         {
             get => base.PayloadPacket;
-
             set
             {
                 base.PayloadPacket = value;

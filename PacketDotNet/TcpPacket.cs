@@ -60,7 +60,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + TcpFields.SourcePortPosition);
-
             set
             {
                 var theValue = value;
@@ -75,7 +74,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + TcpFields.DestinationPortPosition);
-
             set
             {
                 var theValue = value;
@@ -90,7 +88,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt32(Header.Bytes,
                                                    Header.Offset + TcpFields.SequenceNumberPosition);
-
             set => EndianBitConverter.Big.CopyBytes(value,
                                                     Header.Bytes,
                                                     Header.Offset + TcpFields.SequenceNumberPosition);
@@ -101,7 +98,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt32(Header.Bytes,
                                                    Header.Offset + TcpFields.AckNumberPosition);
-
             set => EndianBitConverter.Big.CopyBytes(value,
                                                     Header.Bytes,
                                                     Header.Offset + TcpFields.AckNumberPosition);
@@ -111,7 +107,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + TcpFields.DataOffsetAndFlagsPosition);
-
             set => EndianBitConverter.Big.CopyBytes(value,
                                                     Header.Bytes,
                                                     Header.Offset + TcpFields.DataOffsetAndFlagsPosition);
@@ -146,7 +141,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + TcpFields.WindowSizePosition);
-
             set => EndianBitConverter.Big.CopyBytes(value,
                                                     Header.Bytes,
                                                     Header.Offset + TcpFields.WindowSizePosition);
@@ -159,7 +153,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + TcpFields.ChecksumPosition);
-
             set
             {
                 var theValue = value;
@@ -475,7 +468,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                   Header.Offset + TcpFields.UrgentPointerPosition);
-
             set
             {
                 var theValue = (Int16) value;

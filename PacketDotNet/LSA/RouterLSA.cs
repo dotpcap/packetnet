@@ -104,7 +104,6 @@ namespace PacketDotNet.LSA
         public UInt16 LinkNumber
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + RouterLSAFields.LinkNumberPosition);
-
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + RouterLSAFields.LinkNumberPosition);
         }
 

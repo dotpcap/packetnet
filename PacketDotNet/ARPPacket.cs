@@ -57,7 +57,6 @@ namespace PacketDotNet
         {
             get => (LinkLayers) EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                                 Header.Offset + ARPFields.HardwareAddressTypePosition);
-
             set
             {
                 var theValue = (UInt16) value;
@@ -74,7 +73,6 @@ namespace PacketDotNet
         {
             get => (EthernetPacketType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                                         Header.Offset + ARPFields.ProtocolAddressTypePosition);
-
             set
             {
                 var theValue = (UInt16) value;
@@ -90,7 +88,6 @@ namespace PacketDotNet
         public Int32 HardwareAddressLength
         {
             get => Header.Bytes[Header.Offset + ARPFields.HardwareAddressLengthPosition];
-
             set => Header.Bytes[Header.Offset + ARPFields.HardwareAddressLengthPosition] = (Byte) value;
         }
 
@@ -100,7 +97,6 @@ namespace PacketDotNet
         public Int32 ProtocolAddressLength
         {
             get => Header.Bytes[Header.Offset + ARPFields.ProtocolAddressLengthPosition];
-
             set => Header.Bytes[Header.Offset + ARPFields.ProtocolAddressLengthPosition] = (Byte) value;
         }
 
@@ -116,7 +112,6 @@ namespace PacketDotNet
         {
             get => (ARPOperation) EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                                  Header.Offset + ARPFields.OperationPosition);
-
             set
             {
                 var theValue = (Int16) value;
@@ -134,7 +129,6 @@ namespace PacketDotNet
             get => IPPacket.GetIPAddress(AddressFamily.InterNetwork,
                                          Header.Offset + ARPFields.SenderProtocolAddressPosition,
                                          Header.Bytes);
-
             set
             {
                 // check that the address family is ipv4
@@ -159,7 +153,6 @@ namespace PacketDotNet
             get => IPPacket.GetIPAddress(AddressFamily.InterNetwork,
                                          Header.Offset + ARPFields.TargetProtocolAddressPosition,
                                          Header.Bytes);
-
             set
             {
                 // check that the address family is ipv4

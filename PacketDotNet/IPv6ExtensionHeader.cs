@@ -75,7 +75,6 @@ namespace PacketDotNet
         public IPProtocolType NextHeader
         {
             get => (IPProtocolType)_encapsulatedBytes.Bytes[_encapsulatedBytes.Offset];
-
             set => _encapsulatedBytes.Bytes[_encapsulatedBytes.Offset] = (byte) value;
         }
         

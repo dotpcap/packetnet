@@ -55,7 +55,6 @@ namespace PacketDotNet
         {
             get => (NullPacketType) EndianBitConverter.Little.ToUInt32(Header.Bytes,
                                                                        Header.Offset + NullFields.ProtocolPosition);
-
             set
             {
                 var val = (UInt32) value;

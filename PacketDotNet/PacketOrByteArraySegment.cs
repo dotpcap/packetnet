@@ -44,7 +44,6 @@ namespace PacketDotNet
         public ByteArraySegment ByteArraySegment
         {
             get => _byteArraySegment;
-
             set
             {
                 _packet = null;
@@ -61,7 +60,6 @@ namespace PacketDotNet
         public Packet Packet
         {
             get => _packet;
-
             set
             {
                 _byteArraySegment = null;

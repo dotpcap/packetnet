@@ -56,7 +56,6 @@ namespace PacketDotNet
         {
             get => (PPPProtocol) EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                                  Header.Offset + PPPFields.ProtocolPosition);
-
             set
             {
                 var val = (UInt16) value;

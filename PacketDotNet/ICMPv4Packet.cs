@@ -77,7 +77,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + ICMPv4Fields.ChecksumPosition);
-
             set
             {
                 var theValue = value;
@@ -94,7 +93,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + ICMPv4Fields.IDPosition);
-
             set
             {
                 var theValue = value;
@@ -111,7 +109,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + ICMPv4Fields.SequencePosition);
-
             set => EndianBitConverter.Big.CopyBytes(value,
                                                     Header.Bytes,
                                                     Header.Offset + ICMPv4Fields.SequencePosition);
@@ -123,7 +120,6 @@ namespace PacketDotNet
         public Byte[] Data
         {
             get => PayloadPacketOrData.Value.ByteArraySegment.ActualBytes();
-
             set => PayloadPacketOrData.Value.ByteArraySegment = new ByteArraySegment(value, 0, value.Length);
         }
 

@@ -53,7 +53,6 @@ namespace PacketDotNet
         public override UInt16 SourcePort
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
-
             set
             {
                 var val = value;
@@ -66,7 +65,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + UdpFields.DestinationPortPosition);
-
             set
             {
                 var val = value;
@@ -101,7 +99,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + UdpFields.ChecksumPosition);
-
             set
             {
                 var val = value;

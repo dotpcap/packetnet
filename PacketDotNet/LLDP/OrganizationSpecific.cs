@@ -20,14 +20,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Reflection;
 using PacketDotNet.Utils;
 
 #if DEBUG
+using System.Reflection;
 using log4net;
 #endif
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
     /// An Organization Specific Tlv
@@ -50,9 +50,6 @@ namespace PacketDotNet.LLDP
         private const int OUILength = 3;
         private const int OUISubTypeLength = 1;
 
-
-        #region Constructors
-
         /// <summary>
         /// Creates an Organization Specific Tlv
         /// </summary>
@@ -60,7 +57,7 @@ namespace PacketDotNet.LLDP
         /// The LLDP Data unit being modified
         /// </param>
         /// <param name="offset">
-        /// The Organization Specific Tlv's offset from the
+        /// The Organization Specific TLV's offset from the
         /// origin of the LLDP
         /// </param>
         public OrganizationSpecific(byte[] bytes, int offset) :
@@ -70,7 +67,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Creates an Organization Specific Tlv and sets it value
+        /// Creates an Organization Specific TLV and sets it value
         /// </summary>
         /// <param name="oui">
         /// An Organizationally Unique Identifier
@@ -85,53 +82,16 @@ namespace PacketDotNet.LLDP
         {
             Log.Debug("");
 
-            var length = TLVTypeLength.TypeLengthLength + OUILength + OUISubTypeLength;
+            var length = TlvTypeLength.TypeLengthLength + OUILength + OUISubTypeLength;
             var bytes = new byte[length];
             var offset = 0;
             TLVData = new ByteArraySegment(bytes, offset, length);
 
-            Type = TlvTypes.OrganizationSpecific;
+            Type = TlvType.OrganizationSpecific;
 
             OrganizationUniqueID = oui;
             OrganizationDefinedSubType = subType;
             OrganizationDefinedInfoString = infoString;
-        }
-
-        #endregion
-
-
-        #region Properties
-
-        /// <summary>
-        /// An Organizationally Unique Identifier
-        /// </summary>
-        public byte[] OrganizationUniqueID
-        {
-            get
-            {
-                var oui = new byte[OUILength];
-                Array.Copy(TLVData.Bytes,
-                           ValueOffset,
-                           oui,
-                           0,
-                           OUILength);
-
-                return oui;
-            }
-            set => Array.Copy(value,
-                              0,
-                              TLVData.Bytes,
-                              ValueOffset,
-                              OUILength);
-        }
-
-        /// <summary>
-        /// An Organizationally Defined SubType
-        /// </summary>
-        public int OrganizationDefinedSubType
-        {
-            get => TLVData.Bytes[ValueOffset + OUILength];
-            set => TLVData.Bytes[ValueOffset + OUILength] = (byte) value;
         }
 
         /// <summary>
@@ -160,7 +120,7 @@ namespace PacketDotNet.LLDP
                 // do we have the right sized tlv?
                 if (value.Length != length)
                 {
-                    var headerLength = TLVTypeLength.TypeLengthLength + OUILength + OUISubTypeLength;
+                    var headerLength = TlvTypeLength.TypeLengthLength + OUILength + OUISubTypeLength;
 
                     // resize the tlv
                     var newLength = headerLength + value.Length;
@@ -188,7 +148,39 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Convert this Organization Specific Tlv to a string.
+        /// An Organizationally Defined SubType
+        /// </summary>
+        public int OrganizationDefinedSubType
+        {
+            get => TLVData.Bytes[ValueOffset + OUILength];
+            set => TLVData.Bytes[ValueOffset + OUILength] = (byte) value;
+        }
+
+        /// <summary>
+        /// An Organizationally Unique Identifier
+        /// </summary>
+        public byte[] OrganizationUniqueID
+        {
+            get
+            {
+                var oui = new byte[OUILength];
+                Array.Copy(TLVData.Bytes,
+                           ValueOffset,
+                           oui,
+                           0,
+                           OUILength);
+
+                return oui;
+            }
+            set => Array.Copy(value,
+                              0,
+                              TLVData.Bytes,
+                              ValueOffset,
+                              OUILength);
+        }
+
+        /// <summary>
+        /// Convert this Organization Specific TLV to a string.
         /// </summary>
         /// <returns>
         /// A human readable string
@@ -198,7 +190,5 @@ namespace PacketDotNet.LLDP
             return
                 $"[OrganizationSpecific: OrganizationUniqueID={OrganizationUniqueID}, OrganizationDefinedSubType={OrganizationDefinedSubType}, OrganizationDefinedInfoString={OrganizationDefinedInfoString}]";
         }
-
-        #endregion
     }
 }

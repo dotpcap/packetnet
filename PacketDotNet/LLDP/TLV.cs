@@ -27,7 +27,7 @@ using PacketDotNet.Utils;
 using log4net;
 #endif
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
     /// A Type-Length-Value object
@@ -44,9 +44,6 @@ namespace PacketDotNet.LLDP
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
-
-
-        #region Constructors
 
         /// <summary>
         /// Create a tlv
@@ -70,21 +67,16 @@ namespace PacketDotNet.LLDP
             //       setting tlvData results in the TypeLength.Length being updated with
             //       the length of the ByteArrayAndOffset which would overwrite the value
             //       we are trying to retrieve
-            var byteArraySegment = new ByteArraySegment(bytes, offset, TLVTypeLength.TypeLengthLength);
-            TypeLength = new TLVTypeLength(byteArraySegment);
+            var byteArraySegment = new ByteArraySegment(bytes, offset, TlvTypeLength.TypeLengthLength);
+            TypeLength = new TlvTypeLength(byteArraySegment);
 
             // set the tlvData assuming we have at least the bytes required for the
             // type/length fields
-            TLVData = new ByteArraySegment(bytes, offset, TypeLength.Length + TLVTypeLength.TypeLengthLength)
+            TLVData = new ByteArraySegment(bytes, offset, TypeLength.Length + TlvTypeLength.TypeLengthLength)
             {
-                Length = TypeLength.Length + TLVTypeLength.TypeLengthLength
+                Length = TypeLength.Length + TlvTypeLength.TypeLengthLength
             };
         }
-
-        #endregion
-
-
-        #region Properties
 
         /// <summary>
         /// Length of value portion of the Tlv
@@ -94,8 +86,8 @@ namespace PacketDotNet.LLDP
         {
             get => TypeLength.Length;
 
-            // Length set property is internal because the tlv length is
-            // automatically set based on the length of the tlv value
+            // Length set property is internal because the TLV length is
+            // automatically set based on the length of the TLV value
             internal set => TypeLength.Length = value;
         }
 
@@ -105,9 +97,9 @@ namespace PacketDotNet.LLDP
         public int TotalLength => TLVData.Length;
 
         /// <summary>
-        /// Tlv type
+        /// TLV type
         /// </summary>
-        public TlvTypes Type
+        public TlvType Type
         {
             get => TypeLength.Type;
             set
@@ -120,25 +112,20 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Offset to the value bytes of the Tlv
         /// </summary>
-        internal int ValueOffset => TLVData.Offset + TLVTypeLength.TypeLengthLength;
+        internal int ValueOffset => TLVData.Offset + TlvTypeLength.TypeLengthLength;
 
         /// <summary>
         /// Return a byte[] that contains the tlv
         /// </summary>
         public virtual byte[] Bytes => TLVData.ActualBytes();
 
-        #endregion
-
-
-        #region Members
-
         /// <summary>
-        /// Points to the Tlv data
+        /// Points to the TLV data
         /// </summary>
         private ByteArraySegment _tlvData;
 
         /// <summary>
-        /// Points to the Tlv data
+        /// Points to the TLV data
         /// </summary>
         internal ByteArraySegment TLVData
         {
@@ -148,9 +135,9 @@ namespace PacketDotNet.LLDP
                 _tlvData = value;
 
                 // create a new TypeLength that points at the new ByteArrayAndOffset
-                TypeLength = new TLVTypeLength(value)
+                TypeLength = new TlvTypeLength(value)
                 {
-                    Length = value.Length - TLVTypeLength.TypeLengthLength
+                    Length = value.Length - TlvTypeLength.TypeLengthLength
                 };
             }
         }
@@ -158,8 +145,6 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Interface to this TLVs type and length
         /// </summary>
-        protected TLVTypeLength TypeLength;
-
-        #endregion
+        protected TlvTypeLength TypeLength;
     }
 }

@@ -27,7 +27,7 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-using PacketDotNet.LLDP;
+using PacketDotNet.Lldp;
 using PacketDotNet.Utils;
 
 #if DEBUG
@@ -58,7 +58,7 @@ namespace PacketDotNet
 #endif
 
         /// <summary>
-        /// Contains the Tlv's in the LLDPDU
+        /// Contains the TLV's in the LLDPDU
         /// </summary>
         public TlvCollection TlvCollection = new TlvCollection();
 
@@ -69,9 +69,9 @@ namespace PacketDotNet
         {
             Log.Debug("");
 
-            // all lldp packets end with an EndOfLLDPDU tlv so add one
+            // all lldp packets end with an EndOfLldpdu TLV so add one
             // by default
-            TlvCollection.Add(new EndOfLLDPDU());
+            TlvCollection.Add(new EndOfLldpdu());
         }
 
         /// <summary>
@@ -86,13 +86,13 @@ namespace PacketDotNet
 
             Header = new ByteArraySegment(byteArraySegment);
 
-            // Initiate the Tlv list from the existing data
+            // Initiate the TLV list from the existing data
             ParseByteArrayIntoTlvs(Header.Bytes, Header.Offset);
         }
 
         /// <summary>
         /// LldpPacket specific implementation of BytesSegment
-        /// Necessary because each Tlv in the collection may have a
+        /// Necessary because each TLV in the collection may have a
         /// byte[] that is not shared by other TLVs
         /// NOTE: There is potential for the same performance improvement that
         /// the Packet class uses where we check to see if each TLVs uses the
@@ -154,10 +154,10 @@ namespace PacketDotNet
             while (position < bytes.Length)
             {
                 // The payload type
-                var byteArraySegment = new ByteArraySegment(bytes, offset + position, TLVTypeLength.TypeLengthLength);
-                var typeLength = new TLVTypeLength(byteArraySegment);
+                var byteArraySegment = new ByteArraySegment(bytes, offset + position, TlvTypeLength.TypeLengthLength);
+                var typeLength = new TlvTypeLength(byteArraySegment);
 
-                // create a Tlv based on the type and
+                // create a TLV based on the type and
                 // add it to the collection
                 var currentTlv = TLVFactory(bytes, offset + position, typeLength.Type);
                 if (currentTlv == null)
@@ -166,14 +166,14 @@ namespace PacketDotNet
                     break;
                 }
 
-                Log.DebugFormat("Adding tlv {0}, Type {1}",
+                Log.DebugFormat("Adding TLV {0}, Type {1}",
                                 currentTlv.GetType(),
                                 currentTlv.Type);
 
                 TlvCollection.Add(currentTlv);
 
-                // stop at the first end tlv we run into
-                if (currentTlv is EndOfLLDPDU)
+                // stop at the first end TLV we run into
+                if (currentTlv is EndOfLldpdu)
                 {
                     break;
                 }
@@ -194,54 +194,54 @@ namespace PacketDotNet
         /// A <see cref="int" />
         /// </param>
         /// <param name="type">
-        /// A <see cref="TlvTypes" />
+        /// A <see cref="TlvType" />
         /// </param>
         /// <returns>
         /// A <see cref="Tlv" />
         /// </returns>
-        private static Tlv TLVFactory(byte[] bytes, int offset, TlvTypes type)
+        private static Tlv TLVFactory(byte[] bytes, int offset, TlvType type)
         {
             switch (type)
             {
-                case TlvTypes.ChassisID:
+                case TlvType.ChassisId:
                 {
-                    return new ChassisID(bytes, offset);
+                    return new ChassisId(bytes, offset);
                 }
-                case TlvTypes.PortID:
+                case TlvType.PortId:
                 {
-                    return new PortID(bytes, offset);
+                    return new PortId(bytes, offset);
                 }
-                case TlvTypes.TimeToLive:
+                case TlvType.TimeToLive:
                 {
                     return new TimeToLive(bytes, offset);
                 }
-                case TlvTypes.PortDescription:
+                case TlvType.PortDescription:
                 {
                     return new PortDescription(bytes, offset);
                 }
-                case TlvTypes.SystemName:
+                case TlvType.SystemName:
                 {
                     return new SystemName(bytes, offset);
                 }
-                case TlvTypes.SystemDescription:
+                case TlvType.SystemDescription:
                 {
                     return new SystemDescription(bytes, offset);
                 }
-                case TlvTypes.SystemCapabilities:
+                case TlvType.SystemCapabilities:
                 {
                     return new SystemCapabilities(bytes, offset);
                 }
-                case TlvTypes.ManagementAddress:
+                case TlvType.ManagementAddress:
                 {
                     return new ManagementAddress(bytes, offset);
                 }
-                case TlvTypes.OrganizationSpecific:
+                case TlvType.OrganizationSpecific:
                 {
                     return new OrganizationSpecific(bytes, offset);
                 }
-                case TlvTypes.EndOfLLDPU:
+                case TlvType.EndOfLldpu:
                 {
-                    return new EndOfLLDPDU(bytes, offset);
+                    return new EndOfLldpdu(bytes, offset);
                 }
                 default:
                 {
@@ -265,16 +265,16 @@ namespace PacketDotNet
             var physicalAddressBytes = new byte[EthernetFields.MacAddressLength];
             rnd.NextBytes(physicalAddressBytes);
             var physicalAddress = new PhysicalAddress(physicalAddressBytes);
-            lldpPacket.TlvCollection.Add(new ChassisID(physicalAddress));
+            lldpPacket.TlvCollection.Add(new ChassisId(physicalAddress));
 
             var networkAddress = new byte[IPv4Fields.AddressLength];
             rnd.NextBytes(networkAddress);
-            lldpPacket.TlvCollection.Add(new PortID(new NetworkAddress(new IPAddress(networkAddress))));
+            lldpPacket.TlvCollection.Add(new PortId(new NetworkAddress(new IPAddress(networkAddress))));
 
             var seconds = (ushort) rnd.Next(0, 120);
             lldpPacket.TlvCollection.Add(new TimeToLive(seconds));
 
-            lldpPacket.TlvCollection.Add(new EndOfLLDPDU());
+            lldpPacket.TlvCollection.Add(new EndOfLldpdu());
 
             return lldpPacket;
         }

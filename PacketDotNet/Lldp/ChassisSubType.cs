@@ -19,39 +19,38 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
-    /// The Port ID Tlv subtypes
+    /// The Chassis IDTLV bytes subtypes
     /// </summary>
-    public enum PortSubTypes
+    public enum ChassisSubType
     {
+        /// <summary>A Chassis Component identifier</summary>
+        /// <remarks>See IETF RFC 2737</remarks>
+        ChassisComponent = 1,
+
         /// <summary>An Interface Alias identifier</summary>
         /// <remarks>See IETF RFC 2863</remarks>
-        InterfaceAlias = 1,
+        InterfaceAlias = 2,
 
         /// <summary>A Port Component identifier</summary>
         /// <remarks>See IETF RFC 2737</remarks>
-        PortComponent = 2,
+        PortComponent = 3,
 
         /// <summary>A MAC (Media Access Control) Address identifier</summary>
         /// <remarks>See IEEE Std 802</remarks>
-        MACAddress = 3,
+        MacAddress = 4,
 
         /// <summary>A Network Address (IP Address) Identifier</summary>
         /// <remarks>See IEEE Std 802</remarks>
-        NetworkAddress = 4,
+        NetworkAddress = 5,
 
         /// <summary>An Interface Name identifier</summary>
         /// <remarks>See IEEE Std 802</remarks>
-        InterfaceName = 5,
-
-        /// <summary>An Agent Circiut ID identifier</summary>
-        /// <remarks>See IETF RFC 3046</remarks>
-        AgentCircuitID = 6,
+        InterfaceName = 6,
 
         /// <summary>A Locally Assigned identifier</summary>
-        /// <remarks>See IETF RFC 3046</remarks>
         LocallyAssigned = 7
     }
 }

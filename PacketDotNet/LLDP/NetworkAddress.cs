@@ -23,7 +23,7 @@ using System;
 using System.Net;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
     /// A Network Address
@@ -31,36 +31,11 @@ namespace PacketDotNet.LLDP
     public class NetworkAddress
     {
         /// <summary>
-        /// Length of AddressFamily field in bytes
+        /// Length of IanaAddressFamily field in bytes
         /// </summary>
         internal const int AddressFamilyLength = 1;
 
         internal ByteArraySegment Data;
-
-        internal byte[] Bytes
-        {
-            get
-            {
-                var addressBytes = Address.GetAddressBytes();
-                var data = new byte[AddressFamilyLength + addressBytes.Length];
-                data[0] = (byte) AddressFamily;
-                Array.Copy(addressBytes,
-                           0,
-                           data,
-                           AddressFamilyLength,
-                           addressBytes.Length);
-
-                return data;
-            }
-        }
-
-        /// <summary>
-        /// Number of bytes in the NetworkAddress
-        /// </summary>
-        internal int Length => AddressFamilyLength + Address.GetAddressBytes().Length;
-
-
-        #region Constructors
 
         /// <summary>
         /// Creates a Network Address entity
@@ -88,43 +63,6 @@ namespace PacketDotNet.LLDP
         public NetworkAddress(byte[] bytes, int offset, int length)
         {
             Data = new ByteArraySegment(bytes, offset, length);
-        }
-
-        #endregion
-
-
-        #region Members
-
-        /// <summary>The format of the Network Address</summary>
-        public AddressFamily AddressFamily
-        {
-            get => (AddressFamily) Data.Bytes[Data.Offset];
-            set => Data.Bytes[Data.Offset] = (byte) value;
-        }
-
-        private static int LengthFromAddressFamily(AddressFamily addressFamily)
-        {
-            int length;
-
-            if (addressFamily == AddressFamily.IPv4)
-                length = IPv4Fields.AddressLength;
-            else if (addressFamily == AddressFamily.IPv6)
-                length = IPv6Fields.AddressLength;
-            else
-                throw new NotImplementedException("Unknown addressFamily of " + addressFamily);
-
-
-            return length;
-        }
-
-        private static AddressFamily AddressFamilyFromSocketAddress(IPAddress address)
-        {
-            if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
-            {
-                return AddressFamily.IPv4;
-            }
-
-            return AddressFamily.IPv6;
         }
 
         /// <summary>The Network Address</summary>
@@ -169,6 +107,63 @@ namespace PacketDotNet.LLDP
             }
         }
 
+        /// <summary>The format of the Network Address</summary>
+        public IanaAddressFamily AddressFamily
+        {
+            get => (IanaAddressFamily) Data.Bytes[Data.Offset];
+            set => Data.Bytes[Data.Offset] = (byte) value;
+        }
+
+        /// <summary>
+        /// Gets the bytes.
+        /// </summary>
+        internal byte[] Bytes
+        {
+            get
+            {
+                var addressBytes = Address.GetAddressBytes();
+                var data = new byte[AddressFamilyLength + addressBytes.Length];
+                data[0] = (byte) AddressFamily;
+                Array.Copy(addressBytes,
+                           0,
+                           data,
+                           AddressFamilyLength,
+                           addressBytes.Length);
+
+                return data;
+            }
+        }
+
+        /// <summary>
+        /// Number of bytes in the NetworkAddress
+        /// </summary>
+        internal int Length => AddressFamilyLength + Address.GetAddressBytes().Length;
+
+        private static int LengthFromAddressFamily(IanaAddressFamily addressFamily)
+        {
+            int length;
+
+            switch (addressFamily)
+            {
+                case IanaAddressFamily.IPv4:
+                    length = IPv4Fields.AddressLength;
+                    break;
+                case IanaAddressFamily.IPv6:
+                    length = IPv6Fields.AddressLength;
+                    break;
+                default:
+                    throw new NotImplementedException("Unknown addressFamily of " + addressFamily);
+            }
+
+
+            return length;
+        }
+
+        private static IanaAddressFamily AddressFamilyFromSocketAddress(IPAddress address)
+        {
+            return address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork ? IanaAddressFamily.IPv4 : IanaAddressFamily.IPv6;
+        }
+
         /// <summary>
         /// Equals override
         /// </summary>
@@ -187,13 +182,7 @@ namespace PacketDotNet.LLDP
 
             var na = (NetworkAddress) obj;
 
-            if (AddressFamily.Equals(na.AddressFamily) &&
-                Address.Equals(na.Address))
-            {
-                return true;
-            }
-
-            return false;
+            return AddressFamily.Equals(na.AddressFamily) && Address.Equals(na.Address);
         }
 
         /// <summary>
@@ -215,9 +204,7 @@ namespace PacketDotNet.LLDP
         /// </returns>
         public override string ToString()
         {
-            return $"[NetworkAddress: AddressFamily={AddressFamily}, Address={Address}]";
+            return $"[NetworkAddress: IanaAddressFamily={AddressFamily}, Address={Address}]";
         }
-
-        #endregion
     }
 }

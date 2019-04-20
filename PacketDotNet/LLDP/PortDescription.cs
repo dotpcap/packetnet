@@ -26,13 +26,13 @@ using System.Reflection;
 using log4net;
 #endif
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
     /// A Port Description Tlv
     /// </summary>
     [Serializable]
-    public class PortDescription : StringTLV
+    public class PortDescription : String
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -44,16 +44,13 @@ namespace PacketDotNet.LLDP
 #pragma warning restore 0169, 0649
 #endif
 
-
-        #region Constructors
-
         /// <summary>
         /// Creates a Port Description Tlv
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The Port Description Tlv's offset from the
+        /// The Port Description TLV's offset from the
         /// origin of the LLDP
         /// </param>
         public PortDescription(byte[] bytes, int offset) :
@@ -63,30 +60,23 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Creates a Port Description Tlv and sets it value
+        /// Creates a Port Description TLV and sets it value
         /// </summary>
         /// <param name="description">
         /// A textual description of the port
         /// </param>
-        public PortDescription(string description) : base(TlvTypes.PortDescription, description)
+        public PortDescription(string description) : base(TlvType.PortDescription, description)
         {
             Log.Debug("");
         }
-
-        #endregion
-
-
-        #region Properties
 
         /// <value>
         /// A textual Description of the port
         /// </value>
         public string Description
         {
-            get => StringValue;
-            set => StringValue = value;
+            get => Value;
+            set => Value = value;
         }
-
-        #endregion
     }
 }

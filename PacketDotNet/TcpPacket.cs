@@ -329,16 +329,16 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public TcpPacket(ByteArraySegment bas)
+        public TcpPacket(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
             Header.Length = DataOffset * 4;
 
             // NOTE: we update the Length field AFTER the header field because
@@ -355,7 +355,7 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
         /// <param name="parentPacket">
@@ -363,14 +363,14 @@ namespace PacketDotNet
         /// </param>
         public TcpPacket
         (
-            ByteArraySegment bas,
+            ByteArraySegment byteArraySegment,
             Packet parentPacket)
         {
             Log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             // NOTE: we update the Length field AFTER the header field because
             // we need the header to be valid to retrieve the value of DataOffset

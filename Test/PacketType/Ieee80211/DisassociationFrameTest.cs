@@ -91,10 +91,10 @@ namespace Test.PacketType
                 UInt32 fcs = frame.FrameCheckSequence;
                 
                 var bytes = frame.Bytes;
-                var bas = new ByteArraySegment (bytes);
+                var byteArraySegment = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                DisassociationFrame recreatedFrame = MacFrame.ParsePacket (bas) as DisassociationFrame;
+                DisassociationFrame recreatedFrame = MacFrame.ParsePacket (byteArraySegment) as DisassociationFrame;
                 recreatedFrame.UpdateFrameCheckSequence();
                 
                 Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementDisassociation, recreatedFrame.FrameControl.SubType);

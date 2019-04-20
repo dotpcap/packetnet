@@ -58,9 +58,9 @@ namespace Test.PacketType
             {
                 //This IE will have and length of 5 but only three bytes of data
                 Byte[] value = new Byte[] { 0x0, 0x5, 0x1, 0x2, 0x3 };
-                ByteArraySegment bas = new ByteArraySegment (value);
+                var byteArraySegment = new ByteArraySegment (value);
                 
-                InformationElement infoElement = new InformationElement (bas);
+                InformationElement infoElement = new InformationElement (byteArraySegment);
                 
                 Assert.AreEqual (3, infoElement.ValueLength);
                 Assert.AreEqual (3, infoElement.Value.Length);
@@ -72,9 +72,9 @@ namespace Test.PacketType
                 //This IE will have and length of 2 but there are three bytes of data available,
                 //the last one should be ignored
                 Byte[] value = new Byte[] { 0x0, 0x2, 0x1, 0x2, 0x3 };
-                ByteArraySegment bas = new ByteArraySegment (value);
+                var byteArraySegment = new ByteArraySegment (value);
                 
-                InformationElement infoElement = new InformationElement (bas);
+                InformationElement infoElement = new InformationElement (byteArraySegment);
                 
                 Assert.AreEqual (2, infoElement.ValueLength);
                 Assert.AreEqual (2, infoElement.Value.Length);
@@ -84,9 +84,9 @@ namespace Test.PacketType
             public void Test_Constructor_BufferCorrectSize ()
             {
                 Byte[] value = new Byte[] { 0x0, 0x2, 0x1, 0x2,};
-                ByteArraySegment bas = new ByteArraySegment (value);
+                var byteArraySegment = new ByteArraySegment (value);
                 
-                InformationElement infoElement = new InformationElement (bas);
+                InformationElement infoElement = new InformationElement (byteArraySegment);
                 
                 Assert.AreEqual (2, infoElement.ValueLength);
                 Assert.AreEqual (2, infoElement.Value.Length);

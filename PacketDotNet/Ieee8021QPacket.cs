@@ -37,13 +37,13 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public Ieee8021QPacket(ByteArraySegment bas)
+        public Ieee8021QPacket(ByteArraySegment byteArraySegment)
         {
             // set the header field, header field values are retrieved from this byte array
-            Header = new ByteArraySegment(bas) { Length = Ieee8021QFields.HeaderLength };
+            Header = new ByteArraySegment(byteArraySegment) { Length = Ieee8021QFields.HeaderLength };
 
             // parse the payload via an EthernetPacket method
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header,

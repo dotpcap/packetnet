@@ -81,10 +81,10 @@ namespace Test.PacketType
                 UInt32 fcs = frame.FrameCheckSequence;
                 
                 var bytes = frame.Bytes;
-                var bas = new ByteArraySegment (bytes);
+                var byteArraySegment = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                ContentionFreeEndFrame recreatedFrame = MacFrame.ParsePacket (bas) as ContentionFreeEndFrame;
+                ContentionFreeEndFrame recreatedFrame = MacFrame.ParsePacket (byteArraySegment) as ContentionFreeEndFrame;
                 recreatedFrame.UpdateFrameCheckSequence();
                 
                 Assert.AreEqual (FrameControlField.FrameSubTypes.ControlCFEnd, recreatedFrame.FrameControl.SubType);

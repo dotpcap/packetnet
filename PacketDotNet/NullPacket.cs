@@ -84,16 +84,16 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public NullPacket(ByteArraySegment bas)
+        public NullPacket(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
             // slice off the header portion as our header
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
             Header.Length = NullFields.HeaderLength;
 
             // parse the encapsulated bytes

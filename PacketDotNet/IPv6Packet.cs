@@ -331,15 +331,15 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public IPv6Packet(ByteArraySegment bas)
+        public IPv6Packet(ByteArraySegment byteArraySegment)
         {
-            Log.Debug(bas.ToString());
+            Log.Debug(byteArraySegment.ToString());
 
             // IPv6 headers have a fixed length.
-            Header = new ByteArraySegment(bas)
+            Header = new ByteArraySegment(byteArraySegment)
             {
                 Length = IPv6Fields.HeaderLength
             };
@@ -399,7 +399,7 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor with parent
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
         /// <param name="parentPacket">
@@ -407,8 +407,8 @@ namespace PacketDotNet
         /// </param>
         public IPv6Packet
         (
-            ByteArraySegment bas,
-            Packet parentPacket) : this(bas)
+            ByteArraySegment byteArraySegment,
+            Packet parentPacket) : this(byteArraySegment)
         {
             ParentPacket = parentPacket;
         }

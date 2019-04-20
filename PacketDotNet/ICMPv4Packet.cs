@@ -126,15 +126,15 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public ICMPv4Packet(ByteArraySegment bas)
+        public ICMPv4Packet(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
             Header.Length = ICMPv4Fields.HeaderLength;
 
             // store the payload bytes
@@ -144,7 +144,7 @@ namespace PacketDotNet
         /// <summary>
         /// Construct with parent packet
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
         /// <param name="parentPacket">
@@ -152,8 +152,8 @@ namespace PacketDotNet
         /// </param>
         public ICMPv4Packet
         (
-            ByteArraySegment bas,
-            Packet parentPacket) : this(bas)
+            ByteArraySegment byteArraySegment,
+            Packet parentPacket) : this(byteArraySegment)
         {
             ParentPacket = parentPacket;
         }

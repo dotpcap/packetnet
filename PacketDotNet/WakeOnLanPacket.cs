@@ -67,7 +67,6 @@ namespace PacketDotNet
             Log.Debug("");
 
             // allocate memory for this packet
-            var offset = 0;
             var packetLength = SyncSequence.Length + (EthernetFields.MacAddressLength * MACRepetitions);
             var packetBytes = new Byte[packetLength];
             var destinationMACBytes = destinationMAC.GetAddressBytes();
@@ -88,23 +87,25 @@ namespace PacketDotNet
                 }
             }
 
-            Header = new ByteArraySegment(packetBytes, offset, packetLength);
+            Header = new ByteArraySegment(packetBytes, 0, packetLength);
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public WakeOnLanPacket(ByteArraySegment bas)
+        public WakeOnLanPacket(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
-            
+
             // set the header field, header field values are retrieved from this byte array
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
-            Header.Length = Bytes.Length;
+            Header = new ByteArraySegment(byteArraySegment)
+            {
+                Length = Bytes.Length
+            };
         }
 
         #endregion
@@ -176,19 +177,19 @@ namespace PacketDotNet
         /// <summary>
         /// See IsValid
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
         /// <returns>
         /// A <see cref="System.Boolean" />
         /// </returns>
-        public static Boolean IsValid(ByteArraySegment bas)
+        public static Boolean IsValid(ByteArraySegment byteArraySegment)
         {
             // validate the 16 repetitions of the wolDestinationMAC
             // - verify that the wolDestinationMAC address repeats 16 times in sequence
             for (var i = 0; i < EthernetFields.MacAddressLength * MACRepetitions; i += EthernetFields.MacAddressLength)
             {
-                var basOffset = bas.Offset + i;
+                var basOffset = byteArraySegment.Offset + i;
 
                 // check the synchronization sequence on the first pass
                 if (i == 0)
@@ -196,7 +197,7 @@ namespace PacketDotNet
                     // validate the synchronization sequence
                     for (int j = 0; j < EthernetFields.MacAddressLength; j++)
                     {
-                        if (bas.Bytes[basOffset + j] != SyncSequence[j])
+                        if (byteArraySegment.Bytes[basOffset + j] != SyncSequence[j])
                             return false;
                     }
                 }
@@ -205,7 +206,7 @@ namespace PacketDotNet
                     // fail the validation on malformed WOL Magic Packets
                     for (int j = 0; j < EthernetFields.MacAddressLength; j++)
                     {
-                        if (bas.Bytes[bas.Offset + SyncSequence.Length + j] != bas.Bytes[basOffset + j])
+                        if (byteArraySegment.Bytes[byteArraySegment.Offset + SyncSequence.Length + j] != byteArraySegment.Bytes[basOffset + j])
                             return false;
                     }
                     

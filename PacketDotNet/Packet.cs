@@ -346,36 +346,36 @@ namespace PacketDotNet
             Byte[] packetData)
         {
             Packet p;
-            var bas = new ByteArraySegment(packetData);
+            var byteArraySegment = new ByteArraySegment(packetData);
 
             Log.DebugFormat("LinkLayer {0}", linkLayer);
 
             switch (linkLayer)
             {
                 case LinkLayers.Ethernet:
-                    p = new EthernetPacket(bas);
+                    p = new EthernetPacket(byteArraySegment);
                     break;
                 case LinkLayers.LinuxSLL:
-                    p = new LinuxSLLPacket(bas);
+                    p = new LinuxSLLPacket(byteArraySegment);
                     break;
                 case LinkLayers.Null:
-                    p = new NullPacket(bas);
+                    p = new NullPacket(byteArraySegment);
                     break;
                 case LinkLayers.Ppp:
-                    p = new PPPPacket(bas);
+                    p = new PPPPacket(byteArraySegment);
                     break;
                 case LinkLayers.Ieee80211:
-                    p = MacFrame.ParsePacket(bas);
+                    p = MacFrame.ParsePacket(byteArraySegment);
                     break;
                 case LinkLayers.Ieee80211_Radio:
-                    p = new RadioPacket(bas);
+                    p = new RadioPacket(byteArraySegment);
                     break;
                 case LinkLayers.PerPacketInformation:
-                    p = new PpiPacket(bas);
+                    p = new PpiPacket(byteArraySegment);
                     break;
                 case LinkLayers.Raw:
                 case LinkLayers.RawLegacy:
-                    p = new RawIPPacket(bas);
+                    p = new RawIPPacket(byteArraySegment);
                     break;
                 default:
                     ThrowHelper.ThrowNotImplementedException(ExceptionArgument.linkLayer);

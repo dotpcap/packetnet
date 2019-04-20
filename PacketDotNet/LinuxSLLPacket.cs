@@ -37,12 +37,12 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public LinuxSLLPacket(ByteArraySegment bas)
+        public LinuxSLLPacket(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas) { Length = LinuxSLLFields.SLLHeaderLength };
+            Header = new ByteArraySegment(byteArraySegment) { Length = LinuxSLLFields.SLLHeaderLength };
 
             // parse the payload via an EthernetPacket method
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header,

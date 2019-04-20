@@ -33,12 +33,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public AssociationRequestFrame(ByteArraySegment bas)
+        public AssociationRequestFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -50,12 +50,12 @@ namespace PacketDotNet.Ieee80211
             CapabilityInformation = new CapabilityInformationField(CapabilityInformationBytes);
             ListenInterval = ListenIntervalBytes;
 
-            if (bas.Length > AssociationRequestFields.InformationElement1Position)
+            if (byteArraySegment.Length > AssociationRequestFields.InformationElement1Position)
             {
                 //create a segment that just refers to the info element section
-                var infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                               bas.Offset + AssociationRequestFields.InformationElement1Position,
-                                                               bas.Length - AssociationRequestFields.InformationElement1Position);
+                var infoElementsSegment = new ByteArraySegment(byteArraySegment.Bytes,
+                                                               byteArraySegment.Offset + AssociationRequestFields.InformationElement1Position,
+                                                               byteArraySegment.Length - AssociationRequestFields.InformationElement1Position);
 
                 InformationElements = new InformationElementList(infoElementsSegment);
             }

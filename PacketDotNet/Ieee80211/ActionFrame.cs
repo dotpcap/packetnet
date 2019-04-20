@@ -81,12 +81,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public ActionFrame(ByteArraySegment bas)
+        public ActionFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);

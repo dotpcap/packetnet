@@ -131,10 +131,10 @@ namespace Test.PacketType
                 
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
-                var bas = new ByteArraySegment (bytes);
+                var byteArraySegment = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                DataDataFrame recreatedFrame = MacFrame.ParsePacket (bas) as DataDataFrame;
+                DataDataFrame recreatedFrame = MacFrame.ParsePacket (byteArraySegment) as DataDataFrame;
                 recreatedFrame.UpdateFrameCheckSequence();
                 
                 Assert.AreEqual (FrameControlField.FrameSubTypes.Data, recreatedFrame.FrameControl.SubType);

@@ -68,8 +68,8 @@ namespace Test.PacketType
             [Test]
             public void Test_Constructor_EmptyByteArray ()
             {
-                ByteArraySegment bas = new ByteArraySegment (new Byte[0]);
-                InformationElementList ieList = new InformationElementList (bas);
+                var byteArraySegment = new ByteArraySegment (new Byte[0]);
+                InformationElementList ieList = new InformationElementList (byteArraySegment);
 
                 Assert.AreEqual (0, ieList.Count);
                 Assert.AreEqual (0, ieList.Length);
@@ -83,9 +83,9 @@ namespace Test.PacketType
                 //field which is the second byte on each row (0x5 & 0x4). The actual values are meaningless.
                 Byte[] ieBytes = new Byte[] { 0xD3, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05,
                                               0xDD, 0x04, 0xFF, 0xFE, 0xFD, 0xFC };
-                ByteArraySegment bas = new ByteArraySegment (ieBytes);
+                var byteArraySegment = new ByteArraySegment (ieBytes);
 
-                InformationElementList ieList = new InformationElementList (bas);
+                InformationElementList ieList = new InformationElementList (byteArraySegment);
                 Assert.AreEqual (2, ieList.Count);
                 Assert.AreEqual (13, ieList.Length);
 
@@ -105,9 +105,9 @@ namespace Test.PacketType
                 //but the buffer is too short to contain the complete value for the second IE
                 Byte[] ieBytes = new Byte[] { 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05,
                                               0x00, 0x05, 0x01, 0x02, 0x03 };
-                ByteArraySegment bas = new ByteArraySegment (ieBytes);
+                var byteArraySegment = new ByteArraySegment (ieBytes);
 
-                InformationElementList ieList = new InformationElementList (bas);
+                InformationElementList ieList = new InformationElementList (byteArraySegment);
                 Assert.AreEqual (2, ieList.Count);
 
                 Assert.AreEqual (InformationElement.ElementId.ServiceSetIdentity, ieList [0].Id);
@@ -127,9 +127,9 @@ namespace Test.PacketType
             {
                 //This buffer contains only enough for the id field (i.e. not length or value)
                 Byte[] ieBytes = new Byte[] { 0x00 };
-                ByteArraySegment bas = new ByteArraySegment (ieBytes);
+                var byteArraySegment = new ByteArraySegment (ieBytes);
 
-                InformationElementList ieList = new InformationElementList (bas);
+                InformationElementList ieList = new InformationElementList (byteArraySegment);
                 Assert.AreEqual (0, ieList.Count);
             }
 			
@@ -138,9 +138,9 @@ namespace Test.PacketType
             {
                 //This buffer contains only enough for the id field (i.e. not length or value)
 				Byte[] ieBytes = new Byte[] { 0x00, 0x01 };
-                ByteArraySegment bas = new ByteArraySegment (ieBytes);
+                var byteArraySegment = new ByteArraySegment (ieBytes);
 
-                InformationElementList ieList = new InformationElementList (bas);
+                InformationElementList ieList = new InformationElementList (byteArraySegment);
                 Assert.AreEqual (1, ieList.Count);
             }
             
@@ -156,8 +156,8 @@ namespace Test.PacketType
             [Test]
             public void Test_Bytes_EmptySection ()
             {
-                ByteArraySegment bas = new ByteArraySegment (new Byte[0]);
-                InformationElementList ieList = new InformationElementList (bas);
+                var byteArraySegment = new ByteArraySegment (new Byte[0]);
+                InformationElementList ieList = new InformationElementList (byteArraySegment);
 
                 Assert.AreEqual (0, ieList.Bytes.Length);
             }

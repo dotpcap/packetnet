@@ -246,29 +246,29 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// The parsed MacFrame or null if it could not be parsed.
         /// </returns>
-        /// <param name='bas'>
-        /// The bytes of the packet. bas.Offset should point to the first byte in the mac frame.
+        /// <param name="byteArraySegment">
+        /// The bytes of the packet. byteArraySegment.Offset should point to the first byte in the mac frame.
         /// </param>
         /// <remarks>
         /// If the provided bytes dont contain the FCS then call <see cref="ParsePacket" /> instead. The presence of the
         /// FCS is usually determined by configuration of the device used to capture the packets.
         /// </remarks>
-        public static MacFrame ParsePacketWithFcs(ByteArraySegment bas)
+        public static MacFrame ParsePacketWithFcs(ByteArraySegment byteArraySegment)
         {
-            if (bas.Length < MacFields.FrameControlLength + MacFields.FrameCheckSequenceLength)
+            if (byteArraySegment.Length < MacFields.FrameControlLength + MacFields.FrameCheckSequenceLength)
             {
                 //There isn't enough data for there to be an FCS and a packet
                 return null;
             }
 
             //remove the FCS from the buffer that we will pass to the packet parsers
-            var basWithoutFcs = new ByteArraySegment(bas.Bytes,
-                                                     bas.Offset,
-                                                     bas.Length - MacFields.FrameCheckSequenceLength,
-                                                     bas.BytesLength - MacFields.FrameCheckSequenceLength);
+            var basWithoutFcs = new ByteArraySegment(byteArraySegment.Bytes,
+                                                     byteArraySegment.Offset,
+                                                     byteArraySegment.Length - MacFields.FrameCheckSequenceLength,
+                                                     byteArraySegment.BytesLength - MacFields.FrameCheckSequenceLength);
 
-            var fcs = EndianBitConverter.Big.ToUInt32(bas.Bytes,
-                                                      (bas.Offset + bas.Length) - MacFields.FrameCheckSequenceLength);
+            var fcs = EndianBitConverter.Big.ToUInt32(byteArraySegment.Bytes,
+                                                      (byteArraySegment.Offset + byteArraySegment.Length) - MacFields.FrameCheckSequenceLength);
 
             var frame = ParsePacket(basWithoutFcs);
             if (frame != null)
@@ -286,16 +286,16 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// The parsed MacFrame or null if it could not be parsed.
         /// </returns>
-        /// <param name='bas'>
-        /// The bytes of the packet. bas.Offset should point to the first byte in the mac frame.
+        /// <param name="byteArraySegment">
+        /// The bytes of the packet. byteArraySegment.Offset should point to the first byte in the mac frame.
         /// </param>
         /// <remarks>
         /// If the provided bytes contain the FCS then call <see cref="MacFrame.ParsePacketWithFcs" /> instead. The presence of the
         /// FCS is usually determined by configuration of the device used to capture the packets.
         /// </remarks>
-        public static MacFrame ParsePacket(ByteArraySegment bas)
+        public static MacFrame ParsePacket(ByteArraySegment byteArraySegment)
         {
-            if (bas.Length < MacFields.FrameControlLength)
+            if (byteArraySegment.Length < MacFields.FrameControlLength)
             {
                 //there isn't enough data to even try and work out what type of packet it is
                 return null;
@@ -304,7 +304,7 @@ namespace PacketDotNet.Ieee80211
             //this is a bit ugly as we will end up parsing the framecontrol field twice, once here and once
             //inside the packet constructor. Could create the framecontrol and pass it to the packet but I think that is equally ugly
             var frameControl = new FrameControlField(
-                                                     EndianBitConverter.Big.ToUInt16(bas.Bytes, bas.Offset));
+                                                     EndianBitConverter.Big.ToUInt16(byteArraySegment.Bytes, byteArraySegment.Offset));
 
             MacFrame macFrame = null;
 
@@ -314,32 +314,32 @@ namespace PacketDotNet.Ieee80211
             {
                 case FrameControlField.FrameSubTypes.ManagementAssociationRequest:
                 {
-                    macFrame = new AssociationRequestFrame(bas);
+                    macFrame = new AssociationRequestFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ManagementAssociationResponse:
                 {
-                    macFrame = new AssociationResponseFrame(bas);
+                    macFrame = new AssociationResponseFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ManagementReassociationRequest:
                 {
-                    macFrame = new ReassociationRequestFrame(bas);
+                    macFrame = new ReassociationRequestFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ManagementReassociationResponse:
                 {
-                    macFrame = new AssociationResponseFrame(bas);
+                    macFrame = new AssociationResponseFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ManagementProbeRequest:
                 {
-                    macFrame = new ProbeRequestFrame(bas);
+                    macFrame = new ProbeRequestFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ManagementProbeResponse:
                 {
-                    macFrame = new ProbeResponseFrame(bas);
+                    macFrame = new ProbeResponseFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ManagementReserved0:
@@ -348,63 +348,63 @@ namespace PacketDotNet.Ieee80211
                     break; //TODO
                 case FrameControlField.FrameSubTypes.ManagementBeacon:
                 {
-                    macFrame = new BeaconFrame(bas);
+                    macFrame = new BeaconFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ManagementATIM:
                     break; //TODO
                 case FrameControlField.FrameSubTypes.ManagementDisassociation:
                 {
-                    macFrame = new DisassociationFrame(bas);
+                    macFrame = new DisassociationFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ManagementAuthentication:
                 {
-                    macFrame = new AuthenticationFrame(bas);
+                    macFrame = new AuthenticationFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ManagementDeauthentication:
                 {
-                    macFrame = new DeauthenticationFrame(bas);
+                    macFrame = new DeauthenticationFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ManagementAction:
                 {
-                    macFrame = new ActionFrame(bas);
+                    macFrame = new ActionFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ManagementReserved3:
                     break; //TODO
                 case FrameControlField.FrameSubTypes.ControlBlockAcknowledgmentRequest:
                 {
-                    macFrame = new BlockAcknowledgmentRequestFrame(bas);
+                    macFrame = new BlockAcknowledgmentRequestFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ControlBlockAcknowledgment:
                 {
-                    macFrame = new BlockAcknowledgmentFrame(bas);
+                    macFrame = new BlockAcknowledgmentFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ControlPSPoll:
                     break; //TODO
                 case FrameControlField.FrameSubTypes.ControlRTS:
                 {
-                    macFrame = new RtsFrame(bas);
+                    macFrame = new RtsFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ControlCTS:
                 {
-                    macFrame = new CtsFrame(bas);
+                    macFrame = new CtsFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ControlACK:
                 {
-                    macFrame = new AckFrame(bas);
+                    macFrame = new AckFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ControlCFEnd:
                 {
-                    macFrame = new ContentionFreeEndFrame(bas);
+                    macFrame = new ContentionFreeEndFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ControlCFEndCFACK:
@@ -414,7 +414,7 @@ namespace PacketDotNet.Ieee80211
                 case FrameControlField.FrameSubTypes.DataCFPoll:
                 case FrameControlField.FrameSubTypes.DataCFAckCFPoll:
                 {
-                    macFrame = new DataDataFrame(bas);
+                    macFrame = new DataDataFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.DataNullFunctionNoData:
@@ -422,7 +422,7 @@ namespace PacketDotNet.Ieee80211
                 case FrameControlField.FrameSubTypes.DataCFPollNoData:
                 case FrameControlField.FrameSubTypes.DataCFAckCFPollNoData:
                 {
-                    macFrame = new NullDataFrame(bas);
+                    macFrame = new NullDataFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.QosData:
@@ -430,7 +430,7 @@ namespace PacketDotNet.Ieee80211
                 case FrameControlField.FrameSubTypes.QosDataAndCFPoll:
                 case FrameControlField.FrameSubTypes.QosDataAndCFAckAndCFPoll:
                 {
-                    macFrame = new QosDataFrame(bas);
+                    macFrame = new QosDataFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.QosNullData:
@@ -438,7 +438,7 @@ namespace PacketDotNet.Ieee80211
                 case FrameControlField.FrameSubTypes.QosCFPoll:
                 case FrameControlField.FrameSubTypes.QosCFAckAndCFPoll:
                 {
-                    macFrame = new QosNullDataFrame(bas);
+                    macFrame = new QosNullDataFrame(byteArraySegment);
                     break;
                 }
             }

@@ -23,12 +23,12 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs an OSPFv2 Hello packet from ByteArraySegment
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public OSPFv2HelloPacket(ByteArraySegment bas)
+        public OSPFv2HelloPacket(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas.Bytes);
+            Header = new ByteArraySegment(byteArraySegment.Bytes);
         }
 
         /// <summary>

@@ -135,21 +135,21 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">Payload Bytes</param>
-        public DrdaDDMPacket(ByteArraySegment bas)
+        /// <param name="byteArraySegment">Payload Bytes</param>
+        public DrdaDDMPacket(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">Payload Bytes</param>
+        /// <param name="byteArraySegment">Payload Bytes</param>
         /// <param name="parentPacket">Parent Packet</param>
-        public DrdaDDMPacket(ByteArraySegment bas, Packet parentPacket) : this(bas)
+        public DrdaDDMPacket(ByteArraySegment byteArraySegment, Packet parentPacket) : this(byteArraySegment)
         {
             Log.DebugFormat("ParentPacket.GetType() {0}", parentPacket.GetType());
 

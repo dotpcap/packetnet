@@ -77,10 +77,10 @@ namespace Test.PacketType
                 
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
-                var bas = new ByteArraySegment (bytes);
+                var byteArraySegment = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                CtsFrame recreatedFrame = MacFrame.ParsePacket (bas) as CtsFrame;
+                CtsFrame recreatedFrame = MacFrame.ParsePacket (byteArraySegment) as CtsFrame;
                 recreatedFrame.UpdateFrameCheckSequence ();
                 
                 Assert.AreEqual (FrameControlField.FrameSubTypes.ControlCTS, recreatedFrame.FrameControl.SubType);

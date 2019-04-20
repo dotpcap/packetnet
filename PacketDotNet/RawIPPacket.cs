@@ -41,10 +41,10 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public RawIPPacket(ByteArraySegment bas)
+        public RawIPPacket(ByteArraySegment byteArraySegment)
         {
             // Pcap raw link layer format does not have any header
             // you need to identify whether you have ipv4 or ipv6
@@ -52,10 +52,10 @@ namespace PacketDotNet
             // If the first nibble is 0x04, then you have IP v4
             // If the first nibble is 0x06, then you have IP v6
             // The RawIPPacketProtocol enum has been defined to match this.
-            var firstNibble = bas.Bytes[0] >> 4;
+            var firstNibble = byteArraySegment.Bytes[0] >> 4;
             Protocol = (RawIPPacketProtocol) firstNibble;
 
-            Header = new ByteArraySegment(bas) {Length = 0};
+            Header = new ByteArraySegment(byteArraySegment) {Length = 0};
 
             // parse the encapsulated bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>

@@ -31,12 +31,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Initializes a new instance of the <see cref="DataDataFrame" /> class.
         /// </summary>
-        /// <param name='bas'>
-        /// Bas.
+        /// <param name="byteArraySegment">
+        /// byteArraySegment.
         /// </param>
-        public DataDataFrame(ByteArraySegment bas)
+        public DataDataFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);

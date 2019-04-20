@@ -20,12 +20,12 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs an OSPFv2 Link State Acknowledge packet from ByteArraySegment
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public OSPFv2LSAPacket(ByteArraySegment bas)
+        public OSPFv2LSAPacket(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas.Bytes);
+            Header = new ByteArraySegment(byteArraySegment.Bytes);
         }
 
         /// <summary>

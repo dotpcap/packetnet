@@ -35,13 +35,13 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">A <see cref="ByteArraySegment" /></param>
+        /// <param name="byteArraySegment">A <see cref="ByteArraySegment" /></param>
         /// <param name="parentPacket">The parent packet.</param>
-        public L2TPPacket(ByteArraySegment bas, Packet parentPacket)
+        public L2TPPacket(ByteArraySegment byteArraySegment, Packet parentPacket)
         {
             // slice off the header portion
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
             Header.Length = L2TPFields.HeaderLength;
 
             if (HasLength)

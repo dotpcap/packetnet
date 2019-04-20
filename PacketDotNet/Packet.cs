@@ -66,7 +66,7 @@ namespace PacketDotNet
         /// <value>
         /// The total length of the packet.
         /// </value>
-        public Int32 TotalPacketLength
+        public int TotalPacketLength
         {
             get
             {
@@ -100,7 +100,7 @@ namespace PacketDotNet
         /// are the same instance and the offsets indicate that the bytes
         /// are contiguous
         /// </value>
-        protected Boolean SharesMemoryWithSubPackets
+        protected bool SharesMemoryWithSubPackets
         {
             get
             {
@@ -161,7 +161,7 @@ namespace PacketDotNet
         /// <value>
         /// Gets the header's data.
         /// </value>
-        public virtual Byte[] HeaderData => Header.ActualBytes();
+        public virtual byte[] HeaderData => Header.ActualBytes();
 
         /// <summary>
         /// Gets the header's data high performance.
@@ -192,7 +192,7 @@ namespace PacketDotNet
         /// Note that the packet MAY have a null PayloadData but a
         /// non-null PayloadPacket
         /// </summary>
-        public Byte[] PayloadData
+        public byte[] PayloadData
         {
             get => PayloadDataHighPerformance?.ActualBytes();
             set
@@ -253,7 +253,7 @@ namespace PacketDotNet
         /// byte[] containing this packet and its payload
         /// NOTE: Use 'public virtual ByteArraySegment BytesHighPerformance' for highest performance
         /// </summary>
-        public virtual Byte[] Bytes
+        public virtual byte[] Bytes
         {
             get
             {
@@ -343,7 +343,7 @@ namespace PacketDotNet
         public static Packet ParsePacket
         (
             LinkLayers linkLayer,
-            Byte[] packetData)
+            byte[] packetData)
         {
             Packet p;
             var byteArraySegment = new ByteArraySegment(packetData);
@@ -413,7 +413,7 @@ namespace PacketDotNet
         { }
 
         /// <summary>Output this packet as a readable string</summary>
-        public override String ToString()
+        public override string ToString()
         {
             return ToString(StringOutputType.Normal);
         }
@@ -428,9 +428,9 @@ namespace PacketDotNet
         /// <param name="outputFormat">
         ///     <see cref="StringOutputType" />
         /// </param>
-        public virtual String ToString(StringOutputType outputFormat)
+        public virtual string ToString(StringOutputType outputFormat)
         {
-            return PayloadPacketOrData.Value.Type == PayloadType.Packet ? PayloadPacketOrData.Value.Packet.ToString(outputFormat) : String.Empty;
+            return PayloadPacketOrData.Value.Type == PayloadType.Packet ? PayloadPacketOrData.Value.Packet.ToString(outputFormat) : string.Empty;
         }
 
         /// <summary>
@@ -442,7 +442,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public String PrintHex()
+        public string PrintHex()
         {
             var data = BytesHighPerformance.Bytes;
             var buffer = new StringBuilder();
@@ -538,6 +538,6 @@ namespace PacketDotNet
         /// <value>
         /// Color used when generating the text description of a packet
         /// </value>
-        public virtual String Color => AnsiEscapeSequences.Black;
+        public virtual string Color => AnsiEscapeSequences.Black;
     }
 }

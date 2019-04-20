@@ -44,24 +44,24 @@ namespace PacketDotNet.Utils
 #pragma warning restore 0169, 0649
 #endif
 
-        private Int32 _length;
+        private int _length;
 
         /// <value>
         /// Gets the underlying byte array.
         /// </value>
-        public Byte[] Bytes { get; }
+        public byte[] Bytes { get; }
 
         /// <value>
         /// Gets or sets the maximum number of bytes we should treat <see cref="Bytes"/> as having.
-        /// This allows for controlling the number of bytes produced by <see cref="FollowedSegment"/>.
+        /// This allows for controlling the number of bytes produced by <see cref="NextSegment()"/>.
         /// </value>
-        public Int32 BytesLength { get; set; }
+        public int BytesLength { get; set; }
 
         /// <value>
         /// Gets or sets the number of bytes beyond the offset into <see cref="Bytes"/>. 
         /// </value>
         /// <remarks>Take care when setting this parameter as many things are based on the value of this property being correct.</remarks>
-        public Int32 Length
+        public int Length
         {
             get => _length;
             set
@@ -81,13 +81,13 @@ namespace PacketDotNet.Utils
         /// <value>
         /// Gets or sets the offset into <see cref="Bytes"/>.
         /// </value>
-        public Int32 Offset { get; set; }
+        public int Offset { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ByteArraySegment"/> class.
         /// </summary>
         /// <param name="bytes">The bytes.</param>
-        public ByteArraySegment(Byte[] bytes) : this(bytes, 0, bytes.Length)
+        public ByteArraySegment(byte[] bytes) : this(bytes, 0, bytes.Length)
         { }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace PacketDotNet.Utils
         /// <param name="bytes">The bytes.</param>
         /// <param name="offset">The offset into the byte array.</param>
         /// <param name="length">The length beyond the offset.</param>
-        public ByteArraySegment(Byte[] bytes, Int32 offset, Int32 length) : this(bytes, offset, length, bytes.Length)
+        public ByteArraySegment(byte[] bytes, int offset, int length) : this(bytes, offset, length, bytes.Length)
         { }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace PacketDotNet.Utils
         /// <param name="offset">The offset into the byte array.</param>
         /// <param name="length">The length beyond the offset.</param>
         /// <param name="bytesLength">Length of the bytes.</param>
-        public ByteArraySegment(Byte[] bytes, Int32 offset, Int32 length, Int32 bytesLength)
+        public ByteArraySegment(byte[] bytes, int offset, int length, int bytesLength)
         {
             Log.DebugFormat("Bytes.Length {0}, Offset {1}, Length {2}, BytesLength {3}",
                             bytes.Length,
@@ -137,14 +137,14 @@ namespace PacketDotNet.Utils
         /// <see cref="NeedsCopyForActualBytes" /> can be used to determine if the copy is necessary.
         /// </summary>
         /// <returns>A <see cref="System.Byte" /></returns>
-        public Byte[] ActualBytes()
+        public byte[] ActualBytes()
         {
             Log.DebugFormat("{0}", ToString());
 
             if (NeedsCopyForActualBytes)
             {
                 Log.Debug("needs copy");
-                var bytes = new Byte[Length];
+                var bytes = new byte[Length];
                 Array.Copy(Bytes, Offset, bytes, 0, Length);
                 return bytes;
             }
@@ -156,7 +156,7 @@ namespace PacketDotNet.Utils
         /// <summary>
         /// Gets a value indicating whether we need to perform a copy to get the <see cref="ActualBytes"/>.
         /// </summary>
-        public Boolean NeedsCopyForActualBytes
+        public bool NeedsCopyForActualBytes
         {
             get
             {
@@ -188,7 +188,7 @@ namespace PacketDotNet.Utils
         /// </summary>
         /// <param name="segmentLength">A <see cref="System.Int32" /> that can be used to limit the length of the segment that is to be returned.</param>
         /// <returns>A <see cref="ByteArraySegment" /></returns>
-        public ByteArraySegment NextSegment(Int32 segmentLength)
+        public ByteArraySegment NextSegment(int segmentLength)
         {
             Log.DebugFormat("SegmentLength {0}", segmentLength);
 
@@ -208,7 +208,7 @@ namespace PacketDotNet.Utils
         }
 
         /// <inheritdoc />
-        public override String ToString()
+        public override string ToString()
         {
             return $"[ByteArraySegment: Length={Length}, Bytes.Length={Bytes.Length}, BytesLength={BytesLength}, Offset={Offset}, NeedsCopyForActualBytes={NeedsCopyForActualBytes}]";
         }

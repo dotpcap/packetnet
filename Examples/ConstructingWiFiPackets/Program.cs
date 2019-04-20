@@ -11,12 +11,12 @@ namespace ConstructingWiFiPackets
     class Program
     {
         private static PhysicalAddress adapterAddress;
-        private static Boolean stopCapturing = false;
+        private static bool stopCapturing = false;
         
-        static void Main(String[] args)
+        static void Main(string[] args)
         {
             // Print SharpPcap version
-            String ver = SharpPcap.Version.VersionString;
+            string ver = SharpPcap.Version.VersionString;
             Console.WriteLine("PacketDotNet example using SharpPcap {0}", ver);
 
             // Retrieve the device list
@@ -34,7 +34,7 @@ namespace ConstructingWiFiPackets
             Console.WriteLine("----------------------------------------------------");
             Console.WriteLine();
 
-            Int32 i = 0;
+            int i = 0;
 
             // Print out the devices
             foreach (var dev in devices)
@@ -46,7 +46,7 @@ namespace ConstructingWiFiPackets
 
             Console.WriteLine();
             Console.Write("-- Please choose a device to capture: ");
-            i = Int32.Parse(Console.ReadLine());
+            i = int.Parse(Console.ReadLine());
 
             // Register a cancle handler that lets us break out of our capture loop
             // since we currently need to synchronously receive packets in order to get
@@ -66,7 +66,7 @@ namespace ConstructingWiFiPackets
 
             
             Console.Write("Please enter the SSID to probe for (use empty string for broadcast probe): ");
-            String ssid = Console.ReadLine();
+            string ssid = Console.ReadLine();
             Console.WriteLine();
 
 
@@ -75,16 +75,16 @@ namespace ConstructingWiFiPackets
             System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
             InformationElement ssidIe = new InformationElement(InformationElement.ElementId.ServiceSetIdentity, encoding.GetBytes(ssid));
             InformationElement supportedRatesIe = new InformationElement(InformationElement.ElementId.SupportedRates,
-                new Byte[] { 0x02, 0x04, 0x0b, 0x16, 0x0c, 0x12, 0x18, 0x24 });
+                new byte[] { 0x02, 0x04, 0x0b, 0x16, 0x0c, 0x12, 0x18, 0x24 });
             InformationElement extendedSupportedRatesIe = new InformationElement(InformationElement.ElementId.ExtendedSupportedRates,
-                new Byte[] { 0x30, 0x48, 0x60, 0x6c });
+                new byte[] { 0x30, 0x48, 0x60, 0x6c });
             //Create a broadcast probe
             ProbeRequestFrame probe = new ProbeRequestFrame(device.MacAddress,
                                                             broadcastAddress,
                                                             broadcastAddress,
                                                             new InformationElementList() {ssidIe, supportedRatesIe, extendedSupportedRatesIe});
 
-            Byte[] probeBytes = probe.Bytes;
+            byte[] probeBytes = probe.Bytes;
             device.SendPacket(probeBytes, probeBytes.Length - 4);
 
 
@@ -116,7 +116,7 @@ namespace ConstructingWiFiPackets
             }
         }
 
-        static void device_OnPacketArrival(Object sender, CaptureEventArgs e)
+        static void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
             MacFrame p = Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data) as MacFrame;
 
@@ -131,7 +131,7 @@ namespace ConstructingWiFiPackets
             }
         }
 
-        static void HandleCancelKeyPress(Object sender, ConsoleCancelEventArgs e)
+        static void HandleCancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
             Console.WriteLine("-- Stopping capture");
             stopCapturing = true;

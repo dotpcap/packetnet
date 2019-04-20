@@ -64,7 +64,7 @@ namespace Test.PacketType
             // even though the packet has 6 bytes of extra data, the ip packet shows a size of
             // 40 and the ip header has a length of 20. The TCP header is also 20 bytes so
             // there should be zero bytes in the TCPData value
-            Int32 expectedTcpDataLength = 0;
+            int expectedTcpDataLength = 0;
             Assert.AreEqual(expectedTcpDataLength, t.PayloadData.Length);
 
             dev.Close();
@@ -94,8 +94,8 @@ namespace Test.PacketType
         [Test]
         public void PayloadModification()
         {
-            String s = "-++++=== HELLLLOOO ===++++-";
-            Byte[] data = System.Text.Encoding.UTF8.GetBytes(s);
+            string s = "-++++=== HELLLLOOO ===++++-";
+            byte[] data = System.Text.Encoding.UTF8.GetBytes(s);
 
             //create random pkt
             var p = TcpPacket.RandomPacket();
@@ -142,7 +142,7 @@ namespace Test.PacketType
             Assert.IsNotNull(t, "Expected t to not be null");
 
             // verify that the options byte match what we expect
-            Byte[] expectedOptions = new Byte[] { 0x1, 0x1, 0x8, 0xa, 0x0, 0x14,
+            byte[] expectedOptions = new byte[] { 0x1, 0x1, 0x8, 0xa, 0x0, 0x14,
                                                   0x3d, 0xe5, 0x1d, 0xf5, 0xf8, 0x84 };
             Assert.AreEqual(expectedOptions, t.Options);
 
@@ -179,8 +179,8 @@ namespace Test.PacketType
         [Test]
         public void TCPConstructorFromValues()
         {
-            UInt16 sourcePort = 100;
-            UInt16 destinationPort = 101;
+            ushort sourcePort = 100;
+            ushort destinationPort = 101;
             var tcpPacket = new TcpPacket(sourcePort, destinationPort);
 
             Assert.AreEqual(sourcePort, tcpPacket.SourcePort);
@@ -233,7 +233,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            Boolean foundtcpPacket = false;
+            bool foundtcpPacket = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = PacketDotNet.Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);

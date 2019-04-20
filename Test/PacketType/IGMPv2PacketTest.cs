@@ -40,7 +40,7 @@ namespace Test.PacketType
 
             RawCapture rawCapture;
 
-            Int32 packetIndex = 0;
+            int packetIndex = 0;
             while((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
@@ -53,7 +53,7 @@ namespace Test.PacketType
                 {
                     Assert.AreEqual(igmp.Type, IGMPMessageType.MembershipQuery);
                     Assert.AreEqual(igmp.MaxResponseTime, 100);
-                    Assert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new Byte[2] { 0xEE, 0x9B }, 0));
+                    Assert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new byte[2] { 0xEE, 0x9B }, 0));
                     Assert.AreEqual(igmp.GroupAddress, IPAddress.Parse("0.0.0.0"));
                 }
 
@@ -61,7 +61,7 @@ namespace Test.PacketType
                 {
                     Assert.AreEqual(igmp.Type, IGMPMessageType.MembershipReportIGMPv2);
                     Assert.AreEqual(igmp.MaxResponseTime, 0.0);
-                    Assert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new Byte[2] { 0x08, 0xC3 }, 0));
+                    Assert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new byte[2] { 0x08, 0xC3 }, 0));
                     Assert.AreEqual(igmp.GroupAddress, IPAddress.Parse("224.0.1.60"));
                 }
 
@@ -113,7 +113,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            Boolean foundigmp = false;
+            bool foundigmp = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);

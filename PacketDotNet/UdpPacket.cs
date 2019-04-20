@@ -50,7 +50,7 @@ namespace PacketDotNet
 #endif
 
         /// <summary> Fetch the port number on the source host.</summary>
-        public override UInt16 SourcePort
+        public override ushort SourcePort
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
             set
@@ -61,7 +61,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the port number on the target host.</summary>
-        public override UInt16 DestinationPort
+        public override ushort DestinationPort
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + UdpFields.DestinationPortPosition);
@@ -78,7 +78,7 @@ namespace PacketDotNet
         /// Length in bytes of the header and payload, minimum size of 8,
         /// the size of the Udp header
         /// </value>
-        public Int32 Length
+        public int Length
         {
             get => EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                   Header.Offset + UdpFields.HeaderLengthPosition);
@@ -87,7 +87,7 @@ namespace PacketDotNet
             // its bytes are retrieved
             internal set
             {
-                var val = (Int16) value;
+                var val = (short) value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  Header.Bytes,
                                                  Header.Offset + UdpFields.HeaderLengthPosition);
@@ -95,7 +95,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the header checksum.</summary>
-        public override UInt16 Checksum
+        public override ushort Checksum
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + UdpFields.ChecksumPosition);
@@ -109,7 +109,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Check if the UDP packet is valid, checksum-wise.</summary>
-        public Boolean ValidChecksum
+        public bool ValidChecksum
         {
             get
             {
@@ -126,7 +126,7 @@ namespace PacketDotNet
         /// <value>
         /// True if the udp checksum is valid
         /// </value>
-        public Boolean ValidUDPChecksum
+        public bool ValidUDPChecksum
         {
             get
             {
@@ -138,7 +138,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.LightGreen;
+        public override string Color => AnsiEscapeSequences.LightGreen;
 
         /// <summary>
         /// Update the Udp length
@@ -159,14 +159,14 @@ namespace PacketDotNet
         /// <param name="destinationPort">
         /// A <see cref="System.UInt16" />
         /// </param>
-        public UdpPacket(UInt16 sourcePort, UInt16 destinationPort)
+        public UdpPacket(ushort sourcePort, ushort destinationPort)
         {
             Log.Debug("");
 
             // allocate memory for this packet
             var offset = 0;
             var length = UdpFields.HeaderLength;
-            var headerBytes = new Byte[length];
+            var headerBytes = new byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
             // set instance values
@@ -192,11 +192,11 @@ namespace PacketDotNet
 
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                const Int32 wakeOnLanPort0 = 0;
-                const Int32 wakeOnLanPort7 = 7;
-                const Int32 wakeOnLanPort9 = 9;
-                const Int32 l2TpPort = 1701;
-                const Int32 teredoPort = 3544;
+                const int wakeOnLanPort0 = 0;
+                const int wakeOnLanPort7 = 7;
+                const int wakeOnLanPort9 = 9;
+                const int l2TpPort = 1701;
+                const int teredoPort = 3544;
 
                 var result = new PacketOrByteArraySegment();
                 var destinationPort = DestinationPort;
@@ -275,7 +275,7 @@ namespace PacketDotNet
         /// Calculates the UDP checksum, optionally updating the UDP checksum header.
         /// </summary>
         /// <returns>The calculated UDP checksum.</returns>
-        public UInt16 CalculateUDPChecksum()
+        public ushort CalculateUDPChecksum()
         {
             return (ushort) CalculateChecksum(TransportChecksumOption.IncludePseudoIPHeader);
         }
@@ -289,7 +289,7 @@ namespace PacketDotNet
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
@@ -313,7 +313,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                var properties = new Dictionary<String, String>
+                var properties = new Dictionary<string, string>
                 {
                     {"source", SourcePort.ToString()},
                     {"destination", DestinationPort.ToString()},
@@ -322,7 +322,7 @@ namespace PacketDotNet
                 };
 
                 // calculate the padding needed to right-justify the property names
-                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("UDP:  ******* UDP - \"User Datagram Protocol\" - offset=? length=" + TotalPacketLength);
@@ -350,8 +350,8 @@ namespace PacketDotNet
         public static UdpPacket RandomPacket()
         {
             var rnd = new Random();
-            var sourcePort = (UInt16) rnd.Next(UInt16.MinValue, UInt16.MaxValue);
-            var destinationPort = (UInt16) rnd.Next(UInt16.MinValue, UInt16.MaxValue);
+            var sourcePort = (ushort) rnd.Next(ushort.MinValue, ushort.MaxValue);
+            var destinationPort = (ushort) rnd.Next(ushort.MinValue, ushort.MaxValue);
 
             return new UdpPacket(sourcePort, destinationPort);
         }

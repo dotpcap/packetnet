@@ -67,7 +67,7 @@ namespace PacketDotNet
         /// <summary>
         /// Gets the length.
         /// </summary>
-        public UInt16 Length => (UInt16) ((HeaderExtensionLength + 1) * 8);
+        public ushort Length => (ushort) ((HeaderExtensionLength + 1) * 8);
 
         /// <summary>
         /// Gets or sets the next header.

@@ -126,7 +126,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            Boolean foundicmpv6 = false;
+            bool foundicmpv6 = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
 

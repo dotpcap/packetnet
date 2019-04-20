@@ -78,10 +78,10 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.DarkGray;
+        public override string Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
@@ -105,13 +105,13 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                var properties = new Dictionary<String, String>
+                var properties = new Dictionary<string, string>
                 {
                     {"protocol", Protocol + " (0x" + Protocol.ToString("x") + ")"}
                 };
 
                 // calculate the padding needed to right-justify the property names
-                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Raw:  ******* Raw - \"Raw IP Packet\" - offset=? length=" + TotalPacketLength);

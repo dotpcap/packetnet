@@ -29,28 +29,28 @@ namespace PacketDotNet
     public struct UdpFields
     {
         /// <summary> Length of a UDP port in bytes.</summary>
-        public static readonly Int32 PortLength = 2;
+        public static readonly int PortLength = 2;
 
         /// <summary> Length of the header length field in bytes.</summary>
-        public static readonly Int32 HeaderLengthLength = 2;
+        public static readonly int HeaderLengthLength = 2;
 
         /// <summary> Length of the checksum field in bytes.</summary>
-        public static readonly Int32 ChecksumLength = 2;
+        public static readonly int ChecksumLength = 2;
 
         /// <summary> Position of the source port.</summary>
-        public static readonly Int32 SourcePortPosition = 0;
+        public static readonly int SourcePortPosition = 0;
 
         /// <summary> Position of the destination port.</summary>
-        public static readonly Int32 DestinationPortPosition;
+        public static readonly int DestinationPortPosition;
 
         /// <summary> Position of the header length.</summary>
-        public static readonly Int32 HeaderLengthPosition;
+        public static readonly int HeaderLengthPosition;
 
         /// <summary> Position of the header checksum length.</summary>
-        public static readonly Int32 ChecksumPosition;
+        public static readonly int ChecksumPosition;
 
         /// <summary> Length of a UDP header in bytes.</summary>
-        public static readonly Int32 HeaderLength; // == 8
+        public static readonly int HeaderLength; // == 8
 
         static UdpFields()
         {

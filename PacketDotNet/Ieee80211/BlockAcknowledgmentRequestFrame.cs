@@ -85,13 +85,13 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The block ack starting sequence control field value
         /// </value>
-        public UInt16 BlockAckStartingSequenceControl { get; set; }
+        public ushort BlockAckStartingSequenceControl { get; set; }
 
 
         /// <summary>
         /// Length of the frame
         /// </summary>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
+        public override int FrameSize => MacFields.FrameControlLength +
                                            MacFields.DurationIDLength +
                                            (MacFields.AddressLength * 2) +
                                            BlockAckRequestFields.BlockAckRequestControlLength +
@@ -110,7 +110,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Block acknowledgment control bytes are the first two bytes of the frame
         /// </summary>
-        private UInt16 BlockAckRequestControlBytes
+        private ushort BlockAckRequestControlBytes
         {
             get
             {
@@ -135,7 +135,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The block ack starting sequence control.
         /// </value>
-        private UInt16 BlockAckStartingSequenceControlBytes
+        private ushort BlockAckStartingSequenceControlBytes
         {
             get
             {
@@ -161,7 +161,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;
@@ -182,7 +182,7 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// The address string.
         /// </returns>
-        protected override String GetAddressString()
+        protected override string GetAddressString()
         {
             return $"RA {ReceiverAddress} TA {TransmitterAddress}";
         }

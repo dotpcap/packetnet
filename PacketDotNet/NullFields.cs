@@ -31,17 +31,17 @@ namespace PacketDotNet
         /// <summary>
         /// Length of the Protocol field in bytes, the field is of type
         /// </summary>
-        public static readonly Int32 ProtocolLength = 4;
+        public static readonly int ProtocolLength = 4;
 
         /// <summary>
         /// The length of the header
         /// </summary>
-        public static readonly Int32 HeaderLength = ProtocolLength;
+        public static readonly int HeaderLength = ProtocolLength;
 
 
         /// <summary>
         /// Offset from the start of the packet where the Protocol field is located
         /// </summary>
-        public static readonly Int32 ProtocolPosition = 0;
+        public static readonly int ProtocolPosition = 0;
     }
 }

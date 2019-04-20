@@ -110,7 +110,7 @@ namespace PacketDotNet.Ieee80211
         /// Although this is a 16bit field only 14 of the bits are used to represent the id. Therefore the available values
         /// for this field are inthe range 1-2,007.
         /// </summary>
-        public UInt16 AssociationId { get; set; }
+        public ushort AssociationId { get; set; }
 
         /// <summary>
         /// The capability information field that describes the networks capabilities.
@@ -123,7 +123,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The size of the frame.
         /// </value>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
+        public override int FrameSize => MacFields.FrameControlLength +
                                            MacFields.DurationIDLength +
                                            (MacFields.AddressLength * 3) +
                                            MacFields.SequenceControlLength +
@@ -142,14 +142,14 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         public AuthenticationStatusCode StatusCode { get; set; }
 
-        private UInt16 AssociationIdBytes
+        private ushort AssociationIdBytes
         {
             get
             {
                 if (Header.Length >= AssociationResponseFields.AssociationIdPosition + AssociationResponseFields.AssociationIdLength)
                 {
                     var associationID = EndianBitConverter.Little.ToUInt16(Header.Bytes, Header.Offset + AssociationResponseFields.AssociationIdPosition);
-                    return (UInt16) (associationID & 0xCF);
+                    return (ushort) (associationID & 0xCF);
                 }
 
                 return 0;
@@ -157,7 +157,7 @@ namespace PacketDotNet.Ieee80211
 
             set
             {
-                var associationID = (UInt16) (value & 0xCF);
+                var associationID = (ushort) (value & 0xCF);
                 EndianBitConverter.Little.CopyBytes(associationID,
                                                     Header.Bytes,
                                                     Header.Offset + AssociationResponseFields.AssociationIdPosition);
@@ -167,7 +167,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// The raw capability information bytes
         /// </summary>
-        private UInt16 CapabilityInformationBytes
+        private ushort CapabilityInformationBytes
         {
             get
             {
@@ -199,7 +199,7 @@ namespace PacketDotNet.Ieee80211
                 //to extract a meaningful value
                 return AuthenticationStatusCode.UnspecifiedFailure;
             }
-            set => EndianBitConverter.Little.CopyBytes((UInt16) value,
+            set => EndianBitConverter.Little.CopyBytes((ushort) value,
                                                        Header.Bytes,
                                                        Header.Offset + AssociationResponseFields.StatusCodePosition);
         }
@@ -211,7 +211,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;

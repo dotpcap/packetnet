@@ -105,12 +105,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Number used for selection of authentication algorithm
         /// </summary>
-        public UInt16 AuthenticationAlgorithmNumber { get; set; }
+        public ushort AuthenticationAlgorithmNumber { get; set; }
 
         /// <summary>
         /// Sequence number to define the step of the authentication algorithm
         /// </summary>
-        public UInt16 AuthenticationAlgorithmTransactionSequenceNumber { get; set; }
+        public ushort AuthenticationAlgorithmTransactionSequenceNumber { get; set; }
 
         /// <summary>
         /// Gets the size of the frame.
@@ -118,7 +118,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The size of the frame.
         /// </value>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
+        public override int FrameSize => MacFields.FrameControlLength +
                                            MacFields.DurationIDLength +
                                            (MacFields.AddressLength * 3) +
                                            MacFields.SequenceControlLength +
@@ -137,7 +137,7 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         public AuthenticationStatusCode StatusCode { get; set; }
 
-        private UInt16 AuthenticationAlgorithmNumberBytes
+        private ushort AuthenticationAlgorithmNumberBytes
         {
             get
             {
@@ -155,7 +155,7 @@ namespace PacketDotNet.Ieee80211
                                                        Header.Offset + AuthenticationFields.AuthAlgorithmNumPosition);
         }
 
-        private UInt16 AuthenticationAlgorithmTransactionSequenceNumberBytes
+        private ushort AuthenticationAlgorithmTransactionSequenceNumberBytes
         {
             get
             {
@@ -175,7 +175,7 @@ namespace PacketDotNet.Ieee80211
 
         private AuthenticationStatusCode StatusCodeBytes
         {
-            set => EndianBitConverter.Little.CopyBytes((UInt16) value,
+            set => EndianBitConverter.Little.CopyBytes((ushort) value,
                                                        Header.Bytes,
                                                        Header.Offset + AuthenticationFields.StatusCodePosition);
         }
@@ -187,7 +187,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;

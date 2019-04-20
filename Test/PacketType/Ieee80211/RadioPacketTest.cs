@@ -76,7 +76,7 @@ namespace Test.PacketType
                 
                 FlagsRadioTapField flagsField = p[RadioTapType.Flags] as FlagsRadioTapField;
                 Assert.IsNotNull(flagsField);
-                Assert.AreEqual(0, (Int32)flagsField.Flags);
+                Assert.AreEqual(0, (int)flagsField.Flags);
                 
                 RateRadioTapField rateField = p[RadioTapType.Rate] as RateRadioTapField;
                 Assert.IsNotNull(rateField);
@@ -143,7 +143,7 @@ namespace Test.PacketType
                 
                 //we will just put a single byte of data because we dont want it to be parsed into 
                 //an 802.11 frame in this test
-                p.PayloadData = new Byte[]{0xFF};
+                p.PayloadData = new byte[]{0xFF};
                 
                 var frameBytes = p.Bytes;
                 
@@ -152,7 +152,7 @@ namespace Test.PacketType
                 Assert.IsNotNull(p[RadioTapType.Flags]);
                 Assert.IsNotNull(p[RadioTapType.DbAntennaSignal]);
                 Assert.IsNotNull(p[RadioTapType.DbAntennaNoise]);
-                Assert.AreEqual(new Byte[]{0xFF}, recreatedFrame.PayloadData);
+                Assert.AreEqual(new byte[]{0xFF}, recreatedFrame.PayloadData);
             }
             
             
@@ -204,13 +204,13 @@ namespace Test.PacketType
             {
                 MemoryStream ms = new MemoryStream();
                 BinaryWriter bs = new BinaryWriter(ms);
-                bs.Write((Byte)0x0); //version
-                bs.Write((Byte)0x0); //pad
-                bs.Write((UInt16) 0x0010); //length
-                bs.Write((UInt32) 0x80000002); //present 1 (wth flags field)
-                bs.Write((UInt32) 0x00010000); //present 2 (with unhandled field)
-                bs.Write((UInt16) 0x0010); //Flags field (FCS included flag set)
-                bs.Write((UInt16) 0x1234); //a made up field that we want to keep even though we dont know what it is
+                bs.Write((byte)0x0); //version
+                bs.Write((byte)0x0); //pad
+                bs.Write((ushort) 0x0010); //length
+                bs.Write((uint) 0x80000002); //present 1 (wth flags field)
+                bs.Write((uint) 0x00010000); //present 2 (with unhandled field)
+                bs.Write((ushort) 0x0010); //Flags field (FCS included flag set)
+                bs.Write((ushort) 0x1234); //a made up field that we want to keep even though we dont know what it is
                 
                 var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_plus_radiotap_header.pcap");
                 dev.Open();

@@ -38,16 +38,16 @@ namespace PacketDotNet.Utils
         public static IPAddress GetIPAddress(IPVersion version)
         {
             var rnd = new Random();
-            Byte[] randomAddressBytes;
+            byte[] randomAddressBytes;
 
             if (version == IPVersion.IPv4)
             {
-                randomAddressBytes = new Byte[IPv4Fields.AddressLength];
+                randomAddressBytes = new byte[IPv4Fields.AddressLength];
                 rnd.NextBytes(randomAddressBytes);
             }
             else if (version == IPVersion.IPv6)
             {
-                randomAddressBytes = new Byte[IPv6Fields.AddressLength];
+                randomAddressBytes = new byte[IPv6Fields.AddressLength];
                 rnd.NextBytes(randomAddressBytes);
             }
             else
@@ -67,7 +67,7 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="System.Int32" />
         /// </returns>
-        public static Int32 LongestStringLength(List<String> stringsList)
+        public static int LongestStringLength(List<string> stringsList)
         {
             var longest = "";
 

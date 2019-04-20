@@ -31,58 +31,58 @@ namespace PacketDotNet
         /// <summary>
         /// Length of the ethernet protocol field
         /// </summary>
-        public static readonly Int32 EthernetProtocolTypeLength = 2;
+        public static readonly int EthernetProtocolTypeLength = 2;
 
         /// <summary>
         /// Position of the ethernet protocol type field
         /// </summary>
-        public static readonly Int32 EthernetProtocolTypePosition;
+        public static readonly int EthernetProtocolTypePosition;
 
         /// <summary>
         /// Link layer address length
         /// </summary>
-        public static readonly Int32 LinkLayerAddressLengthLength = 2;
+        public static readonly int LinkLayerAddressLengthLength = 2;
 
         /// <summary>
         /// Positino of the link layer address length field
         /// </summary>
-        public static readonly Int32 LinkLayerAddressLengthPosition;
+        public static readonly int LinkLayerAddressLengthPosition;
 
         /// <summary>
         /// The link layer address field length
         /// NOTE: the actual link layer address MAY be shorter than this
         /// </summary>
-        public static readonly Int32 LinkLayerAddressMaximumLength = 8;
+        public static readonly int LinkLayerAddressMaximumLength = 8;
 
         /// <summary>
         /// Position of the link layer address field
         /// </summary>
-        public static readonly Int32 LinkLayerAddressPosition;
+        public static readonly int LinkLayerAddressPosition;
 
         /// <summary>
         /// Link layer address type
         /// </summary>
-        public static readonly Int32 LinkLayerAddressTypeLength = 2;
+        public static readonly int LinkLayerAddressTypeLength = 2;
 
         /// <summary>
         /// Position of the link layer address type field
         /// </summary>
-        public static readonly Int32 LinkLayerAddressTypePosition;
+        public static readonly int LinkLayerAddressTypePosition;
 
         /// <summary>
         /// Length of the packet type field
         /// </summary>
-        public static readonly Int32 PacketTypeLength = 2;
+        public static readonly int PacketTypeLength = 2;
 
         /// <summary>
         /// Position of the packet type field
         /// </summary>
-        public static readonly Int32 PacketTypePosition = 0;
+        public static readonly int PacketTypePosition = 0;
 
         /// <summary>
         /// Number of bytes in a SLL header
         /// </summary>
-        public static readonly Int32 SLLHeaderLength = 16;
+        public static readonly int SLLHeaderLength = 16;
 
         static LinuxSLLFields()
         {

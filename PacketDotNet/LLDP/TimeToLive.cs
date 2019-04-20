@@ -49,7 +49,7 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Number of bytes in the value portion of this tlv
         /// </summary>
-        private const Int32 ValueLength = 2;
+        private const int ValueLength = 2;
 
 
         #region Constructors
@@ -63,7 +63,7 @@ namespace PacketDotNet.LLDP
         /// The TTL TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public TimeToLive(Byte[] bytes, Int32 offset) :
+        public TimeToLive(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Log.Debug("");
@@ -76,11 +76,11 @@ namespace PacketDotNet.LLDP
         /// The length in seconds until the LLDP
         /// is refreshed
         /// </param>
-        public TimeToLive(UInt16 seconds)
+        public TimeToLive(ushort seconds)
         {
             Log.Debug("");
 
-            var bytes = new Byte[TLVTypeLength.TypeLengthLength + ValueLength];
+            var bytes = new byte[TLVTypeLength.TypeLengthLength + ValueLength];
             var offset = 0;
             var length = bytes.Length;
             TLVData = new ByteArraySegment(bytes, offset, length);
@@ -100,7 +100,7 @@ namespace PacketDotNet.LLDP
         /// A value of 0 means that the LLDP source is
         /// closed and should no longer be refreshed
         /// </value>
-        public UInt16 Seconds
+        public ushort Seconds
         {
             get => EndianBitConverter.Big.ToUInt16(TLVData.Bytes,
                                                    TLVData.Offset + TLVTypeLength.TypeLengthLength);
@@ -115,7 +115,7 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A human readable string
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return $"[TimeToLive: Seconds={Seconds}]";
         }

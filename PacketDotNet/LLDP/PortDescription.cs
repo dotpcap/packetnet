@@ -56,7 +56,7 @@ namespace PacketDotNet.LLDP
         /// The Port Description TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public PortDescription(Byte[] bytes, Int32 offset) :
+        public PortDescription(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Log.Debug("");
@@ -68,7 +68,7 @@ namespace PacketDotNet.LLDP
         /// <param name="description">
         /// A textual description of the port
         /// </param>
-        public PortDescription(String description) : base(TLVTypes.PortDescription, description)
+        public PortDescription(string description) : base(TLVTypes.PortDescription, description)
         {
             Log.Debug("");
         }
@@ -81,7 +81,7 @@ namespace PacketDotNet.LLDP
         /// <value>
         /// A textual Description of the port
         /// </value>
-        public String Description
+        public string Description
         {
             get => StringValue;
             set => StringValue = value;

@@ -32,17 +32,17 @@ namespace PacketDotNet
         /// Length of the Protocol field in bytes, the field is of type
         /// PPPProtocol
         /// </summary>
-        public static readonly Int32 ProtocolLength = 2;
+        public static readonly int ProtocolLength = 2;
 
         /// <summary>
         /// The length of the header
         /// </summary>
-        public static readonly Int32 HeaderLength = ProtocolLength;
+        public static readonly int HeaderLength = ProtocolLength;
 
 
         /// <summary>
         /// Offset from the start of the PPP packet where the Protocol field is located
         /// </summary>
-        public static readonly Int32 ProtocolPosition = 0;
+        public static readonly int ProtocolPosition = 0;
     }
 }

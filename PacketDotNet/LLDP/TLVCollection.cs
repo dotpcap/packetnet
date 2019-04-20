@@ -60,7 +60,7 @@ namespace PacketDotNet.LLDP
         /// <param name="item">
         /// A <see cref="TLV" />
         /// </param>
-        protected override void InsertItem(Int32 index, TLV item)
+        protected override void InsertItem(int index, TLV item)
         {
             Log.DebugFormat("index {0}, TLV.GetType {1}, TLV.Type {2}",
                             index,

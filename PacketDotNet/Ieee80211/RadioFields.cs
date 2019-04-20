@@ -30,31 +30,31 @@ namespace PacketDotNet.Ieee80211
     public class RadioFields
     {
         /// <summary>Default header length, assuming one present field entry</summary>
-        public static readonly Int32 DefaultHeaderLength;
+        public static readonly int DefaultHeaderLength;
 
         /// <summary>Length of the length field</summary>
-        public static readonly Int32 LengthLength = 2;
+        public static readonly int LengthLength = 2;
 
         /// <summary>Position of the length field</summary>
-        public static readonly Int32 LengthPosition;
+        public static readonly int LengthPosition;
 
         /// <summary>Length of the pad field</summary>
-        public static readonly Int32 PadLength = 1;
+        public static readonly int PadLength = 1;
 
         /// <summary>Position of the padding field</summary>
-        public static readonly Int32 PadPosition;
+        public static readonly int PadPosition;
 
         /// <summary>Length of the first present field (others may follow)</summary>
-        public static readonly Int32 PresentLength = 4;
+        public static readonly int PresentLength = 4;
 
         /// <summary>Position of the first present field</summary>
-        public static readonly Int32 PresentPosition;
+        public static readonly int PresentPosition;
 
         /// <summary>Length of the version field</summary>
-        public static readonly Int32 VersionLength = 1;
+        public static readonly int VersionLength = 1;
 
         /// <summary>Position of the version field</summary>
-        public static readonly Int32 VersionPosition = 0;
+        public static readonly int VersionPosition = 0;
 
         static RadioFields()
         {

@@ -57,7 +57,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Length of the whole header in bytes
         /// </summary>
-        public UInt16 Length
+        public ushort Length
         {
             get
             {
@@ -72,11 +72,11 @@ namespace PacketDotNet.Ieee80211
                     }
                 }
 
-                return (UInt16) length;
+                return (ushort) length;
             }
         }
 
-        private UInt16 LengthBytes
+        private ushort LengthBytes
         {
             get => EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                       Header.Offset + PpiHeaderFields.LengthPosition);
@@ -90,9 +90,9 @@ namespace PacketDotNet.Ieee80211
         /// Version 0. Only increases for drastic changes, introduction of compatible
         /// new fields does not count.
         /// </summary>
-        public Byte Version { get; set; }
+        public byte Version { get; set; }
 
-        private Byte VersionBytes
+        private byte VersionBytes
         {
             get => Header.Bytes[Header.Offset + PpiHeaderFields.VersionPosition];
             set => Header.Bytes[Header.Offset + PpiHeaderFields.VersionPosition] = value;
@@ -109,7 +109,7 @@ namespace PacketDotNet.Ieee80211
         private HeaderFlags FlagsBytes
         {
             get => (HeaderFlags) Header.Bytes[Header.Offset + PpiHeaderFields.FlagsPosition];
-            set => Header.Bytes[Header.Offset + PpiHeaderFields.FlagsPosition] = (Byte) value;
+            set => Header.Bytes[Header.Offset + PpiHeaderFields.FlagsPosition] = (byte) value;
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace PacketDotNet.Ieee80211
                                                                    Header.Offset + PpiHeaderFields.DataLinkTypePosition);
 
             // ReSharper disable once ValueParameterNotUsed
-            set => EndianBitConverter.Little.CopyBytes((UInt32) LinkType,
+            set => EndianBitConverter.Little.CopyBytes((uint) LinkType,
                                                        Header.Bytes,
                                                        Header.Offset + PpiHeaderFields.DataLinkTypePosition);
         }
@@ -138,7 +138,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The number of fields.
         /// </value>
-        public Int32 Count => PpiFields.Count;
+        public int Count => PpiFields.Count;
 
         /// <summary>
         /// Gets the <see cref="PpiPacket" /> at the specified index.
@@ -146,7 +146,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='index'>
         /// Index.
         /// </param>
-        public PpiFields this[Int32 index] => PpiFields[index];
+        public PpiFields this[int index] => PpiFields[index];
 
         private List<PpiFields> PpiFields { get; }
 
@@ -240,7 +240,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='field'>
         /// <c>true</c> if the field is in the packet, <c>false</c> if not.
         /// </param>
-        public Boolean Contains(PpiFields field)
+        public bool Contains(PpiFields field)
         {
             return PpiFields.Contains(field);
         }
@@ -251,7 +251,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='type'>
         /// <c>true</c> if there is a field of the specified type in the packet, <c>false</c> if not.
         /// </param>
-        public Boolean Contains(PpiFieldType type)
+        public bool Contains(PpiFieldType type)
         {
             return PpiFields.Find(field => field.FieldType == type) != null;
         }
@@ -292,7 +292,7 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             PayloadPacketOrData.Evaluate();
 
@@ -320,7 +320,7 @@ namespace PacketDotNet.Ieee80211
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                var properties = new Dictionary<String, String>
+                var properties = new Dictionary<string, string>
                 {
                     {"version", Version.ToString()},
                     {"length", Length.ToString()}
@@ -335,7 +335,7 @@ namespace PacketDotNet.Ieee80211
                 }
 
                 // calculate the padding needed to right-justify the property names
-                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Ieee80211PpiPacket");
@@ -380,7 +380,7 @@ namespace PacketDotNet.Ieee80211
 
             if (Header == null || totalFieldLength > Header.Length)
             {
-                Header = new ByteArraySegment(new Byte[totalFieldLength]);
+                Header = new ByteArraySegment(new byte[totalFieldLength]);
             }
 
             Header.Length = totalFieldLength;
@@ -396,13 +396,13 @@ namespace PacketDotNet.Ieee80211
             var writer = new BinaryWriter(ms);
             foreach (var field in PpiFields)
             {
-                writer.Write((UInt16) field.FieldType);
-                writer.Write((UInt16) field.Length);
+                writer.Write((ushort) field.FieldType);
+                writer.Write((ushort) field.Length);
                 writer.Write(field.Bytes);
                 var paddingBytesRequired = GetDistanceTo32BitAlignment(field.Length);
                 if (aligned && paddingBytesRequired > 0)
                 {
-                    writer.Write(new Byte[paddingBytesRequired]);
+                    writer.Write(new byte[paddingBytesRequired]);
                 }
             }
         }
@@ -489,7 +489,7 @@ namespace PacketDotNet.Ieee80211
             return payloadPacketOrData;
         }
 
-        private Int32 GetDistanceTo32BitAlignment(Int32 length)
+        private int GetDistanceTo32BitAlignment(int length)
         {
             return length % 4 == 0 ? 0 : 4 - (length % 4);
         }

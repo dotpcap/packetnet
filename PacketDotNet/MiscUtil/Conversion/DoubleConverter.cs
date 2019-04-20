@@ -15,20 +15,20 @@ namespace PacketDotNet.MiscUtil.Conversion
         /// </summary>
         /// <param name="d">The double to convert.</param>
         /// <returns>A string representation of the double's exact decimal value.</returns>
-        public static String ToExactString(Double d)
+        public static string ToExactString(double d)
         {
-            if (Double.IsPositiveInfinity(d))
+            if (double.IsPositiveInfinity(d))
                 return "+Infinity";
-            if (Double.IsNegativeInfinity(d))
+            if (double.IsNegativeInfinity(d))
                 return "-Infinity";
-            if (Double.IsNaN(d))
+            if (double.IsNaN(d))
                 return "NaN";
 
 
             // Translate the double into sign, exponent and mantissa.
             var bits = BitConverter.DoubleToInt64Bits(d);
             var negative = bits < 0;
-            var exponent = (Int32) ((bits >> 52) & 0x7ffL);
+            var exponent = (int) ((bits >> 52) & 0x7ffL);
             var mantissa = bits & 0xfffffffffffffL;
 
             // Subnormal numbers; exponent is effectively one higher,

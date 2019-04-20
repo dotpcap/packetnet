@@ -12,7 +12,7 @@ namespace PacketDotNet.LSA
     /// </summary>
     public class ASExternalLSA : LSA
     {
-        private const Int32 ASExternalLinkLength = 12;
+        private const int ASExternalLinkLength = 12;
 
         /// <summary>
         /// The type of the lsa.
@@ -24,10 +24,10 @@ namespace PacketDotNet.LSA
         /// </summary>
         public ASExternalLSA()
         {
-            var b = new Byte[ASExternalLSAFields.MetricPosition];
+            var b = new byte[ASExternalLSAFields.MetricPosition];
             Header = new ByteArraySegment(b);
             LSType = LSAType;
-            Length = (UInt16) Header.Bytes.Length;
+            Length = (ushort) Header.Bytes.Length;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace PacketDotNet.LSA
         {
             var length = ASExternalLSAFields.MetricPosition + ASExternalLink.Length * links.Count;
             var offset = ASExternalLSAFields.MetricPosition;
-            var b = new Byte[length];
+            var b = new byte[length];
 
             foreach (var l in links)
             {
@@ -47,7 +47,7 @@ namespace PacketDotNet.LSA
 
             Header = new ByteArraySegment(b);
             LSType = LSAType;
-            Length = (UInt16) Header.Bytes.Length;
+            Length = (ushort) Header.Bytes.Length;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace PacketDotNet.LSA
         /// <param name="length">
         /// A <see cref="System.Int32" />
         /// </param>
-        public ASExternalLSA(Byte[] packet, Int32 offset, Int32 length) :
+        public ASExternalLSA(byte[] packet, int offset, int length) :
             base(packet, offset, length)
         { }
 

@@ -58,7 +58,7 @@ namespace PacketDotNet
                                                                  Header.Offset + PPPFields.ProtocolPosition);
             set
             {
-                var val = (UInt16) value;
+                var val = (ushort) value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  Header.Bytes,
                                                  Header.Offset + PPPFields.ProtocolPosition);
@@ -75,7 +75,7 @@ namespace PacketDotNet
             // allocate memory for this packet
             const int offset = 0;
             var length = PPPFields.HeaderLength;
-            var headerBytes = new Byte[length];
+            var headerBytes = new byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
             // setup some typical values and default values
@@ -131,10 +131,10 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.DarkGray;
+        public override string Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
@@ -158,13 +158,13 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                var properties = new Dictionary<String, String>
+                var properties = new Dictionary<string, string>
                 {
                     {"protocol", Protocol + " (0x" + Protocol.ToString("x") + ")"}
                 };
 
                 // calculate the padding needed to right-justify the property names
-                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("PPP:  ******* PPP - \"Point-to-Point Protocol\" - offset=? length=" + TotalPacketLength);

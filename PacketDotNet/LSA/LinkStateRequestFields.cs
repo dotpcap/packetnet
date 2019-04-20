@@ -9,22 +9,22 @@ namespace PacketDotNet.LSA
     public class LinkStateRequestFields
     {
         /// <summary> The length of the AdvertisingRouter field in bytes</summary>
-        public static readonly Int32 AdvertisingRouterLength = 4;
+        public static readonly int AdvertisingRouterLength = 4;
 
         /// <summary> The relative postion of the AdvertisingRouter field</summary>
-        public static readonly Int32 AdvertisingRouterPosition;
+        public static readonly int AdvertisingRouterPosition;
 
         /// <summary> The length of the LinkStateID field in bytes</summary>
-        public static readonly Int32 LinkStateIdLength = 4;
+        public static readonly int LinkStateIdLength = 4;
 
         /// <summary> The relative postion of the LinkStateID field</summary>
-        public static readonly Int32 LinkStateIdPosition;
+        public static readonly int LinkStateIdPosition;
 
         /// <summary> The length of the LSType field in bytes</summary>
-        public static readonly Int32 LSTypeLength = 4;
+        public static readonly int LSTypeLength = 4;
 
         /// <summary> The relative postion of the LSType field</summary>
-        public static readonly Int32 LSTypePosition;
+        public static readonly int LSTypePosition;
 
         static LinkStateRequestFields()
         {

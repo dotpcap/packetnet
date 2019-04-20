@@ -53,7 +53,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Frame control bytes are the first two bytes of the frame
         /// </summary>
-        protected UInt16 SequenceControlBytes
+        protected ushort SequenceControlBytes
         {
             get
             {
@@ -77,7 +77,7 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// The address string.
         /// </returns>
-        protected override String GetAddressString()
+        protected override string GetAddressString()
         {
             return $"SA {SourceAddress} DA {DestinationAddress} BSSID {BssId}";
         }

@@ -35,7 +35,7 @@ namespace PacketDotNet
         /// <param name="payload">The bytes from which the packet is conctructed</param>
         /// <param name="offset">The offset of this packet from the parent packet</param>
         /// <returns>an OSPF packet</returns>
-        public static OSPFPacket ConstructOSPFPacket(Byte[] payload, Int32 offset)
+        public static OSPFPacket ConstructOSPFPacket(byte[] payload, int offset)
         {
             var v = (OSPFVersion) payload[offset + OSPFv2Fields.VersionPosition];
 
@@ -50,7 +50,7 @@ namespace PacketDotNet
             }
         }
 
-        private static OSPFv2Packet ConstructV2Packet(Byte[] payload, Int32 offset)
+        private static OSPFv2Packet ConstructV2Packet(byte[] payload, int offset)
         {
             OSPFv2Packet p;
             var type = (OSPFPacketType) payload[offset + OSPFv2Fields.TypePosition];

@@ -22,10 +22,10 @@ namespace PacketDotNet.LSA
         /// </summary>
         public NetworkLSA()
         {
-            var b = new Byte[NetworkLSAFields.AttachedRouterPosition];
+            var b = new byte[NetworkLSAFields.AttachedRouterPosition];
             Header = new ByteArraySegment(b);
             LSType = LSAType;
-            Length = (UInt16) Header.Bytes.Length;
+            Length = (ushort) Header.Bytes.Length;
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace PacketDotNet.LSA
             var length = NetworkLSAFields.AttachedRouterPosition + routers.Count * IPv4BytesCount;
             var offset = NetworkLSAFields.AttachedRouterPosition;
 
-            var b = new Byte[length];
+            var b = new byte[length];
             foreach (var ip in routers)
             {
                 Array.Copy(ip.GetAddressBytes(), 0, b, offset, IPv4BytesCount);
@@ -45,7 +45,7 @@ namespace PacketDotNet.LSA
 
             Header = new ByteArraySegment(b);
             LSType = LSAType;
-            Length = (UInt16) Header.Bytes.Length;
+            Length = (ushort) Header.Bytes.Length;
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace PacketDotNet.LSA
         /// <param name="length">
         /// A <see cref="System.Int32" />
         /// </param>
-        public NetworkLSA(Byte[] packet, Int32 offset, Int32 length) :
+        public NetworkLSA(byte[] packet, int offset, int length) :
             base(packet, offset, length)
         { }
 
@@ -86,7 +86,7 @@ namespace PacketDotNet.LSA
 
                 for (var i = 0; i < routerCount; i++)
                 {
-                    var adr = new Byte[IPv4BytesCount];
+                    var adr = new byte[IPv4BytesCount];
                     Array.Copy(Header.Bytes, Header.Offset + NetworkLSAFields.AttachedRouterPosition + i * IPv4BytesCount, adr, 0, IPv4BytesCount);
                     var ip = new IPAddress(adr);
                     ret.Add(ip);

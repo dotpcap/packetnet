@@ -13,7 +13,7 @@ namespace Test.PacketType.Ieee80211
         {
             ChannelRadioTapField field = new ChannelRadioTapField(2142, RadioTapChannelFlags.Channel2Ghz | RadioTapChannelFlags.Ofdm);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             ChannelRadioTapField recreatedField = new ChannelRadioTapField(new BinaryReader (new MemoryStream(bytes)));
@@ -28,7 +28,7 @@ namespace Test.PacketType.Ieee80211
         {
             FhssRadioTapField field = new FhssRadioTapField(5, 6);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             FhssRadioTapField recreatedField = new FhssRadioTapField(new BinaryReader (new MemoryStream(bytes)));
@@ -42,7 +42,7 @@ namespace Test.PacketType.Ieee80211
         {
             FlagsRadioTapField field = new FlagsRadioTapField(RadioTapFlags.ShortPreamble | RadioTapFlags.WepEncrypted);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             FlagsRadioTapField recreatedField = new FlagsRadioTapField(new BinaryReader (new MemoryStream(bytes)));
@@ -55,7 +55,7 @@ namespace Test.PacketType.Ieee80211
         {
             RateRadioTapField field = new RateRadioTapField(2);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             RateRadioTapField recreatedField = new RateRadioTapField(new BinaryReader (new MemoryStream(bytes)));
@@ -68,7 +68,7 @@ namespace Test.PacketType.Ieee80211
         {
             DbAntennaSignalRadioTapField field = new DbAntennaSignalRadioTapField(0x12);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             DbAntennaSignalRadioTapField recreatedField = new DbAntennaSignalRadioTapField(new BinaryReader (new MemoryStream(bytes)));
@@ -81,7 +81,7 @@ namespace Test.PacketType.Ieee80211
         {
             DbAntennaNoiseRadioTapField field = new DbAntennaNoiseRadioTapField(0xAB);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             DbAntennaNoiseRadioTapField recreatedField = new DbAntennaNoiseRadioTapField(new BinaryReader (new MemoryStream(bytes)));
@@ -94,7 +94,7 @@ namespace Test.PacketType.Ieee80211
         {
             AntennaRadioTapField field = new AntennaRadioTapField(0xAB);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             AntennaRadioTapField recreatedField = new AntennaRadioTapField(new BinaryReader (new MemoryStream(bytes)));
@@ -107,7 +107,7 @@ namespace Test.PacketType.Ieee80211
         {
             DbmAntennaSignalRadioTapField field = new DbmAntennaSignalRadioTapField(-128);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             DbmAntennaSignalRadioTapField recreatedField = new DbmAntennaSignalRadioTapField(new BinaryReader (new MemoryStream(bytes)));
@@ -120,7 +120,7 @@ namespace Test.PacketType.Ieee80211
         {
             DbmAntennaNoiseRadioTapField field = new DbmAntennaNoiseRadioTapField(127);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             DbmAntennaNoiseRadioTapField recreatedField = new DbmAntennaNoiseRadioTapField(new BinaryReader (new MemoryStream(bytes)));
@@ -133,7 +133,7 @@ namespace Test.PacketType.Ieee80211
         {
             LockQualityRadioTapField field = new LockQualityRadioTapField(0x1234);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             LockQualityRadioTapField recreatedField = new LockQualityRadioTapField(new BinaryReader (new MemoryStream(bytes)));
@@ -146,7 +146,7 @@ namespace Test.PacketType.Ieee80211
         {
             TsftRadioTapField field = new TsftRadioTapField(0x12345678);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             TsftRadioTapField recreatedField = new TsftRadioTapField(new BinaryReader (new MemoryStream(bytes)));
@@ -159,7 +159,7 @@ namespace Test.PacketType.Ieee80211
         {
             RxFlagsRadioTapField field = new RxFlagsRadioTapField(true);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             RxFlagsRadioTapField recreatedField = new RxFlagsRadioTapField(new BinaryReader (new MemoryStream(bytes)));
@@ -172,7 +172,7 @@ namespace Test.PacketType.Ieee80211
         {
             TxAttenuationRadioTapField field = new TxAttenuationRadioTapField(-4321);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             TxAttenuationRadioTapField recreatedField = new TxAttenuationRadioTapField(new BinaryReader (new MemoryStream(bytes)));
@@ -185,7 +185,7 @@ namespace Test.PacketType.Ieee80211
         {
             DbTxAttenuationRadioTapField field = new DbTxAttenuationRadioTapField(-1234);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             DbTxAttenuationRadioTapField recreatedField = new DbTxAttenuationRadioTapField(new BinaryReader (new MemoryStream(bytes)));
@@ -198,7 +198,7 @@ namespace Test.PacketType.Ieee80211
         {
             DbmTxPowerRadioTapField field = new DbmTxPowerRadioTapField(100);
             
-            var bytes = new Byte[field.Length];
+            var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);
             
             DbmTxPowerRadioTapField recreatedField = new DbmTxPowerRadioTapField(new BinaryReader (new MemoryStream(bytes)));

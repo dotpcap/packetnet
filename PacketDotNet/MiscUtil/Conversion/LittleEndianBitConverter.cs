@@ -22,7 +22,7 @@ namespace PacketDotNet.MiscUtil.Conversion
         /// most significant byte is on the right end of a word.
         /// </remarks>
         /// <returns>true if this converter is little-endian, false otherwise.</returns>
-        public override Boolean IsLittleEndian()
+        public override bool IsLittleEndian()
         {
             return true;
         }
@@ -34,11 +34,11 @@ namespace PacketDotNet.MiscUtil.Conversion
         /// <param name="bytes">The number of bytes to copy</param>
         /// <param name="buffer">The buffer to copy the bytes into</param>
         /// <param name="index">The index to start at</param>
-        protected override void CopyBytesImpl(Int64 value, Int32 bytes, Byte[] buffer, Int32 index)
+        protected override void CopyBytesImpl(long value, int bytes, byte[] buffer, int index)
         {
             for (var i = 0; i < bytes; i++)
             {
-                buffer[i + index] = unchecked((Byte) (value & 0xff));
+                buffer[i + index] = unchecked((byte) (value & 0xff));
                 value = value >> 8;
             }
         }
@@ -51,9 +51,9 @@ namespace PacketDotNet.MiscUtil.Conversion
         /// <param name="startIndex">The first index to use</param>
         /// <param name="bytesToConvert">The number of bytes to use</param>
         /// <returns>The value built from the given bytes</returns>
-        protected override Int64 FromBytes(Byte[] buffer, Int32 startIndex, Int32 bytesToConvert)
+        protected override long FromBytes(byte[] buffer, int startIndex, int bytesToConvert)
         {
-            Int64 ret = 0;
+            long ret = 0;
             for (var i = 0; i < bytesToConvert; i++)
             {
                 ret = unchecked((ret << 8) | buffer[startIndex + bytesToConvert - 1 - i]);

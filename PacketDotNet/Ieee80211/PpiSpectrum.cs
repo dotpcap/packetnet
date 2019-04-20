@@ -20,7 +20,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override Int32 Length => 20 + SamplesData.Length;
+        public override int Length => 20 + SamplesData.Length;
 
         /// <summary>
         /// Gets or sets the starting frequency in kHz.
@@ -28,7 +28,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The starting frequency.
         /// </value>
-        public UInt32 StartingFrequency { get; set; }
+        public uint StartingFrequency { get; set; }
 
         /// <summary>
         /// Gets or sets the resolution of each sample in Hz.
@@ -36,7 +36,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The resolution in Hz.
         /// </value>
-        public UInt32 Resolution { get; set; }
+        public uint Resolution { get; set; }
 
         /// <summary>
         /// Gets or sets the amplitude offset (in 0.001 dBm)
@@ -44,7 +44,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The amplitude offset.
         /// </value>
-        public UInt32 AmplitudeOffset { get; set; }
+        public uint AmplitudeOffset { get; set; }
 
         /// <summary>
         /// Gets or sets the amplitude resolution (in .001 dBm)
@@ -52,7 +52,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The amplitude resolution.
         /// </value>
-        public UInt32 AmplitudeResolution { get; set; }
+        public uint AmplitudeResolution { get; set; }
 
         /// <summary>
         /// Gets or sets the maximum raw RSSI value reported by the device.
@@ -60,7 +60,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The maximum rssi.
         /// </value>
-        public UInt16 MaximumRssi { get; set; }
+        public ushort MaximumRssi { get; set; }
 
         /// <summary>
         /// Gets or sets the data samples.
@@ -68,7 +68,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The data samples.
         /// </value>
-        public Byte[] SamplesData { get; set; }
+        public byte[] SamplesData { get; set; }
 
         /// <summary>
         /// Gets the field bytes. This doesn't include the PPI field header.
@@ -76,7 +76,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public override Byte[] Bytes
+        public override byte[] Bytes
         {
             get
             {
@@ -88,7 +88,7 @@ namespace PacketDotNet.Ieee80211
                 writer.Write(AmplitudeOffset);
                 writer.Write(AmplitudeResolution);
                 writer.Write(MaximumRssi);
-                writer.Write((UInt16) SamplesData.Length);
+                writer.Write((ushort) SamplesData.Length);
                 writer.Write(SamplesData);
 
                 return ms.ToArray();

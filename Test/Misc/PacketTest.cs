@@ -30,10 +30,10 @@ namespace Test.Misc
         [Test]
         public void TestSettingPayloadData()
         {
-            Byte[] data = new Byte[10];
-            for(Int32 i = 0; i < data.Length; i++)
+            byte[] data = new byte[10];
+            for(int i = 0; i < data.Length; i++)
             {
-                data[i] = (Byte)i;
+                data[i] = (byte)i;
             }
 
             // NOTE: we use TcpPacket because it has a simple constructor. We can't

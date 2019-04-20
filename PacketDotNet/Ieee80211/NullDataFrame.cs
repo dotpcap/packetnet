@@ -65,7 +65,7 @@ namespace PacketDotNet.Ieee80211
         /// This does not include the FCS, it represents only the header bytes that would
         /// would preceed any payload.
         /// </summary>
-        public override Int32 FrameSize
+        public override int FrameSize
         {
             get
             {
@@ -86,7 +86,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;

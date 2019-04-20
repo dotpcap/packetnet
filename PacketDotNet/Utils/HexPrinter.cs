@@ -42,11 +42,11 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public static String GetString
+        public static string GetString
         (
-            Byte[] Byte,
-            Int32 offset,
-            Int32 length)
+            byte[] Byte,
+            int offset,
+            int length)
         {
             var sb = new StringBuilder();
 
@@ -67,7 +67,7 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public static String PrintMACAddress(PhysicalAddress address)
+        public static string PrintMACAddress(PhysicalAddress address)
         {
             var bytes = address.GetAddressBytes();
             var output = "";

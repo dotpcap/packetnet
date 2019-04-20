@@ -56,7 +56,7 @@ namespace Test.PacketType
                 Assert.IsTrue ((commonField.Flags & PpiCommon.CommonFlags.FcsIncludedInFrame) == PpiCommon.CommonFlags.FcsIncludedInFrame);
                 Assert.AreEqual (2, commonField.Rate);
                 Assert.AreEqual (2437, commonField.ChannelFrequency);
-                Assert.AreEqual (0x00A0, (Int32) commonField.ChannelFlags);
+                Assert.AreEqual (0x00A0, (int) commonField.ChannelFlags);
                 Assert.AreEqual (0, commonField.FhssHopset);
                 Assert.AreEqual (0, commonField.FhssPattern);
                 Assert.AreEqual (-84, commonField.AntennaSignalPower);
@@ -290,7 +290,7 @@ namespace Test.PacketType
                 
                 PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
                 
-                PpiUnknown unknownField = new PpiUnknown(99, new Byte[]{0xAA, 0xBB, 0xCC, 0xDD});
+                PpiUnknown unknownField = new PpiUnknown(99, new byte[]{0xAA, 0xBB, 0xCC, 0xDD});
                 p.Add(unknownField);
 
                 PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, p.Bytes) as PpiPacket;
@@ -299,7 +299,7 @@ namespace Test.PacketType
                 Assert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiMacPhy));
                 Assert.IsTrue(recreatedPacket.Contains((PpiFieldType)99));
                 PpiUnknown recreatedUnknownField = recreatedPacket.FindFirstByType((PpiFieldType)99) as PpiUnknown;
-                Assert.AreEqual(new Byte[]{0xAA, 0xBB, 0xCC, 0xDD}, recreatedUnknownField.UnknownBytes);
+                Assert.AreEqual(new byte[]{0xAA, 0xBB, 0xCC, 0xDD}, recreatedUnknownField.UnknownBytes);
                 
                 MacFrame macFrame = recreatedPacket.PayloadPacket as MacFrame;
                 Assert.IsNotNull(macFrame);

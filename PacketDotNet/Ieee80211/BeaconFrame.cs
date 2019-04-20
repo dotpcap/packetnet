@@ -106,7 +106,7 @@ namespace PacketDotNet.Ieee80211
         /// The number of "time units" between beacon frames.
         /// A time unit is 1,024 microseconds. This interval is usually set to 100 which equates to approximately 100 milliseconds or 0.1 seconds.
         /// </summary>
-        public UInt16 BeaconInterval { get; set; }
+        public ushort BeaconInterval { get; set; }
 
         /// <summary>
         /// Defines the capabilities of the network.
@@ -119,7 +119,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The size of the frame.
         /// </value>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
+        public override int FrameSize => MacFields.FrameControlLength +
                                            MacFields.DurationIDLength +
                                            (MacFields.AddressLength * 3) +
                                            MacFields.SequenceControlLength +
@@ -139,9 +139,9 @@ namespace PacketDotNet.Ieee80211
         /// The number of microseconds the networks master timekeeper has been active.
         /// Used for synchronisation between stations in an IBSS. When it reaches the maximum value the timestamp will wrap (not very likely).
         /// </summary>
-        public UInt64 Timestamp { get; set; }
+        public ulong Timestamp { get; set; }
 
-        private UInt16 BeaconIntervalBytes
+        private ushort BeaconIntervalBytes
         {
             get
             {
@@ -160,7 +160,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Frame control bytes are the first two bytes of the frame
         /// </summary>
-        private UInt16 CapabilityInformationBytes
+        private ushort CapabilityInformationBytes
         {
             get
             {
@@ -177,7 +177,7 @@ namespace PacketDotNet.Ieee80211
                                                        Header.Offset + BeaconFields.CapabilityInformationPosition);
         }
 
-        private UInt64 TimestampBytes
+        private ulong TimestampBytes
         {
             get
             {
@@ -201,7 +201,7 @@ namespace PacketDotNet.Ieee80211
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
                 //the backing buffer isnt big enough to accommodate the info elements so we need to resize it
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;

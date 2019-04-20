@@ -80,11 +80,11 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The serialised <see cref="InformationElement">InformationElements</see>
         /// </value>
-        public Byte[] Bytes
+        public byte[] Bytes
         {
             get
             {
-                var bytes = new Byte[Length];
+                var bytes = new byte[Length];
                 var index = 0;
                 foreach (var ie in this)
                 {
@@ -104,7 +104,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length
         /// </value>
-        public Int32 Length
+        public int Length
         {
             get
             {
@@ -166,7 +166,7 @@ namespace PacketDotNet.Ieee80211
         /// Ensure that the destination is large enough to contain serialised elements
         /// before calling this method
         /// </remarks>
-        public void CopyTo(ByteArraySegment destination, Int32 offset)
+        public void CopyTo(ByteArraySegment destination, int offset)
         {
             var index = 0;
             foreach (var ie in this)

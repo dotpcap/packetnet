@@ -35,27 +35,27 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// The length in bytes of the Information Element id field.
         /// </summary>
-        public static readonly Int32 ElementIdLength = 1;
+        public static readonly int ElementIdLength = 1;
 
         /// <summary>
         /// The index of the id field in an Information Element.
         /// </summary>
-        public static readonly Int32 ElementIdPosition = 0;
+        public static readonly int ElementIdPosition = 0;
 
         /// <summary>
         /// The length in bytes of the Information Element length field.
         /// </summary>
-        public static readonly Int32 ElementLengthLength = 1;
+        public static readonly int ElementLengthLength = 1;
 
         /// <summary>
         /// The index of the length field in an Information Element.
         /// </summary>
-        public static readonly Int32 ElementLengthPosition;
+        public static readonly int ElementLengthPosition;
 
         /// <summary>
         /// The index of the first byte of the value field in an Information Element.
         /// </summary>
-        public static readonly Int32 ElementValuePosition;
+        public static readonly int ElementValuePosition;
 
         private ByteArraySegment _bytes;
 
@@ -88,9 +88,9 @@ namespace PacketDotNet.Ieee80211
         /// <exception cref='ArgumentException'>
         /// Is thrown when an argument passed to a method is invalid.
         /// </exception>
-        public InformationElement(ElementId id, Byte[] value)
+        public InformationElement(ElementId id, byte[] value)
         {
-            var ie = new Byte[ElementIdLength + ElementLengthLength + value.Length];
+            var ie = new byte[ElementIdLength + ElementLengthLength + value.Length];
             _bytes = new ByteArraySegment(ie);
             Id = id;
             Value = value;
@@ -102,7 +102,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public Byte[] Bytes => _bytes.ActualBytes();
+        public byte[] Bytes => _bytes.ActualBytes();
 
         /// <summary>
         /// Gets the length of the element including the Id and Length field
@@ -110,7 +110,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length of the element.
         /// </value>
-        public Byte ElementLength => (Byte) (ElementIdLength + ElementLengthLength + ValueLength);
+        public byte ElementLength => (byte) (ElementIdLength + ElementLengthLength + ValueLength);
 
         /// <summary>
         /// Gets or sets the identifier.
@@ -121,7 +121,7 @@ namespace PacketDotNet.Ieee80211
         public ElementId Id
         {
             get => (ElementId) _bytes.Bytes[_bytes.Offset + ElementIdPosition];
-            set => _bytes.Bytes[_bytes.Offset + ElementIdPosition] = (Byte) value;
+            set => _bytes.Bytes[_bytes.Offset + ElementIdPosition] = (byte) value;
         }
 
         /// <summary>
@@ -134,11 +134,11 @@ namespace PacketDotNet.Ieee80211
         /// Is thrown when the value is too large. Values are limited to a maximum size 255 bytes due the single
         /// byte length field.
         /// </exception>
-        public Byte[] Value
+        public byte[] Value
         {
             get
             {
-                var valueArray = new Byte[ValueLength];
+                var valueArray = new byte[ValueLength];
                 Array.Copy(_bytes.Bytes,
                            _bytes.Offset + ElementValuePosition,
                            valueArray,
@@ -149,7 +149,7 @@ namespace PacketDotNet.Ieee80211
 
             set
             {
-                if (value.Length > Byte.MaxValue)
+                if (value.Length > byte.MaxValue)
                 {
                     throw new ArgumentException("The provided value is too long. Maximum allowed length is 255 bytes.");
                 }
@@ -158,14 +158,14 @@ namespace PacketDotNet.Ieee80211
                 var newIeLength = ElementIdLength + ElementLengthLength + value.Length;
                 if (_bytes.Length < newIeLength)
                 {
-                    var newIe = new Byte[newIeLength];
+                    var newIe = new byte[newIeLength];
                     newIe[ElementIdPosition] = _bytes.Bytes[_bytes.Offset + ElementIdPosition];
                     _bytes = new ByteArraySegment(newIe);
                 }
 
                 Array.Copy(value, 0, _bytes.Bytes, _bytes.Offset + ElementValuePosition, value.Length);
                 _bytes.Length = newIeLength;
-                _bytes.Bytes[_bytes.Offset + ElementLengthPosition] = (Byte) value.Length;
+                _bytes.Bytes[_bytes.Offset + ElementLengthPosition] = (byte) value.Length;
             }
         }
 
@@ -175,7 +175,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public Int32 ValueLength => Math.Min(_bytes.Length - ElementValuePosition,
+        public int ValueLength => Math.Min(_bytes.Length - ElementValuePosition,
                                              _bytes.Bytes[_bytes.Offset + ElementLengthPosition]);
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace PacketDotNet.Ieee80211
         /// <c>true</c> if the specified <see cref="System.Object" /> is equal to the current
         /// <see cref="InformationElement" />; otherwise, <c>false</c>.
         /// </returns>
-        public override Boolean Equals(Object obj)
+        public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
             {
@@ -205,7 +205,7 @@ namespace PacketDotNet.Ieee80211
         /// A hash code for this instance that is suitable for use in hashing algorithms and data structures such as
         /// a hash table.
         /// </returns>
-        public override Int32 GetHashCode()
+        public override int GetHashCode()
         {
             return Id.GetHashCode() ^ Value.GetHashCode();
         }

@@ -61,7 +61,7 @@ namespace PacketDotNet
             // allocate memory for this packet
             var offset = 0;
             var length = OSPFv2Fields.HeaderLength;
-            var headerBytes = new Byte[length];
+            var headerBytes = new byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
             Version = OSPFVersion;
@@ -70,7 +70,7 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs a packet from bytes and offset
         /// </summary>
-        protected OSPFv2Packet(Byte[] bytes, Int32 offset)
+        protected OSPFv2Packet(byte[] bytes, int offset)
         {
             Log.Debug("");
             Header = new ByteArraySegment(bytes, offset, OSPFv2Fields.HeaderLength);
@@ -83,7 +83,7 @@ namespace PacketDotNet
         public OSPFVersion Version
         {
             get => (OSPFVersion) Header.Bytes[Header.Offset + OSPFv2Fields.VersionPosition];
-            set => Header.Bytes[Header.Offset + OSPFv2Fields.VersionPosition] = (Byte) value;
+            set => Header.Bytes[Header.Offset + OSPFv2Fields.VersionPosition] = (byte) value;
         }
 
         /// <summary>
@@ -92,13 +92,13 @@ namespace PacketDotNet
         public virtual OSPFPacketType Type
         {
             get => (OSPFPacketType) Header.Bytes[Header.Offset + OSPFv2Fields.TypePosition];
-            set => Header.Bytes[Header.Offset + OSPFv2Fields.TypePosition] = (Byte) value;
+            set => Header.Bytes[Header.Offset + OSPFv2Fields.TypePosition] = (byte) value;
         }
 
         /// <summary>
         /// The length of the OSPF protocol packet in bytes.
         /// </summary>
-        public virtual UInt16 PacketLength
+        public virtual ushort PacketLength
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + OSPFv2Fields.PacketLengthPosition);
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.PacketLengthPosition);
@@ -150,7 +150,7 @@ namespace PacketDotNet
         /// The standard IP checksum of the entire contents of the packet,
         /// except the 64-bit authentication field
         /// </summary>
-        public virtual UInt16 Checksum
+        public virtual ushort Checksum
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + OSPFv2Fields.ChecksumPosition);
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.ChecksumPosition);
@@ -159,7 +159,7 @@ namespace PacketDotNet
         /// <summary>
         /// Authentication procedure. See http://www.ietf.org/rfc/rfc2328.txt for details.
         /// </summary>
-        public virtual UInt16 AuType
+        public virtual ushort AuType
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + OSPFv2Fields.AuTypePosition);
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.AuTypePosition);
@@ -168,7 +168,7 @@ namespace PacketDotNet
         /// <summary>
         /// A 64-bit field for use by the authentication scheme
         /// </summary>
-        public virtual UInt64 Authentication
+        public virtual ulong Authentication
         {
             get => EndianBitConverter.Big.ToUInt64(Header.Bytes, Header.Offset + OSPFv2Fields.AuthorizationPosition);
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.AuthorizationPosition);
@@ -178,7 +178,7 @@ namespace PacketDotNet
         /// Returns a <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2Packet" />.
         /// </summary>
         /// <returns>A <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2Packet" />.</returns>
-        public override String ToString()
+        public override string ToString()
         {
             var packet = new StringBuilder();
             packet.AppendFormat("OSPFv2 packet, type {0} ", Type);
@@ -196,7 +196,7 @@ namespace PacketDotNet
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             return ToString();
         }

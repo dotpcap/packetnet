@@ -4,14 +4,14 @@ namespace PacketDotNet.Ieee80211
 {
     public class AssociationResponseFields
     {
-        public static readonly Int32 AssociationIdLength = 2;
-        public static readonly Int32 AssociationIdPosition;
-        public static readonly Int32 CapabilityInformationLength = 2;
+        public static readonly int AssociationIdLength = 2;
+        public static readonly int AssociationIdPosition;
+        public static readonly int CapabilityInformationLength = 2;
 
-        public static readonly Int32 CapabilityInformationPosition;
-        public static readonly Int32 InformationElement1Position;
-        public static readonly Int32 StatusCodeLength = 2;
-        public static readonly Int32 StatusCodePosition;
+        public static readonly int CapabilityInformationPosition;
+        public static readonly int InformationElement1Position;
+        public static readonly int StatusCodeLength = 2;
+        public static readonly int StatusCodePosition;
 
         static AssociationResponseFields()
         {

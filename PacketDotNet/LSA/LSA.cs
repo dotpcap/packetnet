@@ -37,12 +37,12 @@ namespace PacketDotNet.LSA
         /// The Ipv4 bytes count.
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        public const Int32 IPv4BytesCount = 4;
+        public const int IPv4BytesCount = 4;
 
         /// <summary>
         /// The length of the network mask.
         /// </summary>
-        public const Int32 NetworkMaskLength = 4;
+        public const int NetworkMaskLength = 4;
 
         internal ByteArraySegment Header;
 
@@ -51,7 +51,7 @@ namespace PacketDotNet.LSA
         /// </summary>
         public LSA()
         {
-            var b = new Byte[OSPFv2Fields.LSAHeaderLength];
+            var b = new byte[OSPFv2Fields.LSAHeaderLength];
             Header = new ByteArraySegment(b);
         }
 
@@ -67,7 +67,7 @@ namespace PacketDotNet.LSA
         /// <param name="length">
         /// A <see cref="System.Int32" />
         /// </param>
-        public LSA(Byte[] packet, Int32 offset, Int32 length)
+        public LSA(byte[] packet, int offset, int length)
         {
             Header = new ByteArraySegment(packet, offset, length);
         }
@@ -97,13 +97,13 @@ namespace PacketDotNet.LSA
         /// Gets the bytes.
         /// </summary>
         /// <value>The bytes.</value>
-        public virtual Byte[] Bytes => Header.ActualBytes();
+        public virtual byte[] Bytes => Header.ActualBytes();
 
         /// <summary>
         /// The Fletcher checksum of the complete contents of the LSA,
         /// including the LSA header but excluding the LS age field.
         /// </summary>
-        public UInt16 Checksum
+        public ushort Checksum
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + LSAFields.ChecksumPosition);
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LSAFields.ChecksumPosition);
@@ -113,7 +113,7 @@ namespace PacketDotNet.LSA
         /// The length in bytes of the LSA.  This includes the 20 byte LSA
         /// header.
         /// </summary>
-        public UInt16 Length
+        public ushort Length
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + LSAFields.PacketLengthPosition);
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LSAFields.PacketLengthPosition);
@@ -145,7 +145,7 @@ namespace PacketDotNet.LSA
         /// <summary>
         /// The time in seconds since the LSA was originated.
         /// </summary>
-        public UInt16 LSAge
+        public ushort LSAge
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + LSAFields.LSAgePosition);
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LSAFields.LSAgePosition);
@@ -155,7 +155,7 @@ namespace PacketDotNet.LSA
         /// Detects old or duplicate LSAs.  Successive instances of an LSA
         /// are given successive LS sequence numbers.
         /// </summary>
-        public UInt32 LSSequenceNumber
+        public uint LSSequenceNumber
         {
             get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSAFields.LSSequenceNumberPosition);
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LSAFields.LSSequenceNumberPosition);
@@ -167,13 +167,13 @@ namespace PacketDotNet.LSA
         public LSAType LSType
         {
             get => (LSAType) Header.Bytes[Header.Offset + LSAFields.LSTypePosition];
-            set => Header.Bytes[Header.Offset + LSAFields.LSTypePosition] = (Byte) value;
+            set => Header.Bytes[Header.Offset + LSAFields.LSTypePosition] = (byte) value;
         }
 
         /// <summary>
         /// The optional capabilities supported by the described portion of the routing domain.
         /// </summary>
-        public Byte Options
+        public byte Options
         {
             get => Header.Bytes[Header.Offset + LSAFields.OptionsPosition];
             set => Header.Bytes[Header.Offset + LSAFields.OptionsPosition] = value;
@@ -183,7 +183,7 @@ namespace PacketDotNet.LSA
         /// Returns a <see cref="string" /> that represents the current <see cref="PacketDotNet.LSA" />.
         /// </summary>
         /// <returns>A <see cref="string" /> that represents the current <see cref="PacketDotNet.LSA" />.</returns>
-        public override String ToString()
+        public override string ToString()
         {
             var builder = new StringBuilder();
             builder.AppendFormat("LSA Type {0}, Checksum {1:X2}\n", LSType, Checksum);

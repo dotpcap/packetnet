@@ -50,7 +50,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32" />
         /// </param>
-        public SACK(Byte[] bytes, Int32 offset, Int32 length) :
+        public SACK(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
 
@@ -62,12 +62,12 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// Contains an array of SACK (Selective Ack) Blocks
         /// </summary>
-        public UInt16[] SACKBlocks
+        public ushort[] SACKBlocks
         {
             get
             {
                 var numOfBlocks = (Length - SACKBlocksFieldOffset) / BlockLength;
-                var blocks = new UInt16[numOfBlocks];
+                var blocks = new ushort[numOfBlocks];
                 for (var i = 0; i < numOfBlocks; i++)
                 {
                     var offset = SACKBlocksFieldOffset + (i * BlockLength);
@@ -89,7 +89,7 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             var output = "[" + Kind + ": ";
 
@@ -110,10 +110,10 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the length (in bytes) of a SACK block
-        private const Int32 BlockLength = 2;
+        private const int BlockLength = 2;
 
         // the offset (in bytes) of the ScaleFactor Field
-        private const Int32 SACKBlocksFieldOffset = 2;
+        private const int SACKBlocksFieldOffset = 2;
 
         #endregion
     }

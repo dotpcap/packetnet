@@ -25,162 +25,162 @@ namespace PacketDotNet
     internal class OSPFv2Fields
     {
         /// <summary> Length of the OSPF area ID (ip) field in bytes </summary>
-        public static readonly Int32 AreaIDLength = 4;
+        public static readonly int AreaIDLength = 4;
 
         /// <summary> Position of the AreaID field </summary>
-        public static readonly Int32 AreaIDPosition;
+        public static readonly int AreaIDPosition;
 
         /// <summary> One padding byte at the end of the header </summary>
-        public static readonly Int32 AuthorizationLength = 8;
+        public static readonly int AuthorizationLength = 8;
 
         /// <summary> Position of the Authorization bytes </summary>
-        public static readonly Int32 AuthorizationPosition;
+        public static readonly int AuthorizationPosition;
 
         /// <summary> Length of the OSPF instance AuType field in bytes </summary>
-        public static readonly Int32 AuTypeLength = 2;
+        public static readonly int AuTypeLength = 2;
 
         /// <summary> Position of the AuType field </summary>
-        public static readonly Int32 AuTypePosition;
+        public static readonly int AuTypePosition;
 
         /// <summary> Length of the Backup Designated Router in bytes </summary>
-        public static readonly Int32 BackupRouterIDLength = 4;
+        public static readonly int BackupRouterIDLength = 4;
 
         /// <summary> Position of the Backup Designated Router.</summary>
-        public static readonly Int32 BackupRouterIDPosition;
+        public static readonly int BackupRouterIDPosition;
 
         /// <summary> Length of optional bits in bytes.</summary>
-        public static readonly Int32 BitsLength = 1;
+        public static readonly int BitsLength = 1;
 
         /// <summary> Positon of the optional bits.</summary>
-        public static readonly Int32 BitsPosition;
+        public static readonly int BitsPosition;
 
         /// <summary> Length of the OSPF checksum in bytes </summary>
-        public static readonly Int32 ChecksumLength = 2;
+        public static readonly int ChecksumLength = 2;
 
         /// <summary> Position of the OSPF packet checksum </summary>
-        public static readonly Int32 ChecksumPosition;
+        public static readonly int ChecksumPosition;
 
         /// <summary> Length of the options in bytes.</summary>
-        public static readonly Int32 DBDescriptionOptionsLength = 1;
+        public static readonly int DBDescriptionOptionsLength = 1;
 
         /// <summary> Position of DB description options.</summary>
-        public static readonly Int32 DBDescriptionOptionsPosition;
+        public static readonly int DBDescriptionOptionsPosition;
 
         /// <summary> Length of the DD sequence field in bytes </summary>
-        public static readonly Int32 DDSequenceLength = 4;
+        public static readonly int DDSequenceLength = 4;
 
         /// <summary> Positon of the DD sequence. </summary>
-        public static readonly Int32 DDSequencePosition;
+        public static readonly int DDSequencePosition;
 
         /// <summary> Length of the Designated Router ID (ip) field in bytes </summary>
-        public static readonly Int32 DesignatedRouterIDLength = 4;
+        public static readonly int DesignatedRouterIDLength = 4;
 
         /// <summary> Position of the Designated Router ID (ip).</summary>
-        public static readonly Int32 DesignatedRouterIDPosition;
+        public static readonly int DesignatedRouterIDPosition;
 
         /// <summary> Length in bytes of an OSPF header.</summary>
-        public static readonly Int32 HeaderLength;
+        public static readonly int HeaderLength;
 
         /// <summary> Length of the Hello Interaval in bytes.</summary>
-        public static readonly Int32 HelloIntervalLength = 2;
+        public static readonly int HelloIntervalLength = 2;
 
         /// <summary> Position of the Hello Interaval.</summary>
-        public static readonly Int32 HelloIntervalPosition;
+        public static readonly int HelloIntervalPosition;
 
         /// <summary> Length of the options in bytes.</summary>
-        public static readonly Int32 HelloOptionsLength = 1;
+        public static readonly int HelloOptionsLength = 1;
 
         /// <summary> Position of the options.</summary>
-        public static readonly Int32 HelloOptionsPosition;
+        public static readonly int HelloOptionsPosition;
 
         /// <summary> Length of the hello packet.</summary>
-        public static readonly Int32 HelloPacketLength;
+        public static readonly int HelloPacketLength;
 
         // ------------------ ospf database description packet stuff
 
         /// <summary> Length of InterfaceMTU in bytes.</summary>
-        public static readonly Int32 InterfaceMTULength = 2;
+        public static readonly int InterfaceMTULength = 2;
 
         /// <summary> Position of InterfaceMTU.</summary>
-        public static readonly Int32 InterfaceMTUPosition;
+        public static readonly int InterfaceMTUPosition;
 
         // ------------------ ospf link state ack
         /// <summary> Length of the LSA acknowledge</summary>
-        public static readonly Int32 LSAAckLength = 20;
+        public static readonly int LSAAckLength = 20;
 
         /// <summary> Position of the LSA acknowledge</summary>
-        public static readonly Int32 LSAAckPosition;
+        public static readonly int LSAAckPosition;
 
         /// <summary> Length of the LSA header in bytes </summary>
-        public static readonly Int32 LSAHeaderLength = 20;
+        public static readonly int LSAHeaderLength = 20;
 
         /// <summary> Positon of the LSA header. </summary>
-        public static readonly Int32 LSAHeaderPosition;
+        public static readonly int LSAHeaderPosition;
 
         // ------------------ ospf link state update
 
         /// <summary> Length of the LSA# field</summary>
-        public static readonly Int32 LSANumberLength = 4;
+        public static readonly int LSANumberLength = 4;
 
         /// <summary> Positon of the LSA#.</summary>
-        public static readonly Int32 LSANumberPosition;
+        public static readonly int LSANumberPosition;
 
         /// <summary> Positon of the LSA Updates.</summary>
-        public static readonly Int32 LSAUpdatesPositon;
+        public static readonly int LSAUpdatesPositon;
 
         // ------------------ ospf link state request packet stuff
         /// <summary> The start of the link state requests.</summary>
-        public static readonly Int32 LSRStart;
+        public static readonly int LSRStart;
 
         /// <summary> Length of the Neighbor ID field in bytes </summary>
-        public static readonly Int32 NeighborIDLength = 4;
+        public static readonly int NeighborIDLength = 4;
 
         /// <summary> Start of the NeighborIDs (zero or more).</summary>
-        public static readonly Int32 NeighborIDStart;
+        public static readonly int NeighborIDStart;
 
         // ------------------ ospf hello packet stuff
 
         /// <summary> Length of NetworkMask in bytes.</summary>
-        public static readonly Int32 NetworkMaskLength = 4;
+        public static readonly int NetworkMaskLength = 4;
 
         /// <summary> Positon of the Networkmask.</summary>
-        public static readonly Int32 NetworkMaskPositon;
+        public static readonly int NetworkMaskPositon;
 
         /// <summary> Length of the OSPF packet in bytes.</summary>
-        public static readonly Int32 PacketLength = 2;
+        public static readonly int PacketLength = 2;
 
         /// <summary> Position of the OSPF packet length </summary>
-        public static readonly Int32 PacketLengthPosition;
+        public static readonly int PacketLengthPosition;
 
         /// <summary> Length of the Router Dead Interval field in bytes </summary>
-        public static readonly Int32 RouterDeadIntervalLength = 4;
+        public static readonly int RouterDeadIntervalLength = 4;
 
         /// <summary> Position of the Router Dead Interval.</summary>
-        public static readonly Int32 RouterDeadIntervalPosition;
+        public static readonly int RouterDeadIntervalPosition;
 
         /// <summary> Length of the OSPF router ID (ip) field in bytes </summary>
-        public static readonly Int32 RouterIDLength = 4;
+        public static readonly int RouterIDLength = 4;
 
         /// <summary> Position of the RouterID field </summary>
-        public static readonly Int32 RouterIDPosition;
+        public static readonly int RouterIDPosition;
 
         /// <summary> Length of RTR priority in bytes.</summary>
-        public static readonly Int32 RtrPriorityLength = 1;
+        public static readonly int RtrPriorityLength = 1;
 
         /// <summary> Position of RTR priority.</summary>
-        public static readonly Int32 RtrPriorityPosition;
+        public static readonly int RtrPriorityPosition;
 
         /// <summary> Length of the OSPF header type in bytes.</summary>
-        public static readonly Int32 TypeLength = 1;
+        public static readonly int TypeLength = 1;
 
         /// <summary> Position of the the OSPF packet type.</summary>
-        public static readonly Int32 TypePosition;
+        public static readonly int TypePosition;
 
         /// <summary> Length of the OSPF packet version in bytes.</summary>
-        public static readonly Int32 VersionLength = 1;
+        public static readonly int VersionLength = 1;
 
         /// <summary> Position of the OSPF version.</summary>
-        public static readonly Int32 VersionPosition;
+        public static readonly int VersionPosition;
 
         static OSPFv2Fields()
         {

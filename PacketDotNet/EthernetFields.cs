@@ -28,24 +28,24 @@ namespace PacketDotNet
     public class EthernetFields
     {
         /// <summary> Position of the destination MAC address within the ethernet header.</summary>
-        public static readonly Int32 DestinationMacPosition = 0;
+        public static readonly int DestinationMacPosition = 0;
 
         /// <summary> Total length of an ethernet header in bytes.</summary>
-        public static readonly Int32 HeaderLength; // == 14
+        public static readonly int HeaderLength; // == 14
 
         /// <summary>
         /// size of an ethernet mac address in bytes
         /// </summary>
-        public static readonly Int32 MacAddressLength = 6;
+        public static readonly int MacAddressLength = 6;
 
         /// <summary> Position of the source MAC address within the ethernet header.</summary>
-        public static readonly Int32 SourceMacPosition;
+        public static readonly int SourceMacPosition;
 
         /// <summary> Width of the ethernet type code in bytes.</summary>
-        public static readonly Int32 TypeLength = 2;
+        public static readonly int TypeLength = 2;
 
         /// <summary> Position of the ethernet type field within the ethernet header.</summary>
-        public static readonly Int32 TypePosition;
+        public static readonly int TypePosition;
 
         static EthernetFields()
         {

@@ -51,37 +51,37 @@ namespace PacketDotNet.Ieee80211
         #region Fields
 
         /// <summary>Position of the first iField Header</summary>
-        public static readonly Int32 FirstFieldPosition;
+        public static readonly int FirstFieldPosition;
 
         /// <summary>Length of the Data Link Type</summary>
-        public static readonly Int32 DataLinkTypeLength = 4;
+        public static readonly int DataLinkTypeLength = 4;
 
         /// <summary>The data link type position.</summary>
-        public static readonly Int32 DataLinkTypePosition;
+        public static readonly int DataLinkTypePosition;
 
         /// <summary>Length of the Flags field</summary>
-        public static readonly Int32 FlagsLength = 1;
+        public static readonly int FlagsLength = 1;
 
         /// <summary>Position of the Flags field</summary>
-        public static readonly Int32 FlagsPosition;
+        public static readonly int FlagsPosition;
 
         /// <summary>Length of the length field</summary>
-        public static readonly Int32 LengthLength = 2;
+        public static readonly int LengthLength = 2;
 
         /// <summary>Position of the length field</summary>
-        public static readonly Int32 LengthPosition;
+        public static readonly int LengthPosition;
 
         /// <summary>Length of the version field</summary>
-        public static readonly Int32 VersionLength = 1;
+        public static readonly int VersionLength = 1;
 
         /// <summary>Position of the version field</summary>
-        public static readonly Int32 VersionPosition = 0;
+        public static readonly int VersionPosition = 0;
 
         /// <summary>The total length of the ppi packet header</summary>
-        public static readonly Int32 PpiPacketHeaderLength;
+        public static readonly int PpiPacketHeaderLength;
 
         /// <summary>The length of the PPI field header</summary>
-        public static readonly Int32 FieldHeaderLength = 4;
+        public static readonly int FieldHeaderLength = 4;
 
         #endregion Fields
     }

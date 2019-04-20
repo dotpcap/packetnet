@@ -74,7 +74,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch the IGMP header checksum.</summary>
-        public Int16 Checksum
+        public short Checksum
         {
             get => BitConverter.ToInt16(Header.Bytes,
                                         Header.Offset + IGMPv2Fields.ChecksumPosition);
@@ -86,7 +86,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.Brown;
+        public override string Color => AnsiEscapeSequences.Brown;
 
         /// <summary> Fetch the IGMP group address.</summary>
         public IPAddress GroupAddress => IPPacket.GetIPAddress(AddressFamily.InterNetwork,
@@ -94,7 +94,7 @@ namespace PacketDotNet
                                                                Header.Bytes);
 
         /// <summary> Fetch the IGMP max response time.</summary>
-        public Byte MaxResponseTime
+        public byte MaxResponseTime
         {
             get => Header.Bytes[Header.Offset + IGMPv2Fields.MaxResponseTimePosition];
             set => Header.Bytes[Header.Offset + IGMPv2Fields.MaxResponseTimePosition] = value;
@@ -106,11 +106,11 @@ namespace PacketDotNet
         public IGMPMessageType Type
         {
             get => (IGMPMessageType) Header.Bytes[Header.Offset + IGMPv2Fields.TypePosition];
-            set => Header.Bytes[Header.Offset + IGMPv2Fields.TypePosition] = (Byte) value;
+            set => Header.Bytes[Header.Offset + IGMPv2Fields.TypePosition] = (byte) value;
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
@@ -136,7 +136,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                var properties = new Dictionary<String, String>
+                var properties = new Dictionary<string, string>
                 {
                     {"type", Type + " (0x" + Type.ToString("x") + ")"},
                     {"max response time", $"{MaxResponseTime / 10:0.0}" + " sec (0x" + MaxResponseTime.ToString("x") + ")"},
@@ -146,7 +146,7 @@ namespace PacketDotNet
                 };
 
                 // calculate the padding needed to right-justify the property names
-                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("IGMP:  ******* IGMPv2 - \"Internet Group Management Protocol (Version 2)\" - offset=? length=" + TotalPacketLength);

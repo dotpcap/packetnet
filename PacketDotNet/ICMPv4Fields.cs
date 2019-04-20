@@ -29,31 +29,31 @@ namespace PacketDotNet
     public class ICMPv4Fields
     {
         /// <summary> Length of the ICMP header checksum in bytes.</summary>
-        public static readonly Int32 ChecksumLength = 2;
+        public static readonly int ChecksumLength = 2;
 
         /// <summary> Position of the ICMP header checksum.</summary>
-        public static readonly Int32 ChecksumPosition;
+        public static readonly int ChecksumPosition;
 
         /// <summary> Length in bytes of an ICMP header.</summary>
-        public static readonly Int32 HeaderLength;
+        public static readonly int HeaderLength;
 
         /// <summary> Length of the ICMP ID field in bytes.</summary>
-        public static readonly Int32 IDLength = 2;
+        public static readonly int IDLength = 2;
 
         /// <summary> Position of the ICMP ID field </summary>
-        public static readonly Int32 IDPosition;
+        public static readonly int IDPosition;
 
         /// <summary> Length of the ICMP Sequence field in bytes </summary>
-        public static readonly Int32 SequenceLength = 2;
+        public static readonly int SequenceLength = 2;
 
         /// <summary> Position of the Sequence field </summary>
-        public static readonly Int32 SequencePosition;
+        public static readonly int SequencePosition;
 
         /// <summary> Length of the ICMP message type code in bytes.</summary>
-        public static readonly Int32 TypeCodeLength = 2;
+        public static readonly int TypeCodeLength = 2;
 
         /// <summary> Position of the ICMP message type/code.</summary>
-        public static readonly Int32 TypeCodePosition;
+        public static readonly int TypeCodePosition;
 
         static ICMPv4Fields()
         {

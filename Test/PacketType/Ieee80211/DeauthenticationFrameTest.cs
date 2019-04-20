@@ -88,7 +88,7 @@ namespace Test.PacketType
                 frame.Reason = ReasonCode.LeavingToRoam;
                 
                 frame.UpdateFrameCheckSequence ();
-                UInt32 fcs = frame.FrameCheckSequence;
+                uint fcs = frame.FrameCheckSequence;
                 
                 var bytes = frame.Bytes;
                 var byteArraySegment = new ByteArraySegment (bytes);
@@ -119,8 +119,8 @@ namespace Test.PacketType
 			[Test]
 			public void Test_ConstructorWithCorruptBuffer ()
 			{
-				//buffer is way too short for frame. We are just checking it doesn't throw
-				Byte[] corruptBuffer = new Byte[]{0x01};
+                //buffer is way too short for frame. We are just checking it doesn't throw
+                byte[] corruptBuffer = new byte[]{0x01};
 				DeauthenticationFrame frame = new DeauthenticationFrame(new ByteArraySegment(corruptBuffer));
 				Assert.IsFalse(frame.FCSValid);
 			}

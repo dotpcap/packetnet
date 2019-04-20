@@ -68,7 +68,7 @@ namespace Test.PacketType
             [Test]
             public void Test_Constructor_EmptyByteArray ()
             {
-                var byteArraySegment = new ByteArraySegment (new Byte[0]);
+                var byteArraySegment = new ByteArraySegment (new byte[0]);
                 InformationElementList ieList = new InformationElementList (byteArraySegment);
 
                 Assert.AreEqual (0, ieList.Count);
@@ -81,7 +81,7 @@ namespace Test.PacketType
                 //create a dummy info element section for the test. The example here uses 
                 //two arbitrary field types (0xD3 & 0xDD). The important information for the test is the length
                 //field which is the second byte on each row (0x5 & 0x4). The actual values are meaningless.
-                Byte[] ieBytes = new Byte[] { 0xD3, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05,
+                byte[] ieBytes = new byte[] { 0xD3, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05,
                                               0xDD, 0x04, 0xFF, 0xFE, 0xFD, 0xFC };
                 var byteArraySegment = new ByteArraySegment (ieBytes);
 
@@ -91,11 +91,11 @@ namespace Test.PacketType
 
                 Assert.AreEqual (InformationElement.ElementId.WifiProtectedAccess, ieList [0].Id);
                 Assert.AreEqual (5, ieList [0].ValueLength);
-                Assert.IsTrue (ieList [0].Value.SequenceEqual (new Byte[] { 0x1, 0x2, 0x3, 0x4, 0x5 }));
+                Assert.IsTrue (ieList [0].Value.SequenceEqual (new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5 }));
 
                 Assert.AreEqual (InformationElement.ElementId.VendorSpecific, ieList [1].Id);
                 Assert.AreEqual (4, ieList [1].ValueLength);
-                Assert.IsTrue (ieList [1].Value.SequenceEqual (new Byte[] { 0xFF, 0xFE, 0xFD, 0xFC }));
+                Assert.IsTrue (ieList [1].Value.SequenceEqual (new byte[] { 0xFF, 0xFE, 0xFD, 0xFC }));
             }
    
             [Test]
@@ -103,7 +103,7 @@ namespace Test.PacketType
             {
                 //The following buffer contains two information elements both with a length of 5
                 //but the buffer is too short to contain the complete value for the second IE
-                Byte[] ieBytes = new Byte[] { 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05,
+                byte[] ieBytes = new byte[] { 0x00, 0x05, 0x01, 0x02, 0x03, 0x04, 0x05,
                                               0x00, 0x05, 0x01, 0x02, 0x03 };
                 var byteArraySegment = new ByteArraySegment (ieBytes);
 
@@ -126,7 +126,7 @@ namespace Test.PacketType
             public void Test_Constructor_BufferTooShortForLengthHeader ()
             {
                 //This buffer contains only enough for the id field (i.e. not length or value)
-                Byte[] ieBytes = new Byte[] { 0x00 };
+                byte[] ieBytes = new byte[] { 0x00 };
                 var byteArraySegment = new ByteArraySegment (ieBytes);
 
                 InformationElementList ieList = new InformationElementList (byteArraySegment);
@@ -137,7 +137,7 @@ namespace Test.PacketType
             public void Test_Constructor_BufferTooShortForValue ()
             {
                 //This buffer contains only enough for the id field (i.e. not length or value)
-				Byte[] ieBytes = new Byte[] { 0x00, 0x01 };
+                byte[] ieBytes = new byte[] { 0x00, 0x01 };
                 var byteArraySegment = new ByteArraySegment (ieBytes);
 
                 InformationElementList ieList = new InformationElementList (byteArraySegment);
@@ -156,7 +156,7 @@ namespace Test.PacketType
             [Test]
             public void Test_Bytes_EmptySection ()
             {
-                var byteArraySegment = new ByteArraySegment (new Byte[0]);
+                var byteArraySegment = new ByteArraySegment (new byte[0]);
                 InformationElementList ieList = new InformationElementList (byteArraySegment);
 
                 Assert.AreEqual (0, ieList.Bytes.Length);
@@ -166,18 +166,18 @@ namespace Test.PacketType
             public void Test_Bytes_MultipleInfoElements ()
             {
                 InformationElement ie1 = new InformationElement (
-                    InformationElement.ElementId.WifiProtectedAccess, new Byte[] { 0x1, 0x2, 0x3, 0x4, 0x5 });
+                    InformationElement.ElementId.WifiProtectedAccess, new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5 });
 
                 InformationElement ie2 = new InformationElement (
-                    InformationElement.ElementId.VendorSpecific, new Byte[] { 0xFF, 0xFE, 0xFD, 0xFC });
+                    InformationElement.ElementId.VendorSpecific, new byte[] { 0xFF, 0xFE, 0xFD, 0xFC });
           
                 InformationElementList ieList = new InformationElementList ();
                 ieList.Add (ie1);
                 ieList.Add (ie2);
 
-                Byte[] expectedBytes = new Byte[] { 0xD3, 0x5, 0x1, 0x2, 0x3, 0x4, 0x5, 0xDD, 0x4, 0xFF, 0xFE, 0xFD, 0xFC };
+                byte[] expectedBytes = new byte[] { 0xD3, 0x5, 0x1, 0x2, 0x3, 0x4, 0x5, 0xDD, 0x4, 0xFF, 0xFE, 0xFD, 0xFC };
 
-                Byte[] b = ieList.Bytes;
+                byte[] b = ieList.Bytes;
 
                 Assert.AreEqual (0xD3, b [0]);
                 Assert.AreEqual (0x5, b [1]);
@@ -239,7 +239,7 @@ namespace Test.PacketType
                 Assert.AreEqual (0, infoElements.Length);
             }
             
-            private BeaconFrame LoadBeaconFrameFromFile (String file)
+            private BeaconFrame LoadBeaconFrameFromFile (string file)
             {
                 var dev = new CaptureFileReaderDevice (file);
                 dev.Open ();

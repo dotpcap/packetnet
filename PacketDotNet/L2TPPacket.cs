@@ -66,27 +66,27 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.DarkGray;
+        public override string Color => AnsiEscapeSequences.DarkGray;
 
-        public Boolean DataMessage => 8 == (Header.Bytes[Header.Offset] & 0x8);
+        public bool DataMessage => 8 == (Header.Bytes[Header.Offset] & 0x8);
 
-        public Boolean HasLength => 4 == (Header.Bytes[Header.Offset] & 0x4);
+        public bool HasLength => 4 == (Header.Bytes[Header.Offset] & 0x4);
 
-        public Boolean HasOffset => 2 == (Header.Bytes[Header.Offset] & 0x2);
+        public bool HasOffset => 2 == (Header.Bytes[Header.Offset] & 0x2);
 
-        public Boolean HasSequence => 2 == (Header.Bytes[Header.Offset] & 0x2);
+        public bool HasSequence => 2 == (Header.Bytes[Header.Offset] & 0x2);
 
-        public Boolean IsPriority => 2 == (Header.Bytes[Header.Offset] & 0x2);
+        public bool IsPriority => 2 == (Header.Bytes[Header.Offset] & 0x2);
 
-        public Int32 SessionID => HasLength ? EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 5) : EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 4);
+        public int SessionID => HasLength ? EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 5) : EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 4);
 
-        public Int32 TunnelID => HasLength ? EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 3) : EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 2);
+        public int TunnelID => HasLength ? EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 3) : EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 2);
 
-        public Int32 Version => Header.Bytes[Header.Offset + 1] & 0x7;
+        public int Version => Header.Bytes[Header.Offset + 1] & 0x7;
 
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";

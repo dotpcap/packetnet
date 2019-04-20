@@ -48,7 +48,7 @@ namespace PacketDotNet.Tcp
         /// A <see cref="System.Int32" />
         /// </param>
         [Obsolete]
-        public EchoReply(Byte[] bytes, Int32 offset, Int32 length) :
+        public EchoReply(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
 

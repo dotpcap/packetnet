@@ -31,7 +31,7 @@ namespace PacketDotNet.Ieee80211
     /// </summary>
     public sealed class BlockAcknowledgmentFrame : MacFrame
     {
-        private Byte[] _blockAckBitmap;
+        private byte[] _blockAckBitmap;
 
         /// <summary>
         /// Constructor
@@ -69,7 +69,7 @@ namespace PacketDotNet.Ieee80211
         (
             PhysicalAddress transmitterAddress,
             PhysicalAddress receiverAddress,
-            Byte[] blockAckBitmap)
+            byte[] blockAckBitmap)
         {
             FrameControl = new FrameControlField();
             Duration = new DurationField();
@@ -91,7 +91,7 @@ namespace PacketDotNet.Ieee80211
         /// Is thrown when the bitmap is of an incorrect lenght. The bitmap must be either 8 or 64 btyes longs depending on whether or not
         /// it is compressed.
         /// </exception>
-        public Byte[] BlockAckBitmap
+        public byte[] BlockAckBitmap
         {
             get => _blockAckBitmap;
             set
@@ -124,13 +124,13 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The block ack starting sequence control.
         /// </value>
-        public UInt16 BlockAckStartingSequenceControl { get; set; }
+        public ushort BlockAckStartingSequenceControl { get; set; }
 
 
         /// <summary>
         /// Length of the frame
         /// </summary>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
+        public override int FrameSize => MacFields.FrameControlLength +
                                            MacFields.DurationIDLength +
                                            (MacFields.AddressLength * 2) +
                                            BlockAcknowledgmentFields.BlockAckRequestControlLength +
@@ -147,11 +147,11 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         public PhysicalAddress TransmitterAddress { get; set; }
 
-        private Byte[] BlockAckBitmapBytes
+        private byte[] BlockAckBitmapBytes
         {
             get
             {
-                var bitmap = new Byte[GetBitmapLength()];
+                var bitmap = new byte[GetBitmapLength()];
                 if (Header.Length >= BlockAcknowledgmentFields.BlockAckBitmapPosition + GetBitmapLength())
                 {
                     Array.Copy(Header.Bytes,
@@ -178,7 +178,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The block ack request control bytes.
         /// </value>
-        private UInt16 BlockAckRequestControlBytes
+        private ushort BlockAckRequestControlBytes
         {
             get
             {
@@ -196,7 +196,7 @@ namespace PacketDotNet.Ieee80211
                                                        Header.Offset + BlockAcknowledgmentFields.BlockAckRequestControlPosition);
         }
 
-        private UInt16 BlockAckStartingSequenceControlBytes
+        private ushort BlockAckStartingSequenceControlBytes
         {
             get
             {
@@ -215,7 +215,7 @@ namespace PacketDotNet.Ieee80211
         }
 
 
-        private Int32 GetBitmapLength()
+        private int GetBitmapLength()
         {
             return BlockAcknowledgmentControl.CompressedBitmap ? 8 : 64;
         }
@@ -227,7 +227,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;
@@ -249,7 +249,7 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// The address string.
         /// </returns>
-        protected override String GetAddressString()
+        protected override string GetAddressString()
         {
             return $"RA {ReceiverAddress} TA {TransmitterAddress}";
         }

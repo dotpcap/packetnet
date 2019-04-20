@@ -30,7 +30,7 @@ namespace PacketDotNet
         /// <summary>
         /// The Other Data field
         /// </summary>
-        public String Data { set; get; }
+        public string Data { set; get; }
 
         /// <summary>
         /// The Drda Code Point Type field
@@ -40,6 +40,6 @@ namespace PacketDotNet
         /// <summary>
         /// The Length field
         /// </summary>
-        public Int32 Length { set; get; }
+        public int Length { set; get; }
     }
 }

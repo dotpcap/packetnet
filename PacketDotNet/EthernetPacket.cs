@@ -91,7 +91,7 @@ namespace PacketDotNet
         {
             get
             {
-                var hwAddress = new Byte[EthernetFields.MacAddressLength];
+                var hwAddress = new byte[EthernetFields.MacAddressLength];
 
                 for (int i = 0; i < EthernetFields.MacAddressLength; i++)
                     hwAddress[i] = Header.Bytes[Header.Offset + EthernetFields.SourceMacPosition + i];
@@ -115,7 +115,7 @@ namespace PacketDotNet
         {
             get
             {
-                var hwAddress = new Byte[EthernetFields.MacAddressLength];
+                var hwAddress = new byte[EthernetFields.MacAddressLength];
 
                 for (int i = 0; i < EthernetFields.MacAddressLength; i++)
                     hwAddress[i] = Header.Bytes[Header.Offset + EthernetFields.DestinationMacPosition + i];
@@ -143,7 +143,7 @@ namespace PacketDotNet
                                                                        Header.Offset + EthernetFields.TypePosition);
             set
             {
-                var val = (Int16) value;
+                var val = (short) value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  Header.Bytes,
                                                  Header.Offset + EthernetFields.TypePosition);
@@ -164,7 +164,7 @@ namespace PacketDotNet
             // allocate memory for this packet
             const int offset = 0;
             var length = EthernetFields.HeaderLength;
-            var headerBytes = new Byte[length];
+            var headerBytes = new byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
@@ -249,10 +249,10 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.DarkGray;
+        public override string Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
@@ -278,7 +278,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                var properties = new Dictionary<String, String>
+                var properties = new Dictionary<string, string>
                 {
                     {"destination", HexPrinter.PrintMACAddress(DestinationHwAddress)},
                     {"source", HexPrinter.PrintMACAddress(SourceHwAddress)},
@@ -286,7 +286,7 @@ namespace PacketDotNet
                 };
 
                 // calculate the padding needed to right-justify the property names
-                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Eth:  ******* Ethernet - \"Ethernet\" - offset=? length=" + TotalPacketLength);
@@ -316,8 +316,8 @@ namespace PacketDotNet
         {
             var rnd = new Random();
 
-            var srcPhysicalAddress = new Byte[EthernetFields.MacAddressLength];
-            var dstPhysicalAddress = new Byte[EthernetFields.MacAddressLength];
+            var srcPhysicalAddress = new byte[EthernetFields.MacAddressLength];
+            var dstPhysicalAddress = new byte[EthernetFields.MacAddressLength];
 
             rnd.NextBytes(srcPhysicalAddress);
             rnd.NextBytes(dstPhysicalAddress);

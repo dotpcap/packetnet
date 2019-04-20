@@ -52,27 +52,27 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Number of bytes in the AddressLength field
         /// </summary>
-        private const Int32 MgmtAddressLengthLength = 1;
+        private const int MgmtAddressLengthLength = 1;
 
         /// <summary>
         /// Number of bytes in the interface number subtype field
         /// </summary>
-        private const Int32 InterfaceNumberSubTypeLength = 1;
+        private const int InterfaceNumberSubTypeLength = 1;
 
         /// <summary>
         /// Number of bytes in the interface number field
         /// </summary>
-        private const Int32 InterfaceNumberLength = 4;
+        private const int InterfaceNumberLength = 4;
 
         /// <summary>
         /// Number of bytes in the object identifier length field
         /// </summary>
-        private const Int32 ObjectIdentifierLengthLength = 1;
+        private const int ObjectIdentifierLengthLength = 1;
 
         /// <summary>
         /// Maximum number of bytes in the object identifier field
         /// </summary>
-        private const Int32 MaxObjectIdentifierLength = 128;
+        private const int MaxObjectIdentifierLength = 128;
 
 
         #region Constructors
@@ -87,7 +87,7 @@ namespace PacketDotNet.LLDP
         /// The Management Address TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public ManagementAddress(Byte[] bytes, Int32 offset) :
+        public ManagementAddress(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Log.Debug("");
@@ -112,8 +112,8 @@ namespace PacketDotNet.LLDP
         (
             NetworkAddress managementAddress,
             InterfaceNumbering interfaceSubType,
-            UInt32 ifNumber,
-            String oid)
+            uint ifNumber,
+            string oid)
         {
             Log.Debug("");
 
@@ -124,7 +124,7 @@ namespace PacketDotNet.LLDP
                          InterfaceNumberSubTypeLength +
                          InterfaceNumberLength +
                          ObjectIdentifierLengthLength;
-            var bytes = new Byte[length];
+            var bytes = new byte[length];
             var offset = 0;
             TLVData = new ByteArraySegment(bytes, offset, length);
 
@@ -148,10 +148,10 @@ namespace PacketDotNet.LLDP
         /// <value>
         /// The Management Address Length
         /// </value>
-        public Int32 AddressLength
+        public int AddressLength
         {
             get => TLVData.Bytes[ValueOffset];
-            internal set => TLVData.Bytes[ValueOffset] = (Byte) value;
+            internal set => TLVData.Bytes[ValueOffset] = (byte) value;
         }
 
         /// <value>
@@ -189,7 +189,7 @@ namespace PacketDotNet.LLDP
                                     ObjectIdentifierLengthLength +
                                     ObjIdLength;
 
-                    var newBytes = new Byte[newLength];
+                    var newBytes = new byte[newLength];
 
                     var headerLength = TLVTypeLength.TypeLengthLength + MgmtAddressLengthLength;
                     var oldStartOfAfterData = ValueOffset + MgmtAddressLengthLength + AddressLength;
@@ -232,15 +232,15 @@ namespace PacketDotNet.LLDP
         public InterfaceNumbering InterfaceSubType
         {
             get => (InterfaceNumbering) TLVData.Bytes[ValueOffset + MgmtAddressLengthLength + MgmtAddress.Length];
-            set => TLVData.Bytes[ValueOffset + MgmtAddressLengthLength + MgmtAddress.Length] = (Byte) value;
+            set => TLVData.Bytes[ValueOffset + MgmtAddressLengthLength + MgmtAddress.Length] = (byte) value;
         }
 
-        private Int32 InterfaceNumberOffset => ValueOffset + MgmtAddressLengthLength + AddressLength + InterfaceNumberSubTypeLength;
+        private int InterfaceNumberOffset => ValueOffset + MgmtAddressLengthLength + AddressLength + InterfaceNumberSubTypeLength;
 
         /// <value>
         /// Interface Number
         /// </value>
-        public UInt32 InterfaceNumber
+        public uint InterfaceNumber
         {
             get => EndianBitConverter.Big.ToUInt32(TLVData.Bytes,
                                                    InterfaceNumberOffset);
@@ -249,24 +249,24 @@ namespace PacketDotNet.LLDP
                                                     InterfaceNumberOffset);
         }
 
-        private Int32 ObjIdLengthOffset => InterfaceNumberOffset + InterfaceNumberLength;
+        private int ObjIdLengthOffset => InterfaceNumberOffset + InterfaceNumberLength;
 
         /// <value>
         /// Object ID Length
         /// </value>
-        public Byte ObjIdLength
+        public byte ObjIdLength
         {
             get => TLVData.Bytes[ObjIdLengthOffset];
 
             internal set => TLVData.Bytes[ObjIdLengthOffset] = value;
         }
 
-        private Int32 ObjectIdentifierOffset => ObjIdLengthOffset + ObjectIdentifierLengthLength;
+        private int ObjectIdentifierOffset => ObjIdLengthOffset + ObjectIdentifierLengthLength;
 
         /// <value>
         /// Object ID
         /// </value>
-        public String ObjectIdentifier
+        public string ObjectIdentifier
         {
             get => Encoding.UTF8.GetString(TLVData.Bytes,
                                            ObjectIdentifierOffset,
@@ -292,7 +292,7 @@ namespace PacketDotNet.LLDP
                                     ObjectIdentifierLengthLength;
                     var newLength = oldLength + oid.Length;
 
-                    var newBytes = new Byte[newLength];
+                    var newBytes = new byte[newLength];
 
                     // copy the original bytes over
                     Array.Copy(TLVData.Bytes,
@@ -305,7 +305,7 @@ namespace PacketDotNet.LLDP
                     TLVData = new ByteArraySegment(newBytes, offset, newLength);
 
                     // update the length
-                    ObjIdLength = (Byte) value.Length;
+                    ObjIdLength = (byte) value.Length;
                 }
 
                 Array.Copy(oid,
@@ -322,7 +322,7 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A human readable string
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return
                 $"[ManagementAddress: AddressLength={AddressLength}, AddressSubType={AddressSubType}, MgmtAddress={MgmtAddress}, InterfaceSubType={InterfaceSubType}, InterfaceNumber={InterfaceNumber}, ObjIdLength={ObjIdLength}, ObjectIdentifier={ObjectIdentifier}]";

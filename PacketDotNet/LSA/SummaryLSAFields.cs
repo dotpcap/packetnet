@@ -9,22 +9,22 @@ namespace PacketDotNet.LSA
     public class SummaryLSAFields : LSAFields
     {
         /// <summary> The length of the Metric field in bytes</summary>
-        public static readonly Int32 MetricLength = 4;
+        public static readonly int MetricLength = 4;
 
         /// <summary> The relative postion of the Metric field</summary>
-        public static readonly Int32 MetricPosition;
+        public static readonly int MetricPosition;
 
         /// <summary> The length of the NetworkMask field in bytes</summary>
-        public static readonly Int32 NetworkMaskLength = 4;
+        public static readonly int NetworkMaskLength = 4;
 
         /// <summary> The relative postion of the NetworkMask field</summary>
-        public static readonly Int32 NetworkMaskPosition;
+        public static readonly int NetworkMaskPosition;
 
         /// <summary> The length of the TOSMetric field in bytes</summary>
-        public static readonly Int32 TOSMetricLength = 4;
+        public static readonly int TOSMetricLength = 4;
 
         /// <summary> The relative postion of the TOSMetric field</summary>
-        public static readonly Int32 TOSMetricPosition;
+        public static readonly int TOSMetricPosition;
 
         static SummaryLSAFields()
         {

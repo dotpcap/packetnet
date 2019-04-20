@@ -42,7 +42,7 @@ namespace PacketDotNet.LLDP
         /// The Port Description TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public StringTLV(Byte[] bytes, Int32 offset) :
+        public StringTLV(byte[] bytes, int offset) :
             base(bytes, offset)
         { }
 
@@ -55,9 +55,9 @@ namespace PacketDotNet.LLDP
         /// <param name="stringValue">
         /// A <see cref="string" />
         /// </param>
-        public StringTLV(TLVTypes tlvType, String stringValue)
+        public StringTLV(TLVTypes tlvType, string stringValue)
         {
-            var bytes = new Byte[TLVTypeLength.TypeLengthLength];
+            var bytes = new byte[TLVTypeLength.TypeLengthLength];
             const int offset = 0;
             TLVData = new ByteArraySegment(bytes, offset, bytes.Length);
 
@@ -73,7 +73,7 @@ namespace PacketDotNet.LLDP
         /// <value>
         /// A textual Description of the port
         /// </value>
-        public String StringValue
+        public string StringValue
         {
             get => Encoding.ASCII.GetString(TLVData.Bytes,
                                             ValueOffset,
@@ -87,7 +87,7 @@ namespace PacketDotNet.LLDP
                 if (TLVData.Length != length)
                 {
                     // allocate new memory for this tlv
-                    var newTLVBytes = new Byte[length];
+                    var newTLVBytes = new byte[length];
                     var offset = 0;
 
                     // copy header over
@@ -115,7 +115,7 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A human readable string
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return $"[{Type}: Description={StringValue}]";
         }

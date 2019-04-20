@@ -4,14 +4,14 @@ namespace PacketDotNet.Ieee80211
 {
     public class ProbeResponseFields
     {
-        public static readonly Int32 BeaconIntervalLength = 2;
-        public static readonly Int32 BeaconIntervalPosition;
-        public static readonly Int32 CapabilityInformationLength = 2;
-        public static readonly Int32 CapabilityInformationPosition;
-        public static readonly Int32 InformationElement1Position;
-        public static readonly Int32 TimestampLength = 8;
+        public static readonly int BeaconIntervalLength = 2;
+        public static readonly int BeaconIntervalPosition;
+        public static readonly int CapabilityInformationLength = 2;
+        public static readonly int CapabilityInformationPosition;
+        public static readonly int InformationElement1Position;
+        public static readonly int TimestampLength = 8;
 
-        public static readonly Int32 TimestampPosition;
+        public static readonly int TimestampPosition;
 
         static ProbeResponseFields()
         {

@@ -100,7 +100,7 @@ namespace PacketDotNet
         /// <value>
         /// The current length of the LLDPDU
         /// </value>
-        public Int32 Length { get; set; }
+        public int Length { get; set; }
 
         /// <summary>
         /// LLDPPacket specific implementation of BytesHighPerformance
@@ -132,7 +132,7 @@ namespace PacketDotNet
         /// </summary>
         /// <param name="index">The index of the item being set/retrieved in the collection</param>
         /// <returns>The requested TLV</returns>
-        public TLV this[Int32 index]
+        public TLV this[int index]
         {
             get => TlvCollection[index];
             set => TlvCollection[index] = value;
@@ -155,7 +155,7 @@ namespace PacketDotNet
         /// <summary>
         /// Parse byte[] into TLVs
         /// </summary>
-        public void ParseByteArrayIntoTlvs(Byte[] bytes, Int32 offset)
+        public void ParseByteArrayIntoTlvs(byte[] bytes, int offset)
         {
             Log.DebugFormat("bytes.Length {0}, offset {1}", bytes.Length, offset);
 
@@ -210,7 +210,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="TLV" />
         /// </returns>
-        private static TLV TLVFactory(Byte[] bytes, Int32 offset, TLVTypes type)
+        private static TLV TLVFactory(byte[] bytes, int offset, TLVTypes type)
         {
             switch (type)
             {
@@ -251,16 +251,16 @@ namespace PacketDotNet
 
             var lldpPacket = new LLDPPacket();
 
-            var physicalAddressBytes = new Byte[EthernetFields.MacAddressLength];
+            var physicalAddressBytes = new byte[EthernetFields.MacAddressLength];
             rnd.NextBytes(physicalAddressBytes);
             var physicalAddress = new PhysicalAddress(physicalAddressBytes);
             lldpPacket.TlvCollection.Add(new ChassisID(physicalAddress));
 
-            var networkAddress = new Byte[IPv4Fields.AddressLength];
+            var networkAddress = new byte[IPv4Fields.AddressLength];
             rnd.NextBytes(networkAddress);
             lldpPacket.TlvCollection.Add(new PortID(new NetworkAddress(new IPAddress(networkAddress))));
 
-            var seconds = (UInt16) rnd.Next(0, 120);
+            var seconds = (ushort) rnd.Next(0, 120);
             lldpPacket.TlvCollection.Add(new TimeToLive(seconds));
 
             lldpPacket.TlvCollection.Add(new EndOfLLDPDU());
@@ -269,7 +269,7 @@ namespace PacketDotNet
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";

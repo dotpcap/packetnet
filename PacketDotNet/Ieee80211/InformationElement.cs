@@ -179,13 +179,13 @@ namespace PacketDotNet.Ieee80211
                                              _bytes.Bytes[_bytes.Offset + ElementLengthPosition]);
 
         /// <summary>
-        /// Determines whether the specified <see cref="System.Object" /> is equal to the current <see cref="InformationElement" />.
+        /// Determines whether the specified <see cref="object" /> is equal to the current <see cref="InformationElement" />.
         /// </summary>
         /// <param name='obj'>
-        /// The <see cref="System.Object" /> to compare with the current <see cref="InformationElement" />.
+        /// The <see cref="object" /> to compare with the current <see cref="InformationElement" />.
         /// </param>
         /// <returns>
-        /// <c>true</c> if the specified <see cref="System.Object" /> is equal to the current
+        /// <c>true</c> if the specified <see cref="object" /> is equal to the current
         /// <see cref="InformationElement" />; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object obj)

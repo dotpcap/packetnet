@@ -39,7 +39,7 @@ namespace PacketDotNet.Ieee80211
         /// Parse a PPI indicated by type, from a given BinaryReader
         /// </summary>
         /// <param name="fieldType">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="br">
         /// A <see cref="BinaryReader" />

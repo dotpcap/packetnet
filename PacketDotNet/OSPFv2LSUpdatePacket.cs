@@ -66,10 +66,10 @@ namespace PacketDotNet
         /// Constructs a packet from bytes and offset
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="System.Byte" />
+        /// A <see cref="byte" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         public OSPFv2LSUpdatePacket(byte[] bytes, int offset) :
             base(bytes, offset)
@@ -101,7 +101,7 @@ namespace PacketDotNet
         /// A list of LSA, contained in this packet
         /// </summary>
         /// See
-        /// <see cref="PacketDotNet.LSA" />
+        /// <see cref="LSA" />
         public List<LSA.LSA> LSAUpdates
         {
             get
@@ -137,9 +137,9 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns a <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2LSUpdatePacket" />.
+        /// Returns a <see cref="string" /> that represents the current <see cref="OSPFv2LSUpdatePacket" />.
         /// </summary>
-        /// <returns>A <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2LSUpdatePacket" />.</returns>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="OSPFv2LSUpdatePacket" />.</returns>
         public override string ToString()
         {
             var packet = new StringBuilder();

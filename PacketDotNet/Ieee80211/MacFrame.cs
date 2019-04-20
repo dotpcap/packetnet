@@ -132,7 +132,7 @@ namespace PacketDotNet.Ieee80211
 
 
         /// <summary>
-        /// Writes the provided address into the backing <see cref="PacketDotNet.Utils.ByteArraySegment" />
+        /// Writes the provided address into the backing <see cref="ByteArraySegment" />
         /// starting at the provided offset.
         /// </summary>
         /// <param name='offset'>
@@ -241,7 +241,7 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary>
-        /// Parses the <see cref="PacketDotNet.Utils.ByteArraySegment" /> into a MacFrame.
+        /// Parses the <see cref="ByteArraySegment" /> into a MacFrame.
         /// </summary>
         /// <returns>
         /// The parsed MacFrame or null if it could not be parsed.
@@ -281,7 +281,7 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary>
-        /// Parses the <see cref="PacketDotNet.Utils.ByteArraySegment" /> into a MacFrame.
+        /// Parses the <see cref="ByteArraySegment" /> into a MacFrame.
         /// </summary>
         /// <returns>
         /// The parsed MacFrame or null if it could not be parsed.
@@ -290,7 +290,7 @@ namespace PacketDotNet.Ieee80211
         /// The bytes of the packet. byteArraySegment.Offset should point to the first byte in the mac frame.
         /// </param>
         /// <remarks>
-        /// If the provided bytes contain the FCS then call <see cref="MacFrame.ParsePacketWithFcs" /> instead. The presence of the
+        /// If the provided bytes contain the FCS then call <see cref="ParsePacketWithFcs" /> instead. The presence of the
         /// FCS is usually determined by configuration of the device used to capture the packets.
         /// </remarks>
         public static MacFrame ParsePacket(ByteArraySegment byteArraySegment)
@@ -466,7 +466,7 @@ namespace PacketDotNet.Ieee80211
         /// </param>
         /// <remarks>
         /// This method can be used to check the validity of a packet before attempting to parse it with either
-        /// <see cref="ParsePacket" /> or <see cref="MacFrame.ParsePacketWithFcs" />. Attempting to parse a corrupted buffer
+        /// <see cref="ParsePacket" /> or <see cref="ParsePacketWithFcs" />. Attempting to parse a corrupted buffer
         /// using these methods could cause unexpected exceptions.
         /// </remarks>
         public static bool PerformFcsCheck(byte[] data, int offset, int length, uint fcs)

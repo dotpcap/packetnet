@@ -154,10 +154,10 @@ namespace PacketDotNet
         /// Create from values
         /// </summary>
         /// <param name="sourcePort">
-        /// A <see cref="System.UInt16" />
+        /// A <see cref="ushort" />
         /// </param>
         /// <param name="destinationPort">
-        /// A <see cref="System.UInt16" />
+        /// A <see cref="ushort" />
         /// </param>
         public UdpPacket(ushort sourcePort, ushort destinationPort)
         {

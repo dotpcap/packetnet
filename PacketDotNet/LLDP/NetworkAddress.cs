@@ -79,10 +79,10 @@ namespace PacketDotNet.LLDP
         /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         public NetworkAddress(byte[] bytes, int offset, int length)
         {
@@ -172,10 +172,10 @@ namespace PacketDotNet.LLDP
         /// Equals override
         /// </summary>
         /// <param name="obj">
-        /// A <see cref="System.Object" />
+        /// A <see cref="object" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Boolean" />
+        /// A <see cref="bool" />
         /// </returns>
         public override bool Equals(object obj)
         {
@@ -199,7 +199,7 @@ namespace PacketDotNet.LLDP
         /// GetHashCode() override
         /// </summary>
         /// <returns>
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </returns>
         public override int GetHashCode()
         {

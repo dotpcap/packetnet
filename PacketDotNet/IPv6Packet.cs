@@ -300,10 +300,10 @@ namespace PacketDotNet
         /// Create an IPv6 packet from values
         /// </summary>
         /// <param name="sourceAddress">
-        /// A <see cref="System.Net.IPAddress" />
+        /// A <see cref="IPAddress" />
         /// </param>
         /// <param name="destinationAddress">
-        /// A <see cref="System.Net.IPAddress" />
+        /// A <see cref="IPAddress" />
         /// </param>
         public IPv6Packet
         (

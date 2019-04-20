@@ -163,7 +163,7 @@ namespace Test.Misc
                         captureFileReader.Open();
 
                         fileAndPacketIndex++;
-                    } catch(System.Exception e)
+                    } catch(Exception e)
                     {
                         log.Error("caught exception",e);
                         throw;

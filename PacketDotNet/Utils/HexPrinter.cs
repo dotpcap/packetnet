@@ -31,13 +31,13 @@ namespace PacketDotNet.Utils
         /// text form
         /// </summary>
         /// <param name="Byte">
-        /// A <see cref="System.Byte" />
+        /// A <see cref="byte" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <returns>
         /// A <see cref="string" />

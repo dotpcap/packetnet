@@ -49,13 +49,13 @@ namespace PacketDotNet
         /// Constructs a packet from bytes and offset and length
         /// </summary>
         /// <param name="packet">
-        /// A <see cref="System.Byte" />
+        /// A <see cref="byte" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         public RouterLink(byte[] packet, int offset, int length)
         {

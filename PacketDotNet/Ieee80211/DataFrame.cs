@@ -131,7 +131,7 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary>
-        /// Writes the address properties into the backing <see cref="PacketDotNet.Utils.ByteArraySegment" />.
+        /// Writes the address properties into the backing <see cref="Utils.ByteArraySegment" />.
         /// </summary>
         /// <remarks>
         /// The address position into which a particular address property is written is determined by the

@@ -335,7 +335,7 @@ namespace PacketDotNet
         /// A <see cref="LinkLayers" />
         /// </param>
         /// <param name="packetData">
-        /// A <see cref="System.Byte" />
+        /// A <see cref="byte" />
         /// </param>
         /// <returns>
         /// A <see cref="Packet" />
@@ -418,7 +418,7 @@ namespace PacketDotNet
             return ToString(StringOutputType.Normal);
         }
 
-        /// <summary cref="Packet.ToString()">
+        /// <summary cref="ToString()">
         /// Output the packet information in the specified format
         /// Normal - outputs the packet info to a single line
         /// Colored - outputs the packet info to a single line with coloring

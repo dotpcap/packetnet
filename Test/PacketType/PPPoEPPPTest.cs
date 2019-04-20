@@ -27,10 +27,10 @@ using SharpPcap.LibPcap;
 namespace Test.PacketType
 {
     [TestFixture]
-    public class PPPoEPPPTest
+    public class PppoePppTest
     {
         [Test]
-        public void TestParsingPPPoePPPPacket()
+        public void TestParsingPppoePppPacket()
         {
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/PPPoEPPP.pcap");
             dev.Open();

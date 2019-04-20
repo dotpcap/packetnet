@@ -10,7 +10,7 @@ using PacketDotNet.Utils;
 namespace Test.PacketType
 {
     [TestFixture]
-    class OSPFv2PacketTest
+    public class OspfV2PacketTest
     {
         private const int OSPF_HELLO_INDEX = 0;
         private const int OSPF_DBD_INDEX = 9;

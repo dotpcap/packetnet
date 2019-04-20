@@ -26,11 +26,11 @@ using PacketDotNet;
 namespace Test.PacketType
 {
     [TestFixture]
-    public class L2TPPacketTest
+    public class L2tpPacketTest
     {
         // L2TP
         [Test]
-        public void L2TPParsing()
+        public void L2tpParsing()
         {
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/l2tp.pcap");
             dev.Open();

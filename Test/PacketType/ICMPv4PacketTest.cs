@@ -29,14 +29,14 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace Test.PacketType
 {
     [TestFixture]
-    public class ICMPv4PacketTest
+    public class IcmpV4PacketTest
     {
         /// <summary>
         /// Test that we can parse a icmp v4 request and reply
         /// </summary>
         [TestCase("../../CaptureFiles/ICMPv4.pcap", LinkLayers.Ethernet)]
         [TestCase("../../CaptureFiles/ICMPv4_raw_linklayer.pcap", LinkLayers.RawLegacy)]
-        public void ICMPv4Parsing(string pcapPath, LinkLayers linkLayers)
+        public void IcmpV4Parsing(string pcapPath, LinkLayers linkLayers)
         {
             var dev = new CaptureFileReaderDevice(pcapPath);
             dev.Open();

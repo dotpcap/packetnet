@@ -29,7 +29,7 @@ using SharpPcap.LibPcap;
 namespace Test.PacketType
 {
     [TestFixture]
-    public class PPPPacketTest
+    public class PppPacketTest
     {
         [Test]
         public void PrintString()

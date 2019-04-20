@@ -26,11 +26,11 @@ using PacketDotNet;
 namespace Test.PacketType
 {
     [TestFixture]
-    public class GREIPv6PacketTest
+    public class GreIPv6PacketTest
     {
         // GREIPv6
         [Test]
-        public void GREIPv6Parsing()
+        public void GreIPv6Parsing()
         {
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/gre_ipv6.pcap");
             dev.Open();

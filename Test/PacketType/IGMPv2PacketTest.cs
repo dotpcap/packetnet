@@ -30,7 +30,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace Test.PacketType
 {
     [TestFixture]
-    public class IGMPv2PacketTest
+    public class IgmpV2PacketTest
     {
         [Test]
         public void Parsing()

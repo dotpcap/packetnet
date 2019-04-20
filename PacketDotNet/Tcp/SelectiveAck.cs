@@ -23,7 +23,7 @@ using PacketDotNet.MiscUtil.Conversion;
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// SACK (Selective Ack) Option
+    /// SelectiveAck (Selective Ack) Option
     /// Provides a means for a receiver to notify the sender about
     /// all the segments that have arrived successfully.
     /// Used to cut down on the number of unnecessary re-transmissions.
@@ -33,12 +33,16 @@ namespace PacketDotNet.Tcp
     /// http://datatracker.ietf.org/doc/rfc2018/
     /// http://datatracker.ietf.org/doc/rfc2883/
     /// </remarks>
-    public class SACK : Option
+    public class SelectiveAck : Option
     {
-        #region Constructors
+        // the length (in bytes) of a SelectiveAck block
+        private const int BlockLength = 2;
+
+        // the offset (in bytes) of the ScaleFactor Field
+        private const int SACKBlocksFieldOffset = 2;
 
         /// <summary>
-        /// Creates a SACK (Selective Ack) Option
+        /// Creates a SelectiveAck (Selective Ack) Option
         /// </summary>
         /// <param name="bytes">
         /// A <see cref="T:System.Byte[]" />
@@ -49,19 +53,14 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        public SACK(byte[] bytes, int offset, int length) :
+        public SelectiveAck(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
 
-        #endregion
-
-
-        #region Properties
-
         /// <summary>
-        /// Contains an array of SACK (Selective Ack) Blocks
+        /// Contains an array of selective ack blocks.
         /// </summary>
-        public ushort[] SACKBlocks
+        public ushort[] Blocks
         {
             get
             {
@@ -77,11 +76,6 @@ namespace PacketDotNet.Tcp
             }
         }
 
-        #endregion
-
-
-        #region Methods
-
         /// <summary>
         /// Returns the Option info as a string
         /// </summary>
@@ -92,9 +86,9 @@ namespace PacketDotNet.Tcp
         {
             var output = "[" + Kind + ": ";
 
-            for (var i = 0; i < SACKBlocks.Length; i++)
+            for (var i = 0; i < Blocks.Length; i++)
             {
-                output += "Block" + i + "=" + SACKBlocks[i] + " ";
+                output += "Block" + i + "=" + Blocks[i] + " ";
             }
 
             output = output.TrimEnd();
@@ -102,18 +96,5 @@ namespace PacketDotNet.Tcp
 
             return output;
         }
-
-        #endregion
-
-
-        #region Members
-
-        // the length (in bytes) of a SACK block
-        private const int BlockLength = 2;
-
-        // the offset (in bytes) of the ScaleFactor Field
-        private const int SACKBlocksFieldOffset = 2;
-
-        #endregion
     }
 }

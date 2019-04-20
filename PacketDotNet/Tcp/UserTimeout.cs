@@ -33,7 +33,12 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class UserTimeout : Option
     {
-        #region Constructors
+        // the mask used to strip the Granularity field from the
+        //  Values filed to expose the UserTimeout field
+        private const int TimeoutMask = 0x7FFF;
+
+        // the offset (in bytes) of the Value Fields
+        private const int ValuesFieldOffset = 2;
 
         /// <summary>
         /// Creates a User Timeout Option
@@ -50,27 +55,6 @@ namespace PacketDotNet.Tcp
         public UserTimeout(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
-
-        #endregion
-
-
-        #region Methods
-
-        /// <summary>
-        /// Returns the Option info as a string
-        /// </summary>
-        /// <returns>
-        /// A <see cref="string" />
-        /// </returns>
-        public override string ToString()
-        {
-            return "[" + Kind + ": Granularity=" + (Granularity ? "minutes" : "seconds") + " Timeout=" + Timeout + "]";
-        }
-
-        #endregion
-
-
-        #region Properties
 
         /// <summary>
         /// The Granularity
@@ -96,18 +80,15 @@ namespace PacketDotNet.Tcp
             set => EndianBitConverter.Big.CopyBytes(value, OptionData.Bytes, OptionData.Offset + ValuesFieldOffset);
         }
 
-        #endregion
-
-
-        #region Members
-
-        // the offset (in bytes) of the Value Fields
-        private const int ValuesFieldOffset = 2;
-
-        // the mask used to strip the Granularity field from the
-        //  Values filed to expose the UserTimeout field
-        private const int TimeoutMask = 0x7FFF;
-
-        #endregion
+        /// <summary>
+        /// Returns the Option info as a string
+        /// </summary>
+        /// <returns>
+        /// A <see cref="string" />
+        /// </returns>
+        public override string ToString()
+        {
+            return "[" + Kind + ": Granularity=" + (Granularity ? "minutes" : "seconds") + " Timeout=" + Timeout + "]";
+        }
     }
 }

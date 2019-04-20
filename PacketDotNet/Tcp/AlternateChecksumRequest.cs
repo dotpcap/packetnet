@@ -25,15 +25,8 @@ namespace PacketDotNet.Tcp
     /// </summary>
     public class AlternateChecksumRequest : Option
     {
-        #region Members
-
         // the offset (in bytes) of the Checksum field
         private const int ChecksumFieldOffset = 2;
-
-        #endregion
-
-
-        #region Constructors
 
         /// <summary>
         /// Creates an Alternate Checksum Request Option
@@ -56,11 +49,6 @@ namespace PacketDotNet.Tcp
             base(bytes, offset, length)
         { }
 
-        #endregion
-
-
-        #region Properties
-
         /// <summary>
         /// The Checksum
         /// </summary>
@@ -69,11 +57,6 @@ namespace PacketDotNet.Tcp
             get => (ChecksumAlgorithmType) OptionData.Bytes[OptionData.Offset + ChecksumFieldOffset];
             set => OptionData.Bytes[OptionData.Offset + ChecksumFieldOffset] = (byte) value;
         }
-
-        #endregion
-
-
-        #region Methods
 
         /// <summary>
         /// Returns the Option info as a string
@@ -85,7 +68,5 @@ namespace PacketDotNet.Tcp
         {
             return "[" + Kind + ": ChecksumType=" + Checksum + "]";
         }
-
-        #endregion
     }
 }

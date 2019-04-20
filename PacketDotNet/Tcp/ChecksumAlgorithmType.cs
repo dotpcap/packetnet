@@ -31,7 +31,7 @@ namespace PacketDotNet.Tcp
     public enum ChecksumAlgorithmType
     {
         /// <summary>Standard TCP Checksum Algorithm</summary>
-        TCPChecksum = 0,
+        TcpChecksum = 0,
 
         /// <summary>8-bit Fletchers Algorithm</summary>
         EightBitFletchersAlgorithm = 1,

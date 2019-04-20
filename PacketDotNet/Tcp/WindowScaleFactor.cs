@@ -30,15 +30,8 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class WindowScaleFactor : Option
     {
-        #region Members
-
         // the offset (in bytes) of the ScaleFactor Field
         private const int ScaleFactorFieldOffset = 2;
-
-        #endregion
-
-
-        #region Constructors
 
         /// <summary>
         /// Creates a Window Scale Factor Option
@@ -56,11 +49,6 @@ namespace PacketDotNet.Tcp
             base(bytes, offset, length)
         { }
 
-        #endregion
-
-
-        #region Properties
-
         /// <summary>
         /// The Window Scale Factor
         /// used as a multiplier to the window value
@@ -73,11 +61,6 @@ namespace PacketDotNet.Tcp
             set => Bytes[ScaleFactorFieldOffset] = value;
         }
 
-        #endregion
-
-
-        #region Methods
-
         /// <summary>
         /// Returns the Option info as a string
         /// The multiplier is equal to a value of 1 left-shifted by the scale factor
@@ -89,7 +72,5 @@ namespace PacketDotNet.Tcp
         {
             return "[" + Kind + ": ScaleFactor=" + ScaleFactor + " (multiply by " + (1 << ScaleFactor) + ")]";
         }
-
-        #endregion
     }
 }

@@ -19,7 +19,6 @@ using System;
 using System.Net.Sockets;
 
 // ReSharper disable InconsistentNaming
-
 namespace PacketDotNet
 {
     internal static class ThrowHelper

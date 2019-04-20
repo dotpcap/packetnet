@@ -25,7 +25,6 @@ using SharpPcap.LibPcap;
 using PacketDotNet;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -46,12 +45,12 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var icmp = (ICMPv6Packet)p.Extract(typeof(ICMPv6Packet));
-            Console.WriteLine(icmp.GetType());
+            var icmpv6 = p.Extract<ICMPv6Packet>();
+            Console.WriteLine(icmpv6.GetType());
 
-            Assert.AreEqual(ICMPv6Types.RouterSolicitation, icmp.Type);
-            Assert.AreEqual(0, icmp.Code);
-            Assert.AreEqual(0x5d50, icmp.Checksum);
+            Assert.AreEqual(ICMPv6Types.RouterSolicitation, icmpv6.Type);
+            Assert.AreEqual(0, icmpv6.Code);
+            Assert.AreEqual(0x5d50, icmpv6.Checksum);
 
             // Payload differs based on the icmp.Type field
         }
@@ -70,7 +69,7 @@ namespace Test.PacketType
             Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             // save the checksum
-            var icmpv6 = (ICMPv6Packet)p.Extract(typeof(ICMPv6Packet));
+            var icmpv6 = p.Extract<ICMPv6Packet>();
             Assert.IsNotNull(icmpv6);
             var savedChecksum = icmpv6.Checksum;
 
@@ -96,10 +95,10 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var icmpV6 = (ICMPv6Packet)p.Extract (typeof(ICMPv6Packet));
+            var icmpv6 = p.Extract<ICMPv6Packet>();
 
             Console.WriteLine("Printing human readable string");
-            Console.WriteLine(icmpV6.ToString());
+            Console.WriteLine(icmpv6.ToString());
         }
 
         [Test]
@@ -114,7 +113,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var icmpV6 = (ICMPv6Packet)p.Extract (typeof(ICMPv6Packet));
+            var icmpV6 = p.Extract<ICMPv6Packet>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(icmpV6.ToString(StringOutputType.Verbose));
@@ -131,7 +130,7 @@ namespace Test.PacketType
             {
 
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var icmpv6 = (ICMPv6Packet)p.Extract(typeof(ICMPv6Packet));
+                var icmpv6 = p.Extract<ICMPv6Packet>();
                 if (icmpv6 == null)
                 {
                     continue;

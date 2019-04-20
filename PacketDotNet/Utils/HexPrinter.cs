@@ -17,7 +17,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Net.NetworkInformation;
 using System.Text;
-
 namespace PacketDotNet.Utils
 {
     /// <summary>

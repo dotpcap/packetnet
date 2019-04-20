@@ -26,7 +26,6 @@ using SharpPcap.LibPcap;
 using PacketDotNet;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -46,7 +45,7 @@ namespace Test.PacketType
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 Assert.IsNotNull(p);
 
-                var igmp = (IGMPv2Packet)p.Extract (typeof(IGMPv2Packet));
+                var igmp = p.Extract<IGMPv2Packet>();
                 Assert.IsNotNull(p);
 
                 if(packetIndex == 0)
@@ -84,10 +83,10 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var igmpV2 = (IGMPv2Packet)p.Extract (typeof(IGMPv2Packet));
+            var igmp = p.Extract<IGMPv2Packet>();
 
             Console.WriteLine("Printing human readable string");
-            Console.WriteLine(igmpV2.ToString());
+            Console.WriteLine(igmp.ToString());
         }
 
         [Test]
@@ -101,10 +100,10 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var igmpV2 = (IGMPv2Packet)p.Extract (typeof(IGMPv2Packet));
+            var igmp = p.Extract<IGMPv2Packet>();
 
             Console.WriteLine("Printing human readable string");
-            Console.WriteLine(igmpV2.ToString(StringOutputType.Verbose));
+            Console.WriteLine(igmp.ToString(StringOutputType.Verbose));
         }
         [Test]
         public void BinarySerialization()
@@ -117,7 +116,7 @@ namespace Test.PacketType
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var igmp = (IGMPv2Packet)p.Extract(typeof(IGMPv2Packet));
+                var igmp = p.Extract<IGMPv2Packet>();
                 if (igmp == null)
                 {
                     continue;

@@ -5,7 +5,6 @@ using PacketDotNet;
 using PacketDotNet.Ieee80211;
 
 using SharpPcap.AirPcap;
-
 namespace CapturingAndParsingWiFiPackets
 {
     class MainClass

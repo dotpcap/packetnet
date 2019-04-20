@@ -26,7 +26,6 @@ using PacketDotNet;
 using PacketDotNet.Utils;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -52,7 +51,7 @@ namespace Test.PacketType
             p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
             Assert.IsNotNull(p);
 
-            u = (UdpPacket)p.Extract(typeof(UdpPacket));
+            u = p.Extract<UdpPacket>();
             Assert.IsNotNull(u, "Expected a non-null UdpPacket");
             Assert.AreEqual(41 - u.HeaderData.Length,
                             u.PayloadData.Length, "UDPData.Length mismatch");
@@ -63,7 +62,7 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            u = (UdpPacket)p.Extract(typeof(UdpPacket));
+            u = p.Extract<UdpPacket>();
             Assert.IsNotNull(u, "Expected u to be a UdpPacket");
             Assert.AreEqual(356 - u.HeaderData.Length,
                             u.PayloadData.Length, "UDPData.Length mismatch");
@@ -150,13 +149,13 @@ namespace Test.PacketType
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var t = (UdpPacket)p.Extract (typeof(UdpPacket));
+                var t = p.Extract<UdpPacket>();
                 Assert.IsNotNull(t, "Expected t to not be null");
                 Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
 
                 // compare the computed checksum to the expected one
                 Assert.AreEqual(expectedChecksum[packetIndex],
-                                t.CalculateUDPChecksum(),
+                                t.CalculateUdpChecksum(),
                                 "Checksum mismatch");
 
                 packetIndex++;
@@ -181,13 +180,13 @@ namespace Test.PacketType
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 Console.WriteLine("Converted a raw packet to a Packet");
                 Console.WriteLine(p.ToString());
-                var u = (UdpPacket)p.Extract (typeof(UdpPacket));
-                Assert.IsNotNull(u, "Expected u to not be null");
-                Assert.IsTrue(u.ValidChecksum, "u.ValidChecksum isn't true");
+                var udp = p.Extract<UdpPacket>();
+                Assert.IsNotNull(udp, "Expected u to not be null");
+                Assert.IsTrue(udp.ValidChecksum, "u.ValidChecksum isn't true");
 
                 // compare the computed checksum to the expected one
                 Assert.AreEqual(expectedChecksum[packetIndex],
-                                u.CalculateUDPChecksum(),
+                                udp.CalculateUdpChecksum(),
                                 "Checksum mismatch");
 
                 packetIndex++;
@@ -207,7 +206,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var udp = (UdpPacket)p.Extract (typeof(UdpPacket));
+            var udp = p.Extract<UdpPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(udp.ToString());
@@ -224,7 +223,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var udp = (UdpPacket)p.Extract (typeof(UdpPacket));
+            var udp = p.Extract<UdpPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(udp.ToString(StringOutputType.Verbose));
@@ -237,53 +236,53 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            bool foundudpPacket = false;
+            bool foundUdpPacket = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = PacketDotNet.Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
-                var udpPacket = (UdpPacket)p.Extract(typeof(UdpPacket));
-                if (udpPacket == null)
+                var udp = p.Extract<UdpPacket>();
+                if (udp == null)
                 {
                     continue;
                 }
-                foundudpPacket = true;
+                foundUdpPacket = true;
 
                 var memoryStream = new MemoryStream();
                 BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, udpPacket);
+                serializer.Serialize(memoryStream, udp);
 
                 memoryStream.Seek (0, SeekOrigin.Begin);
                 BinaryFormatter deserializer = new BinaryFormatter();
                 UdpPacket fromFile = (UdpPacket)deserializer.Deserialize(memoryStream);
 
-                Assert.AreEqual(udpPacket.Bytes, fromFile.Bytes);
-                Assert.AreEqual(udpPacket.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
-                Assert.AreEqual(udpPacket.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
-                Assert.AreEqual(udpPacket.BytesSegment.Length, fromFile.BytesSegment.Length);
-                Assert.AreEqual(udpPacket.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
-                Assert.AreEqual(udpPacket.BytesSegment.Offset, fromFile.BytesSegment.Offset);
-                Assert.AreEqual(udpPacket.Color, fromFile.Color);
-                Assert.AreEqual(udpPacket.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(udpPacket.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(udpPacket.DestinationPort, fromFile.DestinationPort);
-                Assert.AreEqual(udpPacket.Length, fromFile.Length);
-                Assert.AreEqual(udpPacket.SourcePort, fromFile.SourcePort);
-                Assert.AreEqual(udpPacket.ValidChecksum, fromFile.ValidChecksum);
-                Assert.AreEqual(udpPacket.ValidUdpChecksum, fromFile.ValidUdpChecksum);
+                Assert.AreEqual(udp.Bytes, fromFile.Bytes);
+                Assert.AreEqual(udp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(udp.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(udp.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(udp.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(udp.BytesSegment.Offset, fromFile.BytesSegment.Offset);
+                Assert.AreEqual(udp.Color, fromFile.Color);
+                Assert.AreEqual(udp.HeaderData, fromFile.HeaderData);
+                Assert.AreEqual(udp.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(udp.DestinationPort, fromFile.DestinationPort);
+                Assert.AreEqual(udp.Length, fromFile.Length);
+                Assert.AreEqual(udp.SourcePort, fromFile.SourcePort);
+                Assert.AreEqual(udp.ValidChecksum, fromFile.ValidChecksum);
+                Assert.AreEqual(udp.ValidUdpChecksum, fromFile.ValidUdpChecksum);
 
                 //Method Invocations to make sure that a deserialized packet does not cause 
                 //additional errors.
 
-                udpPacket.CalculateUDPChecksum();
-                udpPacket.IsValidChecksum(TransportPacket.TransportChecksumOption.None);
-                udpPacket.PrintHex();
-                udpPacket.UpdateCalculatedValues();
-                udpPacket.UpdateUDPChecksum();
+                udp.CalculateUdpChecksum();
+                udp.IsValidChecksum(TransportPacket.TransportChecksumOption.None);
+                udp.PrintHex();
+                udp.UpdateCalculatedValues();
+                udp.UpdateUdpChecksum();
             }
 
             dev.Close();
-            Assert.IsTrue(foundudpPacket, "Capture file contained no udpPacket packets");
+            Assert.IsTrue(foundUdpPacket, "Capture file contained no udpPacket packets");
         }
     }
 }

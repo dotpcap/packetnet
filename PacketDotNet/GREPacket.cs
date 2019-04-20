@@ -24,7 +24,6 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 namespace PacketDotNet
 {
     /// <summary>
@@ -57,15 +56,15 @@ namespace PacketDotNet
                 Header.Length += GREFields.SequenceLength;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header, Protocol), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header, Protocol), LazyThreadSafetyMode.PublicationOnly);
             ParentPacket = parentPacket;
         }
 
-        /// <summary> Fetch the GRE header checksum.</summary>
+        /// <summary>Fetch the GRE header checksum.</summary>
         public short Checksum => BitConverter.ToInt16(Header.Bytes,
                                                       Header.Offset + GREFields.ChecksumPosition);
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.DarkGray;
 
         public bool HasCheckSum => 8 == (Header.Bytes[Header.Offset + 1] & 0x8);

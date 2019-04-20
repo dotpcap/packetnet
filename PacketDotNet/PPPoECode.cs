@@ -24,8 +24,7 @@ namespace PacketDotNet
     /// Values for the Code field of a PPPoE packet
     /// See http://tools.ietf.org/html/rfc2516
     /// </summary>
-    // ReSharper disable once InconsistentNaming
-    public enum PPPoECode : ushort
+    public enum PppoeCode : ushort
     {
         /// <summary>
         /// The PPPoe payload must contain a PPP packet

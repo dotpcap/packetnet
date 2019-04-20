@@ -23,7 +23,6 @@ using System.Net;
 using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 namespace PacketDotNet.LSA
 {
     /// <summary>

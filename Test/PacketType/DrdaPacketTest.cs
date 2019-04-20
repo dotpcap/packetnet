@@ -25,7 +25,6 @@ using SharpPcap.LibPcap;
 using PacketDotNet;
 using System.Collections.Generic;
 using PacketDotNet.MiscUtil.Conversion;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -53,7 +52,7 @@ namespace Test.PacketType
 
             while ((raw = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(raw.LinkLayerType, raw.Data).Extract(typeof(DrdaPacket)) as DrdaPacket;
+                var p = Packet.ParsePacket(raw.LinkLayerType, raw.Data).Extract<DrdaPacket>();
                 if (p != null)
                 {
                     foreach (var ddm in p.DrdaDDMPackets)

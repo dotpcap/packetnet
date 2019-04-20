@@ -22,7 +22,6 @@ using System;
 using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 namespace PacketDotNet
 {
     /// <summary>
@@ -56,7 +55,7 @@ namespace PacketDotNet
             var payload = Header.NextSegment();
             try
             {
-                PayloadPacket = new PPPPacket(payload) { ParentPacket = this };
+                PayloadPacket = new PppPacket(payload) { ParentPacket = this };
             }
             catch (Exception)
             {
@@ -67,7 +66,7 @@ namespace PacketDotNet
             ParentPacket = parentPacket;
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.DarkGray;
 
         public bool DataMessage => 8 == (Header.Bytes[Header.Offset] & 0x8);

@@ -4,7 +4,6 @@ using System.Text;
 using PacketDotNet.LSA;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 namespace PacketDotNet
 {
     /// <summary>

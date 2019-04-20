@@ -27,7 +27,6 @@ using PacketDotNet.Utils;
 using SharpPcap;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -178,7 +177,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var l = (LLDPPacket)p.Extract(typeof(LLDPPacket));
+            var l = p.Extract<LLDPPacket>();
 
             int count = 1;
             Console.WriteLine(l.TlvCollection.Count.ToString());
@@ -275,7 +274,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var l = (LLDPPacket)p.Extract(typeof(LLDPPacket));
+            var l = p.Extract<LLDPPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(l.ToString());
@@ -292,7 +291,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var l = (LLDPPacket)p.Extract(typeof(LLDPPacket));
+            var l = p.Extract<LLDPPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(l.ToString(StringOutputType.Verbose));
@@ -309,8 +308,8 @@ namespace Test.PacketType
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var lldp = (LLDPPacket)p.Extract(typeof(LLDPPacket));
-                if (lldp == null)
+                var l = p.Extract<LLDPPacket>();
+                if (l == null)
                 {
                     continue;
                 }
@@ -318,37 +317,37 @@ namespace Test.PacketType
 
                 var memoryStream = new MemoryStream();
                 BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, lldp);
+                serializer.Serialize(memoryStream, l);
 
                 memoryStream.Seek (0, SeekOrigin.Begin);
                 BinaryFormatter deserializer = new BinaryFormatter();
                 LLDPPacket fromFile = (LLDPPacket)deserializer.Deserialize(memoryStream);
 
-                Assert.AreEqual(lldp.Bytes, fromFile.Bytes);
-                Assert.AreEqual(lldp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
-                Assert.AreEqual(lldp.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
-                Assert.AreEqual(lldp.BytesSegment.Length, fromFile.BytesSegment.Length);
-                Assert.AreEqual(lldp.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
-                Assert.AreEqual(lldp.BytesSegment.Offset, fromFile.BytesSegment.Offset);
-                Assert.AreEqual(lldp.Color, fromFile.Color);
-                Assert.AreEqual(lldp.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(lldp.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(l.Bytes, fromFile.Bytes);
+                Assert.AreEqual(l.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(l.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(l.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(l.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(l.BytesSegment.Offset, fromFile.BytesSegment.Offset);
+                Assert.AreEqual(l.Color, fromFile.Color);
+                Assert.AreEqual(l.HeaderData, fromFile.HeaderData);
+                Assert.AreEqual(l.PayloadData, fromFile.PayloadData);
 
-                for (int i = 0; i < lldp.TlvCollection.Count; i++)
+                for (int i = 0; i < l.TlvCollection.Count; i++)
                 {
-                    Assert.AreEqual(lldp.TlvCollection[i].Bytes, fromFile.TlvCollection[i].Bytes);
-                    Assert.AreEqual(lldp.TlvCollection[i].Length, fromFile.TlvCollection[i].Length);
-                    Assert.AreEqual(lldp.TlvCollection[i].TotalLength, fromFile.TlvCollection[i].TotalLength);
-                    Assert.AreEqual(lldp.TlvCollection[i].Type, fromFile.TlvCollection[i].Type);
+                    Assert.AreEqual(l.TlvCollection[i].Bytes, fromFile.TlvCollection[i].Bytes);
+                    Assert.AreEqual(l.TlvCollection[i].Length, fromFile.TlvCollection[i].Length);
+                    Assert.AreEqual(l.TlvCollection[i].TotalLength, fromFile.TlvCollection[i].TotalLength);
+                    Assert.AreEqual(l.TlvCollection[i].Type, fromFile.TlvCollection[i].Type);
 
                 }
 
                 //Method Invocations to make sure that a deserialized packet does not cause 
                 //additional errors.
 
-                lldp.ParseByteArrayIntoTlvs(new byte[] { 0, 0 }, 0);
-                lldp.PrintHex();
-                lldp.UpdateCalculatedValues();
+                l.ParseByteArrayIntoTlvs(new byte[] { 0, 0 }, 0);
+                l.PrintHex();
+                l.UpdateCalculatedValues();
             }
 
             dev.Close();

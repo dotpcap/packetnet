@@ -26,7 +26,6 @@ using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -65,7 +64,7 @@ namespace Test.PacketType
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 Assert.IsNotNull(p);
 
-                var wol = (WakeOnLanPacket)p.Extract(typeof(WakeOnLanPacket));
+                var wol = p.Extract< WakeOnLanPacket>();
                 Assert.IsNotNull(p);
 
                 if(packetIndex == 0)
@@ -96,7 +95,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var wol = (WakeOnLanPacket)p.Extract(typeof(WakeOnLanPacket));
+            var wol = p.Extract<WakeOnLanPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(wol.ToString());
@@ -113,7 +112,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var wol = (WakeOnLanPacket)p.Extract (typeof(WakeOnLanPacket));
+            var wol = p.Extract<WakeOnLanPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(wol.ToString(StringOutputType.Verbose));

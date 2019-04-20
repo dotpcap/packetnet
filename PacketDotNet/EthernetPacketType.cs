@@ -16,7 +16,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System.Diagnostics.CodeAnalysis;
-
 namespace PacketDotNet
 {
     /// Copied from Pcap.Net @ 20091117

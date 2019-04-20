@@ -19,7 +19,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System.Diagnostics.CodeAnalysis;
-
 namespace PacketDotNet
 {
     /// <summary>
@@ -28,10 +27,10 @@ namespace PacketDotNet
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum IPVersion
     {
-        /// <summary> Internet protocol version 4.</summary>
+        /// <summary>Internet protocol version 4.</summary>
         IPv4 = 4,
 
-        /// <summary> Internet protocol version 6.</summary>
+        /// <summary>Internet protocol version 6.</summary>
         IPv6 = 6
     }
 }

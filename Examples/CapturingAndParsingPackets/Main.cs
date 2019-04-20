@@ -1,7 +1,6 @@
 using System;
 using SharpPcap;
 using PacketDotNet;
-
 namespace CapturingAndParsingPackets
 {
     class MainClass

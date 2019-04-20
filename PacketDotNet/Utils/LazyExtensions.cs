@@ -1,5 +1,4 @@
 ﻿using System;
-
 namespace PacketDotNet.Utils
 {
     public static class LazyExtensions

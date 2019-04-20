@@ -23,7 +23,6 @@ using System.Linq;
 using NUnit.Framework;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
-
 namespace Test.PacketType
 {
     namespace Ieee80211

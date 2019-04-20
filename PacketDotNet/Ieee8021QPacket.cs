@@ -24,7 +24,6 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 namespace PacketDotNet
 {
     /// <summary>
@@ -46,7 +45,7 @@ namespace PacketDotNet
             Header = new ByteArraySegment(byteArraySegment) { Length = Ieee8021QFields.HeaderLength };
 
             // parse the payload via an EthernetPacket method
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header,
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header,
                                                                                                                  Type),
                                                                      LazyThreadSafetyMode.PublicationOnly);
         }
@@ -77,7 +76,7 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.LightCyan;
 
         /// <summary>

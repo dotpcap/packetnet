@@ -1,5 +1,4 @@
 using NUnit.Framework;
-
 namespace Test
 {
     [SetUpFixture]

@@ -21,7 +21,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System.Diagnostics.CodeAnalysis;
-
 namespace PacketDotNet
 {
     /// <summary>
@@ -31,10 +30,10 @@ namespace PacketDotNet
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum RawIPPacketProtocol : ushort
     {
-        /// <summary> IPv4 </summary>
+        /// <summary>IPv4 </summary>
         IPv4 = 4,
 
-        /// <summary> IPv6 </summary>
+        /// <summary>IPv6 </summary>
         IPv6 = 6
     }
 }

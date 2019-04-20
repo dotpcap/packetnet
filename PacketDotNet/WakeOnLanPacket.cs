@@ -25,12 +25,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
-using PacketDotNet.Utils;
-#if DEBUG
 using log4net;
-
-#endif
-
+using PacketDotNet.Utils;
 namespace PacketDotNet
 {
     /// <summary>
@@ -40,8 +36,6 @@ namespace PacketDotNet
     /// </summary>
     public sealed class WakeOnLanPacket : Packet
     {
-        #region Preprocessor Directives
-
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
@@ -52,10 +46,11 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        #endregion
+        // the number of times the Destination MAC appears in the payload
+        private const int MACRepetitions = 16;
 
-
-        #region Constructors
+        // the WOL synchronization sequence
+        private static readonly byte[] SyncSequence = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 
         /// <summary>
         /// Create a Wake-On-LAN packet from the destination MAC address
@@ -79,13 +74,9 @@ namespace PacketDotNet
             {
                 // copy the syncSequence on the first pass
                 if (i == 0)
-                {
                     Array.Copy(SyncSequence, 0, packetBytes, i, SyncSequence.Length);
-                }
                 else
-                {
                     Array.Copy(destinationMACBytes, 0, packetBytes, i, EthernetFields.MacAddressLength);
-                }
             }
 
             Header = new ByteArraySegment(packetBytes, 0, packetLength);
@@ -106,11 +97,6 @@ namespace PacketDotNet
             Header = new ByteArraySegment(byteArraySegment);
             Header.Length = Bytes.Length;
         }
-
-        #endregion
-
-
-        #region Properties
 
         /// <summary>
         /// The Physical Address (MAC) of the host being woken up from sleep
@@ -138,11 +124,6 @@ namespace PacketDotNet
                            EthernetFields.MacAddressLength);
             }
         }
-
-        #endregion
-
-
-        #region Methods
 
         /// <summary>
         /// Generate a random WakeOnLanPacket
@@ -193,23 +174,17 @@ namespace PacketDotNet
 
                 // check the synchronization sequence on the first pass
                 if (i == 0)
-                {
-                    // validate the synchronization sequence
                     for (var j = 0; j < EthernetFields.MacAddressLength; j++)
                     {
                         if (byteArraySegment.Bytes[basOffset + j] != SyncSequence[j])
                             return false;
                     }
-                }
                 else
-                {
-                    // fail the validation on malformed WOL Magic Packets
                     for (var j = 0; j < EthernetFields.MacAddressLength; j++)
                     {
                         if (byteArraySegment.Bytes[byteArraySegment.Offset + SyncSequence.Length + j] != byteArraySegment.Bytes[basOffset + j])
                             return false;
                     }
-                }
             }
 
             return true;
@@ -227,7 +202,7 @@ namespace PacketDotNet
         public override bool Equals(object obj)
         {
             // Check for null values and compare run-time types.
-            if (obj == null || GetType() != obj.GetType())
+            if ((obj == null) || (GetType() != obj.GetType()))
                 return false;
 
 
@@ -254,21 +229,19 @@ namespace PacketDotNet
             var color = "";
             var colorEscape = "";
 
-            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if ((outputFormat == StringOutputType.Colored) || (outputFormat == StringOutputType.VerboseColored))
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
-            {
+            if ((outputFormat == StringOutputType.Normal) || (outputFormat == StringOutputType.Colored))
                 buffer.AppendFormat("[{0}WakeOnLanPacket{1}: DestinationMAC={2}]",
                                     color,
                                     colorEscape,
                                     DestinationMAC);
-            }
 
-            if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            if ((outputFormat == StringOutputType.Verbose) || (outputFormat == StringOutputType.VerboseColored))
             {
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>
@@ -283,9 +256,7 @@ namespace PacketDotNet
                 buffer.AppendLine("WOL:  ******* WOL - \"Wake-On-Lan\" - offset=? length=" + TotalPacketLength);
                 buffer.AppendLine("WOL:");
                 foreach (var property in properties)
-                {
                     buffer.AppendLine("WOL: " + property.Key.PadLeft(padLength) + " = " + property.Value);
-                }
 
                 buffer.AppendLine("WOL:");
             }
@@ -295,18 +266,5 @@ namespace PacketDotNet
 
             return buffer.ToString();
         }
-
-        #endregion
-
-
-        #region Members
-
-        // the WOL synchronization sequence
-        private static readonly byte[] SyncSequence = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
-
-        // the number of times the Destination MAC appears in the payload
-        private const int MACRepetitions = 16;
-
-        #endregion
     }
 }

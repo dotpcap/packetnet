@@ -29,9 +29,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using PacketDotNet.LLDP;
 using PacketDotNet.Utils;
+
 #if DEBUG
 using log4net;
-
 #endif
 
 namespace PacketDotNet

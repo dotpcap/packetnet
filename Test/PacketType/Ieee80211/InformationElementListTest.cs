@@ -26,7 +26,6 @@ using PacketDotNet;
 using PacketDotNet.Utils;
 using PacketDotNet.Ieee80211;
 using SharpPcap.LibPcap;
-
 namespace Test.PacketType
 {
     namespace Ieee80211

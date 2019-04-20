@@ -23,7 +23,6 @@ using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
-
 namespace Test.PacketType
 {
     [TestFixture]

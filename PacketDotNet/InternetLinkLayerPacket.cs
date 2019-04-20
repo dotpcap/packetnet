@@ -20,9 +20,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Reflection;
+
 #if DEBUG
 using log4net;
-
 #endif
 
 namespace PacketDotNet
@@ -48,7 +48,7 @@ namespace PacketDotNet
         /// Look for the innermost payload. This method is useful because
         /// while some packets are LinuxSSL->IpPacket or
         /// EthernetPacket->IpPacket, there are some packets that are
-        /// EthernetPacket->PPPoEPacket->PPPPacket->IpPacket, and for these cases
+        /// EthernetPacket->PppoePacket->PppPacket->IpPacket, and for these cases
         /// we really want to get to the IpPacket
         /// </summary>
         /// <returns>
@@ -63,12 +63,12 @@ namespace PacketDotNet
 
                 var thePayload = packet.PayloadPacket;
 
-                // is this packets payload a PPPoEPacket? If so,
-                // the PPPoEPacket payload should be a PPPPacket and we want
+                // is this packets payload a PppoePacket? If so,
+                // the PppoePacket payload should be a PppPacket and we want
                 // the payload of the PPPPpacket
-                if (thePayload is PPPoEPacket)
+                if (thePayload is PppoePacket)
                 {
-                    Log.Debug("thePayload is PPPoEPacket");
+                    Log.Debug("thePayload is PppoePacket");
                     return thePayload.PayloadPacket.PayloadPacket;
                 }
 

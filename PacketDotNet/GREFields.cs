@@ -20,31 +20,31 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace PacketDotNet
 {
-    /// <summary> GRE protocol field encoding information. </summary>
+    /// <summary>GRE protocol field encoding information. </summary>
     public class GREFields
     {
-        /// <summary> Length of the Checksum in bytes (Optional).</summary>
+        /// <summary>Length of the Checksum in bytes (Optional).</summary>
         public static readonly int ChecksumLength = 2;
 
-        /// <summary> Position of the Checksum in bytes (Optional).</summary>
+        /// <summary>Position of the Checksum in bytes (Optional).</summary>
         public static readonly int ChecksumPosition = 2;
 
-        /// <summary> Length of the Flags in bytes.</summary>
+        /// <summary>Length of the Flags in bytes.</summary>
         public static readonly int FlagsLength = 2;
 
-        /// <summary> Length of the Key in bytes (Optional).</summary>
+        /// <summary>Length of the Key in bytes (Optional).</summary>
         public static readonly int KeyLength = 4;
 
-        /// <summary> Length of the Protocol in bytes.</summary>
+        /// <summary>Length of the Protocol in bytes.</summary>
         public static readonly int ProtocolLength = 2;
 
-        /// <summary> Position of the Protocol.</summary>
+        /// <summary>Position of the Protocol.</summary>
         public static readonly int ProtocolPosition = 2;
 
-        /// <summary> Length of the Reserved in bytes (Optional).</summary>
+        /// <summary>Length of the Reserved in bytes (Optional).</summary>
         public static readonly int ReservedLength = 2;
 
-        /// <summary> Length of the Sequence Number in bytes (Optional).</summary>
+        /// <summary>Length of the Sequence Number in bytes (Optional).</summary>
         public static readonly int SequenceLength = 4;
     }
 }

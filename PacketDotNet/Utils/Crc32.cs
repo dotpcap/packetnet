@@ -12,7 +12,6 @@ using System.Collections;
 using System.IO;
 using System.Security.Cryptography;
 using System.Text;
-
 namespace PacketDotNet.Utils
 {
     /// <summary>Implements a 32-bits cyclic redundancy check (CRC) hash algorithm.</summary>

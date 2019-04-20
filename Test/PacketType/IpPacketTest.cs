@@ -25,7 +25,6 @@ using PacketDotNet;
 using SharpPcap;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-
 namespace Test.PacketType
 {
     [TestFixture]
@@ -46,7 +45,7 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var ip = (IPPacket)p.Extract(typeof(IPPacket));
+            var ip = p.Extract<IPPacket>();
             Console.WriteLine(ip.GetType());
 
             Assert.AreEqual(20, ip.HeaderData.Length, "Header.Length doesn't match expected length");
@@ -66,13 +65,13 @@ namespace Test.PacketType
             // Act
             Packet.ParsePacket(firstRawPacket.LinkLayerType, firstRawPacket.Data); // read and discard first packet
             var secondPacket = Packet.ParsePacket(secondRawPacket.LinkLayerType, secondRawPacket.Data);
-            var ipFragmentPacket = secondPacket.Extract(typeof(IPPacket)) as IPPacket;
+            var ip = secondPacket.Extract<IPPacket>();
 
             // Assert
-            Assert.IsNotNull(ipFragmentPacket, "The second packet should contain an IP packet within");
-            Assert.IsNull(ipFragmentPacket.PayloadPacket, "Since packet is IP fragment, we should not have extracted a child packet");
-            Assert.AreEqual(497, ipFragmentPacket.PayloadLength, "The correct payload length for this particular packet should be 497");
-            Assert.AreEqual(497, ipFragmentPacket.PayloadData.Length, "The correct payload length for this particular packet should be 497");
+            Assert.IsNotNull(ip, "The second packet should contain an IP packet within");
+            Assert.IsNull(ip.PayloadPacket, "Since packet is IP fragment, we should not have extracted a child packet");
+            Assert.AreEqual(497, ip.PayloadLength, "The correct payload length for this particular packet should be 497");
+            Assert.AreEqual(497, ip.PayloadData.Length, "The correct payload length for this particular packet should be 497");
         }
 
         [Test]
@@ -86,12 +85,12 @@ namespace Test.PacketType
 
             // Act
             var firstPacket = Packet.ParsePacket(firstRawPacket.LinkLayerType, firstRawPacket.Data);
-            var ipPacket = firstPacket.Extract(typeof(IPPacket)) as IPPacket;
-            var udpPacket = ipPacket.Extract(typeof (UdpPacket)) as UdpPacket;
+            var ip = firstPacket.Extract<IPPacket>();
+            var udpPacket = ip.Extract<UdpPacket>();
 
             // Assert
-            Assert.IsNotNull(ipPacket, "The packet should contain an IP packet within");
-            Assert.IsNotNull(ipPacket.PayloadPacket, "This is not a fragment, and should contain an UDP packet");
+            Assert.IsNotNull(ip, "The packet should contain an IP packet within");
+            Assert.IsNotNull(ip.PayloadPacket, "This is not a fragment, and should contain an UDP packet");
             Assert.IsNotNull(udpPacket, "We should have a UDP packet in there");
             Assert.AreEqual(1977, udpPacket.Length, "We should have the proper length for the packet");
             Assert.AreEqual(5060, udpPacket.DestinationPort, "We should have extracted the correct destination port");
@@ -108,7 +107,7 @@ namespace Test.PacketType
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var ip = (IPPacket)p.Extract(typeof(IPPacket));
+                var ip = p.Extract<IPPacket>();
                 if (ip == null)
                 {
                     continue;

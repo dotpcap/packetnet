@@ -24,9 +24,9 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 #if DEBUG
 using log4net;
-
 #endif
 
 namespace PacketDotNet
@@ -97,10 +97,10 @@ namespace PacketDotNet
             Header.Length = NullFields.HeaderLength;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, Protocol), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header, Protocol), LazyThreadSafetyMode.PublicationOnly);
         }
 
-        internal static PacketOrByteArraySegment ParseEncapsulatedBytes
+        internal static PacketOrByteArraySegment ParseNextSegment
         (
             ByteArraySegment header,
             NullPacketType protocol)
@@ -130,7 +130,7 @@ namespace PacketDotNet
             return payloadPacketOrData;
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.LightPurple;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />

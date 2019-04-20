@@ -5,7 +5,6 @@ using PacketDotNet.Ieee80211;
 using System.Net.NetworkInformation;
 using SharpPcap;
 using PacketDotNet;
-
 namespace ConstructingWiFiPackets
 {
     class Program

@@ -23,13 +23,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Threading;
+using log4net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-#if DEBUG
-using log4net;
-
-#endif
-
 namespace PacketDotNet
 {
     /// <summary>
@@ -48,105 +44,6 @@ namespace PacketDotNet
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
-
-        /// <summary> Fetch the port number on the source host.</summary>
-        public override ushort SourcePort
-        {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
-            set
-            {
-                var val = value;
-                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
-            }
-        }
-
-        /// <summary> Fetch the port number on the target host.</summary>
-        public override ushort DestinationPort
-        {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + UdpFields.DestinationPortPosition);
-            set
-            {
-                var val = value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 Header.Bytes,
-                                                 Header.Offset + UdpFields.DestinationPortPosition);
-            }
-        }
-
-        /// <value>
-        /// Length in bytes of the header and payload, minimum size of 8,
-        /// the size of the Udp header
-        /// </value>
-        public int Length
-        {
-            get => EndianBitConverter.Big.ToInt16(Header.Bytes,
-                                                  Header.Offset + UdpFields.HeaderLengthPosition);
-            internal set
-            {
-                // Internal because it is updated based on the payload when its bytes are retrieved.
-                var val = (short) value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 Header.Bytes,
-                                                 Header.Offset + UdpFields.HeaderLengthPosition);
-            }
-        }
-
-        /// <summary> Fetch the header checksum.</summary>
-        public override ushort Checksum
-        {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + UdpFields.ChecksumPosition);
-            set
-            {
-                var val = value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 Header.Bytes,
-                                                 Header.Offset + UdpFields.ChecksumPosition);
-            }
-        }
-
-        /// <summary> Check if the UDP packet is valid, checksum-wise.</summary>
-        public bool ValidChecksum
-        {
-            get
-            {
-                // IPv6 has no checksum so only the TCP checksum needs evaluation
-                if (ParentPacket is IPv6Packet)
-                    return ValidUdpChecksum;
-                // For IPv4 both the IP layer and the TCP layer contain checksums
-
-
-                return ((IPv4Packet) ParentPacket).ValidIPChecksum && ValidUdpChecksum;
-            }
-        }
-
-        /// <value>
-        /// True if the UDP checksum is valid
-        /// </value>
-        public bool ValidUdpChecksum
-        {
-            get
-            {
-                Log.Debug("ValidUdpChecksum");
-                var result = IsValidChecksum(TransportChecksumOption.IncludePseudoIPHeader);
-                Log.DebugFormat("ValidUdpChecksum {0}", result);
-                return result;
-            }
-        }
-
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override string Color => AnsiEscapeSequences.LightGreen;
-
-        /// <summary>
-        /// Update the Udp length
-        /// </summary>
-        public override void UpdateCalculatedValues()
-        {
-            // update the length field based on the length of this packet header
-            // plus the length of all of the packets it contains
-            Length = TotalPacketLength;
-        }
 
         /// <summary>
         /// Create from values
@@ -232,22 +129,6 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Determines whether the specified byte array segment contains an IPv6 packet.
-        /// </summary>
-        /// <param name="packetBytes">The packet bytes.</param>
-        /// <returns>
-        /// <c>true</c> if it contains an IPv6 packet; otherwise, <c>false</c>.
-        /// </returns>
-        private static bool ContainsIPv6Packet(ByteArraySegment packetBytes)
-        {
-            // Packet bytes must be greater than or equal to the IPV6 header length, start with the version number, 
-            // and be greater in length than the payload length + the header length.
-            return (packetBytes.Length >= IPv6Fields.HeaderLength) &&
-                   (packetBytes.Bytes[packetBytes.Offset] >> 4 == (int) RawIPPacketProtocol.IPv6) &&
-                   (packetBytes.Length >= IPv6Fields.HeaderLength + packetBytes.Bytes[packetBytes.Offset + IPv6Fields.PayloadLengthPosition]);
-        }
-
-        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="byteArraySegment">
@@ -263,6 +144,105 @@ namespace PacketDotNet
             this(byteArraySegment)
         {
             ParentPacket = parentPacket;
+        }
+
+        /// <summary>Fetch the header checksum.</summary>
+        public override ushort Checksum
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                   Header.Offset + UdpFields.ChecksumPosition);
+            set
+            {
+                var val = value;
+                EndianBitConverter.Big.CopyBytes(val,
+                                                 Header.Bytes,
+                                                 Header.Offset + UdpFields.ChecksumPosition);
+            }
+        }
+
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override string Color => AnsiEscapeSequences.LightGreen;
+
+        /// <summary>Fetch the port number on the target host.</summary>
+        public override ushort DestinationPort
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                   Header.Offset + UdpFields.DestinationPortPosition);
+            set
+            {
+                var val = value;
+                EndianBitConverter.Big.CopyBytes(val,
+                                                 Header.Bytes,
+                                                 Header.Offset + UdpFields.DestinationPortPosition);
+            }
+        }
+
+        /// <value>
+        /// Length in bytes of the header and payload, minimum size of 8,
+        /// the size of the Udp header
+        /// </value>
+        public int Length
+        {
+            get => EndianBitConverter.Big.ToInt16(Header.Bytes,
+                                                  Header.Offset + UdpFields.HeaderLengthPosition);
+            internal set
+            {
+                // Internal because it is updated based on the payload when its bytes are retrieved.
+                var val = (short) value;
+                EndianBitConverter.Big.CopyBytes(val,
+                                                 Header.Bytes,
+                                                 Header.Offset + UdpFields.HeaderLengthPosition);
+            }
+        }
+
+        /// <summary>Fetch the port number on the source host.</summary>
+        public override ushort SourcePort
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
+            set
+            {
+                var val = value;
+                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
+            }
+        }
+
+        /// <summary>Check if the UDP packet is valid, checksum-wise.</summary>
+        public bool ValidChecksum
+        {
+            get
+            {
+                // IPv6 has no checksum so only the TCP checksum needs evaluation
+                if (ParentPacket is IPv6Packet)
+                    return ValidUdpChecksum;
+                // For IPv4 both the IP layer and the TCP layer contain checksums
+
+
+                return ((IPv4Packet) ParentPacket).ValidIPChecksum && ValidUdpChecksum;
+            }
+        }
+
+        /// <value>
+        /// True if the UDP checksum is valid
+        /// </value>
+        public bool ValidUdpChecksum
+        {
+            get
+            {
+                Log.Debug("ValidUdpChecksum");
+                var result = IsValidChecksum(TransportChecksumOption.IncludePseudoIPHeader);
+                Log.DebugFormat("ValidUdpChecksum {0}", result);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Update the Udp length
+        /// </summary>
+        public override void UpdateCalculatedValues()
+        {
+            // update the length field based on the length of this packet header
+            // plus the length of all of the packets it contains
+            Length = TotalPacketLength;
         }
 
         /// <summary>
@@ -344,6 +324,22 @@ namespace PacketDotNet
             var destinationPort = (ushort) rnd.Next(UInt16.MinValue, UInt16.MaxValue);
 
             return new UdpPacket(sourcePort, destinationPort);
+        }
+
+        /// <summary>
+        /// Determines whether the specified byte array segment contains an IPv6 packet.
+        /// </summary>
+        /// <param name="packetBytes">The packet bytes.</param>
+        /// <returns>
+        /// <c>true</c> if it contains an IPv6 packet; otherwise, <c>false</c>.
+        /// </returns>
+        private static bool ContainsIPv6Packet(ByteArraySegment packetBytes)
+        {
+            // Packet bytes must be greater than or equal to the IPV6 header length, start with the version number, 
+            // and be greater in length than the payload length + the header length.
+            return (packetBytes.Length >= IPv6Fields.HeaderLength) &&
+                   (packetBytes.Bytes[packetBytes.Offset] >> 4 == (int)RawIPPacketProtocol.IPv6) &&
+                   (packetBytes.Length >= IPv6Fields.HeaderLength + packetBytes.Bytes[packetBytes.Offset + IPv6Fields.PayloadLengthPosition]);
         }
     }
 }

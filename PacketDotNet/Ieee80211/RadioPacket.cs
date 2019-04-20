@@ -28,9 +28,9 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 #if DEBUG
 using log4net;
-
 #endif
 
 namespace PacketDotNet.Ieee80211
@@ -139,7 +139,7 @@ namespace PacketDotNet.Ieee80211
             //Before we attempt to parse the payload we need to work out if 
             //the FCS was valid and if it will be present at the end of the frame
             var flagsField = this[RadioTapType.Flags] as FlagsRadioTapField;
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header.NextSegment(), flagsField), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header.NextSegment(), flagsField), LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
@@ -385,7 +385,7 @@ namespace PacketDotNet.Ieee80211
             }
         }
 
-        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment payload, FlagsRadioTapField flagsField)
+        internal static PacketOrByteArraySegment ParseNextSegment(ByteArraySegment payload, FlagsRadioTapField flagsField)
         {
             var payloadPacketOrData = new PacketOrByteArraySegment();
             MacFrame frame;

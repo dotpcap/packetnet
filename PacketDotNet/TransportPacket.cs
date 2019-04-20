@@ -17,12 +17,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Reflection;
-using PacketDotNet.Utils;
-#if DEBUG
 using log4net;
-
-#endif
-
+using PacketDotNet.Utils;
 namespace PacketDotNet
 {
     /// <summary>
@@ -41,15 +37,31 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        /// <value>
-        /// The Checksum version
-        /// </value>
+        /// <summary>
+        /// Options for use when creating a transport layer checksum
+        /// </summary>
+        public enum TransportChecksumOption
+        {
+            /// <summary>
+            /// No extra options
+            /// </summary>
+            None,
+
+            /// <summary>
+            /// Includes a pseudo IP header to the transport data being checksummed.
+            /// </summary>
+            IncludePseudoIPHeader
+        }
+
+        /// <summary>
+        /// The transport packet's checksum.
+        /// </summary>
         public abstract ushort Checksum { get; set; }
 
-        /// <summary> Fetch the port number on the target host.</summary>
+        /// <summary>Fetch the port number on the target host.</summary>
         public abstract ushort DestinationPort { get; set; }
 
-        /// <summary> Fetch the port number on the source host.</summary>
+        /// <summary>Fetch the port number on the source host.</summary>
         public abstract ushort SourcePort { get; set; }
 
         /// <summary>
@@ -117,22 +129,6 @@ namespace PacketDotNet
                             expectedOnesSum);
 
             return onesSum == expectedOnesSum;
-        }
-
-        /// <summary>
-        /// Options for use when creating a transport layer checksum
-        /// </summary>
-        public enum TransportChecksumOption
-        {
-            /// <summary>
-            /// No extra options
-            /// </summary>
-            None,
-
-            /// <summary>
-            /// Includes a pseudo IP header to the transport data being checksummed.
-            /// </summary>
-            IncludePseudoIPHeader
         }
     }
 }

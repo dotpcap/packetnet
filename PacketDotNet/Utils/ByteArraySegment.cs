@@ -19,10 +19,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-#if DEBUG
 using log4net;
-
-#endif
 
 namespace PacketDotNet.Utils
 {
@@ -45,43 +42,6 @@ namespace PacketDotNet.Utils
 #endif
 
         private int _length;
-
-        /// <value>
-        /// Gets the underlying byte array.
-        /// </value>
-        public byte[] Bytes { get; }
-
-        /// <value>
-        /// Gets or sets the maximum number of bytes we should treat <see cref="Bytes" /> as having.
-        /// This allows for controlling the number of bytes produced by <see cref="NextSegment()" />.
-        /// </value>
-        public int BytesLength { get; set; }
-
-        /// <value>
-        /// Gets or sets the number of bytes beyond the offset into <see cref="Bytes" />.
-        /// </value>
-        /// <remarks>Take care when setting this parameter as many things are based on the value of this property being correct.</remarks>
-        public int Length
-        {
-            get => _length;
-            set
-            {
-                // check for invalid values
-                if (value < 0)
-                {
-                    Log.DebugFormat("Attempting to set a negative length of {0}, setting to 0.", value);
-                    value = 0;
-                }
-
-                _length = value;
-                Log.DebugFormat("Length: {0}", value);
-            }
-        }
-
-        /// <value>
-        /// Gets or sets the offset into <see cref="Bytes" />.
-        /// </value>
-        public int Offset { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ByteArraySegment" /> class.
@@ -132,6 +92,75 @@ namespace PacketDotNet.Utils
             BytesLength = byteArraySegment.BytesLength;
         }
 
+        /// <value>
+        /// Gets the underlying byte array.
+        /// </value>
+        public byte[] Bytes { get; }
+
+        /// <value>
+        /// Gets or sets the maximum number of bytes we should treat <see cref="Bytes" /> as having.
+        /// This allows for controlling the number of bytes produced by <see cref="NextSegment()" />.
+        /// </value>
+        public int BytesLength { get; set; }
+
+        /// <value>
+        /// Gets or sets the number of bytes beyond the offset into <see cref="Bytes" />.
+        /// </value>
+        /// <remarks>Take care when setting this parameter as many things are based on the value of this property being correct.</remarks>
+        public int Length
+        {
+            get => _length;
+            set
+            {
+                // check for invalid values
+                if (value < 0)
+                {
+                    Log.DebugFormat("Attempting to set a negative length of {0}, setting to 0.", value);
+                    value = 0;
+                }
+
+                _length = value;
+                Log.DebugFormat("Length: {0}", value);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether we need to perform a copy to get the <see cref="ActualBytes" />.
+        /// </summary>
+        public bool NeedsCopyForActualBytes
+        {
+            get
+            {
+                // we need a copy unless we are at the start of the byte[]
+                // and the length is the total byte[] length
+                var okWithoutCopy = Offset == 0 && Length == Bytes.Length;
+                var result = !okWithoutCopy;
+
+                Log.DebugFormat("result {0}", result);
+
+                return result;
+            }
+        }
+
+        /// <value>
+        /// Gets or sets the offset into <see cref="Bytes" />.
+        /// </value>
+        public int Offset { get; set; }
+
+        /// <inheritdoc />
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        /// <inheritdoc />
+        public IEnumerator<byte> GetEnumerator()
+        {
+            var to = Offset + Length;
+            for (var i = Offset; i < to; i++)
+                yield return Bytes[i];
+        }
+
         /// <summary>
         /// Returns a contiguous byte array from this instance, if necessary, by copying the bytes from the current offset into a newly allocated byte array.
         /// <see cref="NeedsCopyForActualBytes" /> can be used to determine if the copy is necessary.
@@ -151,24 +180,6 @@ namespace PacketDotNet.Utils
 
             Log.Debug("does not need copy");
             return Bytes;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether we need to perform a copy to get the <see cref="ActualBytes" />.
-        /// </summary>
-        public bool NeedsCopyForActualBytes
-        {
-            get
-            {
-                // we need a copy unless we are at the start of the byte[]
-                // and the length is the total byte[] length
-                var okWithoutCopy = Offset == 0 && Length == Bytes.Length;
-                var result = !okWithoutCopy;
-
-                Log.DebugFormat("result {0}", result);
-
-                return result;
-            }
         }
 
         /// <summary>
@@ -211,19 +222,6 @@ namespace PacketDotNet.Utils
         public override string ToString()
         {
             return $"[ByteArraySegment: Length={Length}, Bytes.Length={Bytes.Length}, BytesLength={BytesLength}, Offset={Offset}, NeedsCopyForActualBytes={NeedsCopyForActualBytes}]";
-        }
-
-        /// <inheritdoc />
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        /// <inheritdoc />
-        public IEnumerator<byte> GetEnumerator()
-        {
-            for (var i = Offset; i < Offset + Length; i++)
-                yield return Bytes[i];
         }
     }
 }

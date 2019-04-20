@@ -25,7 +25,6 @@ using PacketDotNet;
 using PacketDotNet.Ieee80211;
 using System.IO;
 using PacketDotNet.MiscUtil.Conversion;
-
 namespace Test.PacketType
 {
     namespace Ieee80211

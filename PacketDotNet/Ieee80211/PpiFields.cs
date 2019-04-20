@@ -24,7 +24,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 
 using System.IO;
-
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>

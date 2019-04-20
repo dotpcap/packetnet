@@ -201,7 +201,7 @@ namespace PacketDotNet
                 var result = new PacketOrByteArraySegment();
                 var destinationPort = DestinationPort;
                 var sourcePort = SourcePort;
-                var payload = Header.EncapsulatedBytes();
+                var payload = Header.NextSegment();
 
                 // If this packet is going to port 0, 7 or 9, then it might be a WakeOnLan packet.
                 if (destinationPort == wakeOnLanPort0 || destinationPort == wakeOnLanPort7 || destinationPort == wakeOnLanPort9)

@@ -138,7 +138,7 @@ namespace PacketDotNet
             Header.Length = ICMPv4Fields.HeaderLength;
 
             // store the payload bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => new PacketOrByteArraySegment { ByteArraySegment = Header.EncapsulatedBytes() }, LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() }, LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary>

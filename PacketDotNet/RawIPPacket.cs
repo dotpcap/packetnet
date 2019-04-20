@@ -64,10 +64,10 @@ namespace PacketDotNet
                 switch (Protocol)
                 {
                     case RawIPPacketProtocol.IPv4:
-                        result.Packet = new IPv4Packet(Header.EncapsulatedBytes());
+                        result.Packet = new IPv4Packet(Header.NextSegment());
                         break;
                     case RawIPPacketProtocol.IPv6:
-                        result.Packet = new IPv6Packet(Header.EncapsulatedBytes());
+                        result.Packet = new IPv6Packet(Header.NextSegment());
                         break;
                     default:
                         throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");

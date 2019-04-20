@@ -211,7 +211,7 @@ namespace PacketDotNet
             EthernetPacketType type)
         {
             // slice off the payload
-            var payload = header.EncapsulatedBytes();
+            var payload = header.NextSegment();
             Log.DebugFormat("payload {0}", payload);
 
             var payloadPacketOrData = new PacketOrByteArraySegment();

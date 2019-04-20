@@ -448,7 +448,7 @@ namespace PacketDotNet
             // parse the payload
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                var payload = Header.EncapsulatedBytes(PayloadLength);
+                var payload = Header.NextSegment(PayloadLength);
                 return ParseEncapsulatedBytes(payload,
                                               Protocol,
                                               this);

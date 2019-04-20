@@ -106,7 +106,7 @@ namespace PacketDotNet
             NullPacketType protocol)
         {
             // slice off the payload
-            var payload = header.EncapsulatedBytes();
+            var payload = header.NextSegment();
 
             Log.DebugFormat("Protocol: {0}, payload: {1}", protocol, payload);
 

@@ -135,7 +135,7 @@ namespace PacketDotNet.Ieee80211
 
         /// <summary>
         /// The number of microseconds the networks master timekeeper has been active.
-        /// Used for synchronisation between stations in an IBSS. When it reaches the maximum value the timestamp will wrap (not very likely).
+        /// Used for synchronization between stations in an IBSS. When it reaches the maximum value the timestamp will wrap (not very likely).
         /// </summary>
         public ulong Timestamp { get; set; }
 
@@ -198,7 +198,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                //the backing buffer isnt big enough to accommodate the info elements so we need to resize it
+                //the backing buffer isn't big enough to accommodate the info elements so we need to resize it
                 Header = new ByteArraySegment(new byte[FrameSize]);
             }
 

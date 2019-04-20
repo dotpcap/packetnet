@@ -52,7 +52,7 @@ namespace Test.PacketType
             var icmp = p.Extract<IcmpV4Packet>();
             Console.WriteLine(icmp.GetType());
 
-            Assert.AreEqual(IcmpV4TypeCodes.EchoRequest, icmp.TypeCode);
+            Assert.AreEqual(IcmpV4TypeCode.EchoRequest, icmp.TypeCode);
             Assert.AreEqual(0xe05b, icmp.Checksum);
             Assert.AreEqual(0x0200, icmp.ID);
             Assert.AreEqual(0x6b00, icmp.Sequence);

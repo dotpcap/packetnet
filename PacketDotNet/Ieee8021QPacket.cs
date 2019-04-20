@@ -65,7 +65,6 @@ namespace PacketDotNet
                 tci >>= 12;
                 return (tci & 0x1) == 1;
             }
-
             set
             {
                 var tci = TagControlInformation;
@@ -94,7 +93,6 @@ namespace PacketDotNet
                 tci >>= 16 - 3; // priority is the upper 3 bits
                 return (IeeeP8021PPriorities) tci;
             }
-
             set
             {
                 var tci = TagControlInformation;
@@ -135,7 +133,6 @@ namespace PacketDotNet
                 var tci = TagControlInformation;
                 return (ushort) (tci & 0xFFF);
             }
-
             set
             {
                 var tci = TagControlInformation;

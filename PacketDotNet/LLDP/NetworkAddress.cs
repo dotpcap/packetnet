@@ -80,7 +80,6 @@ namespace PacketDotNet.Lldp
 
                 return new IPAddress(bytes);
             }
-
             set
             {
                 // do we have enough bytes for the address?

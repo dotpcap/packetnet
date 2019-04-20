@@ -50,9 +50,9 @@ namespace PacketDotNet.Lldp
 
         /// <summary>
         /// Override to:
-        /// - Prevent duplicate end tlvs from being added
+        /// - Prevent duplicate end TLVs from being added
         /// - Ensure that an end TLV is present
-        /// - Replace any automatically added end tlvs with the user provided tlv
+        /// - Replace any automatically added end TLVs with the user provided tlv
         /// </summary>
         /// <param name="index">
         /// A <see cref="int" />

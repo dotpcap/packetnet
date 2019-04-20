@@ -346,7 +346,7 @@ namespace Test.PacketType
                 //Method Invocations to make sure that a deserialized packet does not cause 
                 //additional errors.
 
-                l.ParseByteArrayIntoTlvs(new byte[] { 0, 0 }, 0);
+                l.ParseByteArrayIntoTLVs(new byte[] { 0, 0 }, 0);
                 l.PrintHex();
                 l.UpdateCalculatedValues();
             }

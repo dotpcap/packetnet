@@ -112,7 +112,6 @@ namespace PacketDotNet.Lldp
 
                 return bytes;
             }
-
             set
             {
                 var length = Length - (OUILength + OUISubTypeLength);

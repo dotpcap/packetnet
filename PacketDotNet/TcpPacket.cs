@@ -222,7 +222,6 @@ namespace PacketDotNet
                 var dataOffset = (byte) ((DataOffsetAndFlags >> 12) & 0xF);
                 return dataOffset;
             }
-
             set
             {
                 var dataOffset = DataOffsetAndFlags;
@@ -274,7 +273,6 @@ namespace PacketDotNet
                 var flags = DataOffsetAndFlags & 0x1FF;
                 return (ushort) flags;
             }
-
             set
             {
                 var flags = DataOffsetAndFlags;

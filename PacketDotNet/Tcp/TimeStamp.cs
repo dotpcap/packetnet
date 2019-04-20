@@ -26,7 +26,7 @@ namespace PacketDotNet.Tcp
     /// A Time Stamp Option
     /// Used for RTTM (Round Trip Time Measurement)
     /// and PAWS (Protect Against Wrapped Sequences)
-    /// Opsoletes the Echo and EchoReply option fields
+    /// Obsoletes the Echo and EchoReply option fields
     /// </summary>
     /// <remarks>
     /// References:

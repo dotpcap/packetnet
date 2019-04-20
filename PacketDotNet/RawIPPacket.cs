@@ -55,26 +55,27 @@ namespace PacketDotNet
             var firstNibble = byteArraySegment.Bytes[0] >> 4;
             Protocol = (RawIPPacketProtocol) firstNibble;
 
-            Header = new ByteArraySegment(byteArraySegment) {Length = 0};
+            Header = new ByteArraySegment(byteArraySegment) { Length = 0 };
 
             // parse the encapsulated bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-            {
-                var result = new PacketOrByteArraySegment();
-                switch (Protocol)
-                {
-                    case RawIPPacketProtocol.IPv4:
-                        result.Packet = new IPv4Packet(Header.NextSegment());
-                        break;
-                    case RawIPPacketProtocol.IPv6:
-                        result.Packet = new IPv6Packet(Header.NextSegment());
-                        break;
-                    default:
-                        throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");
-                }
+                                                                     {
+                                                                         var result = new PacketOrByteArraySegment();
+                                                                         switch (Protocol)
+                                                                         {
+                                                                             case RawIPPacketProtocol.IPv4:
+                                                                                 result.Packet = new IPv4Packet(Header.NextSegment());
+                                                                                 break;
+                                                                             case RawIPPacketProtocol.IPv6:
+                                                                                 result.Packet = new IPv6Packet(Header.NextSegment());
+                                                                                 break;
+                                                                             default:
+                                                                                 throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");
+                                                                         }
 
-                return result;
-            }, LazyThreadSafetyMode.PublicationOnly);
+                                                                         return result;
+                                                                     },
+                                                                     LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
@@ -107,7 +108,7 @@ namespace PacketDotNet
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>
                 {
-                    {"protocol", Protocol + " (0x" + Protocol.ToString("x") + ")"}
+                    { "protocol", Protocol + " (0x" + Protocol.ToString("x") + ")" }
                 };
 
                 // calculate the padding needed to right-justify the property names

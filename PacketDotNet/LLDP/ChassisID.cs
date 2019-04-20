@@ -24,9 +24,9 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet.LLDP
@@ -265,6 +265,7 @@ namespace PacketDotNet.LLDP
                                val,
                                0,
                                dataLength);
+
                     return val;
                 case ChassisSubTypes.NetworkAddress:
                     return new NetworkAddress(TLVData.Bytes,
@@ -277,6 +278,7 @@ namespace PacketDotNet.LLDP
                                val,
                                0,
                                dataLength);
+
                     return new PhysicalAddress(val);
                 case ChassisSubTypes.InterfaceName:
                     return Encoding.ASCII.GetString(TLVData.Bytes, dataOffset, dataLength);

@@ -51,8 +51,8 @@ namespace PacketDotNet.Ieee80211
         /// Length of the frame
         /// </summary>
         public override int FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 2);
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 2);
 
         /// <summary>
         /// ReceiverAddress

@@ -270,7 +270,7 @@ namespace Test.PacketType
                 Assert.AreEqual(udpPacket.Length, fromFile.Length);
                 Assert.AreEqual(udpPacket.SourcePort, fromFile.SourcePort);
                 Assert.AreEqual(udpPacket.ValidChecksum, fromFile.ValidChecksum);
-                Assert.AreEqual(udpPacket.ValidUDPChecksum, fromFile.ValidUDPChecksum);
+                Assert.AreEqual(udpPacket.ValidUdpChecksum, fromFile.ValidUdpChecksum);
 
                 //Method Invocations to make sure that a deserialized packet does not cause 
                 //additional errors.

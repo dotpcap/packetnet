@@ -23,9 +23,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -62,7 +62,7 @@ namespace PacketDotNet
             set
             {
                 base.PayloadPacket = value;
-                
+
                 // set NextHeader (Protocol) based on the type of this packet
                 if (value is TcpPacket)
                 {
@@ -95,7 +95,7 @@ namespace PacketDotNet
 
                 // update the payload length based on the size
                 // of the payload packet
-                var newPayloadLength = (ushort)base.PayloadPacket.BytesSegment.Length;
+                var newPayloadLength = (ushort) base.PayloadPacket.BytesSegment.Length;
                 Log.DebugFormat("newPayloadLength {0}", newPayloadLength);
                 PayloadLength = newPayloadLength;
             }
@@ -203,14 +203,14 @@ namespace PacketDotNet
                 {
                     // IPv4: it's possible to avoid a copy by doing the same as IPAddress.
                     // --> m_Address = ((address[3] << 24 | address[2] <<16 | address[1] << 8| address[0]) & 0x0FFFFFFFF);
-                    var address = ((bytes[3 + fieldOffset] << 24 | bytes[2 + fieldOffset] << 16 | bytes[1 + fieldOffset] << 8 | bytes[fieldOffset]) & 0x0FFFFFFFF);
+                    var address = (bytes[3 + fieldOffset] << 24 | bytes[2 + fieldOffset] << 16 | bytes[1 + fieldOffset] << 8 | bytes[fieldOffset]) & 0x0FFFFFFFF;
                     return new IPAddress(address);
                 }
                 case AddressFamily.InterNetworkV6:
                 {
                     // IPv6: not possible due to not accepting parameters for it.
                     var address = new byte[IPv6Fields.AddressLength];
-                    for (int i = 0; i < IPv6Fields.AddressLength; i++)
+                    for (var i = 0; i < IPv6Fields.AddressLength; i++)
                         address[i] = bytes[fieldOffset + i];
 
                     return new IPAddress(address);
@@ -222,7 +222,7 @@ namespace PacketDotNet
                 }
             }
         }
-        
+
         /// <summary>
         /// Called by IPv4 and IPv6 packets to parse their packet payload
         /// </summary>
@@ -267,38 +267,47 @@ namespace PacketDotNet
                 case IPProtocolType.TCP:
                     payloadPacketOrData.Packet = new TcpPacket(payload,
                                                                parentPacket);
+
                     break;
                 case IPProtocolType.UDP:
                     payloadPacketOrData.Packet = new UdpPacket(payload,
                                                                parentPacket);
+
                     break;
                 case IPProtocolType.ICMP:
                     payloadPacketOrData.Packet = new ICMPv4Packet(payload,
                                                                   parentPacket);
+
                     break;
                 case IPProtocolType.ICMPV6:
                     payloadPacketOrData.Packet = new ICMPv6Packet(payload,
                                                                   parentPacket);
+
                     break;
                 case IPProtocolType.IGMP:
                     payloadPacketOrData.Packet = new IGMPv2Packet(payload,
                                                                   parentPacket);
+
                     break;
                 case IPProtocolType.OSPF:
                     payloadPacketOrData.Packet = OSPFPacket.ConstructOSPFPacket(payload.Bytes,
                                                                                 payload.Offset);
+
                     break;
                 case IPProtocolType.IPIP:
                     payloadPacketOrData.Packet = new IPv4Packet(payload,
                                                                 parentPacket);
+
                     break;
                 case IPProtocolType.IPV6:
                     payloadPacketOrData.Packet = new IPv6Packet(payload,
                                                                 parentPacket);
+
                     break;
                 case IPProtocolType.GRE:
                     payloadPacketOrData.Packet = new GREPacket(payload,
                                                                parentPacket);
+
                     break;
 
                 // NOTE: new payload parsing entries go here

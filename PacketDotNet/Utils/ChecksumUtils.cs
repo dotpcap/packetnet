@@ -88,7 +88,7 @@ namespace PacketDotNet.Utils
                     if (start > 0)
                         mainArray += start;
 
-                    return OnesSum(mainArray, len, (byte*)IntPtr.Zero, 0);
+                    return OnesSum(mainArray, len, (byte*) IntPtr.Zero, 0);
                 }
             }
         }
@@ -126,7 +126,7 @@ namespace PacketDotNet.Utils
         /// <param name="mainSize">Size of the main array.</param>
         /// <param name="prefixArray">The prefix array.</param>
         /// <param name="prefixSize">Size of the prefix array.</param>
-        /// <returns><see cref="ushort"/>.</returns>
+        /// <returns><see cref="ushort" />.</returns>
         private static unsafe ushort OnesSum(byte* mainArray, int mainSize, byte* prefixArray, int prefixSize)
         {
             ulong sum = 0;
@@ -136,16 +136,16 @@ namespace PacketDotNet.Utils
 
             // Swap the byte order of the sum.
             sum = SwapBytes(sum);
-            
+
             // Folds the sum down to 16 bits.
-            var uint1 = (uint)sum;
-            var uint2 = (uint)(sum >> 32);
+            var uint1 = (uint) sum;
+            var uint2 = (uint) (sum >> 32);
             uint1 += uint2;
             if (uint1 < uint2)
                 uint1++;
 
-            var ushort1 = (ushort)uint1;
-            var ushort2 = (ushort)(uint1 >> 16);
+            var ushort1 = (ushort) uint1;
+            var ushort2 = (ushort) (uint1 >> 16);
             ushort1 += ushort2;
             if (ushort1 < ushort2)
                 ushort1++;
@@ -159,11 +159,11 @@ namespace PacketDotNet.Utils
         /// <param name="array">The array.</param>
         /// <param name="size">The size.</param>
         /// <param name="sum">The sum.</param>
-        /// <returns><see cref="ulong"/>.</returns>
+        /// <returns><see cref="ulong" />.</returns>
         private static unsafe ulong Sum(byte* array, int size, ulong sum)
         {
             // Reads per 8 bytes (ulong), this is the main loop.
-            ulong* prefixArrayLong = (ulong*)array;
+            var prefixArrayLong = (ulong*) array;
             while (size >= 8)
             {
                 var s = *prefixArrayLong++;
@@ -175,12 +175,12 @@ namespace PacketDotNet.Utils
             }
 
             // The remainder of the array, which is less than 8 bytes long, needs to be read now.
-            array = (byte*)prefixArrayLong;
+            array = (byte*) prefixArrayLong;
 
             // Reads 4 bytes (uint).
             if ((size & 4) != 0)
             {
-                var s = *(uint*)array;
+                var s = *(uint*) array;
                 sum += s;
                 if (sum < s)
                     sum++;
@@ -191,7 +191,7 @@ namespace PacketDotNet.Utils
             // Reads 2 bytes (ushort).
             if ((size & 2) != 0)
             {
-                var s = *(ushort*)array;
+                var s = *(ushort*) array;
                 sum += s;
                 if (sum < s)
                     sum++;
@@ -215,7 +215,7 @@ namespace PacketDotNet.Utils
         /// Swaps the order of the bytes in a <c>ulong</c>.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <returns><see cref="ulong"/>.</returns>
+        /// <returns><see cref="ulong" />.</returns>
         private static ulong SwapBytes(ulong value)
         {
             // Swap adjacent 32-bit blocks.

@@ -106,7 +106,6 @@ namespace PacketDotNet
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.DDSequencePosition);
         }
 
-
         /// <summary>
         /// The size in bytes of the largest IP datagram that can be sent
         /// out the associated interface, without fragmentation.

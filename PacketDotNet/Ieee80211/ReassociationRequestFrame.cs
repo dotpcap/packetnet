@@ -125,13 +125,13 @@ namespace PacketDotNet.Ieee80211
         /// The size of the frame.
         /// </value>
         public override int FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 3) +
-                                           MacFields.SequenceControlLength +
-                                           ReassociationRequestFields.CapabilityInformationLength +
-                                           ReassociationRequestFields.ListenIntervalLength +
-                                           MacFields.AddressLength +
-                                           InformationElements.Length;
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 3) +
+                                         MacFields.SequenceControlLength +
+                                         ReassociationRequestFields.CapabilityInformationLength +
+                                         ReassociationRequestFields.ListenIntervalLength +
+                                         MacFields.AddressLength +
+                                         InformationElements.Length;
 
         /// <summary>
         /// Gets or sets the information elements.

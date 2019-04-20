@@ -24,9 +24,9 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet.Ieee80211
@@ -45,7 +45,6 @@ namespace PacketDotNet.Ieee80211
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
-
 
         private int GetOffsetForAddress(int addressIndex)
         {
@@ -130,7 +129,6 @@ namespace PacketDotNet.Ieee80211
             SetAddressByOffset(offset, address);
         }
 
-
         /// <summary>
         /// Writes the provided address into the backing <see cref="ByteArraySegment" />
         /// starting at the provided offset.
@@ -144,7 +142,7 @@ namespace PacketDotNet.Ieee80211
         protected void SetAddressByOffset(int offset, PhysicalAddress address)
         {
             //We will replace no address with a MAC of all zer
-            var hwAddress = address.Equals(PhysicalAddress.None) ? new byte[] {0, 0, 0, 0, 0, 0} : address.GetAddressBytes();
+            var hwAddress = address.Equals(PhysicalAddress.None) ? new byte[] { 0, 0, 0, 0, 0, 0 } : address.GetAddressBytes();
 
             // using the offset, set the address
             if (hwAddress.Length != MacFields.AddressLength)
@@ -193,6 +191,7 @@ namespace PacketDotNet.Ieee80211
                            hwAddress,
                            0,
                            hwAddress.Length);
+
                 return new PhysicalAddress(hwAddress);
             }
 
@@ -501,7 +500,6 @@ namespace PacketDotNet.Ieee80211
         /// </value>
         public bool AppendFcs { get; set; }
 
-
         /// <value>
         /// The option to return a ByteArraySegment means that this method
         /// is higher performance as the data can start at an offset other than
@@ -537,8 +535,10 @@ namespace PacketDotNet.Ieee80211
                     var newByteArraySegment = new ByteArraySegment(Header.Bytes,
                                                                    Header.Offset,
                                                                    packetLength);
+
                     Log.DebugFormat("SharesMemoryWithSubPackets, returning byte array {0}",
                                     newByteArraySegment);
+
                     return newByteArraySegment;
                 }
 
@@ -562,7 +562,6 @@ namespace PacketDotNet.Ieee80211
                 return new ByteArraySegment(newBytes, 0, newBytes.Length);
             }
         }
-
 
         /// <summary>
         /// ToString() override

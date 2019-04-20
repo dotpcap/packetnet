@@ -49,6 +49,7 @@ namespace PacketDotNet.LLDP
                            data,
                            AddressFamilyLength,
                            addressBytes.Length);
+
                 return data;
             }
         }

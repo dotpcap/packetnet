@@ -48,7 +48,6 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         public PhysicalAddress SourceAddress { get; set; }
 
-
         /// <summary>
         /// Frame control bytes are the first two bytes of the frame
         /// </summary>

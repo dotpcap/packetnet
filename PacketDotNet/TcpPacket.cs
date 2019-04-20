@@ -26,9 +26,9 @@ using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Tcp;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -346,10 +346,11 @@ namespace PacketDotNet
 
             // store the payload bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-            {
-                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.NextSegment()};
-                return result;
-            }, LazyThreadSafetyMode.PublicationOnly);
+                                                                     {
+                                                                         var result = new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() };
+                                                                         return result;
+                                                                     },
+                                                                     LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary>
@@ -378,36 +379,37 @@ namespace PacketDotNet
 
             // store the payload bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-            {
-                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.NextSegment()};
+                                                                     {
+                                                                         var result = new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() };
 
-                // if the parent packet is an IPv4Packet we need to adjust
-                // the payload length because it is possible for us to have
-                // X bytes of data but only (X - Y) bytes are actually valid
-                if (ParentPacket is IPv4Packet ipv4Parent)
-                {
-                    // actual total length (tcp header + tcp payload)
-                    var ipPayloadTotalLength = ipv4Parent.TotalLength - (ipv4Parent.HeaderLength * 4);
+                                                                         // if the parent packet is an IPv4Packet we need to adjust
+                                                                         // the payload length because it is possible for us to have
+                                                                         // X bytes of data but only (X - Y) bytes are actually valid
+                                                                         if (ParentPacket is IPv4Packet ipv4Parent)
+                                                                         {
+                                                                             // actual total length (tcp header + tcp payload)
+                                                                             var ipPayloadTotalLength = ipv4Parent.TotalLength - (ipv4Parent.HeaderLength * 4);
 
-                    Log.DebugFormat("ipv4Parent.TotalLength {0}, ipv4Parent.HeaderLength {1}",
-                                    ipv4Parent.TotalLength,
-                                    ipv4Parent.HeaderLength * 4);
+                                                                             Log.DebugFormat("ipv4Parent.TotalLength {0}, ipv4Parent.HeaderLength {1}",
+                                                                                             ipv4Parent.TotalLength,
+                                                                                             ipv4Parent.HeaderLength * 4);
 
-                    var newTcpPayloadLength = ipPayloadTotalLength - Header.Length;
+                                                                             var newTcpPayloadLength = ipPayloadTotalLength - Header.Length;
 
-                    Log.DebugFormat("Header.Length {0}, Current payload length: {1}, new payload length {2}",
-                                    Header.Length,
-                                    result.ByteArraySegment.Length,
-                                    newTcpPayloadLength);
+                                                                             Log.DebugFormat("Header.Length {0}, Current payload length: {1}, new payload length {2}",
+                                                                                             Header.Length,
+                                                                                             result.ByteArraySegment.Length,
+                                                                                             newTcpPayloadLength);
 
-                    // the length of the payload is the total payload length
-                    // above, minus the length of the tcp header
-                    result.ByteArraySegment.Length = newTcpPayloadLength;
-                    DecodePayload(result);
-                }
+                                                                             // the length of the payload is the total payload length
+                                                                             // above, minus the length of the tcp header
+                                                                             result.ByteArraySegment.Length = newTcpPayloadLength;
+                                                                             DecodePayload(result);
+                                                                         }
 
-                return result;
-            }, LazyThreadSafetyMode.PublicationOnly);
+                                                                         return result;
+                                                                     },
+                                                                     LazyThreadSafetyMode.PublicationOnly);
 
             Log.DebugFormat("ParentPacket.GetType() {0}", parentPacket.GetType());
 
@@ -427,15 +429,15 @@ namespace PacketDotNet
 
             // Based on https://github.com/wireshark/wireshark/blob/fe219637a6748130266a0b0278166046e60a2d68/epan/dissectors/packet-drda.c#L757.
 
-
-
             // The first header is 6 bytes long, so the length in the second header should be 6 bytes less.
             if (result.ByteArraySegment.Bytes[result.ByteArraySegment.Offset + 2] == 0xD0)
             {
                 var outerLength = EndianBitConverter.Big.ToUInt16(result.ByteArraySegment.Bytes,
                                                                   result.ByteArraySegment.Offset + 0);
+
                 var innerLength = EndianBitConverter.Big.ToUInt16(result.ByteArraySegment.Bytes,
                                                                   result.ByteArraySegment.Offset + 6);
+
                 if (outerLength - innerLength == 6)
                 {
                     var drdaPacket = new DrdaPacket(result.ByteArraySegment, this);
@@ -487,7 +489,6 @@ namespace PacketDotNet
                 if (Urg)
                     ThrowHelper.ThrowNotImplementedException(ExceptionDescription.UrgentPointerSet);
 
-
                 var optionsOffset = TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
                 var optionsLength = (DataOffset * 4) - optionsOffset;
 
@@ -508,7 +509,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Gets the TCP options as a <see cref="ByteArraySegment"/>.
+        /// Gets the TCP options as a <see cref="ByteArraySegment" />.
         /// </summary>
         /// <exception cref="NotImplementedException">Urg == true not implemented yet</exception>
         public ByteArraySegment OptionsSegment
@@ -518,10 +519,9 @@ namespace PacketDotNet
                 if (Urg)
                     ThrowHelper.ThrowNotImplementedException(ExceptionDescription.UrgentPointerSet);
 
-
                 var optionsOffset = TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
                 var optionsLength = (DataOffset * 4) - optionsOffset;
-                
+
                 return new ByteArraySegment(Header.Bytes, Header.Offset + optionsOffset, optionsLength);
             }
         }
@@ -702,14 +702,19 @@ namespace PacketDotNet
                     var flags = "{";
                     if (Urg)
                         flags += "urg[0x" + Convert.ToString(UrgentPointer, 16) + "]|";
+
                     if (Ack)
                         flags += "ack[" + AcknowledgmentNumber + " (0x" + Convert.ToString(AcknowledgmentNumber, 16) + ")]|";
+
                     if (Psh)
                         flags += "psh|";
+
                     if (Rst)
                         flags += "rst|";
+
                     if (Syn)
                         flags += "syn[0x" + Convert.ToString(SequenceNumber, 16) + "," + SequenceNumber + "]|";
+
                     flags = flags.TrimEnd('|');
                     flags += "}";
 
@@ -720,6 +725,7 @@ namespace PacketDotNet
                                         SourcePort,
                                         DestinationPort,
                                         flags);
+
                     break;
                 }
                 case StringOutputType.Verbose:
@@ -728,14 +734,15 @@ namespace PacketDotNet
                     // collect the properties and their value
                     var properties = new Dictionary<string, string>
                     {
-                        {"source port", SourcePort.ToString()},
-                        {"destination port", DestinationPort.ToString()},
-                        {"sequence number", SequenceNumber + " (0x" + SequenceNumber.ToString("x") + ")"},
-                        {"acknowledgement number", AcknowledgmentNumber + " (0x" + AcknowledgmentNumber.ToString("x") + ")"},
+                        { "source port", SourcePort.ToString() },
+                        { "destination port", DestinationPort.ToString() },
+                        { "sequence number", SequenceNumber + " (0x" + SequenceNumber.ToString("x") + ")" },
+                        { "acknowledgement number", AcknowledgmentNumber + " (0x" + AcknowledgmentNumber.ToString("x") + ")" },
                         // TODO: Implement a HeaderLength property for TCPPacket
                         //properties.Add("header length", HeaderLength.ToString());
-                        {"flags", "(0x" + AllFlags.ToString("x") + ")"}
+                        { "flags", "(0x" + AllFlags.ToString("x") + ")" }
                     };
+
                     var flags = Convert.ToString(AllFlags, 2).PadLeft(8, '0');
                     properties.Add("", flags[0] + "... .... = [" + flags[0] + "] congestion window reduced");
                     properties.Add(" ", "." + flags[1] + ".. .... = [" + flags[1] + "] ECN - echo");

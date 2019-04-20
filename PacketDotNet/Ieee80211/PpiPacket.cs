@@ -85,7 +85,6 @@ namespace PacketDotNet.Ieee80211
                                                        Header.Offset + PpiHeaderFields.LengthPosition);
         }
 
-
         /// <summary>
         /// Version 0. Only increases for drastic changes, introduction of compatible
         /// new fields does not count.
@@ -322,8 +321,8 @@ namespace PacketDotNet.Ieee80211
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>
                 {
-                    {"version", Version.ToString()},
-                    {"length", Length.ToString()}
+                    { "version", Version.ToString() },
+                    { "length", Length.ToString() }
                 };
 
                 var ppiField = PpiFields;
@@ -393,6 +392,7 @@ namespace PacketDotNet.Ieee80211
             var ms = new MemoryStream(Header.Bytes,
                                       Header.Offset + PpiHeaderFields.FirstFieldPosition,
                                       totalFieldLength - PpiHeaderFields.FirstFieldPosition);
+
             var writer = new BinaryWriter(ms);
             foreach (var field in PpiFields)
             {
@@ -428,6 +428,7 @@ namespace PacketDotNet.Ieee80211
             var br = new BinaryReader(new MemoryStream(Header.Bytes,
                                                        offset,
                                                        Header.Length - offset));
+
             var length = PpiHeaderFields.FirstFieldPosition;
             while (length < Header.Length)
             {

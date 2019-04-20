@@ -144,6 +144,7 @@ namespace PacketDotNet.Ieee80211
                            valueArray,
                            0,
                            ValueLength);
+
                 return valueArray;
             }
 
@@ -176,7 +177,7 @@ namespace PacketDotNet.Ieee80211
         /// The length.
         /// </value>
         public int ValueLength => Math.Min(_bytes.Length - ElementValuePosition,
-                                             _bytes.Bytes[_bytes.Offset + ElementLengthPosition]);
+                                           _bytes.Bytes[_bytes.Offset + ElementLengthPosition]);
 
         /// <summary>
         /// Determines whether the specified <see cref="object" /> is equal to the current <see cref="InformationElement" />.
@@ -195,7 +196,7 @@ namespace PacketDotNet.Ieee80211
                 return false;
             }
 
-            return obj is InformationElement ie && (Id == ie.Id && Value.SequenceEqual(ie.Value));
+            return obj is InformationElement ie && Id == ie.Id && Value.SequenceEqual(ie.Value);
         }
 
         /// <summary>

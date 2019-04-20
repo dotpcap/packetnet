@@ -62,7 +62,6 @@ namespace PacketDotNet.Ieee80211
                 InformationElements = new InformationElementList();
             }
 
-
             //cant set length until after we have handled the information elements
             //as they vary in length
             Header.Length = FrameSize;
@@ -118,13 +117,13 @@ namespace PacketDotNet.Ieee80211
         /// The size of the frame.
         /// </value>
         public override int FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 3) +
-                                           MacFields.SequenceControlLength +
-                                           AuthenticationFields.AuthAlgorithmNumLength +
-                                           AuthenticationFields.AuthAlgorithmTransactionSequenceNumLength +
-                                           AuthenticationFields.StatusCodeLength +
-                                           InformationElements.Length;
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 3) +
+                                         MacFields.SequenceControlLength +
+                                         AuthenticationFields.AuthAlgorithmNumLength +
+                                         AuthenticationFields.AuthAlgorithmTransactionSequenceNumLength +
+                                         AuthenticationFields.StatusCodeLength +
+                                         InformationElements.Length;
 
         /// <summary>
         /// The information elements included in the frame

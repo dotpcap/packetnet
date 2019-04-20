@@ -131,6 +131,7 @@ namespace PacketDotNet.LSA
                         TOS = (byte) ((metric & 0xFF000000) >> 24),
                         Metric = metric & 0x00FFFFFF
                     };
+
                     ret.Add(m);
                 }
 

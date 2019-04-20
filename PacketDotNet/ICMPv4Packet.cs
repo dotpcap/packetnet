@@ -25,9 +25,9 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -58,6 +58,7 @@ namespace PacketDotNet
             {
                 var val = EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                           Header.Offset + ICMPv4Fields.TypeCodePosition);
+
                 return (ICMPv4TypeCodes) val;
             }
 
@@ -183,17 +184,18 @@ namespace PacketDotNet
                                         color,
                                         colorEscape,
                                         TypeCode);
+
                     break;
                 case StringOutputType.Verbose:
                 case StringOutputType.VerboseColored:
                     // collect the properties and their value
                     var properties = new Dictionary<string, string>
                     {
-                        {"type/code", TypeCode + " (0x" + TypeCode.ToString("x") + ")"},
+                        { "type/code", TypeCode + " (0x" + TypeCode.ToString("x") + ")" },
                         // TODO: Implement checksum verification for ICMPv4
-                        {"checksum", Checksum.ToString("x")},
-                        {"identifier", "0x" + ID.ToString("x")},
-                        {"sequence number", Sequence + " (0x" + Sequence.ToString("x") + ")"}
+                        { "checksum", Checksum.ToString("x") },
+                        { "identifier", "0x" + ID.ToString("x") },
+                        { "sequence number", Sequence + " (0x" + Sequence.ToString("x") + ")" }
                     };
 
                     // calculate the padding needed to right-justify the property names

@@ -22,9 +22,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System.Reflection;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet.Ieee80211
@@ -89,7 +89,6 @@ namespace PacketDotNet.Ieee80211
                        QosDataFields.QosControlLength;
             }
         }
-
 
         /// <summary>
         /// Initializes a new instance of the <see cref="QosDataFrame" /> class.

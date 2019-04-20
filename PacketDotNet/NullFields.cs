@@ -36,7 +36,6 @@ namespace PacketDotNet
         /// </summary>
         public static readonly int HeaderLength = ProtocolLength;
 
-
         /// <summary>
         /// Offset from the start of the packet where the Protocol field is located
         /// </summary>

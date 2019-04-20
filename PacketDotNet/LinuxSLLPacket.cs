@@ -46,7 +46,8 @@ namespace PacketDotNet
 
             // parse the payload via an EthernetPacket method
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header,
-                                                                                                                 EthernetProtocolType), LazyThreadSafetyMode.PublicationOnly);
+                                                                                                                 EthernetProtocolType),
+                                                                     LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <value>
@@ -79,6 +80,7 @@ namespace PacketDotNet
                            theHeader,
                            0,
                            headerLength);
+
                 return theHeader;
             }
 
@@ -181,13 +183,12 @@ namespace PacketDotNet
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>
                 {
-                    {"type", Type + " (" + (int) Type + ")"},
-                    {"link layer address type", LinkLayerAddressType.ToString()},
-                    {"link layer address length", LinkLayerAddressLength.ToString()},
-                    {"source", BitConverter.ToString(LinkLayerAddress)},
-                    {"protocol", EthernetProtocolType + " (0x" + EthernetProtocolType.ToString("x") + ")"}
+                    { "type", Type + " (" + (int) Type + ")" },
+                    { "link layer address type", LinkLayerAddressType.ToString() },
+                    { "link layer address length", LinkLayerAddressLength.ToString() },
+                    { "source", BitConverter.ToString(LinkLayerAddress) },
+                    { "protocol", EthernetProtocolType + " (0x" + EthernetProtocolType.ToString("x") + ")" }
                 };
-
 
                 // calculate the padding needed to right-justify the property names
                 var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));

@@ -26,9 +26,9 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -125,6 +125,7 @@ namespace PacketDotNet
                            destinationMAC,
                            0,
                            EthernetFields.MacAddressLength);
+
                 return new PhysicalAddress(destinationMAC);
             }
             set
@@ -174,7 +175,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// See <see cref="IsValid()"/>.
+        /// See <see cref="IsValid()" />.
         /// </summary>
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
@@ -194,7 +195,7 @@ namespace PacketDotNet
                 if (i == 0)
                 {
                     // validate the synchronization sequence
-                    for (int j = 0; j < EthernetFields.MacAddressLength; j++)
+                    for (var j = 0; j < EthernetFields.MacAddressLength; j++)
                     {
                         if (byteArraySegment.Bytes[basOffset + j] != SyncSequence[j])
                             return false;
@@ -203,12 +204,11 @@ namespace PacketDotNet
                 else
                 {
                     // fail the validation on malformed WOL Magic Packets
-                    for (int j = 0; j < EthernetFields.MacAddressLength; j++)
+                    for (var j = 0; j < EthernetFields.MacAddressLength; j++)
                     {
                         if (byteArraySegment.Bytes[byteArraySegment.Offset + SyncSequence.Length + j] != byteArraySegment.Bytes[basOffset + j])
                             return false;
                     }
-                    
                 }
             }
 
@@ -273,7 +273,7 @@ namespace PacketDotNet
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>
                 {
-                    {"destination", HexPrinter.PrintMACAddress(DestinationMAC)}
+                    { "destination", HexPrinter.PrintMACAddress(DestinationMAC) }
                 };
 
                 // calculate the padding needed to right-justify the property names
@@ -302,7 +302,7 @@ namespace PacketDotNet
         #region Members
 
         // the WOL synchronization sequence
-        private static readonly byte[] SyncSequence = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+        private static readonly byte[] SyncSequence = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 
         // the number of times the Destination MAC appears in the payload
         private const int MACRepetitions = 16;

@@ -832,7 +832,6 @@ namespace PacketDotNet.Ieee80211
         /// <summary>Type of the field</summary>
         public override RadioTapType FieldType => RadioTapType.LockQuality;
 
-
         /// <summary>
         /// Gets the length of the field data.
         /// </summary>
@@ -1008,7 +1007,6 @@ namespace PacketDotNet.Ieee80211
             return $"PlcpCrcCheckFailed {PlcpCrcCheckFailed}";
         }
     }
-
 
     /// <summary>
     /// Transmit power expressed as unitless distance from max

@@ -27,9 +27,9 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -112,7 +112,6 @@ namespace PacketDotNet
         /// <value>
         /// The protocol of the ip packet's payload
         /// Included along side Protocol for user convenience
-        /// 
         /// </value>
         [Obsolete("Use Protocol instead of NextHeader for IPv4 Packets.")]
 #pragma warning disable 0809
@@ -122,7 +121,6 @@ namespace PacketDotNet
             get => Protocol;
             set => Protocol = value;
         }
-
 
         /// <summary>
         /// The unique ID of this IP datagram. The ID normally
@@ -179,7 +177,7 @@ namespace PacketDotNet
             {
                 var address = value.GetAddressBytes();
 
-                for (int i = 0; i < address.Length; i++)
+                for (var i = 0; i < address.Length; i++)
                     Header.Bytes[Header.Offset + IPv4Fields.SourcePosition + i] = address[i];
             }
         }
@@ -194,7 +192,7 @@ namespace PacketDotNet
             {
                 var address = value.GetAddressBytes();
 
-                for (int i = 0; i < address.Length; i++)
+                for (var i = 0; i < address.Length; i++)
                     Header.Bytes[Header.Offset + IPv4Fields.DestinationPosition + i] = address[i];
             }
         }
@@ -224,7 +222,6 @@ namespace PacketDotNet
             get
             {
                 Log.Debug("");
-
 
                 // first validate other information about the packet. if this stuff
                 // is not true, the packet (and therefore the checksum) is invalid
@@ -447,14 +444,14 @@ namespace PacketDotNet
 
             // parse the payload
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-            {
-                var payload = Header.NextSegment(PayloadLength);
-                return ParseEncapsulatedBytes(payload,
-                                              Protocol,
-                                              this);
-            }, LazyThreadSafetyMode.PublicationOnly);
+                                                                     {
+                                                                         var payload = Header.NextSegment(PayloadLength);
+                                                                         return ParseEncapsulatedBytes(payload,
+                                                                                                       Protocol,
+                                                                                                       this);
+                                                                     },
+                                                                     LazyThreadSafetyMode.PublicationOnly);
         }
-
 
         /// <summary>
         /// Constructor with parent
@@ -472,7 +469,6 @@ namespace PacketDotNet
         {
             ParentPacket = parentPacket;
         }
-
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
@@ -505,10 +501,11 @@ namespace PacketDotNet
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>
                 {
-                    {"version", Version.ToString()},
+                    { "version", Version.ToString() },
                     // FIXME: Header length output is incorrect
-                    {"header length", HeaderLength + " bytes"}
+                    { "header length", HeaderLength + " bytes" }
                 };
+
                 var diffServices = Convert.ToString(DifferentiatedServices, 2).PadLeft(8, '0').Insert(4, " ");
                 properties.Add("differentiated services", "0x" + DifferentiatedServices.ToString("x").PadLeft(2, '0'));
                 properties.Add("", diffServices.Substring(0, 7) + ".. = [" + (DifferentiatedServices >> 2) + "] code point");

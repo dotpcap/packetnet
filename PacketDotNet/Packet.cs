@@ -25,9 +25,9 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -157,14 +157,14 @@ namespace PacketDotNet
         /// The packet that is carrying this one
         /// </summary>
         public virtual Packet ParentPacket { get; set; }
-        
+
         /// <value>
         /// Gets the bytes of the header's data.
         /// </value>
         public virtual byte[] HeaderData => Header.ActualBytes();
 
         /// <summary>
-        /// Gets the header's data as a <see cref="ByteArraySegment"/>.
+        /// Gets the header's data as a <see cref="ByteArraySegment" />.
         /// </summary>
         public virtual ByteArraySegment HeaderDataSegment => Header.NextSegment();
 
@@ -181,7 +181,6 @@ namespace PacketDotNet
                 if (this == value)
                     ThrowHelper.ThrowInvalidOperationException(ExceptionDescription.PacketAsPayloadPacket);
 
-
                 PayloadPacketOrData.Value.Packet = value;
                 PayloadPacketOrData.Value.Packet.ParentPacket = this;
             }
@@ -190,7 +189,7 @@ namespace PacketDotNet
         /// <summary>
         /// Gets or sets the bytes of the payload if present.
         /// </summary>
-        /// <remarks>The packet MAY have a null <see cref="PayloadData"/> but a non-null <see cref="PayloadPacket"/>.</remarks>
+        /// <remarks>The packet MAY have a null <see cref="PayloadData" /> but a non-null <see cref="PayloadPacket" />.</remarks>
         public byte[] PayloadData
         {
             get => PayloadDataSegment?.ActualBytes();
@@ -203,9 +202,9 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="ByteArraySegment"/> of the payload if present. 
+        /// Gets or sets the <see cref="ByteArraySegment" /> of the payload if present.
         /// </summary>
-        /// <remarks>The packet MAY have a null <see cref="PayloadData"/> but a non-null <see cref="PayloadPacket"/>.</remarks>
+        /// <remarks>The packet MAY have a null <see cref="PayloadData" /> but a non-null <see cref="PayloadPacket" />.</remarks>
         public ByteArraySegment PayloadDataSegment
         {
             get
@@ -226,7 +225,7 @@ namespace PacketDotNet
         /// Gets a value indicating whether this packet has payload data.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this packet has payload data; otherwise, <c>false</c>.
+        /// <c>true</c> if this packet has payload data; otherwise, <c>false</c>.
         /// </value>
         public virtual bool HasPayloadData => PayloadPacketOrData.Value.Type == PayloadType.Bytes;
 
@@ -234,7 +233,7 @@ namespace PacketDotNet
         /// Gets a value indicating whether this packet has a payload packet.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if this packet has a payload packet; otherwise, <c>false</c>.
+        /// <c>true</c> if this packet has a payload packet; otherwise, <c>false</c>.
         /// </value>
         public virtual bool HasPayloadPacket => PayloadPacketOrData.Value.Type == PayloadType.Packet;
 
@@ -242,18 +241,18 @@ namespace PacketDotNet
         /// Gets a value indicating whether the payload is initialized.
         /// </summary>
         /// <value>
-        ///   <c>true</c> if the payload is initialized; otherwise, <c>false</c>.
+        /// <c>true</c> if the payload is initialized; otherwise, <c>false</c>.
         /// </value>
         public virtual bool IsPayloadInitialized => PayloadPacketOrData.IsValueCreated;
-        
+
         /// <summary>
         /// Gets the actual bytes containing this packet and its payload.
         /// </summary>
-        /// <remarks>Use <see cref="BytesSegment"/> for optimal performance.</remarks>
+        /// <remarks>Use <see cref="BytesSegment" /> for optimal performance.</remarks>
         public virtual byte[] Bytes => BytesSegment.ActualBytes();
 
         /// <value>
-        /// Gets a <see cref="ByteArraySegment"/> with the data that can start at an offset other than the first byte.
+        /// Gets a <see cref="ByteArraySegment" /> with the data that can start at an offset other than the first byte.
         /// </value>
         public virtual ByteArraySegment BytesSegment
         {
@@ -445,7 +444,7 @@ namespace PacketDotNet
                 }
                 else
                 {
-                    ascii += Encoding.ASCII.GetString(new[] {data[i - 1]});
+                    ascii += Encoding.ASCII.GetString(new[] { data[i - 1] });
                 }
 
                 // add an additional space to split the bytes into

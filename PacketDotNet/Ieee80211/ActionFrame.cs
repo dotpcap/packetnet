@@ -102,7 +102,6 @@ namespace PacketDotNet.Ieee80211
             }
         }
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionFrame" /> class.
         /// </summary>
@@ -138,9 +137,9 @@ namespace PacketDotNet.Ieee80211
         /// The size of the frame.
         /// </value>
         public override int FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 3) +
-                                           MacFields.SequenceControlLength;
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 3) +
+                                         MacFields.SequenceControlLength;
 
         /// <summary>
         /// Writes the current packet properties to the backing ByteArraySegment.

@@ -28,9 +28,9 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet.Ieee80211
@@ -93,6 +93,7 @@ namespace PacketDotNet.Ieee80211
             var bitmaskFields = new List<uint>();
             var bitmask = EndianBitConverter.Little.ToUInt32(Header.Bytes,
                                                              Header.Offset + RadioFields.PresentPosition);
+
             bitmaskFields.Add(bitmask);
             var bitmaskOffsetInBytes = 4;
             while ((bitmask & (1 << 31)) == 1)
@@ -100,6 +101,7 @@ namespace PacketDotNet.Ieee80211
                 // retrieve the next field
                 bitmask = EndianBitConverter.Little.ToUInt32(Header.Bytes,
                                                              Header.Offset + RadioFields.PresentPosition + bitmaskOffsetInBytes);
+
                 bitmaskFields.Add(bitmask);
                 bitmaskOffsetInBytes += 4;
             }
@@ -169,9 +171,9 @@ namespace PacketDotNet.Ieee80211
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>
                 {
-                    {"version", Version.ToString()},
-                    {"length", Length.ToString()},
-                    {"present", " (0x" + Present[0].ToString("x") + ")"}
+                    { "version", Version.ToString() },
+                    { "length", Length.ToString() },
+                    { "present", " (0x" + Present[0].ToString("x") + ")" }
                 };
 
                 var radioTapFields = RadioTapFields;
@@ -294,6 +296,7 @@ namespace PacketDotNet.Ieee80211
             var offset = Header.Offset +
                          RadioFields.PresentPosition +
                          bitmasks.Length * Marshal.SizeOf(typeof(uint));
+
             var br = new BinaryReader(new MemoryStream(Header.Bytes,
                                                        offset,
                                                        Length - offset));
@@ -365,6 +368,7 @@ namespace PacketDotNet.Ieee80211
                 EndianBitConverter.Little.CopyBytes(presentField,
                                                     Header.Bytes,
                                                     Header.Offset + index);
+
                 index += RadioFields.PresentLength;
             }
 

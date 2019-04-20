@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Lsa;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet
 {

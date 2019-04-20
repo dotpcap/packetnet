@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
-using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.Utils.Converters;
 
 namespace Test
 {

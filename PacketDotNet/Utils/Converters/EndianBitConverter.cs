@@ -2,24 +2,29 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
-namespace PacketDotNet.MiscUtil.Conversion
+namespace PacketDotNet.Utils.Converters
 {
     /// <summary>
     /// Equivalent of System.BitConverter, but with either endianness.
     /// </summary>
     public abstract class EndianBitConverter
     {
-        #region Endianness of this converter
+        /// <summary>
+        /// Returns a big-endian bit converter instance. The same instance is
+        /// always returned.
+        /// </summary>
+        public static BigEndianBitConverter Big { get; } = new BigEndianBitConverter();
+
+        /// <summary>
+        /// Returns a little-endian bit converter instance. The same instance is
+        /// always returned.
+        /// </summary>
+        public static LittleEndianBitConverter Little { get; } = new LittleEndianBitConverter();
 
         /// <summary>
         /// Indicates the byte order ("endianness") in which data is converted using this class.
         /// </summary>
         public abstract Endianness Endianness { get; }
-
-        #endregion
-
-
-        #region Private struct used for Single/Int32 conversions
 
         /// <summary>
         /// Union used solely for the equivalent of DoubleToInt64Bits and vice versa.
@@ -59,25 +64,6 @@ namespace PacketDotNet.MiscUtil.Conversion
             [field: FieldOffset(0)]
             internal float AsSingle { get; }
         }
-
-        #endregion
-
-
-        #region Factory properties
-
-        /// <summary>
-        /// Returns a little-endian bit converter instance. The same instance is
-        /// always returned.
-        /// </summary>
-        public static LittleEndianBitConverter Little { get; } = new LittleEndianBitConverter();
-
-        /// <summary>
-        /// Returns a big-endian bit converter instance. The same instance is
-        /// always returned.
-        /// </summary>
-        public static BigEndianBitConverter Big { get; } = new BigEndianBitConverter();
-
-        #endregion
 
 
         #region Double/primitive conversions

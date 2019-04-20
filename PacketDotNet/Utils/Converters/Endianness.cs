@@ -1,4 +1,4 @@
-namespace PacketDotNet.MiscUtil.Conversion
+namespace PacketDotNet.Utils.Converters
 {
     /// <summary>
     /// Endianness of a converter

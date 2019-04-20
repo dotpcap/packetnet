@@ -24,8 +24,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Ieee80211
 {

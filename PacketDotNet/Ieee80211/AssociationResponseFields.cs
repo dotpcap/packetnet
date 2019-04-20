@@ -1,5 +1,3 @@
-using System;
-
 namespace PacketDotNet.Ieee80211
 {
     public class AssociationResponseFields

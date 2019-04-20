@@ -18,7 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 

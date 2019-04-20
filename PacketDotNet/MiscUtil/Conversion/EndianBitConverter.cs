@@ -56,18 +56,7 @@ namespace PacketDotNet.MiscUtil.Conversion
         #region Endianness of this converter
 
         /// <summary>
-        /// Indicates the byte order ("endianess") in which data is converted using this class.
-        /// </summary>
-        /// <remarks>
-        /// Different computer architectures store data using different byte orders. "Big-endian"
-        /// means the most significant byte is on the left end of a word. "Little-endian" means the
-        /// most significant byte is on the right end of a word.
-        /// </remarks>
-        /// <returns>true if this converter is little-endian, false otherwise.</returns>
-        public abstract bool IsLittleEndian();
-
-        /// <summary>
-        /// Indicates the byte order ("endianess") in which data is converted using this class.
+        /// Indicates the byte order ("endianness") in which data is converted using this class.
         /// </summary>
         public abstract Endianness Endianness { get; }
 
@@ -388,7 +377,7 @@ namespace PacketDotNet.MiscUtil.Conversion
         public byte[] GetBytes(decimal value)
         {
             var bytes = new byte[16];
-            var parts = decimal.GetBits(value);
+            var parts = Decimal.GetBits(value);
             for (var i = 0; i < 4; i++)
             {
                 CopyBytesImpl(parts[i], 4, bytes, i * 4);
@@ -406,7 +395,7 @@ namespace PacketDotNet.MiscUtil.Conversion
         /// <param name="index">The first index into the array to copy the bytes into</param>
         public void CopyBytes(decimal value, byte[] buffer, int index)
         {
-            var parts = decimal.GetBits(value);
+            var parts = Decimal.GetBits(value);
             for (var i = 0; i < 4; i++)
             {
                 CopyBytesImpl(parts[i], 4, buffer, i * 4 + index);

@@ -39,17 +39,6 @@ namespace PacketDotNet.Utils
         /// Computes the one's complement sum on a byte array
         /// </summary>
         /// <param name="bytes">The bytes.</param>
-        /// <returns><see cref="int" />.</returns>
-        public static int OnesComplementSum(byte[] bytes)
-        {
-            // Just complement the one's sum.
-            return OnesComplementSum(bytes, 0, bytes.Length);
-        }
-
-        /// <summary>
-        /// Computes the one's complement sum on a byte array
-        /// </summary>
-        /// <param name="bytes">The bytes.</param>
         /// <param name="start">The start.</param>
         /// <param name="len">The length.</param>
         /// <returns><see cref="int" />.</returns>

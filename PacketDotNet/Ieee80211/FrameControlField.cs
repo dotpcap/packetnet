@@ -329,7 +329,7 @@ namespace PacketDotNet.Ieee80211
                 flags.Add("Order");
             }
 
-            return string.Join(" ", flags.ToArray());
+            return String.Join(" ", flags.ToArray());
         }
     }
 }

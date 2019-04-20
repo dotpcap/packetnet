@@ -174,7 +174,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// See IsValid
+        /// See <see cref="IsValid()"/>.
         /// </summary>
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />

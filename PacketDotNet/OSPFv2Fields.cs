@@ -18,8 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2011 Georgi Baychev <georgi.baychev@gmail.com>
  */
 
-using System;
-
 namespace PacketDotNet
 {
     internal class OSPFv2Fields

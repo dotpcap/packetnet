@@ -18,8 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2018 Steven Haufe<haufes@hotmail.com>
  */
 
-using System;
-
 namespace PacketDotNet
 {
     /// <summary> GRE protocol field encoding information. </summary>

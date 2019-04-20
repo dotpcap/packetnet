@@ -23,7 +23,7 @@ namespace PacketDotNet
     /// <summary>
     /// Ethernet protocol field encoding information.
     /// </summary>
-    public class EthernetFields
+    public struct EthernetFields
     {
         /// <summary>Position of the destination MAC address within the ethernet header.</summary>
         public static readonly int DestinationMacPosition = 0;

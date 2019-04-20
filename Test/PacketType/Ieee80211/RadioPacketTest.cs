@@ -147,7 +147,7 @@ namespace Test.PacketType
                 
                 var frameBytes = p.Bytes;
                 
-                RadioPacket recreatedFrame = Packet.ParsePacket(LinkLayers.Ieee80211_Radio, frameBytes) as RadioPacket;
+                RadioPacket recreatedFrame = Packet.ParsePacket(LinkLayers.Ieee80211Radio, frameBytes) as RadioPacket;
                 
                 Assert.IsNotNull(p[RadioTapType.Flags]);
                 Assert.IsNotNull(p[RadioTapType.DbAntennaSignal]);
@@ -222,10 +222,10 @@ namespace Test.PacketType
                 
                 var radioTap = ms.ToArray();
                 
-                RadioPacket p = Packet.ParsePacket(LinkLayers.Ieee80211_Radio, radioTap) as RadioPacket;
+                RadioPacket p = Packet.ParsePacket(LinkLayers.Ieee80211Radio, radioTap) as RadioPacket;
                 Assert.AreEqual(16, p.Length);
                 p.Add(new TsftRadioTapField(0x123456789));
-                RadioPacket finalFrame = Packet.ParsePacket(LinkLayers.Ieee80211_Radio, p.Bytes) as RadioPacket;
+                RadioPacket finalFrame = Packet.ParsePacket(LinkLayers.Ieee80211Radio, p.Bytes) as RadioPacket;
                 
                 Assert.AreEqual(24, finalFrame.Length);
                 Assert.AreEqual(0x1234, EndianBitConverter.Little.ToUInt16(finalFrame.Bytes, finalFrame.Length - 2));

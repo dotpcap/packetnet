@@ -22,26 +22,26 @@ namespace PacketDotNet.Utils
     /// </remarks>
     public class Crc32 : HashAlgorithm
     {
-        #region Fields
+        private const uint AllOnes = 0xffffffff;
 
         /// <summary>Gets the default polynomial (used in WinZip, Ethernet, etc.)</summary>
         /// <remarks>The default polynomial is a bit-reflected version of the standard polynomial 0x04C11DB7 used by WinZip, Ethernet, etc.</remarks>
         public static readonly uint DefaultPolynomial = 0xEDB88320; // Bitwise reflection of 0x04C11DB7;
 
-        private const uint AllOnes = 0xffffffff;
-        private uint _crc;
-        private readonly uint[] _crc32Table;
         private static readonly Hashtable CRC32TablesCache;
         private static readonly Crc32 DefaultCRC;
+        private readonly uint[] _crc32Table;
+        private uint _crc;
 
-        #endregion Fields
-
-
-        #region Constructors
+        // static constructor
+        static Crc32()
+        {
+            CRC32TablesCache = Hashtable.Synchronized(new Hashtable());
+            DefaultCRC = new Crc32();
+        }
 
         /// <summary>Creates a CRC32 object using the <see cref="DefaultPolynomial" />.</summary>
-        public Crc32()
-            : this(DefaultPolynomial)
+        public Crc32() : this(DefaultPolynomial)
         { }
 
         /// <summary>Creates a CRC32 object using the specified polynomial.</summary>
@@ -58,18 +58,6 @@ namespace PacketDotNet.Utils
 
             Initialize();
         }
-
-        // static constructor
-        static Crc32()
-        {
-            CRC32TablesCache = Hashtable.Synchronized(new Hashtable());
-            DefaultCRC = new Crc32();
-        }
-
-        #endregion Constructors
-
-
-        #region Public Methods
 
         /// <summary>Computes the hash value for the input data using the <see cref="DefaultPolynomial" />.</summary>
         public static int Compute(byte[] buffer, int offset, int count)
@@ -121,11 +109,6 @@ namespace PacketDotNet.Utils
             _crc = AllOnes;
         }
 
-        #endregion Public Methods
-
-
-        #region Protected Methods
-
         /// <summary>Routes data written to the object into the hash algorithm for computing the hash.</summary>
         protected override void HashCore(byte[] buffer, int offset, int count)
         {
@@ -150,11 +133,6 @@ namespace PacketDotNet.Utils
 
             return finalHash;
         }
-
-        #endregion Protected Methods
-
-
-        #region Private Methods
 
         // Builds a crc32 table given a polynomial
         private static uint[] BuildCrc32Table(uint polynomial)
@@ -183,7 +161,5 @@ namespace PacketDotNet.Utils
         {
             return BitConverter.ToInt32(buffer, 0);
         }
-
-        #endregion Private Methods
     }
 }

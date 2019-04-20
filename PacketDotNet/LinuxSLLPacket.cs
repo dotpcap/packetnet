@@ -194,7 +194,7 @@ namespace PacketDotNet
                 var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
-                buffer.AppendLine("LCC:  ******* LinuxSLL - \"Linux Cooked Capture\" - offset=? length=" + TotalPacketLength);
+                buffer.AppendLine("LCC:  ******* LinuxSll - \"Linux Cooked Capture\" - offset=? length=" + TotalPacketLength);
                 buffer.AppendLine("LCC:");
                 foreach (var property in properties)
                 {

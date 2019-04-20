@@ -31,13 +31,13 @@ namespace Test.PacketType
     [TestFixture]
     public class DrdaPacketTest
     {
-        DrdaDDMPacket excsatPacket;
-        DrdaDDMPacket secchkPacket;
-        DrdaDDMPacket accrdbPacket;
-        DrdaDDMPacket accrdbrmPacket;
-        List<DrdaDDMPacket> sqlsttPackets = new List<DrdaDDMPacket>();
-        DrdaDDMPacket prpsqlsttPacket;
-        DrdaDDMPacket sqlattrPacket;
+        DrdaDdmPacket excsatPacket;
+        DrdaDdmPacket secchkPacket;
+        DrdaDdmPacket accrdbPacket;
+        DrdaDdmPacket accrdbrmPacket;
+        List<DrdaDdmPacket> sqlsttPackets = new List<DrdaDdmPacket>();
+        DrdaDdmPacket prpsqlsttPacket;
+        DrdaDdmPacket sqlattrPacket;
         bool packetsLoaded = false;
 
         [SetUp]
@@ -56,7 +56,7 @@ namespace Test.PacketType
                 var p = Packet.ParsePacket(raw.LinkLayerType, raw.Data).Extract<DrdaPacket>();
                 if (p != null)
                 {
-                    foreach (var ddm in p.DrdaDDMPackets)
+                    foreach (var ddm in p.DrdaDdmPackets)
                     {
                         switch (ddm.CodePoint)
                         {

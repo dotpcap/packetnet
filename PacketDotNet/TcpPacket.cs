@@ -506,7 +506,7 @@ namespace PacketDotNet
         /// <returns></returns>
         public TcpPacket DecodePayload(PacketOrByteArraySegment result)
         {
-            if ((result.ByteArraySegment == null) || (result.ByteArraySegment.Length < DrdaDDMFields.DDMHeadTotalLength))
+            if ((result.ByteArraySegment == null) || (result.ByteArraySegment.Length < DrdaDdmFields.DDMHeadTotalLength))
                 return this;
 
 

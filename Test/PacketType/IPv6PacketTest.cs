@@ -34,14 +34,14 @@ namespace Test.PacketType
     public class IPv6PacketTest
     {
         // icmpv6
-        public void VerifyPacket0(Packet p, RawCapture rawCapture, LinkLayers linkLayer)
+        public void VerifyPacket0(Packet p, RawCapture rawCapture, LinkLayers linkLayers)
         {
             Assert.IsNotNull(p);
             Console.WriteLine(p.ToString());
 
-            Assert.AreEqual(linkLayer, rawCapture.LinkLayerType);
+            Assert.AreEqual(linkLayers, rawCapture.LinkLayerType);
 
-            if (linkLayer == LinkLayers.Ethernet)
+            if (linkLayers == LinkLayers.Ethernet)
             {
                 EthernetPacket e = (EthernetPacket)p;
                 Assert.AreEqual(PhysicalAddress.Parse("00-A0-CC-D9-41-75"), e.SourceHwAddress);
@@ -62,14 +62,14 @@ namespace Test.PacketType
             Assert.AreEqual(453568.000, rawCapture.Timeval.MicroSeconds);
         }
 
-        public void VerifyPacket1(Packet p, RawCapture rawCapture, LinkLayers linkLayer)
+        public void VerifyPacket1(Packet p, RawCapture rawCapture, LinkLayers linkLayers)
         {
             Assert.IsNotNull(p);
             Console.WriteLine(p.ToString());
 
-            Assert.AreEqual(linkLayer, rawCapture.LinkLayerType);
+            Assert.AreEqual(linkLayers, rawCapture.LinkLayerType);
 
-            if (linkLayer == LinkLayers.Ethernet)
+            if (linkLayers == LinkLayers.Ethernet)
             {
                 EthernetPacket e = (EthernetPacket)p;
                 Assert.AreEqual(PhysicalAddress.Parse("F894C22EFAD1"), e.SourceHwAddress);
@@ -95,10 +95,10 @@ namespace Test.PacketType
         }
 
         // Test that we can load and parse an IPv6 packet
-        // for multiple LinkLayerType types
+        // for multiple LinkLayers types
         [TestCase("../../CaptureFiles/ipv6_icmpv6_packet.pcap", LinkLayers.Ethernet)]
         [TestCase("../../CaptureFiles/ipv6_icmpv6_packet_raw_linklayer.pcap", LinkLayers.RawLegacy)]
-        public void IPv6PacketTestParsing(string pcapPath, LinkLayers linkLayer)
+        public void IPv6PacketTestParsing(string pcapPath, LinkLayers linkLayers)
         {
             var dev = new CaptureFileReaderDevice(pcapPath);
             dev.Open();
@@ -112,7 +112,7 @@ namespace Test.PacketType
                 switch(packetIndex)
                 {
                 case 0:
-                    VerifyPacket0(p, rawCapture, linkLayer);
+                    VerifyPacket0(p, rawCapture, linkLayers);
                     break;
                 default:
                     Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
@@ -128,7 +128,7 @@ namespace Test.PacketType
 
         // Test that we can load and parse an with IPv6 packet with an extended (Hop by Hop) header 
         [TestCase("../../CaptureFiles/ipv6_icmpv6_hopbyhop_packet.pcap", LinkLayers.Ethernet)]
-        public void IPv6PacketHopByHopTestParsing(string pcapPath, LinkLayers linkLayer)
+        public void IPv6PacketHopByHopTestParsing(string pcapPath, LinkLayers linkLayers)
         {
             var dev = new CaptureFileReaderDevice(pcapPath);
             dev.Open();
@@ -141,7 +141,7 @@ namespace Test.PacketType
                 switch (packetIndex)
                 {
                     case 0:
-                        VerifyPacket1(p, rawCapture, linkLayer);
+                        VerifyPacket1(p, rawCapture, linkLayers);
                         break;
                     default:
                         Assert.Fail("didn't expect to get to packetIndex " + packetIndex);

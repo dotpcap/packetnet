@@ -49,6 +49,75 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
+        /// <summary>
+        /// Construct a new ethernet packet from source and destination mac addresses
+        /// </summary>
+        public EthernetPacket
+        (
+            PhysicalAddress sourceHwAddress,
+            PhysicalAddress destinationHwAddress,
+            EthernetType ethernetType)
+        {
+            Log.Debug("");
+
+            // allocate memory for this packet
+            const int offset = 0;
+            var length = EthernetFields.HeaderLength;
+            var headerBytes = new byte[length];
+            Header = new ByteArraySegment(headerBytes, offset, length);
+
+            // set the instance values
+            SourceHwAddress = sourceHwAddress;
+            DestinationHwAddress = destinationHwAddress;
+            Type = ethernetType;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="byteArraySegment">
+        /// A <see cref="ByteArraySegment" />
+        /// </param>
+        public EthernetPacket(ByteArraySegment byteArraySegment)
+        {
+            Log.Debug("");
+
+            // slice off the header portion
+            // ReSharper disable once UseObjectOrCollectionInitializer
+            Header = new ByteArraySegment(byteArraySegment);
+            Header.Length = EthernetFields.HeaderLength;
+
+            // parse the encapsulated bytes
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header, Type), LazyThreadSafetyMode.PublicationOnly);
+        }
+
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override string Color => AnsiEscapeSequences.DarkGray;
+
+        /// <summary>MAC address of the host where the packet originated from.</summary>
+        public PhysicalAddress DestinationHwAddress
+        {
+            get
+            {
+                var hwAddress = new byte[EthernetFields.MacAddressLength];
+
+                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
+                    hwAddress[i] = Header.Bytes[Header.Offset + EthernetFields.DestinationMacPosition + i];
+
+                return new PhysicalAddress(hwAddress);
+            }
+
+            set
+            {
+                var hwAddress = value.GetAddressBytes();
+                if (hwAddress.Length != EthernetFields.MacAddressLength)
+                    ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
+
+                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
+                    Header.Bytes[Header.Offset + EthernetFields.DestinationMacPosition + i] = hwAddress[i];
+            }
+        }
+
         /// <value>
         /// Payload packet, overridden to set the 'Type' field based on
         /// the type of packet being used here if the PayloadPacket is being set
@@ -73,7 +142,7 @@ namespace PacketDotNet
                         Type = EthernetType.IPv6;
                         break;
                     }
-                    case ARPPacket _:
+                    case ArpPacket _:
                     {
                         Type = EthernetType.Arp;
                         break;
@@ -122,37 +191,13 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary>MAC address of the host where the packet originated from.</summary>
-        public PhysicalAddress DestinationHwAddress
-        {
-            get
-            {
-                var hwAddress = new byte[EthernetFields.MacAddressLength];
-
-                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
-                    hwAddress[i] = Header.Bytes[Header.Offset + EthernetFields.DestinationMacPosition + i];
-
-                return new PhysicalAddress(hwAddress);
-            }
-
-            set
-            {
-                var hwAddress = value.GetAddressBytes();
-                if (hwAddress.Length != EthernetFields.MacAddressLength)
-                    ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
-
-                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
-                    Header.Bytes[Header.Offset + EthernetFields.DestinationMacPosition + i] = hwAddress[i];
-            }
-        }
-
         /// <value>
         /// Type of packet that this ethernet packet encapsulates.
         /// </value>
         public EthernetType Type
         {
             get => (EthernetType) EndianBitConverter.Big.ToInt16(Header.Bytes,
-                                                                       Header.Offset + EthernetFields.TypePosition);
+                                                                 Header.Offset + EthernetFields.TypePosition);
             set
             {
                 var val = (short) value;
@@ -163,49 +208,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Construct a new ethernet packet from source and destination mac addresses
-        /// </summary>
-        public EthernetPacket
-        (
-            PhysicalAddress sourceHwAddress,
-            PhysicalAddress destinationHwAddress,
-            EthernetType ethernetType)
-        {
-            Log.Debug("");
-
-            // allocate memory for this packet
-            const int offset = 0;
-            var length = EthernetFields.HeaderLength;
-            var headerBytes = new byte[length];
-            Header = new ByteArraySegment(headerBytes, offset, length);
-
-            // set the instance values
-            SourceHwAddress = sourceHwAddress;
-            DestinationHwAddress = destinationHwAddress;
-            Type = ethernetType;
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="byteArraySegment">
-        /// A <see cref="ByteArraySegment" />
-        /// </param>
-        public EthernetPacket(ByteArraySegment byteArraySegment)
-        {
-            Log.Debug("");
-
-            // slice off the header portion
-            // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(byteArraySegment);
-            Header.Length = EthernetFields.HeaderLength;
-
-            // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header, Type), LazyThreadSafetyMode.PublicationOnly);
-        }
-
-        /// <summary>
-        /// Used by the EthernetPacket constructor. Located here because the LinuxSLL constructor
+        /// Used by the EthernetPacket constructor. Located here because the LinuxSll constructor
         /// also needs to perform the same operations as it contains an ethernet type
         /// </summary>
         /// <param name="header">
@@ -243,7 +246,7 @@ namespace PacketDotNet
                 }
                 case EthernetType.Arp:
                 {
-                    payloadPacketOrData.Packet = new ARPPacket(payload);
+                    payloadPacketOrData.Packet = new ArpPacket(payload);
                     break;
                 }
                 case EthernetType.Lldp:
@@ -276,9 +279,6 @@ namespace PacketDotNet
             return payloadPacketOrData;
         }
 
-        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override string Color => AnsiEscapeSequences.DarkGray;
-
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {
@@ -292,39 +292,46 @@ namespace PacketDotNet
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            switch (outputFormat)
             {
-                // build the output string
-                buffer.AppendFormat("{0}[EthernetPacket: SourceHwAddress={2}, DestinationHwAddress={3}, Type={4}]{1}",
-                                    color,
-                                    colorEscape,
-                                    HexPrinter.PrintMACAddress(SourceHwAddress),
-                                    HexPrinter.PrintMACAddress(DestinationHwAddress),
-                                    Type.ToString());
-            }
-
-            if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
-            {
-                // collect the properties and their value
-                var properties = new Dictionary<string, string>
+                case StringOutputType.Normal:
+                case StringOutputType.Colored:
                 {
-                    { "destination", HexPrinter.PrintMACAddress(DestinationHwAddress) },
-                    { "source", HexPrinter.PrintMACAddress(SourceHwAddress) },
-                    { "type", Type + " (0x" + Type.ToString("x") + ")" }
-                };
+                    // build the output string
+                    buffer.AppendFormat("{0}[EthernetPacket: SourceHwAddress={2}, DestinationHwAddress={3}, Type={4}]{1}",
+                                        color,
+                                        colorEscape,
+                                        HexPrinter.PrintMACAddress(SourceHwAddress),
+                                        HexPrinter.PrintMACAddress(DestinationHwAddress),
+                                        Type.ToString());
 
-                // calculate the padding needed to right-justify the property names
-                var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
-
-                // build the output string
-                buffer.AppendLine("Eth:  ******* Ethernet - \"Ethernet\" - offset=? length=" + TotalPacketLength);
-                buffer.AppendLine("Eth:");
-                foreach (var property in properties)
-                {
-                    buffer.AppendLine("Eth: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    break;
                 }
+                case StringOutputType.Verbose:
+                case StringOutputType.VerboseColored:
+                {
+                    // collect the properties and their value
+                    var properties = new Dictionary<string, string>
+                    {
+                        { "destination", HexPrinter.PrintMACAddress(DestinationHwAddress) },
+                        { "source", HexPrinter.PrintMACAddress(SourceHwAddress) },
+                        { "type", Type + " (0x" + Type.ToString("x") + ")" }
+                    };
 
-                buffer.AppendLine("Eth:");
+                    // calculate the padding needed to right-justify the property names
+                    var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+
+                    // build the output string
+                    buffer.AppendLine("Eth:  ******* Ethernet - \"Ethernet\" - offset=? length=" + TotalPacketLength);
+                    buffer.AppendLine("Eth:");
+                    foreach (var property in properties)
+                    {
+                        buffer.AppendLine("Eth: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    }
+
+                    buffer.AppendLine("Eth:");
+                    break;
+                }
             }
 
             // append the base output

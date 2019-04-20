@@ -26,7 +26,7 @@ namespace PacketDotNet
     /// FIXME: These fields are partially broken because they assume the offset for
     /// several fields and the offset is actually based on the accumulated offset
     /// into the structure determined by the fields that indicate sizes
-    public class ARPFields
+    public struct ArpFields
     {
         /// <summary>
         /// The length of the address length fields in bytes.
@@ -79,7 +79,7 @@ namespace PacketDotNet
         /// <summary>Position of the target protocol address.</summary>
         public static readonly int TargetProtocolAddressPosition;
 
-        static ARPFields()
+        static ArpFields()
         {
             // NOTE: We use IPv4Fields_Fields.IP_ADDRESS_WIDTH because arp packets are
             //       only used in IPv4 networks. Neighbor discovery is used with IPv6

@@ -25,8 +25,7 @@ namespace PacketDotNet
     /// <summary>
     /// Drda protocol DDM field encoding information.
     /// </summary>
-    [Serializable]
-    public class DrdaDDMFields
+    public struct DrdaDdmFields
     {
         /// <summary>
         /// Length of the Code Point field in bytes.
@@ -103,7 +102,7 @@ namespace PacketDotNet
         /// </summary>
         public static readonly int ParameterLengthLength = 2;
 
-        static DrdaDDMFields()
+        static DrdaDdmFields()
         {
             MagicPosition = LengthPosition + LengthLength;
             FormatPosition = MagicPosition + MagicLength;

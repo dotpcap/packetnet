@@ -265,55 +265,75 @@ namespace PacketDotNet
             switch (protocolType)
             {
                 case IPProtocolType.TCP:
+                {
                     payloadPacketOrData.Packet = new TcpPacket(payload,
                                                                parentPacket);
 
                     break;
+                }
                 case IPProtocolType.UDP:
+                {
                     payloadPacketOrData.Packet = new UdpPacket(payload,
                                                                parentPacket);
 
                     break;
+                }
                 case IPProtocolType.ICMP:
+                {
                     payloadPacketOrData.Packet = new ICMPv4Packet(payload,
                                                                   parentPacket);
 
                     break;
+                }
                 case IPProtocolType.ICMPV6:
+                {
                     payloadPacketOrData.Packet = new ICMPv6Packet(payload,
                                                                   parentPacket);
 
                     break;
+                }
                 case IPProtocolType.IGMP:
+                {
                     payloadPacketOrData.Packet = new IGMPv2Packet(payload,
                                                                   parentPacket);
 
                     break;
+                }
                 case IPProtocolType.OSPF:
+                {
                     payloadPacketOrData.Packet = OSPFPacket.ConstructOSPFPacket(payload.Bytes,
                                                                                 payload.Offset);
 
                     break;
+                }
                 case IPProtocolType.IPIP:
+                {
                     payloadPacketOrData.Packet = new IPv4Packet(payload,
                                                                 parentPacket);
 
                     break;
+                }
                 case IPProtocolType.IPV6:
+                {
                     payloadPacketOrData.Packet = new IPv6Packet(payload,
                                                                 parentPacket);
 
                     break;
+                }
                 case IPProtocolType.GRE:
+                {
                     payloadPacketOrData.Packet = new GREPacket(payload,
                                                                parentPacket);
 
                     break;
+                }
 
                 // NOTE: new payload parsing entries go here
                 default:
+                {
                     payloadPacketOrData.ByteArraySegment = payload;
                     break;
+                }
             }
 
             return payloadPacketOrData;
@@ -335,9 +355,13 @@ namespace PacketDotNet
             switch (version)
             {
                 case IPVersion.IPv4:
+                {
                     return IPv4Packet.RandomPacket();
+                }
                 case IPVersion.IPv6:
+                {
                     return IPv6Packet.RandomPacket();
+                }
             }
 
             throw new InvalidOperationException("Unknown version of " + version);

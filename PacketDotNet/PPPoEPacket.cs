@@ -223,6 +223,7 @@ namespace PacketDotNet
             {
                 case StringOutputType.Normal:
                 case StringOutputType.Colored:
+                {
                     // build the output string
                     buffer.AppendFormat("{0}[PppoePacket: Version={2}, Type={3}, Code={4}, SessionId={5}, Length={6}]{1}",
                                         color,
@@ -234,8 +235,10 @@ namespace PacketDotNet
                                         Length);
 
                     break;
+                }
                 case StringOutputType.Verbose:
                 case StringOutputType.VerboseColored:
+                {
                     // collect the properties and their value
                     var properties = new Dictionary<string, string>
                     {
@@ -269,6 +272,7 @@ namespace PacketDotNet
 
                     buffer.AppendLine("PPPoE:");
                     break;
+                }
             }
 
             // append the base output

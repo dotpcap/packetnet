@@ -112,23 +112,33 @@ namespace PacketDotNet
             switch (argument)
             {
                 case ExceptionArgument.buffer:
+                {
                     argumentName = "buffer";
                     break;
+                }
 
                 case ExceptionArgument.linkLayer:
+                {
                     argumentName = "linkLayer";
                     break;
+                }
 
                 case ExceptionArgument.startIndex:
+                {
                     argumentName = "startIndex";
                     break;
+                }
 
                 case ExceptionArgument.value:
+                {
                     argumentName = "value";
                     break;
+                }
 
                 default:
+                {
                     return String.Empty;
+                }
             }
 
             return argumentName;
@@ -146,19 +156,27 @@ namespace PacketDotNet
             switch (description)
             {
                 case ExceptionDescription.PacketAsPayloadPacket:
+                {
                     result = "A packet cannot have itself as its payload.";
                     break;
+                }
 
                 case ExceptionDescription.TotalLengthBelowMinimumHeaderLength:
+                {
                     result = "The total length is below the minimum header length.";
                     break;
+                }
 
                 case ExceptionDescription.UrgentPointerSet:
+                {
                     result = "Options with the urgent pointer set are not yet implemented.";
                     break;
+                }
 
                 default:
+                {
                     return String.Empty;
+                }
             }
 
             return result;

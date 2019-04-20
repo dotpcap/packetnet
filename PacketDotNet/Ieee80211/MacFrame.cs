@@ -342,16 +342,22 @@ namespace PacketDotNet.Ieee80211
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ManagementReserved0:
+                {
                     break; //TODO
+                }
                 case FrameControlField.FrameSubTypes.ManagementReserved1:
+                {
                     break; //TODO
+                }
                 case FrameControlField.FrameSubTypes.ManagementBeacon:
                 {
                     macFrame = new BeaconFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ManagementATIM:
+                {
                     break; //TODO
+                }
                 case FrameControlField.FrameSubTypes.ManagementDisassociation:
                 {
                     macFrame = new DisassociationFrame(byteArraySegment);
@@ -373,7 +379,9 @@ namespace PacketDotNet.Ieee80211
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ManagementReserved3:
+                {
                     break; //TODO
+                }
                 case FrameControlField.FrameSubTypes.ControlBlockAcknowledgmentRequest:
                 {
                     macFrame = new BlockAcknowledgmentRequestFrame(byteArraySegment);
@@ -385,7 +393,9 @@ namespace PacketDotNet.Ieee80211
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ControlPSPoll:
+                {
                     break; //TODO
+                }
                 case FrameControlField.FrameSubTypes.ControlRTS:
                 {
                     macFrame = new RtsFrame(byteArraySegment);
@@ -407,7 +417,9 @@ namespace PacketDotNet.Ieee80211
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ControlCFEndCFACK:
+                {
                     break; //TODO
+                }
                 case FrameControlField.FrameSubTypes.Data:
                 case FrameControlField.FrameSubTypes.DataCFACK:
                 case FrameControlField.FrameSubTypes.DataCFPoll:

@@ -216,27 +216,49 @@ namespace PacketDotNet
             switch (type)
             {
                 case TLVTypes.ChassisID:
+                {
                     return new ChassisID(bytes, offset);
+                }
                 case TLVTypes.PortID:
+                {
                     return new PortID(bytes, offset);
+                }
                 case TLVTypes.TimeToLive:
+                {
                     return new TimeToLive(bytes, offset);
+                }
                 case TLVTypes.PortDescription:
+                {
                     return new PortDescription(bytes, offset);
+                }
                 case TLVTypes.SystemName:
+                {
                     return new SystemName(bytes, offset);
+                }
                 case TLVTypes.SystemDescription:
+                {
                     return new SystemDescription(bytes, offset);
+                }
                 case TLVTypes.SystemCapabilities:
+                {
                     return new SystemCapabilities(bytes, offset);
+                }
                 case TLVTypes.ManagementAddress:
+                {
                     return new ManagementAddress(bytes, offset);
+                }
                 case TLVTypes.OrganizationSpecific:
+                {
                     return new OrganizationSpecific(bytes, offset);
+                }
                 case TLVTypes.EndOfLLDPU:
+                {
                     return new EndOfLLDPDU(bytes, offset);
+                }
                 default:
+                {
                     throw new ArgumentOutOfRangeException();
+                }
             }
         }
 

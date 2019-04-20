@@ -54,27 +54,49 @@ namespace PacketDotNet.Ieee80211
             switch (type)
             {
                 case PpiFieldType.PpiReserved0:
+                {
                     return new PpiUnknown(fieldType, br, fieldLength);
+                }
                 case PpiFieldType.PpiReserved1:
+                {
                     return new PpiUnknown(fieldType, br, fieldLength);
+                }
                 case PpiFieldType.PpiCommon:
+                {
                     return new PpiCommon(br);
+                }
                 case PpiFieldType.PpiMacExtensions:
+                {
                     return new PpiMacExtensions(br);
+                }
                 case PpiFieldType.PpiMacPhy:
+                {
                     return new PpiMacPhy(br);
+                }
                 case PpiFieldType.PpiSpectrum:
+                {
                     return new PpiSpectrum(br);
+                }
                 case PpiFieldType.PpiProcessInfo:
+                {
                     return new PpiProcessInfo(br);
+                }
                 case PpiFieldType.PpiCaptureInfo:
+                {
                     return new PpiCaptureInfo();
+                }
                 case PpiFieldType.PpiAggregation:
+                {
                     return new PpiAggregation(br);
+                }
                 case PpiFieldType.Ppi802_3:
+                {
                     return new Ppi8023(br);
+                }
                 default:
+                {
                     return new PpiUnknown(fieldType, br, fieldLength);
+                }
             }
         }
 

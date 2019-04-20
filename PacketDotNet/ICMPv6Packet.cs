@@ -163,6 +163,7 @@ namespace PacketDotNet
             {
                 case StringOutputType.Normal:
                 case StringOutputType.Colored:
+                {
                     // build the output string
                     buffer.AppendFormat("{0}[ICMPv6Packet: Type={2}, Code={3}]{1}",
                                         color,
@@ -171,8 +172,10 @@ namespace PacketDotNet
                                         Code);
 
                     break;
+                }
                 case StringOutputType.Verbose:
                 case StringOutputType.VerboseColored:
+                {
                     // collect the properties and their value
                     var properties = new Dictionary<string, string>
                     {
@@ -196,6 +199,7 @@ namespace PacketDotNet
 
                     buffer.AppendLine("ICMP:");
                     break;
+                }
             }
 
             // append the base string output

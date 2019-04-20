@@ -234,11 +234,15 @@ namespace PacketDotNet
                     switch (PayloadPacketOrData.Value.Type)
                     {
                         case PayloadType.Bytes:
+                        {
                             totalLength += PayloadPacketOrData.Value.ByteArraySegment.Length;
                             break;
+                        }
                         case PayloadType.Packet:
+                        {
                             totalLength += PayloadPacketOrData.Value.Packet.TotalPacketLength;
                             break;
+                        }
                     }
                 }
 
@@ -265,6 +269,7 @@ namespace PacketDotNet
                 switch (payloadType)
                 {
                     case PayloadType.Bytes:
+                    {
                         // is the byte array payload the same byte[] and does the offset indicate
                         // that the bytes are contiguous?
                         if (Header.Bytes == PayloadPacketOrData.Value?.ByteArraySegment.Bytes &&
@@ -278,7 +283,9 @@ namespace PacketDotNet
                             Log.Debug("PayloadType.Bytes returning false");
                             return false;
                         }
+                    }
                     case PayloadType.Packet:
+                    {
                         // is the byte array payload the same as the payload packet header and does
                         // the offset indicate that the bytes are contiguous?
                         if (Header.Bytes == PayloadPacketOrData.Value?.Packet.Header.Bytes &&
@@ -294,11 +301,14 @@ namespace PacketDotNet
                             Log.Debug("PayloadType.Packet returning false");
                             return false;
                         }
+                    }
                     case PayloadType.None:
+                    {
                         // no payload data or packet thus we must share memory with
                         // our non-existent sub packets
                         Log.Debug("PayloadType.None, returning true");
                         return true;
+                    }
                     default:
                     {
                         ThrowHelper.ThrowNotImplementedException();
@@ -333,34 +343,52 @@ namespace PacketDotNet
             switch (linkLayer)
             {
                 case LinkLayers.Ethernet:
+                {
                     p = new EthernetPacket(byteArraySegment);
                     break;
+                }
                 case LinkLayers.LinuxSLL:
+                {
                     p = new LinuxSLLPacket(byteArraySegment);
                     break;
+                }
                 case LinkLayers.Null:
+                {
                     p = new NullPacket(byteArraySegment);
                     break;
+                }
                 case LinkLayers.Ppp:
+                {
                     p = new PppPacket(byteArraySegment);
                     break;
+                }
                 case LinkLayers.Ieee80211:
+                {
                     p = MacFrame.ParsePacket(byteArraySegment);
                     break;
+                }
                 case LinkLayers.Ieee80211_Radio:
+                {
                     p = new RadioPacket(byteArraySegment);
                     break;
+                }
                 case LinkLayers.PerPacketInformation:
+                {
                     p = new PpiPacket(byteArraySegment);
                     break;
+                }
                 case LinkLayers.Raw:
                 case LinkLayers.RawLegacy:
+                {
                     p = new RawIPPacket(byteArraySegment);
                     break;
+                }
                 default:
+                {
                     ThrowHelper.ThrowNotImplementedException(ExceptionArgument.linkLayer);
                     p = null;
                     break;
+                }
             }
 
             return p;

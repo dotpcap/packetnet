@@ -121,11 +121,11 @@ namespace Test.PacketType
                 IPv4Packet fromFile = (IPv4Packet)deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(ipv4.Bytes, fromFile.Bytes);
-                Assert.AreEqual(ipv4.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(ipv4.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(ipv4.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(ipv4.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(ipv4.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(ipv4.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(ipv4.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(ipv4.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(ipv4.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(ipv4.BytesSegment.Offset, fromFile.BytesSegment.Offset);
                 Assert.AreEqual(ipv4.Color, fromFile.Color);
                 Assert.AreEqual(ipv4.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ipv4.PayloadData, fromFile.PayloadData);

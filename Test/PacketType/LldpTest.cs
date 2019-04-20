@@ -325,11 +325,11 @@ namespace Test.PacketType
                 LLDPPacket fromFile = (LLDPPacket)deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(lldp.Bytes, fromFile.Bytes);
-                Assert.AreEqual(lldp.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(lldp.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(lldp.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(lldp.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(lldp.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(lldp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(lldp.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(lldp.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(lldp.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(lldp.BytesSegment.Offset, fromFile.BytesSegment.Offset);
                 Assert.AreEqual(lldp.Color, fromFile.Color);
                 Assert.AreEqual(lldp.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(lldp.PayloadData, fromFile.PayloadData);

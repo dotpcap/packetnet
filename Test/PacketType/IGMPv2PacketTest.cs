@@ -133,11 +133,11 @@ namespace Test.PacketType
                 IGMPv2Packet fromFile = (IGMPv2Packet)deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(igmp.Bytes, fromFile.Bytes);
-                Assert.AreEqual(igmp.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(igmp.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(igmp.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(igmp.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(igmp.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(igmp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(igmp.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(igmp.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(igmp.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(igmp.BytesSegment.Offset, fromFile.BytesSegment.Offset);
                 Assert.AreEqual(igmp.Checksum, fromFile.Checksum);
                 Assert.AreEqual(igmp.Color, fromFile.Color);
                 Assert.AreEqual(igmp.HeaderData, fromFile.HeaderData);

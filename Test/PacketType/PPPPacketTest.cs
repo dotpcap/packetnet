@@ -97,11 +97,11 @@ namespace Test.PacketType
                 PPPPacket fromFile = (PPPPacket)deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(ppp.Bytes, fromFile.Bytes);
-                Assert.AreEqual(ppp.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(ppp.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(ppp.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(ppp.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(ppp.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(ppp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(ppp.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(ppp.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(ppp.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(ppp.BytesSegment.Offset, fromFile.BytesSegment.Offset);
                 Assert.AreEqual(ppp.Color, fromFile.Color);
                 Assert.AreEqual(ppp.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ppp.PayloadData, fromFile.PayloadData);

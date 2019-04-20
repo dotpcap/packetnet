@@ -21,6 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
@@ -96,16 +97,14 @@ namespace PacketDotNet
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
+        [SuppressMessage("ReSharper", "UseObjectOrCollectionInitializer")]
         public WakeOnLanPacket(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(byteArraySegment)
-            {
-                Length = Bytes.Length
-            };
+            Header = new ByteArraySegment(byteArraySegment);
+            Header.Length = Bytes.Length;
         }
 
         #endregion

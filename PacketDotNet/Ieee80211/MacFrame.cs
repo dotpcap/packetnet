@@ -507,7 +507,7 @@ namespace PacketDotNet.Ieee80211
         /// is higher performance as the data can start at an offset other than
         /// the first byte.
         /// </value>
-        public override ByteArraySegment BytesHighPerformance
+        public override ByteArraySegment BytesSegment
         {
             get
             {

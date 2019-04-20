@@ -73,7 +73,7 @@ namespace PacketDotNet
             Checksum = 0;
 
             // copy the tcp section with data
-            var dataToChecksum = ((IPPacket) ParentPacket).PayloadPacket.BytesHighPerformance;
+            var dataToChecksum = ((IPPacket) ParentPacket).PayloadPacket.BytesSegment;
 
             var bytes = option == TransportChecksumOption.IncludePseudoIPHeader
                 ? ((IPPacket) ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
@@ -99,7 +99,7 @@ namespace PacketDotNet
         /// </returns>
         public virtual bool IsValidChecksum(TransportChecksumOption option)
         {
-            var dataToChecksum = ((IPPacket) ParentPacket).PayloadPacket.BytesHighPerformance;
+            var dataToChecksum = ((IPPacket) ParentPacket).PayloadPacket.BytesSegment;
 
             var bytes = option == TransportChecksumOption.IncludePseudoIPHeader
                 ? ((IPPacket) ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)

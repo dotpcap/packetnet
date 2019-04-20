@@ -103,14 +103,14 @@ namespace PacketDotNet
         public int Length { get; set; }
 
         /// <summary>
-        /// LLDPPacket specific implementation of BytesHighPerformance
+        /// LLDPPacket specific implementation of BytesSegment
         /// Necessary because each TLV in the collection may have a
         /// byte[] that is not shared by other TLVs
         /// NOTE: There is potential for the same performance improvement that
         /// the Packet class uses where we check to see if each TLVs uses the
         /// same byte[] and that there are no gaps.
         /// </summary>
-        public override ByteArraySegment BytesHighPerformance
+        public override ByteArraySegment BytesSegment
         {
             get
             {

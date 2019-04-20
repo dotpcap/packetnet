@@ -93,9 +93,9 @@ namespace PacketDotNet.Ieee80211
         /// Gets or sets the type.
         /// </summary>
         /// <value>The type.</value>
-        public EthernetPacketType Type
+        public EthernetType Type
         {
-            get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
+            get => (EthernetType) EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                                        Header.Offset + LogicalLinkControlFields.TypePosition);
             set
             {

@@ -42,7 +42,7 @@ namespace Test.PacketType
             Assert.IsNotNull(p);
 
             var gerp = p.Extract<GrePacket>();
-            Assert.AreEqual(gerp.Protocol, PacketDotNet.EthernetPacketType.IPv6);
+            Assert.AreEqual(gerp.Protocol, PacketDotNet.EthernetType.IPv6);
             Console.WriteLine(gerp.GetType());
         }        
     }

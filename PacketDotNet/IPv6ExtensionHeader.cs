@@ -35,7 +35,7 @@ namespace PacketDotNet
         /// </summary>
         /// <param name="header">The header.</param>
         /// <param name="byteArraySegment">The byte array segment.</param>
-        public IPv6ExtensionHeader(IPProtocolType header, ByteArraySegment byteArraySegment)
+        public IPv6ExtensionHeader(ProtocolType header, ByteArraySegment byteArraySegment)
         {
             Header = header;
             ByteArraySegment = byteArraySegment;
@@ -44,7 +44,7 @@ namespace PacketDotNet
         /// <summary>
         /// Gets the header.
         /// </summary>
-        public IPProtocolType Header { get; }
+        public ProtocolType Header { get; }
 
         /// <summary>
         /// Gets or sets the length of the header extension in 8-octets (bytes) units, not including the first 8 octets.
@@ -53,7 +53,7 @@ namespace PacketDotNet
         {
             get
             {
-                if (Header == IPProtocolType.FRAGMENT)
+                if (Header == ProtocolType.IPv6FragmentHeader)
                     return 0;
 
 
@@ -61,7 +61,7 @@ namespace PacketDotNet
             }
             set
             {
-                if (Header == IPProtocolType.FRAGMENT)
+                if (Header == ProtocolType.IPv6FragmentHeader)
                     return;
 
 
@@ -77,9 +77,9 @@ namespace PacketDotNet
         /// <summary>
         /// Gets or sets the next header.
         /// </summary>
-        public IPProtocolType NextHeader
+        public ProtocolType NextHeader
         {
-            get => (IPProtocolType) ByteArraySegment.Bytes[ByteArraySegment.Offset];
+            get => (ProtocolType) ByteArraySegment.Bytes[ByteArraySegment.Offset];
             set => ByteArraySegment.Bytes[ByteArraySegment.Offset] = (byte) value;
         }
 

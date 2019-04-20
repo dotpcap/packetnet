@@ -78,7 +78,7 @@ namespace PacketDotNet
         /// The protocol of the ip packet's payload
         /// Included along side Protocol for user convenience
         /// </value>
-        public virtual IPProtocolType NextHeader
+        public virtual ProtocolType NextHeader
         {
             get => Protocol;
             set => Protocol = value;
@@ -105,26 +105,26 @@ namespace PacketDotNet
                 {
                     // set NextHeader (Protocol) based on the type of this packet
                     case TcpPacket _:
-                        Protocol = IPProtocolType.TCP;
+                        Protocol = ProtocolType.Tcp;
                         break;
                     case UdpPacket _:
-                        Protocol = IPProtocolType.UDP;
+                        Protocol = ProtocolType.Udp;
                         break;
                     case IcmpV6Packet _:
-                        Protocol = IPProtocolType.ICMPV6;
+                        Protocol = ProtocolType.IcmpV6;
                         break;
                     case IcmpV4Packet _:
-                        Protocol = IPProtocolType.ICMP;
+                        Protocol = ProtocolType.Icmp;
                         break;
                     case IgmpV2Packet _:
-                        Protocol = IPProtocolType.IGMP;
+                        Protocol = ProtocolType.Igmp;
                         break;
                     case OspfPacket _:
-                        Protocol = IPProtocolType.OSPF;
+                        Protocol = ProtocolType.Ospf;
                         break;
                     // NOTE: new checks go here
                     default:
-                        Protocol = IPProtocolType.NONE;
+                        Protocol = ProtocolType.IPv6NoNextHeader;
                         break;
                 }
 
@@ -141,7 +141,7 @@ namespace PacketDotNet
         /// Named 'Protocol' in IPv4
         /// Named 'NextHeader' in IPv6'
         /// </value>
-        public abstract IPProtocolType Protocol { get; set; }
+        public abstract ProtocolType Protocol { get; set; }
 
         /// <value>
         /// The source address
@@ -227,7 +227,7 @@ namespace PacketDotNet
         /// A <see cref="ByteArraySegment" />
         /// </param>
         /// <param name="protocolType">
-        /// A <see cref="IPProtocolType" />
+        /// A <see cref="ProtocolType" />
         /// </param>
         /// <param name="parentPacket">
         /// A <see cref="Packet" />
@@ -238,7 +238,7 @@ namespace PacketDotNet
         protected static PacketOrByteArraySegment ParseNextSegment
         (
             ByteArraySegment payload,
-            IPProtocolType protocolType,
+            ProtocolType protocolType,
             Packet parentPacket)
         {
             Log.DebugFormat("payload: {0}, ParentPacket.GetType() {1}",
@@ -261,63 +261,63 @@ namespace PacketDotNet
 
             switch (protocolType)
             {
-                case IPProtocolType.TCP:
+                case ProtocolType.Tcp:
                 {
                     payloadPacketOrData.Packet = new TcpPacket(payload,
                                                                parentPacket);
 
                     break;
                 }
-                case IPProtocolType.UDP:
+                case ProtocolType.Udp:
                 {
                     payloadPacketOrData.Packet = new UdpPacket(payload,
                                                                parentPacket);
 
                     break;
                 }
-                case IPProtocolType.ICMP:
+                case ProtocolType.Icmp:
                 {
                     payloadPacketOrData.Packet = new IcmpV4Packet(payload,
                                                                   parentPacket);
 
                     break;
                 }
-                case IPProtocolType.ICMPV6:
+                case ProtocolType.IcmpV6:
                 {
                     payloadPacketOrData.Packet = new IcmpV6Packet(payload,
                                                                   parentPacket);
 
                     break;
                 }
-                case IPProtocolType.IGMP:
+                case ProtocolType.Igmp:
                 {
                     payloadPacketOrData.Packet = new IgmpV2Packet(payload,
                                                                   parentPacket);
 
                     break;
                 }
-                case IPProtocolType.OSPF:
+                case ProtocolType.Ospf:
                 {
                     payloadPacketOrData.Packet = OspfPacket.ConstructOspfPacket(payload.Bytes,
                                                                                 payload.Offset);
 
                     break;
                 }
-                case IPProtocolType.IPIP:
+                case ProtocolType.IPv4:
                 {
                     payloadPacketOrData.Packet = new IPv4Packet(payload,
                                                                 parentPacket);
 
                     break;
                 }
-                case IPProtocolType.IPV6:
+                case ProtocolType.IPv6:
                 {
                     payloadPacketOrData.Packet = new IPv6Packet(payload,
                                                                 parentPacket);
 
                     break;
                 }
-                case IPProtocolType.GRE:
+                case ProtocolType.Gre:
                 {
                     payloadPacketOrData.Packet = new GrePacket(payload,
                                                                parentPacket);

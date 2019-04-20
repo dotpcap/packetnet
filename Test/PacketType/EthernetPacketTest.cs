@@ -46,7 +46,7 @@ namespace Test.PacketType
             Assert.AreEqual(System.Net.IPAddress.Parse("82.165.240.134"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.221"), ip.DestinationAddress);
             Assert.AreEqual(IPVersion.IPv4, ip.Version);
-            Assert.AreEqual(IPProtocolType.TCP, ip.Protocol);
+            Assert.AreEqual(ProtocolType.Tcp, ip.Protocol);
             Assert.AreEqual(254, ip.TimeToLive);
             Assert.AreEqual(0x0df8, ((IPv4Packet)ip).CalculateIPChecksum());
             Assert.AreEqual(1176685346, rawCapture.Timeval.Seconds);
@@ -103,7 +103,7 @@ namespace Test.PacketType
             Assert.AreEqual(System.Net.IPAddress.Parse("172.210.164.56"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.104"), ip.DestinationAddress);
             Assert.AreEqual(IPVersion.IPv4, ip.Version);
-            Assert.AreEqual(IPProtocolType.UDP, ip.Protocol);
+            Assert.AreEqual(ProtocolType.Udp, ip.Protocol);
             Assert.AreEqual(112, ip.TimeToLive);
             Assert.AreEqual(0xe0a2, ((IPv4Packet)ip).CalculateIPChecksum());
             Assert.AreEqual(1171483602, rawCapture.Timeval.Seconds);
@@ -127,7 +127,7 @@ namespace Test.PacketType
             var ip = p.Extract<IPPacket>();
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.172"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("66.189.0.29"), ip.DestinationAddress);
-            Assert.AreEqual(IPProtocolType.UDP, ip.Protocol);
+            Assert.AreEqual(ProtocolType.Udp, ip.Protocol);
             Assert.AreEqual(0x7988, ((IPv4Packet)ip).CalculateIPChecksum());
 
             var udp = p.Extract<UdpPacket>();
@@ -225,7 +225,7 @@ namespace Test.PacketType
             var dstHwAddress = new PhysicalAddress(dstHwAddressBytes);
             var ethernetPacket = new EthernetPacket(srcHwAddress,
                                                     dstHwAddress,
-                                                    EthernetPacketType.None);
+                                                    EthernetType.None);
 
             int expectedLength = 14;
             Assert.AreEqual(expectedLength, ethernetPacket.Bytes.Length);
@@ -249,7 +249,7 @@ namespace Test.PacketType
             Assert.AreEqual(PhysicalAddress.Parse("00-13-10-03-71-47"), e.SourceHwAddress);
             Assert.AreEqual(PhysicalAddress.Parse("00-E0-4C-E5-73-AD"), e.DestinationHwAddress);
 
-            Assert.AreEqual(EthernetPacketType.IPv4, e.Type);
+            Assert.AreEqual(EthernetType.IPv4, e.Type);
 
             dev.Close();
         }

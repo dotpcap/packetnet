@@ -65,33 +65,33 @@ namespace PacketDotNet
                     // set Type based on the type of the payload
                     case IPv4Packet _:
                     {
-                        Type = EthernetPacketType.IPv4;
+                        Type = EthernetType.IPv4;
                         break;
                     }
                     case IPv6Packet _:
                     {
-                        Type = EthernetPacketType.IPv6;
+                        Type = EthernetType.IPv6;
                         break;
                     }
                     case ARPPacket _:
                     {
-                        Type = EthernetPacketType.Arp;
+                        Type = EthernetType.Arp;
                         break;
                     }
                     case LldpPacket _:
                     {
-                        Type = EthernetPacketType.LLDP;
+                        Type = EthernetType.Lldp;
                         break;
                     }
                     // NOTE: new types should be inserted here
                     case PppoePacket _:
                     {
-                        Type = EthernetPacketType.PointToPointProtocolOverEthernetSessionStage;
+                        Type = EthernetType.PppoeSessionStage;
                         break;
                     }
                     default:
                     {
-                        Type = EthernetPacketType.None;
+                        Type = EthernetType.None;
                         break;
                     }
                 }
@@ -147,11 +147,11 @@ namespace PacketDotNet
         }
 
         /// <value>
-        /// Type of packet that this ethernet packet encapsulates
+        /// Type of packet that this ethernet packet encapsulates.
         /// </value>
-        public EthernetPacketType Type
+        public EthernetType Type
         {
-            get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
+            get => (EthernetType) EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                                        Header.Offset + EthernetFields.TypePosition);
             set
             {
@@ -169,7 +169,7 @@ namespace PacketDotNet
         (
             PhysicalAddress sourceHwAddress,
             PhysicalAddress destinationHwAddress,
-            EthernetPacketType ethernetPacketType)
+            EthernetType ethernetType)
         {
             Log.Debug("");
 
@@ -182,7 +182,7 @@ namespace PacketDotNet
             // set the instance values
             SourceHwAddress = sourceHwAddress;
             DestinationHwAddress = destinationHwAddress;
-            Type = ethernetPacketType;
+            Type = ethernetType;
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace PacketDotNet
         /// A <see cref="ByteArraySegment" />
         /// </param>
         /// <param name="type">
-        /// A <see cref="EthernetPacketType" />
+        /// A <see cref="EthernetType" />
         /// </param>
         /// <returns>
         /// A <see cref="PacketOrByteArraySegment" />
@@ -220,7 +220,7 @@ namespace PacketDotNet
         internal static PacketOrByteArraySegment ParseNextSegment
         (
             ByteArraySegment header,
-            EthernetPacketType type)
+            EthernetType type)
         {
             // slice off the payload
             var payload = header.NextSegment();
@@ -231,37 +231,37 @@ namespace PacketDotNet
             // parse the encapsulated bytes
             switch (type)
             {
-                case EthernetPacketType.IPv4:
+                case EthernetType.IPv4:
                 {
                     payloadPacketOrData.Packet = new IPv4Packet(payload);
                     break;
                 }
-                case EthernetPacketType.IPv6:
+                case EthernetType.IPv6:
                 {
                     payloadPacketOrData.Packet = new IPv6Packet(payload);
                     break;
                 }
-                case EthernetPacketType.Arp:
+                case EthernetType.Arp:
                 {
                     payloadPacketOrData.Packet = new ARPPacket(payload);
                     break;
                 }
-                case EthernetPacketType.LLDP:
+                case EthernetType.Lldp:
                 {
                     payloadPacketOrData.Packet = new LldpPacket(payload);
                     break;
                 }
-                case EthernetPacketType.PointToPointProtocolOverEthernetSessionStage:
+                case EthernetType.PppoeSessionStage:
                 {
                     payloadPacketOrData.Packet = new PppoePacket(payload);
                     break;
                 }
-                case EthernetPacketType.WakeOnLan:
+                case EthernetType.WakeOnLan:
                 {
                     payloadPacketOrData.Packet = new WakeOnLanPacket(payload);
                     break;
                 }
-                case EthernetPacketType.VLanTaggedFrame:
+                case EthernetType.VLanTaggedFrame:
                 {
                     payloadPacketOrData.Packet = new Ieee8021QPacket(payload);
                     break;
@@ -352,7 +352,7 @@ namespace PacketDotNet
 
             return new EthernetPacket(new PhysicalAddress(srcPhysicalAddress),
                                       new PhysicalAddress(dstPhysicalAddress),
-                                      EthernetPacketType.None);
+                                      EthernetType.None);
         }
     }
 }

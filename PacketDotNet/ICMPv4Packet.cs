@@ -37,7 +37,7 @@ namespace PacketDotNet
     /// See http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol
     /// </summary>
     [Serializable]
-    public sealed class ICMPv4Packet : InternetPacket
+    public sealed class IcmpV4Packet : InternetPacket
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -49,94 +49,19 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        /// <value>
-        /// The Type/Code enum value
-        /// </value>
-        public ICMPv4TypeCodes TypeCode
-        {
-            get
-            {
-                var val = EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                          Header.Offset + ICMPv4Fields.TypeCodePosition);
-
-                return (ICMPv4TypeCodes) val;
-            }
-
-            set
-            {
-                var theValue = (ushort) value;
-                EndianBitConverter.Big.CopyBytes(theValue,
-                                                 Header.Bytes,
-                                                 Header.Offset + ICMPv4Fields.TypeCodePosition);
-            }
-        }
-
-        /// <value>
-        /// Checksum value
-        /// </value>
-        public ushort Checksum
-        {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + ICMPv4Fields.ChecksumPosition);
-            set
-            {
-                var theValue = value;
-                EndianBitConverter.Big.CopyBytes(theValue,
-                                                 Header.Bytes,
-                                                 Header.Offset + ICMPv4Fields.ChecksumPosition);
-            }
-        }
-
-        /// <summary>
-        /// ID field
-        /// </summary>
-        public ushort ID
-        {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + ICMPv4Fields.IDPosition);
-            set
-            {
-                var theValue = value;
-                EndianBitConverter.Big.CopyBytes(theValue,
-                                                 Header.Bytes,
-                                                 Header.Offset + ICMPv4Fields.IDPosition);
-            }
-        }
-
-        /// <summary>
-        /// Sequence field
-        /// </summary>
-        public ushort Sequence
-        {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + ICMPv4Fields.SequencePosition);
-            set => EndianBitConverter.Big.CopyBytes(value,
-                                                    Header.Bytes,
-                                                    Header.Offset + ICMPv4Fields.SequencePosition);
-        }
-
-        /// <summary>
-        /// Contents of the ICMP packet
-        /// </summary>
-        public byte[] Data
-        {
-            get => PayloadPacketOrData.Value.ByteArraySegment.ActualBytes();
-            set => PayloadPacketOrData.Value.ByteArraySegment = new ByteArraySegment(value, 0, value.Length);
-        }
-
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public ICMPv4Packet(ByteArraySegment byteArraySegment)
+        public IcmpV4Packet(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
             // ReSharper disable once UseObjectOrCollectionInitializer
             Header = new ByteArraySegment(byteArraySegment);
-            Header.Length = ICMPv4Fields.HeaderLength;
+            Header.Length = IcmpV4Fields.HeaderLength;
 
             // store the payload bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() }, LazyThreadSafetyMode.PublicationOnly);
@@ -151,7 +76,7 @@ namespace PacketDotNet
         /// <param name="parentPacket">
         /// A <see cref="Packet" />
         /// </param>
-        public ICMPv4Packet
+        public IcmpV4Packet
         (
             ByteArraySegment byteArraySegment,
             Packet parentPacket) : this(byteArraySegment)
@@ -159,8 +84,83 @@ namespace PacketDotNet
             ParentPacket = parentPacket;
         }
 
+        /// <value>
+        /// Checksum value
+        /// </value>
+        public ushort Checksum
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                   Header.Offset + IcmpV4Fields.ChecksumPosition);
+            set
+            {
+                var theValue = value;
+                EndianBitConverter.Big.CopyBytes(theValue,
+                                                 Header.Bytes,
+                                                 Header.Offset + IcmpV4Fields.ChecksumPosition);
+            }
+        }
+
         /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.LightBlue;
+
+        /// <summary>
+        /// Contents of the ICMP packet
+        /// </summary>
+        public byte[] Data
+        {
+            get => PayloadPacketOrData.Value.ByteArraySegment.ActualBytes();
+            set => PayloadPacketOrData.Value.ByteArraySegment = new ByteArraySegment(value, 0, value.Length);
+        }
+
+        /// <summary>
+        /// ID field
+        /// </summary>
+        public ushort ID
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                   Header.Offset + IcmpV4Fields.IDPosition);
+            set
+            {
+                var theValue = value;
+                EndianBitConverter.Big.CopyBytes(theValue,
+                                                 Header.Bytes,
+                                                 Header.Offset + IcmpV4Fields.IDPosition);
+            }
+        }
+
+        /// <summary>
+        /// Sequence field
+        /// </summary>
+        public ushort Sequence
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                   Header.Offset + IcmpV4Fields.SequencePosition);
+            set => EndianBitConverter.Big.CopyBytes(value,
+                                                    Header.Bytes,
+                                                    Header.Offset + IcmpV4Fields.SequencePosition);
+        }
+
+        /// <value>
+        /// The Type/Code enum value
+        /// </value>
+        public IcmpV4TypeCodes TypeCode
+        {
+            get
+            {
+                var val = EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                          Header.Offset + IcmpV4Fields.TypeCodePosition);
+
+                return (IcmpV4TypeCodes) val;
+            }
+
+            set
+            {
+                var theValue = (ushort) value;
+                EndianBitConverter.Big.CopyBytes(theValue,
+                                                 Header.Bytes,
+                                                 Header.Offset + IcmpV4Fields.TypeCodePosition);
+            }
+        }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
@@ -181,7 +181,7 @@ namespace PacketDotNet
                 case StringOutputType.Colored:
                 {
                     // build the output string
-                    buffer.AppendFormat("{0}[ICMPv4Packet: TypeCode={2}]{1}",
+                    buffer.AppendFormat("{0}[IcmpV4Packet: TypeCode={2}]{1}",
                                         color,
                                         colorEscape,
                                         TypeCode);

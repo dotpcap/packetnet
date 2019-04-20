@@ -27,7 +27,7 @@ namespace PacketDotNet
     /// http://www.iana.org/assignments/icmpv6-parameters
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public enum ICMPv6Types : byte
+    public enum IcmpV6Types : byte
     {
 #pragma warning disable 1591
 

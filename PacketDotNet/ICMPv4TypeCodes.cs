@@ -29,7 +29,7 @@ namespace PacketDotNet
     /// type and code fields, where the type field is the upper byte
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public enum ICMPv4TypeCodes : ushort
+    public enum IcmpV4TypeCodes : ushort
     {
 #pragma warning disable 1591
         EchoReply = 0x0000,

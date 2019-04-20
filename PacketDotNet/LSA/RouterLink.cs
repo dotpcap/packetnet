@@ -4,10 +4,10 @@ using System.Net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.Lsa
 {
     /// <summary>
-    /// Router link contained in a RouterLSA.
+    /// Router link contained in a RouterLinksAdvertisement.
     /// </summary>
     public class RouterLink
     {
@@ -16,7 +16,7 @@ namespace PacketDotNet
         /// </summary>
         public const int RouterLinkLength = 12;
 
-        internal ByteArraySegment Header;
+        private readonly ByteArraySegment _header;
 
         /// <summary>
         /// Default constructor
@@ -24,25 +24,25 @@ namespace PacketDotNet
         public RouterLink()
         {
             var b = new byte[RouterLinkLength];
-            Header = new ByteArraySegment(b);
+            _header = new ByteArraySegment(b);
         }
 
         /// <summary>
         /// Constructs router link from a list of TOS metrics
         /// </summary>
-        public RouterLink(IReadOnlyCollection<TOSMetric> metrics)
+        public RouterLink(IReadOnlyCollection<TosMetric> metrics)
         {
-            var length = RouterLinkLength + metrics.Count * TOSMetric.TOSMetricLength;
-            var offset = LSA.RouterLinkFields.AdditionalMetricsPosition;
+            var length = RouterLinkLength + metrics.Count * TosMetric.TosMetricLength;
+            var offset = RouterLinkFields.AdditionalMetricsPosition;
             var b = new byte[length];
 
             foreach (var m in metrics)
             {
-                Array.Copy(m.Bytes, 0, b, offset, TOSMetric.TOSMetricLength);
-                offset += TOSMetric.TOSMetricLength;
+                Array.Copy(m.Bytes, 0, b, offset, TosMetric.TosMetricLength);
+                offset += TosMetric.TosMetricLength;
             }
 
-            Header = new ByteArraySegment(b);
+            _header = new ByteArraySegment(b);
         }
 
         /// <summary>
@@ -59,13 +59,13 @@ namespace PacketDotNet
         /// </param>
         public RouterLink(byte[] packet, int offset, int length)
         {
-            Header = new ByteArraySegment(packet, offset, length);
+            _header = new ByteArraySegment(packet, offset, length);
         }
 
         /// <summary>
         /// bytes representation
         /// </summary>
-        public byte[] Bytes => Header.Bytes;
+        public byte[] Bytes => _header.Bytes;
 
         /// <summary>
         /// Value again depends on the link's Type field. See http://www.ietf.org/rfc/rfc2328.txt for details.
@@ -74,7 +74,7 @@ namespace PacketDotNet
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + LSA.RouterLinkFields.LinkDataPosition);
+                var val = EndianBitConverter.Little.ToUInt32(_header.Bytes, _header.Offset + RouterLinkFields.LinkDataPosition);
                 return new IPAddress(val);
             }
             set
@@ -82,8 +82,8 @@ namespace PacketDotNet
                 var address = value.GetAddressBytes();
                 Array.Copy(address,
                            0,
-                           Header.Bytes,
-                           Header.Offset + LSA.RouterLinkFields.LinkDataPosition,
+                           _header.Bytes,
+                           _header.Offset + RouterLinkFields.LinkDataPosition,
                            address.Length);
             }
         }
@@ -92,11 +92,11 @@ namespace PacketDotNet
         /// Identifies the object that this router link connects to.  Value
         /// depends on the link's Type.
         /// </summary>
-        public IPAddress LinkID
+        public IPAddress LinkId
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + LSA.RouterLinkFields.LinkIDPosition);
+                var val = EndianBitConverter.Little.ToUInt32(_header.Bytes, _header.Offset + RouterLinkFields.LinkIdPosition);
                 return new IPAddress(val);
             }
             set
@@ -104,8 +104,8 @@ namespace PacketDotNet
                 var address = value.GetAddressBytes();
                 Array.Copy(address,
                            0,
-                           Header.Bytes,
-                           Header.Offset + LSA.RouterLinkFields.LinkIDPosition,
+                           _header.Bytes,
+                           _header.Offset + RouterLinkFields.LinkIdPosition,
                            address.Length);
             }
         }
@@ -115,25 +115,25 @@ namespace PacketDotNet
         /// </summary>
         public ushort Metric
         {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + LSA.RouterLinkFields.MetricPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LSA.RouterLinkFields.MetricPosition);
+            get => EndianBitConverter.Big.ToUInt16(_header.Bytes, _header.Offset + RouterLinkFields.MetricPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, _header.Bytes, _header.Offset + RouterLinkFields.MetricPosition);
         }
 
         /// <summary>
         /// List of TOS metrics, contained in this LSA. Deprecated by RFC 4915
         /// </summary>
-        public List<TOSMetric> TOSMetrics
+        public List<TosMetric> TosMetrics
         {
             get
             {
-                var metrics = new List<TOSMetric>();
+                var metrics = new List<TosMetric>();
 
-                for (var i = 0; i < TOSNumber; i++)
+                for (var i = 0; i < TosNumber; i++)
                 {
-                    var metric = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.RouterLinkFields.AdditionalMetricsPosition + i * TOSMetric.TOSMetricLength);
-                    var m = new TOSMetric
+                    var metric = EndianBitConverter.Big.ToUInt32(_header.Bytes, _header.Offset + RouterLinkFields.AdditionalMetricsPosition + i * TosMetric.TosMetricLength);
+                    var m = new TosMetric
                     {
-                        TOS = (byte) ((metric & 0xFF000000) >> 3),
+                        Tos = (byte) ((metric & 0xFF000000) >> 3),
                         Metric = metric & 0x00FFFFFF
                     };
 
@@ -148,10 +148,10 @@ namespace PacketDotNet
         /// The number of different TOS metrics given for this link, not
         /// counting the required link metric
         /// </summary>
-        public byte TOSNumber
+        public byte TosNumber
         {
-            get => Header.Bytes[Header.Offset + LSA.RouterLinkFields.TOSNumberPosition];
-            set => Header.Bytes[Header.Offset + LSA.RouterLinkFields.TOSNumberPosition] = value;
+            get => _header.Bytes[_header.Offset + RouterLinkFields.TOSNumberPosition];
+            set => _header.Bytes[_header.Offset + RouterLinkFields.TOSNumberPosition] = value;
         }
 
         /// <summary>
@@ -159,8 +159,8 @@ namespace PacketDotNet
         /// </summary>
         public byte Type
         {
-            get => Header.Bytes[Header.Offset + LSA.RouterLinkFields.TypePosition];
-            set => Header.Bytes[Header.Offset + LSA.RouterLinkFields.TypePosition] = value;
+            get => _header.Bytes[_header.Offset + RouterLinkFields.TypePosition];
+            set => _header.Bytes[_header.Offset + RouterLinkFields.TypePosition] = value;
         }
     }
 }

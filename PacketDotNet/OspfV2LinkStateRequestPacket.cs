@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PacketDotNet.LSA;
+using PacketDotNet.Lsa;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet

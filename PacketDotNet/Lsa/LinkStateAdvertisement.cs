@@ -24,14 +24,14 @@ using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.LSA
+namespace PacketDotNet.Lsa
 {
     /// <summary>
     /// The LSA header. All LSAs begin with a common 20 byte header.  This header contains
     /// enough information to uniquely identify the LSA (LS type, Link State
     /// ID, and Advertising Router). See http://www.ietf.org/rfc/rfc2328.txt for details.
     /// </summary>
-    public class LSA
+    public class LinkStateAdvertisement
     {
         /// <summary>
         /// The Ipv4 bytes count.
@@ -44,12 +44,12 @@ namespace PacketDotNet.LSA
         /// </summary>
         public const int NetworkMaskLength = 4;
 
-        internal ByteArraySegment Header;
+        protected ByteArraySegment Header;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public LSA()
+        public LinkStateAdvertisement()
         {
             var b = new byte[OspfV2Fields.LSAHeaderLength];
             Header = new ByteArraySegment(b);
@@ -67,7 +67,7 @@ namespace PacketDotNet.LSA
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        public LSA(byte[] packet, int offset, int length)
+        public LinkStateAdvertisement(byte[] packet, int offset, int length)
         {
             Header = new ByteArraySegment(packet, offset, length);
         }
@@ -79,7 +79,7 @@ namespace PacketDotNet.LSA
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + LSAFields.AdvertisingRouterIDPosition);
+                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + LinkStateFields.AdvertisingRouterIDPosition);
                 return new IPAddress(val);
             }
             set
@@ -88,9 +88,18 @@ namespace PacketDotNet.LSA
                 Array.Copy(address,
                            0,
                            Header.Bytes,
-                           Header.Offset + LSAFields.AdvertisingRouterIDPosition,
+                           Header.Offset + LinkStateFields.AdvertisingRouterIDPosition,
                            address.Length);
             }
+        }
+
+        /// <summary>
+        /// The time in seconds since the LSA was originated.
+        /// </summary>
+        public ushort Age
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + LinkStateFields.LinkStateAgePosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LinkStateFields.LinkStateAgePosition);
         }
 
         /// <summary>
@@ -105,18 +114,8 @@ namespace PacketDotNet.LSA
         /// </summary>
         public ushort Checksum
         {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + LSAFields.ChecksumPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LSAFields.ChecksumPosition);
-        }
-
-        /// <summary>
-        /// The length in bytes of the LSA.  This includes the 20 byte LSA
-        /// header.
-        /// </summary>
-        public ushort Length
-        {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + LSAFields.PacketLengthPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LSAFields.PacketLengthPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + LinkStateFields.ChecksumPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LinkStateFields.ChecksumPosition);
         }
 
         /// <summary>
@@ -124,11 +123,11 @@ namespace PacketDotNet.LSA
         /// that is being described by the LSA.  The contents of this field
         /// depend on the LSA's LS type.
         /// </summary>
-        public IPAddress LinkStateID
+        public IPAddress Id
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + LSAFields.LinkStateIDPosition);
+                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + LinkStateFields.LinkStateIdPosition);
                 return new IPAddress(val);
             }
             set
@@ -137,37 +136,19 @@ namespace PacketDotNet.LSA
                 Array.Copy(address,
                            0,
                            Header.Bytes,
-                           Header.Offset + LSAFields.LinkStateIDPosition,
+                           Header.Offset + LinkStateFields.LinkStateIdPosition,
                            address.Length);
             }
         }
 
         /// <summary>
-        /// The time in seconds since the LSA was originated.
+        /// The length in bytes of the LSA.  This includes the 20 byte LSA
+        /// header.
         /// </summary>
-        public ushort LSAge
+        public ushort Length
         {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + LSAFields.LSAgePosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LSAFields.LSAgePosition);
-        }
-
-        /// <summary>
-        /// Detects old or duplicate LSAs.  Successive instances of an LSA
-        /// are given successive LS sequence numbers.
-        /// </summary>
-        public uint LSSequenceNumber
-        {
-            get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSAFields.LSSequenceNumberPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LSAFields.LSSequenceNumberPosition);
-        }
-
-        ///<summary>
-        ///The type of the LSA.  Each LSA type has a separate advertisement format.
-        ///</summary>
-        public LSAType LSType
-        {
-            get => (LSAType) Header.Bytes[Header.Offset + LSAFields.LSTypePosition];
-            set => Header.Bytes[Header.Offset + LSAFields.LSTypePosition] = (byte) value;
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + LinkStateFields.PacketLengthPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LinkStateFields.PacketLengthPosition);
         }
 
         /// <summary>
@@ -175,18 +156,37 @@ namespace PacketDotNet.LSA
         /// </summary>
         public byte Options
         {
-            get => Header.Bytes[Header.Offset + LSAFields.OptionsPosition];
-            set => Header.Bytes[Header.Offset + LSAFields.OptionsPosition] = value;
+            get => Header.Bytes[Header.Offset + LinkStateFields.OptionsPosition];
+            set => Header.Bytes[Header.Offset + LinkStateFields.OptionsPosition] = value;
         }
 
         /// <summary>
-        /// Returns a <see cref="string" /> that represents the current <see cref="PacketDotNet.LSA" />.
+        /// Detects old or duplicate LSAs.  Successive instances of an LSA
+        /// are given successive LS sequence numbers.
         /// </summary>
-        /// <returns>A <see cref="string" /> that represents the current <see cref="PacketDotNet.LSA" />.</returns>
+        public uint SequenceNumber
+        {
+            get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LinkStateFields.LinkStateSequenceNumberPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LinkStateFields.LinkStateSequenceNumberPosition);
+        }
+
+        ///<summary>
+        ///The type of the LSA. Each LSA type has a separate advertisement format.
+        ///</summary>
+        public LinkStateAdvertisementType Type
+        {
+            get => (LinkStateAdvertisementType) Header.Bytes[Header.Offset + LinkStateFields.LinkStateTypePosition];
+            set => Header.Bytes[Header.Offset + LinkStateFields.LinkStateTypePosition] = (byte) value;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="string" /> that represents the current <see cref="LinkStateAdvertisement" />.
+        /// </summary>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="LinkStateAdvertisement" />.</returns>
         public override string ToString()
         {
             var builder = new StringBuilder();
-            builder.AppendFormat("LSA Type {0}, Checksum {1:X2}\n", LSType, Checksum);
+            builder.AppendFormat("LSA Type {0}, Checksum {1:X2}\n", Type, Checksum);
             return builder.ToString();
         }
     }

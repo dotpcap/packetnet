@@ -4,7 +4,7 @@ using System.Net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.LSA
+namespace PacketDotNet.Lsa
 {
     /// <summary>
     /// Summary-LSAs are the Type 3 and 4 LSAs.  These LSAs are originated
@@ -12,41 +12,36 @@ namespace PacketDotNet.LSA
     /// destinations. Type 3 summary-LSAs are used when the destination is an IP network,
     /// Type 4 - an AS boundary router.
     /// </summary>
-    public class SummaryLSA : LSA
+    public class SummaryLinkAdvertisement : LinkStateAdvertisement
     {
-        /// <summary>
-        /// The type of the lsa.
-        /// </summary>
-        public static readonly LSAType LSAType = LSAType.Summary;
-
         /// <summary>
         /// Default constructor
         /// </summary>
-        public SummaryLSA()
+        public SummaryLinkAdvertisement()
         {
-            var b = new byte[SummaryLSAFields.TOSMetricPosition];
+            var b = new byte[SummaryLinkAdvertisementFields.TosMetricPosition];
             Header = new ByteArraySegment(b);
-            LSType = LSAType;
+            Type = LinkStateAdvertisementType.Summary;
             Length = (ushort) Header.Bytes.Length;
         }
 
         /// <summary>
         /// Constructs a Summary LSA with a list of TOS metrics
         /// </summary>
-        public SummaryLSA(List<TOSMetric> metrics)
+        public SummaryLinkAdvertisement(List<TosMetric> metrics)
         {
-            var length = SummaryLSAFields.TOSMetricPosition + metrics.Count * TOSMetric.TOSMetricLength;
-            var offset = SummaryLSAFields.TOSMetricPosition;
+            var length = SummaryLinkAdvertisementFields.TosMetricPosition + metrics.Count * TosMetric.TosMetricLength;
+            var offset = SummaryLinkAdvertisementFields.TosMetricPosition;
             var b = new byte[length];
 
             foreach (var m in metrics)
             {
-                Array.Copy(m.Bytes, 0, b, offset, TOSMetric.TOSMetricLength);
-                offset += TOSMetric.TOSMetricLength;
+                Array.Copy(m.Bytes, 0, b, offset, TosMetric.TosMetricLength);
+                offset += TosMetric.TosMetricLength;
             }
 
             Header = new ByteArraySegment(b);
-            LSType = LSAType;
+            Type = LinkStateAdvertisementType.Summary;
             Length = (ushort) Header.Bytes.Length;
         }
 
@@ -62,7 +57,7 @@ namespace PacketDotNet.LSA
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        public SummaryLSA(byte[] packet, int offset, int length) :
+        public SummaryLinkAdvertisement(byte[] packet, int offset, int length) :
             base(packet, offset, length)
         { }
 
@@ -73,13 +68,13 @@ namespace PacketDotNet.LSA
         {
             get
             {
-                var val = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + SummaryLSAFields.MetricPosition);
+                var val = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + SummaryLinkAdvertisementFields.MetricPosition);
                 return val & 0x00FFFFFF;
             }
             set
             {
                 var theValue = value & 0x00FFFFFF;
-                EndianBitConverter.Big.CopyBytes(theValue, Header.Bytes, Header.Offset + SummaryLSAFields.MetricPosition);
+                EndianBitConverter.Big.CopyBytes(theValue, Header.Bytes, Header.Offset + SummaryLinkAdvertisementFields.MetricPosition);
             }
         }
 
@@ -92,7 +87,7 @@ namespace PacketDotNet.LSA
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + SummaryLSAFields.NetworkMaskPosition);
+                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + SummaryLinkAdvertisementFields.NetworkMaskPosition);
                 return new IPAddress(val);
             }
             set
@@ -101,7 +96,7 @@ namespace PacketDotNet.LSA
                 Array.Copy(address,
                            0,
                            Header.Bytes,
-                           Header.Offset + SummaryLSAFields.NetworkMaskPosition,
+                           Header.Offset + SummaryLinkAdvertisementFields.NetworkMaskPosition,
                            address.Length);
             }
         }
@@ -110,25 +105,25 @@ namespace PacketDotNet.LSA
         /// Additional TOS-specific information  for backward compatibility
         /// with previous versions of the OSPF specification
         /// </summary>
-        public List<TOSMetric> TOSMetrics
+        public List<TosMetric> TosMetrics
         {
             get
             {
-                var ret = new List<TOSMetric>();
+                var ret = new List<TosMetric>();
 
-                if ((Length - SummaryLSAFields.TOSMetricPosition) % TOSMetric.TOSMetricLength != 0)
+                if ((Length - SummaryLinkAdvertisementFields.TosMetricPosition) % TosMetric.TosMetricLength != 0)
                 {
-                    throw new Exception("Malformed summary LSA - bad TOSMetrics size");
+                    throw new Exception("Malformed summary LSA - bad TosMetrics size");
                 }
 
-                var tosCnt = (Length - SummaryLSAFields.TOSMetricPosition) / TOSMetric.TOSMetricLength;
+                var tosCnt = (Length - SummaryLinkAdvertisementFields.TosMetricPosition) / TosMetric.TosMetricLength;
 
                 for (var i = 0; i < tosCnt; i++)
                 {
-                    var metric = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + SummaryLSAFields.TOSMetricPosition + i * TOSMetric.TOSMetricLength);
-                    var m = new TOSMetric
+                    var metric = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + SummaryLinkAdvertisementFields.TosMetricPosition + i * TosMetric.TosMetricLength);
+                    var m = new TosMetric
                     {
-                        TOS = (byte) ((metric & 0xFF000000) >> 24),
+                        Tos = (byte) ((metric & 0xFF000000) >> 24),
                         Metric = metric & 0x00FFFFFF
                     };
 

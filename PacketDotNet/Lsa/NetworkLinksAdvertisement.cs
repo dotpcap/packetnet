@@ -4,37 +4,32 @@ using System.Net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.LSA
+namespace PacketDotNet.Lsa
 {
     /// <summary>
     /// Network-LSAs are the Type 2 LSAs. The LSA describes all routers
     /// attached to the network, including the Designated Router itself.
     /// </summary>
-    public class NetworkLSA : LSA
+    public class NetworkLinksAdvertisement : LinkStateAdvertisement
     {
-        /// <summary>
-        /// The type of the lsa.
-        /// </summary>
-        public static readonly LSAType LSAType = LSAType.Network;
-
         /// <summary>
         /// Default constructor
         /// </summary>
-        public NetworkLSA()
+        public NetworkLinksAdvertisement()
         {
-            var b = new byte[NetworkLSAFields.AttachedRouterPosition];
+            var b = new byte[NetworkLinksAdvertisementFields.AttachedRouterPosition];
             Header = new ByteArraySegment(b);
-            LSType = LSAType;
+            Type = LinkStateAdvertisementType.Network;
             Length = (ushort) Header.Bytes.Length;
         }
 
         /// <summary>
         /// Constructs a Network LSA with a list of attached routers
         /// </summary>
-        public NetworkLSA(List<IPAddress> routers)
+        public NetworkLinksAdvertisement(List<IPAddress> routers)
         {
-            var length = NetworkLSAFields.AttachedRouterPosition + routers.Count * IPv4BytesCount;
-            var offset = NetworkLSAFields.AttachedRouterPosition;
+            var length = NetworkLinksAdvertisementFields.AttachedRouterPosition + routers.Count * IPv4BytesCount;
+            var offset = NetworkLinksAdvertisementFields.AttachedRouterPosition;
 
             var b = new byte[length];
             foreach (var ip in routers)
@@ -44,7 +39,7 @@ namespace PacketDotNet.LSA
             }
 
             Header = new ByteArraySegment(b);
-            LSType = LSAType;
+            Type = LinkStateAdvertisementType.Network;
             Length = (ushort) Header.Bytes.Length;
         }
 
@@ -60,7 +55,7 @@ namespace PacketDotNet.LSA
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        public NetworkLSA(byte[] packet, int offset, int length) :
+        public NetworkLinksAdvertisement(byte[] packet, int offset, int length) :
             base(packet, offset, length)
         { }
 
@@ -79,7 +74,7 @@ namespace PacketDotNet.LSA
                 var routerCount = Length - NetworkMaskLength - OspfV2Fields.LSAHeaderLength;
                 if (routerCount % IPv4BytesCount != 0)
                 {
-                    throw new Exception("Mallformed NetworkLSA - routerCount should be aligned to 4");
+                    throw new Exception("Mallformed NetworkLinksAdvertisement - routerCount should be aligned to 4");
                 }
 
                 routerCount /= IPv4BytesCount;
@@ -87,7 +82,7 @@ namespace PacketDotNet.LSA
                 for (var i = 0; i < routerCount; i++)
                 {
                     var adr = new byte[IPv4BytesCount];
-                    Array.Copy(Header.Bytes, Header.Offset + NetworkLSAFields.AttachedRouterPosition + i * IPv4BytesCount, adr, 0, IPv4BytesCount);
+                    Array.Copy(Header.Bytes, Header.Offset + NetworkLinksAdvertisementFields.AttachedRouterPosition + i * IPv4BytesCount, adr, 0, IPv4BytesCount);
                     var ip = new IPAddress(adr);
                     ret.Add(ip);
                 }
@@ -104,7 +99,7 @@ namespace PacketDotNet.LSA
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + NetworkLSAFields.NetworkMaskPosition);
+                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + NetworkLinksAdvertisementFields.NetworkMaskPosition);
                 return new IPAddress(val);
             }
             set
@@ -113,7 +108,7 @@ namespace PacketDotNet.LSA
                 Array.Copy(address,
                            0,
                            Header.Bytes,
-                           Header.Offset + NetworkLSAFields.NetworkMaskPosition,
+                           Header.Offset + NetworkLinksAdvertisementFields.NetworkMaskPosition,
                            address.Length);
             }
         }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using PacketDotNet.Lsa;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -45,7 +46,7 @@ namespace PacketDotNet
         /// Constructs an OSPFv2 Link State Acknowledge packet with LSA headers
         /// </summary>
         /// <param name="linkStates">List of the LSA headers</param>
-        public OspfV2LinkStateAcknowledgmentPacket(List<LSA.LSA> linkStates)
+        public OspfV2LinkStateAcknowledgmentPacket(List<LinkStateAdvertisement> linkStates)
         {
             var length = linkStates.Count * OspfV2Fields.LSAHeaderLength;
             var offset = OspfV2Fields.HeaderLength;
@@ -81,11 +82,11 @@ namespace PacketDotNet
         /// <summary>
         /// List of LSA acknowledgments.
         /// </summary>
-        public List<LSA.LSA> Acknowledgments
+        public List<LinkStateAdvertisement> Acknowledgments
         {
             get
             {
-                var ret = new List<LSA.LSA>();
+                var ret = new List<LinkStateAdvertisement>();
                 var bytesNeeded = PacketLength - OspfV2Fields.LSAAckPosition;
 
                 if (bytesNeeded % OspfV2Fields.LSAHeaderLength != 0)
@@ -98,7 +99,7 @@ namespace PacketDotNet
 
                 for (var i = 0; i < headerCount; i++)
                 {
-                    var l = new LSA.LSA(Header.Bytes, offset, OspfV2Fields.LSAHeaderLength);
+                    var l = new LinkStateAdvertisement(Header.Bytes, offset, OspfV2Fields.LSAHeaderLength);
                     ret.Add(l);
                     offset += OspfV2Fields.LSAHeaderLength;
                 }

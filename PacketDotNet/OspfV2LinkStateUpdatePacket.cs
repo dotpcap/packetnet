@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PacketDotNet.LSA;
+using PacketDotNet.Lsa;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
@@ -31,7 +31,7 @@ namespace PacketDotNet
         /// Constructs an OSPFv2 link state update with LSAs
         /// </summary>
         /// <param name="linkStates">List of the LSA headers</param>
-        public OspfV2LinkStateUpdatePacket(List<LSA.LSA> linkStates)
+        public OspfV2LinkStateUpdatePacket(List<LinkStateAdvertisement> linkStates)
         {
             var length = 0;
             var offset = OspfV2Fields.HeaderLength + OspfV2Fields.LSANumberLength;
@@ -95,38 +95,38 @@ namespace PacketDotNet
         /// A list of LSA, contained in this packet
         /// </summary>
         /// See
-        /// <see cref="LSA" />
-        public List<LSA.LSA> Updates
+        /// <see cref="LinkStateAdvertisement" />
+        public List<LinkStateAdvertisement> Updates
         {
             get
             {
-                var ret = new List<LSA.LSA>();
+                var ret = new List<LinkStateAdvertisement>();
 
                 var offset = Header.Offset + OspfV2Fields.LSAUpdatesPosition;
                 for (var i = 0; i < LsaNumber; i++)
                 {
-                    var l = new LSA.LSA(Header.Bytes, offset, OspfV2Fields.LSAHeaderLength);
-                    switch (l.LSType)
+                    var l = new LinkStateAdvertisement(Header.Bytes, offset, OspfV2Fields.LSAHeaderLength);
+                    switch (l.Type)
                     {
-                        case LSAType.ASExternal:
+                        case LinkStateAdvertisementType.ASExternal:
                         {
-                            ret.Add(new ASExternalLSA(Header.Bytes, offset, l.Length));
+                            ret.Add(new ASExternalLinkAdvertisement(Header.Bytes, offset, l.Length));
                             break;
                         }
-                        case LSAType.Network:
+                        case LinkStateAdvertisementType.Network:
                         {
-                            ret.Add(new NetworkLSA(Header.Bytes, offset, l.Length));
+                            ret.Add(new NetworkLinksAdvertisement(Header.Bytes, offset, l.Length));
                             break;
                         }
-                        case LSAType.Router:
+                        case LinkStateAdvertisementType.Router:
                         {
-                            ret.Add(new RouterLSA(Header.Bytes, offset, l.Length));
+                            ret.Add(new RouterLinksAdvertisement(Header.Bytes, offset, l.Length));
                             break;
                         }
-                        case LSAType.Summary:
-                        case LSAType.SummaryASBR:
+                        case LinkStateAdvertisementType.Summary:
+                        case LinkStateAdvertisementType.SummaryASBR:
                         {
-                            ret.Add(new SummaryLSA(Header.Bytes, offset, l.Length));
+                            ret.Add(new SummaryLinkAdvertisement(Header.Bytes, offset, l.Length));
                             break;
                         }
                     }

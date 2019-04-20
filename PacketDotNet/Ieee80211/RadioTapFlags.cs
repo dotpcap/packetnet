@@ -31,7 +31,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// sent/received during cfp
         /// </summary>
-        CFP = 0x01,
+        Cfp = 0x01,
 
         /// <summary>
         /// sent/received with short preamble

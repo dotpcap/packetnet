@@ -34,7 +34,6 @@ namespace PacketDotNet.Ieee80211
         public static readonly int DurationIDPosition;
         public static readonly int FrameCheckSequenceLength = 4;
         public static readonly int FrameControlLength = 2;
-
         public static readonly int FrameControlPosition = 0;
         public static readonly int SequenceControlLength = 2;
 

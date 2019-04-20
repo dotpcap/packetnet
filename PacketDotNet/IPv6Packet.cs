@@ -21,6 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
@@ -250,6 +251,7 @@ namespace PacketDotNet
         /// Backwards compatibility property for IPv4.HeaderLength
         /// NOTE: This field is the number of 32bit words
         /// </value>
+        [SuppressMessage("ReSharper", "ValueParameterNotUsed")]
         public override int HeaderLength
         {
             get => IPv6Fields.HeaderLength / 4;

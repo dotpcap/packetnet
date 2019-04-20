@@ -100,7 +100,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Length of the frame header.
         /// This does not include the FCS, it represents only the header bytes that would
-        /// would preceed any payload.
+        /// would proceed any payload.
         /// </summary>
         public override int FrameSize => MacFields.FrameControlLength +
                                          MacFields.DurationIDLength +

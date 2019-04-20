@@ -8,7 +8,6 @@ namespace PacketDotNet.Ieee80211
         public static readonly int CapabilityInformationPosition;
         public static readonly int InformationElement1Position;
         public static readonly int TimestampLength = 8;
-
         public static readonly int TimestampPosition;
 
         static ProbeResponseFields()

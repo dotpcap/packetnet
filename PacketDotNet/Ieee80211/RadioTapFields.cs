@@ -30,11 +30,6 @@ namespace PacketDotNet.Ieee80211
     public class ChannelRadioTapField : RadioTapField
     {
         /// <summary>
-        /// Channel flags
-        /// </summary>
-        public RadioTapChannelFlags Flags;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="br">
@@ -72,6 +67,11 @@ namespace PacketDotNet.Ieee80211
 
         /// <summary>Type of the field</summary>
         public override RadioTapType FieldType => RadioTapType.Channel;
+
+        /// <summary>
+        /// Gets the channel flags.
+        /// </summary>
+        public RadioTapChannelFlags Flags { get; }
 
         /// <summary>
         /// Frequency in MHz

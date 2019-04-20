@@ -70,7 +70,7 @@ namespace PacketDotNet.Ieee80211
 
         /// <summary>
         /// Returns a string with a description of the addresses used in the packet.
-        /// This is used as a compoent of the string returned by ToString().
+        /// This is used as a component of the string returned by ToString().
         /// </summary>
         /// <returns>
         /// The address string.

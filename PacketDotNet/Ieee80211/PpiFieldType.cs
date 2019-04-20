@@ -1,5 +1,3 @@
-#region Header
-
 /*
 This file is part of PacketDotNet
 
@@ -20,16 +18,11 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2011 David Thedens <dthedens@metageek.net>
  */
 
-#endregion Header
-
-
 using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace PacketDotNet.Ieee80211
 {
-    #region Enumerations
-
     /// <summary>
     /// from PPI v 1.0.10
     /// </summary>
@@ -92,6 +85,4 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         PpiReservedAll = 10
     }
-
-    #endregion Enumerations
 }

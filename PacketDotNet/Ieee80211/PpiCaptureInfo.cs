@@ -6,13 +6,6 @@ namespace PacketDotNet.Ieee80211
     /// </summary>
     public class PpiCaptureInfo : PpiFields
     {
-        #region Constructors
-
-        #endregion Constructors
-
-
-        #region Properties
-
         /// <summary>Type of the field</summary>
         public override PpiFieldType FieldType => PpiFieldType.PpiCaptureInfo;
 
@@ -31,7 +24,5 @@ namespace PacketDotNet.Ieee80211
         /// The bytes.
         /// </value>
         public override byte[] Bytes => new byte[0];
-
-        #endregion Properties
     }
 }

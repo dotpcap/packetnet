@@ -1,5 +1,3 @@
-#region Header
-
 /*
 This file is part of PacketDotNet
 
@@ -20,9 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2011 David Thedens <dthedens@metageek.net>
  */
 
-#endregion Header
-
-
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
@@ -32,7 +27,24 @@ namespace PacketDotNet.Ieee80211
     /// </summary>
     public abstract class PpiFields
     {
-        #region Public Methods
+        /// <summary>
+        /// Gets the field bytes. This doesn't include the PPI field header.
+        /// </summary>
+        /// <value>
+        /// The bytes.
+        /// </value>
+        public abstract byte[] Bytes { get; }
+
+        /// <summary>Type of the field</summary>
+        public abstract PpiFieldType FieldType { get; }
+
+        /// <summary>
+        /// Gets the length of the field data.
+        /// </summary>
+        /// <value>
+        /// The length.
+        /// </value>
+        public abstract int Length { get; }
 
         /// <summary>
         /// Parse a PPI indicated by type, from a given BinaryReader
@@ -100,31 +112,5 @@ namespace PacketDotNet.Ieee80211
                 }
             }
         }
-
-        #endregion Public Methods
-
-
-        #region Properties
-
-        /// <summary>Type of the field</summary>
-        public abstract PpiFieldType FieldType { get; }
-
-        /// <summary>
-        /// Gets the length of the field data.
-        /// </summary>
-        /// <value>
-        /// The length.
-        /// </value>
-        public abstract int Length { get; }
-
-        /// <summary>
-        /// Gets the field bytes. This doesn't include the PPI field header.
-        /// </summary>
-        /// <value>
-        /// The bytes.
-        /// </value>
-        public abstract byte[] Bytes { get; }
-
-        #endregion Properties
     }
 }

@@ -28,7 +28,6 @@ namespace PacketDotNet.Ieee80211
         public static readonly int DsapPosition = 0;
         public static readonly int SsapPosition = DsapPosition + DsapLength;
         public static readonly int ControlOrganizationPosition = SsapPosition + SsapLength;
-
         public static readonly int TypeLength = 2;
         public static readonly int TypePosition = ControlOrganizationPosition + ControlOrganizationLength;
         public static readonly int HeaderLength = TypePosition + TypeLength;

@@ -63,7 +63,7 @@ namespace Test.PacketType
                 Assert.AreEqual (-100, commonField.AntennaSignalNoise);
                 
                 MacFrame macFrame = p.PayloadPacket as MacFrame;
-                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlCTS, macFrame.FrameControl.SubType);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlCts, macFrame.FrameControl.SubType);
                 Assert.IsTrue(macFrame.AppendFcs);
             }
             
@@ -94,7 +94,7 @@ namespace Test.PacketType
                 PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
                 Assert.IsNotNull (p.PayloadPacket);
                 MacFrame macFrame = p.PayloadPacket as MacFrame;
-                Assert.IsTrue(macFrame.FCSValid);
+                Assert.IsTrue(macFrame.FcsValid);
                 Assert.IsTrue(macFrame.AppendFcs);
             }
 			
@@ -109,7 +109,7 @@ namespace Test.PacketType
                 PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
                 Assert.IsNotNull (p.PayloadPacket);
                 MacFrame macFrame = p.PayloadPacket as MacFrame;
-                Assert.IsFalse(macFrame.FCSValid);
+                Assert.IsFalse(macFrame.FcsValid);
                 Assert.IsFalse(macFrame.AppendFcs);
 			}
             
@@ -256,7 +256,7 @@ namespace Test.PacketType
                 
                 MacFrame macFrame = recreatedPacket.PayloadPacket as MacFrame;
                 Assert.IsNotNull(macFrame);
-                Assert.IsTrue(macFrame.FCSValid);
+                Assert.IsTrue(macFrame.FcsValid);
             }
             
             [Test]
@@ -277,7 +277,7 @@ namespace Test.PacketType
                 
                 MacFrame macFrame = recreatedPacket.PayloadPacket as MacFrame;
                 Assert.IsNotNull(macFrame);
-                Assert.IsTrue(macFrame.FCSValid);
+                Assert.IsTrue(macFrame.FcsValid);
             }
             
             [Test]
@@ -303,7 +303,7 @@ namespace Test.PacketType
                 
                 MacFrame macFrame = recreatedPacket.PayloadPacket as MacFrame;
                 Assert.IsNotNull(macFrame);
-                Assert.IsTrue(macFrame.FCSValid);
+                Assert.IsTrue(macFrame.FcsValid);
             }
         } 
     }

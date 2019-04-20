@@ -106,7 +106,7 @@ namespace Test.PacketType
                 
                 MacFrame macFrame = p.PayloadPacket as MacFrame;
                 Assert.IsFalse(macFrame.AppendFcs);
-                Assert.IsFalse(macFrame.FCSValid);
+                Assert.IsFalse(macFrame.FcsValid);
 			}
    
             [Test]
@@ -177,7 +177,7 @@ namespace Test.PacketType
                 MacFrame macFrame = p.PayloadPacket as MacFrame;
                 Assert.IsNotNull(macFrame);
                 Assert.IsTrue(macFrame.AppendFcs);
-                Assert.IsTrue(macFrame.FCSValid);
+                Assert.IsTrue(macFrame.FcsValid);
                 
                 //Now remove a couple of radio tap fields and check that it is still valid
                 p.Remove(RadioTapType.Rate);
@@ -196,7 +196,7 @@ namespace Test.PacketType
                 MacFrame recreatedMacFrame = p.PayloadPacket as MacFrame;
                 Assert.IsNotNull(recreatedMacFrame);
                 Assert.IsTrue(recreatedMacFrame.AppendFcs);
-                Assert.IsTrue(recreatedMacFrame.FCSValid);
+                Assert.IsTrue(recreatedMacFrame.FcsValid);
             }
             
             [Test]

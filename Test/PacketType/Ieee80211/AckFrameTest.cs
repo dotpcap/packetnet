@@ -46,7 +46,7 @@ namespace Test.PacketType
                 AckFrame frame = (AckFrame)p.PayloadPacket;
 
                 Assert.AreEqual (0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual (FrameControlField.FrameSubTypes.ControlACK, frame.FrameControl.SubType);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ControlAck, frame.FrameControl.SubType);
                 Assert.IsFalse (frame.FrameControl.ToDS);
                 Assert.IsFalse (frame.FrameControl.FromDS);
                 Assert.IsFalse (frame.FrameControl.MoreFragments);
@@ -83,7 +83,7 @@ namespace Test.PacketType
                 AckFrame recreatedFrame = MacFrame.ParsePacket (byteArraySegment) as AckFrame;
                 recreatedFrame.UpdateFrameCheckSequence ();
                 
-                Assert.AreEqual (FrameControlField.FrameSubTypes.ControlACK, recreatedFrame.FrameControl.SubType);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ControlAck, recreatedFrame.FrameControl.SubType);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);
@@ -99,7 +99,7 @@ namespace Test.PacketType
                 //buffer is way too short for frame. We are just checking it doesn't throw
                 byte[] corruptBuffer = new byte[]{0x01};
 				AckFrame frame = new AckFrame(new ByteArraySegment(corruptBuffer));
-				Assert.IsFalse(frame.FCSValid);
+				Assert.IsFalse(frame.FcsValid);
 			}
         } 
     }

@@ -47,59 +47,6 @@ namespace PacketDotNet.Ieee80211
             FcsPresent = 1
         }
 
-
-        #region Properties
-
-        /// <summary>Type of the field</summary>
-        public override PpiFieldType FieldType => PpiFieldType.Ppi802_3;
-
-        /// <summary>
-        /// Gets the length of the field data.
-        /// </summary>
-        /// <value>
-        /// The length.
-        /// </value>
-        public override int Length => 8;
-
-        /// <summary>
-        /// Gets or sets the standard 802.2 flags.
-        /// </summary>
-        /// <value>
-        /// The standard flags.
-        /// </value>
-        public StandardFlags Flags { get; set; }
-
-        /// <summary>
-        /// Gets or sets the 802.3 error flags.
-        /// </summary>
-        /// <value>
-        /// The error flags.
-        /// </value>
-        public ErrorFlags Errors { get; set; }
-
-        /// <summary>
-        /// Gets the field bytes. This doesn't include the PPI field header.
-        /// </summary>
-        /// <value>
-        /// The bytes.
-        /// </value>
-        public override byte[] Bytes
-        {
-            get
-            {
-                var ms = new MemoryStream();
-                var writer = new BinaryWriter(ms);
-                writer.Write((uint) Flags);
-                writer.Write((uint) Errors);
-                return ms.ToArray();
-            }
-        }
-
-        #endregion Properties
-
-
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Ppi8023" /> class from the
         /// provided stream.
@@ -134,6 +81,49 @@ namespace PacketDotNet.Ieee80211
         public Ppi8023()
         { }
 
-        #endregion Constructors
+        /// <summary>
+        /// Gets the field bytes. This doesn't include the PPI field header.
+        /// </summary>
+        /// <value>
+        /// The bytes.
+        /// </value>
+        public override byte[] Bytes
+        {
+            get
+            {
+                var ms = new MemoryStream();
+                var writer = new BinaryWriter(ms);
+                writer.Write((uint) Flags);
+                writer.Write((uint) Errors);
+                return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the 802.3 error flags.
+        /// </summary>
+        /// <value>
+        /// The error flags.
+        /// </value>
+        public ErrorFlags Errors { get; set; }
+
+        /// <summary>Type of the field</summary>
+        public override PpiFieldType FieldType => PpiFieldType.Ppi802_3;
+
+        /// <summary>
+        /// Gets or sets the standard 802.2 flags.
+        /// </summary>
+        /// <value>
+        /// The standard flags.
+        /// </value>
+        public StandardFlags Flags { get; set; }
+
+        /// <summary>
+        /// Gets the length of the field data.
+        /// </summary>
+        /// <value>
+        /// The length.
+        /// </value>
+        public override int Length => 8;
     }
 }

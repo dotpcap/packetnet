@@ -40,7 +40,7 @@ namespace PacketDotNet.Ieee80211
             /// <summary>
             /// Provides the parameters necessary to join a frequency-hopping 802.11 network
             /// </summary>
-            FhParamterSet = 0x02,
+            FhParameterSet = 0x02,
 
             /// <summary>
             /// Direct-sequence 802.11 networks have one parameter, the channel number of the network
@@ -48,7 +48,7 @@ namespace PacketDotNet.Ieee80211
             DsParameterSet = 0x03,
 
             /// <summary>
-            /// Contention-free parameter. Transmitted in Becons by access points that support
+            /// Contention-free parameter. Transmitted in beacons by access points that support
             /// contention-free operation.
             /// </summary>
             CfParameterSet = 0x04,
@@ -91,7 +91,7 @@ namespace PacketDotNet.Ieee80211
             /// <summary>
             /// Specifies the difference between the regulatory maximum transmit power and any local constraint.
             /// </summary>
-            PowerContstraint = 0x20,
+            PowerConstraint = 0x20,
 
             /// <summary>
             /// Specifies the minimum and maximum transmit power a station is capable of.
@@ -104,7 +104,7 @@ namespace PacketDotNet.Ieee80211
             TransmitPowerControlRequest = 0x22,
 
             /// <summary>
-            /// Radio link managment report used by stations to tune their transmission power.
+            /// Radio link management report used by stations to tune their transmission power.
             /// </summary>
             TransmitPowerControlReport = 0x23,
 

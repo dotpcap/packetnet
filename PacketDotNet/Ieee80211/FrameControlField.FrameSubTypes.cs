@@ -25,7 +25,7 @@ namespace PacketDotNet.Ieee80211
     public partial class FrameControlField
     {
         /// <summary>
-        /// Sepcifies the frame types down to the sub type level.
+        /// Specifies the frame types down to the sub type level.
         /// </summary>
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         public enum FrameSubTypes
@@ -78,7 +78,7 @@ namespace PacketDotNet.Ieee80211
             /// <summary>
             /// ATIM
             /// </summary>
-            ManagementATIM = 0x9,
+            ManagementAtim = 0x9,
 
             /// <summary>
             /// Disassociation
@@ -106,12 +106,12 @@ namespace PacketDotNet.Ieee80211
             ManagementReserved3 = 0xE,
 
             /// <summary>
-            /// Blck Acknowledgment Request (QOS)
+            /// Block Acknowledgment Request (QOS)
             /// </summary>
             ControlBlockAcknowledgmentRequest = 0x18,
 
             /// <summary>
-            /// Blck Acknowledgment (QOS)
+            /// Block Acknowledgment (QOS)
             /// </summary>
             ControlBlockAcknowledgment = 0x19,
 
@@ -123,17 +123,17 @@ namespace PacketDotNet.Ieee80211
             /// <summary>
             /// RTS
             /// </summary>
-            ControlRTS = 0x1B,
+            ControlRts = 0x1B,
 
             /// <summary>
             /// CTS
             /// </summary>
-            ControlCTS = 0x1C,
+            ControlCts = 0x1C,
 
             /// <summary>
             /// ACK
             /// </summary>
-            ControlACK = 0x1D,
+            ControlAck = 0x1D,
 
             /// <summary>
             /// CF-End
@@ -153,7 +153,7 @@ namespace PacketDotNet.Ieee80211
             /// <summary>
             /// CF-ACK
             /// </summary>
-            DataCFACK = 0x21,
+            DataCFAck = 0x21,
 
             /// <summary>
             /// CF-Poll

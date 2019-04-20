@@ -46,7 +46,7 @@ namespace Test.PacketType
                 CtsFrame frame = (CtsFrame)p.PayloadPacket;
 
                 Assert.AreEqual (0, frame.FrameControl.ProtocolVersion);
-                Assert.AreEqual (FrameControlField.FrameSubTypes.ControlCTS, frame.FrameControl.SubType);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ControlCts, frame.FrameControl.SubType);
                 Assert.IsFalse (frame.FrameControl.ToDS);
                 Assert.IsFalse (frame.FrameControl.FromDS);
                 Assert.IsFalse (frame.FrameControl.MoreFragments);
@@ -83,7 +83,7 @@ namespace Test.PacketType
                 CtsFrame recreatedFrame = MacFrame.ParsePacket (byteArraySegment) as CtsFrame;
                 recreatedFrame.UpdateFrameCheckSequence ();
                 
-                Assert.AreEqual (FrameControlField.FrameSubTypes.ControlCTS, recreatedFrame.FrameControl.SubType);
+                Assert.AreEqual (FrameControlField.FrameSubTypes.ControlCts, recreatedFrame.FrameControl.SubType);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.FromDS);
                 Assert.IsTrue (recreatedFrame.FrameControl.MoreFragments);
@@ -99,7 +99,7 @@ namespace Test.PacketType
                 //buffer is way too short for frame. We are just checking it doesn't throw
                 byte[] corruptBuffer = new byte[]{0x01};
 				CtsFrame frame = new CtsFrame(new ByteArraySegment(corruptBuffer));
-				Assert.IsFalse(frame.FCSValid);
+				Assert.IsFalse(frame.FcsValid);
 			}
         } 
     }

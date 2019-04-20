@@ -39,13 +39,14 @@ namespace PacketDotNet.Ieee80211
         public LogicalLinkControl(ByteArraySegment byteArraySegment)
         {
             // set the header field, header field values are retrieved from this byte array
-            // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(byteArraySegment);
-            Header.Length = LogicalLinkControlFields.HeaderLength;
+            Header = new ByteArraySegment(byteArraySegment)
+            {
+                Length = LogicalLinkControlFields.HeaderLength
+            };
 
             // parse the payload via an EthernetPacket method
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header,
-                                                                                                                 Type),
+                                                                                                           Type),
                                                                      LazyThreadSafetyMode.PublicationOnly);
         }
 
@@ -63,7 +64,7 @@ namespace PacketDotNet.Ieee80211
         /// Gets or sets the destination service access point.
         /// </summary>
         /// <value>The dsap.</value>
-        public byte DSAP
+        public byte Dsap
         {
             get => Header.Bytes[Header.Offset + LogicalLinkControlFields.DsapPosition];
             set => Header.Bytes[Header.Offset + LogicalLinkControlFields.DsapPosition] = value;
@@ -83,7 +84,7 @@ namespace PacketDotNet.Ieee80211
         /// Gets or sets the source service access point.
         /// </summary>
         /// <value>The ssap.</value>
-        public byte SSAP
+        public byte Ssap
         {
             get => Header.Bytes[Header.Offset + LogicalLinkControlFields.SsapPosition];
             set => Header.Bytes[Header.Offset + LogicalLinkControlFields.SsapPosition] = value;
@@ -96,7 +97,7 @@ namespace PacketDotNet.Ieee80211
         public EthernetType Type
         {
             get => (EthernetType) EndianBitConverter.Big.ToInt16(Header.Bytes,
-                                                                       Header.Offset + LogicalLinkControlFields.TypePosition);
+                                                                 Header.Offset + LogicalLinkControlFields.TypePosition);
             set
             {
                 var val = (short) value;

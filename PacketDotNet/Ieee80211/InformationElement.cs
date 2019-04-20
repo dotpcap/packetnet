@@ -68,12 +68,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Initializes a new instance of the <see cref="InformationElement" /> class.
         /// </summary>
-        /// <param name='bas'>
+        /// <param name="byteArraySegment">
         /// The bytes of the information element. The Offset property should point to the first byte of the element, the Id byte
         /// </param>
-        public InformationElement(ByteArraySegment bas)
+        public InformationElement(ByteArraySegment byteArraySegment)
         {
-            _bytes = bas;
+            _bytes = byteArraySegment;
         }
 
         /// <summary>

@@ -167,16 +167,16 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public PPPoEPacket(ByteArraySegment bas)
+        public PPPoEPacket(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
             // slice off the header portion
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
             Header.Length = PPPoEFields.HeaderLength;
 
             // parse the encapsulated bytes

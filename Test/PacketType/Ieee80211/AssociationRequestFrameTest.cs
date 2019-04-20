@@ -110,10 +110,10 @@ namespace Test.PacketType
                 
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
-                var bas = new ByteArraySegment (bytes);
+                var byteArraySegment = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                AssociationRequestFrame recreatedFrame = MacFrame.ParsePacket(bas) as AssociationRequestFrame;
+                AssociationRequestFrame recreatedFrame = MacFrame.ParsePacket(byteArraySegment) as AssociationRequestFrame;
                 recreatedFrame.UpdateFrameCheckSequence ();
                 
                 Assert.AreEqual (FrameControlField.FrameSubTypes.ManagementAssociationRequest, recreatedFrame.FrameControl.SubType);

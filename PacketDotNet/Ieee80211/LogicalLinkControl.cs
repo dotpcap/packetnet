@@ -35,12 +35,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Initializes a new instance of the <see cref="T:PacketDotNet.Ieee80211.Ieee80211.LogicalLinkControl" /> class.
         /// </summary>
-        /// <param name="bas">Bas.</param>
-        public LogicalLinkControl(ByteArraySegment bas)
+        /// <param name="byteArraySegment">byteArraySegment.</param>
+        public LogicalLinkControl(ByteArraySegment byteArraySegment)
         {
             // set the header field, header field values are retrieved from this byte array
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
             Header.Length = LogicalLinkControlFields.HeaderLength;
 
             // parse the payload via an EthernetPacket method

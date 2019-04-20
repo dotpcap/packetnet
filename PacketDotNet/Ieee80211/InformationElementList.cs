@@ -54,20 +54,20 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Initializes a new instance of the <see cref="InformationElementList" /> class.
         /// </summary>
-        /// <param name='bas'>
+        /// <param name="byteArraySegment">
         /// A <see cref="PacketDotNet.Utils.ByteArraySegment" /> containing one or more information elements.
-        /// bas.Offset should point to the first byte of the first Information Element.
+        /// byteArraySegment.Offset should point to the first byte of the first Information Element.
         /// </param>
-        public InformationElementList(ByteArraySegment bas)
+        public InformationElementList(ByteArraySegment byteArraySegment)
         {
             var index = 0;
-            while (index + InformationElement.ElementLengthPosition < bas.Length)
+            while (index + InformationElement.ElementLengthPosition < byteArraySegment.Length)
             {
-                var ieStartPosition = bas.Offset + index;
-                var valueLength = bas.Bytes[ieStartPosition + InformationElement.ElementLengthPosition];
+                var ieStartPosition = byteArraySegment.Offset + index;
+                var valueLength = byteArraySegment.Bytes[ieStartPosition + InformationElement.ElementLengthPosition];
                 var ieLength = InformationElement.ElementIdLength + InformationElement.ElementLengthLength + valueLength;
-                var availableLength = Math.Min(ieLength, bas.Length - index);
-                Add(new InformationElement(new ByteArraySegment(bas.Bytes, ieStartPosition, availableLength)));
+                var availableLength = Math.Min(ieLength, byteArraySegment.Length - index);
+                Add(new InformationElement(new ByteArraySegment(byteArraySegment.Bytes, ieStartPosition, availableLength)));
 
                 index += ieLength;
             }

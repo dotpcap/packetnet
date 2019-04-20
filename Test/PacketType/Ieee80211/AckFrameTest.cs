@@ -77,10 +77,10 @@ namespace Test.PacketType
                 
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
-                var bas = new ByteArraySegment (bytes);
+                var byteArraySegment = new ByteArraySegment (bytes);
 
                 //create a new frame that should be identical to the original
-                AckFrame recreatedFrame = MacFrame.ParsePacket (bas) as AckFrame;
+                AckFrame recreatedFrame = MacFrame.ParsePacket (byteArraySegment) as AckFrame;
                 recreatedFrame.UpdateFrameCheckSequence ();
                 
                 Assert.AreEqual (FrameControlField.FrameSubTypes.ControlACK, recreatedFrame.FrameControl.SubType);

@@ -158,13 +158,13 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Initializes a new instance of the <see cref="PpiPacket" /> class.
         /// </summary>
-        /// <param name='bas'>
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public PpiPacket(ByteArraySegment bas)
+        public PpiPacket(ByteArraySegment byteArraySegment)
         {
             // slice off the header portion
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             Version = VersionBytes;
             Flags = FlagsBytes;

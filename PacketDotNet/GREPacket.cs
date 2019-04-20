@@ -36,13 +36,13 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">A <see cref="ByteArraySegment" /></param>
+        /// <param name="byteArraySegment">A <see cref="ByteArraySegment" /></param>
         /// <param name="parentPacket">The parent packet.</param>
-        public GREPacket(ByteArraySegment bas, Packet parentPacket)
+        public GREPacket(ByteArraySegment byteArraySegment, Packet parentPacket)
         {
             // slice off the header portion
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
             Header.Length = GREFields.FlagsLength + GREFields.ProtocolLength;
             if (HasCheckSum)
                 Header.Length += GREFields.ChecksumLength;

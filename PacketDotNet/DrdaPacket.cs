@@ -86,13 +86,13 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas"></param>
-        public DrdaPacket(ByteArraySegment bas)
+        /// <param name="byteArraySegment"></param>
+        public DrdaPacket(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
             // set the header field, header field values are retrieved from this byte array
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             // store the payload bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
@@ -105,9 +105,9 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas"></param>
+        /// <param name="byteArraySegment"></param>
         /// <param name="parentPacket"></param>
-        public DrdaPacket(ByteArraySegment bas, Packet parentPacket) : this(bas)
+        public DrdaPacket(ByteArraySegment byteArraySegment, Packet parentPacket) : this(byteArraySegment)
         {
             Log.DebugFormat("ParentPacket.GetType() {0}", parentPacket.GetType());
 

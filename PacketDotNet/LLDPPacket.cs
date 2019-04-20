@@ -79,14 +79,14 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public LLDPPacket(ByteArraySegment bas)
+        public LLDPPacket(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             // Initiate the TLV list from the existing data
             ParseByteArrayIntoTlvs(Header.Bytes, Header.Offset);

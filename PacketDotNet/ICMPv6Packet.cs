@@ -83,20 +83,20 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public ICMPv6Packet(ByteArraySegment bas)
+        public ICMPv6Packet(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
         }
 
         /// <summary>
         /// Constructor with parent packet
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
         /// <param name="parentPacket">
@@ -104,8 +104,8 @@ namespace PacketDotNet
         /// </param>
         public ICMPv6Packet
         (
-            ByteArraySegment bas,
-            Packet parentPacket) : this(bas)
+            ByteArraySegment byteArraySegment,
+            Packet parentPacket) : this(byteArraySegment)
         {
             ParentPacket = parentPacket;
         }

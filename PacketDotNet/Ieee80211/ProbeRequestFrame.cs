@@ -32,12 +32,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public ProbeRequestFrame(ByteArraySegment bas)
+        public ProbeRequestFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -46,12 +46,12 @@ namespace PacketDotNet.Ieee80211
             BssId = GetAddress(2);
             SequenceControl = new SequenceControlField(SequenceControlBytes);
 
-            if (bas.Length > ProbeRequestFields.InformationElement1Position)
+            if (byteArraySegment.Length > ProbeRequestFields.InformationElement1Position)
             {
                 //create a segment that just refers to the info element section
-                var infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                               bas.Offset + ProbeRequestFields.InformationElement1Position,
-                                                               bas.Length - ProbeRequestFields.InformationElement1Position);
+                var infoElementsSegment = new ByteArraySegment(byteArraySegment.Bytes,
+                                                               byteArraySegment.Offset + ProbeRequestFields.InformationElement1Position,
+                                                               byteArraySegment.Length - ProbeRequestFields.InformationElement1Position);
 
                 InformationElements = new InformationElementList(infoElementsSegment);
             }

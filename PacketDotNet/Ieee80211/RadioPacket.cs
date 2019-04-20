@@ -117,13 +117,13 @@ namespace PacketDotNet.Ieee80211
             Length = (UInt16) RadioFields.DefaultHeaderLength;
         }
 
-        internal RadioPacket(ByteArraySegment bas)
+        internal RadioPacket(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
             // slice off the header portion
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
             Header.Length = RadioFields.DefaultHeaderLength;
 
             Version = VersionBytes;

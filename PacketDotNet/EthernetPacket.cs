@@ -176,16 +176,16 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public EthernetPacket(ByteArraySegment bas)
+        public EthernetPacket(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
             // slice off the header portion
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
             Header.Length = EthernetFields.HeaderLength;
 
             // parse the encapsulated bytes

@@ -33,12 +33,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public AuthenticationFrame(ByteArraySegment bas)
+        public AuthenticationFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -49,12 +49,12 @@ namespace PacketDotNet.Ieee80211
             AuthenticationAlgorithmNumber = AuthenticationAlgorithmNumberBytes;
             AuthenticationAlgorithmTransactionSequenceNumber = AuthenticationAlgorithmTransactionSequenceNumberBytes;
 
-            if (bas.Length > AuthenticationFields.InformationElement1Position)
+            if (byteArraySegment.Length > AuthenticationFields.InformationElement1Position)
             {
                 //create a segment that just refers to the info element section
-                var infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                               bas.Offset + AuthenticationFields.InformationElement1Position,
-                                                               bas.Length - AuthenticationFields.InformationElement1Position);
+                var infoElementsSegment = new ByteArraySegment(byteArraySegment.Bytes,
+                                                               byteArraySegment.Offset + AuthenticationFields.InformationElement1Position,
+                                                               byteArraySegment.Length - AuthenticationFields.InformationElement1Position);
 
                 InformationElements = new InformationElementList(infoElementsSegment);
             }

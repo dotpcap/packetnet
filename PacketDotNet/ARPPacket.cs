@@ -290,13 +290,13 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public ARPPacket(ByteArraySegment bas)
+        public ARPPacket(ByteArraySegment byteArraySegment)
         {
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
             Header.Length = ARPFields.HeaderLength;
 
             // NOTE: no need to set the payloadPacketOrData field, arp packets have

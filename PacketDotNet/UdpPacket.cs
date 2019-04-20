@@ -177,15 +177,15 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public UdpPacket(ByteArraySegment bas)
+        public UdpPacket(ByteArraySegment byteArraySegment)
         {
-            Log.DebugFormat("ByteArraySegment {0}", bas);
+            Log.DebugFormat("ByteArraySegment {0}", byteArraySegment);
 
             // set the header field, header field values are retrieved from this byte array
-            Header = new ByteArraySegment(bas)
+            Header = new ByteArraySegment(byteArraySegment)
             {
                 Length = UdpFields.HeaderLength
             };
@@ -256,7 +256,7 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
         /// <param name="parentPacket">
@@ -264,9 +264,9 @@ namespace PacketDotNet
         /// </param>
         public UdpPacket
         (
-            ByteArraySegment bas,
+            ByteArraySegment byteArraySegment,
             Packet parentPacket) :
-            this(bas)
+            this(byteArraySegment)
         {
             ParentPacket = parentPacket;
         }

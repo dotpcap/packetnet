@@ -36,12 +36,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public BeaconFrame(ByteArraySegment bas)
+        public BeaconFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -53,12 +53,12 @@ namespace PacketDotNet.Ieee80211
             BeaconInterval = BeaconIntervalBytes;
             CapabilityInformation = new CapabilityInformationField(CapabilityInformationBytes);
 
-            if (bas.Length > BeaconFields.InformationElement1Position)
+            if (byteArraySegment.Length > BeaconFields.InformationElement1Position)
             {
                 //create a segment that just refers to the info element section
-                var infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                               bas.Offset + BeaconFields.InformationElement1Position,
-                                                               bas.Length - BeaconFields.InformationElement1Position);
+                var infoElementsSegment = new ByteArraySegment(byteArraySegment.Bytes,
+                                                               byteArraySegment.Offset + BeaconFields.InformationElement1Position,
+                                                               byteArraySegment.Length - BeaconFields.InformationElement1Position);
 
                 InformationElements = new InformationElementList(infoElementsSegment);
             }

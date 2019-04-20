@@ -94,10 +94,10 @@ namespace Test.PacketType
                 
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
-                var bas = new ByteArraySegment (bytes);
+                var byteArraySegment = new ByteArraySegment (bytes);
                 
                 //create a new frame that should be identical to the original
-                NullDataFrame recreatedFrame = MacFrame.ParsePacketWithFcs (bas) as NullDataFrame;
+                NullDataFrame recreatedFrame = MacFrame.ParsePacketWithFcs (byteArraySegment) as NullDataFrame;
                 
                 Assert.AreEqual (FrameControlField.FrameSubTypes.DataNullFunctionNoData, recreatedFrame.FrameControl.SubType);
                 Assert.IsFalse (recreatedFrame.FrameControl.ToDS);

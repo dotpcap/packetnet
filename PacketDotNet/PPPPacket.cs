@@ -85,16 +85,16 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public PPPPacket(ByteArraySegment bas)
+        public PPPPacket(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
             // slice off the header portion as our header
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
             Header.Length = PPPFields.HeaderLength;
 
             // parse the encapsulated bytes

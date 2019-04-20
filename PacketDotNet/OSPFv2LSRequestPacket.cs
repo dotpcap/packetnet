@@ -53,12 +53,12 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs an OSPFv2 LSR packet from ByteArraySegment
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public OSPFv2LSRequestPacket(ByteArraySegment bas)
+        public OSPFv2LSRequestPacket(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas.Bytes);
+            Header = new ByteArraySegment(byteArraySegment.Bytes);
         }
 
         /// <summary>

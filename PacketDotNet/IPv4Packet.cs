@@ -413,14 +413,14 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public IPv4Packet(ByteArraySegment bas)
+        public IPv4Packet(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             // TOS? See http://en.wikipedia.org/wiki/TCP_offload_engine
             var totalLength = TotalLength;
@@ -459,7 +459,7 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor with parent
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
         /// <param name="parentPacket">
@@ -467,8 +467,8 @@ namespace PacketDotNet
         /// </param>
         public IPv4Packet
         (
-            ByteArraySegment bas,
-            Packet parentPacket) : this(bas)
+            ByteArraySegment byteArraySegment,
+            Packet parentPacket) : this(byteArraySegment)
         {
             ParentPacket = parentPacket;
         }

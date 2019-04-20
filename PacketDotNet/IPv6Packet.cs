@@ -62,20 +62,20 @@ namespace PacketDotNet
         /// </value>
         public static IPVersion IPVersion = IPVersion.IPv6;
 
-        private static readonly HashSet<IPProtocolType> ExtensionHeaderTypes = new HashSet<IPProtocolType>
+        private static readonly HashSet<ProtocolType> ExtensionHeaderTypes = new HashSet<ProtocolType>
         {
-            IPProtocolType.HOPOPTS,
-            IPProtocolType.DSTOPTS,
-            IPProtocolType.ROUTING,
-            IPProtocolType.FRAGMENT,
-            IPProtocolType.AH,
-            IPProtocolType.ENCAP,
-            IPProtocolType.DSTOPTS,
-            IPProtocolType.MOBILITY,
-            IPProtocolType.HOSTIDENTITY,
-            IPProtocolType.SHIM6,
-            IPProtocolType.RESERVEDTYPE253,
-            IPProtocolType.RESERVEDTYPE254
+            ProtocolType.IPv6HopByHopOptions,
+            ProtocolType.IPv6DestinationOptions,
+            ProtocolType.IPv6RoutingHeader,
+            ProtocolType.IPv6FragmentHeader,
+            ProtocolType.IPSecAuthenticationHeader,
+            ProtocolType.Encapsulation,
+            ProtocolType.IPv6DestinationOptions,
+            ProtocolType.MobilityHeader,
+            ProtocolType.HostIdentity,
+            ProtocolType.Shim6,
+            ProtocolType.Reserved253,
+            ProtocolType.Reserved254
         };
 
         private List<IPv6ExtensionHeader> _extensionHeaders;
@@ -270,9 +270,9 @@ namespace PacketDotNet
         /// <summary>
         /// Identifies the NextHeader, will be the protocol of the encapsulated in this ip packet unless there are extended headers
         /// </summary>
-        public override IPProtocolType NextHeader
+        public override ProtocolType NextHeader
         {
-            get => (IPProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
+            get => (ProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
             set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition] = (byte) value;
         }
 
@@ -292,7 +292,7 @@ namespace PacketDotNet
         /// <value>
         /// The protocol of the packet encapsulated in this ip packet
         /// </value>
-        public override IPProtocolType Protocol
+        public override ProtocolType Protocol
         {
             get
             {
@@ -300,10 +300,10 @@ namespace PacketDotNet
                     CalculateExtensionHeaders();
 
                 if (_totalExtensionHeadersLength == 0)
-                    return (IPProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
+                    return (ProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
 
 
-                return (IPProtocolType) Header.Bytes[_protocolOffset];
+                return (ProtocolType) Header.Bytes[_protocolOffset];
             }
 
             set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition + _totalExtensionHeadersLength] = (byte) value;
@@ -401,10 +401,10 @@ namespace PacketDotNet
             var nextHeaderPosition = Header.Offset + IPv6Fields.NextHeaderPosition;
             var totalExtensionHeadersLength = 0;
 
-            var nextHeader = (IPProtocolType) Header.Bytes[nextHeaderPosition];
+            var nextHeader = (ProtocolType) Header.Bytes[nextHeaderPosition];
 
             // Strip off the extension headers.
-            while (ExtensionHeaderTypes.Contains(nextHeader) && nextHeader != IPProtocolType.NONE)
+            while (ExtensionHeaderTypes.Contains(nextHeader) && nextHeader != ProtocolType.IPv6NoNextHeader)
             {
                 nextHeaderPosition = Header.Offset + IPv6Fields.HeaderLength + totalExtensionHeadersLength;
 
@@ -413,7 +413,7 @@ namespace PacketDotNet
 
                 totalExtensionHeadersLength += extensionHeader.Length;
 
-                nextHeader = (IPProtocolType) Header.Bytes[nextHeaderPosition];
+                nextHeader = (ProtocolType) Header.Bytes[nextHeaderPosition];
             }
 
             _protocolOffset = nextHeaderPosition;

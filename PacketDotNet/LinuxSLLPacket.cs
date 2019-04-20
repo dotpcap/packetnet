@@ -53,9 +53,9 @@ namespace PacketDotNet
         /// <value>
         /// The encapsulated protocol type
         /// </value>
-        public EthernetPacketType EthernetProtocolType
+        public EthernetType EthernetProtocolType
         {
-            get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
+            get => (EthernetType) EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                                        Header.Offset + LinuxSllFields.EthernetProtocolTypePosition);
             set
             {

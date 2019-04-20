@@ -53,7 +53,7 @@ namespace Test.PacketType
             Assert.AreEqual(System.Net.IPAddress.Parse("fe80::2a0:ccff:fed9:4175"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("ff02::2"), ip.DestinationAddress);
             Assert.AreEqual(IPVersion.IPv6, ip.Version);
-            Assert.AreEqual(IPProtocolType.ICMPV6, ip.Protocol);
+            Assert.AreEqual(ProtocolType.IcmpV6, ip.Protocol);
             Assert.AreEqual(16,  ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
             Assert.AreEqual(255, ip.HopLimit);
             Assert.AreEqual(255, ip.TimeToLive);
@@ -81,7 +81,7 @@ namespace Test.PacketType
             Assert.AreEqual(System.Net.IPAddress.Parse("fe80::d802:3589:15cf:3128"), ip.SourceAddress);
             Assert.AreEqual(System.Net.IPAddress.Parse("ff02::16"), ip.DestinationAddress);
             Assert.AreEqual(IPVersion.IPv6, ip.Version);
-            Assert.AreEqual(IPProtocolType.ICMPV6, ip.Protocol);
+            Assert.AreEqual(ProtocolType.IcmpV6, ip.Protocol);
             Assert.AreEqual(28, ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
             Assert.AreEqual(1, ip.HopLimit);
             Assert.AreEqual(1, ip.TimeToLive);

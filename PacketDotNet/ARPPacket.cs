@@ -69,9 +69,9 @@ namespace PacketDotNet
         /// <value>
         /// Also known as ProtocolType
         /// </value>
-        public EthernetPacketType ProtocolAddressType
+        public EthernetType ProtocolAddressType
         {
-            get => (EthernetPacketType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
+            get => (EthernetType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                                         Header.Offset + ARPFields.ProtocolAddressTypePosition);
             set
             {
@@ -283,7 +283,7 @@ namespace PacketDotNet
             HardwareAddressType = LinkLayers.Ethernet;
             HardwareAddressLength = EthernetFields.MacAddressLength;
 
-            ProtocolAddressType = EthernetPacketType.IPv4;
+            ProtocolAddressType = EthernetType.IPv4;
             ProtocolAddressLength = IPv4Fields.AddressLength;
         }
 

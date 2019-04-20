@@ -23,12 +23,12 @@ namespace ConstructingPackets
             var ethernetSourceHwAddress = System.Net.NetworkInformation.PhysicalAddress.Parse(sourceHwAddress);
             var destinationHwAddress = "80-80-80-80-80-80";
             var ethernetDestinationHwAddress = System.Net.NetworkInformation.PhysicalAddress.Parse(destinationHwAddress);
-            // NOTE: using EthernetPacketType.None to illustrate that the ethernet
+            // NOTE: using EthernetType.None to illustrate that the ethernet
             //       protocol type is updated based on the packet payload that is
             //       assigned to that particular ethernet packet
             var ethernetPacket = new EthernetPacket(ethernetSourceHwAddress,
                                                     ethernetDestinationHwAddress,
-                                                    EthernetPacketType.None);
+                                                    EthernetType.None);
 
             // Now stitch all of the packets together
             ipPacket.PayloadPacket = tcpPacket;

@@ -19,7 +19,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace PacketDotNet
 {
-    /// Copied from Pcap.Net @ 20091117
     /// <summary>
     /// Code constants for well-defined ethernet protocols.
     /// EtherType is a two-octet field in an Ethernet frame, as defined by the Ethernet II framing networking standard.
@@ -27,7 +26,7 @@ namespace PacketDotNet
     /// Also contains entries taken from linux/if_ether.h and tcpdump/ethertype.h
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public enum EthernetPacketType : ushort
+    public enum EthernetType : ushort
     {
         /// <summary>
         /// No Ethernet type
@@ -72,7 +71,7 @@ namespace PacketDotNet
         /// <summary>
         /// Novell IPX (alt)
         /// </summary>
-        NovellInternetworkPacketExchange = 0x8137,
+        NovellIpx = 0x8137,
 
         /// <summary>
         /// Novell
@@ -97,27 +96,27 @@ namespace PacketDotNet
         /// <summary>
         /// MPLS unicast
         /// </summary>
-        MultiprotocolLabelSwitchingUnicast = 0x8847,
+        MplsUnicast = 0x8847,
 
         /// <summary>
         /// MPLS multicast
         /// </summary>
-        MultiprotocolLabelSwitchingMulticast = 0x8848,
+        MplsMulticast = 0x8848,
 
         /// <summary>
         /// PPPoE Discovery Stage
         /// </summary>
-        PointToPointProtocolOverEthernetDiscoveryStage = 0x8863,
+        PppoeDiscoveryStage = 0x8863,
 
         /// <summary>
         /// PPPoE Session Stage
         /// </summary>
-        PointToPointProtocolOverEthernetSessionStage = 0x8864,
+        PppoeSessionStage = 0x8864,
 
         /// <summary>
         /// EAP over LAN (IEEE 802.1X)
         /// </summary>
-        ExtensibleAuthenticationProtocolOverLan = 0x888E,
+        EapOverLan = 0x888E,
 
         /// <summary>
         /// PROFINET
@@ -137,7 +136,7 @@ namespace PacketDotNet
         /// <summary>
         /// EtherCAT Protocol
         /// </summary>
-        EtherCatProtocol = 0x88A4,
+        EtherCat = 0x88A4,
 
         /// <summary>
         /// Provider Bridging (IEEE 802.1ad)
@@ -147,22 +146,22 @@ namespace PacketDotNet
         /// <summary>
         /// AVB Transport Protocol (AVBTP)
         /// </summary>
-        AvbTransportProtocol = 0x88B5,
+        Avbtp = 0x88B5,
 
         /// <summary>
         /// Link Layer Discovery Protocol (LLDP)
         /// </summary>
-        LLDP = 0x88CC,
+        Lldp = 0x88CC,
 
         /// <summary>
         /// SERCOS III
         /// </summary>
-        SerialRealTimeCommunicationSystemIii = 0x88CD,
+        SercosIII = 0x88CD,
 
         /// <summary>
         /// Circuit Emulation Services over Ethernet (MEF-8)
         /// </summary>
-        CircuitEmulationServicesOverEthernet = 0x88D8,
+        CecOverEthernet = 0x88D8,
 
         /// <summary>
         /// HomePlug
@@ -177,22 +176,22 @@ namespace PacketDotNet
         /// <summary>
         /// Precision Time Protocol (IEEE 1588)
         /// </summary>
-        PrecisionTimeProtocol = 0x88f7,
+        Ptp = 0x88f7,
 
         /// <summary>
         /// IEEE 802.1ag Connectivity Fault Management (CFM) Protocol / ITU-T Recommendation Y.1731 (OAM)
         /// </summary>
-        ConnectivityFaultManagementOrOperationsAdministrationManagement = 0x8902,
+        CfmOrOam = 0x8902,
 
         /// <summary>
         /// Fibre Channel over Ethernet
         /// </summary>
-        FibreChannelOverEthernet = 0x8906,
+        Fcoe = 0x8906,
 
         /// <summary>
         /// FCoE Initialization Protocol
         /// </summary>
-        FibreChannelOverEthernetInitializationProtocol = 0x8914,
+        FcoeInitialization = 0x8914,
 
         /// <summary>
         /// Q-in-Q
@@ -202,7 +201,7 @@ namespace PacketDotNet
         /// <summary>
         /// Veritas Low Latency Transport (LLT)
         /// </summary>
-        VeritasLowLatencyTransport = 0xCAFE,
+        VeritasLlt = 0xCAFE,
 
         /// <summary>
         /// Ethernet loopback packet

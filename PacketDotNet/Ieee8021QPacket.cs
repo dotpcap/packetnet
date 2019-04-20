@@ -109,9 +109,9 @@ namespace PacketDotNet
         /// <value>
         /// Type of packet that this vlan packet encapsulates
         /// </value>
-        public virtual EthernetPacketType Type
+        public virtual EthernetType Type
         {
-            get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
+            get => (EthernetType) EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                                        Header.Offset + Ieee8021QFields.TypePosition);
             set
             {

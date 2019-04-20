@@ -288,7 +288,7 @@ namespace PacketDotNet
         /// </value>
         [Obsolete("Use Protocol instead of NextHeader for IPv4 Packets.")]
 #pragma warning disable 0809
-        public override IPProtocolType NextHeader
+        public override ProtocolType NextHeader
 #pragma warning restore 0809
         {
             get => Protocol;
@@ -305,11 +305,11 @@ namespace PacketDotNet
         }
 
         /// <summary>Fetch the code indicating the type of protocol embedded in the IP</summary>
-        /// <seealso cref="IPProtocolType">
+        /// <seealso cref="ProtocolType">
         /// </seealso>
-        public override IPProtocolType Protocol
+        public override ProtocolType Protocol
         {
-            get => (IPProtocolType) Header.Bytes[Header.Offset + IPv4Fields.ProtocolPosition];
+            get => (ProtocolType) Header.Bytes[Header.Offset + IPv4Fields.ProtocolPosition];
             set => Header.Bytes[Header.Offset + IPv4Fields.ProtocolPosition] = (byte) value;
         }
 

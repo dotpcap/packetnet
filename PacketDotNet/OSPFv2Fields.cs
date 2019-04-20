@@ -20,12 +20,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace PacketDotNet
 {
-    internal class OSPFv2Fields
+    internal class OspfV2Fields
     {
         /// <summary>Length of the OSPF area ID (ip) field in bytes </summary>
         public static readonly int AreaIDLength = 4;
 
-        /// <summary>Position of the AreaID field </summary>
+        /// <summary>Position of the AreaId field </summary>
         public static readonly int AreaIDPosition;
 
         /// <summary>One padding byte at the end of the header </summary>
@@ -49,7 +49,7 @@ namespace PacketDotNet
         /// <summary>Length of optional bits in bytes.</summary>
         public static readonly int BitsLength = 1;
 
-        /// <summary>Positon of the optional bits.</summary>
+        /// <summary>Position of the optional bits.</summary>
         public static readonly int BitsPosition;
 
         /// <summary>Length of the OSPF checksum in bytes </summary>
@@ -62,12 +62,12 @@ namespace PacketDotNet
         public static readonly int DBDescriptionOptionsLength = 1;
 
         /// <summary>Position of DB description options.</summary>
-        public static readonly int DBDescriptionOptionsPosition;
+        public static readonly int DescriptionOptionsPosition;
 
         /// <summary>Length of the DD sequence field in bytes </summary>
         public static readonly int DDSequenceLength = 4;
 
-        /// <summary>Positon of the DD sequence. </summary>
+        /// <summary>Position of the DD sequence. </summary>
         public static readonly int DDSequencePosition;
 
         /// <summary>Length of the Designated Router ID (ip) field in bytes </summary>
@@ -79,10 +79,10 @@ namespace PacketDotNet
         /// <summary>Length in bytes of an OSPF header.</summary>
         public static readonly int HeaderLength;
 
-        /// <summary>Length of the Hello Interaval in bytes.</summary>
+        /// <summary>Length of the Hello Interval in bytes.</summary>
         public static readonly int HelloIntervalLength = 2;
 
-        /// <summary>Position of the Hello Interaval.</summary>
+        /// <summary>Position of the Hello Interval.</summary>
         public static readonly int HelloIntervalPosition;
 
         /// <summary>Length of the options in bytes.</summary>
@@ -96,10 +96,10 @@ namespace PacketDotNet
 
         // ------------------ ospf database description packet stuff
 
-        /// <summary>Length of InterfaceMTU in bytes.</summary>
+        /// <summary>Length of InterfaceMtu in bytes.</summary>
         public static readonly int InterfaceMTULength = 2;
 
-        /// <summary>Position of InterfaceMTU.</summary>
+        /// <summary>Position of InterfaceMtu.</summary>
         public static readonly int InterfaceMTUPosition;
 
         // ------------------ ospf link state ack
@@ -112,7 +112,7 @@ namespace PacketDotNet
         /// <summary>Length of the LSA header in bytes </summary>
         public static readonly int LSAHeaderLength = 20;
 
-        /// <summary>Positon of the LSA header. </summary>
+        /// <summary>Position of the LSA header. </summary>
         public static readonly int LSAHeaderPosition;
 
         // ------------------ ospf link state update
@@ -120,11 +120,11 @@ namespace PacketDotNet
         /// <summary>Length of the LSA# field</summary>
         public static readonly int LSANumberLength = 4;
 
-        /// <summary>Positon of the LSA#.</summary>
+        /// <summary>Position of the LSA#.</summary>
         public static readonly int LSANumberPosition;
 
-        /// <summary>Positon of the LSA Updates.</summary>
-        public static readonly int LSAUpdatesPositon;
+        /// <summary>Position of the LSA Updates.</summary>
+        public static readonly int LSAUpdatesPosition;
 
         // ------------------ ospf link state request packet stuff
         /// <summary>The start of the link state requests.</summary>
@@ -141,8 +141,8 @@ namespace PacketDotNet
         /// <summary>Length of NetworkMask in bytes.</summary>
         public static readonly int NetworkMaskLength = 4;
 
-        /// <summary>Positon of the Networkmask.</summary>
-        public static readonly int NetworkMaskPositon;
+        /// <summary>Position of the Networkmask.</summary>
+        public static readonly int NetworkMaskPosition;
 
         /// <summary>Length of the OSPF packet in bytes.</summary>
         public static readonly int PacketLength = 2;
@@ -159,7 +159,7 @@ namespace PacketDotNet
         /// <summary>Length of the OSPF router ID (ip) field in bytes </summary>
         public static readonly int RouterIDLength = 4;
 
-        /// <summary>Position of the RouterID field </summary>
+        /// <summary>Position of the RouterId field </summary>
         public static readonly int RouterIDPosition;
 
         /// <summary>Length of RTR priority in bytes.</summary>
@@ -180,7 +180,7 @@ namespace PacketDotNet
         /// <summary>Position of the OSPF version.</summary>
         public static readonly int VersionPosition;
 
-        static OSPFv2Fields()
+        static OspfV2Fields()
         {
             VersionPosition = 0;
             TypePosition = VersionPosition + VersionLength;
@@ -193,8 +193,8 @@ namespace PacketDotNet
             HeaderLength = AuthorizationPosition + AuthorizationLength;
 
             // ------------------ ospf hello packet stuff
-            NetworkMaskPositon = HeaderLength;
-            HelloIntervalPosition = NetworkMaskPositon + NetworkMaskLength;
+            NetworkMaskPosition = HeaderLength;
+            HelloIntervalPosition = NetworkMaskPosition + NetworkMaskLength;
             HelloOptionsPosition = HelloIntervalPosition + HelloIntervalLength;
             RtrPriorityPosition = HelloOptionsPosition + HelloOptionsLength;
             RouterDeadIntervalPosition = RtrPriorityPosition + RtrPriorityLength;
@@ -205,8 +205,8 @@ namespace PacketDotNet
 
             // ------------------ ospf database description packet stuff
             InterfaceMTUPosition = HeaderLength;
-            DBDescriptionOptionsPosition = InterfaceMTUPosition + InterfaceMTULength;
-            BitsPosition = DBDescriptionOptionsPosition + DBDescriptionOptionsLength;
+            DescriptionOptionsPosition = InterfaceMTUPosition + InterfaceMTULength;
+            BitsPosition = DescriptionOptionsPosition + DBDescriptionOptionsLength;
             DDSequencePosition = BitsPosition + BitsLength;
             LSAHeaderPosition = DDSequencePosition + DDSequenceLength;
 
@@ -215,7 +215,7 @@ namespace PacketDotNet
 
             // ------------------ ospf link state update
             LSANumberPosition = HeaderLength;
-            LSAUpdatesPositon = LSANumberLength + LSANumberPosition;
+            LSAUpdatesPosition = LSANumberLength + LSANumberPosition;
 
             // ------------------ ospf link state ack
             LSAAckPosition = HeaderLength;

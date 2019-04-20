@@ -24,6 +24,7 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -127,7 +128,7 @@ namespace PacketDotNet
         /// <value>
         /// The VLAN identifier.
         /// </value>
-        public ushort VLANIdentifier
+        public ushort VlanIdentifier
         {
             get
             {
@@ -190,7 +191,7 @@ namespace PacketDotNet
                     { "priority", PriorityControlPoint + " (0x" + PriorityControlPoint.ToString("x") + ")" },
                     { "canonical format indicator", CanonicalFormatIndicator.ToString() },
                     { "type", Type + " (0x" + Type.ToString("x") + ")" },
-                    { "VLANIdentifier", VLANIdentifier + " (0x" + VLANIdentifier.ToString("x") + ")" }
+                    { "VlanIdentifier", VlanIdentifier + " (0x" + VlanIdentifier.ToString("x") + ")" }
                 };
 
                 // calculate the padding needed to right-justify the property names

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
+
 namespace Test
 {
     /// <summary>

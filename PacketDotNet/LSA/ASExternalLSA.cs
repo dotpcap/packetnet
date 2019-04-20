@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet.LSA
 {
     /// <summary>
@@ -72,7 +73,7 @@ namespace PacketDotNet.LSA
         {
             get
             {
-                var linkCnt = (Length - NetworkMaskLength - OSPFv2Fields.LSAHeaderLength) / ASExternalLinkLength;
+                var linkCnt = (Length - NetworkMaskLength - OspfV2Fields.LSAHeaderLength) / ASExternalLinkLength;
                 var ret = new List<ASExternalLink>(linkCnt);
                 for (var i = 0; i < linkCnt; i++)
                 {

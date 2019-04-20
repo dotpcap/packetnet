@@ -23,6 +23,7 @@ using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
+
 namespace Test.PacketType
 {
     namespace Ieee80211

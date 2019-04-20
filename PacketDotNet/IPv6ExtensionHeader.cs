@@ -27,7 +27,7 @@ namespace PacketDotNet
     [Serializable]
     public class IPv6ExtensionHeader
     {
-        protected ByteArraySegment _encapsulatedBytes;
+        protected ByteArraySegment ByteArraySegment;
         private ByteArraySegment _data;
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace PacketDotNet
         public IPv6ExtensionHeader(IPProtocolType header, ByteArraySegment byteArraySegment)
         {
             Header = header;
-            _encapsulatedBytes = byteArraySegment;
+            ByteArraySegment = byteArraySegment;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace PacketDotNet
                     return 0;
 
 
-                return _encapsulatedBytes.Bytes[_encapsulatedBytes.Offset + IPv6Fields.HeaderExtensionLengthPosition];
+                return ByteArraySegment.Bytes[ByteArraySegment.Offset + IPv6Fields.HeaderExtensionLengthPosition];
             }
             set
             {
@@ -65,7 +65,7 @@ namespace PacketDotNet
                     return;
 
 
-                _encapsulatedBytes.Bytes[_encapsulatedBytes.Offset + IPv6Fields.HeaderExtensionLengthPosition] = (byte) value;
+                ByteArraySegment.Bytes[ByteArraySegment.Offset + IPv6Fields.HeaderExtensionLengthPosition] = (byte) value;
             }
         }
 
@@ -79,14 +79,14 @@ namespace PacketDotNet
         /// </summary>
         public IPProtocolType NextHeader
         {
-            get => (IPProtocolType) _encapsulatedBytes.Bytes[_encapsulatedBytes.Offset];
-            set => _encapsulatedBytes.Bytes[_encapsulatedBytes.Offset] = (byte) value;
+            get => (IPProtocolType) ByteArraySegment.Bytes[ByteArraySegment.Offset];
+            set => ByteArraySegment.Bytes[ByteArraySegment.Offset] = (byte) value;
         }
 
         /// <summary>
         /// Gets the payload of the extension header.
         /// </summary>
         public ByteArraySegment Payload =>
-            _data ?? (_data = new ByteArraySegment(_encapsulatedBytes.Bytes, _encapsulatedBytes.Offset + IPv6Fields.HeaderExtensionDataPosition, Length - IPv6Fields.HeaderExtensionDataPosition));
+            _data ?? (_data = new ByteArraySegment(ByteArraySegment.Bytes, ByteArraySegment.Offset + IPv6Fields.HeaderExtensionDataPosition, Length - IPv6Fields.HeaderExtensionDataPosition));
     }
 }

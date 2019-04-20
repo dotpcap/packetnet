@@ -19,6 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -26,25 +27,25 @@ namespace PacketDotNet
     /// OSPF Version 2 (for IPv4) is defined in RFC 2328.
     /// OSPF Version 3 (for IPv6) is defined in RFC 5340.
     /// </summary>
-    public abstract class OSPFPacket : Packet
+    public abstract class OspfPacket : Packet
     {
         /// <summary>
-        /// Constructs the right version and type of an OSPFPacket
+        /// Constructs the right version and type of an OspfPacket
         /// </summary>
-        /// <param name="payload">The bytes from which the packet is conctructed</param>
+        /// <param name="payload">The bytes from which the packet is constructed</param>
         /// <param name="offset">The offset of this packet from the parent packet</param>
         /// <returns>an OSPF packet</returns>
-        public static OSPFPacket ConstructOSPFPacket(byte[] payload, int offset)
+        public static OspfPacket ConstructOspfPacket(byte[] payload, int offset)
         {
-            var v = (OSPFVersion) payload[offset + OSPFv2Fields.VersionPosition];
+            var v = (OspfVersion) payload[offset + OspfV2Fields.VersionPosition];
 
             switch (v)
             {
-                case OSPFVersion.OSPFv2:
+                case OspfVersion.OSPFv2:
                 {
                     return ConstructV2Packet(payload, offset);
                 }
-                case OSPFVersion.OSPFv3:
+                case OspfVersion.OSPFv3:
                 {
                     return ConstructV3Packet();
                 }
@@ -55,36 +56,36 @@ namespace PacketDotNet
             }
         }
 
-        private static OSPFv2Packet ConstructV2Packet(byte[] payload, int offset)
+        private static OspfV2Packet ConstructV2Packet(byte[] payload, int offset)
         {
-            OSPFv2Packet p;
-            var type = (OSPFPacketType) payload[offset + OSPFv2Fields.TypePosition];
+            OspfV2Packet p;
+            var type = (OspfPacketType) payload[offset + OspfV2Fields.TypePosition];
 
             switch (type)
             {
-                case OSPFPacketType.Hello:
+                case OspfPacketType.Hello:
                 {
-                    p = new OSPFv2HelloPacket(payload, offset);
+                    p = new OspfV2HelloPacket(payload, offset);
                     break;
                 }
-                case OSPFPacketType.DatabaseDescription:
+                case OspfPacketType.DatabaseDescription:
                 {
-                    p = new OSPFv2DDPacket(payload, offset);
+                    p = new OspfV2DatabaseDescriptorPacket(payload, offset);
                     break;
                 }
-                case OSPFPacketType.LinkStateAcknowledgment:
+                case OspfPacketType.LinkStateAcknowledgment:
                 {
-                    p = new OSPFv2LSAPacket(payload, offset);
+                    p = new OspfV2LinkStateAcknowledgmentPacket(payload, offset);
                     break;
                 }
-                case OSPFPacketType.LinkStateRequest:
+                case OspfPacketType.LinkStateRequest:
                 {
-                    p = new OSPFv2LSRequestPacket(payload, offset);
+                    p = new OspfV2LinkStateRequestPacket(payload, offset);
                     break;
                 }
-                case OSPFPacketType.LinkStateUpdate:
+                case OspfPacketType.LinkStateUpdate:
                 {
-                    p = new OSPFv2LSUpdatePacket(payload, offset);
+                    p = new OspfV2LinkStateUpdatePacket(payload, offset);
                     break;
                 }
                 default:
@@ -96,7 +97,7 @@ namespace PacketDotNet
             return p;
         }
 
-        private static OSPFPacket ConstructV3Packet()
+        private static OspfPacket ConstructV3Packet()
         {
             throw new NotImplementedException("OSPFv3 is not supported yet");
         }

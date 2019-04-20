@@ -20,6 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using log4net;
 using log4net.Repository.Hierarchy;
+
 namespace Test
 {
     public class LoggingConfiguration

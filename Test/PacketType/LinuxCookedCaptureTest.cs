@@ -23,6 +23,7 @@ using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;
 using PacketDotNet;
+
 namespace Test.PacketType
 {
     [TestFixture]
@@ -35,10 +36,10 @@ namespace Test.PacketType
             Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             // validate some of the LinuxSSLPacket fields
-            var l = (LinuxSLLPacket)p;
+            var l = (LinuxSllPacket)p;
             Assert.AreEqual(6, l.LinkLayerAddressLength, "Address length");
             Assert.AreEqual(1, l.LinkLayerAddressType);
-            Assert.AreEqual(LinuxSLLType.PacketSentToUs, l.Type);
+            Assert.AreEqual(LinuxSllType.PacketSentToUs, l.Type);
 
             // validate some of the arp fields
             Assert.AreEqual("192.168.1.1",
@@ -105,7 +106,7 @@ namespace Test.PacketType
             Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var l = (LinuxSLLPacket)p;
+            var l = (LinuxSllPacket)p;
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(l.ToString());
@@ -122,7 +123,7 @@ namespace Test.PacketType
             Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var l = (LinuxSLLPacket)p;
+            var l = (LinuxSllPacket)p;
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(l.ToString(StringOutputType.Verbose));

@@ -61,7 +61,7 @@ namespace PacketDotNet.LLDP
         private readonly ByteArraySegment _byteArraySegment;
 
         /// <summary>
-        /// Construct a TLVTypeLength for a TLV
+        /// Construct a TLVTypeLength for a Tlv
         /// </summary>
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
@@ -72,16 +72,16 @@ namespace PacketDotNet.LLDP
         }
 
         /// <value>
-        /// The TLV Value's Type
+        /// The Tlv Value's Type
         /// </value>
-        public TLVTypes Type
+        public TlvTypes Type
         {
             get
             {
                 // get the type
                 var typeAndLength = TypeAndLength;
                 // remove the length info
-                return (TLVTypes) (typeAndLength >> LengthBits);
+                return (TlvTypes) (typeAndLength >> LengthBits);
             }
 
             set
@@ -98,8 +98,8 @@ namespace PacketDotNet.LLDP
         }
 
         /// <value>
-        /// The TLV Value's Length
-        /// NOTE: Value is the length of the TLV Value only, does not include the length
+        /// The Tlv Value's Length
+        /// NOTE: Value is the length of the Tlv Value only, does not include the length
         /// of the type and length fields
         /// </value>
         public int Length
@@ -125,7 +125,7 @@ namespace PacketDotNet.LLDP
 
                 if (value > MaximumTLVLength)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value), "The maximum value for a TLV length is 511");
+                    throw new ArgumentOutOfRangeException(nameof(value), "The maximum value for a Tlv length is 511");
                 }
 
                 // save the old type

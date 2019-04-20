@@ -5,6 +5,7 @@
 // *************************************************************************
 
 using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet
 {
     /// <summary>

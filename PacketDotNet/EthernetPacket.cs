@@ -78,7 +78,7 @@ namespace PacketDotNet
                         Type = EthernetPacketType.Arp;
                         break;
                     }
-                    case LLDPPacket _:
+                    case LldpPacket _:
                     {
                         Type = EthernetPacketType.LLDP;
                         break;
@@ -248,7 +248,7 @@ namespace PacketDotNet
                 }
                 case EthernetPacketType.LLDP:
                 {
-                    payloadPacketOrData.Packet = new LLDPPacket(payload);
+                    payloadPacketOrData.Packet = new LldpPacket(payload);
                     break;
                 }
                 case EthernetPacketType.PointToPointProtocolOverEthernetSessionStage:

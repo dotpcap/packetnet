@@ -26,13 +26,14 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet
 {
     /// <summary>
     /// An IGMP packet.
     /// </summary>
     [Serializable]
-    public sealed class IGMPv2Packet : InternetPacket
+    public sealed class IgmpV2Packet : InternetPacket
     {
         /// <summary>
         /// Constructor
@@ -40,7 +41,7 @@ namespace PacketDotNet
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public IGMPv2Packet(ByteArraySegment byteArraySegment)
+        public IgmpV2Packet(ByteArraySegment byteArraySegment)
         {
             // set the header field, header field values are retrieved from this byte array
             // ReSharper disable once UseObjectOrCollectionInitializer
@@ -65,7 +66,7 @@ namespace PacketDotNet
         /// <param name="parentPacket">
         /// A <see cref="Packet" />
         /// </param>
-        public IGMPv2Packet
+        public IgmpV2Packet
         (
             ByteArraySegment byteArraySegment,
             Packet parentPacket) : this(byteArraySegment)
@@ -77,11 +78,11 @@ namespace PacketDotNet
         public short Checksum
         {
             get => BitConverter.ToInt16(Header.Bytes,
-                                        Header.Offset + IGMPv2Fields.ChecksumPosition);
+                                        Header.Offset + IgmpV2Fields.ChecksumPosition);
             set
             {
                 var theValue = BitConverter.GetBytes(value);
-                Array.Copy(theValue, 0, Header.Bytes, Header.Offset + IGMPv2Fields.ChecksumPosition, 2);
+                Array.Copy(theValue, 0, Header.Bytes, Header.Offset + IgmpV2Fields.ChecksumPosition, 2);
             }
         }
 
@@ -90,23 +91,23 @@ namespace PacketDotNet
 
         /// <summary>Fetch the IGMP group address.</summary>
         public IPAddress GroupAddress => IPPacket.GetIPAddress(AddressFamily.InterNetwork,
-                                                               Header.Offset + IGMPv2Fields.GroupAddressPosition,
+                                                               Header.Offset + IgmpV2Fields.GroupAddressPosition,
                                                                Header.Bytes);
 
         /// <summary>Fetch the IGMP max response time.</summary>
         public byte MaxResponseTime
         {
-            get => Header.Bytes[Header.Offset + IGMPv2Fields.MaxResponseTimePosition];
-            set => Header.Bytes[Header.Offset + IGMPv2Fields.MaxResponseTimePosition] = value;
+            get => Header.Bytes[Header.Offset + IgmpV2Fields.MaxResponseTimePosition];
+            set => Header.Bytes[Header.Offset + IgmpV2Fields.MaxResponseTimePosition] = value;
         }
 
         /// <value>
         /// The type of IGMP message
         /// </value>
-        public IGMPMessageType Type
+        public IgmpV2MessageType Type
         {
-            get => (IGMPMessageType) Header.Bytes[Header.Offset + IGMPv2Fields.TypePosition];
-            set => Header.Bytes[Header.Offset + IGMPv2Fields.TypePosition] = (byte) value;
+            get => (IgmpV2MessageType) Header.Bytes[Header.Offset + IgmpV2Fields.TypePosition];
+            set => Header.Bytes[Header.Offset + IgmpV2Fields.TypePosition] = (byte) value;
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
@@ -125,7 +126,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
-                buffer.AppendFormat("{0}[IGMPv2Packet: Type={2}, MaxResponseTime={3}, GroupAddress={4}]{1}",
+                buffer.AppendFormat("{0}[IgmpV2Packet: Type={2}, MaxResponseTime={3}, GroupAddress={4}]{1}",
                                     color,
                                     colorEscape,
                                     Type,

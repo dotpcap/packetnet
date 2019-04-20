@@ -19,6 +19,7 @@ using System;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
+
 namespace Test.PacketType
 {
     [TestFixture]

@@ -22,6 +22,7 @@ using System;
 using System.Net.NetworkInformation;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>

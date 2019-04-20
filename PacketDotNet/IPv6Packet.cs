@@ -57,6 +57,11 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
+        /// <value>
+        /// The version of the IP protocol. The '6' in IPv6 indicates the version of the protocol
+        /// </value>
+        public static IPVersion IPVersion = IPVersion.IPv6;
+
         private static readonly HashSet<IPProtocolType> ExtensionHeaderTypes = new HashSet<IPProtocolType>
         {
             IPProtocolType.HOPOPTS,
@@ -73,231 +78,17 @@ namespace PacketDotNet
             IPProtocolType.RESERVEDTYPE254
         };
 
-        /// <value>
-        /// The version of the IP protocol. The '6' in IPv6 indicates the version of the protocol
-        /// </value>
-        public static IPVersion IPVersion = IPVersion.IPv6;
-
-        /// <value>
-        /// The length of all the extension headers
-        /// </value>
-        private int _totalExtensionHeadersLength = -1;
+        private List<IPv6ExtensionHeader> _extensionHeaders;
 
         /// <value>
         /// The position of the byte the contains the encapsulated protocol
         /// </value>
         private int _protocolOffset;
 
-        private List<IPv6ExtensionHeader> _extensionHeaders;
-
-        private int VersionTrafficClassFlowLabel
-        {
-            get => EndianBitConverter.Big.ToInt32(Header.Bytes,
-                                                  Header.Offset + IPv6Fields.VersionTrafficClassFlowLabelPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + IPv6Fields.VersionTrafficClassFlowLabelPosition);
-        }
-
-        /// <summary>
-        /// The version field of the IPv6 Packet.
-        /// </summary>
-        public override IPVersion Version
-        {
-            get => (IPVersion) ((VersionTrafficClassFlowLabel >> 28) & 0xF);
-            set
-            {
-                var theValue = (int) value;
-
-                // read the existing value
-                var field = (uint) VersionTrafficClassFlowLabel;
-
-                // mask the new field into place
-                field = (uint) ((field & 0x0FFFFFFF) | ((theValue << 28) & 0xF0000000));
-
-                // write the updated value back
-                VersionTrafficClassFlowLabel = (int) field;
-            }
-        }
-
-        /// <summary>
-        /// The traffic class field of the IPv6 Packet.
-        /// </summary>
-        public int TrafficClass
-        {
-            get => (VersionTrafficClassFlowLabel >> 20) & 0xFF;
-            set
-            {
-                // read the original value
-                var field = (uint) VersionTrafficClassFlowLabel;
-
-                // mask in the new field
-                field = (field & 0xF00FFFFF) | ((uint) value << 20) & 0x0FF00000;
-
-                // write the updated value back
-                VersionTrafficClassFlowLabel = (int) field;
-            }
-        }
-
-        /// <summary>
-        /// The flow label field of the IPv6 Packet.
-        /// </summary>
-        public int FlowLabel
-        {
-            get => VersionTrafficClassFlowLabel & 0xFFFFF;
-            set
-            {
-                // read the original value
-                var field = (uint) VersionTrafficClassFlowLabel;
-
-                // make the value in
-                field = (field & 0xFFF00000) | ((uint) value & 0x000FFFFF);
-
-                // write the updated value back
-                VersionTrafficClassFlowLabel = (int) field;
-            }
-        }
-
-        /// <summary>
-        /// The size of the payload in octets, including any extension headers.
-        /// This differs from the IPv4's Total Length, which also includes the length of the header.
-        /// </summary>
-        public override ushort PayloadLength
-        {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + IPv6Fields.PayloadLengthPosition);
-            set => EndianBitConverter.Big.CopyBytes(value,
-                                                    Header.Bytes,
-                                                    Header.Offset + IPv6Fields.PayloadLengthPosition);
-        }
-
         /// <value>
-        /// Backwards compatibility property for IPv4.HeaderLength
-        /// NOTE: This field is the number of 32bit words
+        /// The length of all the extension headers
         /// </value>
-        public override int HeaderLength
-        {
-            get => IPv6Fields.HeaderLength / 4;
-            set => ThrowHelper.ThrowNotImplementedException();
-        }
-
-        /// <value>
-        /// Backwards compatibility property for IPv4.TotalLength
-        /// </value>
-        public override int TotalLength
-        {
-            get => PayloadLength + (HeaderLength * 4);
-            set => PayloadLength = (ushort) (value - (HeaderLength * 4));
-        }
-
-        /// <summary>
-        /// Identifies the NextHeader, will be the protocol of the encapsulated in this ip packet unless there are extended headers
-        /// </summary>
-        public override IPProtocolType NextHeader
-        {
-            get => (IPProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
-            set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition] = (byte) value;
-        }
-
-        /// <value>
-        /// The protocol of the packet encapsulated in this ip packet
-        /// </value>
-        public override IPProtocolType Protocol
-        {
-            get
-            {
-                if (_totalExtensionHeadersLength == -1)
-                    CalculateExtensionHeaders();
-
-                if (_totalExtensionHeadersLength == 0)
-                    return (IPProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
-
-
-                return (IPProtocolType) Header.Bytes[_protocolOffset];
-            }
-
-            set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition + _totalExtensionHeadersLength] = (byte) value;
-        }
-
-        /// <summary>
-        /// The hop limit field of the IPv6 Packet.
-        /// NOTE: Replaces the 'time to live' field of IPv4
-        /// 8-bit value
-        /// </summary>
-        public override int HopLimit
-        {
-            get => Header.Bytes[Header.Offset + IPv6Fields.HopLimitPosition];
-            set => Header.Bytes[Header.Offset + IPv6Fields.HopLimitPosition] = (byte) value;
-        }
-
-        /// <value>
-        /// Helper alias for 'HopLimit'
-        /// </value>
-        public override int TimeToLive
-        {
-            get => HopLimit;
-            set => HopLimit = value;
-        }
-
-        /// <summary>
-        /// The source address field of the IPv6 Packet.
-        /// </summary>
-        public override IPAddress SourceAddress
-        {
-            get => GetIPAddress(AddressFamily.InterNetworkV6,
-                                Header.Offset + IPv6Fields.SourceAddressPosition,
-                                Header.Bytes);
-            set
-            {
-                var address = value.GetAddressBytes();
-
-                for (var i = 0; i < address.Length; i++)
-                    Header.Bytes[Header.Offset + IPv6Fields.SourceAddressPosition + i] = address[i];
-            }
-        }
-
-        /// <summary>
-        /// The destination address field of the IPv6 Packet.
-        /// </summary>
-        public override IPAddress DestinationAddress
-        {
-            get => GetIPAddress(AddressFamily.InterNetworkV6,
-                                Header.Offset + IPv6Fields.DestinationAddressPosition,
-                                Header.Bytes);
-            set
-            {
-                var address = value.GetAddressBytes();
-
-                for (var i = 0; i < address.Length; i++)
-                    Header.Bytes[Header.Offset + IPv6Fields.DestinationAddressPosition + i] = address[i];
-            }
-        }
-
-        /// <summary>
-        /// The extension headers of the IPv6 Packet.
-        /// </summary>
-        public List<IPv6ExtensionHeader> ExtensionHeaders
-        {
-            get
-            {
-                if (_totalExtensionHeadersLength == -1)
-                    CalculateExtensionHeaders();
-
-                return _extensionHeaders;
-            }
-        }
-
-        /// <summary>
-        /// Gets the length in bytes of the extension headers.
-        /// </summary>
-        public int ExtensionHeadersLength
-        {
-            get
-            {
-                if (_totalExtensionHeadersLength == -1)
-                    CalculateExtensionHeaders();
-
-                return _totalExtensionHeadersLength;
-            }
-        }
+        private int _totalExtensionHeadersLength = -1;
 
         /// <summary>
         /// Create an IPv6 packet from values
@@ -364,11 +155,240 @@ namespace PacketDotNet
                                                                              var payload = new ByteArraySegment(Header.Bytes, startingOffset, segmentLength, bytesLength);
 
                                                                              return ParseNextSegment(payload,
-                                                                                                           Protocol,
-                                                                                                           this);
+                                                                                                     Protocol,
+                                                                                                     this);
                                                                          },
                                                                          LazyThreadSafetyMode.PublicationOnly);
             }
+        }
+
+        /// <summary>
+        /// Constructor with parent
+        /// </summary>
+        /// <param name="byteArraySegment">
+        /// A <see cref="ByteArraySegment" />
+        /// </param>
+        /// <param name="parentPacket">
+        /// A <see cref="Packet" />
+        /// </param>
+        public IPv6Packet
+        (
+            ByteArraySegment byteArraySegment,
+            Packet parentPacket) : this(byteArraySegment)
+        {
+            ParentPacket = parentPacket;
+        }
+
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override string Color => AnsiEscapeSequences.White;
+
+        /// <summary>
+        /// The destination address field of the IPv6 Packet.
+        /// </summary>
+        public override IPAddress DestinationAddress
+        {
+            get => GetIPAddress(AddressFamily.InterNetworkV6,
+                                Header.Offset + IPv6Fields.DestinationAddressPosition,
+                                Header.Bytes);
+            set
+            {
+                var address = value.GetAddressBytes();
+
+                for (var i = 0; i < address.Length; i++)
+                    Header.Bytes[Header.Offset + IPv6Fields.DestinationAddressPosition + i] = address[i];
+            }
+        }
+
+        /// <summary>
+        /// The extension headers of the IPv6 Packet.
+        /// </summary>
+        public List<IPv6ExtensionHeader> ExtensionHeaders
+        {
+            get
+            {
+                if (_totalExtensionHeadersLength == -1)
+                    CalculateExtensionHeaders();
+
+                return _extensionHeaders;
+            }
+        }
+
+        /// <summary>
+        /// Gets the length in bytes of the extension headers.
+        /// </summary>
+        public int ExtensionHeadersLength
+        {
+            get
+            {
+                if (_totalExtensionHeadersLength == -1)
+                    CalculateExtensionHeaders();
+
+                return _totalExtensionHeadersLength;
+            }
+        }
+
+        /// <summary>
+        /// The flow label field of the IPv6 Packet.
+        /// </summary>
+        public int FlowLabel
+        {
+            get => VersionTrafficClassFlowLabel & 0xFFFFF;
+            set
+            {
+                // read the original value
+                var field = (uint) VersionTrafficClassFlowLabel;
+
+                // make the value in
+                field = (field & 0xFFF00000) | ((uint) value & 0x000FFFFF);
+
+                // write the updated value back
+                VersionTrafficClassFlowLabel = (int) field;
+            }
+        }
+
+        /// <value>
+        /// Backwards compatibility property for IPv4.HeaderLength
+        /// NOTE: This field is the number of 32bit words
+        /// </value>
+        public override int HeaderLength
+        {
+            get => IPv6Fields.HeaderLength / 4;
+            set => ThrowHelper.ThrowNotImplementedException();
+        }
+
+        /// <summary>
+        /// The hop limit field of the IPv6 Packet.
+        /// NOTE: Replaces the 'time to live' field of IPv4
+        /// 8-bit value
+        /// </summary>
+        public override int HopLimit
+        {
+            get => Header.Bytes[Header.Offset + IPv6Fields.HopLimitPosition];
+            set => Header.Bytes[Header.Offset + IPv6Fields.HopLimitPosition] = (byte) value;
+        }
+
+        /// <summary>
+        /// Identifies the NextHeader, will be the protocol of the encapsulated in this ip packet unless there are extended headers
+        /// </summary>
+        public override IPProtocolType NextHeader
+        {
+            get => (IPProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
+            set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition] = (byte) value;
+        }
+
+        /// <summary>
+        /// The size of the payload in octets, including any extension headers.
+        /// This differs from the IPv4's Total Length, which also includes the length of the header.
+        /// </summary>
+        public override ushort PayloadLength
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                   Header.Offset + IPv6Fields.PayloadLengthPosition);
+            set => EndianBitConverter.Big.CopyBytes(value,
+                                                    Header.Bytes,
+                                                    Header.Offset + IPv6Fields.PayloadLengthPosition);
+        }
+
+        /// <value>
+        /// The protocol of the packet encapsulated in this ip packet
+        /// </value>
+        public override IPProtocolType Protocol
+        {
+            get
+            {
+                if (_totalExtensionHeadersLength == -1)
+                    CalculateExtensionHeaders();
+
+                if (_totalExtensionHeadersLength == 0)
+                    return (IPProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
+
+
+                return (IPProtocolType) Header.Bytes[_protocolOffset];
+            }
+
+            set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition + _totalExtensionHeadersLength] = (byte) value;
+        }
+
+        /// <summary>
+        /// The source address field of the IPv6 Packet.
+        /// </summary>
+        public override IPAddress SourceAddress
+        {
+            get => GetIPAddress(AddressFamily.InterNetworkV6,
+                                Header.Offset + IPv6Fields.SourceAddressPosition,
+                                Header.Bytes);
+            set
+            {
+                var address = value.GetAddressBytes();
+
+                for (var i = 0; i < address.Length; i++)
+                    Header.Bytes[Header.Offset + IPv6Fields.SourceAddressPosition + i] = address[i];
+            }
+        }
+
+        /// <value>
+        /// Helper alias for 'HopLimit'
+        /// </value>
+        public override int TimeToLive
+        {
+            get => HopLimit;
+            set => HopLimit = value;
+        }
+
+        /// <value>
+        /// Backwards compatibility property for IPv4.TotalLength
+        /// </value>
+        public override int TotalLength
+        {
+            get => PayloadLength + (HeaderLength * 4);
+            set => PayloadLength = (ushort) (value - (HeaderLength * 4));
+        }
+
+        /// <summary>
+        /// The traffic class field of the IPv6 Packet.
+        /// </summary>
+        public int TrafficClass
+        {
+            get => (VersionTrafficClassFlowLabel >> 20) & 0xFF;
+            set
+            {
+                // read the original value
+                var field = (uint) VersionTrafficClassFlowLabel;
+
+                // mask in the new field
+                field = (field & 0xF00FFFFF) | ((uint) value << 20) & 0x0FF00000;
+
+                // write the updated value back
+                VersionTrafficClassFlowLabel = (int) field;
+            }
+        }
+
+        /// <summary>
+        /// The version field of the IPv6 Packet.
+        /// </summary>
+        public override IPVersion Version
+        {
+            get => (IPVersion) ((VersionTrafficClassFlowLabel >> 28) & 0xF);
+            set
+            {
+                var theValue = (int) value;
+
+                // read the existing value
+                var field = (uint) VersionTrafficClassFlowLabel;
+
+                // mask the new field into place
+                field = (uint) ((field & 0x0FFFFFFF) | ((theValue << 28) & 0xF0000000));
+
+                // write the updated value back
+                VersionTrafficClassFlowLabel = (int) field;
+            }
+        }
+
+        private int VersionTrafficClassFlowLabel
+        {
+            get => EndianBitConverter.Big.ToInt32(Header.Bytes,
+                                                  Header.Offset + IPv6Fields.VersionTrafficClassFlowLabelPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + IPv6Fields.VersionTrafficClassFlowLabelPosition);
         }
 
         /// <summary>
@@ -400,23 +420,7 @@ namespace PacketDotNet
             _totalExtensionHeadersLength = totalExtensionHeadersLength;
         }
 
-        /// <summary>
-        /// Constructor with parent
-        /// </summary>
-        /// <param name="byteArraySegment">
-        /// A <see cref="ByteArraySegment" />
-        /// </param>
-        /// <param name="parentPacket">
-        /// A <see cref="Packet" />
-        /// </param>
-        public IPv6Packet
-        (
-            ByteArraySegment byteArraySegment,
-            Packet parentPacket) : this(byteArraySegment)
-        {
-            ParentPacket = parentPacket;
-        }
-
+        /// <inheritdoc />
         internal override byte[] GetPseudoIPHeader(int originalHeaderLength)
         {
             var ms = new MemoryStream();
@@ -513,9 +517,6 @@ namespace PacketDotNet
 
             return buffer.ToString();
         }
-
-        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override string Color => AnsiEscapeSequences.White;
 
         /// <summary>
         /// Generate a random packet

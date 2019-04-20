@@ -23,7 +23,7 @@ namespace PacketDotNet
     /// <summary>
     /// The five different OSPF packet types
     /// </summary>
-    public enum OSPFPacketType : byte
+    public enum OspfPacketType : byte
     {
 #pragma warning disable 1591
         Hello = 0x0001,

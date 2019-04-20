@@ -53,92 +53,16 @@ namespace PacketDotNet
         protected int DefaultTimeToLive = 64;
 
         /// <value>
-        /// Payload packet, overridden to set the NextHeader/Protocol based
-        /// on the type of payload packet when the payload packet is set
-        /// </value>
-        public override Packet PayloadPacket
-        {
-            get => base.PayloadPacket;
-            set
-            {
-                base.PayloadPacket = value;
-
-                // set NextHeader (Protocol) based on the type of this packet
-                if (value is TcpPacket)
-                {
-                    Protocol = IPProtocolType.TCP;
-                }
-                else if (value is UdpPacket)
-                {
-                    Protocol = IPProtocolType.UDP;
-                }
-                else if (value is ICMPv6Packet)
-                {
-                    Protocol = IPProtocolType.ICMPV6;
-                }
-                else if (value is ICMPv4Packet)
-                {
-                    Protocol = IPProtocolType.ICMP;
-                }
-                else if (value is IGMPv2Packet)
-                {
-                    Protocol = IPProtocolType.IGMP;
-                }
-                else if (value is OSPFPacket)
-                {
-                    Protocol = IPProtocolType.OSPF;
-                }
-                else // NOTE: new checks go here
-                {
-                    Protocol = IPProtocolType.NONE;
-                }
-
-                // update the payload length based on the size
-                // of the payload packet
-                var newPayloadLength = (ushort) base.PayloadPacket.BytesSegment.Length;
-                Log.DebugFormat("newPayloadLength {0}", newPayloadLength);
-                PayloadLength = newPayloadLength;
-            }
-        }
-
-        /// <value>
         /// The destination address
         /// </value>
         public abstract IPAddress DestinationAddress { get; set; }
 
-        /// <value>
-        /// The source address
-        /// </value>
-        public abstract IPAddress SourceAddress { get; set; }
-
-        /// <value>
-        /// The IP version
-        /// </value>
-        public abstract IPVersion Version { get; set; }
-
-        /// <value>
-        /// The protocol of the ip packet's payload
-        /// Named 'Protocol' in IPv4
-        /// Named 'NextHeader' in IPv6'
-        /// </value>
-        public abstract IPProtocolType Protocol { get; set; }
-
-        /// <value>
-        /// The protocol of the ip packet's payload
-        /// Included along side Protocol for user convenience
-        /// </value>
-        public virtual IPProtocolType NextHeader
-        {
-            get => Protocol;
-            set => Protocol = value;
-        }
-
-        /// <value>
-        /// The number of hops remaining before this packet is discarded
-        /// Named 'TimeToLive' in IPv4
-        /// Named 'HopLimit' in IPv6
-        /// </value>
-        public abstract int TimeToLive { get; set; }
+        /// <summary>
+        /// ipv4 header length field, calculated for ipv6 packets
+        /// NOTE: This field is the number of 32bit words in the ip header,
+        /// ie. the number of bytes is 4x this value
+        /// </summary>
+        public abstract int HeaderLength { get; set; }
 
         /// <value>
         /// The number of hops remaining for this packet
@@ -150,12 +74,86 @@ namespace PacketDotNet
             set => TimeToLive = value;
         }
 
+        /// <value>
+        /// The protocol of the ip packet's payload
+        /// Included along side Protocol for user convenience
+        /// </value>
+        public virtual IPProtocolType NextHeader
+        {
+            get => Protocol;
+            set => Protocol = value;
+        }
+
         /// <summary>
-        /// ipv4 header length field, calculated for ipv6 packets
-        /// NOTE: This field is the number of 32bit words in the ip header,
-        /// ie. the number of bytes is 4x this value
+        /// ipv6 payload length in bytes,
+        /// calculate from ipv4.TotalLength - (ipv4.HeaderLength * 4)
         /// </summary>
-        public abstract int HeaderLength { get; set; }
+        public abstract ushort PayloadLength { get; set; }
+
+        /// <value>
+        /// Payload packet, overridden to set the NextHeader/Protocol based
+        /// on the type of payload packet when the payload packet is set
+        /// </value>
+        public override Packet PayloadPacket
+        {
+            get => base.PayloadPacket;
+            set
+            {
+                base.PayloadPacket = value;
+
+                switch (value)
+                {
+                    // set NextHeader (Protocol) based on the type of this packet
+                    case TcpPacket _:
+                        Protocol = IPProtocolType.TCP;
+                        break;
+                    case UdpPacket _:
+                        Protocol = IPProtocolType.UDP;
+                        break;
+                    case ICMPv6Packet _:
+                        Protocol = IPProtocolType.ICMPV6;
+                        break;
+                    case ICMPv4Packet _:
+                        Protocol = IPProtocolType.ICMP;
+                        break;
+                    case IgmpV2Packet _:
+                        Protocol = IPProtocolType.IGMP;
+                        break;
+                    case OspfPacket _:
+                        Protocol = IPProtocolType.OSPF;
+                        break;
+                    // NOTE: new checks go here
+                    default:
+                        Protocol = IPProtocolType.NONE;
+                        break;
+                }
+
+                // update the payload length based on the size
+                // of the payload packet
+                var newPayloadLength = (ushort) base.PayloadPacket.BytesSegment.Length;
+                Log.DebugFormat("newPayloadLength {0}", newPayloadLength);
+                PayloadLength = newPayloadLength;
+            }
+        }
+
+        /// <value>
+        /// The protocol of the ip packet's payload
+        /// Named 'Protocol' in IPv4
+        /// Named 'NextHeader' in IPv6'
+        /// </value>
+        public abstract IPProtocolType Protocol { get; set; }
+
+        /// <value>
+        /// The source address
+        /// </value>
+        public abstract IPAddress SourceAddress { get; set; }
+
+        /// <value>
+        /// The number of hops remaining before this packet is discarded
+        /// Named 'TimeToLive' in IPv4
+        /// Named 'HopLimit' in IPv6
+        /// </value>
+        public abstract int TimeToLive { get; set; }
 
         /// <summary>
         /// ipv4 total number of bytes in the ipv4 header + payload,
@@ -163,11 +161,10 @@ namespace PacketDotNet
         /// </summary>
         public abstract int TotalLength { get; set; }
 
-        /// <summary>
-        /// ipv6 payload length in bytes,
-        /// calculate from ipv4.TotalLength - (ipv4.HeaderLength * 4)
-        /// </summary>
-        public abstract ushort PayloadLength { get; set; }
+        /// <value>
+        /// The IP version
+        /// </value>
+        public abstract IPVersion Version { get; set; }
 
         /// <summary>
         /// Gets the pseudo ip header.
@@ -238,7 +235,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="PacketOrByteArraySegment" />
         /// </returns>
-        internal static PacketOrByteArraySegment ParseNextSegment
+        protected static PacketOrByteArraySegment ParseNextSegment
         (
             ByteArraySegment payload,
             IPProtocolType protocolType,
@@ -294,14 +291,14 @@ namespace PacketDotNet
                 }
                 case IPProtocolType.IGMP:
                 {
-                    payloadPacketOrData.Packet = new IGMPv2Packet(payload,
+                    payloadPacketOrData.Packet = new IgmpV2Packet(payload,
                                                                   parentPacket);
 
                     break;
                 }
                 case IPProtocolType.OSPF:
                 {
-                    payloadPacketOrData.Packet = OSPFPacket.ConstructOSPFPacket(payload.Bytes,
+                    payloadPacketOrData.Packet = OspfPacket.ConstructOspfPacket(payload.Bytes,
                                                                                 payload.Offset);
 
                     break;

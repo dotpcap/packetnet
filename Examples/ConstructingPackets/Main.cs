@@ -1,5 +1,6 @@
 using System;
 using PacketDotNet;
+
 namespace ConstructingPackets
 {
     /// <summary>

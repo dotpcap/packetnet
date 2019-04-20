@@ -35,7 +35,7 @@ namespace PacketDotNet
     /// OSPFv2 packet.
     /// </summary>
     [Serializable]
-    public abstract class OSPFv2Packet : OSPFPacket
+    public abstract class OspfV2Packet : OspfPacket
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -46,93 +46,40 @@ namespace PacketDotNet
         private static readonly ILogInactive Log;
 #pragma warning restore 0169
 #endif
-        /// <value>
-        /// Version number of this OSPF protocol
-        /// </value>
-        public static OSPFVersion OSPFVersion = OSPFVersion.OSPFv2;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        protected OSPFv2Packet()
+        protected OspfV2Packet()
         {
             Log.Debug("");
 
             // allocate memory for this packet
-            var offset = 0;
-            var length = OSPFv2Fields.HeaderLength;
+            var length = OspfV2Fields.HeaderLength;
             var headerBytes = new byte[length];
-            Header = new ByteArraySegment(headerBytes, offset, length);
+            Header = new ByteArraySegment(headerBytes, 0, length);
 
-            Version = OSPFVersion;
+            Version = OspfVersion.OSPFv2;
         }
 
         /// <summary>
         /// Constructs a packet from bytes and offset
         /// </summary>
-        protected OSPFv2Packet(byte[] bytes, int offset)
+        protected OspfV2Packet(byte[] bytes, int offset)
         {
             Log.Debug("");
-            Header = new ByteArraySegment(bytes, offset, OSPFv2Fields.HeaderLength);
-            Version = OSPFVersion;
-        }
-
-        /// <summary>
-        /// The OSPF version number.
-        /// </summary>
-        public OSPFVersion Version
-        {
-            get => (OSPFVersion) Header.Bytes[Header.Offset + OSPFv2Fields.VersionPosition];
-            set => Header.Bytes[Header.Offset + OSPFv2Fields.VersionPosition] = (byte) value;
-        }
-
-        /// <summary>
-        /// The OSPF packet types - see http://www.ietf.org/rfc/rfc2328.txt for details
-        /// </summary>
-        public virtual OSPFPacketType Type
-        {
-            get => (OSPFPacketType) Header.Bytes[Header.Offset + OSPFv2Fields.TypePosition];
-            set => Header.Bytes[Header.Offset + OSPFv2Fields.TypePosition] = (byte) value;
-        }
-
-        /// <summary>
-        /// The length of the OSPF protocol packet in bytes.
-        /// </summary>
-        public virtual ushort PacketLength
-        {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + OSPFv2Fields.PacketLengthPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.PacketLengthPosition);
-        }
-
-        /// <summary>
-        /// The Router ID of the packet's source.
-        /// </summary>
-        public virtual IPAddress RouterID
-        {
-            get
-            {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.RouterIDPosition);
-                return new IPAddress(val);
-            }
-            set
-            {
-                var address = value.GetAddressBytes();
-                Array.Copy(address,
-                           0,
-                           Header.Bytes,
-                           Header.Offset + OSPFv2Fields.RouterIDPosition,
-                           address.Length);
-            }
+            Header = new ByteArraySegment(bytes, offset, OspfV2Fields.HeaderLength);
+            Version = OspfVersion.OSPFv2;
         }
 
         /// <summary>
         /// Identifies the area that this packet belongs to. See http://www.ietf.org/rfc/rfc2328.txt for details.
         /// </summary>
-        public virtual IPAddress AreaID
+        public virtual IPAddress AreaId
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.AreaIDPosition);
+                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + OspfV2Fields.AreaIDPosition);
                 return new IPAddress(val);
             }
             set
@@ -141,9 +88,27 @@ namespace PacketDotNet
                 Array.Copy(address,
                            0,
                            Header.Bytes,
-                           Header.Offset + OSPFv2Fields.AreaIDPosition,
+                           Header.Offset + OspfV2Fields.AreaIDPosition,
                            address.Length);
             }
+        }
+
+        /// <summary>
+        /// A 64-bit field for use by the authentication scheme
+        /// </summary>
+        public virtual ulong Authentication
+        {
+            get => EndianBitConverter.Big.ToUInt64(Header.Bytes, Header.Offset + OspfV2Fields.AuthorizationPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OspfV2Fields.AuthorizationPosition);
+        }
+
+        /// <summary>
+        /// Authentication procedure. See http://www.ietf.org/rfc/rfc2328.txt for details.
+        /// </summary>
+        public virtual ushort AuType
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + OspfV2Fields.AuTypePosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OspfV2Fields.AuTypePosition);
         }
 
         /// <summary>
@@ -152,32 +117,62 @@ namespace PacketDotNet
         /// </summary>
         public virtual ushort Checksum
         {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + OSPFv2Fields.ChecksumPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.ChecksumPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + OspfV2Fields.ChecksumPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OspfV2Fields.ChecksumPosition);
         }
 
         /// <summary>
-        /// Authentication procedure. See http://www.ietf.org/rfc/rfc2328.txt for details.
+        /// The length of the OSPF protocol packet in bytes.
         /// </summary>
-        public virtual ushort AuType
+        public virtual ushort PacketLength
         {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + OSPFv2Fields.AuTypePosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.AuTypePosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + OspfV2Fields.PacketLengthPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OspfV2Fields.PacketLengthPosition);
         }
 
         /// <summary>
-        /// A 64-bit field for use by the authentication scheme
+        /// The Router ID of the packet's source.
         /// </summary>
-        public virtual ulong Authentication
+        public virtual IPAddress RouterId
         {
-            get => EndianBitConverter.Big.ToUInt64(Header.Bytes, Header.Offset + OSPFv2Fields.AuthorizationPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.AuthorizationPosition);
+            get
+            {
+                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + OspfV2Fields.RouterIDPosition);
+                return new IPAddress(val);
+            }
+            set
+            {
+                var address = value.GetAddressBytes();
+                Array.Copy(address,
+                           0,
+                           Header.Bytes,
+                           Header.Offset + OspfV2Fields.RouterIDPosition,
+                           address.Length);
+            }
         }
 
         /// <summary>
-        /// Returns a <see cref="string" /> that represents the current <see cref="OSPFv2Packet" />.
+        /// The OSPF packet types - see http://www.ietf.org/rfc/rfc2328.txt for details
         /// </summary>
-        /// <returns>A <see cref="string" /> that represents the current <see cref="OSPFv2Packet" />.</returns>
+        public virtual OspfPacketType Type
+        {
+            get => (OspfPacketType) Header.Bytes[Header.Offset + OspfV2Fields.TypePosition];
+            set => Header.Bytes[Header.Offset + OspfV2Fields.TypePosition] = (byte) value;
+        }
+
+        /// <summary>
+        /// The OSPF version number.
+        /// </summary>
+        public OspfVersion Version
+        {
+            get => (OspfVersion) Header.Bytes[Header.Offset + OspfV2Fields.VersionPosition];
+            set => Header.Bytes[Header.Offset + OspfV2Fields.VersionPosition] = (byte) value;
+        }
+
+        /// <summary>
+        /// Returns a <see cref="string" /> that represents the current <see cref="OspfV2Packet" />.
+        /// </summary>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="OspfV2Packet" />.</returns>
         public override string ToString()
         {
             var packet = new StringBuilder();

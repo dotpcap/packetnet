@@ -24,7 +24,7 @@ namespace PacketDotNet
     /// Code constants for IGMP message types.
     /// From RFC #2236.
     /// </summary>
-    public enum IGMPMessageType : byte
+    public enum IgmpV2MessageType : byte
     {
 #pragma warning disable 1591
         MembershipQuery = 0x11,

@@ -21,7 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet
 {
     /// <summary>IGMP protocol field encoding information. </summary>
-    public class IGMPv2Fields
+    public class IgmpV2Fields
     {
         /// <summary>Length of the IGMP header checksum in bytes.</summary>
         public static readonly int ChecksumLength = 2;
@@ -50,7 +50,7 @@ namespace PacketDotNet
         /// <summary>Position of the IGMP message type.</summary>
         public static readonly int TypePosition = 0;
 
-        static IGMPv2Fields()
+        static IgmpV2Fields()
         {
             GroupAddressLength = IPv4Fields.AddressLength;
             MaxResponseTimePosition = TypePosition + TypeLength;

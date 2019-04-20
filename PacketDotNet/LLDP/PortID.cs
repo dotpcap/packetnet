@@ -31,10 +31,10 @@ using log4net;
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// A Port ID TLV
+    /// A Port ID Tlv
     /// </summary>
     [Serializable]
-    public class PortID : TLV
+    public class PortID : Tlv
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -52,12 +52,12 @@ namespace PacketDotNet.LLDP
         #region Constructors
 
         /// <summary>
-        /// Creates a Port ID TLV
+        /// Creates a Port ID Tlv
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The Port ID TLV's offset from the
+        /// The Port ID Tlv's offset from the
         /// origin of the LLDP
         /// </param>
         public PortID(byte[] bytes, int offset) :
@@ -67,7 +67,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Creates a Port ID TLV and sets it value
+        /// Creates a Port ID Tlv and sets it value
         /// </summary>
         /// <param name="subType">
         /// The Port ID SubType
@@ -81,7 +81,7 @@ namespace PacketDotNet.LLDP
 
             EmptyTLVDataInit();
 
-            Type = TLVTypes.PortID;
+            Type = TlvTypes.PortID;
             SubType = subType;
 
             // method will resize the tlv
@@ -103,7 +103,7 @@ namespace PacketDotNet.LLDP
             var offset = 0;
             TLVData = new ByteArraySegment(bytes, offset, length);
 
-            Type = TLVTypes.PortID;
+            Type = TlvTypes.PortID;
             SubType = PortSubTypes.NetworkAddress;
             SubTypeValue = networkAddress;
         }
@@ -114,7 +114,7 @@ namespace PacketDotNet.LLDP
         #region Properties
 
         /// <value>
-        /// The type of the TLV subtype
+        /// The type of the Tlv subtype
         /// </value>
         public PortSubTypes SubType
         {
@@ -123,7 +123,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <value>
-        /// The TLV subtype value
+        /// The Tlv subtype value
         /// </value>
         public object SubTypeValue
         {
@@ -265,7 +265,7 @@ namespace PacketDotNet.LLDP
         }
 
         /// <summary>
-        /// Convert this Port ID TLV to a string.
+        /// Convert this Port ID Tlv to a string.
         /// </summary>
         /// <returns>
         /// A human readable string

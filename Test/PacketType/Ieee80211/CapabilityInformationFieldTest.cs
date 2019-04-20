@@ -20,6 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
 using PacketDotNet.Ieee80211;
+
 namespace Test.PacketType.Ieee80211
 {
     [TestFixture]

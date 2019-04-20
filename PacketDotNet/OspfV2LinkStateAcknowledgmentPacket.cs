@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -9,12 +10,12 @@ namespace PacketDotNet
     /// the flooding of LSAs reliable, flooded LSAs are explicitly
     /// acknowledged. See http://www.ietf.org/rfc/rfc2328.txt for details.
     /// </summary>
-    public sealed class OSPFv2LSAPacket : OSPFv2Packet
+    public sealed class OspfV2LinkStateAcknowledgmentPacket : OspfV2Packet
     {
         /// <value>
         /// The packet type
         /// </value>
-        public static OSPFPacketType PacketType = OSPFPacketType.LinkStateAcknowledgment;
+        public static OspfPacketType PacketType = OspfPacketType.LinkStateAcknowledgment;
 
         /// <summary>
         /// Constructs an OSPFv2 Link State Acknowledge packet from ByteArraySegment
@@ -22,7 +23,7 @@ namespace PacketDotNet
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public OSPFv2LSAPacket(ByteArraySegment byteArraySegment)
+        public OspfV2LinkStateAcknowledgmentPacket(ByteArraySegment byteArraySegment)
         {
             Header = new ByteArraySegment(byteArraySegment.Bytes);
         }
@@ -30,11 +31,11 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs an Link OSPFv2 State Acknowledge packet
         /// </summary>
-        public OSPFv2LSAPacket()
+        public OspfV2LinkStateAcknowledgmentPacket()
         {
-            var b = new byte[OSPFv2Fields.LSAHeaderPosition];
+            var b = new byte[OspfV2Fields.LSAHeaderPosition];
             Array.Copy(Header.Bytes, b, Header.Bytes.Length);
-            Header = new ByteArraySegment(b, 0, OSPFv2Fields.LSAHeaderPosition);
+            Header = new ByteArraySegment(b, 0, OspfV2Fields.LSAHeaderPosition);
             Type = PacketType;
 
             PacketLength = (ushort) Header.Bytes.Length;
@@ -43,17 +44,17 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs an OSPFv2 Link State Acknowledge packet with LSA headers
         /// </summary>
-        /// <param name="lsas">List of the LSA headers</param>
-        public OSPFv2LSAPacket(List<LSA.LSA> lsas)
+        /// <param name="linkStates">List of the LSA headers</param>
+        public OspfV2LinkStateAcknowledgmentPacket(List<LSA.LSA> linkStates)
         {
-            var length = lsas.Count * OSPFv2Fields.LSAHeaderLength;
-            var offset = OSPFv2Fields.HeaderLength;
-            var bytes = new byte[length + OSPFv2Fields.HeaderLength];
+            var length = linkStates.Count * OspfV2Fields.LSAHeaderLength;
+            var offset = OspfV2Fields.HeaderLength;
+            var bytes = new byte[length + OspfV2Fields.HeaderLength];
 
             Array.Copy(Header.Bytes, bytes, Header.Length);
-            foreach (var t in lsas)
+            foreach (var t in linkStates)
             {
-                Array.Copy(t.Bytes, 0, bytes, offset, OSPFv2Fields.LSAHeaderLength);
+                Array.Copy(t.Bytes, 0, bytes, offset, OspfV2Fields.LSAHeaderLength);
                 offset += 20;
             }
 
@@ -71,35 +72,35 @@ namespace PacketDotNet
         /// <param name="offset">
         /// A <see cref="int" />
         /// </param>
-        public OSPFv2LSAPacket(byte[] bytes, int offset) :
+        public OspfV2LinkStateAcknowledgmentPacket(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Type = PacketType;
         }
 
         /// <summary>
-        /// List of LSA acknowledgements.
+        /// List of LSA acknowledgments.
         /// </summary>
-        public List<LSA.LSA> LSAAcknowledge
+        public List<LSA.LSA> Acknowledgments
         {
             get
             {
                 var ret = new List<LSA.LSA>();
-                var bytesNeeded = PacketLength - OSPFv2Fields.LSAAckPosition;
+                var bytesNeeded = PacketLength - OspfV2Fields.LSAAckPosition;
 
-                if (bytesNeeded % OSPFv2Fields.LSAHeaderLength != 0)
+                if (bytesNeeded % OspfV2Fields.LSAHeaderLength != 0)
                 {
                     throw new Exception("OSPFv2 LSA Packet - Invalid LSA headers count");
                 }
 
-                var offset = Header.Offset + OSPFv2Fields.LSAAckPosition;
-                var headerCount = bytesNeeded / OSPFv2Fields.LSAHeaderLength;
+                var offset = Header.Offset + OspfV2Fields.LSAAckPosition;
+                var headerCount = bytesNeeded / OspfV2Fields.LSAHeaderLength;
 
                 for (var i = 0; i < headerCount; i++)
                 {
-                    var l = new LSA.LSA(Header.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
+                    var l = new LSA.LSA(Header.Bytes, offset, OspfV2Fields.LSAHeaderLength);
                     ret.Add(l);
-                    offset += OSPFv2Fields.LSAHeaderLength;
+                    offset += OspfV2Fields.LSAHeaderLength;
                 }
 
                 return ret;
@@ -107,14 +108,14 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns a <see cref="string" /> that represents the current <see cref="OSPFv2LSAPacket" />.
+        /// Returns a <see cref="string" /> that represents the current <see cref="OspfV2LinkStateAcknowledgmentPacket" />.
         /// </summary>
-        /// <returns>A <see cref="string" /> that represents the current <see cref="OSPFv2LSAPacket" />.</returns>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="OspfV2LinkStateAcknowledgmentPacket" />.</returns>
         public override string ToString()
         {
             var packet = new StringBuilder();
             packet.Append(base.ToString());
-            packet.AppendFormat("#LSA{0} ", LSAAcknowledge.Count);
+            packet.AppendFormat("#LSA{0} ", Acknowledgments.Count);
             return packet.ToString();
         }
 

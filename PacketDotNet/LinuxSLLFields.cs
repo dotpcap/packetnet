@@ -24,7 +24,7 @@ namespace PacketDotNet
     /// Lengths and offsets to the fields in the LinuxSLL packet
     /// See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
     /// </summary>
-    public class LinuxSLLFields
+    public class LinuxSllFields
     {
         /// <summary>
         /// Length of the ethernet protocol field
@@ -82,7 +82,7 @@ namespace PacketDotNet
         /// </summary>
         public static readonly int SLLHeaderLength = 16;
 
-        static LinuxSLLFields()
+        static LinuxSllFields()
         {
             LinkLayerAddressTypePosition = PacketTypePosition + PacketTypeLength;
             LinkLayerAddressLengthPosition = LinkLayerAddressTypePosition + LinkLayerAddressTypeLength;

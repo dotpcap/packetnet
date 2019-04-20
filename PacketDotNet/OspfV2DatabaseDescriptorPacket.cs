@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -10,12 +11,12 @@ namespace PacketDotNet
     /// are exchanged when an adjacency is being initialized.
     /// See http://www.ietf.org/rfc/rfc2328.txt for details.
     /// </summary>
-    public sealed class OSPFv2DDPacket : OSPFv2Packet
+    public sealed class OspfV2DatabaseDescriptorPacket : OspfV2Packet
     {
         /// <value>
         /// The packet type
         /// </value>
-        public static OSPFPacketType PacketType = OSPFPacketType.DatabaseDescription;
+        public static OspfPacketType PacketType = OspfPacketType.DatabaseDescription;
 
         /// <summary>
         /// Constructs an OSPFv2 DD packet from ByteArraySegment
@@ -23,7 +24,7 @@ namespace PacketDotNet
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public OSPFv2DDPacket(ByteArraySegment byteArraySegment)
+        public OspfV2DatabaseDescriptorPacket(ByteArraySegment byteArraySegment)
         {
             Header = new ByteArraySegment(byteArraySegment.Bytes);
         }
@@ -31,11 +32,11 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs an OSPFv2 DD packet
         /// </summary>
-        public OSPFv2DDPacket()
+        public OspfV2DatabaseDescriptorPacket()
         {
-            var b = new byte[OSPFv2Fields.LSAHeaderPosition];
+            var b = new byte[OspfV2Fields.LSAHeaderPosition];
             Array.Copy(Header.Bytes, b, Header.Bytes.Length);
-            Header = new ByteArraySegment(b, 0, OSPFv2Fields.LSAHeaderPosition);
+            Header = new ByteArraySegment(b, 0, OspfV2Fields.LSAHeaderPosition);
             Type = PacketType;
 
             PacketLength = (ushort) Header.Bytes.Length;
@@ -44,15 +45,15 @@ namespace PacketDotNet
         /// <summary>
         /// Constructs an OSPFv2 DD packet with LSA headers
         /// </summary>
-        /// <param name="lsas">List of the LSA headers</param>
-        public OSPFv2DDPacket(List<LSA.LSA> lsas)
+        /// <param name="linkStates">List of the LSA headers</param>
+        public OspfV2DatabaseDescriptorPacket(List<LSA.LSA> linkStates)
         {
-            var length = lsas.Count * OSPFv2Fields.LSAHeaderLength;
-            var offset = OSPFv2Fields.LSAHeaderPosition;
-            var bytes = new byte[length + OSPFv2Fields.LSAHeaderPosition];
+            var length = linkStates.Count * OspfV2Fields.LSAHeaderLength;
+            var offset = OspfV2Fields.LSAHeaderPosition;
+            var bytes = new byte[length + OspfV2Fields.LSAHeaderPosition];
 
             Array.Copy(Header.Bytes, bytes, Header.Length);
-            foreach (var t in lsas)
+            foreach (var t in linkStates)
             {
                 Array.Copy(t.Bytes, 0, bytes, offset, 20); //20 bytes per header
                 offset += 20;
@@ -72,7 +73,7 @@ namespace PacketDotNet
         /// <param name="offset">
         /// A <see cref="int" />
         /// </param>
-        public OSPFv2DDPacket(byte[] bytes, int offset) :
+        public OspfV2DatabaseDescriptorPacket(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Type = PacketType;
@@ -81,19 +82,19 @@ namespace PacketDotNet
         /// <summary>
         /// DD Packet bits - See http://www.ietf.org/rfc/rfc2328.txt for details.
         /// </summary>
-        public byte DBDescriptionBits
+        public byte DescriptionBits
         {
-            get => Header.Bytes[Header.Offset + OSPFv2Fields.BitsPosition];
-            set => Header.Bytes[Header.Offset + OSPFv2Fields.BitsPosition] = value;
+            get => Header.Bytes[Header.Offset + OspfV2Fields.BitsPosition];
+            set => Header.Bytes[Header.Offset + OspfV2Fields.BitsPosition] = value;
         }
 
         /// <summary>
         /// The optional capabilities supported by the router. See http://www.ietf.org/rfc/rfc2328.txt for details.
         /// </summary>
-        public byte DBDescriptionOptions
+        public byte DescriptionOptions
         {
-            get => Header.Bytes[Header.Offset + OSPFv2Fields.DBDescriptionOptionsPosition];
-            set => Header.Bytes[Header.Offset + OSPFv2Fields.DBDescriptionOptionsPosition] = value;
+            get => Header.Bytes[Header.Offset + OspfV2Fields.DescriptionOptionsPosition];
+            set => Header.Bytes[Header.Offset + OspfV2Fields.DescriptionOptionsPosition] = value;
         }
 
         /// <summary>
@@ -101,18 +102,18 @@ namespace PacketDotNet
         /// </summary>
         public uint DDSequence
         {
-            get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.DDSequencePosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.DDSequencePosition);
+            get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + OspfV2Fields.DDSequencePosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OspfV2Fields.DDSequencePosition);
         }
 
         /// <summary>
         /// The size in bytes of the largest IP datagram that can be sent
         /// out the associated interface, without fragmentation.
         /// </summary>
-        public ushort InterfaceMTU
+        public ushort InterfaceMtu
         {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + OSPFv2Fields.InterfaceMTUPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.InterfaceMTUPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + OspfV2Fields.InterfaceMTUPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OspfV2Fields.InterfaceMTUPosition);
         }
 
         /// <summary>
@@ -122,25 +123,25 @@ namespace PacketDotNet
         /// </summary>
         /// See
         /// <see cref="LSA" />
-        public List<LSA.LSA> LSAHeader
+        public List<LSA.LSA> Headers
         {
             get
             {
                 var ret = new List<LSA.LSA>();
-                var bytesNeeded = PacketLength - OSPFv2Fields.LSAHeaderPosition;
+                var bytesNeeded = PacketLength - OspfV2Fields.LSAHeaderPosition;
 
-                if (bytesNeeded % OSPFv2Fields.LSAHeaderLength != 0)
+                if (bytesNeeded % OspfV2Fields.LSAHeaderLength != 0)
                 {
                     throw new Exception("OSPFv2 DD Packet - Invalid LSA headers count");
                 }
 
-                var offset = Header.Offset + OSPFv2Fields.LSAHeaderPosition;
-                var headerCount = bytesNeeded / OSPFv2Fields.LSAHeaderLength;
+                var offset = Header.Offset + OspfV2Fields.LSAHeaderPosition;
+                var headerCount = bytesNeeded / OspfV2Fields.LSAHeaderLength;
 
                 for (var i = 0; i < headerCount; i++)
                 {
-                    var l = new LSA.LSA(Header.Bytes, offset, OSPFv2Fields.LSAHeaderLength);
-                    offset += OSPFv2Fields.LSAHeaderLength;
+                    var l = new LSA.LSA(Header.Bytes, offset, OspfV2Fields.LSAHeaderLength);
+                    offset += OspfV2Fields.LSAHeaderLength;
                     ret.Add(l);
                 }
 
@@ -149,16 +150,16 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns a <see cref="string" /> that represents the current <see cref="OSPFv2DDPacket" />.
+        /// Returns a <see cref="string" /> that represents the current <see cref="OspfV2DatabaseDescriptorPacket" />.
         /// </summary>
-        /// <returns>A <see cref="string" /> that represents the current <see cref="OSPFv2DDPacket" />.</returns>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="OspfV2DatabaseDescriptorPacket" />.</returns>
         public override string ToString()
         {
             var packet = new StringBuilder();
             packet.Append(base.ToString());
             packet.Append(" ");
             packet.AppendFormat("DDSequence: 0x{0:X8} ", DDSequence);
-            packet.AppendFormat("#LSA headers: {0} ", LSAHeader.Count);
+            packet.AppendFormat("#LSA headers: {0} ", Headers.Count);
             return packet.ToString();
         }
 

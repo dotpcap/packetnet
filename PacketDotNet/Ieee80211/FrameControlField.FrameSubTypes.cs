@@ -19,6 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System.Diagnostics.CodeAnalysis;
+
 namespace PacketDotNet.Ieee80211
 {
     public partial class FrameControlField

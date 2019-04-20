@@ -20,10 +20,11 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+
 namespace PacketDotNet.LLDP
 {
     /// <summary>
-    /// A System Name TLV
+    /// A System Name Tlv
     /// </summary>
     [Serializable]
     public class SystemName : StringTLV
@@ -45,12 +46,12 @@ namespace PacketDotNet.LLDP
         #region Constructors
 
         /// <summary>
-        /// Creates a System Name TLV
+        /// Creates a System Name Tlv
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The System Name TLV's offset from the
+        /// The System Name Tlv's offset from the
         /// origin of the LLDP
         /// </param>
         public SystemName(byte[] bytes, int offset) :
@@ -58,12 +59,12 @@ namespace PacketDotNet.LLDP
         { }
 
         /// <summary>
-        /// Creates a System Name TLV and sets it value
+        /// Creates a System Name Tlv and sets it value
         /// </summary>
         /// <param name="name">
         /// A textual Name of the system
         /// </param>
-        public SystemName(string name) : base(TLVTypes.SystemName, name)
+        public SystemName(string name) : base(TlvTypes.SystemName, name)
         { }
 
         #endregion

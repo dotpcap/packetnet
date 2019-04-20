@@ -23,6 +23,7 @@ using System.Net;
 using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+
 namespace PacketDotNet.LSA
 {
     /// <summary>
@@ -50,7 +51,7 @@ namespace PacketDotNet.LSA
         /// </summary>
         public LSA()
         {
-            var b = new byte[OSPFv2Fields.LSAHeaderLength];
+            var b = new byte[OspfV2Fields.LSAHeaderLength];
             Header = new ByteArraySegment(b);
         }
 

@@ -65,7 +65,6 @@ namespace PacketDotNet.Ieee80211
 
                 return 0;
             }
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
                                                        Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3));

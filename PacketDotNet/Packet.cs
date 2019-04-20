@@ -221,7 +221,6 @@ namespace PacketDotNet
                 Log.DebugFormat("result.Length: {0}", PayloadPacketOrData.Value.ByteArraySegment.Length);
                 return PayloadPacketOrData.Value.ByteArraySegment;
             }
-
             set => PayloadPacketOrData.Value.ByteArraySegment = value;
         }
 

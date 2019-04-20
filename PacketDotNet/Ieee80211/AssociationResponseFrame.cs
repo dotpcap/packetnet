@@ -180,7 +180,6 @@ namespace PacketDotNet.Ieee80211
 
                 return 0;
             }
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
                                                        Header.Offset + AssociationResponseFields.CapabilityInformationPosition);
@@ -200,7 +199,6 @@ namespace PacketDotNet.Ieee80211
                 //to extract a meaningful value
                 return AuthenticationStatusCode.UnspecifiedFailure;
             }
-
             set => EndianBitConverter.Little.CopyBytes((UInt16) value,
                                                        Header.Bytes,
                                                        Header.Offset + AssociationResponseFields.StatusCodePosition);

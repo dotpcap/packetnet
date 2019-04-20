@@ -111,7 +111,6 @@ namespace PacketDotNet.Ieee80211
 
                 return ReasonCode.Unspecified;
             }
-
             set => EndianBitConverter.Little.CopyBytes((UInt16) value,
                                                        Header.Bytes,
                                                        Header.Offset + DeauthenticationFields.ReasonCodePosition);

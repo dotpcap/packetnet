@@ -55,7 +55,7 @@ namespace PacketDotNet.LLDP
         /// - Replace any automatically added end tlvs with the user provided tlv
         /// </summary>
         /// <param name="index">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="item">
         /// A <see cref="TLV" />

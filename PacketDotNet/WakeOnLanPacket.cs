@@ -60,7 +60,7 @@ namespace PacketDotNet
         /// Create a Wake-On-LAN packet from the destination MAC address
         /// </summary>
         /// <param name="destinationMAC">
-        /// A <see cref="System.Net.NetworkInformation.PhysicalAddress" />
+        /// A <see cref="PhysicalAddress" />
         /// </param>
         public WakeOnLanPacket(PhysicalAddress destinationMAC)
         {
@@ -181,7 +181,7 @@ namespace PacketDotNet
         /// A <see cref="ByteArraySegment" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Boolean" />
+        /// A <see cref="bool" />
         /// </returns>
         public static bool IsValid(ByteArraySegment byteArraySegment)
         {
@@ -220,10 +220,10 @@ namespace PacketDotNet
         /// Compare two instances
         /// </summary>
         /// <param name="obj">
-        /// A <see cref="System.Object" />
+        /// A <see cref="object" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Boolean" />
+        /// A <see cref="bool" />
         /// </returns>
         public override bool Equals(object obj)
         {
@@ -241,7 +241,7 @@ namespace PacketDotNet
         /// GetHashCode override
         /// </summary>
         /// <returns>
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </returns>
         public override int GetHashCode()
         {

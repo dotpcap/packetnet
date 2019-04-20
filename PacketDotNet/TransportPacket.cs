@@ -57,10 +57,10 @@ namespace PacketDotNet
         /// tcp or udp packet
         /// </summary>
         /// <param name="option">
-        ///     <see cref="TransportPacket.TransportChecksumOption" />
+        ///     <see cref="TransportChecksumOption" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </returns>
         internal int CalculateChecksum(TransportChecksumOption option)
         {
@@ -95,7 +95,7 @@ namespace PacketDotNet
         /// A <see cref="TransportChecksumOption" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Boolean" />
+        /// A <see cref="bool" />
         /// </returns>
         public virtual bool IsValidChecksum(TransportChecksumOption option)
         {

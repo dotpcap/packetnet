@@ -136,7 +136,7 @@ namespace PacketDotNet.Utils
         /// Returns a contiguous byte array from this instance, if necessary, by copying the bytes from the current offset into a newly allocated byte array.
         /// <see cref="NeedsCopyForActualBytes" /> can be used to determine if the copy is necessary.
         /// </summary>
-        /// <returns>A <see cref="System.Byte" /></returns>
+        /// <returns>A <see cref="byte" /></returns>
         public byte[] ActualBytes()
         {
             Log.DebugFormat("{0}", ToString());
@@ -186,7 +186,7 @@ namespace PacketDotNet.Utils
         /// <summary>
         /// Returns the segment immediately after this segment.
         /// </summary>
-        /// <param name="segmentLength">A <see cref="System.Int32" /> that can be used to limit the length of the segment that is to be returned.</param>
+        /// <param name="segmentLength">A <see cref="int" /> that can be used to limit the length of the segment that is to be returned.</param>
         /// <returns>A <see cref="ByteArraySegment" /></returns>
         public ByteArraySegment NextSegment(int segmentLength)
         {

@@ -92,7 +92,7 @@ namespace PacketDotNet.LLDP
         /// Construct a PortID from a NetworkAddress
         /// </summary>
         /// <param name="networkAddress">
-        /// A <see cref="LLDP.NetworkAddress" />
+        /// A <see cref="NetworkAddress" />
         /// </param>
         public PortID(NetworkAddress networkAddress)
         {

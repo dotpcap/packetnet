@@ -27,7 +27,7 @@ namespace PacketDotNet.Ieee80211
 {
     /// <summary>
     /// A <see cref="T:System.Collections.Generic.List" /> of
-    /// <see cref="PacketDotNet.Ieee80211.InformationElement">InformationElements</see>.
+    /// <see cref="InformationElement">InformationElements</see>.
     /// </summary>
     /// <remarks>
     /// The order and set of Information Elements allowed in a particular 802.11 frame type is dictated
@@ -55,7 +55,7 @@ namespace PacketDotNet.Ieee80211
         /// Initializes a new instance of the <see cref="InformationElementList" /> class.
         /// </summary>
         /// <param name="byteArraySegment">
-        /// A <see cref="PacketDotNet.Utils.ByteArraySegment" /> containing one or more information elements.
+        /// A <see cref="ByteArraySegment" /> containing one or more information elements.
         /// byteArraySegment.Offset should point to the first byte of the first Information Element.
         /// </param>
         public InformationElementList(ByteArraySegment byteArraySegment)
@@ -157,7 +157,7 @@ namespace PacketDotNet.Ieee80211
         /// in the list into the provided buffer.
         /// </summary>
         /// <param name='destination'>
-        /// The <see cref="PacketDotNet.Utils.ByteArraySegment" /> to copy the elements into.
+        /// The <see cref="ByteArraySegment" /> to copy the elements into.
         /// </param>
         /// <param name='offset'>
         /// The offset into destination at which to start copy the <see cref="InformationElement">InformationElements</see>

@@ -60,13 +60,13 @@ namespace PacketDotNet.LSA
         /// Constructs a packet from bytes and offset and length
         /// </summary>
         /// <param name="packet">
-        /// A <see cref="System.Byte" />
+        /// A <see cref="byte" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         public RouterLSA(byte[] packet, int offset, int length) :
             base(packet, offset, length)
@@ -110,7 +110,7 @@ namespace PacketDotNet.LSA
         /// <summary>
         /// The contained router links in this RouterLSA
         /// </summary>
-        /// <see cref="PacketDotNet.RouterLink" />
+        /// <see cref="RouterLink" />
         public List<RouterLink> RouterLinks
         {
             get

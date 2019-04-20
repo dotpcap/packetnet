@@ -67,10 +67,10 @@ namespace PacketDotNet
         /// Constructs a packet from bytes and offset
         /// </summary>
         /// <param name="bytes">
-        /// A <see cref="System.Byte" />
+        /// A <see cref="byte" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         public OSPFv2LSAPacket(byte[] bytes, int offset) :
             base(bytes, offset)
@@ -108,9 +108,9 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Returns a <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2LSAPacket" />.
+        /// Returns a <see cref="string" /> that represents the current <see cref="OSPFv2LSAPacket" />.
         /// </summary>
-        /// <returns>A <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2LSAPacket" />.</returns>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="OSPFv2LSAPacket" />.</returns>
         public override string ToString()
         {
             var packet = new StringBuilder();

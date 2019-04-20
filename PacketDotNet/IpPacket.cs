@@ -180,16 +180,16 @@ namespace PacketDotNet
         /// Convert an ip address from a byte[]
         /// </summary>
         /// <param name="ipType">
-        /// A <see cref="System.Net.Sockets.AddressFamily" />
+        /// A <see cref="AddressFamily" />
         /// </param>
         /// <param name="fieldOffset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="bytes">
-        /// A <see cref="System.Byte" />
+        /// A <see cref="byte" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Net.IPAddress" />
+        /// A <see cref="IPAddress" />
         /// </returns>
         public static IPAddress GetIPAddress
         (

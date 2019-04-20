@@ -74,8 +74,8 @@ namespace PacketDotNet.Utils
         /// <summary>
         /// Compute a ones sum of a byte array
         /// </summary>
-        /// <param name="bytes">A <see cref="System.Byte" /></param>
-        /// <returns>A <see cref="System.Int32" /></returns>
+        /// <param name="bytes">A <see cref="byte" /></param>
+        /// <returns>A <see cref="int" /></returns>
         public static int OnesSum(byte[] bytes)
         {
             return OnesSum(bytes, 0, bytes.Length);
@@ -85,10 +85,10 @@ namespace PacketDotNet.Utils
         /// 16 bit sum of all values
         /// http://en.wikipedia.org/wiki/Signed_number_representations#Ones.27_complement
         /// </summary>
-        /// <param name="bytes">A <see cref="System.Byte" /></param>
-        /// <param name="start">A <see cref="System.Int32" /></param>
-        /// <param name="len">A <see cref="System.Int32" /></param>
-        /// <returns>A <see cref="System.Int32" /></returns>
+        /// <param name="bytes">A <see cref="byte" /></param>
+        /// <param name="start">A <see cref="int" /></param>
+        /// <param name="len">A <see cref="int" /></param>
+        /// <returns>A <see cref="int" /></returns>
         public static int OnesSum(byte[] bytes, int start, int len)
         {
             unsafe
@@ -110,7 +110,7 @@ namespace PacketDotNet.Utils
         /// </summary>
         /// <param name="byteArraySegment">A <see cref="ByteArraySegment" />.</param>
         /// <param name="prefixedBytes">The prefixed bytes.</param>
-        /// <returns>A <see cref="System.Int32" /></returns>
+        /// <returns>A <see cref="int" /></returns>
         public static ushort OnesSum(ByteArraySegment byteArraySegment, byte[] prefixedBytes)
         {
             unsafe
@@ -170,7 +170,7 @@ namespace PacketDotNet.Utils
         /// <param name="array">The array.</param>
         /// <param name="size">The size.</param>
         /// <param name="sum">The sum.</param>
-        /// <returns><see cref="System.UInt64"/>.</returns>
+        /// <returns><see cref="ulong"/>.</returns>
         private static unsafe ulong Sum(byte* array, int size, ulong sum)
         {
             // Reads per 8 bytes (ulong), this is the main loop.
@@ -226,7 +226,7 @@ namespace PacketDotNet.Utils
         /// Swaps the order of the bytes in a <c>ulong</c>.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <returns><see cref="System.UInt64"/>.</returns>
+        /// <returns><see cref="ulong"/>.</returns>
         private static ulong SwapBytes(ulong value)
         {
             // Swap adjacent 32-bit blocks.

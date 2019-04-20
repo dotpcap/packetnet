@@ -94,10 +94,10 @@ namespace PacketDotNet.Ieee80211
         /// ever map to single channel number the same channel number may be returned for more than one frequency. At present this affects channel numbers 8 and 12.
         /// </remarks>
         /// <param name="frequencyMHz">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </returns>
         public static int ChannelFromFrequencyMHz(int frequencyMHz)
         {
@@ -1245,7 +1245,7 @@ namespace PacketDotNet.Ieee80211
         /// Parse a radio tap field, indicated by bitIndex, from a given BinaryReader
         /// </summary>
         /// <param name="bitIndex">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="br">
         /// A <see cref="BinaryReader" />

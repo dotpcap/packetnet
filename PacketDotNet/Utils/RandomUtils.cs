@@ -33,7 +33,7 @@ namespace PacketDotNet.Utils
         /// A <see cref="IPVersion" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Net.IPAddress" />
+        /// A <see cref="IPAddress" />
         /// </returns>
         public static IPAddress GetIPAddress(IPVersion version)
         {
@@ -65,7 +65,7 @@ namespace PacketDotNet.Utils
         /// A <see cref="T:List{System.String}" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </returns>
         public static int LongestStringLength(List<string> stringsList)
         {

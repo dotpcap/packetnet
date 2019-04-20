@@ -105,7 +105,7 @@ namespace PacketDotNet
         /// Converts an ExceptionArgument enum value to the argument name string.
         /// </summary>
         /// <param name="argument">The argument.</param>
-        /// <returns><see cref="System.String" />.</returns>
+        /// <returns><see cref="string" />.</returns>
         private static string GetArgumentName(ExceptionArgument argument)
         {
             string argumentName;
@@ -139,7 +139,7 @@ namespace PacketDotNet
         /// Converts an ExceptionDescription enum value to the description string.
         /// </summary>
         /// <param name="description">The description.</param>
-        /// <returns><see cref="System.String"/>.</returns>
+        /// <returns><see cref="string"/>.</returns>
         private static string GetDescription(ExceptionDescription description)
         {
             string result;

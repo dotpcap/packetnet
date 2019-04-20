@@ -29,7 +29,7 @@ namespace PacketDotNet.Ieee80211
     public class SequenceControlField
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.SequenceControlField" /> class.
+        /// Initializes a new instance of the <see cref="SequenceControlField" /> class.
         /// </summary>
         public SequenceControlField()
         { }

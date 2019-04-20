@@ -249,13 +249,13 @@ namespace PacketDotNet
         /// A <see cref="PhysicalAddress" />
         /// </param>
         /// <param name="targetProtocolAddress">
-        /// A <see cref="System.Net.IPAddress" />
+        /// A <see cref="IPAddress" />
         /// </param>
         /// <param name="senderHardwareAddress">
         /// A <see cref="PhysicalAddress" />
         /// </param>
         /// <param name="senderProtocolAddress">
-        /// A <see cref="System.Net.IPAddress" />
+        /// A <see cref="IPAddress" />
         /// </param>
         public ARPPacket
         (

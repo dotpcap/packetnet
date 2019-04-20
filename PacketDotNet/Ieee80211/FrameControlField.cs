@@ -61,7 +61,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean FromDS
         {
             get => ((Field >> 1) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -81,7 +80,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean MoreData
         {
             get => ((Field >> 5) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -102,7 +100,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean MoreFragments
         {
             get => ((Field >> 2) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -123,7 +120,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean Order
         {
             get => ((Field >> 0x7) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -143,7 +139,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean PowerManagement
         {
             get => ((Field >> 4) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -163,7 +158,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean Protected
         {
             get => ((Field >> 6) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -183,7 +177,6 @@ namespace PacketDotNet.Ieee80211
         public Byte ProtocolVersion
         {
             get => (Byte) ((Field >> 0x8) & 0x3);
-
             set
             {
                 if (value > 3)
@@ -204,7 +197,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean Retry
         {
             get => ((Field >> 3) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -250,7 +242,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean ToDS
         {
             get => (Field & 0x1) == 1;
-
             set
             {
                 if (value)

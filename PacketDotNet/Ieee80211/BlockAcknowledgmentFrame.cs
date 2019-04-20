@@ -94,7 +94,6 @@ namespace PacketDotNet.Ieee80211
         public Byte[] BlockAckBitmap
         {
             get => _blockAckBitmap;
-
             set
             {
                 if (value.Length == 8)

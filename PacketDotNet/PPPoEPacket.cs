@@ -52,7 +52,6 @@ namespace PacketDotNet
         private Byte VersionType
         {
             get => Header.Bytes[Header.Offset + PPPoEFields.VersionTypePosition];
-
             set => Header.Bytes[Header.Offset + PPPoEFields.VersionTypePosition] = value;
         }
 
@@ -63,7 +62,6 @@ namespace PacketDotNet
         public Byte Version
         {
             get => (Byte) ((VersionType >> 4) & 0xF0);
-
             set
             {
                 var versionType = VersionType;
@@ -81,7 +79,6 @@ namespace PacketDotNet
         public Byte Type
         {
             get => (Byte) (VersionType & 0x0F);
-
             set
             {
                 var versionType = VersionType;
@@ -100,7 +97,6 @@ namespace PacketDotNet
         {
             get => (PPPoECode) EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                                Header.Offset + PPPoEFields.CodePosition);
-
             set
             {
                 var val = (UInt16) value;
@@ -117,7 +113,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + PPPoEFields.SessionIdPosition);
-
             set
             {
                 var val = value;
@@ -134,7 +129,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + PPPoEFields.LengthPosition);
-
             set
             {
                 var val = value;

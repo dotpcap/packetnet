@@ -55,7 +55,6 @@ namespace PacketDotNet.Ieee80211
         public Byte Control
         {
             get => (Byte) ((ControlOrganizationCode >> 24) & 0xFF);
-
             set => throw new NotImplementedException("Control setter not implemented");
         }
 
@@ -66,7 +65,6 @@ namespace PacketDotNet.Ieee80211
         public Byte DSAP
         {
             get => Header.Bytes[Header.Offset + LogicalLinkControlFields.DsapPosition];
-
             set => Header.Bytes[Header.Offset + LogicalLinkControlFields.DsapPosition] = value;
         }
 
@@ -77,7 +75,6 @@ namespace PacketDotNet.Ieee80211
         public UInt32 OrganizationCode
         {
             get => (Byte) (ControlOrganizationCode & 0x00FFFFFF);
-
             set => throw new NotImplementedException("OrganizationCode setter not implemented");
         }
 
@@ -88,7 +85,6 @@ namespace PacketDotNet.Ieee80211
         public Byte SSAP
         {
             get => Header.Bytes[Header.Offset + LogicalLinkControlFields.SsapPosition];
-
             set => Header.Bytes[Header.Offset + LogicalLinkControlFields.SsapPosition] = value;
         }
 
@@ -100,7 +96,6 @@ namespace PacketDotNet.Ieee80211
         {
             get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                                        Header.Offset + LogicalLinkControlFields.TypePosition);
-
             set
             {
                 var val = (Int16) value;
@@ -118,7 +113,6 @@ namespace PacketDotNet.Ieee80211
         {
             get => EndianBitConverter.Big.ToUInt32(Header.Bytes,
                                                    Header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);
-
             set
             {
                 var val = value;

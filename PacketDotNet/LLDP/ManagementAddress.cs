@@ -232,7 +232,6 @@ namespace PacketDotNet.LLDP
         public InterfaceNumbering InterfaceSubType
         {
             get => (InterfaceNumbering) TLVData.Bytes[ValueOffset + MgmtAddressLengthLength + MgmtAddress.Length];
-
             set => TLVData.Bytes[ValueOffset + MgmtAddressLengthLength + MgmtAddress.Length] = (Byte) value;
         }
 
@@ -245,7 +244,6 @@ namespace PacketDotNet.LLDP
         {
             get => EndianBitConverter.Big.ToUInt32(TLVData.Bytes,
                                                    InterfaceNumberOffset);
-
             set => EndianBitConverter.Big.CopyBytes(value,
                                                     TLVData.Bytes,
                                                     InterfaceNumberOffset);
@@ -273,7 +271,6 @@ namespace PacketDotNet.LLDP
             get => Encoding.UTF8.GetString(TLVData.Bytes,
                                            ObjectIdentifierOffset,
                                            ObjIdLength);
-
             set
             {
                 var oid = Encoding.UTF8.GetBytes(value);

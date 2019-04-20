@@ -80,7 +80,6 @@ namespace PacketDotNet.Ieee80211
         {
             get => EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                       Header.Offset + PpiHeaderFields.LengthPosition);
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
                                                        Header.Offset + PpiHeaderFields.LengthPosition);
@@ -96,7 +95,6 @@ namespace PacketDotNet.Ieee80211
         private Byte VersionBytes
         {
             get => Header.Bytes[Header.Offset + PpiHeaderFields.VersionPosition];
-
             set => Header.Bytes[Header.Offset + PpiHeaderFields.VersionPosition] = value;
         }
 
@@ -111,7 +109,6 @@ namespace PacketDotNet.Ieee80211
         private HeaderFlags FlagsBytes
         {
             get => (HeaderFlags) Header.Bytes[Header.Offset + PpiHeaderFields.FlagsPosition];
-
             set => Header.Bytes[Header.Offset + PpiHeaderFields.FlagsPosition] = (Byte) value;
         }
 

@@ -78,7 +78,6 @@ namespace PacketDotNet
         {
             get => BitConverter.ToInt16(Header.Bytes,
                                         Header.Offset + IGMPv2Fields.ChecksumPosition);
-
             set
             {
                 var theValue = BitConverter.GetBytes(value);
@@ -98,7 +97,6 @@ namespace PacketDotNet
         public Byte MaxResponseTime
         {
             get => Header.Bytes[Header.Offset + IGMPv2Fields.MaxResponseTimePosition];
-
             set => Header.Bytes[Header.Offset + IGMPv2Fields.MaxResponseTimePosition] = value;
         }
 
@@ -108,7 +106,6 @@ namespace PacketDotNet
         public IGMPMessageType Type
         {
             get => (IGMPMessageType) Header.Bytes[Header.Offset + IGMPv2Fields.TypePosition];
-
             set => Header.Bytes[Header.Offset + IGMPv2Fields.TypePosition] = (Byte) value;
         }
 

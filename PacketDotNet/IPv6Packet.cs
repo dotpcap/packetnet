@@ -91,7 +91,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToInt32(Header.Bytes,
                                                   Header.Offset + IPv6Fields.VersionTrafficClassFlowLabelPosition);
-
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + IPv6Fields.VersionTrafficClassFlowLabelPosition);
         }
 
@@ -101,7 +100,6 @@ namespace PacketDotNet
         public override IPVersion Version
         {
             get => (IPVersion) ((VersionTrafficClassFlowLabel >> 28) & 0xF);
-
             set
             {
                 var theValue = (Int32) value;
@@ -123,7 +121,6 @@ namespace PacketDotNet
         public Int32 TrafficClass
         {
             get => (VersionTrafficClassFlowLabel >> 20) & 0xFF;
-
             set
             {
                 // read the original value
@@ -143,7 +140,6 @@ namespace PacketDotNet
         public Int32 FlowLabel
         {
             get => VersionTrafficClassFlowLabel & 0xFFFFF;
-
             set
             {
                 // read the original value
@@ -165,7 +161,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + IPv6Fields.PayloadLengthPosition);
-
             set => EndianBitConverter.Big.CopyBytes(value,
                                                     Header.Bytes,
                                                     Header.Offset + IPv6Fields.PayloadLengthPosition);
@@ -178,7 +173,6 @@ namespace PacketDotNet
         public override Int32 HeaderLength
         {
             get => IPv6Fields.HeaderLength / 4;
-
             set => ThrowHelper.ThrowNotImplementedException();
         }
 
@@ -188,7 +182,6 @@ namespace PacketDotNet
         public override Int32 TotalLength
         {
             get => PayloadLength + (HeaderLength * 4);
-
             set => PayloadLength = (UInt16) (value - (HeaderLength * 4));
         }
 
@@ -198,7 +191,6 @@ namespace PacketDotNet
         public override IPProtocolType NextHeader
         {
             get => (IPProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
-
             set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition] = (Byte) value;
         }
 
@@ -230,7 +222,6 @@ namespace PacketDotNet
         public override Int32 HopLimit
         {
             get => Header.Bytes[Header.Offset + IPv6Fields.HopLimitPosition];
-
             set => Header.Bytes[Header.Offset + IPv6Fields.HopLimitPosition] = (Byte) value;
         }
 
@@ -240,7 +231,6 @@ namespace PacketDotNet
         public override Int32 TimeToLive
         {
             get => HopLimit;
-
             set => HopLimit = value;
         }
 
@@ -252,7 +242,6 @@ namespace PacketDotNet
             get => GetIPAddress(AddressFamily.InterNetworkV6,
                                 Header.Offset + IPv6Fields.SourceAddressPosition,
                                 Header.Bytes);
-
             set
             {
                 var address = value.GetAddressBytes();
@@ -270,7 +259,6 @@ namespace PacketDotNet
             get => GetIPAddress(AddressFamily.InterNetworkV6,
                                 Header.Offset + IPv6Fields.DestinationAddressPosition,
                                 Header.Bytes);
-
             set
             {
                 var address = value.GetAddressBytes();

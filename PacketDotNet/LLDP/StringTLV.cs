@@ -78,7 +78,6 @@ namespace PacketDotNet.LLDP
             get => Encoding.ASCII.GetString(TLVData.Bytes,
                                             ValueOffset,
                                             Length);
-
             set
             {
                 var bytes = Encoding.ASCII.GetBytes(value);

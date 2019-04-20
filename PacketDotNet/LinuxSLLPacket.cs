@@ -56,7 +56,6 @@ namespace PacketDotNet
         {
             get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                                        Header.Offset + LinuxSLLFields.EthernetProtocolTypePosition);
-
             set
             {
                 var theValue = (Int16) value;
@@ -104,7 +103,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                   Header.Offset + LinuxSLLFields.LinkLayerAddressLengthPosition);
-
             set
             {
                 // range check
@@ -127,7 +125,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                   Header.Offset + LinuxSLLFields.LinkLayerAddressTypePosition);
-
             set
             {
                 var theValue = (Int16) value;
@@ -144,7 +141,6 @@ namespace PacketDotNet
         {
             get => (LinuxSLLType) EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                                  Header.Offset + LinuxSLLFields.PacketTypePosition);
-
             set
             {
                 var theValue = (Int16) value;

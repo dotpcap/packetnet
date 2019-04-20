@@ -110,7 +110,6 @@ namespace PacketDotNet.LLDP
         public TLVTypes Type
         {
             get => TypeLength.Type;
-
             set
             {
                 Log.DebugFormat("value {0}", value);
@@ -144,7 +143,6 @@ namespace PacketDotNet.LLDP
         internal ByteArraySegment TLVData
         {
             get => _tlvData;
-
             set
             {
                 _tlvData = value;

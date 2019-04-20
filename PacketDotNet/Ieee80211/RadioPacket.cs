@@ -59,7 +59,6 @@ namespace PacketDotNet.Ieee80211
         private Byte VersionBytes
         {
             get => Header.Bytes[Header.Offset + RadioFields.VersionPosition];
-
             set => Header.Bytes[Header.Offset + RadioFields.VersionPosition] = value;
         }
 
@@ -73,7 +72,6 @@ namespace PacketDotNet.Ieee80211
         {
             get => EndianBitConverter.Little.ToUInt16(Header.Bytes,
                                                       Header.Offset + RadioFields.LengthPosition);
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
                                                        Header.Offset + RadioFields.LengthPosition);

@@ -54,7 +54,6 @@ namespace PacketDotNet
         public ICMPv6Types Type
         {
             get => (ICMPv6Types) Header.Bytes[Header.Offset + ICMPv6Fields.TypePosition];
-
             set => Header.Bytes[Header.Offset + ICMPv6Fields.TypePosition] = (Byte) value;
         }
 
@@ -62,7 +61,6 @@ namespace PacketDotNet
         public Byte Code
         {
             get => Header.Bytes[Header.Offset + ICMPv6Fields.CodePosition];
-
             set => Header.Bytes[Header.Offset + ICMPv6Fields.CodePosition] = value;
         }
 
@@ -73,7 +71,6 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + ICMPv6Fields.ChecksumPosition);
-
             set
             {
                 var theValue = value;

@@ -56,7 +56,6 @@ namespace PacketDotNet
         public override Packet PayloadPacket
         {
             get => base.PayloadPacket;
-
             set
             {
                 base.PayloadPacket = value;
@@ -142,7 +141,6 @@ namespace PacketDotNet
         {
             get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                                        Header.Offset + EthernetFields.TypePosition);
-
             set
             {
                 var val = (Int16) value;

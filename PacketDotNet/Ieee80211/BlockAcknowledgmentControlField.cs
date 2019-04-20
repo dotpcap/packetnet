@@ -67,7 +67,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean CompressedBitmap
         {
             get => ((Field >> 2) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -95,7 +94,6 @@ namespace PacketDotNet.Ieee80211
         public Boolean MultiTid
         {
             get => ((Field >> 1) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -115,7 +113,6 @@ namespace PacketDotNet.Ieee80211
         public AcknowledgementPolicy Policy
         {
             get => (AcknowledgementPolicy) (Field & 0x1);
-
             set
             {
                 if (value == AcknowledgementPolicy.Immediate)
@@ -135,7 +132,6 @@ namespace PacketDotNet.Ieee80211
         public Byte Tid
         {
             get => (Byte) (Field >> 12);
-
             set
             {
                 Field &= 0x0FFF;

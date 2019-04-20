@@ -83,7 +83,6 @@ namespace PacketDotNet
         public OSPFVersion Version
         {
             get => (OSPFVersion) Header.Bytes[Header.Offset + OSPFv2Fields.VersionPosition];
-
             set => Header.Bytes[Header.Offset + OSPFv2Fields.VersionPosition] = (Byte) value;
         }
 

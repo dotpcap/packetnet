@@ -46,10 +46,10 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var icmpv6 = p.Extract<ICMPv6Packet>();
+            var icmpv6 = p.Extract<IcmpV6Packet>();
             Console.WriteLine(icmpv6.GetType());
 
-            Assert.AreEqual(ICMPv6Types.RouterSolicitation, icmpv6.Type);
+            Assert.AreEqual(IcmpV6Types.RouterSolicitation, icmpv6.Type);
             Assert.AreEqual(0, icmpv6.Code);
             Assert.AreEqual(0x5d50, icmpv6.Checksum);
 
@@ -70,7 +70,7 @@ namespace Test.PacketType
             Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             // save the checksum
-            var icmpv6 = p.Extract<ICMPv6Packet>();
+            var icmpv6 = p.Extract<IcmpV6Packet>();
             Assert.IsNotNull(icmpv6);
             var savedChecksum = icmpv6.Checksum;
 
@@ -96,7 +96,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var icmpv6 = p.Extract<ICMPv6Packet>();
+            var icmpv6 = p.Extract<IcmpV6Packet>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(icmpv6.ToString());
@@ -114,7 +114,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var icmpV6 = p.Extract<ICMPv6Packet>();
+            var icmpV6 = p.Extract<IcmpV6Packet>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(icmpV6.ToString(StringOutputType.Verbose));
@@ -131,7 +131,7 @@ namespace Test.PacketType
             {
 
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var icmpv6 = p.Extract<ICMPv6Packet>();
+                var icmpv6 = p.Extract<IcmpV6Packet>();
                 if (icmpv6 == null)
                 {
                     continue;
@@ -145,7 +145,7 @@ namespace Test.PacketType
 
                 Stream inFile = File.OpenRead("icmpv6.dat");
                 BinaryFormatter deserializer = new BinaryFormatter();
-                ICMPv6Packet fromFile = (ICMPv6Packet)deserializer.Deserialize(inFile);
+                IcmpV6Packet fromFile = (IcmpV6Packet)deserializer.Deserialize(inFile);
                 inFile.Close();
 
 

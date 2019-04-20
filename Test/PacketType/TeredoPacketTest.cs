@@ -51,7 +51,7 @@ namespace Test.PacketType
 
             Packet tunneledTcpPacket = tunneledIp6Packet.PayloadPacket;
             Assert.IsNotNull(tunneledTcpPacket);
-            Assert.AreEqual(typeof(ICMPv6Packet), tunneledTcpPacket.GetType());
+            Assert.AreEqual(typeof(IcmpV6Packet), tunneledTcpPacket.GetType());
 
         }
     }

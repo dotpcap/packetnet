@@ -110,10 +110,10 @@ namespace PacketDotNet
                     case UdpPacket _:
                         Protocol = IPProtocolType.UDP;
                         break;
-                    case ICMPv6Packet _:
+                    case IcmpV6Packet _:
                         Protocol = IPProtocolType.ICMPV6;
                         break;
-                    case ICMPv4Packet _:
+                    case IcmpV4Packet _:
                         Protocol = IPProtocolType.ICMP;
                         break;
                     case IgmpV2Packet _:
@@ -277,14 +277,14 @@ namespace PacketDotNet
                 }
                 case IPProtocolType.ICMP:
                 {
-                    payloadPacketOrData.Packet = new ICMPv4Packet(payload,
+                    payloadPacketOrData.Packet = new IcmpV4Packet(payload,
                                                                   parentPacket);
 
                     break;
                 }
                 case IPProtocolType.ICMPV6:
                 {
-                    payloadPacketOrData.Packet = new ICMPv6Packet(payload,
+                    payloadPacketOrData.Packet = new IcmpV6Packet(payload,
                                                                   parentPacket);
 
                     break;

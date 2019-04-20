@@ -36,7 +36,7 @@ namespace PacketDotNet
     /// See http://en.wikipedia.org/wiki/ICMPv6
     /// </summary>
     [Serializable]
-    public sealed class ICMPv6Packet : InternetPacket
+    public sealed class IcmpV6Packet : InternetPacket
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -48,37 +48,11 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        /// <value>
-        /// The Type value
-        /// </value>
-        public ICMPv6Types Type
-        {
-            get => (ICMPv6Types) Header.Bytes[Header.Offset + ICMPv6Fields.TypePosition];
-            set => Header.Bytes[Header.Offset + ICMPv6Fields.TypePosition] = (byte) value;
-        }
-
-        /// <summary>Fetch the ICMP code </summary>
-        public byte Code
-        {
-            get => Header.Bytes[Header.Offset + ICMPv6Fields.CodePosition];
-            set => Header.Bytes[Header.Offset + ICMPv6Fields.CodePosition] = value;
-        }
-
-        /// <value>
-        /// Checksum value
-        /// </value>
-        public ushort Checksum
-        {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + ICMPv6Fields.ChecksumPosition);
-            set
-            {
-                var theValue = value;
-                EndianBitConverter.Big.CopyBytes(theValue,
-                                                 Header.Bytes,
-                                                 Header.Offset + ICMPv6Fields.ChecksumPosition);
-            }
-        }
+        /// <summary>
+        /// Used to prevent a recursive stack overflow
+        /// when recalculating in UpdateCalculatedValues()
+        /// </summary>
+        private bool _skipUpdating;
 
         /// <summary>
         /// Constructor
@@ -86,7 +60,7 @@ namespace PacketDotNet
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public ICMPv6Packet(ByteArraySegment byteArraySegment)
+        public IcmpV6Packet(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
@@ -102,7 +76,7 @@ namespace PacketDotNet
         /// <param name="parentPacket">
         /// A <see cref="Packet" />
         /// </param>
-        public ICMPv6Packet
+        public IcmpV6Packet
         (
             ByteArraySegment byteArraySegment,
             Packet parentPacket) : this(byteArraySegment)
@@ -110,11 +84,40 @@ namespace PacketDotNet
             ParentPacket = parentPacket;
         }
 
-        /// <summary>
-        /// Used to prevent a recursive stack overflow
-        /// when recalculating in UpdateCalculatedValues()
-        /// </summary>
-        private bool _skipUpdating;
+        /// <value>
+        /// Checksum value
+        /// </value>
+        public ushort Checksum
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                   Header.Offset + IcmpV6Fields.ChecksumPosition);
+            set
+            {
+                var theValue = value;
+                EndianBitConverter.Big.CopyBytes(theValue,
+                                                 Header.Bytes,
+                                                 Header.Offset + IcmpV6Fields.ChecksumPosition);
+            }
+        }
+
+        /// <summary>Fetch the ICMP code </summary>
+        public byte Code
+        {
+            get => Header.Bytes[Header.Offset + IcmpV6Fields.CodePosition];
+            set => Header.Bytes[Header.Offset + IcmpV6Fields.CodePosition] = value;
+        }
+
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override string Color => AnsiEscapeSequences.LightBlue;
+
+        /// <value>
+        /// The Type value
+        /// </value>
+        public IcmpV6Types Type
+        {
+            get => (IcmpV6Types) Header.Bytes[Header.Offset + IcmpV6Fields.TypePosition];
+            set => Header.Bytes[Header.Offset + IcmpV6Fields.TypePosition] = (byte) value;
+        }
 
         /// <summary>
         /// Recalculate the checksum
@@ -143,9 +146,6 @@ namespace PacketDotNet
             _skipUpdating = false;
         }
 
-        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override string Color => AnsiEscapeSequences.LightBlue;
-
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {
@@ -165,7 +165,7 @@ namespace PacketDotNet
                 case StringOutputType.Colored:
                 {
                     // build the output string
-                    buffer.AppendFormat("{0}[ICMPv6Packet: Type={2}, Code={3}]{1}",
+                    buffer.AppendFormat("{0}[IcmpV6Packet: Type={2}, Code={3}]{1}",
                                         color,
                                         colorEscape,
                                         Type,

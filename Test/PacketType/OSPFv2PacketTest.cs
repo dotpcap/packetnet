@@ -3,7 +3,7 @@ using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;
 using System.Collections.Generic;
-using PacketDotNet.LSA;
+using PacketDotNet.Lsa;
 using SharpPcap;
 using PacketDotNet.Utils;
 
@@ -120,9 +120,9 @@ namespace Test.PacketType
             Assert.AreEqual(lsuPacket is OspfV2LinkStateUpdatePacket, true);
             lp = (OspfV2LinkStateUpdatePacket)lsuPacket;
             Assert.AreEqual(1, lp.LsaNumber);
-            List<LSA> l = lp.Updates;
+            List<LinkStateAdvertisement> l = lp.Updates;
             Assert.AreEqual(1, l.Count);
-            Assert.AreEqual(typeof(RouterLSA), l[0].GetType());
+            Assert.AreEqual(typeof(RouterLinksAdvertisement), l[0].GetType());
             Console.WriteLine(l[0]);
         }
 
@@ -151,133 +151,133 @@ namespace Test.PacketType
             OspfV2LinkStateAcknowledgmentPacket ack = (OspfV2LinkStateAcknowledgmentPacket)lsaPacket;
             Assert.AreEqual(13, ack.Acknowledgments.Count);
 
-            LSA l = ack.Acknowledgments[0];
-            Assert.AreEqual(l.LSAge, 2);
+            LinkStateAdvertisement l = ack.Acknowledgments[0];
+            Assert.AreEqual(l.Age, 2);
             Assert.AreEqual(l.Options, 2);
-            Assert.AreEqual(l.LSType, LSAType.Router);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("192.168.170.3"));
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.Router);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("192.168.170.3"));
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.3"));
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
             Assert.AreEqual(l.Checksum, 0x3a9c);
             Assert.AreEqual(l.Length, 48);
 
             l = ack.Acknowledgments[1];
-            Assert.AreEqual(l.LSAge, 3);
+            Assert.AreEqual(l.Age, 3);
             Assert.AreEqual(l.Options, 2);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("80.212.16.0"));
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("80.212.16.0"));
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2")) ;
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
             Assert.AreEqual(l.Checksum, 0x2a49);
             Assert.AreEqual(l.Length, 36);
 
             l = ack.Acknowledgments[2];
-            Assert.AreEqual(l.LSAge, 3);
+            Assert.AreEqual(l.Age, 3);
             Assert.AreEqual(l.Options, 2);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("148.121.171.0"));
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("148.121.171.0"));
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
             Assert.AreEqual(l.Checksum, 0x34a5);
             Assert.AreEqual(l.Length, 36);
 
             l = ack.Acknowledgments[3];
-            Assert.AreEqual(l.LSAge, 3);
+            Assert.AreEqual(l.Age, 3);
             Assert.AreEqual(l.Options, 2);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("192.130.120.0"));
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("192.130.120.0"));
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
             Assert.AreEqual(l.Checksum, 0xd319);
             Assert.AreEqual(l.Length, 36);
 
             l = ack.Acknowledgments[4];
-            Assert.AreEqual(l.LSAge, 3);
+            Assert.AreEqual(l.Age, 3);
             Assert.AreEqual(l.Options, 2);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("192.168.0.0"));
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("192.168.0.0"));
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
             Assert.AreEqual(l.Checksum, 0x3708);
             Assert.AreEqual(l.Length, 36);
 
             l = ack.Acknowledgments[5];
-            Assert.AreEqual(l.LSAge, 3);
+            Assert.AreEqual(l.Age, 3);
             Assert.AreEqual(l.Options, 2);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("192.168.1.0"));
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("192.168.1.0"));
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
             Assert.AreEqual(l.Checksum, 0x2c12);
             Assert.AreEqual(l.Length, 36);
 
             l = ack.Acknowledgments[6];
-            Assert.AreEqual(l.LSAge, 3);
+            Assert.AreEqual(l.Age, 3);
             Assert.AreEqual(l.Options, 2);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("192.168.172.0"));
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("192.168.172.0"));
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
             Assert.AreEqual(l.Checksum, 0x3341);
             Assert.AreEqual(l.Length, 36);
 
             l = ack.Acknowledgments[7];
-            Assert.AreEqual(l.LSAge, 1);
+            Assert.AreEqual(l.Age, 1);
             Assert.AreEqual(l.Options, 2);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("148.121.171.0"));
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("148.121.171.0"));
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.3"));
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
             Assert.AreEqual(l.Checksum, 0x2eaa);
             Assert.AreEqual(l.Length, 36);
 
             l = ack.Acknowledgments[8];
-            Assert.AreEqual(l.LSAge, 1);
+            Assert.AreEqual(l.Age, 1);
             Assert.AreEqual(l.Options, 2);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("192.130.120.0"));
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("192.130.120.0"));
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.3"));
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
             Assert.AreEqual(l.Checksum, 0xcd1e);
             Assert.AreEqual(l.Length, 36);
 
             l = ack.Acknowledgments[9];
-            Assert.AreEqual(l.LSAge, 1);
+            Assert.AreEqual(l.Age, 1);
             Assert.AreEqual(l.Options, 2);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("192.168.0.0"));
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("192.168.0.0"));
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.3"));
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
             Assert.AreEqual(l.Checksum, 0x310d);
             Assert.AreEqual(l.Length, 36);
 
             l = ack.Acknowledgments[10];
-            Assert.AreEqual(l.LSAge, 1);
+            Assert.AreEqual(l.Age, 1);
             Assert.AreEqual(l.Options, 2);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("192.168.1.0"));
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("192.168.1.0"));
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.3"));
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
             Assert.AreEqual(l.Checksum, 0x2617);
             Assert.AreEqual(l.Length, 36);
 
             l = ack.Acknowledgments[11];
-            Assert.AreEqual(l.LSAge, 1);
+            Assert.AreEqual(l.Age, 1);
             Assert.AreEqual(l.Options, 2);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("192.168.172.0"));
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("192.168.172.0"));
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.3"));
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
             Assert.AreEqual(l.Checksum, 0x2d46);
             Assert.AreEqual(l.Length, 36);
 
             l = ack.Acknowledgments[12];
-            Assert.AreEqual(l.LSAge, 1);
+            Assert.AreEqual(l.Age, 1);
             Assert.AreEqual(l.Options, 2);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("80.212.16.0"));
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("80.212.16.0"));
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.3"));
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
             Assert.AreEqual(l.Checksum, 0x244e);
             Assert.AreEqual(l.Length, 36);
         }
@@ -294,77 +294,77 @@ namespace Test.PacketType
             Assert.AreEqual(1098361214, dp.DDSequence);
             Assert.AreEqual(172, ddLSAPacket.PacketLength);
 
-            List<LSA> lsas = dp.Headers;
+            List<LinkStateAdvertisement> lsas = dp.Headers;
             Assert.AreEqual(7, lsas.Count);
-            LSA l = lsas[0];
+            LinkStateAdvertisement l = lsas[0];
             Console.WriteLine(l);
             Assert.AreEqual(l.Checksum, 0x3a9c);
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.3"));
             Assert.AreEqual(l.Length, 48);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("192.168.170.3"));
-            Assert.AreEqual(l.LSAge, 1);
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
-            Assert.AreEqual(l.LSType, LSAType.Router);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("192.168.170.3"));
+            Assert.AreEqual(l.Age, 1);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.Router);
             Assert.AreEqual(l.Options, 0x02);
 
             l = lsas[1];
             Assert.AreEqual(l.Checksum, 0x2a49);
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
             Assert.AreEqual(l.Length, 36);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("80.212.16.0"));
-            Assert.AreEqual(l.LSAge, 2);
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("80.212.16.0"));
+            Assert.AreEqual(l.Age, 2);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(l.Options, 0x02);
 
             l = lsas[2];
             Assert.AreEqual(l.Checksum, 0x34a5);
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
             Assert.AreEqual(l.Length, 36);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("148.121.171.0"));
-            Assert.AreEqual(l.LSAge, 2);
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("148.121.171.0"));
+            Assert.AreEqual(l.Age, 2);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(l.Options, 0x02);
 
             l = lsas[3];
             Assert.AreEqual(l.Checksum, 0xd319);
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
             Assert.AreEqual(l.Length, 36);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("192.130.120.0"));
-            Assert.AreEqual(l.LSAge, 2);
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("192.130.120.0"));
+            Assert.AreEqual(l.Age, 2);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(l.Options, 0x02);
 
             l = lsas[4];
             Assert.AreEqual(l.Checksum, 0x3708);
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
             Assert.AreEqual(l.Length, 36);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("192.168.0.0"));
-            Assert.AreEqual(l.LSAge, 2);
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("192.168.0.0"));
+            Assert.AreEqual(l.Age, 2);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(l.Options, 0x02);
 
             l = lsas[5];
             Assert.AreEqual(l.Checksum, 0x2c12);
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
             Assert.AreEqual(l.Length, 36);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("192.168.1.0"));
-            Assert.AreEqual(l.LSAge, 2);
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("192.168.1.0"));
+            Assert.AreEqual(l.Age, 2);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(l.Options, 0x02);
 
             l = lsas[6];
             Assert.AreEqual(l.Checksum, 0x3341);
             Assert.AreEqual(l.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
             Assert.AreEqual(l.Length, 36);
-            Assert.AreEqual(l.LinkStateID, System.Net.IPAddress.Parse("192.168.172.0"));
-            Assert.AreEqual(l.LSAge, 2);
-            Assert.AreEqual(l.LSSequenceNumber, 0x80000001);
-            Assert.AreEqual(l.LSType, LSAType.ASExternal);
+            Assert.AreEqual(l.Id, System.Net.IPAddress.Parse("192.168.172.0"));
+            Assert.AreEqual(l.Age, 2);
+            Assert.AreEqual(l.SequenceNumber, 0x80000001);
+            Assert.AreEqual(l.Type, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(l.Options, 0x02);
         }
 
@@ -376,37 +376,37 @@ namespace Test.PacketType
             Assert.AreEqual(requests.Count, 7);
 
             LinkStateRequest r = requests[0];
-            Assert.AreEqual(r.LSType, LSAType.Router);
+            Assert.AreEqual(r.LSType, LinkStateAdvertisementType.Router);
             Assert.AreEqual(r.LinkStateID, System.Net.IPAddress.Parse("192.168.170.3"));
             Assert.AreEqual(r.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.3"));
 
             r = requests[1];
-            Assert.AreEqual(r.LSType, LSAType.ASExternal);
+            Assert.AreEqual(r.LSType, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(r.LinkStateID, System.Net.IPAddress.Parse("80.212.16.0"));
             Assert.AreEqual(r.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
 
             r = requests[2];
-            Assert.AreEqual(r.LSType, LSAType.ASExternal);
+            Assert.AreEqual(r.LSType, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(r.LinkStateID, System.Net.IPAddress.Parse("148.121.171.0"));
             Assert.AreEqual(r.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
 
             r = requests[3];
-            Assert.AreEqual(r.LSType, LSAType.ASExternal);
+            Assert.AreEqual(r.LSType, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(r.LinkStateID, System.Net.IPAddress.Parse("192.130.120.0"));
             Assert.AreEqual(r.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
 
             r = requests[4];
-            Assert.AreEqual(r.LSType, LSAType.ASExternal);
+            Assert.AreEqual(r.LSType, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(r.LinkStateID, System.Net.IPAddress.Parse("192.168.0.0"));
             Assert.AreEqual(r.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
 
             r = requests[5];
-            Assert.AreEqual(r.LSType, LSAType.ASExternal);
+            Assert.AreEqual(r.LSType, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(r.LinkStateID, System.Net.IPAddress.Parse("192.168.1.0"));
             Assert.AreEqual(r.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
 
             r = requests[6];
-            Assert.AreEqual(r.LSType, LSAType.ASExternal);
+            Assert.AreEqual(r.LSType, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(r.LinkStateID, System.Net.IPAddress.Parse("192.168.172.0"));
             Assert.AreEqual(r.AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
         }
@@ -414,25 +414,25 @@ namespace Test.PacketType
         [Test]
         public void TestLSA()
         {
-            RouterLSA rl;
-            NetworkLSA nl;
-            SummaryLSA sl;
-            ASExternalLSA al;
-            LSA l;
+            RouterLinksAdvertisement rl;
+            NetworkLinksAdvertisement nl;
+            SummaryLinkAdvertisement sl;
+            ASExternalLinkAdvertisement al;
+            LinkStateAdvertisement l;
 
             Assert.AreNotEqual(null, lsaHolder);
             Assert.AreEqual(11, lsaHolder.LsaNumber);
             Assert.AreEqual(11, lsaHolder.Updates.Count);
 
             l = lsaHolder.Updates[0];
-            Assert.AreEqual(typeof(RouterLSA), l.GetType());
-            rl = (RouterLSA)l;
-            Assert.AreEqual(446, rl.LSAge);
+            Assert.AreEqual(typeof(RouterLinksAdvertisement), l.GetType());
+            rl = (RouterLinksAdvertisement)l;
+            Assert.AreEqual(446, rl.Age);
             Assert.AreEqual(0x22, rl.Options);
-            Assert.AreEqual(LSAType.Router, rl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), rl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.Router, rl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), rl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), rl.AdvertisingRouter);
-            Assert.AreEqual(0x80000004, rl.LSSequenceNumber);
+            Assert.AreEqual(0x80000004, rl.SequenceNumber);
             Assert.AreEqual(0x7caa, rl.Checksum);
             Assert.AreEqual(48, rl.Length);
             Assert.AreEqual(0, rl.VBit);
@@ -442,27 +442,27 @@ namespace Test.PacketType
 
             RouterLink rlink = rl.RouterLinks[0];
             Assert.AreEqual(3, rlink.Type);
-            Assert.AreEqual(System.Net.IPAddress.Parse("192.168.20.0"), rlink.LinkID);
+            Assert.AreEqual(System.Net.IPAddress.Parse("192.168.20.0"), rlink.LinkId);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.0"), rlink.LinkData);
-            Assert.AreEqual(0, rlink.TOSNumber);
+            Assert.AreEqual(0, rlink.TosNumber);
             Assert.AreEqual(10, rlink.Metric);
 
             rlink = rl.RouterLinks[1];
             Assert.AreEqual(2, rlink.Type);
-            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), rlink.LinkID);
+            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), rlink.LinkId);
             Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), rlink.LinkData);
-            Assert.AreEqual(0, rlink.TOSNumber);
+            Assert.AreEqual(0, rlink.TosNumber);
             Assert.AreEqual(10, rlink.Metric);
 
             l = lsaHolder.Updates[1];
-            Assert.AreEqual(typeof(RouterLSA), l.GetType());
-            rl = (RouterLSA)l;
-            Assert.AreEqual(10, rl.LSAge);
+            Assert.AreEqual(typeof(RouterLinksAdvertisement), l.GetType());
+            rl = (RouterLinksAdvertisement)l;
+            Assert.AreEqual(10, rl.Age);
             Assert.AreEqual(0x22, rl.Options);
-            Assert.AreEqual(LSAType.Router, rl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("4.4.4.4"), rl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.Router, rl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("4.4.4.4"), rl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("4.4.4.4"), rl.AdvertisingRouter);
-            Assert.AreEqual(0x80000006, rl.LSSequenceNumber);
+            Assert.AreEqual(0x80000006, rl.SequenceNumber);
             Assert.AreEqual(0x36b1, rl.Checksum);
             Assert.AreEqual(36, rl.Length);
             Assert.AreEqual(0, rl.VBit);
@@ -472,20 +472,20 @@ namespace Test.PacketType
 
             rlink = rl.RouterLinks[0];
             Assert.AreEqual(3, rlink.Type);
-            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.0"), rlink.LinkID);
+            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.0"), rlink.LinkId);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.252"), rlink.LinkData);
-            Assert.AreEqual(0, rlink.TOSNumber);
+            Assert.AreEqual(0, rlink.TosNumber);
             Assert.AreEqual(10, rlink.Metric);
 
             l = lsaHolder.Updates[2];
-            Assert.AreEqual(typeof(NetworkLSA), l.GetType());
-            nl = (NetworkLSA)l;
-            Assert.AreEqual(446, nl.LSAge);
+            Assert.AreEqual(typeof(NetworkLinksAdvertisement), l.GetType());
+            nl = (NetworkLinksAdvertisement)l;
+            Assert.AreEqual(446, nl.Age);
             Assert.AreEqual(0x22, nl.Options);
-            Assert.AreEqual(LSAType.Network, nl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), nl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.Network, nl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), nl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), nl.AdvertisingRouter);
-            Assert.AreEqual(0x80000001, nl.LSSequenceNumber);
+            Assert.AreEqual(0x80000001, nl.SequenceNumber);
             Assert.AreEqual(0xf6ed, nl.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.252"), nl.NetworkMask);
             Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), nl.AttachedRouters[0]);
@@ -493,56 +493,56 @@ namespace Test.PacketType
             Assert.AreEqual(32, nl.Length);
 
             l = lsaHolder.Updates[3];
-            Assert.AreEqual(typeof(SummaryLSA), l.GetType());
-            sl = (SummaryLSA)l;
-            Assert.AreEqual(11, sl.LSAge);
+            Assert.AreEqual(typeof(SummaryLinkAdvertisement), l.GetType());
+            sl = (SummaryLinkAdvertisement)l;
+            Assert.AreEqual(11, sl.Age);
             Assert.AreEqual(0x22, sl.Options);
-            Assert.AreEqual(LSAType.Summary, sl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("192.168.10.0"), sl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.Summary, sl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("192.168.10.0"), sl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("4.4.4.4"), sl.AdvertisingRouter);
-            Assert.AreEqual(0x80000001, sl.LSSequenceNumber);
+            Assert.AreEqual(0x80000001, sl.SequenceNumber);
             Assert.AreEqual(0x1e7d, sl.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.0"), sl.NetworkMask);
             Assert.AreEqual(30, sl.Metric);
             Assert.AreEqual(28, sl.Length);
 
             l = lsaHolder.Updates[4];
-            Assert.AreEqual(typeof(SummaryLSA), l.GetType());
-            sl = (SummaryLSA)l;
-            Assert.AreEqual(11, sl.LSAge);
+            Assert.AreEqual(typeof(SummaryLinkAdvertisement), l.GetType());
+            sl = (SummaryLinkAdvertisement)l;
+            Assert.AreEqual(11, sl.Age);
             Assert.AreEqual(0x22, sl.Options);
-            Assert.AreEqual(LSAType.Summary, sl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.10.0"), sl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.Summary, sl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.10.0"), sl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("4.4.4.4"), sl.AdvertisingRouter);
-            Assert.AreEqual(0x80000001, sl.LSSequenceNumber);
+            Assert.AreEqual(0x80000001, sl.SequenceNumber);
             Assert.AreEqual(0xd631, sl.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.252"), sl.NetworkMask);
             Assert.AreEqual(20, sl.Metric);
             Assert.AreEqual(28, sl.Length);
 
             l = lsaHolder.Updates[6];
-            Assert.AreEqual(typeof(SummaryLSA), l.GetType());
-            sl = (SummaryLSA)l;
-            Assert.AreEqual(11, sl.LSAge);
+            Assert.AreEqual(typeof(SummaryLinkAdvertisement), l.GetType());
+            sl = (SummaryLinkAdvertisement)l;
+            Assert.AreEqual(11, sl.Age);
             Assert.AreEqual(0x22, sl.Options);
-            Assert.AreEqual(LSAType.SummaryASBR, sl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("2.2.2.2"), sl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.SummaryASBR, sl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("2.2.2.2"), sl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("4.4.4.4"), sl.AdvertisingRouter);
-            Assert.AreEqual(0x80000001, sl.LSSequenceNumber);
+            Assert.AreEqual(0x80000001, sl.SequenceNumber);
             Assert.AreEqual(0x6fa0, sl.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("0.0.0.0"), sl.NetworkMask);
             Assert.AreEqual(20, sl.Metric);
             Assert.AreEqual(28, sl.Length);
 
             l = lsaHolder.Updates[7];
-            Assert.AreEqual(typeof(ASExternalLSA), l.GetType());
-            al = (ASExternalLSA)l;
-            Assert.AreEqual(197, al.LSAge);
+            Assert.AreEqual(typeof(ASExternalLinkAdvertisement), l.GetType());
+            al = (ASExternalLinkAdvertisement)l;
+            Assert.AreEqual(197, al.Age);
             Assert.AreEqual(0x20, al.Options);
-            Assert.AreEqual(LSAType.ASExternal, al.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("172.16.3.0"), al.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.ASExternal, al.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("172.16.3.0"), al.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("2.2.2.2"), al.AdvertisingRouter);
-            Assert.AreEqual(0x80000001, al.LSSequenceNumber);
+            Assert.AreEqual(0x80000001, al.SequenceNumber);
             Assert.AreEqual(0x2860, al.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.0"), al.NetworkMask);
             Assert.AreEqual(1, al.ASExternalLinks.Count);
@@ -552,18 +552,18 @@ namespace Test.PacketType
             Assert.AreEqual(aslink.EBit, 1);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
-            Assert.AreEqual(0, aslink.TOS);
+            Assert.AreEqual(0, aslink.Tos);
             Assert.AreEqual(System.Net.IPAddress.Parse("0.0.0.0"), aslink.ForwardingAddress);
 
             l = lsaHolder.Updates[8];
-            Assert.AreEqual(typeof(ASExternalLSA), l.GetType());
-            al = (ASExternalLSA)l;
-            Assert.AreEqual(197, al.LSAge);
+            Assert.AreEqual(typeof(ASExternalLinkAdvertisement), l.GetType());
+            al = (ASExternalLinkAdvertisement)l;
+            Assert.AreEqual(197, al.Age);
             Assert.AreEqual(0x20, al.Options);
-            Assert.AreEqual(LSAType.ASExternal, al.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("172.16.2.0"), al.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.ASExternal, al.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("172.16.2.0"), al.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("2.2.2.2"), al.AdvertisingRouter);
-            Assert.AreEqual(0x80000001, al.LSSequenceNumber);
+            Assert.AreEqual(0x80000001, al.SequenceNumber);
             Assert.AreEqual(0x3356, al.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.0"), al.NetworkMask);
             Assert.AreEqual(1, al.ASExternalLinks.Count);
@@ -573,7 +573,7 @@ namespace Test.PacketType
             Assert.AreEqual(aslink.EBit, 1);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
-            Assert.AreEqual(0, aslink.TOS);
+            Assert.AreEqual(0, aslink.Tos);
             Assert.AreEqual(System.Net.IPAddress.Parse("0.0.0.0"), aslink.ForwardingAddress);
         }
 
@@ -687,32 +687,32 @@ namespace Test.PacketType
             Assert.AreEqual(0x02, dp.DescriptionOptions);
 
             //test ctor 2
-            List<LSA> lsas = new List<LSA>();
+            List<LinkStateAdvertisement> lsas = new List<LinkStateAdvertisement>();
 
-            LSA l = new LSA();
+            LinkStateAdvertisement l = new LinkStateAdvertisement();
             l.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.3");
-            l.LinkStateID = System.Net.IPAddress.Parse("192.168.170.3");
-            l.LSAge = 1;
-            l.LSSequenceNumber = 0x80000001;
-            l.LSType = LSAType.Router;
+            l.Id = System.Net.IPAddress.Parse("192.168.170.3");
+            l.Age = 1;
+            l.SequenceNumber = 0x80000001;
+            l.Type = LinkStateAdvertisementType.Router;
             l.Options = 0x02;
             lsas.Add(l);
 
-            l = new LSA();
+            l = new LinkStateAdvertisement();
             l.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2");
-            l.LinkStateID = System.Net.IPAddress.Parse("80.212.16.0");
-            l.LSAge = 2;
-            l.LSSequenceNumber = 0x80000001;
-            l.LSType = LSAType.ASExternal;
+            l.Id = System.Net.IPAddress.Parse("80.212.16.0");
+            l.Age = 2;
+            l.SequenceNumber = 0x80000001;
+            l.Type = LinkStateAdvertisementType.ASExternal;
             l.Options = 0x02;
             lsas.Add(l);
 
-            l = new LSA();
+            l = new LinkStateAdvertisement();
             l.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2");
-            l.LinkStateID = System.Net.IPAddress.Parse("148.121.171.0");
-            l.LSAge = 2;
-            l.LSSequenceNumber = 0x80000001;
-            l.LSType = LSAType.ASExternal;
+            l.Id = System.Net.IPAddress.Parse("148.121.171.0");
+            l.Age = 2;
+            l.SequenceNumber = 0x80000001;
+            l.Type = LinkStateAdvertisementType.ASExternal;
             l.Options = 0x02;
             lsas.Add(l);
 
@@ -729,24 +729,24 @@ namespace Test.PacketType
             Assert.AreEqual(3, ddl.Headers.Count);
 
             Assert.AreEqual(ddl.Headers[0].AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.3"));
-            Assert.AreEqual(ddl.Headers[0].LinkStateID, System.Net.IPAddress.Parse("192.168.170.3"));
-            Assert.AreEqual(ddl.Headers[0].LSAge, 1);
-            Assert.AreEqual(ddl.Headers[0].LSSequenceNumber, 0x80000001);
-            Assert.AreEqual(ddl.Headers[0].LSType, LSAType.Router);
+            Assert.AreEqual(ddl.Headers[0].Id, System.Net.IPAddress.Parse("192.168.170.3"));
+            Assert.AreEqual(ddl.Headers[0].Age, 1);
+            Assert.AreEqual(ddl.Headers[0].SequenceNumber, 0x80000001);
+            Assert.AreEqual(ddl.Headers[0].Type, LinkStateAdvertisementType.Router);
             Assert.AreEqual(ddl.Headers[0].Options, 0x02);
 
             Assert.AreEqual(ddl.Headers[1].AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
-            Assert.AreEqual(ddl.Headers[1].LinkStateID, System.Net.IPAddress.Parse("80.212.16.0"));
-            Assert.AreEqual(ddl.Headers[1].LSAge, 2);
-            Assert.AreEqual(ddl.Headers[1].LSSequenceNumber, 0x80000001);
-            Assert.AreEqual(ddl.Headers[1].LSType, LSAType.ASExternal);
+            Assert.AreEqual(ddl.Headers[1].Id, System.Net.IPAddress.Parse("80.212.16.0"));
+            Assert.AreEqual(ddl.Headers[1].Age, 2);
+            Assert.AreEqual(ddl.Headers[1].SequenceNumber, 0x80000001);
+            Assert.AreEqual(ddl.Headers[1].Type, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(ddl.Headers[1].Options, 0x02);
 
             Assert.AreEqual(ddl.Headers[2].AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
-            Assert.AreEqual(ddl.Headers[2].LinkStateID, System.Net.IPAddress.Parse("148.121.171.0"));
-            Assert.AreEqual(ddl.Headers[2].LSAge, 2);
-            Assert.AreEqual(ddl.Headers[2].LSSequenceNumber, 0x80000001);
-            Assert.AreEqual(ddl.Headers[2].LSType, LSAType.ASExternal);
+            Assert.AreEqual(ddl.Headers[2].Id, System.Net.IPAddress.Parse("148.121.171.0"));
+            Assert.AreEqual(ddl.Headers[2].Age, 2);
+            Assert.AreEqual(ddl.Headers[2].SequenceNumber, 0x80000001);
+            Assert.AreEqual(ddl.Headers[2].Type, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(ddl.Headers[2].Options, 0x02);
         }
 
@@ -779,19 +779,19 @@ namespace Test.PacketType
             List<LinkStateRequest> lsrs = new List<LinkStateRequest>();
 
             LinkStateRequest r = new LinkStateRequest();
-            r.LSType = LSAType.Router;
+            r.LSType = LinkStateAdvertisementType.Router;
             r.LinkStateID = System.Net.IPAddress.Parse("192.168.170.3");
             r.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.3");
             lsrs.Add(r);
 
             r = new LinkStateRequest();
-            r.LSType = LSAType.ASExternal;
+            r.LSType = LinkStateAdvertisementType.ASExternal;
             r.LinkStateID = System.Net.IPAddress.Parse("80.212.16.0");
             r.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2");
             lsrs.Add(r);
 
             r = new LinkStateRequest();
-            r.LSType = LSAType.Network;
+            r.LSType = LinkStateAdvertisementType.Network;
             r.LinkStateID = System.Net.IPAddress.Parse("148.121.171.0");
             r.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2");
             lsrs.Add(r);
@@ -807,15 +807,15 @@ namespace Test.PacketType
             Assert.AreEqual(System.Net.IPAddress.Parse("10.0.1.255"), lp2.RouterId);
             Assert.AreEqual(System.Net.IPAddress.Parse("10.0.2.252"), lp2.AreaId);
 
-            Assert.AreEqual(lp2.Requests[0].LSType, LSAType.Router);
+            Assert.AreEqual(lp2.Requests[0].LSType, LinkStateAdvertisementType.Router);
             Assert.AreEqual(lp2.Requests[0].LinkStateID, System.Net.IPAddress.Parse("192.168.170.3"));
             Assert.AreEqual(lp2.Requests[0].AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.3"));
 
-            Assert.AreEqual(lp2.Requests[1].LSType, LSAType.ASExternal);
+            Assert.AreEqual(lp2.Requests[1].LSType, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(lp2.Requests[1].LinkStateID, System.Net.IPAddress.Parse("80.212.16.0"));
             Assert.AreEqual(lp2.Requests[1].AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
 
-            Assert.AreEqual(lp2.Requests[2].LSType, LSAType.Network);
+            Assert.AreEqual(lp2.Requests[2].LSType, LinkStateAdvertisementType.Network);
             Assert.AreEqual(lp2.Requests[2].LinkStateID, System.Net.IPAddress.Parse("148.121.171.0"));
             Assert.AreEqual(lp2.Requests[2].AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
         }
@@ -824,25 +824,25 @@ namespace Test.PacketType
         public void TestRouterLSAConstruction()
         {
             //ctor 1
-            RouterLSA rl = new RouterLSA();
+            RouterLinksAdvertisement rl = new RouterLinksAdvertisement();
 
-            rl.LSAge = 333;
+            rl.Age = 333;
             rl.Options = 0x20;
-            rl.LinkStateID = System.Net.IPAddress.Parse("1.1.1.1");
+            rl.Id = System.Net.IPAddress.Parse("1.1.1.1");
             rl.AdvertisingRouter = System.Net.IPAddress.Parse("2.2.2.2");
-            rl.LSSequenceNumber = 0x80000001;
+            rl.SequenceNumber = 0x80000001;
             rl.Checksum = 0xaaaa;
             rl.VBit = 1;
             rl.EBit = 0;
             rl.BBit = 1;
 
 
-            Assert.AreEqual(333, rl.LSAge);
+            Assert.AreEqual(333, rl.Age);
             Assert.AreEqual(0x20, rl.Options);
-            Assert.AreEqual(LSAType.Router, rl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("1.1.1.1"), rl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.Router, rl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("1.1.1.1"), rl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("2.2.2.2"), rl.AdvertisingRouter);
-            Assert.AreEqual(0x80000001, rl.LSSequenceNumber);
+            Assert.AreEqual(0x80000001, rl.SequenceNumber);
             Assert.AreEqual(0xaaaa, rl.Checksum);
             Assert.AreEqual(24, rl.Length);
             Assert.AreEqual(1, rl.VBit);
@@ -854,39 +854,39 @@ namespace Test.PacketType
 
             RouterLink rlink = new RouterLink();
             rlink.Type = 3;
-            rlink.LinkID = System.Net.IPAddress.Parse("192.168.20.0");
+            rlink.LinkId = System.Net.IPAddress.Parse("192.168.20.0");
             rlink.LinkData = System.Net.IPAddress.Parse("255.255.255.0");
-            rlink.TOSNumber = 0;
+            rlink.TosNumber = 0;
             rlink.Metric = 10;
             rlist.Add(rlink);
 
             rlink = new RouterLink();
             rlink.Type = 2;
-            rlink.LinkID = System.Net.IPAddress.Parse("10.0.20.2");
+            rlink.LinkId = System.Net.IPAddress.Parse("10.0.20.2");
             rlink.LinkData = System.Net.IPAddress.Parse("10.0.20.2");
-            rlink.TOSNumber = 0;
+            rlink.TosNumber = 0;
             rlink.Metric = 10;
             rlist.Add(rlink);
 
             //ctor 2
-            rl = new RouterLSA(rlist);
+            rl = new RouterLinksAdvertisement(rlist);
 
-            rl.LSAge = 446;
+            rl.Age = 446;
             rl.Options = 0x22;
-            rl.LinkStateID = System.Net.IPAddress.Parse("5.5.5.5");
+            rl.Id = System.Net.IPAddress.Parse("5.5.5.5");
             rl.AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5");
-            rl.LSSequenceNumber = 0x80000004;
+            rl.SequenceNumber = 0x80000004;
             rl.Checksum = 0x7caa;
             rl.VBit = 0;
             rl.EBit = 0;
             rl.BBit = 0;
 
-            Assert.AreEqual(446, rl.LSAge);
+            Assert.AreEqual(446, rl.Age);
             Assert.AreEqual(0x22, rl.Options);
-            Assert.AreEqual(LSAType.Router, rl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), rl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.Router, rl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), rl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), rl.AdvertisingRouter);
-            Assert.AreEqual(0x80000004, rl.LSSequenceNumber);
+            Assert.AreEqual(0x80000004, rl.SequenceNumber);
             Assert.AreEqual(0x7caa, rl.Checksum);
             Assert.AreEqual(48, rl.Length);
             Assert.AreEqual(0, rl.VBit);
@@ -896,16 +896,16 @@ namespace Test.PacketType
 
             rlink = rl.RouterLinks[0];
             Assert.AreEqual(3, rlink.Type);
-            Assert.AreEqual(System.Net.IPAddress.Parse("192.168.20.0"), rlink.LinkID);
+            Assert.AreEqual(System.Net.IPAddress.Parse("192.168.20.0"), rlink.LinkId);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.0"), rlink.LinkData);
-            Assert.AreEqual(0, rlink.TOSNumber);
+            Assert.AreEqual(0, rlink.TosNumber);
             Assert.AreEqual(10, rlink.Metric);
 
             rlink = rl.RouterLinks[1];
             Assert.AreEqual(2, rlink.Type);
-            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), rlink.LinkID);
+            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), rlink.LinkId);
             Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), rlink.LinkData);
-            Assert.AreEqual(0, rlink.TOSNumber);
+            Assert.AreEqual(0, rlink.TosNumber);
             Assert.AreEqual(10, rlink.Metric);
 
             //re-creation
@@ -915,23 +915,23 @@ namespace Test.PacketType
         public void TestNetworkLSACreation()
         {
             //ctor 1
-            NetworkLSA nl = new NetworkLSA();
+            NetworkLinksAdvertisement nl = new NetworkLinksAdvertisement();
 
-            nl.LSAge = 333;
+            nl.Age = 333;
             nl.Options = 0x20;
-            nl.LSType = LSAType.Network;
-            nl.LinkStateID = System.Net.IPAddress.Parse("1.1.1.1");
+            nl.Type = LinkStateAdvertisementType.Network;
+            nl.Id = System.Net.IPAddress.Parse("1.1.1.1");
             nl.AdvertisingRouter = System.Net.IPAddress.Parse("2.2.2.2");
-            nl.LSSequenceNumber = 0x8000000F;
+            nl.SequenceNumber = 0x8000000F;
             nl.Checksum = 0xdede;
             nl.NetworkMask = System.Net.IPAddress.Parse("255.255.255.252");
 
-            Assert.AreEqual(333, nl.LSAge);
+            Assert.AreEqual(333, nl.Age);
             Assert.AreEqual(0x20, nl.Options);
-            Assert.AreEqual(LSAType.Network, nl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("1.1.1.1"), nl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.Network, nl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("1.1.1.1"), nl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("2.2.2.2"), nl.AdvertisingRouter);
-            Assert.AreEqual(0x8000000F, nl.LSSequenceNumber);
+            Assert.AreEqual(0x8000000F, nl.SequenceNumber);
             Assert.AreEqual(0xdede, nl.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.252"), nl.NetworkMask);
             Assert.AreEqual(24, nl.Length);
@@ -941,23 +941,23 @@ namespace Test.PacketType
             rtrs.Add(System.Net.IPAddress.Parse("5.5.5.5"));
             rtrs.Add(System.Net.IPAddress.Parse("4.4.4.4"));
 
-            nl = new NetworkLSA(rtrs);
+            nl = new NetworkLinksAdvertisement(rtrs);
 
-            nl.LSAge = 446;
+            nl.Age = 446;
             nl.Options = 0x22;
-            nl.LSType = LSAType.Network;
-            nl.LinkStateID = System.Net.IPAddress.Parse("10.0.20.2");
+            nl.Type = LinkStateAdvertisementType.Network;
+            nl.Id = System.Net.IPAddress.Parse("10.0.20.2");
             nl.AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5");
-            nl.LSSequenceNumber = 0x80000001;
+            nl.SequenceNumber = 0x80000001;
             nl.Checksum = 0xf6ed;
             nl.NetworkMask = System.Net.IPAddress.Parse("255.255.255.252");
 
-            Assert.AreEqual(446, nl.LSAge);
+            Assert.AreEqual(446, nl.Age);
             Assert.AreEqual(0x22, nl.Options);
-            Assert.AreEqual(LSAType.Network, nl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), nl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.Network, nl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), nl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), nl.AdvertisingRouter);
-            Assert.AreEqual(0x80000001, nl.LSSequenceNumber);
+            Assert.AreEqual(0x80000001, nl.SequenceNumber);
             Assert.AreEqual(0xf6ed, nl.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.252"), nl.NetworkMask);
             Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), nl.AttachedRouters[0]);
@@ -969,94 +969,94 @@ namespace Test.PacketType
         public void TestSummaryLSAConstruction()
         {
             //ctor 1
-            SummaryLSA sl = new SummaryLSA();
+            SummaryLinkAdvertisement sl = new SummaryLinkAdvertisement();
 
-            sl.LSAge = 22;
+            sl.Age = 22;
             sl.Options = 0x20;
-            sl.LSType = LSAType.Summary;
-            sl.LinkStateID = System.Net.IPAddress.Parse("1.1.1.1");
+            sl.Type = LinkStateAdvertisementType.Summary;
+            sl.Id = System.Net.IPAddress.Parse("1.1.1.1");
             sl.AdvertisingRouter = System.Net.IPAddress.Parse("4.4.4.4");
-            sl.LSSequenceNumber = 0x8000000F;
+            sl.SequenceNumber = 0x8000000F;
             sl.Checksum = 0xdddd;
             sl.NetworkMask = System.Net.IPAddress.Parse("255.255.255.0");
             sl.Metric = 10;
 
-            Assert.AreEqual(22, sl.LSAge);
+            Assert.AreEqual(22, sl.Age);
             Assert.AreEqual(0x20, sl.Options);
-            Assert.AreEqual(LSAType.Summary, sl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("1.1.1.1"), sl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.Summary, sl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("1.1.1.1"), sl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("4.4.4.4"), sl.AdvertisingRouter);
-            Assert.AreEqual(0x8000000F, sl.LSSequenceNumber);
+            Assert.AreEqual(0x8000000F, sl.SequenceNumber);
             Assert.AreEqual(0xdddd, sl.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.0"), sl.NetworkMask);
             Assert.AreEqual(10, sl.Metric);
             Assert.AreEqual(28, sl.Length);
-            Assert.AreEqual(0, sl.TOSMetrics.Count);
+            Assert.AreEqual(0, sl.TosMetrics.Count);
 
-            List<TOSMetric> tms = new List<TOSMetric>();
+            List<TosMetric> tms = new List<TosMetric>();
 
-            TOSMetric tm = new TOSMetric();
-            tm.TOS = 1;
+            TosMetric tm = new TosMetric();
+            tm.Tos = 1;
             tm.Metric = 11;
             tms.Add(tm);
 
-            tm = new TOSMetric();
-            tm.TOS = 2;
+            tm = new TosMetric();
+            tm.Tos = 2;
             tm.Metric = 22;
             tms.Add(tm);
 
             //ctor 2
-            sl = new SummaryLSA(tms);
+            sl = new SummaryLinkAdvertisement(tms);
 
-            sl.LSAge = 11;
+            sl.Age = 11;
             sl.Options = 0x22;
-            sl.LSType = LSAType.Summary;
-            sl.LinkStateID = System.Net.IPAddress.Parse("192.168.10.0");
+            sl.Type = LinkStateAdvertisementType.Summary;
+            sl.Id = System.Net.IPAddress.Parse("192.168.10.0");
             sl.AdvertisingRouter = System.Net.IPAddress.Parse("4.4.4.4");
-            sl.LSSequenceNumber = 0x80000001;
+            sl.SequenceNumber = 0x80000001;
             sl.Checksum = 0x1e7d;
             sl.NetworkMask = System.Net.IPAddress.Parse("255.255.255.0");
             sl.Metric = 30;
 
-            Assert.AreEqual(11, sl.LSAge);
+            Assert.AreEqual(11, sl.Age);
             Assert.AreEqual(0x22, sl.Options);
-            Assert.AreEqual(LSAType.Summary, sl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("192.168.10.0"), sl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.Summary, sl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("192.168.10.0"), sl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("4.4.4.4"), sl.AdvertisingRouter);
-            Assert.AreEqual(0x80000001, sl.LSSequenceNumber);
+            Assert.AreEqual(0x80000001, sl.SequenceNumber);
             Assert.AreEqual(0x1e7d, sl.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.0"), sl.NetworkMask);
             Assert.AreEqual(30, sl.Metric);
             Assert.AreEqual(36, sl.Length);
-            Assert.AreEqual(2, sl.TOSMetrics.Count);
+            Assert.AreEqual(2, sl.TosMetrics.Count);
 
-            Assert.AreEqual(1, sl.TOSMetrics[0].TOS);
-            Assert.AreEqual(11, sl.TOSMetrics[0].Metric);
-            Assert.AreEqual(2, sl.TOSMetrics[1].TOS);
-            Assert.AreEqual(22, sl.TOSMetrics[1].Metric);
+            Assert.AreEqual(1, sl.TosMetrics[0].Tos);
+            Assert.AreEqual(11, sl.TosMetrics[0].Metric);
+            Assert.AreEqual(2, sl.TosMetrics[1].Tos);
+            Assert.AreEqual(22, sl.TosMetrics[1].Metric);
         }
 
         [Test]
         public void TestASExternalLSAConstruction()
         {
             //ctor 1
-            ASExternalLSA al = new ASExternalLSA();
+            ASExternalLinkAdvertisement al = new ASExternalLinkAdvertisement();
 
-            al.LSAge = 90;
+            al.Age = 90;
             al.Options = 0x22;
-            al.LSType = LSAType.ASExternal;
-            al.LinkStateID = System.Net.IPAddress.Parse("1.1.1.1");
+            al.Type = LinkStateAdvertisementType.ASExternal;
+            al.Id = System.Net.IPAddress.Parse("1.1.1.1");
             al.AdvertisingRouter = System.Net.IPAddress.Parse("3.3.3.3");
-            al.LSSequenceNumber = 0x8000000F;
+            al.SequenceNumber = 0x8000000F;
             al.Checksum = 0x3333;
             al.NetworkMask = System.Net.IPAddress.Parse("255.255.255.252");
 
-            Assert.AreEqual(90, al.LSAge);
+            Assert.AreEqual(90, al.Age);
             Assert.AreEqual(0x22, al.Options);
-            Assert.AreEqual(LSAType.ASExternal, al.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("1.1.1.1"), al.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.ASExternal, al.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("1.1.1.1"), al.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("3.3.3.3"), al.AdvertisingRouter);
-            Assert.AreEqual(0x8000000F, al.LSSequenceNumber);
+            Assert.AreEqual(0x8000000F, al.SequenceNumber);
             Assert.AreEqual(0x3333, al.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.252"), al.NetworkMask);
             Assert.AreEqual(0, al.ASExternalLinks.Count);
@@ -1068,30 +1068,30 @@ namespace Test.PacketType
             aslink.EBit = 1;
             aslink.Metric = 100;
             aslink.ExternalRouteTag = 0;
-            aslink.TOS = 0;
+            aslink.Tos = 0;
             aslink.ForwardingAddress = System.Net.IPAddress.Parse("0.0.0.0");
 
             List<ASExternalLink> links = new List<ASExternalLink>();
             links.Add(aslink);
 
-            al = new ASExternalLSA(links);
+            al = new ASExternalLinkAdvertisement(links);
 
-            al.LSAge = 197;
+            al.Age = 197;
             al.Options = 0x20;
-            al.LSType = LSAType.ASExternal;
-            al.LinkStateID = System.Net.IPAddress.Parse("172.16.2.0");
+            al.Type = LinkStateAdvertisementType.ASExternal;
+            al.Id = System.Net.IPAddress.Parse("172.16.2.0");
             al.AdvertisingRouter = System.Net.IPAddress.Parse("2.2.2.2");
-            al.LSSequenceNumber = 0x80000001;
+            al.SequenceNumber = 0x80000001;
             al.Checksum = 0x3356;
             al.NetworkMask = System.Net.IPAddress.Parse("255.255.255.0");
 
 
-            Assert.AreEqual(197, al.LSAge);
+            Assert.AreEqual(197, al.Age);
             Assert.AreEqual(0x20, al.Options);
-            Assert.AreEqual(LSAType.ASExternal, al.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("172.16.2.0"), al.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.ASExternal, al.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("172.16.2.0"), al.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("2.2.2.2"), al.AdvertisingRouter);
-            Assert.AreEqual(0x80000001, al.LSSequenceNumber);
+            Assert.AreEqual(0x80000001, al.SequenceNumber);
             Assert.AreEqual(0x3356, al.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.0"), al.NetworkMask);
             Assert.AreEqual(1, al.ASExternalLinks.Count);
@@ -1101,17 +1101,17 @@ namespace Test.PacketType
             Assert.AreEqual(1, aslink.EBit);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
-            Assert.AreEqual(0, aslink.TOS);
+            Assert.AreEqual(0, aslink.Tos);
             Assert.AreEqual(System.Net.IPAddress.Parse("0.0.0.0"), aslink.ForwardingAddress);
         }
 
         [Test]
         public void TestLSUConstruction()
         {
-            RouterLSA rl;
-            NetworkLSA nl;
-            SummaryLSA sl;
-            ASExternalLSA al;
+            RouterLinksAdvertisement rl;
+            NetworkLinksAdvertisement nl;
+            SummaryLinkAdvertisement sl;
+            ASExternalLinkAdvertisement al;
 
             //test ctor 1
             OspfV2LinkStateUpdatePacket p = new OspfV2LinkStateUpdatePacket();
@@ -1144,26 +1144,26 @@ namespace Test.PacketType
 
             RouterLink rlink = new RouterLink();
             rlink.Type = 3;
-            rlink.LinkID = System.Net.IPAddress.Parse("192.168.20.0");
+            rlink.LinkId = System.Net.IPAddress.Parse("192.168.20.0");
             rlink.LinkData = System.Net.IPAddress.Parse("255.255.255.0");
-            rlink.TOSNumber = 0;
+            rlink.TosNumber = 0;
             rlink.Metric = 10;
             rlist.Add(rlink);
 
             rlink = new RouterLink();
             rlink.Type = 2;
-            rlink.LinkID = System.Net.IPAddress.Parse("10.0.20.2");
+            rlink.LinkId = System.Net.IPAddress.Parse("10.0.20.2");
             rlink.LinkData = System.Net.IPAddress.Parse("10.0.20.2");
-            rlink.TOSNumber = 0;
+            rlink.TosNumber = 0;
             rlink.Metric = 10;
             rlist.Add(rlink);
-            rl = new RouterLSA(rlist);
+            rl = new RouterLinksAdvertisement(rlist);
 
-            rl.LSAge = 446;
+            rl.Age = 446;
             rl.Options = 0x22;
-            rl.LinkStateID = System.Net.IPAddress.Parse("5.5.5.5");
+            rl.Id = System.Net.IPAddress.Parse("5.5.5.5");
             rl.AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5");
-            rl.LSSequenceNumber = 0x80000004;
+            rl.SequenceNumber = 0x80000004;
             rl.Checksum = 0x7caa;
             rl.VBit = 0;
             rl.EBit = 0;
@@ -1174,38 +1174,38 @@ namespace Test.PacketType
             rtrs.Add(System.Net.IPAddress.Parse("5.5.5.5"));
             rtrs.Add(System.Net.IPAddress.Parse("4.4.4.4"));
 
-            nl = new NetworkLSA(rtrs);
+            nl = new NetworkLinksAdvertisement(rtrs);
 
-            nl.LSAge = 446;
+            nl.Age = 446;
             nl.Options = 0x22;
-            nl.LSType = LSAType.Network;
-            nl.LinkStateID = System.Net.IPAddress.Parse("10.0.20.2");
+            nl.Type = LinkStateAdvertisementType.Network;
+            nl.Id = System.Net.IPAddress.Parse("10.0.20.2");
             nl.AdvertisingRouter = System.Net.IPAddress.Parse("5.5.5.5");
-            nl.LSSequenceNumber = 0x80000001;
+            nl.SequenceNumber = 0x80000001;
             nl.Checksum = 0xf6ed;
             nl.NetworkMask = System.Net.IPAddress.Parse("255.255.255.252");
 
             //add summary lsa
-            List<TOSMetric> tms = new List<TOSMetric>();
+            List<TosMetric> tms = new List<TosMetric>();
 
-            TOSMetric tm = new TOSMetric();
-            tm.TOS = 1;
+            TosMetric tm = new TosMetric();
+            tm.Tos = 1;
             tm.Metric = 11;
             tms.Add(tm);
 
-            tm = new TOSMetric();
-            tm.TOS = 2;
+            tm = new TosMetric();
+            tm.Tos = 2;
             tm.Metric = 22;
             tms.Add(tm);
 
-            sl = new SummaryLSA(tms);
+            sl = new SummaryLinkAdvertisement(tms);
 
-            sl.LSAge = 11;
+            sl.Age = 11;
             sl.Options = 0x22;
-            sl.LSType = LSAType.Summary;
-            sl.LinkStateID = System.Net.IPAddress.Parse("192.168.10.0");
+            sl.Type = LinkStateAdvertisementType.Summary;
+            sl.Id = System.Net.IPAddress.Parse("192.168.10.0");
             sl.AdvertisingRouter = System.Net.IPAddress.Parse("4.4.4.4");
-            sl.LSSequenceNumber = 0x80000001;
+            sl.SequenceNumber = 0x80000001;
             sl.Checksum = 0x1e7d;
             sl.NetworkMask = System.Net.IPAddress.Parse("255.255.255.0");
             sl.Metric = 30;
@@ -1215,25 +1215,25 @@ namespace Test.PacketType
             aslink.EBit = 1;
             aslink.Metric = 100;
             aslink.ExternalRouteTag = 0;
-            aslink.TOS = 0;
+            aslink.Tos = 0;
             aslink.ForwardingAddress = System.Net.IPAddress.Parse("0.0.0.0");
 
             List<ASExternalLink> links = new List<ASExternalLink>();
             links.Add(aslink);
 
-            al = new ASExternalLSA(links);
+            al = new ASExternalLinkAdvertisement(links);
 
-            al.LSAge = 197;
+            al.Age = 197;
             al.Options = 0x20;
-            al.LSType = LSAType.ASExternal;
-            al.LinkStateID = System.Net.IPAddress.Parse("172.16.2.0");
+            al.Type = LinkStateAdvertisementType.ASExternal;
+            al.Id = System.Net.IPAddress.Parse("172.16.2.0");
             al.AdvertisingRouter = System.Net.IPAddress.Parse("2.2.2.2");
-            al.LSSequenceNumber = 0x80000001;
+            al.SequenceNumber = 0x80000001;
             al.Checksum = 0x3356;
             al.NetworkMask = System.Net.IPAddress.Parse("255.255.255.0");
 
             //put them all together in a list
-            List<LSA> lsas = new List<LSA>();
+            List<LinkStateAdvertisement> lsas = new List<LinkStateAdvertisement>();
             lsas.Add(rl);
             lsas.Add(nl);
             lsas.Add(sl);
@@ -1254,13 +1254,13 @@ namespace Test.PacketType
 
 
             //test router lsa
-            rl = (RouterLSA)p.Updates[0];
-            Assert.AreEqual(446, rl.LSAge);
+            rl = (RouterLinksAdvertisement)p.Updates[0];
+            Assert.AreEqual(446, rl.Age);
             Assert.AreEqual(0x22, rl.Options);
-            Assert.AreEqual(LSAType.Router, rl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), rl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.Router, rl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), rl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), rl.AdvertisingRouter);
-            Assert.AreEqual(0x80000004, rl.LSSequenceNumber);
+            Assert.AreEqual(0x80000004, rl.SequenceNumber);
             Assert.AreEqual(0x7caa, rl.Checksum);
             Assert.AreEqual(48, rl.Length);
             Assert.AreEqual(0, rl.VBit);
@@ -1270,26 +1270,26 @@ namespace Test.PacketType
 
             rlink = rl.RouterLinks[0];
             Assert.AreEqual(3, rlink.Type);
-            Assert.AreEqual(System.Net.IPAddress.Parse("192.168.20.0"), rlink.LinkID);
+            Assert.AreEqual(System.Net.IPAddress.Parse("192.168.20.0"), rlink.LinkId);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.0"), rlink.LinkData);
-            Assert.AreEqual(0, rlink.TOSNumber);
+            Assert.AreEqual(0, rlink.TosNumber);
             Assert.AreEqual(10, rlink.Metric);
 
             rlink = rl.RouterLinks[1];
             Assert.AreEqual(2, rlink.Type);
-            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), rlink.LinkID);
+            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), rlink.LinkId);
             Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), rlink.LinkData);
-            Assert.AreEqual(0, rlink.TOSNumber);
+            Assert.AreEqual(0, rlink.TosNumber);
             Assert.AreEqual(10, rlink.Metric);
 
             //test network lsa
-            nl = (NetworkLSA)p.Updates[1];
-            Assert.AreEqual(446, nl.LSAge);
+            nl = (NetworkLinksAdvertisement)p.Updates[1];
+            Assert.AreEqual(446, nl.Age);
             Assert.AreEqual(0x22, nl.Options);
-            Assert.AreEqual(LSAType.Network, nl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), nl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.Network, nl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("10.0.20.2"), nl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), nl.AdvertisingRouter);
-            Assert.AreEqual(0x80000001, nl.LSSequenceNumber);
+            Assert.AreEqual(0x80000001, nl.SequenceNumber);
             Assert.AreEqual(0xf6ed, nl.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.252"), nl.NetworkMask);
             Assert.AreEqual(System.Net.IPAddress.Parse("5.5.5.5"), nl.AttachedRouters[0]);
@@ -1297,32 +1297,32 @@ namespace Test.PacketType
             Assert.AreEqual(32, nl.Length);
 
             //test summary lsa
-            sl = (SummaryLSA)p.Updates[2];
-            Assert.AreEqual(11, sl.LSAge);
+            sl = (SummaryLinkAdvertisement)p.Updates[2];
+            Assert.AreEqual(11, sl.Age);
             Assert.AreEqual(0x22, sl.Options);
-            Assert.AreEqual(LSAType.Summary, sl.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("192.168.10.0"), sl.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.Summary, sl.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("192.168.10.0"), sl.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("4.4.4.4"), sl.AdvertisingRouter);
-            Assert.AreEqual(0x80000001, sl.LSSequenceNumber);
+            Assert.AreEqual(0x80000001, sl.SequenceNumber);
             Assert.AreEqual(0x1e7d, sl.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.0"), sl.NetworkMask);
             Assert.AreEqual(30, sl.Metric);
             Assert.AreEqual(36, sl.Length);
-            Assert.AreEqual(2, sl.TOSMetrics.Count);
+            Assert.AreEqual(2, sl.TosMetrics.Count);
 
-            Assert.AreEqual(1, sl.TOSMetrics[0].TOS);
-            Assert.AreEqual(11, sl.TOSMetrics[0].Metric);
-            Assert.AreEqual(2, sl.TOSMetrics[1].TOS);
-            Assert.AreEqual(22, sl.TOSMetrics[1].Metric);
+            Assert.AreEqual(1, sl.TosMetrics[0].Tos);
+            Assert.AreEqual(11, sl.TosMetrics[0].Metric);
+            Assert.AreEqual(2, sl.TosMetrics[1].Tos);
+            Assert.AreEqual(22, sl.TosMetrics[1].Metric);
 
             //test AS-External-LSA
-            al = (ASExternalLSA)p.Updates[3];
-            Assert.AreEqual(197, al.LSAge);
+            al = (ASExternalLinkAdvertisement)p.Updates[3];
+            Assert.AreEqual(197, al.Age);
             Assert.AreEqual(0x20, al.Options);
-            Assert.AreEqual(LSAType.ASExternal, al.LSType);
-            Assert.AreEqual(System.Net.IPAddress.Parse("172.16.2.0"), al.LinkStateID);
+            Assert.AreEqual(LinkStateAdvertisementType.ASExternal, al.Type);
+            Assert.AreEqual(System.Net.IPAddress.Parse("172.16.2.0"), al.Id);
             Assert.AreEqual(System.Net.IPAddress.Parse("2.2.2.2"), al.AdvertisingRouter);
-            Assert.AreEqual(0x80000001, al.LSSequenceNumber);
+            Assert.AreEqual(0x80000001, al.SequenceNumber);
             Assert.AreEqual(0x3356, al.Checksum);
             Assert.AreEqual(System.Net.IPAddress.Parse("255.255.255.0"), al.NetworkMask);
             Assert.AreEqual(1, al.ASExternalLinks.Count);
@@ -1332,7 +1332,7 @@ namespace Test.PacketType
             Assert.AreEqual(1, aslink.EBit);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
-            Assert.AreEqual(0, aslink.TOS);
+            Assert.AreEqual(0, aslink.Tos);
             Assert.AreEqual(System.Net.IPAddress.Parse("0.0.0.0"), aslink.ForwardingAddress);
         }
 
@@ -1351,32 +1351,32 @@ namespace Test.PacketType
             Assert.AreEqual(OspfPacketType.LinkStateAcknowledgment, p2.Type);
 
             //test ctor 2
-            List<LSA> lsas = new List<LSA>();
-            LSA l = new LSA();
+            List<LinkStateAdvertisement> lsas = new List<LinkStateAdvertisement>();
+            LinkStateAdvertisement l = new LinkStateAdvertisement();
 
             l.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.3");
-            l.LinkStateID = System.Net.IPAddress.Parse("192.168.170.3");
-            l.LSAge = 1;
-            l.LSSequenceNumber = 0x80000001;
-            l.LSType = LSAType.Router;
+            l.Id = System.Net.IPAddress.Parse("192.168.170.3");
+            l.Age = 1;
+            l.SequenceNumber = 0x80000001;
+            l.Type = LinkStateAdvertisementType.Router;
             l.Options = 0x02;
             lsas.Add(l);
 
-            l = new LSA();
+            l = new LinkStateAdvertisement();
             l.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2");
-            l.LinkStateID = System.Net.IPAddress.Parse("80.212.16.0");
-            l.LSAge = 2;
-            l.LSSequenceNumber = 0x80000001;
-            l.LSType = LSAType.ASExternal;
+            l.Id = System.Net.IPAddress.Parse("80.212.16.0");
+            l.Age = 2;
+            l.SequenceNumber = 0x80000001;
+            l.Type = LinkStateAdvertisementType.ASExternal;
             l.Options = 0x02;
             lsas.Add(l);
 
-            l = new LSA();
+            l = new LinkStateAdvertisement();
             l.AdvertisingRouter = System.Net.IPAddress.Parse("192.168.170.2");
-            l.LinkStateID = System.Net.IPAddress.Parse("148.121.171.0");
-            l.LSAge = 2;
-            l.LSSequenceNumber = 0x80000001;
-            l.LSType = LSAType.ASExternal;
+            l.Id = System.Net.IPAddress.Parse("148.121.171.0");
+            l.Age = 2;
+            l.SequenceNumber = 0x80000001;
+            l.Type = LinkStateAdvertisementType.ASExternal;
             l.Options = 0x02;
             lsas.Add(l);
 
@@ -1386,24 +1386,24 @@ namespace Test.PacketType
             Assert.AreEqual(3, p3.Acknowledgments.Count);
 
             Assert.AreEqual(p3.Acknowledgments[0].AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.3"));
-            Assert.AreEqual(p3.Acknowledgments[0].LinkStateID, System.Net.IPAddress.Parse("192.168.170.3"));
-            Assert.AreEqual(p3.Acknowledgments[0].LSAge, 1);
-            Assert.AreEqual(p3.Acknowledgments[0].LSSequenceNumber, 0x80000001);
-            Assert.AreEqual(p3.Acknowledgments[0].LSType, LSAType.Router);
+            Assert.AreEqual(p3.Acknowledgments[0].Id, System.Net.IPAddress.Parse("192.168.170.3"));
+            Assert.AreEqual(p3.Acknowledgments[0].Age, 1);
+            Assert.AreEqual(p3.Acknowledgments[0].SequenceNumber, 0x80000001);
+            Assert.AreEqual(p3.Acknowledgments[0].Type, LinkStateAdvertisementType.Router);
             Assert.AreEqual(p3.Acknowledgments[0].Options, 0x02);
 
             Assert.AreEqual(p3.Acknowledgments[1].AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
-            Assert.AreEqual(p3.Acknowledgments[1].LinkStateID, System.Net.IPAddress.Parse("80.212.16.0"));
-            Assert.AreEqual(p3.Acknowledgments[1].LSAge, 2);
-            Assert.AreEqual(p3.Acknowledgments[1].LSSequenceNumber, 0x80000001);
-            Assert.AreEqual(p3.Acknowledgments[1].LSType, LSAType.ASExternal);
+            Assert.AreEqual(p3.Acknowledgments[1].Id, System.Net.IPAddress.Parse("80.212.16.0"));
+            Assert.AreEqual(p3.Acknowledgments[1].Age, 2);
+            Assert.AreEqual(p3.Acknowledgments[1].SequenceNumber, 0x80000001);
+            Assert.AreEqual(p3.Acknowledgments[1].Type, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(p3.Acknowledgments[1].Options, 0x02);
 
             Assert.AreEqual(p3.Acknowledgments[2].AdvertisingRouter, System.Net.IPAddress.Parse("192.168.170.2"));
-            Assert.AreEqual(p3.Acknowledgments[2].LinkStateID, System.Net.IPAddress.Parse("148.121.171.0"));
-            Assert.AreEqual(p3.Acknowledgments[2].LSAge, 2);
-            Assert.AreEqual(p3.Acknowledgments[2].LSSequenceNumber, 0x80000001);
-            Assert.AreEqual(p3.Acknowledgments[2].LSType, LSAType.ASExternal);
+            Assert.AreEqual(p3.Acknowledgments[2].Id, System.Net.IPAddress.Parse("148.121.171.0"));
+            Assert.AreEqual(p3.Acknowledgments[2].Age, 2);
+            Assert.AreEqual(p3.Acknowledgments[2].SequenceNumber, 0x80000001);
+            Assert.AreEqual(p3.Acknowledgments[2].Type, LinkStateAdvertisementType.ASExternal);
             Assert.AreEqual(p3.Acknowledgments[2].Options, 0x02);
         }
 

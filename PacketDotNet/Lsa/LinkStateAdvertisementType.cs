@@ -18,12 +18,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2011 Georgi Baychev <georgi.baychev@gmail.com>
  */
 
-namespace PacketDotNet
+namespace PacketDotNet.Lsa
 {
     /// <summary>
     /// The different LSA types
     /// </summary>
-    public enum LSAType : byte
+    public enum LinkStateAdvertisementType : byte
     {
 #pragma warning disable 1591
         Router = 0x01,

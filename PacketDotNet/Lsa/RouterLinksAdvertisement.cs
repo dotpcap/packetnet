@@ -4,27 +4,22 @@ using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.LSA
+namespace PacketDotNet.Lsa
 {
     /// <summary>
     /// Router-LSAs are the Type 1 LSAs. The LSA describes the state and cost of
     /// the router's links (i.e., interfaces) to the area.
     /// </summary>
-    public class RouterLSA : LSA
+    public class RouterLinksAdvertisement : LinkStateAdvertisement
     {
-        /// <summary>
-        /// The type of the lsa.
-        /// </summary>
-        public static readonly LSAType LSAType = LSAType.Router;
-
         /// <summary>
         /// Default constructor
         /// </summary>
-        public RouterLSA()
+        public RouterLinksAdvertisement()
         {
-            var b = new byte[RouterLSAFields.RouterLinksStart];
+            var b = new byte[RouterLinksAdvertisementFields.RouterLinksStart];
             Header = new ByteArraySegment(b);
-            LSType = LSAType;
+            Type = LinkStateAdvertisementType.Router;
             LinkNumber = 0;
             Length = (ushort) Header.Bytes.Length;
         }
@@ -32,16 +27,16 @@ namespace PacketDotNet.LSA
         /// <summary>
         /// Constructs a Router LSA with a list of router links
         /// </summary>
-        public RouterLSA(List<RouterLink> links)
+        public RouterLinksAdvertisement(List<RouterLink> links)
         {
             var length = 0;
-            var offset = RouterLSAFields.RouterLinksStart;
+            var offset = RouterLinksAdvertisementFields.RouterLinksStart;
             foreach (var l in links)
             {
                 length += l.Bytes.Length;
             }
 
-            length += RouterLSAFields.RouterLinksStart;
+            length += RouterLinksAdvertisementFields.RouterLinksStart;
 
             var b = new byte[length];
             Header = new ByteArraySegment(b);
@@ -51,7 +46,7 @@ namespace PacketDotNet.LSA
                 offset += l.Bytes.Length;
             }
 
-            LSType = LSAType;
+            Type = LinkStateAdvertisementType.Router;
             LinkNumber = (ushort) links.Count;
             Length = (ushort) Header.Bytes.Length;
         }
@@ -68,7 +63,7 @@ namespace PacketDotNet.LSA
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        public RouterLSA(byte[] packet, int offset, int length) :
+        public RouterLinksAdvertisement(byte[] packet, int offset, int length) :
             base(packet, offset, length)
         { }
 
@@ -79,10 +74,10 @@ namespace PacketDotNet.LSA
         {
             get
             {
-                var flags = (byte) (Header.Bytes[Header.Offset + RouterLSAFields.RouterOptionsPosition] & 1);
+                var flags = (byte) (Header.Bytes[Header.Offset + RouterLinksAdvertisementFields.RouterOptionsPosition] & 1);
                 return flags;
             }
-            set => Header.Bytes[Header.Offset + RouterLSAFields.RouterOptionsPosition] |= (byte) (value & 1);
+            set => Header.Bytes[Header.Offset + RouterLinksAdvertisementFields.RouterOptionsPosition] |= (byte) (value & 1);
         }
 
         /// <summary>
@@ -92,23 +87,23 @@ namespace PacketDotNet.LSA
         {
             get
             {
-                var flags = (byte) ((Header.Bytes[Header.Offset + RouterLSAFields.RouterOptionsPosition] >> 1) & 1);
+                var flags = (byte) ((Header.Bytes[Header.Offset + RouterLinksAdvertisementFields.RouterOptionsPosition] >> 1) & 1);
                 return flags;
             }
-            set => Header.Bytes[Header.Offset + RouterLSAFields.RouterOptionsPosition] |= (byte) ((value & 1) << 1);
+            set => Header.Bytes[Header.Offset + RouterLinksAdvertisementFields.RouterOptionsPosition] |= (byte) ((value & 1) << 1);
         }
 
         /// <summary>
-        /// The number of the contained links in this RouterLSA
+        /// The number of the contained links in this RouterLinksAdvertisement
         /// </summary>
         public ushort LinkNumber
         {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + RouterLSAFields.LinkNumberPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + RouterLSAFields.LinkNumberPosition);
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + RouterLinksAdvertisementFields.LinkNumberPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + RouterLinksAdvertisementFields.LinkNumberPosition);
         }
 
         /// <summary>
-        /// The contained router links in this RouterLSA
+        /// The contained router links in this RouterLinksAdvertisement
         /// </summary>
         /// <see cref="RouterLink" />
         public List<RouterLink> RouterLinks
@@ -117,7 +112,7 @@ namespace PacketDotNet.LSA
             {
                 var ret = new List<RouterLink>();
 
-                var offset = Header.Offset + RouterLSAFields.RouterLinksStart;
+                var offset = Header.Offset + RouterLinksAdvertisementFields.RouterLinksStart;
 
                 for (var i = 0; i < LinkNumber; i++)
                 {
@@ -138,16 +133,16 @@ namespace PacketDotNet.LSA
         {
             get
             {
-                var flags = (byte) ((Header.Bytes[Header.Offset + RouterLSAFields.RouterOptionsPosition] >> 2) & 1);
+                var flags = (byte) ((Header.Bytes[Header.Offset + RouterLinksAdvertisementFields.RouterOptionsPosition] >> 2) & 1);
                 return flags;
             }
-            set => Header.Bytes[Header.Offset + RouterLSAFields.RouterOptionsPosition] |= (byte) ((value & 1) << 2);
+            set => Header.Bytes[Header.Offset + RouterLinksAdvertisementFields.RouterOptionsPosition] |= (byte) ((value & 1) << 2);
         }
 
         /// <summary>
-        /// Returns a <see cref="string" /> that represents the current <see cref="RouterLSA" />.
+        /// Returns a <see cref="string" /> that represents the current <see cref="RouterLinksAdvertisement" />.
         /// </summary>
-        /// <returns>A <see cref="string" /> that represents the current <see cref="RouterLSA" />.</returns>
+        /// <returns>A <see cref="string" /> that represents the current <see cref="RouterLinksAdvertisement" />.</returns>
         public override string ToString()
         {
             var ret = new StringBuilder();

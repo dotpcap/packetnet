@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using PacketDotNet.Lsa;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
@@ -46,7 +47,7 @@ namespace PacketDotNet
         /// Constructs an OSPFv2 DD packet with LSA headers
         /// </summary>
         /// <param name="linkStates">List of the LSA headers</param>
-        public OspfV2DatabaseDescriptorPacket(List<LSA.LSA> linkStates)
+        public OspfV2DatabaseDescriptorPacket(List<LinkStateAdvertisement> linkStates)
         {
             var length = linkStates.Count * OspfV2Fields.LSAHeaderLength;
             var offset = OspfV2Fields.LSAHeaderPosition;
@@ -122,12 +123,12 @@ namespace PacketDotNet
         /// See http://www.ietf.org/rfc/rfc2328.txt for details.
         /// </summary>
         /// See
-        /// <see cref="LSA" />
-        public List<LSA.LSA> Headers
+        /// <see cref="LinkStateAdvertisement" />
+        public List<LinkStateAdvertisement> Headers
         {
             get
             {
-                var ret = new List<LSA.LSA>();
+                var ret = new List<LinkStateAdvertisement>();
                 var bytesNeeded = PacketLength - OspfV2Fields.LSAHeaderPosition;
 
                 if (bytesNeeded % OspfV2Fields.LSAHeaderLength != 0)
@@ -140,7 +141,7 @@ namespace PacketDotNet
 
                 for (var i = 0; i < headerCount; i++)
                 {
-                    var l = new LSA.LSA(Header.Bytes, offset, OspfV2Fields.LSAHeaderLength);
+                    var l = new LinkStateAdvertisement(Header.Bytes, offset, OspfV2Fields.LSAHeaderLength);
                     offset += OspfV2Fields.LSAHeaderLength;
                     ret.Add(l);
                 }

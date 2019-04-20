@@ -3,7 +3,7 @@ using System.Net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
+namespace PacketDotNet.Lsa
 {
     /// <summary>
     /// Describes a particular external destination
@@ -15,7 +15,7 @@ namespace PacketDotNet
         /// </summary>
         public static readonly int Length = 12;
 
-        internal ByteArraySegment Header;
+        private readonly ByteArraySegment _header;
 
         /// <summary>
         /// Default constructor
@@ -23,7 +23,7 @@ namespace PacketDotNet
         public ASExternalLink()
         {
             var b = new byte[Length];
-            Header = new ByteArraySegment(b);
+            _header = new ByteArraySegment(b);
         }
 
         /// <summary>
@@ -40,13 +40,13 @@ namespace PacketDotNet
         /// </param>
         public ASExternalLink(byte[] packet, int offset, int length)
         {
-            Header = new ByteArraySegment(packet, offset, length);
+            _header = new ByteArraySegment(packet, offset, length);
         }
 
         /// <summary>
         /// Bytes representation
         /// </summary>
-        public byte[] Bytes => Header.Bytes;
+        public byte[] Bytes => _header.Bytes;
 
         /// <summary>
         /// The type of external metric.  If bit E is set, the metric
@@ -56,14 +56,14 @@ namespace PacketDotNet
         {
             get
             {
-                var val = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
+                var val = EndianBitConverter.Big.ToUInt32(_header.Bytes, _header.Offset + ASExternalLinkFields.TOSPosition);
                 return (byte) ((val >> 31) & 0xFF);
             }
             set
             {
-                var original = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
+                var original = EndianBitConverter.Big.ToUInt32(_header.Bytes, _header.Offset + ASExternalLinkFields.TOSPosition);
                 var val = (uint) ((value & 1) << 31) | original;
-                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
+                EndianBitConverter.Big.CopyBytes(val, _header.Bytes, _header.Offset + ASExternalLinkFields.TOSPosition);
             }
         }
 
@@ -72,8 +72,8 @@ namespace PacketDotNet
         /// </summary>
         public uint ExternalRouteTag
         {
-            get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.ExternalRouteTagPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.ExternalRouteTagPosition);
+            get => EndianBitConverter.Big.ToUInt32(_header.Bytes, _header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, _header.Bytes, _header.Offset + ASExternalLinkFields.ExternalRouteTagPosition);
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace PacketDotNet
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.ForwardingAddressPosition);
+                var val = EndianBitConverter.Little.ToUInt32(_header.Bytes, _header.Offset + ASExternalLinkFields.ForwardingAddressPosition);
                 return new IPAddress(val);
             }
             set
@@ -91,8 +91,8 @@ namespace PacketDotNet
                 var address = value.GetAddressBytes();
                 Array.Copy(address,
                            0,
-                           Header.Bytes,
-                           Header.Offset + LSA.ASExternalLinkFields.ForwardingAddressPosition,
+                           _header.Bytes,
+                           _header.Offset + ASExternalLinkFields.ForwardingAddressPosition,
                            address.Length);
             }
         }
@@ -105,32 +105,32 @@ namespace PacketDotNet
         {
             get
             {
-                var val = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
+                var val = EndianBitConverter.Big.ToUInt32(_header.Bytes, _header.Offset + ASExternalLinkFields.TOSPosition);
                 return val & 0x00FFFFFF;
             }
             set
             {
-                var original = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
+                var original = EndianBitConverter.Big.ToUInt32(_header.Bytes, _header.Offset + ASExternalLinkFields.TOSPosition);
                 var val = value & 0x00FFFFFF | original;
-                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
+                EndianBitConverter.Big.CopyBytes(val, _header.Bytes, _header.Offset + ASExternalLinkFields.TOSPosition);
             }
         }
 
         /// <summary>
         /// The Type of Service that the following fields concern.
         /// </summary>
-        public byte TOS
+        public byte Tos
         {
             get
             {
-                var val = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
+                var val = EndianBitConverter.Big.ToUInt32(_header.Bytes, _header.Offset + ASExternalLinkFields.TOSPosition);
                 return (byte) ((val >> 24) & 0x7F);
             }
             set
             {
-                var original = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
+                var original = EndianBitConverter.Big.ToUInt32(_header.Bytes, _header.Offset + ASExternalLinkFields.TOSPosition);
                 var val = (byte) ((value & 0x7F) << 24) | original;
-                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
+                EndianBitConverter.Big.CopyBytes(val, _header.Bytes, _header.Offset + ASExternalLinkFields.TOSPosition);
             }
         }
     }

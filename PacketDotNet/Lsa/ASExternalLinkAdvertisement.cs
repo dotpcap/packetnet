@@ -4,39 +4,39 @@ using System.Net;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.LSA
+namespace PacketDotNet.Lsa
 {
     /// <summary>
     /// AS-external-LSAs are the Type 5 LSAs.  These LSAs are originated by
     /// AS boundary routers, and describe destinations external to the AS.
     /// </summary>
-    public class ASExternalLSA : LSA
+    public class ASExternalLinkAdvertisement : LinkStateAdvertisement
     {
         private const int ASExternalLinkLength = 12;
 
         /// <summary>
         /// The type of the lsa.
         /// </summary>
-        public static readonly LSAType LSAType = LSAType.ASExternal;
+        public static readonly LinkStateAdvertisementType LsaType = LinkStateAdvertisementType.ASExternal;
 
         /// <summary>
         /// Default constructor
         /// </summary>
-        public ASExternalLSA()
+        public ASExternalLinkAdvertisement()
         {
-            var b = new byte[ASExternalLSAFields.MetricPosition];
+            var b = new byte[ASExternalLinkAdvertisementFields.MetricPosition];
             Header = new ByteArraySegment(b);
-            LSType = LSAType;
+            Type = LsaType;
             Length = (ushort) Header.Bytes.Length;
         }
 
         /// <summary>
-        /// Constructs an ASExternalLSA with a list of ASExternalLinks
+        /// Constructs an ASExternalLinkAdvertisement with a list of ASExternalLinks
         /// </summary>
-        public ASExternalLSA(List<ASExternalLink> links)
+        public ASExternalLinkAdvertisement(List<ASExternalLink> links)
         {
-            var length = ASExternalLSAFields.MetricPosition + ASExternalLink.Length * links.Count;
-            var offset = ASExternalLSAFields.MetricPosition;
+            var length = ASExternalLinkAdvertisementFields.MetricPosition + ASExternalLink.Length * links.Count;
+            var offset = ASExternalLinkAdvertisementFields.MetricPosition;
             var b = new byte[length];
 
             foreach (var l in links)
@@ -46,7 +46,7 @@ namespace PacketDotNet.LSA
             }
 
             Header = new ByteArraySegment(b);
-            LSType = LSAType;
+            Type = LsaType;
             Length = (ushort) Header.Bytes.Length;
         }
 
@@ -62,7 +62,7 @@ namespace PacketDotNet.LSA
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        public ASExternalLSA(byte[] packet, int offset, int length) :
+        public ASExternalLinkAdvertisement(byte[] packet, int offset, int length) :
             base(packet, offset, length)
         { }
 
@@ -78,7 +78,7 @@ namespace PacketDotNet.LSA
                 for (var i = 0; i < linkCnt; i++)
                 {
                     var l = new ASExternalLink(Header.Bytes,
-                                               Header.Offset + ASExternalLSAFields.MetricPosition + i * ASExternalLink.Length,
+                                               Header.Offset + ASExternalLinkAdvertisementFields.MetricPosition + i * ASExternalLink.Length,
                                                ASExternalLink.Length);
 
                     ret.Add(l);
@@ -96,7 +96,7 @@ namespace PacketDotNet.LSA
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + ASExternalLSAFields.NetworkMaskPosition);
+                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + ASExternalLinkAdvertisementFields.NetworkMaskPosition);
                 return new IPAddress(val);
             }
             set
@@ -105,7 +105,7 @@ namespace PacketDotNet.LSA
                 Array.Copy(address,
                            0,
                            Header.Bytes,
-                           Header.Offset + ASExternalLSAFields.NetworkMaskPosition,
+                           Header.Offset + ASExternalLinkAdvertisementFields.NetworkMaskPosition,
                            address.Length);
             }
         }

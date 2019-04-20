@@ -259,6 +259,7 @@ namespace PacketDotNet.LLDP
                 case ChassisSubTypes.InterfaceAlias:
                 case ChassisSubTypes.LocallyAssigned:
                 case ChassisSubTypes.PortComponent:
+                {
                     val = new byte[dataLength];
                     Array.Copy(TLVData.Bytes,
                                dataOffset,
@@ -267,11 +268,15 @@ namespace PacketDotNet.LLDP
                                dataLength);
 
                     return val;
+                }
                 case ChassisSubTypes.NetworkAddress:
+                {
                     return new NetworkAddress(TLVData.Bytes,
                                               dataOffset,
                                               dataLength);
+                }
                 case ChassisSubTypes.MACAddress:
+                {
                     val = new byte[dataLength];
                     Array.Copy(TLVData.Bytes,
                                dataOffset,
@@ -280,10 +285,15 @@ namespace PacketDotNet.LLDP
                                dataLength);
 
                     return new PhysicalAddress(val);
+                }
                 case ChassisSubTypes.InterfaceName:
+                {
                     return Encoding.ASCII.GetString(TLVData.Bytes, dataOffset, dataLength);
+                }
                 default:
+                {
                     throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -298,12 +308,15 @@ namespace PacketDotNet.LLDP
                 case ChassisSubTypes.InterfaceAlias:
                 case ChassisSubTypes.LocallyAssigned:
                 case ChassisSubTypes.PortComponent:
-
+                {
                     valBytes = val as byte[] ?? throw new ArgumentOutOfRangeException(nameof(val), "expected byte[] for type");
 
                     SetSubTypeValue(valBytes);
                     break;
+                }
+
                 case ChassisSubTypes.NetworkAddress:
+                {
                     if (!(val is NetworkAddress))
                     {
                         throw new ArgumentOutOfRangeException(nameof(val), "expected NetworkAddress instance for NetworkAddress");
@@ -313,7 +326,9 @@ namespace PacketDotNet.LLDP
 
                     SetSubTypeValue(valBytes);
                     break;
+                }
                 case ChassisSubTypes.InterfaceName:
+                {
                     if (!(val is string))
                     {
                         throw new ArgumentOutOfRangeException(nameof(val), "expected string for InterfaceName");
@@ -325,7 +340,9 @@ namespace PacketDotNet.LLDP
 
                     SetSubTypeValue(valBytes);
                     break;
+                }
                 case ChassisSubTypes.MACAddress:
+                {
                     if (!(val is PhysicalAddress))
                     {
                         throw new ArgumentOutOfRangeException(nameof(val), "expected PhysicalAddress for MACAddress");
@@ -335,8 +352,11 @@ namespace PacketDotNet.LLDP
 
                     SetSubTypeValue(physicalAddress.GetAddressBytes());
                     break;
+                }
                 default:
+                {
                     throw new ArgumentOutOfRangeException();
+                }
             }
         }
 

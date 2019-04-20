@@ -41,11 +41,17 @@ namespace PacketDotNet
             switch (v)
             {
                 case OSPFVersion.OSPFv2:
+                {
                     return ConstructV2Packet(payload, offset);
+                }
                 case OSPFVersion.OSPFv3:
+                {
                     return ConstructV3Packet();
+                }
                 default:
+                {
                     throw new InvalidOperationException("No such OSPF version: " + v);
+                }
             }
         }
 
@@ -57,22 +63,34 @@ namespace PacketDotNet
             switch (type)
             {
                 case OSPFPacketType.Hello:
+                {
                     p = new OSPFv2HelloPacket(payload, offset);
                     break;
+                }
                 case OSPFPacketType.DatabaseDescription:
+                {
                     p = new OSPFv2DDPacket(payload, offset);
                     break;
+                }
                 case OSPFPacketType.LinkStateAcknowledgment:
+                {
                     p = new OSPFv2LSAPacket(payload, offset);
                     break;
+                }
                 case OSPFPacketType.LinkStateRequest:
+                {
                     p = new OSPFv2LSRequestPacket(payload, offset);
                     break;
+                }
                 case OSPFPacketType.LinkStateUpdate:
+                {
                     p = new OSPFv2LSUpdatePacket(payload, offset);
                     break;
+                }
                 default:
+                {
                     throw new Exception("Malformed OSPF packet");
+                }
             }
 
             return p;

@@ -121,15 +121,21 @@ namespace PacketDotNet
             switch (protocol)
             {
                 case PppProtocol.IPv4:
+                {
                     payloadPacketOrData.Packet = new IPv4Packet(payload);
                     break;
+                }
                 case PppProtocol.IPv6:
+                {
                     payloadPacketOrData.Packet = new IPv6Packet(payload);
                     break;
+                }
                 default:
+                {
                     //Probably a control packet, lets just add it to the data
                     payloadPacketOrData.ByteArraySegment = payload;
                     break;
+                }
             }
 
             return payloadPacketOrData;

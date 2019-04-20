@@ -64,24 +64,36 @@ namespace PacketDotNet
                 {
                     // set Type based on the type of the payload
                     case IPv4Packet _:
+                    {
                         Type = EthernetPacketType.IPv4;
                         break;
+                    }
                     case IPv6Packet _:
+                    {
                         Type = EthernetPacketType.IPv6;
                         break;
+                    }
                     case ARPPacket _:
+                    {
                         Type = EthernetPacketType.Arp;
                         break;
+                    }
                     case LLDPPacket _:
+                    {
                         Type = EthernetPacketType.LLDP;
                         break;
+                    }
                     // NOTE: new types should be inserted here
                     case PppoePacket _:
+                    {
                         Type = EthernetPacketType.PointToPointProtocolOverEthernetSessionStage;
                         break;
+                    }
                     default:
+                    {
                         Type = EthernetPacketType.None;
                         break;
+                    }
                 }
             }
         }
@@ -220,29 +232,45 @@ namespace PacketDotNet
             switch (type)
             {
                 case EthernetPacketType.IPv4:
+                {
                     payloadPacketOrData.Packet = new IPv4Packet(payload);
                     break;
+                }
                 case EthernetPacketType.IPv6:
+                {
                     payloadPacketOrData.Packet = new IPv6Packet(payload);
                     break;
+                }
                 case EthernetPacketType.Arp:
+                {
                     payloadPacketOrData.Packet = new ARPPacket(payload);
                     break;
+                }
                 case EthernetPacketType.LLDP:
+                {
                     payloadPacketOrData.Packet = new LLDPPacket(payload);
                     break;
+                }
                 case EthernetPacketType.PointToPointProtocolOverEthernetSessionStage:
+                {
                     payloadPacketOrData.Packet = new PppoePacket(payload);
                     break;
+                }
                 case EthernetPacketType.WakeOnLan:
+                {
                     payloadPacketOrData.Packet = new WakeOnLanPacket(payload);
                     break;
+                }
                 case EthernetPacketType.VLanTaggedFrame:
+                {
                     payloadPacketOrData.Packet = new Ieee8021QPacket(payload);
                     break;
+                }
                 default: // consider the sub-packet to be a byte array
+                {
                     payloadPacketOrData.ByteArraySegment = payload;
                     break;
+                }
             }
 
             return payloadPacketOrData;

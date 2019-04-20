@@ -114,18 +114,26 @@ namespace PacketDotNet
                     switch (l.LSType)
                     {
                         case LSAType.ASExternal:
+                        {
                             ret.Add(new ASExternalLSA(Header.Bytes, offset, l.Length));
                             break;
+                        }
                         case LSAType.Network:
+                        {
                             ret.Add(new NetworkLSA(Header.Bytes, offset, l.Length));
                             break;
+                        }
                         case LSAType.Router:
+                        {
                             ret.Add(new RouterLSA(Header.Bytes, offset, l.Length));
                             break;
+                        }
                         case LSAType.Summary:
                         case LSAType.SummaryASBR:
+                        {
                             ret.Add(new SummaryLSA(Header.Bytes, offset, l.Length));
                             break;
+                        }
                     }
 
                     offset += l.Length;

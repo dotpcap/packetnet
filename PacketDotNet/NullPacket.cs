@@ -115,16 +115,22 @@ namespace PacketDotNet
             switch (protocol)
             {
                 case NullPacketType.IPv4:
+                {
                     payloadPacketOrData.Packet = new IPv4Packet(payload);
                     break;
+                }
                 case NullPacketType.IPv6:
                 case NullPacketType.IPv6_28:
                 case NullPacketType.IPv6_30:
+                {
                     payloadPacketOrData.Packet = new IPv6Packet(payload);
                     break;
+                }
                 //case NullPacketType.IPX:
                 default:
+                {
                     throw new NotImplementedException("Protocol of " + protocol + " is not implemented");
+                }
             }
 
             return payloadPacketOrData;

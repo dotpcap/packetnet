@@ -168,21 +168,29 @@ namespace PacketDotNet.LLDP
                 case PortSubTypes.LocallyAssigned:
                 case PortSubTypes.PortComponent:
                 case PortSubTypes.AgentCircuitID:
+                {
                     // get the address
                     arrAddress = new byte[DataLength];
                     Array.Copy(TLVData.Bytes, DataOffset, arrAddress, 0, DataLength);
                     return arrAddress;
+                }
                 case PortSubTypes.MACAddress:
+                {
                     // get the address
                     arrAddress = new byte[DataLength];
                     Array.Copy(TLVData.Bytes, DataOffset, arrAddress, 0, DataLength);
                     var address = new PhysicalAddress(arrAddress);
                     return address;
+                }
                 case PortSubTypes.NetworkAddress:
+                {
                     // get the address
                     return GetNetworkAddress();
+                }
                 default:
+                {
                     throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -195,16 +203,24 @@ namespace PacketDotNet.LLDP
                 case PortSubTypes.LocallyAssigned:
                 case PortSubTypes.PortComponent:
                 case PortSubTypes.AgentCircuitID:
+                {
                     SetSubTypeValue((byte[]) subTypeValue);
                     break;
+                }
                 case PortSubTypes.MACAddress:
+                {
                     SetSubTypeValue(((PhysicalAddress) subTypeValue).GetAddressBytes());
                     break;
+                }
                 case PortSubTypes.NetworkAddress:
+                {
                     SetSubTypeValue(((NetworkAddress) subTypeValue).Bytes);
                     break;
+                }
                 default:
+                {
                     throw new ArgumentOutOfRangeException();
+                }
             }
         }
 

@@ -347,7 +347,7 @@ namespace PacketDotNet
             // store the payload bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.EncapsulatedBytes()};
+                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.NextSegment()};
                 return result;
             }, LazyThreadSafetyMode.PublicationOnly);
         }
@@ -379,7 +379,7 @@ namespace PacketDotNet
             // store the payload bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.EncapsulatedBytes()};
+                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.NextSegment()};
 
                 // if the parent packet is an IPv4Packet we need to adjust
                 // the payload length because it is possible for us to have

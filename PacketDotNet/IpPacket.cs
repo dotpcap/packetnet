@@ -62,7 +62,7 @@ namespace PacketDotNet
             set
             {
                 base.PayloadPacket = value;
-
+                
                 // set NextHeader (Protocol) based on the type of this packet
                 if (value is TcpPacket)
                 {

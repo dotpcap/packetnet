@@ -16,6 +16,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 #if DEBUG
@@ -30,7 +32,7 @@ namespace PacketDotNet.Utils
     /// be avoided
     /// </summary>
     [Serializable]
-    public class ByteArraySegment
+    public sealed class ByteArraySegment : IEnumerable<byte>
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -51,7 +53,7 @@ namespace PacketDotNet.Utils
 
         /// <value>
         /// Gets or sets the maximum number of bytes we should treat <see cref="Bytes"/> as having.
-        /// This allows for controlling the number of bytes produced by <see cref="EncapsulatedBytes()"/>.
+        /// This allows for controlling the number of bytes produced by <see cref="FollowedSegment"/>.
         /// </value>
         public Int32 BytesLength { get; set; }
 
@@ -85,8 +87,7 @@ namespace PacketDotNet.Utils
         /// Initializes a new instance of the <see cref="ByteArraySegment"/> class.
         /// </summary>
         /// <param name="bytes">The bytes.</param>
-        public ByteArraySegment(Byte[] bytes) :
-            this(bytes, 0, bytes.Length)
+        public ByteArraySegment(Byte[] bytes) : this(bytes, 0, bytes.Length)
         { }
 
         /// <summary>
@@ -95,8 +96,7 @@ namespace PacketDotNet.Utils
         /// <param name="bytes">The bytes.</param>
         /// <param name="offset">The offset into the byte array.</param>
         /// <param name="length">The length beyond the offset.</param>
-        public ByteArraySegment(Byte[] bytes, Int32 offset, Int32 length)
-            : this(bytes, offset, length, bytes.Length)
+        public ByteArraySegment(Byte[] bytes, Int32 offset, Int32 length) : this(bytes, offset, length, bytes.Length)
         { }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace PacketDotNet.Utils
         }
 
         /// <summary>
-        /// Gets a value indicating whether we need to perform a copy to get the bytes represented by this instance.
+        /// Gets a value indicating whether we need to perform a copy to get the <see cref="ActualBytes"/>.
         /// </summary>
         public Boolean NeedsCopyForActualBytes
         {
@@ -172,23 +172,23 @@ namespace PacketDotNet.Utils
         }
 
         /// <summary>
-        /// Returns the segment after this instance.
+        /// Returns the segment immediately after this segment.
         /// </summary>
         /// <returns>
         /// A <see cref="ByteArraySegment" />
         /// </returns>
-        public ByteArraySegment EncapsulatedBytes()
+        public ByteArraySegment NextSegment()
         {
             var numberOfBytesAfterThisSegment = BytesLength - (Offset + Length);
-            return EncapsulatedBytes(numberOfBytesAfterThisSegment);
+            return NextSegment(numberOfBytesAfterThisSegment);
         }
 
         /// <summary>
-        /// Returns the segment after this instance.
+        /// Returns the segment immediately after this segment.
         /// </summary>
         /// <param name="segmentLength">A <see cref="System.Int32" /> that can be used to limit the length of the segment that is to be returned.</param>
         /// <returns>A <see cref="ByteArraySegment" /></returns>
-        public ByteArraySegment EncapsulatedBytes(Int32 segmentLength)
+        public ByteArraySegment NextSegment(Int32 segmentLength)
         {
             Log.DebugFormat("SegmentLength {0}", segmentLength);
 
@@ -211,6 +211,19 @@ namespace PacketDotNet.Utils
         public override String ToString()
         {
             return $"[ByteArraySegment: Length={Length}, Bytes.Length={Bytes.Length}, BytesLength={BytesLength}, Offset={Offset}, NeedsCopyForActualBytes={NeedsCopyForActualBytes}]";
+        }
+
+        /// <inheritdoc />
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+
+        /// <inheritdoc />
+        public IEnumerator<byte> GetEnumerator()
+        {
+            for (int i = Offset; i < Offset + Length; i++)
+                yield return Bytes[i];
         }
     }
 }

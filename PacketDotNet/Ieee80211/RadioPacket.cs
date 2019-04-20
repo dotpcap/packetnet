@@ -137,7 +137,7 @@ namespace PacketDotNet.Ieee80211
             //Before we attempt to parse the payload we need to work out if 
             //the FCS was valid and if it will be present at the end of the frame
             var flagsField = this[RadioTapType.Flags] as FlagsRadioTapField;
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header.EncapsulatedBytes(), flagsField), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header.NextSegment(), flagsField), LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />

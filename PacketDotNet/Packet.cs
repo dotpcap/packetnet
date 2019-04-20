@@ -166,7 +166,7 @@ namespace PacketDotNet
         /// <summary>
         /// Gets the header's data high performance.
         /// </summary>
-        public virtual ByteArraySegment HeaderDataHighPerformance => Header.EncapsulatedBytes();
+        public virtual ByteArraySegment HeaderDataHighPerformance => Header.NextSegment();
 
         /// <summary>
         /// Packet that this packet carries if one is present.

@@ -99,7 +99,7 @@ namespace PacketDotNet.Ieee80211
             var availablePayloadLength = GetAvailablePayloadLength();
             if (availablePayloadLength > 0)
             {
-                PayloadPacketOrData.Value.ByteArraySegment = Header.EncapsulatedBytes(availablePayloadLength);
+                PayloadPacketOrData.Value.ByteArraySegment = Header.NextSegment(availablePayloadLength);
             }
         }
 

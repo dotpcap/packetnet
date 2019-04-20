@@ -186,7 +186,7 @@ namespace PacketDotNet
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment header)
         {
             // slice off the payload
-            var payload = header.EncapsulatedBytes();
+            var payload = header.NextSegment();
             Log.DebugFormat("payload {0}", payload);
 
             // ReSharper disable once UseObjectOrCollectionInitializer

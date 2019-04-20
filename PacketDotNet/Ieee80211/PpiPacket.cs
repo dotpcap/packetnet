@@ -462,7 +462,7 @@ namespace PacketDotNet.Ieee80211
         internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment header, PpiCommon commonField)
         {
             // slice off the payload
-            var payload = header.EncapsulatedBytes();
+            var payload = header.NextSegment();
             var payloadPacketOrData = new PacketOrByteArraySegment();
             MacFrame frame;
 

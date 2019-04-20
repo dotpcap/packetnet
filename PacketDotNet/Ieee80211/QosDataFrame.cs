@@ -118,11 +118,11 @@ namespace PacketDotNet.Ieee80211
                 // should parse it
                 if (FrameControl.Protected)
                 {
-                    PayloadPacketOrData.Value.ByteArraySegment = Header.EncapsulatedBytes(availablePayloadLength);
+                    PayloadPacketOrData.Value.ByteArraySegment = Header.NextSegment(availablePayloadLength);
                 }
                 else
                 {
-                    PayloadPacketOrData.Value.Packet = new LogicalLinkControl(Header.EncapsulatedBytes());
+                    PayloadPacketOrData.Value.Packet = new LogicalLinkControl(Header.NextSegment());
                 }
             }
         }

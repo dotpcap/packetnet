@@ -51,7 +51,7 @@ namespace PacketDotNet
             // store the payload bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.EncapsulatedBytes()};
+                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.NextSegment()};
                 return result;
             }, LazyThreadSafetyMode.PublicationOnly);
         }

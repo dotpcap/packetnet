@@ -384,7 +384,7 @@ namespace PacketDotNet
             {
                 nextHeaderPosition = Header.Offset + IPv6Fields.HeaderLength + totalExtensionHeadersLength;
 
-                var extensionHeader = new IPv6ExtensionHeader(nextHeader, Header.EncapsulatedBytes(PayloadLength));
+                var extensionHeader = new IPv6ExtensionHeader(nextHeader, Header.NextSegment(PayloadLength));
                 _extensionHeaders.Add(extensionHeader);
 
                 totalExtensionHeadersLength += extensionHeader.Length;

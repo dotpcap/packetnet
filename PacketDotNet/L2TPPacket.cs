@@ -51,7 +51,7 @@ namespace PacketDotNet
             if (HasOffset)
                 Header.Length += L2TPFields.OffsetSizeLength + L2TPFields.OffsetPadLength;
 
-            var payload = Header.EncapsulatedBytes();
+            var payload = Header.NextSegment();
             try
             {
                 PayloadPacket = new PPPPacket(payload) {ParentPacket = this};

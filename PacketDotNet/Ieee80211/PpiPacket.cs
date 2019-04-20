@@ -151,7 +151,7 @@ namespace PacketDotNet.Ieee80211
         /// </param>
         public PpiFields this[Int32 index] => PpiFields[index];
 
-        private List<PpiFields> PpiFields { get; set; }
+        private List<PpiFields> PpiFields { get; }
 
         #endregion Properties
 

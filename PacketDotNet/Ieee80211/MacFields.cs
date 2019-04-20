@@ -28,7 +28,7 @@ namespace PacketDotNet.Ieee80211
     /// field to move. In addition the payload size determines where the frame control
     /// sequence value is as it is after the payload bytes, if any payload is present
     /// </summary>
-    class MacFields
+    internal class MacFields
     {
         public static readonly Int32 Address1Position;
         public static readonly Int32 AddressLength = EthernetFields.MacAddressLength;

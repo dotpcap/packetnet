@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace PacketDotNet.MiscUtil.Conversion
@@ -14,28 +15,16 @@ namespace PacketDotNet.MiscUtil.Conversion
         /// Union used solely for the equivalent of DoubleToInt64Bits and vice versa.
         /// </summary>
         [StructLayout(LayoutKind.Explicit)]
-        struct Int32SingleUnion
+        private struct Int32SingleUnion
         {
-            /// <summary>
-            /// Int32 version of the value.
-            /// </summary>
-            [FieldOffset(0)]
-            readonly Int32 i;
-
-            /// <summary>
-            /// Single version of the value.
-            /// </summary>
-            [FieldOffset(0)]
-            readonly Single f;
-
             /// <summary>
             /// Creates an instance representing the given integer.
             /// </summary>
             /// <param name="i">The integer value of the new instance.</param>
             internal Int32SingleUnion(Int32 i)
             {
-                f = 0; // Just to keep the compiler happy
-                this.i = i;
+                AsSingle = 0; // Just to keep the compiler happy
+                AsInt32 = i;
             }
 
             /// <summary>
@@ -44,19 +33,21 @@ namespace PacketDotNet.MiscUtil.Conversion
             /// <param name="f">The floating point value of the new instance.</param>
             internal Int32SingleUnion(Single f)
             {
-                i = 0; // Just to keep the compiler happy
-                this.f = f;
+                AsInt32 = 0; // Just to keep the compiler happy
+                AsSingle = f;
             }
 
             /// <summary>
             /// Returns the value of the instance as an integer.
             /// </summary>
-            internal Int32 AsInt32 => i;
+            [field: FieldOffset(0)]
+            internal Int32 AsInt32 { get; }
 
             /// <summary>
             /// Returns the value of the instance as a floating point number.
             /// </summary>
-            internal Single AsSingle => f;
+            [field: FieldOffset(0)]
+            internal Single AsSingle { get; }
         }
 
         #endregion
@@ -278,8 +269,8 @@ namespace PacketDotNet.MiscUtil.Conversion
         /// <exception cref="ArgumentOutOfRangeException">
         /// startIndex is less than zero or greater than the length of value minus bytesRequired.
         /// </exception>
-        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
-        static void CheckByteArgument(Byte[] value, Int32 startIndex, Int32 bytesRequired)
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
+        private static void CheckByteArgument(Byte[] value, Int32 startIndex, Int32 bytesRequired)
         {
             if (value == null)
                 ThrowHelper.ThrowArgumentNullException(ExceptionArgument.value);
@@ -296,7 +287,7 @@ namespace PacketDotNet.MiscUtil.Conversion
         /// <param name="startIndex">The index of the first byte to convert</param>
         /// <param name="bytesToConvert">The number of bytes to convert</param>
         /// <returns></returns>
-        Int64 CheckedFromBytes(Byte[] value, Int32 startIndex, Int32 bytesToConvert)
+        private Int64 CheckedFromBytes(Byte[] value, Int32 startIndex, Int32 bytesToConvert)
         {
             CheckByteArgument(value, startIndex, bytesToConvert);
             return FromBytes(value, startIndex, bytesToConvert);
@@ -434,7 +425,7 @@ namespace PacketDotNet.MiscUtil.Conversion
         /// </summary>
         /// <param name="value">The value to get bytes for</param>
         /// <param name="bytes">The number of significant bytes to return</param>
-        Byte[] GetBytes(Int64 value, Int32 bytes)
+        private Byte[] GetBytes(Int64 value, Int32 bytes)
         {
             var buffer = new Byte[bytes];
             CopyBytes(value, bytes, buffer, 0);
@@ -556,6 +547,7 @@ namespace PacketDotNet.MiscUtil.Conversion
         /// <param name="bytes">The number of significant bytes to copy</param>
         /// <param name="buffer">The byte array to copy the bytes into</param>
         /// <param name="index">The first index into the array to copy the bytes into</param>
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         private void CopyBytes(Int64 value, Int32 bytes, Byte[] buffer, Int32 index)
         {
             if (buffer == null)

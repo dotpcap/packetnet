@@ -89,7 +89,7 @@ namespace PacketDotNet.Ieee80211
                                            MacFields.DurationIDLength +
                                            (MacFields.AddressLength * 3) +
                                            MacFields.SequenceControlLength +
-                                           DisassociationFields.ReasonCodeLength;
+                                           DisassociationFrameFields.ReasonCodeLength;
 
         /// <summary>
         /// Gets or sets the reason for disassociation.
@@ -103,17 +103,17 @@ namespace PacketDotNet.Ieee80211
         {
             get
             {
-                if (Header.Length >= DisassociationFields.ReasonCodePosition + DisassociationFields.ReasonCodeLength)
+                if (Header.Length >= DisassociationFrameFields.ReasonCodePosition + DisassociationFrameFields.ReasonCodeLength)
                 {
                     return (ReasonCode) EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                                           Header.Offset + DisassociationFields.ReasonCodePosition);
+                                                                           Header.Offset + DisassociationFrameFields.ReasonCodePosition);
                 }
 
                 return ReasonCode.Unspecified;
             }
             set => EndianBitConverter.Little.CopyBytes((UInt16) value,
                                                        Header.Bytes,
-                                                       Header.Offset + DisassociationFields.ReasonCodePosition);
+                                                       Header.Offset + DisassociationFrameFields.ReasonCodePosition);
         }
 
         /// <summary>
@@ -135,18 +135,6 @@ namespace PacketDotNet.Ieee80211
             ReasonBytes = Reason;
 
             Header.Length = FrameSize;
-        }
-
-        private class DisassociationFields
-        {
-            public static readonly Int32 ReasonCodeLength = 2;
-
-            public static readonly Int32 ReasonCodePosition;
-
-            static DisassociationFields()
-            {
-                ReasonCodePosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
-            }
         }
     }
 }

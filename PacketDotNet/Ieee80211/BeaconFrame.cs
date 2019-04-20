@@ -132,7 +132,7 @@ namespace PacketDotNet.Ieee80211
         /// The information elements included in the frame
         /// Most (but not all) beacons frames will contain an Information element that contains the SSID.
         /// </summary>
-        public InformationElementList InformationElements { get; private set; }
+        public InformationElementList InformationElements { get; }
 
 
         /// <summary>

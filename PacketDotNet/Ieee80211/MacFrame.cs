@@ -143,16 +143,8 @@ namespace PacketDotNet.Ieee80211
         /// </param>
         protected void SetAddressByOffset(Int32 offset, PhysicalAddress address)
         {
-            Byte[] hwAddress;
             //We will replace no address with a MAC of all zer
-            if (address == PhysicalAddress.None)
-            {
-                hwAddress = new Byte[] {0, 0, 0, 0, 0, 0};
-            }
-            else
-            {
-                hwAddress = address.GetAddressBytes();
-            }
+            var hwAddress = address.Equals(PhysicalAddress.None) ? new Byte[] {0, 0, 0, 0, 0, 0} : address.GetAddressBytes();
 
             // using the offset, set the address
             if (hwAddress.Length != MacFields.AddressLength)
@@ -258,7 +250,7 @@ namespace PacketDotNet.Ieee80211
         /// The bytes of the packet. bas.Offset should point to the first byte in the mac frame.
         /// </param>
         /// <remarks>
-        /// If the provided bytes dont contain the FCS then call <see cref="MacFrame.ParsePacket" /> instead. The presence of the
+        /// If the provided bytes dont contain the FCS then call <see cref="ParsePacket" /> instead. The presence of the
         /// FCS is usually determined by configuration of the device used to capture the packets.
         /// </remarks>
         public static MacFrame ParsePacketWithFcs(ByteArraySegment bas)
@@ -474,7 +466,7 @@ namespace PacketDotNet.Ieee80211
         /// </param>
         /// <remarks>
         /// This method can be used to check the validity of a packet before attempting to parse it with either
-        /// <see cref="MacFrame.ParsePacket" /> or <see cref="MacFrame.ParsePacketWithFcs" />. Attempting to parse a corrupted buffer
+        /// <see cref="ParsePacket" /> or <see cref="MacFrame.ParsePacketWithFcs" />. Attempting to parse a corrupted buffer
         /// using these methods could cause unexpected exceptions.
         /// </remarks>
         public static Boolean PerformFcsCheck(Byte[] data, Int32 offset, Int32 length, UInt32 fcs)

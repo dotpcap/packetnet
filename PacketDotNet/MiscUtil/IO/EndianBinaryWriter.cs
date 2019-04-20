@@ -34,17 +34,17 @@ namespace PacketDotNet.MiscUtil.IO
         /// <summary>
         /// Whether or not this writer has been disposed yet.
         /// </summary>
-        Boolean disposed;
+        private Boolean disposed;
 
         /// <summary>
         /// Buffer used for temporary storage during conversion from primitives
         /// </summary>
-        readonly Byte[] buffer = new Byte[16];
+        private readonly Byte[] buffer = new Byte[16];
 
         /// <summary>
         /// Buffer used for Write(char)
         /// </summary>
-        readonly Char[] charBuffer = new Char[1];
+        private readonly Char[] charBuffer = new Char[1];
 
         #endregion
 
@@ -72,29 +72,17 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="encoding">Encoding to use when writing character data</param>
         public EndianBinaryWriter(EndianBitConverter bitConverter, Stream stream, Encoding encoding)
         {
-            if (bitConverter == null)
-            {
-                throw new ArgumentNullException(nameof(bitConverter));
-            }
-
             if (stream == null)
-            {
                 throw new ArgumentNullException(nameof(stream));
-            }
 
-            if (encoding == null)
-            {
-                throw new ArgumentNullException(nameof(encoding));
-            }
 
             if (!stream.CanWrite)
-            {
                 throw new ArgumentException("Stream isn't writable", nameof(stream));
-            }
+
 
             BaseStream = stream;
-            BitConverter = bitConverter;
-            Encoding = encoding;
+            BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
+            Encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
         }
 
         #endregion
@@ -383,7 +371,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// <summary>
         /// Checks whether or not the writer has been disposed, throwing an exception if so.
         /// </summary>
-        void CheckDisposed()
+        private void CheckDisposed()
         {
             if (disposed)
             {
@@ -397,7 +385,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// </summary>
         /// <param name="bytes">The array of bytes to write from</param>
         /// <param name="length">The number of bytes to write</param>
-        void WriteInternal(Byte[] bytes, Int32 length)
+        private void WriteInternal(Byte[] bytes, Int32 length)
         {
             CheckDisposed();
             BaseStream.Write(bytes, 0, length);

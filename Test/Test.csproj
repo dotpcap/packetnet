@@ -47,6 +47,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EndianBinaryReader.cs" />
+    <Compile Include="EndianBinaryWriter.cs" />
     <Compile Include="PacketType\DrdaPacketTest.cs" />
     <Compile Include="PacketType\L2TPPacketTest.cs" />
     <Compile Include="PacketType\Ieee80211\CapabilityInformationFieldTest.cs" />

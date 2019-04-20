@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 
-namespace PacketDotNet.MiscUtil.IO
+namespace Test
 {
     /// <summary>
     /// Equivalent of System.IO.BinaryReader, but with either endianness, depending on
@@ -19,9 +19,9 @@ namespace PacketDotNet.MiscUtil.IO
         /// </summary>
         public void Dispose()
         {
-            if (!disposed)
+            if (!_disposed)
             {
-                disposed = true;
+                _disposed = true;
                 ((IDisposable) BaseStream).Dispose();
             }
         }
@@ -34,27 +34,27 @@ namespace PacketDotNet.MiscUtil.IO
         /// <summary>
         /// Whether or not this reader has been disposed yet.
         /// </summary>
-        private bool disposed;
+        private bool _disposed;
 
         /// <summary>
         /// Decoder to use for string conversions.
         /// </summary>
-        private readonly Decoder decoder;
+        private readonly Decoder _decoder;
 
         /// <summary>
         /// Buffer used for temporary storage before conversion into primitives
         /// </summary>
-        private readonly byte[] buffer = new byte[16];
+        private readonly byte[] _buffer = new byte[16];
 
         /// <summary>
         /// Buffer used for temporary storage when reading a single character
         /// </summary>
-        private readonly char[] charBuffer = new char[1];
+        private readonly char[] _charBuffer = new char[1];
 
         /// <summary>
         /// Minimum number of bytes used to encode a character
         /// </summary>
-        private readonly int minBytesPerChar;
+        private readonly int _minBytesPerChar;
 
         #endregion
 
@@ -93,12 +93,12 @@ namespace PacketDotNet.MiscUtil.IO
             BaseStream = stream;
             BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
             Encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
-            decoder = encoding.GetDecoder();
-            minBytesPerChar = 1;
+            _decoder = encoding.GetDecoder();
+            _minBytesPerChar = 1;
 
             if (encoding is UnicodeEncoding)
             {
-                minBytesPerChar = 2;
+                _minBytesPerChar = 2;
             }
         }
 
@@ -152,8 +152,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <returns>The byte read</returns>
         public byte ReadByte()
         {
-            ReadInternal(buffer, 1);
-            return buffer[0];
+            ReadInternal(_buffer, 1);
+            return _buffer[0];
         }
 
         /// <summary>
@@ -162,8 +162,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <returns>The byte read</returns>
         public sbyte ReadSByte()
         {
-            ReadInternal(buffer, 1);
-            return unchecked((sbyte) buffer[0]);
+            ReadInternal(_buffer, 1);
+            return unchecked((sbyte) _buffer[0]);
         }
 
         /// <summary>
@@ -172,8 +172,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <returns>The boolean read</returns>
         public bool ReadBoolean()
         {
-            ReadInternal(buffer, 1);
-            return BitConverter.ToBoolean(buffer, 0);
+            ReadInternal(_buffer, 1);
+            return BitConverter.ToBoolean(_buffer, 0);
         }
 
         /// <summary>
@@ -183,8 +183,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <returns>The 16-bit integer read</returns>
         public short ReadInt16()
         {
-            ReadInternal(buffer, 2);
-            return BitConverter.ToInt16(buffer, 0);
+            ReadInternal(_buffer, 2);
+            return BitConverter.ToInt16(_buffer, 0);
         }
 
         /// <summary>
@@ -194,8 +194,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <returns>The 32-bit integer read</returns>
         public int ReadInt32()
         {
-            ReadInternal(buffer, 4);
-            return BitConverter.ToInt32(buffer, 0);
+            ReadInternal(_buffer, 4);
+            return BitConverter.ToInt32(_buffer, 0);
         }
 
         /// <summary>
@@ -205,8 +205,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <returns>The 64-bit integer read</returns>
         public long ReadInt64()
         {
-            ReadInternal(buffer, 8);
-            return BitConverter.ToInt64(buffer, 0);
+            ReadInternal(_buffer, 8);
+            return BitConverter.ToInt64(_buffer, 0);
         }
 
         /// <summary>
@@ -216,8 +216,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <returns>The 16-bit unsigned integer read</returns>
         public ushort ReadUInt16()
         {
-            ReadInternal(buffer, 2);
-            return BitConverter.ToUInt16(buffer, 0);
+            ReadInternal(_buffer, 2);
+            return BitConverter.ToUInt16(_buffer, 0);
         }
 
         /// <summary>
@@ -227,8 +227,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <returns>The 32-bit unsigned integer read</returns>
         public uint ReadUInt32()
         {
-            ReadInternal(buffer, 4);
-            return BitConverter.ToUInt32(buffer, 0);
+            ReadInternal(_buffer, 4);
+            return BitConverter.ToUInt32(_buffer, 0);
         }
 
         /// <summary>
@@ -238,8 +238,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <returns>The 64-bit unsigned integer read</returns>
         public ulong ReadUInt64()
         {
-            ReadInternal(buffer, 8);
-            return BitConverter.ToUInt64(buffer, 0);
+            ReadInternal(_buffer, 8);
+            return BitConverter.ToUInt64(_buffer, 0);
         }
 
         /// <summary>
@@ -249,8 +249,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <returns>The floating point value read</returns>
         public float ReadSingle()
         {
-            ReadInternal(buffer, 4);
-            return BitConverter.ToSingle(buffer, 0);
+            ReadInternal(_buffer, 4);
+            return BitConverter.ToSingle(_buffer, 0);
         }
 
         /// <summary>
@@ -260,8 +260,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <returns>The floating point value read</returns>
         public double ReadDouble()
         {
-            ReadInternal(buffer, 8);
-            return BitConverter.ToDouble(buffer, 0);
+            ReadInternal(_buffer, 8);
+            return BitConverter.ToDouble(_buffer, 0);
         }
 
         /// <summary>
@@ -271,8 +271,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <returns>The decimal value read</returns>
         public decimal ReadDecimal()
         {
-            ReadInternal(buffer, 16);
-            return BitConverter.ToDecimal(buffer, 0);
+            ReadInternal(_buffer, 16);
+            return BitConverter.ToDecimal(_buffer, 0);
         }
 
         /// <summary>
@@ -283,13 +283,13 @@ namespace PacketDotNet.MiscUtil.IO
         /// <returns>The character read, or -1 for end of stream.</returns>
         public int Read()
         {
-            var charsRead = Read(charBuffer, 0, 1);
+            var charsRead = Read(_charBuffer, 0, 1);
             if (charsRead == 0)
             {
                 return -1;
             }
 
-            return charBuffer[0];
+            return _charBuffer[0];
         }
 
         /// <summary>
@@ -307,8 +307,8 @@ namespace PacketDotNet.MiscUtil.IO
         {
             CheckDisposed();
 
-            if (buffer == null)
-                throw new ArgumentNullException(nameof(buffer));
+            if (_buffer == null)
+                throw new ArgumentNullException(nameof(_buffer));
 
 
             if (index < 0)
@@ -328,9 +328,9 @@ namespace PacketDotNet.MiscUtil.IO
 
             // Use the normal buffer if we're only reading a small amount, otherwise
             // use at most 4K at a time.
-            var byteBuffer = buffer;
+            var byteBuffer = _buffer;
 
-            if (byteBuffer.Length < count * minBytesPerChar)
+            if (byteBuffer.Length < count * _minBytesPerChar)
             {
                 byteBuffer = new byte[4096];
             }
@@ -341,14 +341,14 @@ namespace PacketDotNet.MiscUtil.IO
                 // First time through we know we haven't previously read any data
                 if (firstTime)
                 {
-                    amountToRead = count * minBytesPerChar;
+                    amountToRead = count * _minBytesPerChar;
                     firstTime = false;
                 }
                 // After that we can only assume we need to fully read "chars left -1" characters
                 // and a single byte of the character we may be in the middle of
                 else
                 {
-                    amountToRead = ((count - read - 1) * minBytesPerChar) + 1;
+                    amountToRead = ((count - read - 1) * _minBytesPerChar) + 1;
                 }
 
                 if (amountToRead > byteBuffer.Length)
@@ -362,7 +362,7 @@ namespace PacketDotNet.MiscUtil.IO
                     return read;
                 }
 
-                var decoded = decoder.GetChars(byteBuffer, 0, bytesRead, data, index);
+                var decoded = _decoder.GetChars(byteBuffer, 0, bytesRead, data, index);
                 read += decoded;
                 index += decoded;
             }
@@ -558,7 +558,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// </summary>
         private void CheckDisposed()
         {
-            if (disposed)
+            if (_disposed)
             {
                 throw new ObjectDisposedException("EndianBinaryReader");
             }

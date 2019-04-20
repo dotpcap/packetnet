@@ -1,5 +1,3 @@
-using System;
-
 namespace PacketDotNet.MiscUtil.Conversion
 {
     /// <summary>
@@ -9,23 +7,9 @@ namespace PacketDotNet.MiscUtil.Conversion
     public sealed class LittleEndianBitConverter : EndianBitConverter
     {
         /// <summary>
-        /// Indicates the byte order ("endianess") in which data is converted using this class.
+        /// Indicates the byte order ("endianness") in which data is converted using this class.
         /// </summary>
         public override Endianness Endianness => Endianness.LittleEndian;
-
-        /// <summary>
-        /// Indicates the byte order ("endianess") in which data is converted using this class.
-        /// </summary>
-        /// <remarks>
-        /// Different computer architectures store data using different byte orders. "Big-endian"
-        /// means the most significant byte is on the left end of a word. "Little-endian" means the
-        /// most significant byte is on the right end of a word.
-        /// </remarks>
-        /// <returns>true if this converter is little-endian, false otherwise.</returns>
-        public override bool IsLittleEndian()
-        {
-            return true;
-        }
 
         /// <summary>
         /// Copies the specified number of bytes from value to buffer, starting at index.

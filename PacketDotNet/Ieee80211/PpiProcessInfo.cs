@@ -24,9 +24,9 @@ namespace PacketDotNet.Ieee80211
         {
             get
             {
-                var processLength = string.IsNullOrEmpty(ProcessPath) ? 0 : Encoding.UTF8.GetByteCount(ProcessPath);
-                var userLength = string.IsNullOrEmpty(UserName) ? 0 : Encoding.UTF8.GetByteCount(UserName);
-                var groupLength = string.IsNullOrEmpty(GroupName) ? 0 : Encoding.UTF8.GetByteCount(GroupName);
+                var processLength = String.IsNullOrEmpty(ProcessPath) ? 0 : Encoding.UTF8.GetByteCount(ProcessPath);
+                var userLength = String.IsNullOrEmpty(UserName) ? 0 : Encoding.UTF8.GetByteCount(UserName);
+                var groupLength = String.IsNullOrEmpty(GroupName) ? 0 : Encoding.UTF8.GetByteCount(GroupName);
                 return 19 + processLength + userLength + groupLength;
             }
         }
@@ -103,19 +103,19 @@ namespace PacketDotNet.Ieee80211
                 writer.Write(ProcessId);
                 writer.Write(ThreadId);
 
-                var pathBytes = Encoding.UTF8.GetBytes(ProcessPath ?? string.Empty);
+                var pathBytes = Encoding.UTF8.GetBytes(ProcessPath ?? String.Empty);
                 writer.Write((byte) pathBytes.Length);
                 writer.Write(pathBytes);
 
                 writer.Write(UserId);
 
-                var userBytes = Encoding.UTF8.GetBytes(UserName ?? string.Empty);
+                var userBytes = Encoding.UTF8.GetBytes(UserName ?? String.Empty);
                 writer.Write((byte) userBytes.Length);
                 writer.Write(userBytes);
 
                 writer.Write(GroupId);
 
-                var groupBytes = Encoding.UTF8.GetBytes(GroupName ?? string.Empty);
+                var groupBytes = Encoding.UTF8.GetBytes(GroupName ?? String.Empty);
                 writer.Write((byte) groupBytes.Length);
                 writer.Write(groupBytes);
 

@@ -7,8 +7,6 @@
  * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
-
 namespace PacketDotNet.Utils
 {
     /// <summary>

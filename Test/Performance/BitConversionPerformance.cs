@@ -23,7 +23,6 @@ using System.Net;
 using System.IO;
 using NUnit.Framework;
 using PacketDotNet.MiscUtil.Conversion;
-using PacketDotNet.MiscUtil.IO;
 
 namespace Test.Performance
 {

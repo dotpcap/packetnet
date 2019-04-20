@@ -409,7 +409,7 @@ namespace PacketDotNet
         /// </param>
         public virtual string ToString(StringOutputType outputFormat)
         {
-            return PayloadPacketOrData.Value.Type == PayloadType.Packet ? PayloadPacketOrData.Value.Packet.ToString(outputFormat) : string.Empty;
+            return PayloadPacketOrData.Value.Type == PayloadType.Packet ? PayloadPacketOrData.Value.Packet.ToString(outputFormat) : String.Empty;
         }
 
         /// <summary>

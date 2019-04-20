@@ -797,8 +797,8 @@ namespace PacketDotNet
             var rnd = new Random();
 
             // create a randomized TcpPacket
-            var srcPort = (ushort) rnd.Next(ushort.MinValue, ushort.MaxValue);
-            var dstPort = (ushort) rnd.Next(ushort.MinValue, ushort.MaxValue);
+            var srcPort = (ushort) rnd.Next(UInt16.MinValue, UInt16.MaxValue);
+            var dstPort = (ushort) rnd.Next(UInt16.MinValue, UInt16.MaxValue);
             var tcpPacket = new TcpPacket(srcPort, dstPort);
 
             return tcpPacket;

@@ -348,8 +348,8 @@ namespace PacketDotNet
         public static UdpPacket RandomPacket()
         {
             var rnd = new Random();
-            var sourcePort = (ushort) rnd.Next(ushort.MinValue, ushort.MaxValue);
-            var destinationPort = (ushort) rnd.Next(ushort.MinValue, ushort.MaxValue);
+            var sourcePort = (ushort) rnd.Next(UInt16.MinValue, UInt16.MaxValue);
+            var destinationPort = (ushort) rnd.Next(UInt16.MinValue, UInt16.MaxValue);
 
             return new UdpPacket(sourcePort, destinationPort);
         }

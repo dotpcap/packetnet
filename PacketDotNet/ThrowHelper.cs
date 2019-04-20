@@ -129,7 +129,7 @@ namespace PacketDotNet
                     break;
 
                 default:
-                    return string.Empty;
+                    return String.Empty;
             }
 
             return argumentName;
@@ -159,7 +159,7 @@ namespace PacketDotNet
                     break;
 
                 default:
-                    return string.Empty;
+                    return String.Empty;
             }
 
             return result;

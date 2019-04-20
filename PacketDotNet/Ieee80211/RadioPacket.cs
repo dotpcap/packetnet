@@ -340,7 +340,7 @@ namespace PacketDotNet.Ieee80211
 
             //this will read the rest of the bytes. We pass in max value because we dont know how
             //much there is but this will ensure we get up to the end of the buffer
-            UnhandledFieldBytes = br.ReadBytes(ushort.MaxValue);
+            UnhandledFieldBytes = br.ReadBytes(UInt16.MaxValue);
 
             return result;
         }

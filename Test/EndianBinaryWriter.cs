@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 
-namespace PacketDotNet.MiscUtil.IO
+namespace Test
 {
     /// <summary>
     /// Equivalent of System.IO.BinaryWriter, but with either endianness, depending on
@@ -18,10 +18,10 @@ namespace PacketDotNet.MiscUtil.IO
         /// </summary>
         public void Dispose()
         {
-            if (!disposed)
+            if (!_disposed)
             {
                 Flush();
-                disposed = true;
+                _disposed = true;
                 ((IDisposable) BaseStream).Dispose();
             }
         }
@@ -34,17 +34,17 @@ namespace PacketDotNet.MiscUtil.IO
         /// <summary>
         /// Whether or not this writer has been disposed yet.
         /// </summary>
-        private bool disposed;
+        private bool _disposed;
 
         /// <summary>
         /// Buffer used for temporary storage during conversion from primitives
         /// </summary>
-        private readonly byte[] buffer = new byte[16];
+        private readonly byte[] _buffer = new byte[16];
 
         /// <summary>
         /// Buffer used for Write(char)
         /// </summary>
-        private readonly char[] charBuffer = new char[1];
+        private readonly char[] _charBuffer = new char[1];
 
         #endregion
 
@@ -144,8 +144,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write(bool value)
         {
-            BitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 1);
+            BitConverter.CopyBytes(value, _buffer, 0);
+            WriteInternal(_buffer, 1);
         }
 
         /// <summary>
@@ -155,8 +155,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write(short value)
         {
-            BitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 2);
+            BitConverter.CopyBytes(value, _buffer, 0);
+            WriteInternal(_buffer, 2);
         }
 
         /// <summary>
@@ -166,8 +166,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write(int value)
         {
-            BitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 4);
+            BitConverter.CopyBytes(value, _buffer, 0);
+            WriteInternal(_buffer, 4);
         }
 
         /// <summary>
@@ -177,8 +177,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write(long value)
         {
-            BitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 8);
+            BitConverter.CopyBytes(value, _buffer, 0);
+            WriteInternal(_buffer, 8);
         }
 
         /// <summary>
@@ -188,8 +188,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write(ushort value)
         {
-            BitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 2);
+            BitConverter.CopyBytes(value, _buffer, 0);
+            WriteInternal(_buffer, 2);
         }
 
         /// <summary>
@@ -199,8 +199,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write(uint value)
         {
-            BitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 4);
+            BitConverter.CopyBytes(value, _buffer, 0);
+            WriteInternal(_buffer, 4);
         }
 
         /// <summary>
@@ -210,8 +210,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write(ulong value)
         {
-            BitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 8);
+            BitConverter.CopyBytes(value, _buffer, 0);
+            WriteInternal(_buffer, 8);
         }
 
         /// <summary>
@@ -221,8 +221,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write(float value)
         {
-            BitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 4);
+            BitConverter.CopyBytes(value, _buffer, 0);
+            WriteInternal(_buffer, 4);
         }
 
         /// <summary>
@@ -232,8 +232,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write(double value)
         {
-            BitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 8);
+            BitConverter.CopyBytes(value, _buffer, 0);
+            WriteInternal(_buffer, 8);
         }
 
         /// <summary>
@@ -243,8 +243,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write(decimal value)
         {
-            BitConverter.CopyBytes(value, buffer, 0);
-            WriteInternal(buffer, 16);
+            BitConverter.CopyBytes(value, _buffer, 0);
+            WriteInternal(_buffer, 16);
         }
 
         /// <summary>
@@ -253,8 +253,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write(byte value)
         {
-            buffer[0] = value;
-            WriteInternal(buffer, 1);
+            _buffer[0] = value;
+            WriteInternal(_buffer, 1);
         }
 
         /// <summary>
@@ -263,8 +263,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write(sbyte value)
         {
-            buffer[0] = unchecked((byte) value);
-            WriteInternal(buffer, 1);
+            _buffer[0] = unchecked((byte) value);
+            WriteInternal(_buffer, 1);
         }
 
         /// <summary>
@@ -299,8 +299,8 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="value">The value to write</param>
         public void Write(char value)
         {
-            charBuffer[0] = value;
-            Write(charBuffer);
+            _charBuffer[0] = value;
+            Write(_charBuffer);
         }
 
         /// <summary>
@@ -354,13 +354,13 @@ namespace PacketDotNet.MiscUtil.IO
             var index = 0;
             while (value >= 128)
             {
-                buffer[index++] = (byte) ((value & 0x7f) | 0x80);
+                _buffer[index++] = (byte) ((value & 0x7f) | 0x80);
                 value = value >> 7;
                 index++;
             }
 
-            buffer[index++] = (byte) value;
-            BaseStream.Write(buffer, 0, index);
+            _buffer[index++] = (byte) value;
+            BaseStream.Write(_buffer, 0, index);
         }
 
         #endregion
@@ -373,7 +373,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// </summary>
         private void CheckDisposed()
         {
-            if (disposed)
+            if (_disposed)
             {
                 throw new ObjectDisposedException("EndianBinaryWriter");
             }

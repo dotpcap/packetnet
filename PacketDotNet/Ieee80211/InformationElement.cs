@@ -149,7 +149,7 @@ namespace PacketDotNet.Ieee80211
 
             set
             {
-                if (value.Length > byte.MaxValue)
+                if (value.Length > Byte.MaxValue)
                 {
                     throw new ArgumentException("The provided value is too long. Maximum allowed length is 255 bytes.");
                 }

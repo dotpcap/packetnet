@@ -23,8 +23,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 #endregion Header
 
 
-using System;
-
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>

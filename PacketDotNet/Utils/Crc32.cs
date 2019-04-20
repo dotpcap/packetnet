@@ -70,28 +70,7 @@ namespace PacketDotNet.Utils
 
 
         #region Public Methods
-
-        /// <summary>Computes the CRC32 value for the given ASCII string using the <see cref="DefaultPolynomial" />.</summary>
-        public static int Compute(string asciiString)
-        {
-            DefaultCRC.Initialize();
-            return ToInt32(DefaultCRC.ComputeHash(asciiString));
-        }
-
-        /// <summary>Computes the CRC32 value for the given input stream using the <see cref="DefaultPolynomial" />.</summary>
-        public static int Compute(Stream inputStream)
-        {
-            DefaultCRC.Initialize();
-            return ToInt32(DefaultCRC.ComputeHash(inputStream));
-        }
-
-        /// <summary>Computes the CRC32 value for the input data using the <see cref="DefaultPolynomial" />.</summary>
-        public static int Compute(byte[] buffer)
-        {
-            DefaultCRC.Initialize();
-            return ToInt32(DefaultCRC.ComputeHash(buffer));
-        }
-
+        
         /// <summary>Computes the hash value for the input data using the <see cref="DefaultPolynomial" />.</summary>
         public static int Compute(byte[] buffer, int offset, int count)
         {

@@ -88,7 +88,7 @@ namespace PacketDotNet.Ieee80211
         /// The block ack bitmap.
         /// </value>
         /// <exception cref='ArgumentException'>
-        /// Is thrown when the bitmap is of an incorrect lenght. The bitmap must be either 8 or 64 btyes longs depending on whether or not
+        /// Is thrown when the bitmap is of an incorrect length. The bitmap must be either 8 or 64 bytes longs depending on whether or not
         /// it is compressed.
         /// </exception>
         public byte[] BlockAckBitmap
@@ -242,7 +242,7 @@ namespace PacketDotNet.Ieee80211
 
         /// <summary>
         /// Returns a string with a description of the addresses used in the packet.
-        /// This is used as a compoent of the string returned by ToString().
+        /// This is used as a component of the string returned by ToString().
         /// </summary>
         /// <returns>
         /// The address string.

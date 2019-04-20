@@ -176,7 +176,7 @@ namespace Test.PacketType
                 //buffer is way too short for frame. We are just checking it doesn't throw
                 byte[] corruptBuffer = new byte[]{0x01};
 				AuthenticationFrame frame = new AuthenticationFrame(new ByteArraySegment(corruptBuffer));
-				Assert.IsFalse(frame.FCSValid);
+				Assert.IsFalse(frame.FcsValid);
 			}
         } 
     }

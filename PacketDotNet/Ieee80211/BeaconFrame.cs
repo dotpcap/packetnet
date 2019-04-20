@@ -26,7 +26,7 @@ namespace PacketDotNet.Ieee80211
 {
     /// <summary>
     /// Format of an 802.11 management beacon frame.
-    /// Beacon frames are used to annouce the existance of a wireless network. If an
+    /// Beacon frames are used to announce the existence of a wireless network. If an
     /// access point has been configured to not broadcast its SSID then it may not transmit
     /// beacon frames.
     /// </summary>

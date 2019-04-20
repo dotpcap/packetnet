@@ -124,10 +124,10 @@ namespace PacketDotNet.Ieee80211
 
         /// <summary>
         /// Gets or sets a value indicating whether this
-        /// <see cref="CapabilityInformationField" /> is pbcc.
+        /// <see cref="CapabilityInformationField" /> is PBCC.
         /// </summary>
         /// <value>
-        /// <c>true</c> if pbcc; otherwise, <c>false</c>.
+        /// <c>true</c> if PBCC; otherwise, <c>false</c>.
         /// </value>
         public bool Pbcc
         {

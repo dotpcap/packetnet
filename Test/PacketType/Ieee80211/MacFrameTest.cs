@@ -39,7 +39,7 @@ namespace Test.PacketType
             }
 
             /// <summary>
-            /// Test that the MacFrame.FCSValid property is working correctly
+            /// Test that the MacFrame.FcsValid property is working correctly
             /// </summary>
             [Test]
             public void FCSTest ()
@@ -53,11 +53,11 @@ namespace Test.PacketType
                 Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
                 AssociationRequestFrame frame = (AssociationRequestFrame)p.PayloadPacket;
                 Assert.AreEqual (0xde82c216, frame.FrameCheckSequence, "FCS mismatch");
-                Assert.IsTrue (frame.FCSValid);
+                Assert.IsTrue (frame.FcsValid);
 
-                // adjust the fcs of the packet and check that the FCSValid property returns false
+                // adjust the fcs of the packet and check that the FcsValid property returns false
                 frame.FrameCheckSequence = 0x1;
-                Assert.IsFalse (frame.FCSValid);                
+                Assert.IsFalse (frame.FcsValid);                
             }
             
             [Test]
@@ -122,10 +122,10 @@ namespace Test.PacketType
                 dataFrame.DestinationAddress = PhysicalAddress.Parse("112233445566");
                 dataFrame.PayloadData = new byte[]{0x1, 0x2, 0x3, 0x4};
                 
-                //Force it to recalculate the FCS and include it when serialised
+                //Force it to recalculate the FCS and include it when serialized
                 dataFrame.UpdateFrameCheckSequence();
                 dataFrame.AppendFcs = true;
-                Assert.IsTrue(dataFrame.FCSValid);
+                Assert.IsTrue(dataFrame.FcsValid);
                 
                 var expectedLength = dataFrame.FrameSize + dataFrame.PayloadData.Length + 4;
 
@@ -151,7 +151,7 @@ namespace Test.PacketType
                 dataFrame.DestinationAddress = PhysicalAddress.Parse("112233445566");
                 dataFrame.PayloadData = new byte[]{0x01, 0x02, 0x03, 0x04};
                 
-                //Force it to recalculate the FCS but don't include it when serialised
+                //Force it to recalculate the FCS but don't include it when serialized
                 dataFrame.UpdateFrameCheckSequence();
                 dataFrame.AppendFcs = false;
                 

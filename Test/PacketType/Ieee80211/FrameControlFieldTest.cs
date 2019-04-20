@@ -73,7 +73,7 @@ namespace Test.PacketType
 
                 Assert.AreEqual(0x0, frameControl.ProtocolVersion);
                 Assert.AreEqual(FrameControlField.FrameTypes.Control, frameControl.Type);
-                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlCTS, frameControl.SubType);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlCts, frameControl.SubType);
                 Assert.IsFalse(frameControl.FromDS);
                 Assert.IsFalse(frameControl.Protected);
                 Assert.IsFalse(frameControl.ToDS);
@@ -91,7 +91,7 @@ namespace Test.PacketType
 
                 Assert.AreEqual(0x0, frameControl.ProtocolVersion);
                 Assert.AreEqual(FrameControlField.FrameTypes.Control, frameControl.Type);
-                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlACK, frameControl.SubType);
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlAck, frameControl.SubType);
                 Assert.IsFalse(frameControl.FromDS);
                 Assert.IsFalse(frameControl.Protected);
                 Assert.IsFalse(frameControl.ToDS);
@@ -150,8 +150,8 @@ namespace Test.PacketType
                 frameControl.SubType = FrameControlField.FrameSubTypes.ManagementAuthentication;
                 Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementAuthentication, frameControl.SubType);
 
-                frameControl.SubType = FrameControlField.FrameSubTypes.ControlACK;
-                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlACK, frameControl.SubType);
+                frameControl.SubType = FrameControlField.FrameSubTypes.ControlAck;
+                Assert.AreEqual(FrameControlField.FrameSubTypes.ControlAck, frameControl.SubType);
             }
 
             [Test]

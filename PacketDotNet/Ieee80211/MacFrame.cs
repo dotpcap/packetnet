@@ -21,12 +21,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Net.NetworkInformation;
-using System.Reflection;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
 
 #if DEBUG
 using log4net;
+using System.Reflection;
 #endif
 
 namespace PacketDotNet.Ieee80211
@@ -206,7 +206,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Recalculates and updates the frame check sequence.
         /// </summary>
-        /// <remarks>After calling this method the FCS will be valud regardless of what the packet contains.</remarks>
+        /// <remarks>After calling this method the FCS will be value regardless of what the packet contains.</remarks>
         public void UpdateFrameCheckSequence()
         {
             var bytes = Bytes;
@@ -217,7 +217,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Length of the frame header.
         /// This does not include the FCS, it represents only the header bytes that would
-        /// would preceed any payload.
+        /// would proceed any payload.
         /// </summary>
         public abstract int FrameSize { get; }
 
@@ -354,7 +354,7 @@ namespace PacketDotNet.Ieee80211
                     macFrame = new BeaconFrame(byteArraySegment);
                     break;
                 }
-                case FrameControlField.FrameSubTypes.ManagementATIM:
+                case FrameControlField.FrameSubTypes.ManagementAtim:
                 {
                     break; //TODO
                 }
@@ -396,17 +396,17 @@ namespace PacketDotNet.Ieee80211
                 {
                     break; //TODO
                 }
-                case FrameControlField.FrameSubTypes.ControlRTS:
+                case FrameControlField.FrameSubTypes.ControlRts:
                 {
                     macFrame = new RtsFrame(byteArraySegment);
                     break;
                 }
-                case FrameControlField.FrameSubTypes.ControlCTS:
+                case FrameControlField.FrameSubTypes.ControlCts:
                 {
                     macFrame = new CtsFrame(byteArraySegment);
                     break;
                 }
-                case FrameControlField.FrameSubTypes.ControlACK:
+                case FrameControlField.FrameSubTypes.ControlAck:
                 {
                     macFrame = new AckFrame(byteArraySegment);
                     break;
@@ -421,7 +421,7 @@ namespace PacketDotNet.Ieee80211
                     break; //TODO
                 }
                 case FrameControlField.FrameSubTypes.Data:
-                case FrameControlField.FrameSubTypes.DataCFACK:
+                case FrameControlField.FrameSubTypes.DataCFAck:
                 case FrameControlField.FrameSubTypes.DataCFPoll:
                 case FrameControlField.FrameSubTypes.DataCFAckCFPoll:
                 {
@@ -458,7 +458,7 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary>
-        /// Calculates the FCS value for the provided bytes and compates it to the FCS value passed to the method.
+        /// Calculates the FCS value for the provided bytes and compares it to the FCS value passed to the method.
         /// </summary>
         /// <returns>
         /// true if the FCS for the provided bytes matches the FCS passed in, false if not.
@@ -493,7 +493,7 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// The valid.
         /// </returns>
-        public bool FCSValid
+        public bool FcsValid
         {
             get
             {
@@ -588,7 +588,7 @@ namespace PacketDotNet.Ieee80211
 
         /// <summary>
         /// Returns a string with a description of the addresses used in the packet.
-        /// This is used as a compoent of the string returned by ToString().
+        /// This is used as a component of the string returned by ToString().
         /// </summary>
         /// <returns>
         /// The address string.

@@ -74,11 +74,11 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary>
-        /// Gets a Byte[] containing the serialised
+        /// Gets a Byte[] containing the serialized
         /// <see cref="InformationElement">InformationElements</see>
         /// </summary>
         /// <value>
-        /// The serialised <see cref="InformationElement">InformationElements</see>
+        /// The serialized <see cref="InformationElement">InformationElements</see>
         /// </value>
         public byte[] Bytes
         {
@@ -99,7 +99,7 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary>
-        /// Gets the total length in bytes of the list if its elements were serialised into a byte array
+        /// Gets the total length in bytes of the list if its elements were serialized into a byte array
         /// </summary>
         /// <value>
         /// The length
@@ -163,7 +163,7 @@ namespace PacketDotNet.Ieee80211
         /// The offset into destination at which to start copy the <see cref="InformationElement">InformationElements</see>
         /// </param>
         /// <remarks>
-        /// Ensure that the destination is large enough to contain serialised elements
+        /// Ensure that the destination is large enough to contain serialized elements
         /// before calling this method
         /// </remarks>
         public void CopyTo(ByteArraySegment destination, int offset)

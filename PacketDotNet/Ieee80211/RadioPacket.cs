@@ -22,7 +22,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -31,6 +30,7 @@ using PacketDotNet.Utils;
 
 #if DEBUG
 using log4net;
+using System.Reflection;
 #endif
 
 namespace PacketDotNet.Ieee80211
@@ -49,17 +49,54 @@ namespace PacketDotNet.Ieee80211
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RadioPacket" /> class.
+        /// </summary>
+        public RadioPacket()
+        {
+            Present = new uint[1];
+            RadioTapFields = new SortedDictionary<RadioTapType, RadioTapField>();
+            Length = (ushort) RadioFields.DefaultHeaderLength;
+        }
+
+        internal RadioPacket(ByteArraySegment byteArraySegment)
+        {
+            Log.Debug("");
+
+            // slice off the header portion
+            Header = new ByteArraySegment(byteArraySegment)
+            {
+                Length = RadioFields.DefaultHeaderLength
+            };
+
+            Version = VersionBytes;
+            Length = LengthBytes;
+
+            // update the header size based on the headers packet length
+            Header.Length = Length;
+            Present = ReadPresentFields();
+            RadioTapFields = ReadRadioTapFields();
+
+            //Before we attempt to parse the payload we need to work out if 
+            //the FCS was valid and if it will be present at the end of the frame
+            var flagsField = this[RadioTapType.Flags] as FlagsRadioTapField;
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header.NextSegment(), flagsField), LazyThreadSafetyMode.PublicationOnly);
+        }
 
         /// <summary>
-        /// Version 0. Only increases for drastic changes, introduction of compatible
-        /// new fields does not count.
+        /// Gets the <see cref="RadioTapField" /> with the specified type, or null if the
+        /// field is not in the packet.
         /// </summary>
-        public byte Version { get; set; }
-
-        private byte VersionBytes
+        /// <param name='type'>
+        /// Radio Tap field type
+        /// </param>
+        public RadioTapField this[RadioTapType type]
         {
-            get => Header.Bytes[Header.Offset + RadioFields.VersionPosition];
-            set => Header.Bytes[Header.Offset + RadioFields.VersionPosition] = value;
+            get
+            {
+                RadioTapFields.TryGetValue(type, out var field);
+                return field;
+            }
         }
 
         /// <summary>
@@ -67,6 +104,12 @@ namespace PacketDotNet.Ieee80211
         /// and data fields
         /// </summary>
         public ushort Length { get; set; }
+
+        /// <summary>
+        /// Version 0. Only increases for drastic changes, introduction of compatible
+        /// new fields does not count.
+        /// </summary>
+        public byte Version { get; set; }
 
         private ushort LengthBytes
         {
@@ -84,6 +127,19 @@ namespace PacketDotNet.Ieee80211
         /// by setting bit 31.
         /// </summary>
         private uint[] Present { get; set; }
+
+        /// <summary>
+        /// Array of radio tap fields
+        /// </summary>
+        private SortedDictionary<RadioTapType, RadioTapField> RadioTapFields { get; }
+
+        private byte[] UnhandledFieldBytes { get; set; }
+
+        private byte VersionBytes
+        {
+            get => Header.Bytes[Header.Offset + RadioFields.VersionPosition];
+            set => Header.Bytes[Header.Offset + RadioFields.VersionPosition] = value;
+        }
 
         private uint[] ReadPresentFields()
         {
@@ -107,39 +163,6 @@ namespace PacketDotNet.Ieee80211
             }
 
             return bitmaskFields.ToArray();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RadioPacket" /> class.
-        /// </summary>
-        public RadioPacket()
-        {
-            Present = new uint[1];
-            RadioTapFields = new SortedDictionary<RadioTapType, RadioTapField>();
-            Length = (ushort) RadioFields.DefaultHeaderLength;
-        }
-
-        internal RadioPacket(ByteArraySegment byteArraySegment)
-        {
-            Log.Debug("");
-
-            // slice off the header portion
-            // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(byteArraySegment);
-            Header.Length = RadioFields.DefaultHeaderLength;
-
-            Version = VersionBytes;
-            Length = LengthBytes;
-
-            // update the header size based on the headers packet length
-            Header.Length = Length;
-            Present = ReadPresentFields();
-            RadioTapFields = ReadRadioTapFields();
-
-            //Before we attempt to parse the payload we need to work out if 
-            //the FCS was valid and if it will be present at the end of the frame
-            var flagsField = this[RadioTapType.Flags] as FlagsRadioTapField;
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header.NextSegment(), flagsField), LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
@@ -261,29 +284,6 @@ namespace PacketDotNet.Ieee80211
             return RadioTapFields.ContainsKey(fieldType);
         }
 
-        /// <summary>
-        /// Gets the <see cref="RadioTapField" /> with the specified type, or null if the
-        /// field is not in the packet.
-        /// </summary>
-        /// <param name='type'>
-        /// Radio Tap field type
-        /// </param>
-        public RadioTapField this[RadioTapType type]
-        {
-            get
-            {
-                RadioTapFields.TryGetValue(type, out var field);
-                return field;
-            }
-        }
-
-        /// <summary>
-        /// Array of radio tap fields
-        /// </summary>
-        private SortedDictionary<RadioTapType, RadioTapField> RadioTapFields { get; }
-
-        private byte[] UnhandledFieldBytes { get; set; }
-
         private SortedDictionary<RadioTapType, RadioTapField> ReadRadioTapFields()
         {
             var bitmasks = Present;
@@ -303,11 +303,11 @@ namespace PacketDotNet.Ieee80211
 
             // now go through each of the bitmask fields looking at the least significant
             // bit first to retrieve each field
-            foreach (var bmask in bitmasks)
+            foreach (var bitmask in bitmasks)
             {
-                var bmaskArray = new int[1];
-                bmaskArray[0] = (int) bmask;
-                var ba = new BitArray(bmaskArray);
+                var bitmaskArray = new int[1];
+                bitmaskArray[0] = (int) bitmask;
+                var ba = new BitArray(bitmaskArray);
 
                 var unhandledFieldFound = false;
 

@@ -1,5 +1,3 @@
-#region Header
-
 /*
 This file is part of PacketDotNet
 
@@ -20,7 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-#endregion Header
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
@@ -30,30 +27,17 @@ namespace PacketDotNet.Ieee80211
     /// </summary>
     public class PpiHeaderFields
     {
-        #region Constructors
-
-        static PpiHeaderFields()
-        {
-            FlagsPosition = VersionPosition + VersionLength;
-            LengthPosition = FlagsPosition + FlagsLength;
-            DataLinkTypePosition = LengthPosition + LengthLength;
-            FirstFieldPosition = DataLinkTypePosition + DataLinkTypeLength;
-            PpiPacketHeaderLength = FirstFieldPosition;
-        }
-
-        #endregion Constructors
-
-
-        #region Fields
-
-        /// <summary>Position of the first iField Header</summary>
-        public static readonly int FirstFieldPosition;
-
         /// <summary>Length of the Data Link Type</summary>
         public static readonly int DataLinkTypeLength = 4;
 
         /// <summary>The data link type position.</summary>
         public static readonly int DataLinkTypePosition;
+
+        /// <summary>The length of the PPI field header</summary>
+        public static readonly int FieldHeaderLength = 4;
+
+        /// <summary>Position of the first iField Header</summary>
+        public static readonly int FirstFieldPosition;
 
         /// <summary>Length of the Flags field</summary>
         public static readonly int FlagsLength = 1;
@@ -67,18 +51,22 @@ namespace PacketDotNet.Ieee80211
         /// <summary>Position of the length field</summary>
         public static readonly int LengthPosition;
 
+        /// <summary>The total length of the ppi packet header</summary>
+        public static readonly int PpiPacketHeaderLength;
+
         /// <summary>Length of the version field</summary>
         public static readonly int VersionLength = 1;
 
         /// <summary>Position of the version field</summary>
         public static readonly int VersionPosition = 0;
 
-        /// <summary>The total length of the ppi packet header</summary>
-        public static readonly int PpiPacketHeaderLength;
-
-        /// <summary>The length of the PPI field header</summary>
-        public static readonly int FieldHeaderLength = 4;
-
-        #endregion Fields
+        static PpiHeaderFields()
+        {
+            FlagsPosition = VersionPosition + VersionLength;
+            LengthPosition = FlagsPosition + FlagsLength;
+            DataLinkTypePosition = LengthPosition + LengthLength;
+            FirstFieldPosition = DataLinkTypePosition + DataLinkTypeLength;
+            PpiPacketHeaderLength = FirstFieldPosition;
+        }
     }
 }

@@ -9,40 +9,6 @@ namespace PacketDotNet.Ieee80211
     /// </summary>
     public class PpiUnknown : PpiFields
     {
-        #region Properties
-
-        /// <summary>Type of the field</summary>
-        public override PpiFieldType FieldType { get; }
-
-        /// <summary>
-        /// Gets the length of the field data.
-        /// </summary>
-        /// <value>
-        /// The length.
-        /// </value>
-        public override int Length => Bytes.Length;
-
-        /// <summary>
-        /// Gets the field bytes. This doesn't include the PPI field header.
-        /// </summary>
-        /// <value>
-        /// The bytes.
-        /// </value>
-        public override byte[] Bytes => UnknownBytes;
-
-        /// <summary>
-        /// Gets or sets the field data.
-        /// </summary>
-        /// <value>
-        /// The fields values bytes.
-        /// </value>
-        public byte[] UnknownBytes { get; set; }
-
-        #endregion Properties
-
-
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PpiUnknown" /> class from the
         /// provided stream.
@@ -92,6 +58,31 @@ namespace PacketDotNet.Ieee80211
             UnknownBytes = unknownBytes;
         }
 
-        #endregion Constructors
+        /// <summary>
+        /// Gets the field bytes. This doesn't include the PPI field header.
+        /// </summary>
+        /// <value>
+        /// The bytes.
+        /// </value>
+        public override byte[] Bytes => UnknownBytes;
+
+        /// <summary>Type of the field</summary>
+        public override PpiFieldType FieldType { get; }
+
+        /// <summary>
+        /// Gets the length of the field data.
+        /// </summary>
+        /// <value>
+        /// The length.
+        /// </value>
+        public override int Length => Bytes.Length;
+
+        /// <summary>
+        /// Gets or sets the field data.
+        /// </summary>
+        /// <value>
+        /// The fields values bytes.
+        /// </value>
+        public byte[] UnknownBytes { get; set; }
     }
 }

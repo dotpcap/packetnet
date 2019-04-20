@@ -41,11 +41,7 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public static string GetString
-        (
-            byte[] Byte,
-            int offset,
-            int length)
+        public static string GetString(byte[] Byte, int offset, int length)
         {
             var sb = new StringBuilder();
 

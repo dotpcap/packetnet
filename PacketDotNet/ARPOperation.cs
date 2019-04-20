@@ -31,7 +31,7 @@ namespace PacketDotNet
     /// - http://www.networksorcery.com/enp/default1101.htm
     /// </remarks>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public enum ARPOperation : ushort
+    public enum ArpOperation : ushort
     {
         /// <summary>Request</summary>
         /// <remarks>See RFC 826, RFC 5227</remarks>

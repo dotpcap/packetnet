@@ -324,7 +324,7 @@ namespace PacketDotNet
         /// <summary>
         /// Parse bytes into a packet
         /// </summary>
-        /// <param name="linkLayer">
+        /// <param name="linkLayers">
         /// A <see cref="LinkLayers" />
         /// </param>
         /// <param name="packetData">
@@ -335,22 +335,22 @@ namespace PacketDotNet
         /// </returns>
         public static Packet ParsePacket
         (
-            LinkLayers linkLayer,
+            LinkLayers linkLayers,
             byte[] packetData)
         {
             Packet p;
             var byteArraySegment = new ByteArraySegment(packetData);
 
-            Log.DebugFormat("LinkLayer {0}", linkLayer);
+            Log.DebugFormat("LinkLayer {0}", linkLayers);
 
-            switch (linkLayer)
+            switch (linkLayers)
             {
                 case LinkLayers.Ethernet:
                 {
                     p = new EthernetPacket(byteArraySegment);
                     break;
                 }
-                case LinkLayers.LinuxSLL:
+                case LinkLayers.LinuxSll:
                 {
                     p = new LinuxSllPacket(byteArraySegment);
                     break;
@@ -370,12 +370,12 @@ namespace PacketDotNet
                     p = MacFrame.ParsePacket(byteArraySegment);
                     break;
                 }
-                case LinkLayers.Ieee80211_Radio:
+                case LinkLayers.Ieee80211Radio:
                 {
                     p = new RadioPacket(byteArraySegment);
                     break;
                 }
-                case LinkLayers.PerPacketInformation:
+                case LinkLayers.Ppi:
                 {
                     p = new PpiPacket(byteArraySegment);
                     break;

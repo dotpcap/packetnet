@@ -119,7 +119,7 @@ namespace PacketDotNet
 
                 case ExceptionArgument.linkLayer:
                 {
-                    argumentName = "linkLayer";
+                    argumentName = "linkLayers";
                     break;
                 }
 

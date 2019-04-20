@@ -118,7 +118,7 @@ namespace Test.PacketType
             {
                 PpiPacket packet = new PpiPacket();
                 
-                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, packet.Bytes) as PpiPacket;
+                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.Ppi, packet.Bytes) as PpiPacket;
                 
                 Assert.AreEqual(0, recreatedPacket.Version);
                 Assert.IsFalse((recreatedPacket.Flags & PpiPacket.HeaderFlags.Alignment32Bit) == PpiPacket.HeaderFlags.Alignment32Bit);
@@ -151,7 +151,7 @@ namespace Test.PacketType
                 
                 Assert.AreEqual(90, packet.Length);
                 
-                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, packet.Bytes) as PpiPacket;
+                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.Ppi, packet.Bytes) as PpiPacket;
                 
                 PpiCommon recreatedCommonField = recreatedPacket[0] as PpiCommon;
                 Assert.IsNotNull(recreatedCommonField);
@@ -201,7 +201,7 @@ namespace Test.PacketType
                 
                 Assert.AreEqual(92, packet.Length);
                 
-                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, packet.Bytes) as PpiPacket;
+                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.Ppi, packet.Bytes) as PpiPacket;
                 
                 PpiCommon recreatedCommonField = recreatedPacket[0] as PpiCommon;
                 Assert.IsNotNull(recreatedCommonField);
@@ -249,7 +249,7 @@ namespace Test.PacketType
                 var expectedLength = p.Length - p[1].Length - PpiHeaderFields.FieldHeaderLength;
                 p.Remove(p[1]);
                 
-                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, p.Bytes) as PpiPacket;
+                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.Ppi, p.Bytes) as PpiPacket;
                 Assert.AreEqual(expectedLength, recreatedPacket.Length);
                 Assert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiCommon));
                 Assert.IsFalse(recreatedPacket.Contains(PpiFieldType.PpiMacPhy));
@@ -270,7 +270,7 @@ namespace Test.PacketType
                 PpiPacket p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
                 p.RemoveAll(PpiFieldType.PpiMacPhy);
                 
-                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, p.Bytes) as PpiPacket;
+                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.Ppi, p.Bytes) as PpiPacket;
                 
                 Assert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiCommon));
                 Assert.IsFalse(recreatedPacket.Contains(PpiFieldType.PpiMacPhy));
@@ -293,7 +293,7 @@ namespace Test.PacketType
                 PpiUnknown unknownField = new PpiUnknown(99, new byte[]{0xAA, 0xBB, 0xCC, 0xDD});
                 p.Add(unknownField);
 
-                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.PerPacketInformation, p.Bytes) as PpiPacket;
+                PpiPacket recreatedPacket = Packet.ParsePacket(LinkLayers.Ppi, p.Bytes) as PpiPacket;
                 
                 Assert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiCommon));
                 Assert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiMacPhy));

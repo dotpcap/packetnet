@@ -48,40 +48,7 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        private List<DrdaDDMPacket> _ddmList;
-
-        /// <summary>
-        /// Decde DDM Packet into List
-        /// </summary>
-        public List<DrdaDDMPacket> DrdaDDMPackets
-        {
-            get
-            {
-                if (_ddmList == null)
-                {
-                    _ddmList = new List<DrdaDDMPacket>();
-                }
-
-                if (_ddmList.Count > 0) return _ddmList;
-
-
-                var startOffset = Header.Offset;
-                while (startOffset < Header.BytesLength)
-                {
-                    var length = EndianBitConverter.Big.ToUInt16(Header.Bytes, startOffset);
-                    if (startOffset + length <= Header.BytesLength)
-                    {
-                        var ddmBas = new ByteArraySegment(Header.Bytes, startOffset, length);
-                        _ddmList.Add(new DrdaDDMPacket(ddmBas, this));
-                    }
-
-                    startOffset += length;
-                }
-
-                Log.DebugFormat("DrdaDDMPacket.Count {0}", _ddmList.Count);
-                return _ddmList;
-            }
-        }
+        private List<DrdaDdmPacket> _ddmList;
 
         /// <summary>
         /// Constructor
@@ -113,6 +80,39 @@ namespace PacketDotNet
             Log.DebugFormat("ParentPacket.GetType() {0}", parentPacket.GetType());
 
             ParentPacket = parentPacket;
+        }
+
+        /// <summary>
+        /// Decoded DDM Packet as a list.
+        /// </summary>
+        public List<DrdaDdmPacket> DrdaDdmPackets
+        {
+            get
+            {
+                if (_ddmList == null)
+                {
+                    _ddmList = new List<DrdaDdmPacket>();
+                }
+
+                if (_ddmList.Count > 0) return _ddmList;
+
+
+                var startOffset = Header.Offset;
+                while (startOffset < Header.BytesLength)
+                {
+                    var length = EndianBitConverter.Big.ToUInt16(Header.Bytes, startOffset);
+                    if (startOffset + length <= Header.BytesLength)
+                    {
+                        var ddmBas = new ByteArraySegment(Header.Bytes, startOffset, length);
+                        _ddmList.Add(new DrdaDdmPacket(ddmBas, this));
+                    }
+
+                    startOffset += length;
+                }
+
+                Log.DebugFormat("DrdaDdmPacket.Count {0}", _ddmList.Count);
+                return _ddmList;
+            }
         }
     }
 }

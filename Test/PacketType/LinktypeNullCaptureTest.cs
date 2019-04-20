@@ -51,7 +51,7 @@ namespace Test.PacketType
             int packetIndex = 0;
             while((rawCapture = dev.GetNextPacket()) != null)
             {
-                Console.WriteLine ("LinkLayerType: {0}", rawCapture.LinkLayerType);
+                Console.WriteLine ("LinkLayers: {0}", rawCapture.LinkLayerType);
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 switch(packetIndex)
                 {

@@ -36,7 +36,7 @@ namespace Test.PacketType
         /// </summary>
         [TestCase("../../CaptureFiles/ICMPv4.pcap", LinkLayers.Ethernet)]
         [TestCase("../../CaptureFiles/ICMPv4_raw_linklayer.pcap", LinkLayers.RawLegacy)]
-        public void ICMPv4Parsing(string pcapPath, LinkLayers linkLayer)
+        public void ICMPv4Parsing(string pcapPath, LinkLayers linkLayers)
         {
             var dev = new CaptureFileReaderDevice(pcapPath);
             dev.Open();
@@ -47,7 +47,7 @@ namespace Test.PacketType
             Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Assert.IsNotNull(p);
-            Assert.AreEqual(linkLayer, rawCapture.LinkLayerType);
+            Assert.AreEqual(linkLayers, rawCapture.LinkLayerType);
 
             var icmp = p.Extract<IcmpV4Packet>();
             Console.WriteLine(icmp.GetType());

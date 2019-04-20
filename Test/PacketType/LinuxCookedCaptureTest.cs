@@ -32,7 +32,7 @@ namespace Test.PacketType
         private void VerifyPacket0(Packet p)
         {
             // expect an arp packet
-            var arpPacket = p.Extract<ARPPacket>();
+            var arpPacket = p.Extract<ArpPacket>();
             Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             // validate some of the LinuxSSLPacket fields

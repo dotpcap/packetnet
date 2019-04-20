@@ -23,7 +23,7 @@ namespace PacketDotNet
     /// <summary>
     /// The DDM Parameter subsection field
     /// </summary>
-    public class DrdaDDMParameter
+    public class DrdaDdmParameter
     {
         /// <summary>
         /// The Other Data field

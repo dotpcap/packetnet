@@ -23,10 +23,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Net.NetworkInformation;
-using System.Reflection;
 using System.Text;
-using log4net;
 using PacketDotNet.Utils;
+
+#if DEBUG
+using log4net;
+using System.Reflection;
+#endif
 
 namespace PacketDotNet
 {

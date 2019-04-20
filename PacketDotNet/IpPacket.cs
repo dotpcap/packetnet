@@ -105,27 +105,41 @@ namespace PacketDotNet
                 {
                     // set NextHeader (Protocol) based on the type of this packet
                     case TcpPacket _:
+                    {
                         Protocol = ProtocolType.Tcp;
                         break;
+                    }
                     case UdpPacket _:
+                    {
                         Protocol = ProtocolType.Udp;
                         break;
+                    }
                     case IcmpV6Packet _:
+                    {
                         Protocol = ProtocolType.IcmpV6;
                         break;
+                    }
                     case IcmpV4Packet _:
+                    {
                         Protocol = ProtocolType.Icmp;
                         break;
+                    }
                     case IgmpV2Packet _:
+                    {
                         Protocol = ProtocolType.Igmp;
                         break;
+                    }
                     case OspfPacket _:
+                    {
                         Protocol = ProtocolType.Ospf;
                         break;
+                    }
                     // NOTE: new checks go here
                     default:
+                    {
                         Protocol = ProtocolType.IPv6NoNextHeader;
                         break;
+                    }
                 }
 
                 // update the payload length based on the size

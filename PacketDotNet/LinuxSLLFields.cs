@@ -21,7 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet
 {
     /// <summary>
-    /// Lengths and offsets to the fields in the LinuxSLL packet
+    /// Lengths and offsets to the fields in the LinuxSll packet
     /// See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
     /// </summary>
     public class LinuxSllFields

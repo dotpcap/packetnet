@@ -35,7 +35,7 @@ namespace Test.PacketType
         // arp request
         private void VerifyPacket0(Packet p)
         {
-            var arpPacket = p.Extract<ARPPacket>();
+            var arpPacket = p.Extract<ArpPacket>();
             Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             IPAddress senderIp = IPAddress.Parse("192.168.1.202");
@@ -53,7 +53,7 @@ namespace Test.PacketType
         // arp response
         private void VerifyPacket1(Packet p)
         {
-            var arp = p.Extract<ARPPacket>();
+            var arp = p.Extract<ArpPacket>();
             Assert.IsNotNull(arp, "Expected arpPacket to not be null");
 
             IPAddress senderIp = IPAddress.Parse("192.168.1.214");
@@ -102,7 +102,7 @@ namespace Test.PacketType
         }
 
         /// <summary>
-        /// Test that we can build an ARPPacket from values
+        /// Test that we can build an ArpPacket from values
         /// </summary>
         [Test]
         public void ConstructingFromValues()
@@ -115,7 +115,7 @@ namespace Test.PacketType
 
             var localMac = System.Net.NetworkInformation.PhysicalAddress.Parse("AA-BB-CC-DD-EE-FF");
 
-            new ARPPacket(PacketDotNet.ARPOperation.Request,
+            new ArpPacket(PacketDotNet.ArpOperation.Request,
                                        System.Net.NetworkInformation.PhysicalAddress.Parse("00-00-00-00-00-00"),
                                        destinationIP,
                                        localMac,
@@ -134,7 +134,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var arp = p.Extract<ARPPacket>();
+            var arp = p.Extract<ArpPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(arp.ToString());
@@ -152,7 +152,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var arp = p.Extract<ARPPacket>();
+            var arp = p.Extract<ArpPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(arp.ToString(StringOutputType.Verbose));
@@ -170,7 +170,7 @@ namespace Test.PacketType
             {
                 var p = PacketDotNet.Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
-                var arp = p.Extract<ARPPacket>();
+                var arp = p.Extract<ArpPacket>();
                 if (arp == null)
                 {
                     continue;
@@ -183,7 +183,7 @@ namespace Test.PacketType
 
                 memoryStream.Seek (0, SeekOrigin.Begin);
                 BinaryFormatter deserializer = new BinaryFormatter();
-                ARPPacket fromFile = (ARPPacket)deserializer.Deserialize(memoryStream);
+                ArpPacket fromFile = (ArpPacket)deserializer.Deserialize(memoryStream);
 
                 CollectionAssert.AreEqual(arp.Bytes, fromFile.Bytes);
                 Assert.AreEqual(arp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);

@@ -186,11 +186,11 @@ namespace Test.PacketType
                 ARPPacket fromFile = (ARPPacket)deserializer.Deserialize(memoryStream);
 
                 CollectionAssert.AreEqual(arpPacket.Bytes, fromFile.Bytes);
-                Assert.AreEqual(arpPacket.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(arpPacket.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(arpPacket.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(arpPacket.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(arpPacket.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(arpPacket.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(arpPacket.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(arpPacket.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(arpPacket.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(arpPacket.BytesSegment.Offset, fromFile.BytesSegment.Offset);
                 Assert.AreEqual(arpPacket.Color, fromFile.Color);
                 Assert.AreEqual(arpPacket.HardwareAddressLength, fromFile.HardwareAddressLength);
                 Assert.AreEqual(arpPacket.HardwareAddressType, fromFile.HardwareAddressType);

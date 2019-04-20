@@ -291,11 +291,11 @@ namespace Test.PacketType
                 IPv6Packet fromFile = (IPv6Packet)deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(ipv6.Bytes, fromFile.Bytes);
-                Assert.AreEqual(ipv6.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(ipv6.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(ipv6.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(ipv6.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(ipv6.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(ipv6.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(ipv6.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(ipv6.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(ipv6.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(ipv6.BytesSegment.Offset, fromFile.BytesSegment.Offset);
                 Assert.AreEqual(ipv6.Color, fromFile.Color);
                 Assert.AreEqual(ipv6.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ipv6.PayloadData, fromFile.PayloadData);

@@ -258,11 +258,11 @@ namespace Test.PacketType
                 UdpPacket fromFile = (UdpPacket)deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(udpPacket.Bytes, fromFile.Bytes);
-                Assert.AreEqual(udpPacket.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(udpPacket.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(udpPacket.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(udpPacket.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(udpPacket.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(udpPacket.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(udpPacket.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(udpPacket.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(udpPacket.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(udpPacket.BytesSegment.Offset, fromFile.BytesSegment.Offset);
                 Assert.AreEqual(udpPacket.Color, fromFile.Color);
                 Assert.AreEqual(udpPacket.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(udpPacket.PayloadData, fromFile.PayloadData);

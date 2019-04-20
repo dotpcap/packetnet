@@ -125,11 +125,11 @@ namespace Test.PacketType
                 ICMPv4Packet fromFile = (ICMPv4Packet)deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(icmp.Bytes, fromFile.Bytes);
-                Assert.AreEqual(icmp.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(icmp.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(icmp.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(icmp.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(icmp.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(icmp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(icmp.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(icmp.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(icmp.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(icmp.BytesSegment.Offset, fromFile.BytesSegment.Offset);
                 Assert.AreEqual(icmp.Checksum, fromFile.Checksum);
                 Assert.AreEqual(icmp.Color, fromFile.Color);
                 Assert.AreEqual(icmp.Data, fromFile.Data);

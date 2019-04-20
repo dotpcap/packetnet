@@ -478,11 +478,8 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Bytes that represent the tcp options
+        /// Gets the bytes that represent the TCP options.
         /// </summary>
-        /// <returns>
-        /// A <see cref="string" />
-        /// </returns>
         public byte[] Options
         {
             get
@@ -511,13 +508,10 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Gets the options high performance.
+        /// Gets the TCP options as a <see cref="ByteArraySegment"/>.
         /// </summary>
-        /// <value>
-        /// The options high performance.
-        /// </value>
         /// <exception cref="NotImplementedException">Urg == true not implemented yet</exception>
-        public ByteArraySegment OptionsHighPerformance
+        public ByteArraySegment OptionsSegment
         {
             get
             {
@@ -537,7 +531,7 @@ namespace PacketDotNet
         /// </summary>
         public List<Option> OptionsCollection
         {
-            get => ParseOptions(OptionsHighPerformance);
+            get => ParseOptions(OptionsSegment);
             set
             {
                 var optionsOffset = TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;

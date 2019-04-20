@@ -322,11 +322,11 @@ namespace Test.PacketType
                 EthernetPacket fromFile = (EthernetPacket)deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(ethernetPacket.Bytes, fromFile.Bytes);
-                Assert.AreEqual(ethernetPacket.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(ethernetPacket.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(ethernetPacket.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(ethernetPacket.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(ethernetPacket.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(ethernetPacket.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(ethernetPacket.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(ethernetPacket.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(ethernetPacket.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(ethernetPacket.BytesSegment.Offset, fromFile.BytesSegment.Offset);
                 Assert.AreEqual(ethernetPacket.Color, fromFile.Color);
                 Assert.AreEqual(ethernetPacket.DestinationHwAddress, fromFile.DestinationHwAddress);
                 Assert.AreEqual(ethernetPacket.HeaderData, fromFile.HeaderData);

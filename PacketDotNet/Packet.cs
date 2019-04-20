@@ -159,14 +159,14 @@ namespace PacketDotNet
         public virtual Packet ParentPacket { get; set; }
         
         /// <value>
-        /// Gets the header's data.
+        /// Gets the bytes of the header's data.
         /// </value>
         public virtual byte[] HeaderData => Header.ActualBytes();
 
         /// <summary>
-        /// Gets the header's data high performance.
+        /// Gets the header's data as a <see cref="ByteArraySegment"/>.
         /// </summary>
-        public virtual ByteArraySegment HeaderDataHighPerformance => Header.NextSegment();
+        public virtual ByteArraySegment HeaderDataSegment => Header.NextSegment();
 
         /// <summary>
         /// Packet that this packet carries if one is present.
@@ -188,27 +188,25 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Payload byte[] if one is present.
-        /// Note that the packet MAY have a null PayloadData but a
-        /// non-null PayloadPacket
+        /// Gets or sets the bytes of the payload if present.
         /// </summary>
+        /// <remarks>The packet MAY have a null <see cref="PayloadData"/> but a non-null <see cref="PayloadPacket"/>.</remarks>
         public byte[] PayloadData
         {
-            get => PayloadDataHighPerformance?.ActualBytes();
+            get => PayloadDataSegment?.ActualBytes();
             set
             {
                 Log.DebugFormat("value.Length {0}", value.Length);
 
-                PayloadDataHighPerformance = new ByteArraySegment(value, 0, value.Length);
+                PayloadDataSegment = new ByteArraySegment(value, 0, value.Length);
             }
         }
 
         /// <summary>
-        /// Payload if one is present.
-        /// Note that the packet MAY have a null PayloadData but a
-        /// non-null PayloadPacket
+        /// Gets or sets the <see cref="ByteArraySegment"/> of the payload if present. 
         /// </summary>
-        public ByteArraySegment PayloadDataHighPerformance
+        /// <remarks>The packet MAY have a null <see cref="PayloadData"/> but a non-null <see cref="PayloadPacket"/>.</remarks>
+        public ByteArraySegment PayloadDataSegment
         {
             get
             {
@@ -247,39 +245,20 @@ namespace PacketDotNet
         ///   <c>true</c> if the payload is initialized; otherwise, <c>false</c>.
         /// </value>
         public virtual bool IsPayloadInitialized => PayloadPacketOrData.IsValueCreated;
-
-
+        
         /// <summary>
-        /// byte[] containing this packet and its payload
-        /// NOTE: Use 'public virtual ByteArraySegment BytesHighPerformance' for highest performance
+        /// Gets the actual bytes containing this packet and its payload.
         /// </summary>
-        public virtual byte[] Bytes
-        {
-            get
-            {
-                Log.Debug("");
-
-                // Retrieve the byte array container
-                var bytesHighPerformance = BytesHighPerformance;
-
-                // ActualBytes() will copy bytes if necessary but will avoid a copy in the
-                // case where our offset is zero and the byte[] length matches the
-                // encapsulated Length
-                return bytesHighPerformance.ActualBytes();
-            }
-        }
+        /// <remarks>Use <see cref="BytesSegment"/> for optimal performance.</remarks>
+        public virtual byte[] Bytes => BytesSegment.ActualBytes();
 
         /// <value>
-        /// The option to return a ByteArraySegment means that this method
-        /// is higher performance as the data can start at an offset other than
-        /// the first byte.
+        /// Gets a <see cref="ByteArraySegment"/> with the data that can start at an offset other than the first byte.
         /// </value>
-        public virtual ByteArraySegment BytesHighPerformance
+        public virtual ByteArraySegment BytesSegment
         {
             get
             {
-                Log.Debug("");
-
                 // ensure calculated values are properly updated
                 RecursivelyUpdateCalculatedValues();
 
@@ -297,11 +276,11 @@ namespace PacketDotNet
                                                                 Header.Offset,
                                                                 Header.Length + PayloadPacket.TotalPacketLength);
                     }
-                    else if (PayloadPacketOrData.IsValueCreated && PayloadPacketOrData.Value.Type == PayloadType.Bytes && PayloadDataHighPerformance != null)
+                    else if (PayloadPacketOrData.IsValueCreated && PayloadPacketOrData.Value.Type == PayloadType.Bytes && PayloadDataSegment != null)
                     {
                         byteArraySegment = new ByteArraySegment(Header.Bytes,
                                                                 Header.Offset,
-                                                                Header.Length + PayloadDataHighPerformance.Length);
+                                                                Header.Length + PayloadDataSegment.Length);
                     }
                     else
                     {
@@ -444,7 +423,7 @@ namespace PacketDotNet
         /// </returns>
         public string PrintHex()
         {
-            var data = BytesHighPerformance.Bytes;
+            var data = BytesSegment.Bytes;
             var buffer = new StringBuilder();
             var bytes = "";
             var ascii = "";

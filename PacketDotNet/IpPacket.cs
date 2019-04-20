@@ -95,7 +95,7 @@ namespace PacketDotNet
 
                 // update the payload length based on the size
                 // of the payload packet
-                var newPayloadLength = (ushort)base.PayloadPacket.BytesHighPerformance.Length;
+                var newPayloadLength = (ushort)base.PayloadPacket.BytesSegment.Length;
                 Log.DebugFormat("newPayloadLength {0}", newPayloadLength);
                 PayloadLength = newPayloadLength;
             }

@@ -254,11 +254,11 @@ namespace Test.PacketType
                 TcpPacket fromFile = (TcpPacket)deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(tcpPacket.Bytes, fromFile.Bytes);
-                Assert.AreEqual(tcpPacket.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(tcpPacket.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(tcpPacket.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(tcpPacket.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(tcpPacket.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(tcpPacket.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(tcpPacket.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(tcpPacket.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(tcpPacket.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(tcpPacket.BytesSegment.Offset, fromFile.BytesSegment.Offset);
                 Assert.AreEqual(tcpPacket.Color, fromFile.Color);
                 Assert.AreEqual(tcpPacket.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(tcpPacket.PayloadData, fromFile.PayloadData);

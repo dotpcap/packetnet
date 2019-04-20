@@ -124,11 +124,11 @@ namespace Test.PacketType
                 IPPacket fromFile = (IPPacket)deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(ip.Bytes, fromFile.Bytes);
-                Assert.AreEqual(ip.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(ip.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(ip.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(ip.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(ip.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(ip.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(ip.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(ip.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(ip.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(ip.BytesSegment.Offset, fromFile.BytesSegment.Offset);
                 Assert.AreEqual(ip.Color, fromFile.Color);
                 Assert.AreEqual(ip.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ip.PayloadData, fromFile.PayloadData);

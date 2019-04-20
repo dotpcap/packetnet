@@ -134,7 +134,7 @@ namespace PacketDotNet
             // start with this packet with a zeroed out checksum field
             Checksum = 0;
 
-            var dataToChecksum = BytesHighPerformance;
+            var dataToChecksum = BytesSegment;
             var ipv6Parent = ParentPacket as IPv6Packet;
 
             Checksum = (ushort) ChecksumUtils.OnesComplementSum(dataToChecksum, ipv6Parent?.GetPseudoIPHeader(dataToChecksum.Length) ?? new byte[0]);

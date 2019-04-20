@@ -150,11 +150,11 @@ namespace Test.PacketType
 
 
                 Assert.AreEqual(icmpv6.Bytes, fromFile.Bytes);
-                Assert.AreEqual(icmpv6.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(icmpv6.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(icmpv6.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(icmpv6.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(icmpv6.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
+                Assert.AreEqual(icmpv6.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(icmpv6.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(icmpv6.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(icmpv6.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(icmpv6.BytesSegment.Offset, fromFile.BytesSegment.Offset);
                 Assert.AreEqual(icmpv6.Checksum, fromFile.Checksum);
                 Assert.AreEqual(icmpv6.Color, fromFile.Color);
                 Assert.AreEqual(icmpv6.HeaderData, fromFile.HeaderData);

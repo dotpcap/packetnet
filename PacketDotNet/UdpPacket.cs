@@ -82,11 +82,9 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                   Header.Offset + UdpFields.HeaderLengthPosition);
-
-            // Internal because it is updated based on the payload when
-            // its bytes are retrieved
             internal set
             {
+                // Internal because it is updated based on the payload when its bytes are retrieved.
                 var val = (short) value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  Header.Bytes,

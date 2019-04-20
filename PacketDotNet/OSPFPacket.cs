@@ -44,7 +44,7 @@ namespace PacketDotNet
                 case OSPFVersion.OSPFv2:
                     return ConstructV2Packet(payload, offset);
                 case OSPFVersion.OSPFv3:
-                    return ConstructV3Packet(payload, offset);
+                    return ConstructV3Packet();
                 default:
                     throw new InvalidOperationException("No such OSPF version: " + v);
             }
@@ -79,7 +79,7 @@ namespace PacketDotNet
             return p;
         }
 
-        private static OSPFPacket ConstructV3Packet(Byte[] payload, Int32 offset)
+        private static OSPFPacket ConstructV3Packet()
         {
             throw new NotImplementedException("OSPFv3 is not supported yet");
         }

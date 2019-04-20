@@ -69,10 +69,7 @@ namespace PacketDotNet
         /// <summary>
         /// Construct a new PPPPacket from source and destination mac addresses
         /// </summary>
-        public PPPPacket
-        (
-            PPPoECode code,
-            UInt16 sessionId)
+        public PPPPacket()
         {
             Log.Debug("");
 

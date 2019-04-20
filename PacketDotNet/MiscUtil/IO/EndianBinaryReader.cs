@@ -34,27 +34,27 @@ namespace PacketDotNet.MiscUtil.IO
         /// <summary>
         /// Whether or not this reader has been disposed yet.
         /// </summary>
-        Boolean disposed;
+        private Boolean disposed;
 
         /// <summary>
         /// Decoder to use for string conversions.
         /// </summary>
-        readonly Decoder decoder;
+        private readonly Decoder decoder;
 
         /// <summary>
         /// Buffer used for temporary storage before conversion into primitives
         /// </summary>
-        readonly Byte[] buffer = new Byte[16];
+        private readonly Byte[] buffer = new Byte[16];
 
         /// <summary>
         /// Buffer used for temporary storage when reading a single character
         /// </summary>
-        readonly Char[] charBuffer = new Char[1];
+        private readonly Char[] charBuffer = new Char[1];
 
         /// <summary>
         /// Minimum number of bytes used to encode a character
         /// </summary>
-        readonly Int32 minBytesPerChar;
+        private readonly Int32 minBytesPerChar;
 
         #endregion
 
@@ -82,29 +82,17 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="encoding">Encoding to use when reading character data</param>
         public EndianBinaryReader(EndianBitConverter bitConverter, Stream stream, Encoding encoding)
         {
-            if (bitConverter == null)
-            {
-                throw new ArgumentNullException(nameof(bitConverter));
-            }
-
             if (stream == null)
-            {
                 throw new ArgumentNullException(nameof(stream));
-            }
 
-            if (encoding == null)
-            {
-                throw new ArgumentNullException(nameof(encoding));
-            }
 
             if (!stream.CanRead)
-            {
                 throw new ArgumentException("Stream isn't writable", nameof(stream));
-            }
+
 
             BaseStream = stream;
-            BitConverter = bitConverter;
-            Encoding = encoding;
+            BitConverter = bitConverter ?? throw new ArgumentNullException(nameof(bitConverter));
+            Encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
             decoder = encoding.GetDecoder();
             minBytesPerChar = 1;
 
@@ -318,26 +306,22 @@ namespace PacketDotNet.MiscUtil.IO
         public Int32 Read(Char[] data, Int32 index, Int32 count)
         {
             CheckDisposed();
+
             if (buffer == null)
-            {
-                throw new ArgumentNullException("buffer");
-            }
+                throw new ArgumentNullException(nameof(buffer));
+
 
             if (index < 0)
-            {
                 throw new ArgumentOutOfRangeException(nameof(index));
-            }
+
 
             if (count < 0)
-            {
                 throw new ArgumentOutOfRangeException(nameof(index));
-            }
+
 
             if (count + index > data.Length)
-            {
-                throw new ArgumentException
-                    ("Not enough space in buffer for specified number of characters starting at specified index");
-            }
+                throw new ArgumentException("Not enough space in buffer for specified number of characters starting at specified index");
+
 
             var read = 0;
             var firstTime = true;
@@ -572,7 +556,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// <summary>
         /// Checks whether or not the reader has been disposed, throwing an exception if so.
         /// </summary>
-        void CheckDisposed()
+        private void CheckDisposed()
         {
             if (disposed)
             {
@@ -586,7 +570,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// </summary>
         /// <param name="data">Buffer to read into</param>
         /// <param name="size">Number of bytes to read</param>
-        void ReadInternal(Byte[] data, Int32 size)
+        private void ReadInternal(Byte[] data, Int32 size)
         {
             CheckDisposed();
             var index = 0;
@@ -611,7 +595,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="data">Buffer to read into</param>
         /// <param name="size">Number of bytes to read</param>
         /// <returns>Number of bytes actually read</returns>
-        Int32 TryReadInternal(Byte[] data, Int32 size)
+        private Int32 TryReadInternal(Byte[] data, Int32 size)
         {
             CheckDisposed();
             var index = 0;

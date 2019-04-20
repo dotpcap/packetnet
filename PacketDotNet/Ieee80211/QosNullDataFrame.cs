@@ -79,7 +79,7 @@ namespace PacketDotNet.Ieee80211
                        MacFields.DurationIDLength +
                        (MacFields.AddressLength * numOfAddressFields) +
                        MacFields.SequenceControlLength +
-                       QosNullDataField.QosControlLength;
+                       QosNullDataFrameFields.QosControlLength;
             }
         }
 
@@ -95,17 +95,17 @@ namespace PacketDotNet.Ieee80211
         {
             get
             {
-                if (Header.Length >= QosNullDataField.QosControlPosition + QosNullDataField.QosControlLength)
+                if (Header.Length >= QosNullDataFrameFields.QosControlPosition + QosNullDataFrameFields.QosControlLength)
                 {
                     return EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                              Header.Offset + QosNullDataField.QosControlPosition);
+                                                              Header.Offset + QosNullDataFrameFields.QosControlPosition);
                 }
 
                 return 0;
             }
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
-                                                       Header.Offset + QosNullDataField.QosControlPosition);
+                                                       Header.Offset + QosNullDataFrameFields.QosControlPosition);
         }
 
         /// <summary>
@@ -123,18 +123,6 @@ namespace PacketDotNet.Ieee80211
             SequenceControlBytes = SequenceControl.Field;
             QosControlBytes = QosControl;
             WriteAddressBytes();
-        }
-
-        private class QosNullDataField
-        {
-            public static readonly Int32 QosControlLength = 2;
-
-            public static readonly Int32 QosControlPosition;
-
-            static QosNullDataField()
-            {
-                QosControlPosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
-            }
         }
     }
 }

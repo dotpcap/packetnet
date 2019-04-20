@@ -42,8 +42,7 @@ namespace PacketDotNet
         /// </param>
         public LinuxSLLPacket(ByteArraySegment bas)
         {
-            Header = new ByteArraySegment(bas);
-            Header.Length = LinuxSLLFields.SLLHeaderLength;
+            Header = new ByteArraySegment(bas) { Length = LinuxSLLFields.SLLHeaderLength };
 
             // parse the payload via an EthernetPacket method
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header,

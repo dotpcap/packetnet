@@ -126,9 +126,11 @@ namespace PacketDotNet.LSA
                 for (var i = 0; i < tosCnt; i++)
                 {
                     var metric = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + SummaryLSAFields.TOSMetricPosition + i * TOSMetric.TOSMetricLength);
-                    var m = new TOSMetric();
-                    m.TOS = (Byte) ((metric & 0xFF000000) >> 24);
-                    m.Metric = metric & 0x00FFFFFF;
+                    var m = new TOSMetric
+                    {
+                        TOS = (Byte) ((metric & 0xFF000000) >> 24),
+                        Metric = metric & 0x00FFFFFF
+                    };
                     ret.Add(m);
                 }
 

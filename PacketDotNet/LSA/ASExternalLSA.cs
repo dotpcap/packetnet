@@ -12,7 +12,7 @@ namespace PacketDotNet.LSA
     /// </summary>
     public class ASExternalLSA : LSA
     {
-        const Int32 ASExternalLinkLength = 12;
+        private const Int32 ASExternalLinkLength = 12;
 
         /// <summary>
         /// The type of the lsa.

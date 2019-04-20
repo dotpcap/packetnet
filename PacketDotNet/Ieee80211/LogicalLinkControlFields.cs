@@ -22,7 +22,7 @@ using System;
 
 namespace PacketDotNet.Ieee80211
 {
-    class LogicalLinkControlFields
+    internal class LogicalLinkControlFields
     {
         public static readonly Int32 ControlOrganizationLength = 4;
         public static readonly Int32 SsapLength = 1;

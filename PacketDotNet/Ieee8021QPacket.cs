@@ -43,8 +43,7 @@ namespace PacketDotNet
         public Ieee8021QPacket(ByteArraySegment bas)
         {
             // set the header field, header field values are retrieved from this byte array
-            Header = new ByteArraySegment(bas);
-            Header.Length = Ieee8021QFields.HeaderLength;
+            Header = new ByteArraySegment(bas) { Length = Ieee8021QFields.HeaderLength };
 
             // parse the payload via an EthernetPacket method
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header,

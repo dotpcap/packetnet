@@ -172,10 +172,7 @@ namespace PacketDotNet.Ieee80211
                                                        Header.Offset + ReassociationRequestFields.CapabilityInformationPosition);
         }
 
-        private PhysicalAddress CurrentAccessPointAddressBytes
-        {
-            get => GetAddressByOffset(Header.Offset + ReassociationRequestFields.CurrentAccessPointPosition);
-        }
+        private PhysicalAddress CurrentAccessPointAddressBytes => GetAddressByOffset(Header.Offset + ReassociationRequestFields.CurrentAccessPointPosition);
 
         /// <summary>
         /// Gets or sets the listen interval, the length of buffered frame retention

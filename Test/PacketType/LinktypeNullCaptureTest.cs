@@ -48,7 +48,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            Int32 packetIndex = 0;
+            int packetIndex = 0;
             while((rawCapture = dev.GetNextPacket()) != null)
             {
                 Console.WriteLine ("LinkLayerType: {0}", rawCapture.LinkLayerType);

@@ -13,7 +13,7 @@ namespace PacketDotNet.LSA
         /// <summary>
         /// Size of LinkStateRequest in bytes
         /// </summary>
-        public static readonly Int32 Length = 12;
+        public static readonly int Length = 12;
 
         internal ByteArraySegment Header;
 
@@ -22,7 +22,7 @@ namespace PacketDotNet.LSA
         /// </summary>
         public LinkStateRequest()
         {
-            var b = new Byte[Length];
+            var b = new byte[Length];
             Header = new ByteArraySegment(b);
         }
 
@@ -38,7 +38,7 @@ namespace PacketDotNet.LSA
         /// <param name="length">
         /// A <see cref="System.Int32" />
         /// </param>
-        public LinkStateRequest(Byte[] packet, Int32 offset, Int32 length)
+        public LinkStateRequest(byte[] packet, int offset, int length)
         {
             Header = new ByteArraySegment(packet, offset, length);
         }
@@ -68,7 +68,7 @@ namespace PacketDotNet.LSA
         /// Gets the bytes.
         /// </summary>
         /// <value>The bytes.</value>
-        public virtual Byte[] Bytes => Header.ActualBytes();
+        public virtual byte[] Bytes => Header.ActualBytes();
 
         /// <summary>
         /// This field identifies the portion of the internet environment
@@ -98,7 +98,7 @@ namespace PacketDotNet.LSA
         public LSAType LSType
         {
             get => (LSAType) EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LinkStateRequestFields.LSTypePosition);
-            set => EndianBitConverter.Big.CopyBytes((UInt32) value, Header.Bytes, Header.Offset + LinkStateRequestFields.LSTypePosition);
+            set => EndianBitConverter.Big.CopyBytes((uint) value, Header.Bytes, Header.Offset + LinkStateRequestFields.LSTypePosition);
         }
     }
 }

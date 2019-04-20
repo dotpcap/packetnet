@@ -39,8 +39,8 @@ namespace PacketDotNet.Utils
         /// Computes the one's complement sum on a byte array
         /// </summary>
         /// <param name="bytes">The bytes.</param>
-        /// <returns><see cref="Int32" />.</returns>
-        public static Int32 OnesComplementSum(Byte[] bytes)
+        /// <returns><see cref="int" />.</returns>
+        public static int OnesComplementSum(byte[] bytes)
         {
             // Just complement the one's sum.
             return OnesComplementSum(bytes, 0, bytes.Length);
@@ -52,8 +52,8 @@ namespace PacketDotNet.Utils
         /// <param name="bytes">The bytes.</param>
         /// <param name="start">The start.</param>
         /// <param name="len">The length.</param>
-        /// <returns><see cref="Int32" />.</returns>
-        public static Int32 OnesComplementSum(Byte[] bytes, Int32 start, Int32 len)
+        /// <returns><see cref="int" />.</returns>
+        public static int OnesComplementSum(byte[] bytes, int start, int len)
         {
             // Just complement the one's sum.
             return ~OnesSum(bytes, start, len);
@@ -64,8 +64,8 @@ namespace PacketDotNet.Utils
         /// </summary>
         /// <param name="byteArraySegment">The byte array segment.</param>
         /// <param name="prefixedBytes">The prefixed bytes.</param>
-        /// <returns><see cref="Int32" />.</returns>
-        public static Int32 OnesComplementSum(ByteArraySegment byteArraySegment, byte[] prefixedBytes)
+        /// <returns><see cref="int" />.</returns>
+        public static int OnesComplementSum(ByteArraySegment byteArraySegment, byte[] prefixedBytes)
         {
             // Just complement the one's sum.
             return ~OnesSum(byteArraySegment, prefixedBytes);
@@ -76,7 +76,7 @@ namespace PacketDotNet.Utils
         /// </summary>
         /// <param name="bytes">A <see cref="System.Byte" /></param>
         /// <returns>A <see cref="System.Int32" /></returns>
-        public static Int32 OnesSum(Byte[] bytes)
+        public static int OnesSum(byte[] bytes)
         {
             return OnesSum(bytes, 0, bytes.Length);
         }
@@ -89,7 +89,7 @@ namespace PacketDotNet.Utils
         /// <param name="start">A <see cref="System.Int32" /></param>
         /// <param name="len">A <see cref="System.Int32" /></param>
         /// <returns>A <see cref="System.Int32" /></returns>
-        public static Int32 OnesSum(Byte[] bytes, Int32 start, Int32 len)
+        public static int OnesSum(byte[] bytes, int start, int len)
         {
             unsafe
             {
@@ -111,7 +111,7 @@ namespace PacketDotNet.Utils
         /// <param name="byteArraySegment">A <see cref="ByteArraySegment" />.</param>
         /// <param name="prefixedBytes">The prefixed bytes.</param>
         /// <returns>A <see cref="System.Int32" /></returns>
-        public static UInt16 OnesSum(ByteArraySegment byteArraySegment, byte[] prefixedBytes)
+        public static ushort OnesSum(ByteArraySegment byteArraySegment, byte[] prefixedBytes)
         {
             unsafe
             {
@@ -137,8 +137,8 @@ namespace PacketDotNet.Utils
         /// <param name="mainSize">Size of the main array.</param>
         /// <param name="prefixArray">The prefix array.</param>
         /// <param name="prefixSize">Size of the prefix array.</param>
-        /// <returns><see cref="UInt16"/>.</returns>
-        private static unsafe UInt16 OnesSum(byte* mainArray, int mainSize, byte* prefixArray, int prefixSize)
+        /// <returns><see cref="ushort"/>.</returns>
+        private static unsafe ushort OnesSum(byte* mainArray, int mainSize, byte* prefixArray, int prefixSize)
         {
             ulong sum = 0;
 
@@ -171,7 +171,7 @@ namespace PacketDotNet.Utils
         /// <param name="size">The size.</param>
         /// <param name="sum">The sum.</param>
         /// <returns><see cref="System.UInt64"/>.</returns>
-        private static unsafe UInt64 Sum(byte* array, int size, ulong sum)
+        private static unsafe ulong Sum(byte* array, int size, ulong sum)
         {
             // Reads per 8 bytes (ulong), this is the main loop.
             ulong* prefixArrayLong = (ulong*)array;

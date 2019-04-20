@@ -59,7 +59,7 @@ namespace Test.PacketType
 
             RawCapture rawCapture;
 
-            Int32 packetIndex = 0;
+            int packetIndex = 0;
             while((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);

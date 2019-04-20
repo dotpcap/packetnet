@@ -101,7 +101,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            Boolean foundipv4 = false;
+            bool foundipv4 = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);

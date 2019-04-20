@@ -49,7 +49,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32" />
         /// </param>
-        public TimeStamp(Byte[] bytes, Int32 offset, Int32 length) :
+        public TimeStamp(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
 
@@ -64,7 +64,7 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return "[" + Kind + ": Value=" + Value + " EchoReply=" + EchoReply + "]";
         }
@@ -77,7 +77,7 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The Timestamp value
         /// </summary>
-        public UInt32 Value
+        public uint Value
         {
             get => EndianBitConverter.Big.ToUInt32(OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
             set => EndianBitConverter.Big.CopyBytes(value, OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
@@ -86,7 +86,7 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The Echo Reply
         /// </summary>
-        public UInt32 EchoReply => EndianBitConverter.Big.ToUInt32(OptionData.Bytes, OptionData.Offset + EchoReplyFieldOffset);
+        public uint EchoReply => EndianBitConverter.Big.ToUInt32(OptionData.Bytes, OptionData.Offset + EchoReplyFieldOffset);
 
         #endregion
 
@@ -94,10 +94,10 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the offset (in bytes) of the Value Field
-        private const Int32 ValueFieldOffset = 2;
+        private const int ValueFieldOffset = 2;
 
         // the offset (in bytes) of the Echo Reply Field
-        private const Int32 EchoReplyFieldOffset = 6;
+        private const int EchoReplyFieldOffset = 6;
 
         #endregion
     }

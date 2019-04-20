@@ -41,10 +41,10 @@ namespace PacketDotNet
         public OSPFv2HelloPacket
         (
             IPAddress networkMask,
-            UInt16 helloInterval,
-            UInt16 routerDeadInterval)
+            ushort helloInterval,
+            ushort routerDeadInterval)
         {
-            var b = new Byte[OSPFv2Fields.NeighborIDStart];
+            var b = new byte[OSPFv2Fields.NeighborIDStart];
             Array.Copy(Header.Bytes, b, Header.Bytes.Length);
             Header = new ByteArraySegment(b, 0, OSPFv2Fields.NeighborIDStart);
             Type = PacketType;
@@ -52,7 +52,7 @@ namespace PacketDotNet
             NetworkMask = networkMask;
             HelloInterval = helloInterval;
             RouterDeadInterval = routerDeadInterval;
-            PacketLength = (UInt16) Header.Bytes.Length;
+            PacketLength = (ushort) Header.Bytes.Length;
         }
 
         /// <summary>
@@ -66,14 +66,14 @@ namespace PacketDotNet
         public OSPFv2HelloPacket
         (
             IPAddress networkMask,
-            UInt16 helloInterval,
-            UInt16 routerDeadInterval,
+            ushort helloInterval,
+            ushort routerDeadInterval,
             IReadOnlyList<IPAddress> neighbors)
             : this(networkMask, helloInterval, routerDeadInterval)
         {
             var length = neighbors.Count * 4;
             var offset = OSPFv2Fields.NeighborIDStart;
-            var bytes = new Byte[length + OSPFv2Fields.NeighborIDStart];
+            var bytes = new byte[length + OSPFv2Fields.NeighborIDStart];
 
             Array.Copy(Header.Bytes, bytes, Header.Length);
             foreach (var t in neighbors)
@@ -83,7 +83,7 @@ namespace PacketDotNet
             }
 
             Header = new ByteArraySegment(bytes);
-            PacketLength = (UInt16) Header.Bytes.Length;
+            PacketLength = (ushort) Header.Bytes.Length;
         }
 
         /// <summary>
@@ -95,7 +95,7 @@ namespace PacketDotNet
         /// <param name="offset">
         /// A <see cref="System.Int32" />
         /// </param>
-        public OSPFv2HelloPacket(Byte[] bytes, Int32 offset) :
+        public OSPFv2HelloPacket(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Type = PacketType;
@@ -149,7 +149,7 @@ namespace PacketDotNet
         /// <summary>
         /// The number of seconds between this router's Hello packets.
         /// </summary>
-        public UInt16 HelloInterval
+        public ushort HelloInterval
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + OSPFv2Fields.HelloIntervalPosition);
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.HelloIntervalPosition);
@@ -158,7 +158,7 @@ namespace PacketDotNet
         /// <summary>
         /// The optional capabilities supported by the router. See http://www.ietf.org/rfc/rfc2328.txt for details.
         /// </summary>
-        public Byte HelloOptions
+        public byte HelloOptions
         {
             get => Header.Bytes[Header.Offset + OSPFv2Fields.HelloOptionsPosition];
             set => Header.Bytes[Header.Offset + OSPFv2Fields.HelloOptionsPosition] = value;
@@ -184,7 +184,7 @@ namespace PacketDotNet
                 var offset = OSPFv2Fields.NeighborIDStart;
                 while (offset < PacketLength)
                 {
-                    Int64 address = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + offset);
+                    long address = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + offset);
                     ret.Add(new IPAddress(address));
                     offset += 4;
                 }
@@ -218,7 +218,7 @@ namespace PacketDotNet
         /// <summary>
         /// The number of seconds before declaring a silent router down.
         /// </summary>
-        public UInt32 RouterDeadInterval
+        public uint RouterDeadInterval
         {
             get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.RouterDeadIntervalPosition);
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.RouterDeadIntervalPosition);
@@ -227,7 +227,7 @@ namespace PacketDotNet
         /// <summary>
         /// This router's Router Priority.
         /// </summary>
-        public Byte RtrPriority
+        public byte RtrPriority
         {
             get => Header.Bytes[Header.Offset + OSPFv2Fields.RtrPriorityPosition];
             set => Header.Bytes[Header.Offset + OSPFv2Fields.RtrPriorityPosition] = value;
@@ -237,7 +237,7 @@ namespace PacketDotNet
         /// Returns a <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2HelloPacket" />.
         /// </summary>
         /// <returns>A <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2HelloPacket" />.</returns>
-        public override String ToString()
+        public override string ToString()
         {
             var packet = new StringBuilder();
             packet.Append(base.ToString());
@@ -256,7 +256,7 @@ namespace PacketDotNet
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             return ToString();
         }

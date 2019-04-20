@@ -57,7 +57,7 @@ namespace PacketDotNet
                                                                        Header.Offset + NullFields.ProtocolPosition);
             set
             {
-                var val = (UInt32) value;
+                var val = (uint) value;
                 EndianBitConverter.Little.CopyBytes(val,
                                                     Header.Bytes,
                                                     Header.Offset + NullFields.ProtocolPosition);
@@ -74,7 +74,7 @@ namespace PacketDotNet
             // allocate memory for this packet
             const int offset = 0;
             var length = NullFields.HeaderLength;
-            var headerBytes = new Byte[length];
+            var headerBytes = new byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
             // setup some typical values and default values
@@ -131,10 +131,10 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.LightPurple;
+        public override string Color => AnsiEscapeSequences.LightPurple;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             buffer.Append(base.ToString(outputFormat));

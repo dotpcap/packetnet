@@ -34,7 +34,7 @@ namespace Test.PacketType
             [Test]
             public void Test_Constructor_ValidParameters()
             {
-                Byte[] value = new Byte[] { 0x1, 0x2, 0x3, 0x4, 0x5 };
+                byte[] value = new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5 };
                 InformationElement infoElement = new InformationElement(
                     InformationElement.ElementId.ChallengeText, value);
 
@@ -47,7 +47,7 @@ namespace Test.PacketType
             [ExpectedException(typeof(ArgumentException), ExpectedMessage = "The provided value is too long. Maximum allowed length is 255 bytes.")]
             public void Test_Constructor_ValueTooLong ()
             {
-                Byte[] value = new Byte[300];
+                byte[] value = new byte[300];
                 new InformationElement (
                     InformationElement.ElementId.CfParameterSet, value);
                 
@@ -57,7 +57,7 @@ namespace Test.PacketType
             public void Test_Constructor_BufferTooShort ()
             {
                 //This IE will have and length of 5 but only three bytes of data
-                Byte[] value = new Byte[] { 0x0, 0x5, 0x1, 0x2, 0x3 };
+                byte[] value = new byte[] { 0x0, 0x5, 0x1, 0x2, 0x3 };
                 var byteArraySegment = new ByteArraySegment (value);
                 
                 InformationElement infoElement = new InformationElement (byteArraySegment);
@@ -71,7 +71,7 @@ namespace Test.PacketType
             {
                 //This IE will have and length of 2 but there are three bytes of data available,
                 //the last one should be ignored
-                Byte[] value = new Byte[] { 0x0, 0x2, 0x1, 0x2, 0x3 };
+                byte[] value = new byte[] { 0x0, 0x2, 0x1, 0x2, 0x3 };
                 var byteArraySegment = new ByteArraySegment (value);
                 
                 InformationElement infoElement = new InformationElement (byteArraySegment);
@@ -83,7 +83,7 @@ namespace Test.PacketType
             [Test]
             public void Test_Constructor_BufferCorrectSize ()
             {
-                Byte[] value = new Byte[] { 0x0, 0x2, 0x1, 0x2,};
+                byte[] value = new byte[] { 0x0, 0x2, 0x1, 0x2,};
                 var byteArraySegment = new ByteArraySegment (value);
                 
                 InformationElement infoElement = new InformationElement (byteArraySegment);
@@ -95,17 +95,17 @@ namespace Test.PacketType
             [Test]
             public void Test_Bytes()
             {
-                Byte[] value = new Byte[] { 0x1, 0x2, 0x3, 0x4, 0x5 };
+                byte[] value = new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5 };
                 InformationElement infoElement = new InformationElement(
                     InformationElement.ElementId.VendorSpecific, value);
 
-                Byte[] ieArray = infoElement.Bytes;
+                byte[] ieArray = infoElement.Bytes;
 
                 Assert.AreEqual(7, ieArray.Length);
-                Assert.AreEqual((Byte)InformationElement.ElementId.VendorSpecific, ieArray[0]);
+                Assert.AreEqual((byte)InformationElement.ElementId.VendorSpecific, ieArray[0]);
                 Assert.AreEqual(5, ieArray[1]);
 
-                Byte[] actualValue = new Byte[5];
+                byte[] actualValue = new byte[5];
                 Array.Copy(ieArray, 2, actualValue, 0, 5);
                 Assert.IsTrue(value.SequenceEqual(actualValue));
             }
@@ -113,7 +113,7 @@ namespace Test.PacketType
             [Test]
             public void Test_Equals_AreEqual()
             {
-                Byte[] value = new Byte[] { 0x1, 0x2, 0x3, 0x4, 0x5 };
+                byte[] value = new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5 };
                 InformationElement infoElement = new InformationElement(
                     InformationElement.ElementId.ChallengeText, value);
 
@@ -126,11 +126,11 @@ namespace Test.PacketType
             [Test]
             public void Test_Equals_AreNotEqual()
             {
-                Byte[] value = new Byte[] { 0x1, 0x2, 0x3, 0x4, 0x5 };
+                byte[] value = new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5 };
                 InformationElement infoElement = new InformationElement(
                     InformationElement.ElementId.RobustSecurityNetwork, value);
 
-                Byte[] otherValue = new Byte[] { 0xa, 0xb, 0xc, 0xd, 0xe };
+                byte[] otherValue = new byte[] { 0xa, 0xb, 0xc, 0xd, 0xe };
                 InformationElement otherInfoElement = new InformationElement(
                     InformationElement.ElementId.ChallengeText, otherValue);
 

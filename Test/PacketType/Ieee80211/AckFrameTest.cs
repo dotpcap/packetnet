@@ -73,7 +73,7 @@ namespace Test.PacketType
                 frame.Duration.Field = 0x1234;
                 
                 frame.UpdateFrameCheckSequence ();
-                UInt32 fcs = frame.FrameCheckSequence;
+                uint fcs = frame.FrameCheckSequence;
                 
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
@@ -96,8 +96,8 @@ namespace Test.PacketType
 			[Test]
 			public void Test_ConstructorWithCorruptBuffer ()
 			{
-				//buffer is way too short for frame. We are just checking it doesn't throw
-				Byte[] corruptBuffer = new Byte[]{0x01};
+                //buffer is way too short for frame. We are just checking it doesn't throw
+                byte[] corruptBuffer = new byte[]{0x01};
 				AckFrame frame = new AckFrame(new ByteArraySegment(corruptBuffer));
 				Assert.IsFalse(frame.FCSValid);
 			}

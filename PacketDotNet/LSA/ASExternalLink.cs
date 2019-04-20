@@ -13,7 +13,7 @@ namespace PacketDotNet
         /// <summary>
         /// The length.
         /// </summary>
-        public static readonly Int32 Length = 12;
+        public static readonly int Length = 12;
 
         internal ByteArraySegment Header;
 
@@ -22,7 +22,7 @@ namespace PacketDotNet
         /// </summary>
         public ASExternalLink()
         {
-            var b = new Byte[Length];
+            var b = new byte[Length];
             Header = new ByteArraySegment(b);
         }
 
@@ -38,7 +38,7 @@ namespace PacketDotNet
         /// <param name="length">
         /// A <see cref="System.Int32" />
         /// </param>
-        public ASExternalLink(Byte[] packet, Int32 offset, Int32 length)
+        public ASExternalLink(byte[] packet, int offset, int length)
         {
             Header = new ByteArraySegment(packet, offset, length);
         }
@@ -46,23 +46,23 @@ namespace PacketDotNet
         /// <summary>
         /// Bytes representation
         /// </summary>
-        public Byte[] Bytes => Header.Bytes;
+        public byte[] Bytes => Header.Bytes;
 
         /// <summary>
         /// The type of external metric.  If bit E is set, the metric
         /// specified is a Type 2 external metric.
         /// </summary>
-        public Byte EBit
+        public byte EBit
         {
             get
             {
                 var val = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
-                return (Byte) ((val >> 31) & 0xFF);
+                return (byte) ((val >> 31) & 0xFF);
             }
             set
             {
                 var original = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
-                var val = (UInt32) ((value & 1) << 31) | original;
+                var val = (uint) ((value & 1) << 31) | original;
                 EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
             }
         }
@@ -70,7 +70,7 @@ namespace PacketDotNet
         /// <summary>
         /// A 32-bit field attached to each external route.  This is not used by the OSPF protocol itself.
         /// </summary>
-        public UInt32 ExternalRouteTag
+        public uint ExternalRouteTag
         {
             get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.ExternalRouteTagPosition);
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.ExternalRouteTagPosition);
@@ -101,7 +101,7 @@ namespace PacketDotNet
         /// The cost of this route.  Interpretation depends on the external
         /// type indication (bit E above).
         /// </summary>
-        public UInt32 Metric
+        public uint Metric
         {
             get
             {
@@ -119,17 +119,17 @@ namespace PacketDotNet
         /// <summary>
         /// The Type of Service that the following fields concern.
         /// </summary>
-        public Byte TOS
+        public byte TOS
         {
             get
             {
                 var val = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
-                return (Byte) ((val >> 24) & 0x7F);
+                return (byte) ((val >> 24) & 0x7F);
             }
             set
             {
                 var original = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
-                var val = (Byte) ((value & 0x7F) << 24) | original;
+                var val = (byte) ((value & 0x7F) << 24) | original;
                 EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + LSA.ASExternalLinkFields.TOSPosition);
             }
         }

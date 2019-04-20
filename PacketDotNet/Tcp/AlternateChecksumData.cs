@@ -36,7 +36,7 @@ namespace PacketDotNet.Tcp
         #region Members
 
         // the offset (in bytes) of the Data Field
-        private const Int32 DataFieldOffset = 2;
+        private const int DataFieldOffset = 2;
 
         #endregion
 
@@ -55,7 +55,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32" />
         /// </param>
-        public AlternateChecksumData(Byte[] bytes, Int32 offset, Int32 length) :
+        public AlternateChecksumData(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
 
@@ -67,11 +67,11 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The array of attached Checksum
         /// </summary>
-        public Byte[] Data
+        public byte[] Data
         {
             get
             {
-                var data = new Byte[Length - DataFieldOffset];
+                var data = new byte[Length - DataFieldOffset];
                 Array.Copy(OptionData.Bytes, OptionData.Offset + DataFieldOffset, data, 0, data.Length);
                 return data;
             }
@@ -89,7 +89,7 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return "[" + Kind + ": Data=0x" + Data + "]";
         }

@@ -52,9 +52,9 @@ namespace PacketDotNet.Ieee80211
         /// Gets or sets the control.
         /// </summary>
         /// <value>The control.</value>
-        public Byte Control
+        public byte Control
         {
-            get => (Byte) ((ControlOrganizationCode >> 24) & 0xFF);
+            get => (byte) ((ControlOrganizationCode >> 24) & 0xFF);
             set => throw new NotImplementedException("Control setter not implemented");
         }
 
@@ -62,7 +62,7 @@ namespace PacketDotNet.Ieee80211
         /// Gets or sets the destination service access point.
         /// </summary>
         /// <value>The dsap.</value>
-        public Byte DSAP
+        public byte DSAP
         {
             get => Header.Bytes[Header.Offset + LogicalLinkControlFields.DsapPosition];
             set => Header.Bytes[Header.Offset + LogicalLinkControlFields.DsapPosition] = value;
@@ -72,9 +72,9 @@ namespace PacketDotNet.Ieee80211
         /// Gets or sets the organization code.
         /// </summary>
         /// <value>The organization code.</value>
-        public UInt32 OrganizationCode
+        public uint OrganizationCode
         {
-            get => (Byte) (ControlOrganizationCode & 0x00FFFFFF);
+            get => (byte) (ControlOrganizationCode & 0x00FFFFFF);
             set => throw new NotImplementedException("OrganizationCode setter not implemented");
         }
 
@@ -82,7 +82,7 @@ namespace PacketDotNet.Ieee80211
         /// Gets or sets the source service access point.
         /// </summary>
         /// <value>The ssap.</value>
-        public Byte SSAP
+        public byte SSAP
         {
             get => Header.Bytes[Header.Offset + LogicalLinkControlFields.SsapPosition];
             set => Header.Bytes[Header.Offset + LogicalLinkControlFields.SsapPosition] = value;
@@ -98,7 +98,7 @@ namespace PacketDotNet.Ieee80211
                                                                        Header.Offset + LogicalLinkControlFields.TypePosition);
             set
             {
-                var val = (Int16) value;
+                var val = (short) value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  Header.Bytes,
                                                  Header.Offset + LogicalLinkControlFields.TypePosition);
@@ -109,7 +109,7 @@ namespace PacketDotNet.Ieee80211
         /// Gets or sets the control organization code.
         /// </summary>
         /// <value>The control organization code.</value>
-        protected UInt32 ControlOrganizationCode
+        protected uint ControlOrganizationCode
         {
             get => EndianBitConverter.Big.ToUInt32(Header.Bytes,
                                                    Header.Offset + LogicalLinkControlFields.ControlOrganizationPosition);

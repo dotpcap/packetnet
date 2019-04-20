@@ -46,7 +46,7 @@ namespace PacketDotNet.LLDP
 #pragma warning restore 0169, 0649
 #endif
 
-        private const Int32 SubTypeLength = 1;
+        private const int SubTypeLength = 1;
 
 
         #region Constructors
@@ -60,7 +60,7 @@ namespace PacketDotNet.LLDP
         /// The Port ID TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public PortID(Byte[] bytes, Int32 offset) :
+        public PortID(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Log.Debug("");
@@ -75,7 +75,7 @@ namespace PacketDotNet.LLDP
         /// <param name="subTypeValue">
         /// The subtype's value
         /// </param>
-        public PortID(PortSubTypes subType, Object subTypeValue)
+        public PortID(PortSubTypes subType, object subTypeValue)
         {
             Log.Debug("");
 
@@ -99,7 +99,7 @@ namespace PacketDotNet.LLDP
             Log.DebugFormat("NetworkAddress {0}", networkAddress);
 
             var length = TLVTypeLength.TypeLengthLength + SubTypeLength;
-            var bytes = new Byte[length];
+            var bytes = new byte[length];
             var offset = 0;
             TLVData = new ByteArraySegment(bytes, offset, length);
 
@@ -119,13 +119,13 @@ namespace PacketDotNet.LLDP
         public PortSubTypes SubType
         {
             get => (PortSubTypes) TLVData.Bytes[TLVData.Offset + TLVTypeLength.TypeLengthLength];
-            set => TLVData.Bytes[TLVData.Offset + TLVTypeLength.TypeLengthLength] = (Byte) value;
+            set => TLVData.Bytes[TLVData.Offset + TLVTypeLength.TypeLengthLength] = (byte) value;
         }
 
         /// <value>
         /// The TLV subtype value
         /// </value>
-        public Object SubTypeValue
+        public object SubTypeValue
         {
             get => GetSubTypeValue();
             set => SetSubTypeValue(value);
@@ -134,12 +134,12 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Offset to the value field
         /// </summary>
-        private Int32 DataOffset => ValueOffset + SubTypeLength;
+        private int DataOffset => ValueOffset + SubTypeLength;
 
         /// <summary>
         /// Size of the value field
         /// </summary>
-        private Int32 DataLength => Length - SubTypeLength;
+        private int DataLength => Length - SubTypeLength;
 
         #endregion
 
@@ -152,14 +152,14 @@ namespace PacketDotNet.LLDP
         private void EmptyTLVDataInit()
         {
             var length = TLVTypeLength.TypeLengthLength + SubTypeLength;
-            var bytes = new Byte[length];
+            var bytes = new byte[length];
             var offset = 0;
             TLVData = new ByteArraySegment(bytes, offset, length);
         }
 
-        private Object GetSubTypeValue()
+        private object GetSubTypeValue()
         {
-            Byte[] arrAddress;
+            byte[] arrAddress;
 
             switch (SubType)
             {
@@ -169,12 +169,12 @@ namespace PacketDotNet.LLDP
                 case PortSubTypes.PortComponent:
                 case PortSubTypes.AgentCircuitID:
                     // get the address
-                    arrAddress = new Byte[DataLength];
+                    arrAddress = new byte[DataLength];
                     Array.Copy(TLVData.Bytes, DataOffset, arrAddress, 0, DataLength);
                     return arrAddress;
                 case PortSubTypes.MACAddress:
                     // get the address
-                    arrAddress = new Byte[DataLength];
+                    arrAddress = new byte[DataLength];
                     Array.Copy(TLVData.Bytes, DataOffset, arrAddress, 0, DataLength);
                     var address = new PhysicalAddress(arrAddress);
                     return address;
@@ -186,7 +186,7 @@ namespace PacketDotNet.LLDP
             }
         }
 
-        private void SetSubTypeValue(Object subTypeValue)
+        private void SetSubTypeValue(object subTypeValue)
         {
             switch (SubType)
             {
@@ -195,7 +195,7 @@ namespace PacketDotNet.LLDP
                 case PortSubTypes.LocallyAssigned:
                 case PortSubTypes.PortComponent:
                 case PortSubTypes.AgentCircuitID:
-                    SetSubTypeValue((Byte[]) subTypeValue);
+                    SetSubTypeValue((byte[]) subTypeValue);
                     break;
                 case PortSubTypes.MACAddress:
                     SetSubTypeValue(((PhysicalAddress) subTypeValue).GetAddressBytes());
@@ -208,7 +208,7 @@ namespace PacketDotNet.LLDP
             }
         }
 
-        private void SetSubTypeValue(Byte[] val)
+        private void SetSubTypeValue(byte[] val)
         {
             // does our current length match?
             var dataLength = Length - SubTypeLength;
@@ -216,7 +216,7 @@ namespace PacketDotNet.LLDP
             {
                 var headerLength = TLVTypeLength.TypeLengthLength + SubTypeLength;
                 var newLength = headerLength + val.Length;
-                var newBytes = new Byte[newLength];
+                var newBytes = new byte[newLength];
 
                 // copy the header data over
                 Array.Copy(TLVData.Bytes,
@@ -254,7 +254,7 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A human readable string
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return $"[PortID: SubType={SubType}, SubTypeValue={SubTypeValue}]";
         }

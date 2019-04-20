@@ -49,7 +49,7 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        private Byte VersionType
+        private byte VersionType
         {
             get => Header.Bytes[Header.Offset + PPPoEFields.VersionTypePosition];
             set => Header.Bytes[Header.Offset + PPPoEFields.VersionTypePosition] = value;
@@ -59,15 +59,15 @@ namespace PacketDotNet
         /// PPPoe version, must be 0x1 according to RFC
         /// </summary>
         /// FIXME: This currently outputs the wrong version number
-        public Byte Version
+        public byte Version
         {
-            get => (Byte) ((VersionType >> 4) & 0xF0);
+            get => (byte) ((VersionType >> 4) & 0xF0);
             set
             {
                 var versionType = VersionType;
 
                 // mask the new value in
-                versionType = (Byte) ((versionType & 0x0F) | ((value << 4) & 0xF0));
+                versionType = (byte) ((versionType & 0x0F) | ((value << 4) & 0xF0));
 
                 VersionType = versionType;
             }
@@ -76,15 +76,15 @@ namespace PacketDotNet
         /// <summary>
         /// Type, must be 0x1 according to RFC
         /// </summary>
-        public Byte Type
+        public byte Type
         {
-            get => (Byte) (VersionType & 0x0F);
+            get => (byte) (VersionType & 0x0F);
             set
             {
                 var versionType = VersionType;
 
                 // mask the new value in
-                versionType = (Byte) ((versionType & 0xF0) | (value & 0xF0));
+                versionType = (byte) ((versionType & 0xF0) | (value & 0xF0));
 
                 VersionType = versionType;
             }
@@ -99,7 +99,7 @@ namespace PacketDotNet
                                                                Header.Offset + PPPoEFields.CodePosition);
             set
             {
-                var val = (UInt16) value;
+                var val = (ushort) value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  Header.Bytes,
                                                  Header.Offset + PPPoEFields.CodePosition);
@@ -109,7 +109,7 @@ namespace PacketDotNet
         /// <summary>
         /// Session identifier for this PPPoe packet
         /// </summary>
-        public UInt16 SessionId
+        public ushort SessionId
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + PPPoEFields.SessionIdPosition);
@@ -125,7 +125,7 @@ namespace PacketDotNet
         /// <summary>
         /// Length of the PPPoe payload, not including the PPPoe header
         /// </summary>
-        public UInt16 Length
+        public ushort Length
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + PPPoEFields.LengthPosition);
@@ -144,14 +144,14 @@ namespace PacketDotNet
         public PPPoEPacket
         (
             PPPoECode code,
-            UInt16 sessionId)
+            ushort sessionId)
         {
             Log.Debug("");
 
             // allocate memory for this packet
             const int offset = 0;
             var length = PPPoEFields.HeaderLength;
-            var headerBytes = new Byte[length];
+            var headerBytes = new byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
@@ -199,10 +199,10 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.DarkGray;
+        public override string Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
@@ -231,7 +231,7 @@ namespace PacketDotNet
                 case StringOutputType.Verbose:
                 case StringOutputType.VerboseColored:
                     // collect the properties and their value
-                    var properties = new Dictionary<String, String>
+                    var properties = new Dictionary<string, string>
                     {
                         // FIXME: The version output is incorrect
                         {"", Convert.ToString(Version, 2).PadLeft(4, '0') + " .... = version: " + Version},
@@ -244,7 +244,7 @@ namespace PacketDotNet
                     //properties.Add("payload length", PayloadLength.ToString());
 
                     // calculate the padding needed to right-justify the property names
-                    var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                    var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                     // build the output string
                     buffer.AppendLine("PPPoE:  ******* PPPoE - \"Point-to-Point Protocol over Ethernet\" - offset=? length=" + TotalPacketLength);

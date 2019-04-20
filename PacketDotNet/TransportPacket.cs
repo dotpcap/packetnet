@@ -44,13 +44,13 @@ namespace PacketDotNet
         /// <value>
         /// The Checksum version
         /// </value>
-        public abstract UInt16 Checksum { get; set; }
+        public abstract ushort Checksum { get; set; }
 
         /// <summary> Fetch the port number on the target host.</summary>
-        public abstract UInt16 DestinationPort { get; set; }
+        public abstract ushort DestinationPort { get; set; }
 
         /// <summary> Fetch the port number on the source host.</summary>
-        public abstract UInt16 SourcePort { get; set; }
+        public abstract ushort SourcePort { get; set; }
 
         /// <summary>
         /// Calculates the transport layer checksum, either for the
@@ -62,7 +62,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Int32" />
         /// </returns>
-        internal Int32 CalculateChecksum(TransportChecksumOption option)
+        internal int CalculateChecksum(TransportChecksumOption option)
         {
             // save the checksum field value so it can be restored, altering the checksum is not
             // an intended side effect of this method
@@ -97,7 +97,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Boolean" />
         /// </returns>
-        public virtual Boolean IsValidChecksum(TransportChecksumOption option)
+        public virtual bool IsValidChecksum(TransportChecksumOption option)
         {
             var dataToChecksum = ((IPPacket) ParentPacket).PayloadPacket.BytesHighPerformance;
 
@@ -111,7 +111,7 @@ namespace PacketDotNet
                             option,
                             bytes.Length);
 
-            const Int32 expectedOnesSum = 0xffff;
+            const int expectedOnesSum = 0xffff;
             Log.DebugFormat("onesSum {0} expected {1}",
                             onesSum,
                             expectedOnesSum);

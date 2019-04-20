@@ -111,7 +111,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The beacon interval.
         /// </value>
-        public UInt16 BeaconInterval { get; set; }
+        public ushort BeaconInterval { get; set; }
 
         /// <summary>
         /// Get or set the capability information field that defines the capabilities of the network.
@@ -123,7 +123,7 @@ namespace PacketDotNet.Ieee80211
         /// This does not include the FCS, it represents only the header bytes that would
         /// would preceed any payload.
         /// </summary>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
+        public override int FrameSize => MacFields.FrameControlLength +
                                            MacFields.DurationIDLength +
                                            (MacFields.AddressLength * 3) +
                                            MacFields.SequenceControlLength +
@@ -147,9 +147,9 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The timestamp.
         /// </value>
-        public UInt64 Timestamp { get; set; }
+        public ulong Timestamp { get; set; }
 
-        private UInt16 BeaconIntervalBytes
+        private ushort BeaconIntervalBytes
         {
             get
             {
@@ -165,7 +165,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Frame control bytes are the first two bytes of the frame
         /// </summary>
-        private UInt16 CapabilityInformationBytes
+        private ushort CapabilityInformationBytes
         {
             get
             {
@@ -183,7 +183,7 @@ namespace PacketDotNet.Ieee80211
                                                        Header.Offset + ProbeResponseFields.CapabilityInformationPosition);
         }
 
-        private UInt64 TimestampBytes
+        private ulong TimestampBytes
         {
             get
             {
@@ -203,7 +203,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;

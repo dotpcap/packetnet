@@ -75,7 +75,7 @@ namespace Test.PacketType
             [Test]
             public void Test_Constructor_ConstructWithValues ()
             {
-                Byte[] BlockAckBitmap = new Byte[]{0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8};
+                byte[] BlockAckBitmap = new byte[]{0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8};
                 
                 BlockAcknowledgmentFrame frame = new BlockAcknowledgmentFrame (PhysicalAddress.Parse ("111111111111"),
                                                                                PhysicalAddress.Parse ("222222222222"),
@@ -93,7 +93,7 @@ namespace Test.PacketType
                 frame.BlockAckStartingSequenceControl = 0x5678;
                 
                 frame.UpdateFrameCheckSequence ();
-                UInt32 fcs = frame.FrameCheckSequence;
+                uint fcs = frame.FrameCheckSequence;
                 
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
@@ -126,8 +126,8 @@ namespace Test.PacketType
 			[Test]
 			public void Test_ConstructorWithCorruptBuffer ()
 			{
-				//buffer is way too short for frame. We are just checking it doesn't throw
-				Byte[] corruptBuffer = new Byte[]{0x01};
+                //buffer is way too short for frame. We are just checking it doesn't throw
+                byte[] corruptBuffer = new byte[]{0x01};
 				BlockAcknowledgmentFrame frame = new BlockAcknowledgmentFrame(new ByteArraySegment(corruptBuffer));
 				Assert.IsFalse(frame.FCSValid);
 			}

@@ -42,7 +42,7 @@ namespace PacketDotNet.LLDP
         /// The End Of LLDPDU TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public EndOfLLDPDU(Byte[] bytes, Int32 offset) :
+        public EndOfLLDPDU(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Type = 0;
@@ -54,7 +54,7 @@ namespace PacketDotNet.LLDP
         /// </summary>
         public EndOfLLDPDU()
         {
-            var bytes = new Byte[TLVTypeLength.TypeLengthLength];
+            var bytes = new byte[TLVTypeLength.TypeLengthLength];
             var offset = 0;
             var length = bytes.Length;
             TLVData = new ByteArraySegment(bytes, offset, length);
@@ -69,7 +69,7 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A human readable string
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return "[EndOfLLDPDU]";
         }

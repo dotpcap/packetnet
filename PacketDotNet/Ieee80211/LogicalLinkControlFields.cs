@@ -24,17 +24,17 @@ namespace PacketDotNet.Ieee80211
 {
     internal class LogicalLinkControlFields
     {
-        public static readonly Int32 ControlOrganizationLength = 4;
-        public static readonly Int32 SsapLength = 1;
-        public static readonly Int32 DsapLength = 1;
-        public static readonly Int32 DsapPosition = 0;
-        public static readonly Int32 SsapPosition = DsapPosition + DsapLength;
-        public static readonly Int32 ControlOrganizationPosition = SsapPosition + SsapLength;
+        public static readonly int ControlOrganizationLength = 4;
+        public static readonly int SsapLength = 1;
+        public static readonly int DsapLength = 1;
+        public static readonly int DsapPosition = 0;
+        public static readonly int SsapPosition = DsapPosition + DsapLength;
+        public static readonly int ControlOrganizationPosition = SsapPosition + SsapLength;
 
 
-        public static readonly Int32 TypeLength = 2;
-        public static readonly Int32 TypePosition = ControlOrganizationPosition + ControlOrganizationLength;
-        public static readonly Int32 HeaderLength = TypePosition + TypeLength;
+        public static readonly int TypeLength = 2;
+        public static readonly int TypePosition = ControlOrganizationPosition + ControlOrganizationLength;
+        public static readonly int HeaderLength = TypePosition + TypeLength;
 
 
         static LogicalLinkControlFields()

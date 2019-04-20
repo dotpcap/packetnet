@@ -48,7 +48,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override Int32 Length => 20;
+        public override int Length => 20;
 
         /// <summary>
         /// Radiotap-formatted channel flags.
@@ -61,7 +61,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The channel frequency.
         /// </value>
-        public UInt16 ChannelFrequency { get; set; }
+        public ushort ChannelFrequency { get; set; }
 
         /// <summary>
         /// The common flags.
@@ -74,7 +74,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The data rate.
         /// </value>
-        public Double Rate { get; set; }
+        public double Rate { get; set; }
 
         /// <summary>
         /// Gets or sets the TSF timer.
@@ -82,7 +82,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The TSF Timer value.
         /// </value>
-        public UInt64 TSFTimer { get; set; }
+        public ulong TSFTimer { get; set; }
 
         /// <summary>
         /// Gets or sets the Frequency-hopping spread spectrum (FHSS) hopset
@@ -90,7 +90,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The FHSS hopset.
         /// </value>
-        public Byte FhssHopset { get; set; }
+        public byte FhssHopset { get; set; }
 
         /// <summary>
         /// Gets or sets the Frequency-hopping spread spectrum (FHSS) pattern.
@@ -98,7 +98,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The FHSS pattern.
         /// </value>
-        public Byte FhssPattern { get; set; }
+        public byte FhssPattern { get; set; }
 
         /// <summary>
         /// Gets or sets the RF signal power at antenna.
@@ -106,7 +106,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The antenna signal power.
         /// </value>
-        public SByte AntennaSignalPower { get; set; }
+        public sbyte AntennaSignalPower { get; set; }
 
         /// <summary>
         /// Gets or sets the RF signal noise at antenna
@@ -114,7 +114,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The antenna signal noise.
         /// </value>
-        public SByte AntennaSignalNoise { get; set; }
+        public sbyte AntennaSignalNoise { get; set; }
 
         /// <summary>
         /// Gets the field bytes. This doesn't include the PPI field header.
@@ -122,7 +122,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public override Byte[] Bytes
+        public override byte[] Bytes
         {
             get
             {
@@ -130,10 +130,10 @@ namespace PacketDotNet.Ieee80211
                 var writer = new BinaryWriter(ms);
 
                 writer.Write(TSFTimer);
-                writer.Write((UInt16) Flags);
-                writer.Write((UInt16) (Rate * 2));
+                writer.Write((ushort) Flags);
+                writer.Write((ushort) (Rate * 2));
                 writer.Write(ChannelFrequency);
-                writer.Write((UInt16) ChannelFlags);
+                writer.Write((ushort) ChannelFlags);
                 writer.Write(FhssHopset);
                 writer.Write(FhssPattern);
                 writer.Write(AntennaSignalPower);

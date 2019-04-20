@@ -51,7 +51,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Length of the frame
         /// </summary>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
+        public override int FrameSize => MacFields.FrameControlLength +
                                            MacFields.DurationIDLength +
                                            (MacFields.AddressLength * 2);
 
@@ -72,7 +72,7 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// The address string.
         /// </returns>
-        protected override String GetAddressString()
+        protected override string GetAddressString()
         {
             return $"RA {ReceiverAddress} TA {TransmitterAddress}";
         }

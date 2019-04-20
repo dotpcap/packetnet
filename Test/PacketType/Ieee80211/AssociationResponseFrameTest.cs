@@ -84,9 +84,9 @@ namespace Test.PacketType
             public void Test_Constructor_ConstructWithValues ()
             {
                 InformationElement ssidInfoElement = new InformationElement (InformationElement.ElementId.ServiceSetIdentity, 
-                                                                           new Byte[] { 0x68, 0x65, 0x6c, 0x6c, 0x6f });
+                                                                           new byte[] { 0x68, 0x65, 0x6c, 0x6c, 0x6f });
                 InformationElement vendorElement = new InformationElement (InformationElement.ElementId.VendorSpecific,
-                                                                           new Byte[] {0x01, 0x02, 0x03, 0x04, 0x05});
+                                                                           new byte[] {0x01, 0x02, 0x03, 0x04, 0x05});
                 
                 
                 AssociationResponseFrame frame = new AssociationResponseFrame (PhysicalAddress.Parse ("111111111111"),
@@ -110,7 +110,7 @@ namespace Test.PacketType
                 frame.AssociationId = 0x2;
                 
                 frame.UpdateFrameCheckSequence ();
-                UInt32 fcs = frame.FrameCheckSequence;
+                uint fcs = frame.FrameCheckSequence;
                 
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
@@ -144,8 +144,8 @@ namespace Test.PacketType
 			[Test]
 			public void Test_ConstructorWithCorruptBuffer ()
 			{
-				//buffer is way too short for frame. We are just checking it doesn't throw
-				Byte[] corruptBuffer = new Byte[]{0x01};
+                //buffer is way too short for frame. We are just checking it doesn't throw
+                byte[] corruptBuffer = new byte[]{0x01};
 				AssociationResponseFrame frame = new AssociationResponseFrame(new ByteArraySegment(corruptBuffer));
 				Assert.IsFalse(frame.FCSValid);
 			}

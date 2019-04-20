@@ -11,12 +11,12 @@ namespace CapturingAndParsingWiFiPackets
     class MainClass
     {
         // used to stop the capture loop
-        private static Boolean stopCapturing = false;
+        private static bool stopCapturing = false;
 
-        public static void Main (String[] args)
+        public static void Main (string[] args)
         {
             // Print SharpPcap version
-            String ver = SharpPcap.Version.VersionString;
+            string ver = SharpPcap.Version.VersionString;
             Console.WriteLine ("PacketDotNet example using SharpPcap {0}", ver);
 
             // Retrieve the device list
@@ -34,7 +34,7 @@ namespace CapturingAndParsingWiFiPackets
             Console.WriteLine ("----------------------------------------------------");
             Console.WriteLine ();
 
-            Int32 i = 0;
+            int i = 0;
 
             // Print out the devices
             foreach (var dev in devices)
@@ -46,7 +46,7 @@ namespace CapturingAndParsingWiFiPackets
 
             Console.WriteLine ();
             Console.Write ("-- Please choose a device to capture: ");
-            i = Int32.Parse (Console.ReadLine ());
+            i = int.Parse (Console.ReadLine ());
 
             // Register a cancle handler that lets us break out of our capture loop
             // since we currently need to synchronously receive packets in order to get
@@ -58,7 +58,7 @@ namespace CapturingAndParsingWiFiPackets
             var device = (AirPcapDevice)devices [i];
 
             // Open the device for capturing
-            Int32 readTimeoutMilliseconds = 1000;
+            int readTimeoutMilliseconds = 1000;
             device.Open (DeviceMode.Promiscuous, readTimeoutMilliseconds);
             device.FcsValidation = AirPcapValidationType.ACCEPT_CORRECT_FRAMES;
 
@@ -101,7 +101,7 @@ namespace CapturingAndParsingWiFiPackets
             device.Close ();
         }
 
-        static void HandleCancelKeyPress(Object sender, ConsoleCancelEventArgs e)
+        static void HandleCancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
             Console.WriteLine("-- Stopping capture");
             stopCapturing = true;

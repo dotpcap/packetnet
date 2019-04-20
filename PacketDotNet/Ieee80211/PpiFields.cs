@@ -50,7 +50,7 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="PpiFields" />
         /// </returns>
-        public static PpiFields Parse(Int32 fieldType, BinaryReader br, UInt16 fieldLength)
+        public static PpiFields Parse(int fieldType, BinaryReader br, ushort fieldLength)
         {
             var type = (PpiFieldType) fieldType;
             switch (type)
@@ -94,7 +94,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public abstract Int32 Length { get; }
+        public abstract int Length { get; }
 
         /// <summary>
         /// Gets the field bytes. This doesn't include the PPI field header.
@@ -102,7 +102,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public abstract Byte[] Bytes { get; }
+        public abstract byte[] Bytes { get; }
 
         #endregion Properties
     }

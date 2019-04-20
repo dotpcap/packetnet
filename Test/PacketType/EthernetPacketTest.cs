@@ -170,7 +170,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            Int32 packetIndex = 0;
+            int packetIndex = 0;
             while((rawCapture = dev.GetNextPacket()) != null)
             {
                 Packet p = Packet.ParsePacket(rawCapture.LinkLayerType,
@@ -209,16 +209,16 @@ namespace Test.PacketType
         [Test]
         public void EthernetConstructorFromMacAddresses()
         {
-            var srcHwAddressBytes = new Byte[EthernetFields.MacAddressLength];
-            for(Int32 i = 0; i < srcHwAddressBytes.Length; i++)
+            var srcHwAddressBytes = new byte[EthernetFields.MacAddressLength];
+            for(int i = 0; i < srcHwAddressBytes.Length; i++)
             {
-                srcHwAddressBytes[i] = (Byte)i;
+                srcHwAddressBytes[i] = (byte)i;
             }
 
-            var dstHwAddressBytes = new Byte[EthernetFields.MacAddressLength];
-            for(Int32 i = 0; i < dstHwAddressBytes.Length; i++)
+            var dstHwAddressBytes = new byte[EthernetFields.MacAddressLength];
+            for(int i = 0; i < dstHwAddressBytes.Length; i++)
             {
-                dstHwAddressBytes[i] = (Byte)(dstHwAddressBytes.Length - i);
+                dstHwAddressBytes[i] = (byte)(dstHwAddressBytes.Length - i);
             }
 
             var srcHwAddress = new PhysicalAddress(srcHwAddressBytes);
@@ -227,7 +227,7 @@ namespace Test.PacketType
                                                     dstHwAddress,
                                                     EthernetPacketType.None);
 
-            Int32 expectedLength = 14;
+            int expectedLength = 14;
             Assert.AreEqual(expectedLength, ethernetPacket.Bytes.Length);
             //TODO: improve this here
             Console.WriteLine("ethernetPacket.ToString() {0}",
@@ -303,7 +303,7 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            Boolean foundEthernet = false;
+            bool foundEthernet = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var ethernetPacket = new EthernetPacket(new ByteArraySegment(rawCapture.Data));

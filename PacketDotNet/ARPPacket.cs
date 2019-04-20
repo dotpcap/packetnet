@@ -59,7 +59,7 @@ namespace PacketDotNet
                                                                 Header.Offset + ARPFields.HardwareAddressTypePosition);
             set
             {
-                var theValue = (UInt16) value;
+                var theValue = (ushort) value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  Header.Bytes,
                                                  Header.Offset + ARPFields.HardwareAddressTypePosition);
@@ -75,7 +75,7 @@ namespace PacketDotNet
                                                                         Header.Offset + ARPFields.ProtocolAddressTypePosition);
             set
             {
-                var theValue = (UInt16) value;
+                var theValue = (ushort) value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  Header.Bytes,
                                                  Header.Offset + ARPFields.ProtocolAddressTypePosition);
@@ -85,19 +85,19 @@ namespace PacketDotNet
         /// <value>
         /// Hardware address length field
         /// </value>
-        public Int32 HardwareAddressLength
+        public int HardwareAddressLength
         {
             get => Header.Bytes[Header.Offset + ARPFields.HardwareAddressLengthPosition];
-            set => Header.Bytes[Header.Offset + ARPFields.HardwareAddressLengthPosition] = (Byte) value;
+            set => Header.Bytes[Header.Offset + ARPFields.HardwareAddressLengthPosition] = (byte) value;
         }
 
         /// <value>
         /// Protocol address length field
         /// </value>
-        public Int32 ProtocolAddressLength
+        public int ProtocolAddressLength
         {
             get => Header.Bytes[Header.Offset + ARPFields.ProtocolAddressLengthPosition];
-            set => Header.Bytes[Header.Offset + ARPFields.ProtocolAddressLengthPosition] = (Byte) value;
+            set => Header.Bytes[Header.Offset + ARPFields.ProtocolAddressLengthPosition] = (byte) value;
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace PacketDotNet
                                                                  Header.Offset + ARPFields.OperationPosition);
             set
             {
-                var theValue = (Int16) value;
+                var theValue = (short) value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  Header.Bytes,
                                                  Header.Offset + ARPFields.OperationPosition);
@@ -178,7 +178,7 @@ namespace PacketDotNet
             {
                 //FIXME: this code is broken because it assumes that the address position is
                 // a fixed position
-                var hwAddress = new Byte[HardwareAddressLength];
+                var hwAddress = new byte[HardwareAddressLength];
                 Array.Copy(Header.Bytes,
                            Header.Offset + ARPFields.SenderHardwareAddressPosition,
                            hwAddress,
@@ -212,7 +212,7 @@ namespace PacketDotNet
             {
                 //FIXME: this code is broken because it assumes that the address position is
                 // a fixed position
-                var hwAddress = new Byte[HardwareAddressLength];
+                var hwAddress = new byte[HardwareAddressLength];
                 Array.Copy(Header.Bytes,
                            Header.Offset + ARPFields.TargetHardwareAddressPosition,
                            hwAddress,
@@ -237,7 +237,7 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.Purple;
+        public override string Color => AnsiEscapeSequences.Purple;
 
         /// <summary>
         /// Create an ARPPacket from values
@@ -270,7 +270,7 @@ namespace PacketDotNet
             // allocate memory for this packet
             const int offset = 0;
             var length = ARPFields.HeaderLength;
-            var headerBytes = new Byte[length];
+            var headerBytes = new byte[length];
             Header = new ByteArraySegment(headerBytes, offset, length);
 
             Operation = operation;
@@ -304,7 +304,7 @@ namespace PacketDotNet
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
@@ -332,7 +332,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                var properties = new Dictionary<String, String>
+                var properties = new Dictionary<string, string>
                 {
                     {"hardware type", HardwareAddressType + " (0x" + HardwareAddressType.ToString("x") + ")"},
                     {"protocol type", ProtocolAddressType + " (0x" + ProtocolAddressType.ToString("x") + ")"},
@@ -344,7 +344,7 @@ namespace PacketDotNet
                 };
 
                 // calculate the padding needed to right-justify the property names
-                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("ARP:  ******* ARP - \"Address Resolution Protocol\" - offset=? length=" + TotalPacketLength);

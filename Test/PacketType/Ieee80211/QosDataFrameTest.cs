@@ -113,10 +113,10 @@ namespace Test.PacketType
                 frame.SourceAddress = PhysicalAddress.Parse ("222222222222");
                 frame.BssId = PhysicalAddress.Parse ("333333333333");
                 
-                frame.PayloadData = new Byte[]{0x01, 0x02, 0x03, 0x04, 0x05};
+                frame.PayloadData = new byte[]{0x01, 0x02, 0x03, 0x04, 0x05};
                 
                 frame.UpdateFrameCheckSequence ();
-                UInt32 fcs = frame.FrameCheckSequence;
+                uint fcs = frame.FrameCheckSequence;
                 
                 //serialize the frame into a byte buffer
                 var bytes = frame.Bytes;
@@ -139,7 +139,7 @@ namespace Test.PacketType
                 Assert.AreEqual ("222222222222", recreatedFrame.SourceAddress.ToString ().ToUpper ());
                 Assert.AreEqual ("333333333333", recreatedFrame.BssId.ToString ().ToUpper ());
                 
-                CollectionAssert.AreEqual (new Byte[]{0x01, 0x02, 0x03, 0x04, 0x05}, recreatedFrame.PayloadData);
+                CollectionAssert.AreEqual (new byte[]{0x01, 0x02, 0x03, 0x04, 0x05}, recreatedFrame.PayloadData);
                 
                 Assert.AreEqual (fcs, recreatedFrame.FrameCheckSequence);
             }
@@ -147,8 +147,8 @@ namespace Test.PacketType
 			[Test]
 			public void Test_ConstructorWithCorruptBuffer ()
 			{
-				//buffer is way too short for frame. We are just checking it doesn't throw
-				Byte[] corruptBuffer = new Byte[]{0x01};
+                //buffer is way too short for frame. We are just checking it doesn't throw
+                byte[] corruptBuffer = new byte[]{0x01};
 				QosDataFrame frame = new QosDataFrame(new ByteArraySegment(corruptBuffer));
 				Assert.IsFalse(frame.FCSValid);
 			}

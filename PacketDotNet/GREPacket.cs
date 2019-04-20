@@ -60,30 +60,30 @@ namespace PacketDotNet
 
 
         /// <summary> Fetch the GRE header checksum.</summary>
-        public Int16 Checksum => BitConverter.ToInt16(Header.Bytes,
+        public short Checksum => BitConverter.ToInt16(Header.Bytes,
                                                       Header.Offset + GREFields.ChecksumPosition);
 
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.DarkGray;
+        public override string Color => AnsiEscapeSequences.DarkGray;
 
-        public Boolean HasCheckSum => 8 == (Header.Bytes[Header.Offset + 1] & 0x8);
+        public bool HasCheckSum => 8 == (Header.Bytes[Header.Offset + 1] & 0x8);
 
-        public Boolean HasKey => 2 == (Header.Bytes[Header.Offset + 1] & 0x2);
+        public bool HasKey => 2 == (Header.Bytes[Header.Offset + 1] & 0x2);
 
-        public Boolean HasReserved => 4 == (Header.Bytes[Header.Offset + 1] & 0x4);
+        public bool HasReserved => 4 == (Header.Bytes[Header.Offset + 1] & 0x4);
 
-        public Boolean HasSequence => 1 == (Header.Bytes[Header.Offset + 1] & 0x1);
+        public bool HasSequence => 1 == (Header.Bytes[Header.Offset + 1] & 0x1);
 
         public EthernetPacketType Protocol => (EthernetPacketType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                                                                    Header.Offset + GREFields.FlagsLength);
 
 
-        public Int32 Version => Header.Bytes[2] & 0x7;
+        public int Version => Header.Bytes[2] & 0x7;
 
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
@@ -105,7 +105,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                var unused = new Dictionary<String, String>
+                var unused = new Dictionary<string, string>
                 {
                     {"Protocol ", Protocol + " (0x" + Protocol.ToString("x") + ")"}
                 };

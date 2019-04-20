@@ -8,7 +8,7 @@ namespace Test.Performance
     public class ByteCopyPerformance
     {
         // The number of times the test is run
-        Int32 testRuns = 40000;
+        int testRuns = 40000;
 
         [Test]
         public void ArrayCopyPerformance()
@@ -16,7 +16,7 @@ namespace Test.Performance
             // create a realistic packet for testing
             var ethernetPacket = EthernetPacket.RandomPacket();
             // create the array to store the copy result
-            Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
+            byte[] hwAddress = new byte[EthernetFields.MacAddressLength];
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
@@ -28,7 +28,7 @@ namespace Test.Performance
             var startTime = DateTime.Now;
 
             // run the test
-            for (Int32 i = 0; i < testRuns; i++)
+            for (int i = 0; i < testRuns; i++)
             {
                 Array.Copy(ethernetPacket.Bytes, EthernetFields.SourceMacPosition,
                     hwAddress, 0, EthernetFields.MacAddressLength);
@@ -53,7 +53,7 @@ namespace Test.Performance
             // create a realistic packet for testing
             var ethernetPacket = EthernetPacket.RandomPacket();
             // create the array to store the copy result
-            Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
+            byte[] hwAddress = new byte[EthernetFields.MacAddressLength];
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
@@ -65,7 +65,7 @@ namespace Test.Performance
             var startTime = DateTime.Now;
 
             // run the test
-            for (Int32 i = 0; i < testRuns; i++)
+            for (int i = 0; i < testRuns; i++)
             {
                 Buffer.BlockCopy(ethernetPacket.Bytes, EthernetFields.SourceMacPosition,
                     hwAddress, 0, EthernetFields.MacAddressLength);

@@ -54,11 +54,11 @@ namespace PacketDotNet
         public ICMPv6Types Type
         {
             get => (ICMPv6Types) Header.Bytes[Header.Offset + ICMPv6Fields.TypePosition];
-            set => Header.Bytes[Header.Offset + ICMPv6Fields.TypePosition] = (Byte) value;
+            set => Header.Bytes[Header.Offset + ICMPv6Fields.TypePosition] = (byte) value;
         }
 
         /// <summary> Fetch the ICMP code </summary>
-        public Byte Code
+        public byte Code
         {
             get => Header.Bytes[Header.Offset + ICMPv6Fields.CodePosition];
             set => Header.Bytes[Header.Offset + ICMPv6Fields.CodePosition] = value;
@@ -67,7 +67,7 @@ namespace PacketDotNet
         /// <value>
         /// Checksum value
         /// </value>
-        public UInt16 Checksum
+        public ushort Checksum
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + ICMPv6Fields.ChecksumPosition);
@@ -114,7 +114,7 @@ namespace PacketDotNet
         /// Used to prevent a recursive stack overflow
         /// when recalculating in UpdateCalculatedValues()
         /// </summary>
-        private Boolean _skipUpdating;
+        private bool _skipUpdating;
 
         /// <summary>
         /// Recalculate the checksum
@@ -144,10 +144,10 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.LightBlue;
+        public override string Color => AnsiEscapeSequences.LightBlue;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
@@ -173,9 +173,9 @@ namespace PacketDotNet
                 case StringOutputType.Verbose:
                 case StringOutputType.VerboseColored:
                     // collect the properties and their value
-                    var properties = new Dictionary<String, String>
+                    var properties = new Dictionary<string, string>
                     {
-                        {"type", Type + " (" + (Int32) Type + ")"},
+                        {"type", Type + " (" + (int) Type + ")"},
                         {"code", Code.ToString()},
                         // TODO: Implement a checksum verification for ICMPv6
                         {"checksum", "0x" + Checksum.ToString("x")}
@@ -183,7 +183,7 @@ namespace PacketDotNet
                     // TODO: Implement ICMPv6 Option fields here?
 
                     // calculate the padding needed to right-justify the property names
-                    var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                    var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                     // build the output string
                     buffer.AppendLine("ICMP:  ******* ICMPv6 - \"Internet Control Message Protocol (Version 6)\"- offset=? length=" + TotalPacketLength);

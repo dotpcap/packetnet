@@ -23,12 +23,12 @@ namespace PacketDotNet
         /// </summary>
         public OSPFv2LSUpdatePacket()
         {
-            var b = new Byte[OSPFv2Fields.HeaderLength + 4];
+            var b = new byte[OSPFv2Fields.HeaderLength + 4];
             Array.Copy(Header.Bytes, b, Header.Bytes.Length);
             Header = new ByteArraySegment(b, 0, OSPFv2Fields.LSRStart);
             Type = PacketType;
 
-            PacketLength = (UInt16) Header.Bytes.Length;
+            PacketLength = (ushort) Header.Bytes.Length;
             LSANumber = 0;
         }
 
@@ -47,7 +47,7 @@ namespace PacketDotNet
                 length += t.Bytes.Length;
             }
 
-            var bytes = new Byte[length + offset];
+            var bytes = new byte[length + offset];
 
             Array.Copy(Header.Bytes, bytes, Header.Length);
             foreach (var t in lsas)
@@ -58,8 +58,8 @@ namespace PacketDotNet
 
             Header = new ByteArraySegment(bytes);
             Type = PacketType;
-            PacketLength = (UInt16) Header.Bytes.Length;
-            LSANumber = (UInt32) lsas.Count;
+            PacketLength = (ushort) Header.Bytes.Length;
+            LSANumber = (uint) lsas.Count;
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace PacketDotNet
         /// <param name="offset">
         /// A <see cref="System.Int32" />
         /// </param>
-        public OSPFv2LSUpdatePacket(Byte[] bytes, Int32 offset) :
+        public OSPFv2LSUpdatePacket(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Type = PacketType;
@@ -91,7 +91,7 @@ namespace PacketDotNet
         /// <summary>
         /// The number of LSAs included in this update.
         /// </summary>
-        public UInt32 LSANumber
+        public uint LSANumber
         {
             get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + OSPFv2Fields.LSANumberPosition);
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OSPFv2Fields.LSANumberPosition);
@@ -140,7 +140,7 @@ namespace PacketDotNet
         /// Returns a <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2LSUpdatePacket" />.
         /// </summary>
         /// <returns>A <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2LSUpdatePacket" />.</returns>
-        public override String ToString()
+        public override string ToString()
         {
             var packet = new StringBuilder();
             packet.Append(base.ToString());
@@ -158,7 +158,7 @@ namespace PacketDotNet
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             return ToString();
         }

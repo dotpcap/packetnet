@@ -9,19 +9,19 @@ namespace PacketDotNet.LSA
     public class RouterLSAFields : LSAFields
     {
         /// <summary> The length of the LinkNumber field in bytes</summary>
-        public static readonly Int32 LinkNumberLength = 2;
+        public static readonly int LinkNumberLength = 2;
 
         /// <summary> The relative postion of the LinkNumber field</summary>
-        public static readonly Int32 LinkNumberPosition;
+        public static readonly int LinkNumberPosition;
 
         /// <summary> The relative postion of the start of the RouterLink(s)</summary>
-        public static readonly Int32 RouterLinksStart;
+        public static readonly int RouterLinksStart;
 
         /// <summary> The length of the RouterOptions field in bytes</summary>
-        public static readonly Int32 RouterOptionsLength = 2;
+        public static readonly int RouterOptionsLength = 2;
 
         /// <summary> The relative postion of the RouterOptions field</summary>
-        public static readonly Int32 RouterOptionsPosition;
+        public static readonly int RouterOptionsPosition;
 
         static RouterLSAFields()
         {

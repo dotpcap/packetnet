@@ -68,7 +68,7 @@ namespace PacketDotNet
 
             // allocate memory for this packet
             var packetLength = SyncSequence.Length + (EthernetFields.MacAddressLength * MACRepetitions);
-            var packetBytes = new Byte[packetLength];
+            var packetBytes = new byte[packetLength];
             var destinationMACBytes = destinationMAC.GetAddressBytes();
 
             // write the data to the payload
@@ -120,7 +120,7 @@ namespace PacketDotNet
         {
             get
             {
-                var destinationMAC = new Byte[EthernetFields.MacAddressLength];
+                var destinationMAC = new byte[EthernetFields.MacAddressLength];
                 Array.Copy(Header.Bytes,
                            Header.Offset + SyncSequence.Length,
                            destinationMAC,
@@ -154,7 +154,7 @@ namespace PacketDotNet
         {
             var rnd = new Random();
 
-            var destAddress = new Byte[EthernetFields.MacAddressLength];
+            var destAddress = new byte[EthernetFields.MacAddressLength];
 
             rnd.NextBytes(destAddress);
 
@@ -169,7 +169,7 @@ namespace PacketDotNet
         /// <returns>
         /// True if the Wake-On-LAN payload is valid
         /// </returns>
-        public Boolean IsValid()
+        public bool IsValid()
         {
             return IsValid(Header);
         }
@@ -183,7 +183,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Boolean" />
         /// </returns>
-        public static Boolean IsValid(ByteArraySegment byteArraySegment)
+        public static bool IsValid(ByteArraySegment byteArraySegment)
         {
             // validate the 16 repetitions of the wolDestinationMAC
             // - verify that the wolDestinationMAC address repeats 16 times in sequence
@@ -225,7 +225,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Boolean" />
         /// </returns>
-        public override Boolean Equals(Object obj)
+        public override bool Equals(object obj)
         {
             // Check for null values and compare run-time types.
             if (obj == null || GetType() != obj.GetType())
@@ -243,13 +243,13 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="System.Int32" />
         /// </returns>
-        public override Int32 GetHashCode()
+        public override int GetHashCode()
         {
             return Header.GetHashCode();
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
@@ -272,13 +272,13 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                var properties = new Dictionary<String, String>
+                var properties = new Dictionary<string, string>
                 {
                     {"destination", HexPrinter.PrintMACAddress(DestinationMAC)}
                 };
 
                 // calculate the padding needed to right-justify the property names
-                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("WOL:  ******* WOL - \"Wake-On-Lan\" - offset=? length=" + TotalPacketLength);
@@ -303,10 +303,10 @@ namespace PacketDotNet
         #region Members
 
         // the WOL synchronization sequence
-        private static readonly Byte[] SyncSequence = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
+        private static readonly byte[] SyncSequence = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
 
         // the number of times the Destination MAC appears in the payload
-        private const Int32 MACRepetitions = 16;
+        private const int MACRepetitions = 16;
 
         #endregion
     }

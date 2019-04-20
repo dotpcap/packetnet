@@ -117,7 +117,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The size of the frame.
         /// </value>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
+        public override int FrameSize => MacFields.FrameControlLength +
                                            MacFields.DurationIDLength +
                                            (MacFields.AddressLength * 3) +
                                            MacFields.SequenceControlLength +
@@ -139,12 +139,12 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The listen interval.
         /// </value>
-        public UInt16 ListenInterval { get; set; }
+        public ushort ListenInterval { get; set; }
 
         /// <summary>
         /// Frame control bytes are the first two bytes of the frame
         /// </summary>
-        private UInt16 CapabilityInformationBytes
+        private ushort CapabilityInformationBytes
         {
             get
             {
@@ -162,7 +162,7 @@ namespace PacketDotNet.Ieee80211
                                                        Header.Offset + AssociationRequestFields.CapabilityInformationPosition);
         }
 
-        private UInt16 ListenIntervalBytes
+        private ushort ListenIntervalBytes
         {
             get
             {
@@ -183,7 +183,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;

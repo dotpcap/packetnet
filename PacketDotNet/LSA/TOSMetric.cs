@@ -10,27 +10,27 @@ namespace PacketDotNet
     public struct TOSMetric
     {
         ///<summary>The number of bytes a TOS metric occupy</summary>
-        public static readonly Int32 TOSMetricLength = 4;
+        public static readonly int TOSMetricLength = 4;
 
         /// <summary>
         /// IP Type of Service that this metric refers to.
         /// </summary>
-        public Byte TOS;
+        public byte TOS;
 
         /// <summary>
         /// TOS-specific metric information.
         /// </summary>
-        public UInt32 Metric;
+        public uint Metric;
 
         /// <summary>
         /// Gets the bytes that make up this packet.
         /// </summary>
         /// <value>Packet bytes</value>
-        public Byte[] Bytes
+        public byte[] Bytes
         {
             get
             {
-                var b = new Byte[TOSMetricLength];
+                var b = new byte[TOSMetricLength];
                 EndianBitConverter.Big.CopyBytes(Metric, b, 0);
                 b[0] = TOS;
                 return b;

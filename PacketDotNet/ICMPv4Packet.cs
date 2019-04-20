@@ -63,7 +63,7 @@ namespace PacketDotNet
 
             set
             {
-                var theValue = (UInt16) value;
+                var theValue = (ushort) value;
                 EndianBitConverter.Big.CopyBytes(theValue,
                                                  Header.Bytes,
                                                  Header.Offset + ICMPv4Fields.TypeCodePosition);
@@ -73,7 +73,7 @@ namespace PacketDotNet
         /// <value>
         /// Checksum value
         /// </value>
-        public UInt16 Checksum
+        public ushort Checksum
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + ICMPv4Fields.ChecksumPosition);
@@ -89,7 +89,7 @@ namespace PacketDotNet
         /// <summary>
         /// ID field
         /// </summary>
-        public UInt16 ID
+        public ushort ID
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + ICMPv4Fields.IDPosition);
@@ -105,7 +105,7 @@ namespace PacketDotNet
         /// <summary>
         /// Sequence field
         /// </summary>
-        public UInt16 Sequence
+        public ushort Sequence
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + ICMPv4Fields.SequencePosition);
@@ -117,7 +117,7 @@ namespace PacketDotNet
         /// <summary>
         /// Contents of the ICMP packet
         /// </summary>
-        public Byte[] Data
+        public byte[] Data
         {
             get => PayloadPacketOrData.Value.ByteArraySegment.ActualBytes();
             set => PayloadPacketOrData.Value.ByteArraySegment = new ByteArraySegment(value, 0, value.Length);
@@ -159,10 +159,10 @@ namespace PacketDotNet
         }
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.LightBlue;
+        public override string Color => AnsiEscapeSequences.LightBlue;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
@@ -187,7 +187,7 @@ namespace PacketDotNet
                 case StringOutputType.Verbose:
                 case StringOutputType.VerboseColored:
                     // collect the properties and their value
-                    var properties = new Dictionary<String, String>
+                    var properties = new Dictionary<string, string>
                     {
                         {"type/code", TypeCode + " (0x" + TypeCode.ToString("x") + ")"},
                         // TODO: Implement checksum verification for ICMPv4
@@ -197,7 +197,7 @@ namespace PacketDotNet
                     };
 
                     // calculate the padding needed to right-justify the property names
-                    var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                    var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                     // build the output string
                     buffer.AppendLine("ICMP:  ******* ICMPv4 - \"Internet Control Message Protocol (Version 4)\" - offset=? length=" + TotalPacketLength);

@@ -28,7 +28,7 @@ namespace PacketDotNet.MiscUtil.Conversion
     /// </summary>
     public class StringConverter
     {
-        private static readonly Int32[] E2ATable =
+        private static readonly int[] E2ATable =
         {
             0,
             1,
@@ -296,7 +296,7 @@ namespace PacketDotNet.MiscUtil.Conversion
         /// <param name="offset">offset</param>
         /// <param name="length">length</param>
         /// <returns></returns>
-        public static String EbcdicToAscii(Byte[] data, Int32 offset, Int32 length)
+        public static string EbcdicToAscii(byte[] data, int offset, int length)
         {
             var stringBuilder = new StringBuilder();
             for (var i = offset; i < data.Length && i - offset < length; i++)

@@ -20,7 +20,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override Int32 Length => 4;
+        public override int Length => 4;
 
         /// <summary>
         /// Zero-based index of the physical interface the packet was captured from.
@@ -28,7 +28,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The interface id.
         /// </value>
-        public UInt32 InterfaceId { get; set; }
+        public uint InterfaceId { get; set; }
 
         /// <summary>
         /// Gets the field bytes. This doesn't include the PPI field header.
@@ -36,7 +36,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public override Byte[] Bytes => BitConverter.GetBytes(InterfaceId);
+        public override byte[] Bytes => BitConverter.GetBytes(InterfaceId);
 
         #endregion Properties
 
@@ -65,7 +65,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='interfaceId'>
         /// The interface id.
         /// </param>
-        public PpiAggregation(UInt32 interfaceId)
+        public PpiAggregation(uint interfaceId)
         {
             InterfaceId = interfaceId;
         }

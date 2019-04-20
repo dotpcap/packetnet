@@ -62,7 +62,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Frame control bytes are the first two bytes of the frame
         /// </summary>
-        protected UInt16 SequenceControlBytes
+        protected ushort SequenceControlBytes
         {
             get
             {
@@ -173,9 +173,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// The address string.
         /// </returns>
-        protected override String GetAddressString()
+        protected override string GetAddressString()
         {
-            String addresses;
+            string addresses;
             if (FrameControl.ToDS && FrameControl.FromDS)
             {
                 addresses = $"SA {SourceAddress} DA {DestinationAddress} TA {TransmitterAddress} RA {ReceiverAddress}";

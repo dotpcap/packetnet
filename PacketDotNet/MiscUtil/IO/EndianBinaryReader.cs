@@ -34,7 +34,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// <summary>
         /// Whether or not this reader has been disposed yet.
         /// </summary>
-        private Boolean disposed;
+        private bool disposed;
 
         /// <summary>
         /// Decoder to use for string conversions.
@@ -44,17 +44,17 @@ namespace PacketDotNet.MiscUtil.IO
         /// <summary>
         /// Buffer used for temporary storage before conversion into primitives
         /// </summary>
-        private readonly Byte[] buffer = new Byte[16];
+        private readonly byte[] buffer = new byte[16];
 
         /// <summary>
         /// Buffer used for temporary storage when reading a single character
         /// </summary>
-        private readonly Char[] charBuffer = new Char[1];
+        private readonly char[] charBuffer = new char[1];
 
         /// <summary>
         /// Minimum number of bytes used to encode a character
         /// </summary>
-        private readonly Int32 minBytesPerChar;
+        private readonly int minBytesPerChar;
 
         #endregion
 
@@ -140,7 +140,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// </summary>
         /// <param name="offset">Offset to seek to.</param>
         /// <param name="origin">Origin of seek operation.</param>
-        public void Seek(Int32 offset, SeekOrigin origin)
+        public void Seek(int offset, SeekOrigin origin)
         {
             CheckDisposed();
             BaseStream.Seek(offset, origin);
@@ -150,7 +150,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// Reads a single byte from the stream.
         /// </summary>
         /// <returns>The byte read</returns>
-        public Byte ReadByte()
+        public byte ReadByte()
         {
             ReadInternal(buffer, 1);
             return buffer[0];
@@ -160,17 +160,17 @@ namespace PacketDotNet.MiscUtil.IO
         /// Reads a single signed byte from the stream.
         /// </summary>
         /// <returns>The byte read</returns>
-        public SByte ReadSByte()
+        public sbyte ReadSByte()
         {
             ReadInternal(buffer, 1);
-            return unchecked((SByte) buffer[0]);
+            return unchecked((sbyte) buffer[0]);
         }
 
         /// <summary>
         /// Reads a boolean from the stream. 1 byte is read.
         /// </summary>
         /// <returns>The boolean read</returns>
-        public Boolean ReadBoolean()
+        public bool ReadBoolean()
         {
             ReadInternal(buffer, 1);
             return BitConverter.ToBoolean(buffer, 0);
@@ -181,7 +181,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this reader. 2 bytes are read.
         /// </summary>
         /// <returns>The 16-bit integer read</returns>
-        public Int16 ReadInt16()
+        public short ReadInt16()
         {
             ReadInternal(buffer, 2);
             return BitConverter.ToInt16(buffer, 0);
@@ -192,7 +192,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this reader. 4 bytes are read.
         /// </summary>
         /// <returns>The 32-bit integer read</returns>
-        public Int32 ReadInt32()
+        public int ReadInt32()
         {
             ReadInternal(buffer, 4);
             return BitConverter.ToInt32(buffer, 0);
@@ -203,7 +203,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this reader. 8 bytes are read.
         /// </summary>
         /// <returns>The 64-bit integer read</returns>
-        public Int64 ReadInt64()
+        public long ReadInt64()
         {
             ReadInternal(buffer, 8);
             return BitConverter.ToInt64(buffer, 0);
@@ -214,7 +214,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this reader. 2 bytes are read.
         /// </summary>
         /// <returns>The 16-bit unsigned integer read</returns>
-        public UInt16 ReadUInt16()
+        public ushort ReadUInt16()
         {
             ReadInternal(buffer, 2);
             return BitConverter.ToUInt16(buffer, 0);
@@ -225,7 +225,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this reader. 4 bytes are read.
         /// </summary>
         /// <returns>The 32-bit unsigned integer read</returns>
-        public UInt32 ReadUInt32()
+        public uint ReadUInt32()
         {
             ReadInternal(buffer, 4);
             return BitConverter.ToUInt32(buffer, 0);
@@ -236,7 +236,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this reader. 8 bytes are read.
         /// </summary>
         /// <returns>The 64-bit unsigned integer read</returns>
-        public UInt64 ReadUInt64()
+        public ulong ReadUInt64()
         {
             ReadInternal(buffer, 8);
             return BitConverter.ToUInt64(buffer, 0);
@@ -247,7 +247,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this reader. 4 bytes are read.
         /// </summary>
         /// <returns>The floating point value read</returns>
-        public Single ReadSingle()
+        public float ReadSingle()
         {
             ReadInternal(buffer, 4);
             return BitConverter.ToSingle(buffer, 0);
@@ -258,7 +258,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this reader. 8 bytes are read.
         /// </summary>
         /// <returns>The floating point value read</returns>
-        public Double ReadDouble()
+        public double ReadDouble()
         {
             ReadInternal(buffer, 8);
             return BitConverter.ToDouble(buffer, 0);
@@ -269,7 +269,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this reader. 16 bytes are read.
         /// </summary>
         /// <returns>The decimal value read</returns>
-        public Decimal ReadDecimal()
+        public decimal ReadDecimal()
         {
             ReadInternal(buffer, 16);
             return BitConverter.ToDecimal(buffer, 0);
@@ -281,7 +281,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// -1 is returned.
         /// </summary>
         /// <returns>The character read, or -1 for end of stream.</returns>
-        public Int32 Read()
+        public int Read()
         {
             var charsRead = Read(charBuffer, 0, 1);
             if (charsRead == 0)
@@ -303,7 +303,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// The number of characters actually read. This will only be less than
         /// the requested number of characters if the end of the stream is reached.
         /// </returns>
-        public Int32 Read(Char[] data, Int32 index, Int32 count)
+        public int Read(char[] data, int index, int count)
         {
             CheckDisposed();
 
@@ -332,12 +332,12 @@ namespace PacketDotNet.MiscUtil.IO
 
             if (byteBuffer.Length < count * minBytesPerChar)
             {
-                byteBuffer = new Byte[4096];
+                byteBuffer = new byte[4096];
             }
 
             while (read < count)
             {
-                Int32 amountToRead;
+                int amountToRead;
                 // First time through we know we haven't previously read any data
                 if (firstTime)
                 {
@@ -381,7 +381,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// The number of bytes actually read. This will only be less than
         /// the requested number of bytes if the end of the stream is reached.
         /// </returns>
-        public Int32 Read(Byte[] buffer, Int32 index, Int32 count)
+        public int Read(byte[] buffer, int index, int count)
         {
             CheckDisposed();
             if (buffer == null)
@@ -429,7 +429,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// </summary>
         /// <param name="count">The number of bytes to read</param>
         /// <returns>The bytes read</returns>
-        public Byte[] ReadBytes(Int32 count)
+        public byte[] ReadBytes(int count)
         {
             CheckDisposed();
             if (count < 0)
@@ -437,7 +437,7 @@ namespace PacketDotNet.MiscUtil.IO
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
 
-            var ret = new Byte[count];
+            var ret = new byte[count];
             var index = 0;
             while (index < count)
             {
@@ -445,7 +445,7 @@ namespace PacketDotNet.MiscUtil.IO
                 // Stream has finished half way through. That's fine, return what we've got.
                 if (read == 0)
                 {
-                    var copy = new Byte[index];
+                    var copy = new byte[index];
                     Buffer.BlockCopy(ret, 0, copy, 0, index);
                     return copy;
                 }
@@ -463,9 +463,9 @@ namespace PacketDotNet.MiscUtil.IO
         /// </summary>
         /// <param name="count">The number of bytes to read</param>
         /// <returns>The bytes read</returns>
-        public Byte[] ReadBytesOrThrow(Int32 count)
+        public byte[] ReadBytesOrThrow(int count)
         {
-            var ret = new Byte[count];
+            var ret = new byte[count];
             ReadInternal(ret, count);
             return ret;
         }
@@ -477,7 +477,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// of the bit converter.
         /// </summary>
         /// <returns>The 7-bit encoded integer read from the stream.</returns>
-        public Int32 Read7BitEncodedInt()
+        public int Read7BitEncodedInt()
         {
             CheckDisposed();
 
@@ -508,7 +508,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// of the bit converter.
         /// </summary>
         /// <returns>The 7-bit encoded integer read from the stream.</returns>
-        public Int32 ReadBigEndian7BitEncodedInt()
+        public int ReadBigEndian7BitEncodedInt()
         {
             CheckDisposed();
 
@@ -539,11 +539,11 @@ namespace PacketDotNet.MiscUtil.IO
         /// the encoding for this reader.
         /// </summary>
         /// <returns>The string read from the stream.</returns>
-        public String ReadString()
+        public string ReadString()
         {
             var bytesToRead = Read7BitEncodedInt();
 
-            var data = new Byte[bytesToRead];
+            var data = new byte[bytesToRead];
             ReadInternal(data, bytesToRead);
             return Encoding.GetString(data, 0, data.Length);
         }
@@ -570,7 +570,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// </summary>
         /// <param name="data">Buffer to read into</param>
         /// <param name="size">Number of bytes to read</param>
-        private void ReadInternal(Byte[] data, Int32 size)
+        private void ReadInternal(byte[] data, int size)
         {
             CheckDisposed();
             var index = 0;
@@ -595,7 +595,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="data">Buffer to read into</param>
         /// <param name="size">Number of bytes to read</param>
         /// <returns>Number of bytes actually read</returns>
-        private Int32 TryReadInternal(Byte[] data, Int32 size)
+        private int TryReadInternal(byte[] data, int size)
         {
             CheckDisposed();
             var index = 0;

@@ -50,7 +50,7 @@ namespace PacketDotNet
         /// <summary>
         /// The default time to live value for Ip packets being constructed
         /// </summary>
-        protected Int32 DefaultTimeToLive = 64;
+        protected int DefaultTimeToLive = 64;
 
         /// <value>
         /// Payload packet, overridden to set the NextHeader/Protocol based
@@ -95,7 +95,7 @@ namespace PacketDotNet
 
                 // update the payload length based on the size
                 // of the payload packet
-                var newPayloadLength = (UInt16)base.PayloadPacket.BytesHighPerformance.Length;
+                var newPayloadLength = (ushort)base.PayloadPacket.BytesHighPerformance.Length;
                 Log.DebugFormat("newPayloadLength {0}", newPayloadLength);
                 PayloadLength = newPayloadLength;
             }
@@ -138,13 +138,13 @@ namespace PacketDotNet
         /// Named 'TimeToLive' in IPv4
         /// Named 'HopLimit' in IPv6
         /// </value>
-        public abstract Int32 TimeToLive { get; set; }
+        public abstract int TimeToLive { get; set; }
 
         /// <value>
         /// The number of hops remaining for this packet
         /// Included along side of TimeToLive for user convenience
         /// </value>
-        public virtual Int32 HopLimit
+        public virtual int HopLimit
         {
             get => TimeToLive;
             set => TimeToLive = value;
@@ -155,25 +155,25 @@ namespace PacketDotNet
         /// NOTE: This field is the number of 32bit words in the ip header,
         /// ie. the number of bytes is 4x this value
         /// </summary>
-        public abstract Int32 HeaderLength { get; set; }
+        public abstract int HeaderLength { get; set; }
 
         /// <summary>
         /// ipv4 total number of bytes in the ipv4 header + payload,
         /// ipv6 PayloadLength + IPv6Fields.HeaderLength
         /// </summary>
-        public abstract Int32 TotalLength { get; set; }
+        public abstract int TotalLength { get; set; }
 
         /// <summary>
         /// ipv6 payload length in bytes,
         /// calculate from ipv4.TotalLength - (ipv4.HeaderLength * 4)
         /// </summary>
-        public abstract UInt16 PayloadLength { get; set; }
+        public abstract ushort PayloadLength { get; set; }
 
         /// <summary>
         /// Gets the pseudo ip header.
         /// </summary>
         /// <param name="originalHeaderLength">Length of the original header.</param>
-        /// <returns><see cref="Byte" />s.</returns>
+        /// <returns><see cref="byte" />s.</returns>
         internal abstract byte[] GetPseudoIPHeader(int originalHeaderLength);
 
         /// <summary>
@@ -194,8 +194,8 @@ namespace PacketDotNet
         public static IPAddress GetIPAddress
         (
             AddressFamily ipType,
-            Int32 fieldOffset,
-            Byte[] bytes)
+            int fieldOffset,
+            byte[] bytes)
         {
             switch (ipType)
             {
@@ -209,7 +209,7 @@ namespace PacketDotNet
                 case AddressFamily.InterNetworkV6:
                 {
                     // IPv6: not possible due to not accepting parameters for it.
-                    var address = new Byte[IPv6Fields.AddressLength];
+                    var address = new byte[IPv6Fields.AddressLength];
                     for (int i = 0; i < IPv6Fields.AddressLength; i++)
                         address[i] = bytes[fieldOffset + i];
 

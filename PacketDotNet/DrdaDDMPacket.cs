@@ -50,27 +50,27 @@ namespace PacketDotNet
         /// <summary>
         /// The Length field
         /// </summary>
-        public UInt16 Length => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.LengthPosition);
+        public ushort Length => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.LengthPosition);
 
         /// <summary>
         /// The Magic field
         /// </summary>
-        public Byte Magic => Header.Bytes[Header.Offset + DrdaDDMFields.MagicPosition];
+        public byte Magic => Header.Bytes[Header.Offset + DrdaDDMFields.MagicPosition];
 
         /// <summary>
         /// The Format field
         /// </summary>
-        public Byte Format => Header.Bytes[Header.Offset + DrdaDDMFields.FormatPosition];
+        public byte Format => Header.Bytes[Header.Offset + DrdaDDMFields.FormatPosition];
 
         /// <summary>
         /// The CorrelId field
         /// </summary>
-        public UInt16 CorrelId => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.CorrelIdPosition);
+        public ushort CorrelId => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.CorrelIdPosition);
 
         /// <summary>
         /// The Length2 field
         /// </summary>
-        public UInt16 Length2 => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.Length2Position);
+        public ushort Length2 => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDDMFields.Length2Position);
 
         /// <summary>
         /// The Code Point field
@@ -94,7 +94,7 @@ namespace PacketDotNet
                 var ddmTotalLength = Length;
                 while (offset < Header.Offset + ddmTotalLength)
                 {
-                    Int32 length = EndianBitConverter.Big.ToUInt16(Header.Bytes, offset);
+                    int length = EndianBitConverter.Big.ToUInt16(Header.Bytes, offset);
                     if (length == 0)
                     {
                         length = Header.Offset + ddmTotalLength - offset;
@@ -157,7 +157,7 @@ namespace PacketDotNet
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";

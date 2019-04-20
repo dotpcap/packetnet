@@ -24,10 +24,10 @@ namespace PacketDotNet.LSA
         /// </summary>
         public SummaryLSA()
         {
-            var b = new Byte[SummaryLSAFields.TOSMetricPosition];
+            var b = new byte[SummaryLSAFields.TOSMetricPosition];
             Header = new ByteArraySegment(b);
             LSType = LSAType;
-            Length = (UInt16) Header.Bytes.Length;
+            Length = (ushort) Header.Bytes.Length;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace PacketDotNet.LSA
         {
             var length = SummaryLSAFields.TOSMetricPosition + metrics.Count * TOSMetric.TOSMetricLength;
             var offset = SummaryLSAFields.TOSMetricPosition;
-            var b = new Byte[length];
+            var b = new byte[length];
 
             foreach (var m in metrics)
             {
@@ -47,7 +47,7 @@ namespace PacketDotNet.LSA
 
             Header = new ByteArraySegment(b);
             LSType = LSAType;
-            Length = (UInt16) Header.Bytes.Length;
+            Length = (ushort) Header.Bytes.Length;
         }
 
         /// <summary>
@@ -62,14 +62,14 @@ namespace PacketDotNet.LSA
         /// <param name="length">
         /// A <see cref="System.Int32" />
         /// </param>
-        public SummaryLSA(Byte[] packet, Int32 offset, Int32 length) :
+        public SummaryLSA(byte[] packet, int offset, int length) :
             base(packet, offset, length)
         { }
 
         /// <summary>
         /// The cost of this route.  Expressed in the same units as the interface costs in the router-LSAs.
         /// </summary>
-        public UInt32 Metric
+        public uint Metric
         {
             get
             {
@@ -128,7 +128,7 @@ namespace PacketDotNet.LSA
                     var metric = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + SummaryLSAFields.TOSMetricPosition + i * TOSMetric.TOSMetricLength);
                     var m = new TOSMetric
                     {
-                        TOS = (Byte) ((metric & 0xFF000000) >> 24),
+                        TOS = (byte) ((metric & 0xFF000000) >> 24),
                         Metric = metric & 0x00FFFFFF
                     };
                     ret.Add(m);

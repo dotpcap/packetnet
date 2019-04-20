@@ -59,7 +59,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override Int32 Length => 8;
+        public override int Length => 8;
 
         /// <summary>
         /// Gets or sets the standard 802.2 flags.
@@ -83,14 +83,14 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public override Byte[] Bytes
+        public override byte[] Bytes
         {
             get
             {
                 var ms = new MemoryStream();
                 var writer = new BinaryWriter(ms);
-                writer.Write((UInt32) Flags);
-                writer.Write((UInt32) Errors);
+                writer.Write((uint) Flags);
+                writer.Write((uint) Errors);
                 return ms.ToArray();
             }
         }

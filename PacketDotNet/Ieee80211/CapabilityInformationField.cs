@@ -39,7 +39,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name="field">
         /// A <see cref="ushort" />
         /// </param>
-        public CapabilityInformationField(UInt16 field)
+        public CapabilityInformationField(ushort field)
         {
             Field = field;
         }
@@ -51,7 +51,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// <c>true</c> if cf pollable; otherwise, <c>false</c>.
         /// </value>
-        public Boolean CfPollable
+        public bool CfPollable
         {
             get => GetBitFieldValue(2);
             set => SetBitFieldValue(2, value);
@@ -64,7 +64,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// <c>true</c> if cf poll request; otherwise, <c>false</c>.
         /// </value>
-        public Boolean CfPollRequest
+        public bool CfPollRequest
         {
             get => GetBitFieldValue(3);
             set => SetBitFieldValue(3, value);
@@ -77,7 +77,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// <c>true</c> if channel agility; otherwise, <c>false</c>.
         /// </value>
-        public Boolean ChannelAgility
+        public bool ChannelAgility
         {
             get => GetBitFieldValue(7);
             set => SetBitFieldValue(7, value);
@@ -90,7 +90,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// <c>true</c> if dss ofdm; otherwise, <c>false</c>.
         /// </value>
-        public Boolean DssOfdm
+        public bool DssOfdm
         {
             get => GetBitFieldValue(13);
             set => SetBitFieldValue(13, value);
@@ -102,13 +102,13 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The field.
         /// </value>
-        public UInt16 Field { get; set; }
+        public ushort Field { get; set; }
 
         /// <summary>
         /// Is set to 1 when the beacon frame is representing an ESS (as opposed to an IBSS)
         /// This field and IsIbss should be mutually exclusive
         /// </summary>
-        public Boolean IsEss
+        public bool IsEss
         {
             get => GetBitFieldValue(0);
             set => SetBitFieldValue(0, value);
@@ -118,7 +118,7 @@ namespace PacketDotNet.Ieee80211
         /// Is set to 1 when the beacon frame is representing an IBSS (as opposed to an ESS)
         /// This field and IsEss should be mutually exclusive
         /// </summary>
-        public Boolean IsIbss
+        public bool IsIbss
         {
             get => GetBitFieldValue(1);
             set => SetBitFieldValue(1, value);
@@ -131,7 +131,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// <c>true</c> if pbcc; otherwise, <c>false</c>.
         /// </value>
-        public Boolean Pbcc
+        public bool Pbcc
         {
             get => GetBitFieldValue(6);
             set => SetBitFieldValue(6, value);
@@ -144,7 +144,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// <c>true</c> if privacy; otherwise, <c>false</c>.
         /// </value>
-        public Boolean Privacy
+        public bool Privacy
         {
             get => GetBitFieldValue(4);
             set => SetBitFieldValue(4, value);
@@ -157,7 +157,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// <c>true</c> if short preamble; otherwise, <c>false</c>.
         /// </value>
-        public Boolean ShortPreamble
+        public bool ShortPreamble
         {
             get => GetBitFieldValue(5);
             set => SetBitFieldValue(5, value);
@@ -170,7 +170,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// <c>true</c> if short time slot; otherwise, <c>false</c>.
         /// </value>
-        public Boolean ShortTimeSlot
+        public bool ShortTimeSlot
         {
             get => GetBitFieldValue(10);
             set => SetBitFieldValue(10, value);
@@ -180,20 +180,20 @@ namespace PacketDotNet.Ieee80211
         /// Returns true if the bit is set false if not.
         /// </summary>
         /// <param name="index">0 indexed position of the bit</param>
-        private Boolean GetBitFieldValue(UInt16 index)
+        private bool GetBitFieldValue(ushort index)
         {
             return ((Field >> index) & 0x1) == 1;
         }
 
-        private void SetBitFieldValue(UInt16 index, Boolean value)
+        private void SetBitFieldValue(ushort index, bool value)
         {
             if (value)
             {
-                Field |= unchecked((UInt16) (1 << index));
+                Field |= unchecked((ushort) (1 << index));
             }
             else
             {
-                Field &= unchecked((UInt16) ~(1 << index));
+                Field &= unchecked((ushort) ~(1 << index));
             }
         }
     }

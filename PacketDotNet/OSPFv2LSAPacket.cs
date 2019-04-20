@@ -33,12 +33,12 @@ namespace PacketDotNet
         /// </summary>
         public OSPFv2LSAPacket()
         {
-            var b = new Byte[OSPFv2Fields.LSAHeaderPosition];
+            var b = new byte[OSPFv2Fields.LSAHeaderPosition];
             Array.Copy(Header.Bytes, b, Header.Bytes.Length);
             Header = new ByteArraySegment(b, 0, OSPFv2Fields.LSAHeaderPosition);
             Type = PacketType;
 
-            PacketLength = (UInt16) Header.Bytes.Length;
+            PacketLength = (ushort) Header.Bytes.Length;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace PacketDotNet
         {
             var length = lsas.Count * OSPFv2Fields.LSAHeaderLength;
             var offset = OSPFv2Fields.HeaderLength;
-            var bytes = new Byte[length + OSPFv2Fields.HeaderLength];
+            var bytes = new byte[length + OSPFv2Fields.HeaderLength];
 
             Array.Copy(Header.Bytes, bytes, Header.Length);
             foreach (var t in lsas)
@@ -60,7 +60,7 @@ namespace PacketDotNet
 
             Header = new ByteArraySegment(bytes);
             Type = PacketType;
-            PacketLength = (UInt16) Header.Bytes.Length;
+            PacketLength = (ushort) Header.Bytes.Length;
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace PacketDotNet
         /// <param name="offset">
         /// A <see cref="System.Int32" />
         /// </param>
-        public OSPFv2LSAPacket(Byte[] bytes, Int32 offset) :
+        public OSPFv2LSAPacket(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Type = PacketType;
@@ -111,7 +111,7 @@ namespace PacketDotNet
         /// Returns a <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2LSAPacket" />.
         /// </summary>
         /// <returns>A <see cref="string" /> that represents the current <see cref="PacketDotNet.OSPFv2LSAPacket" />.</returns>
-        public override String ToString()
+        public override string ToString()
         {
             var packet = new StringBuilder();
             packet.Append(base.ToString());
@@ -128,7 +128,7 @@ namespace PacketDotNet
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="outputFormat">Output format.</param>
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             return ToString();
         }

@@ -12,13 +12,13 @@ namespace Test.PacketType
     [TestFixture]
     class OSPFv2PacketTest
     {
-        private const Int32 OSPF_HELLO_INDEX = 0;
-        private const Int32 OSPF_DBD_INDEX = 9;
-        private const Int32 OSPF_DBD_LSA_INDEX = 11;
-        private const Int32 OSPF_LSR_INDEX = 17;
-        private const Int32 OSPF_LSU_INDEX = 18;
-        private const Int32 OSPF_LSA_INDEX = 23;
-        private const Int32 OSPF_LSU_LSA_INDEX = 31;
+        private const int OSPF_HELLO_INDEX = 0;
+        private const int OSPF_DBD_INDEX = 9;
+        private const int OSPF_DBD_LSA_INDEX = 11;
+        private const int OSPF_LSR_INDEX = 17;
+        private const int OSPF_LSU_INDEX = 18;
+        private const int OSPF_LSA_INDEX = 23;
+        private const int OSPF_LSU_LSA_INDEX = 31;
 
         OSPFv2Packet helloPacket;
         OSPFv2Packet ddPacket;
@@ -29,7 +29,7 @@ namespace Test.PacketType
 
         OSPFv2LSUpdatePacket lsaHolder;
 
-        Boolean packetsLoaded = false;
+        bool packetsLoaded = false;
 
         [SetUp]
         public void Init()
@@ -38,7 +38,7 @@ namespace Test.PacketType
                 return;
 
             RawCapture raw;
-            Int32 packetIndex = 0;
+            int packetIndex = 0;
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/ospfv2.pcap");
             dev.Open();
 
@@ -583,7 +583,7 @@ namespace Test.PacketType
             RawCapture raw;
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/ospfv2_md5.pcap");
             OSPFv2HelloPacket[] testSubjects = new OSPFv2HelloPacket[4];
-            Int32 i = 0;
+            int i = 0;
 
             dev.Open();
             while ((raw = dev.GetNextPacket()) != null && i < 4)
@@ -593,10 +593,10 @@ namespace Test.PacketType
             }
             dev.Close();
 
-            Assert.AreEqual(testSubjects[0].Authentication, (Int64)0x000000103c7ec4f7);
-            Assert.AreEqual(testSubjects[1].Authentication, (Int64)0x000000103c7ec4fc);
-            Assert.AreEqual(testSubjects[2].Authentication, (Int64)0x000000103c7ec501);
-            Assert.AreEqual(testSubjects[3].Authentication, (Int64)0x000000103c7ec505);
+            Assert.AreEqual(testSubjects[0].Authentication, (long)0x000000103c7ec4f7);
+            Assert.AreEqual(testSubjects[1].Authentication, (long)0x000000103c7ec4fc);
+            Assert.AreEqual(testSubjects[2].Authentication, (long)0x000000103c7ec501);
+            Assert.AreEqual(testSubjects[3].Authentication, (long)0x000000103c7ec505);
             Assert.AreEqual(0, testSubjects[0].NeighborID.Count);
             Assert.AreEqual(0, testSubjects[1].NeighborID.Count);
             Assert.AreEqual(1, testSubjects[2].NeighborID.Count);
@@ -631,7 +631,7 @@ namespace Test.PacketType
             Assert.AreEqual(0, p.NeighborID.Count);
 
             //test re-creation
-            Byte[] bytes = p.Bytes;
+            byte[] bytes = p.Bytes;
             OSPFv2HelloPacket hp = new OSPFv2HelloPacket(new ByteArraySegment(bytes));
 
             Assert.AreEqual(OSPFVersion.OSPFv2, hp.Version);
@@ -678,7 +678,7 @@ namespace Test.PacketType
             Assert.AreEqual(0x02, d.DBDescriptionOptions);
 
             //test re-creation
-            Byte[] bytes = d.Bytes;
+            byte[] bytes = d.Bytes;
             OSPFv2DDPacket dp = new OSPFv2DDPacket(new ByteArraySegment(bytes));
 
             Assert.AreEqual(OSPFPacketType.DatabaseDescription, d.Type);
@@ -766,7 +766,7 @@ namespace Test.PacketType
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.255.252"), p.AreaID);
 
             //test re-creation
-            Byte[] bytes = p.Bytes;
+            byte[] bytes = p.Bytes;
             OSPFv2LSRequestPacket lp = new OSPFv2LSRequestPacket(new ByteArraySegment(bytes));
 
             Assert.AreEqual(OSPFVersion.OSPFv2, lp.Version);
@@ -1128,7 +1128,7 @@ namespace Test.PacketType
             Assert.AreEqual(0, p.LSANumber);
 
             //test re-creation
-            Byte[] bytes = p.Bytes;
+            byte[] bytes = p.Bytes;
             OSPFv2LSUpdatePacket lp = new OSPFv2LSUpdatePacket(new ByteArraySegment(bytes));
 
             Assert.AreEqual(OSPFVersion.OSPFv2, lp.Version);
@@ -1345,7 +1345,7 @@ namespace Test.PacketType
             Assert.AreEqual(OSPFPacketType.LinkStateAcknowledgment, p.Type);
 
             //test re-creation
-            Byte[] bytes = p.Bytes;
+            byte[] bytes = p.Bytes;
             OSPFv2DDPacket p2 = new OSPFv2DDPacket(new ByteArraySegment(bytes));
 
             Assert.AreEqual(OSPFPacketType.LinkStateAcknowledgment, p2.Type);

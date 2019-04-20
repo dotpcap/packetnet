@@ -39,7 +39,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name="field">
         /// A <see cref="ushort" />
         /// </param>
-        public DurationField(UInt16 field)
+        public DurationField(ushort field)
         {
             Field = field;
         }
@@ -47,6 +47,6 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// This is the raw Duration field
         /// </summary>
-        public UInt16 Field { get; set; }
+        public ushort Field { get; set; }
     }
 }

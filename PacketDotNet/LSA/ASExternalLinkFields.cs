@@ -9,22 +9,22 @@ namespace PacketDotNet.LSA
     public class ASExternalLinkFields
     {
         /// <summary> The length of the ExternalRouteTag field in bytes</summary>
-        public static readonly Int32 ExternalRouteTagLength = 4;
+        public static readonly int ExternalRouteTagLength = 4;
 
         /// <summary> The relative postion of the ExternalRouteTag field</summary>
-        public static readonly Int32 ExternalRouteTagPosition;
+        public static readonly int ExternalRouteTagPosition;
 
         /// <summary> The length of the ForwardingAddress field in bytes</summary>
-        public static readonly Int32 ForwardingAddressLength = 4;
+        public static readonly int ForwardingAddressLength = 4;
 
         /// <summary> The relative postion of the ForwardingAddress field</summary>
-        public static readonly Int32 ForwardingAddressPosition;
+        public static readonly int ForwardingAddressPosition;
 
         /// <summary> The length of the TOS field in bytes</summary>
-        public static readonly Int32 TOSLength = 4;
+        public static readonly int TOSLength = 4;
 
         /// <summary> The relative postion of the TOSPosition field</summary>
-        public static readonly Int32 TOSPosition;
+        public static readonly int TOSPosition;
 
         static ASExternalLinkFields()
         {

@@ -20,13 +20,13 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override Int32 Length
+        public override int Length
         {
             get
             {
-                var processLength = String.IsNullOrEmpty(ProcessPath) ? 0 : Encoding.UTF8.GetByteCount(ProcessPath);
-                var userLength = String.IsNullOrEmpty(UserName) ? 0 : Encoding.UTF8.GetByteCount(UserName);
-                var groupLength = String.IsNullOrEmpty(GroupName) ? 0 : Encoding.UTF8.GetByteCount(GroupName);
+                var processLength = string.IsNullOrEmpty(ProcessPath) ? 0 : Encoding.UTF8.GetByteCount(ProcessPath);
+                var userLength = string.IsNullOrEmpty(UserName) ? 0 : Encoding.UTF8.GetByteCount(UserName);
+                var groupLength = string.IsNullOrEmpty(GroupName) ? 0 : Encoding.UTF8.GetByteCount(GroupName);
                 return 19 + processLength + userLength + groupLength;
             }
         }
@@ -37,7 +37,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The process identifier.
         /// </value>
-        public UInt32 ProcessId { get; set; }
+        public uint ProcessId { get; set; }
 
         /// <summary>
         /// Gets or sets the thread identifier.
@@ -45,7 +45,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The thread identifier.
         /// </value>
-        public UInt32 ThreadId { get; set; }
+        public uint ThreadId { get; set; }
 
         /// <summary>
         /// Gets or sets the process path.
@@ -53,7 +53,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The process path.
         /// </value>
-        public String ProcessPath { get; set; }
+        public string ProcessPath { get; set; }
 
         /// <summary>
         /// Gets or sets the user identifier.
@@ -61,7 +61,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The user identifier.
         /// </value>
-        public UInt32 UserId { get; set; }
+        public uint UserId { get; set; }
 
         /// <summary>
         /// Gets or sets the user name.
@@ -69,7 +69,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The user name.
         /// </value>
-        public String UserName { get; set; }
+        public string UserName { get; set; }
 
         /// <summary>
         /// Gets or sets the group identifier.
@@ -77,7 +77,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The group identifier.
         /// </value>
-        public UInt32 GroupId { get; set; }
+        public uint GroupId { get; set; }
 
         /// <summary>
         /// Gets or sets the group name.
@@ -85,7 +85,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The group name.
         /// </value>
-        public String GroupName { get; set; }
+        public string GroupName { get; set; }
 
         /// <summary>
         /// Gets the field bytes. This doesn't include the PPI field header.
@@ -93,7 +93,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public override Byte[] Bytes
+        public override byte[] Bytes
         {
             get
             {
@@ -103,20 +103,20 @@ namespace PacketDotNet.Ieee80211
                 writer.Write(ProcessId);
                 writer.Write(ThreadId);
 
-                var pathBytes = Encoding.UTF8.GetBytes(ProcessPath ?? String.Empty);
-                writer.Write((Byte) pathBytes.Length);
+                var pathBytes = Encoding.UTF8.GetBytes(ProcessPath ?? string.Empty);
+                writer.Write((byte) pathBytes.Length);
                 writer.Write(pathBytes);
 
                 writer.Write(UserId);
 
-                var userBytes = Encoding.UTF8.GetBytes(UserName ?? String.Empty);
-                writer.Write((Byte) userBytes.Length);
+                var userBytes = Encoding.UTF8.GetBytes(UserName ?? string.Empty);
+                writer.Write((byte) userBytes.Length);
                 writer.Write(userBytes);
 
                 writer.Write(GroupId);
 
-                var groupBytes = Encoding.UTF8.GetBytes(GroupName ?? String.Empty);
-                writer.Write((Byte) groupBytes.Length);
+                var groupBytes = Encoding.UTF8.GetBytes(GroupName ?? string.Empty);
+                writer.Write((byte) groupBytes.Length);
                 writer.Write(groupBytes);
 
                 return ms.ToArray();

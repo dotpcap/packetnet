@@ -47,7 +47,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="System.Int32" />
         /// </param>
-        public SACKPermitted(Byte[] bytes, Int32 offset, Int32 length) :
+        public SACKPermitted(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
 

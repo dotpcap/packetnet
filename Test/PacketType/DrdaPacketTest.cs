@@ -38,7 +38,7 @@ namespace Test.PacketType
         List<DrdaDDMPacket> sqlsttPackets = new List<DrdaDDMPacket>();
         DrdaDDMPacket prpsqlsttPacket;
         DrdaDDMPacket sqlattrPacket;
-        Boolean packetsLoaded = false;
+        bool packetsLoaded = false;
 
         [SetUp]
         public void Init()
@@ -46,7 +46,7 @@ namespace Test.PacketType
             if (packetsLoaded)
                 return;
             RawCapture raw;
-            Int32 packetIndex = 0;
+            int packetIndex = 0;
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/db2_select.pcap");
             dev.Open();
 
@@ -170,7 +170,7 @@ namespace Test.PacketType
         [Test]
         public void TestSqlsttPacket()
         {
-            Int32 packetIndex = 0;
+            int packetIndex = 0;
             foreach (var packet in sqlsttPackets)
             {
                 Assert.IsNotNull(packet);
@@ -202,7 +202,7 @@ namespace Test.PacketType
         [Test]
         public void TestStringConverter()
         {
-            var bytes = new Byte[] { 0xd8, 0xc4, 0xc2, 0xf2, 0x61, 0xd1, 0xe5, 0xd4 };
+            var bytes = new byte[] { 0xd8, 0xc4, 0xc2, 0xf2, 0x61, 0xd1, 0xe5, 0xd4 };
             Assert.AreEqual("QDB2/JVM", StringConverter.EbcdicToAscii(bytes, 0, bytes.Length));
         }
     }

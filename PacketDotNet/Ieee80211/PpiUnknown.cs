@@ -21,7 +21,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override Int32 Length => Bytes.Length;
+        public override int Length => Bytes.Length;
 
         /// <summary>
         /// Gets the field bytes. This doesn't include the PPI field header.
@@ -29,7 +29,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public override Byte[] Bytes => UnknownBytes;
+        public override byte[] Bytes => UnknownBytes;
 
         /// <summary>
         /// Gets or sets the field data.
@@ -37,7 +37,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The fields values bytes.
         /// </value>
-        public Byte[] UnknownBytes { get; set; }
+        public byte[] UnknownBytes { get; set; }
 
         #endregion Properties
 
@@ -61,7 +61,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='length'>
         /// The number of bytes the unknown field contains.
         /// </param>
-        public PpiUnknown(Int32 typeNumber, BinaryReader br, Int32 length)
+        public PpiUnknown(int typeNumber, BinaryReader br, int length)
         {
             FieldType = (PpiFieldType) typeNumber;
             UnknownBytes = br.ReadBytes(length);
@@ -73,7 +73,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='typeNumber'>
         /// The PPI field type number.
         /// </param>
-        public PpiUnknown(Int32 typeNumber)
+        public PpiUnknown(int typeNumber)
         {
             FieldType = (PpiFieldType) typeNumber;
         }
@@ -87,7 +87,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='unknownBytes'>
         /// The field data.
         /// </param>
-        public PpiUnknown(Int32 typeNumber, Byte[] unknownBytes)
+        public PpiUnknown(int typeNumber, byte[] unknownBytes)
         {
             FieldType = (PpiFieldType) typeNumber;
             UnknownBytes = unknownBytes;

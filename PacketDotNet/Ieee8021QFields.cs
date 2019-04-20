@@ -26,19 +26,19 @@ namespace PacketDotNet
     public class Ieee8021QFields
     {
         /// <summary> Length in bytes of a Ieee8021Q header.</summary>
-        public static readonly Int32 HeaderLength; // 4
+        public static readonly int HeaderLength; // 4
 
         /// <summary> Length of the tag control information in bytes. </summary>
-        public static readonly Int32 TagControlInformationLength = 2;
+        public static readonly int TagControlInformationLength = 2;
 
         /// <summary> Position of the tag control information </summary>
-        public static readonly Int32 TagControlInformationPosition = 0;
+        public static readonly int TagControlInformationPosition = 0;
 
         /// <summary> Length of the ethertype value in bytes.</summary>
-        public static readonly Int32 TypeLength = 2;
+        public static readonly int TypeLength = 2;
 
         /// <summary> Position of the type field </summary>
-        public static readonly Int32 TypePosition;
+        public static readonly int TypePosition;
 
         static Ieee8021QFields()
         {

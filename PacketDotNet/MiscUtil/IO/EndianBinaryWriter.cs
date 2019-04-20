@@ -34,17 +34,17 @@ namespace PacketDotNet.MiscUtil.IO
         /// <summary>
         /// Whether or not this writer has been disposed yet.
         /// </summary>
-        private Boolean disposed;
+        private bool disposed;
 
         /// <summary>
         /// Buffer used for temporary storage during conversion from primitives
         /// </summary>
-        private readonly Byte[] buffer = new Byte[16];
+        private readonly byte[] buffer = new byte[16];
 
         /// <summary>
         /// Buffer used for Write(char)
         /// </summary>
-        private readonly Char[] charBuffer = new Char[1];
+        private readonly char[] charBuffer = new char[1];
 
         #endregion
 
@@ -132,7 +132,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// </summary>
         /// <param name="offset">Offset to seek to.</param>
         /// <param name="origin">Origin of seek operation.</param>
-        public void Seek(Int32 offset, SeekOrigin origin)
+        public void Seek(int offset, SeekOrigin origin)
         {
             CheckDisposed();
             BaseStream.Seek(offset, origin);
@@ -142,7 +142,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// Writes a boolean value to the stream. 1 byte is written.
         /// </summary>
         /// <param name="value">The value to write</param>
-        public void Write(Boolean value)
+        public void Write(bool value)
         {
             BitConverter.CopyBytes(value, buffer, 0);
             WriteInternal(buffer, 1);
@@ -153,7 +153,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this writer. 2 bytes are written.
         /// </summary>
         /// <param name="value">The value to write</param>
-        public void Write(Int16 value)
+        public void Write(short value)
         {
             BitConverter.CopyBytes(value, buffer, 0);
             WriteInternal(buffer, 2);
@@ -164,7 +164,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this writer. 4 bytes are written.
         /// </summary>
         /// <param name="value">The value to write</param>
-        public void Write(Int32 value)
+        public void Write(int value)
         {
             BitConverter.CopyBytes(value, buffer, 0);
             WriteInternal(buffer, 4);
@@ -175,7 +175,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this writer. 8 bytes are written.
         /// </summary>
         /// <param name="value">The value to write</param>
-        public void Write(Int64 value)
+        public void Write(long value)
         {
             BitConverter.CopyBytes(value, buffer, 0);
             WriteInternal(buffer, 8);
@@ -186,7 +186,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this writer. 2 bytes are written.
         /// </summary>
         /// <param name="value">The value to write</param>
-        public void Write(UInt16 value)
+        public void Write(ushort value)
         {
             BitConverter.CopyBytes(value, buffer, 0);
             WriteInternal(buffer, 2);
@@ -197,7 +197,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this writer. 4 bytes are written.
         /// </summary>
         /// <param name="value">The value to write</param>
-        public void Write(UInt32 value)
+        public void Write(uint value)
         {
             BitConverter.CopyBytes(value, buffer, 0);
             WriteInternal(buffer, 4);
@@ -208,7 +208,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this writer. 8 bytes are written.
         /// </summary>
         /// <param name="value">The value to write</param>
-        public void Write(UInt64 value)
+        public void Write(ulong value)
         {
             BitConverter.CopyBytes(value, buffer, 0);
             WriteInternal(buffer, 8);
@@ -219,7 +219,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this writer. 4 bytes are written.
         /// </summary>
         /// <param name="value">The value to write</param>
-        public void Write(Single value)
+        public void Write(float value)
         {
             BitConverter.CopyBytes(value, buffer, 0);
             WriteInternal(buffer, 4);
@@ -230,7 +230,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// for this writer. 8 bytes are written.
         /// </summary>
         /// <param name="value">The value to write</param>
-        public void Write(Double value)
+        public void Write(double value)
         {
             BitConverter.CopyBytes(value, buffer, 0);
             WriteInternal(buffer, 8);
@@ -241,7 +241,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// 16 bytes are written.
         /// </summary>
         /// <param name="value">The value to write</param>
-        public void Write(Decimal value)
+        public void Write(decimal value)
         {
             BitConverter.CopyBytes(value, buffer, 0);
             WriteInternal(buffer, 16);
@@ -251,7 +251,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// Writes a signed byte to the stream.
         /// </summary>
         /// <param name="value">The value to write</param>
-        public void Write(Byte value)
+        public void Write(byte value)
         {
             buffer[0] = value;
             WriteInternal(buffer, 1);
@@ -261,9 +261,9 @@ namespace PacketDotNet.MiscUtil.IO
         /// Writes an unsigned byte to the stream.
         /// </summary>
         /// <param name="value">The value to write</param>
-        public void Write(SByte value)
+        public void Write(sbyte value)
         {
-            buffer[0] = unchecked((Byte) value);
+            buffer[0] = unchecked((byte) value);
             WriteInternal(buffer, 1);
         }
 
@@ -271,7 +271,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// Writes an array of bytes to the stream.
         /// </summary>
         /// <param name="value">The values to write</param>
-        public void Write(Byte[] value)
+        public void Write(byte[] value)
         {
             if (value == null)
             {
@@ -287,7 +287,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// <param name="value">An array containing the bytes to write</param>
         /// <param name="offset">The index of the first byte to write within the array</param>
         /// <param name="count">The number of bytes to write</param>
-        public void Write(Byte[] value, Int32 offset, Int32 count)
+        public void Write(byte[] value, int offset, int count)
         {
             CheckDisposed();
             BaseStream.Write(value, offset, count);
@@ -297,7 +297,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// Writes a single character to the stream, using the encoding for this writer.
         /// </summary>
         /// <param name="value">The value to write</param>
-        public void Write(Char value)
+        public void Write(char value)
         {
             charBuffer[0] = value;
             Write(charBuffer);
@@ -307,7 +307,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// Writes an array of characters to the stream, using the encoding for this writer.
         /// </summary>
         /// <param name="value">An array containing the characters to write</param>
-        public void Write(Char[] value)
+        public void Write(char[] value)
         {
             if (value == null)
             {
@@ -324,7 +324,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// </summary>
         /// <param name="value">The value to write. Must not be null.</param>
         /// <exception cref="ArgumentNullException">value is null</exception>
-        public void Write(String value)
+        public void Write(string value)
         {
             if (value == null)
             {
@@ -343,7 +343,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// bit as a continuation flag.
         /// </summary>
         /// <param name="value">The 7-bit encoded integer to write to the stream</param>
-        public void Write7BitEncodedInt(Int32 value)
+        public void Write7BitEncodedInt(int value)
         {
             CheckDisposed();
             if (value < 0)
@@ -354,12 +354,12 @@ namespace PacketDotNet.MiscUtil.IO
             var index = 0;
             while (value >= 128)
             {
-                buffer[index++] = (Byte) ((value & 0x7f) | 0x80);
+                buffer[index++] = (byte) ((value & 0x7f) | 0x80);
                 value = value >> 7;
                 index++;
             }
 
-            buffer[index++] = (Byte) value;
+            buffer[index++] = (byte) value;
             BaseStream.Write(buffer, 0, index);
         }
 
@@ -385,7 +385,7 @@ namespace PacketDotNet.MiscUtil.IO
         /// </summary>
         /// <param name="bytes">The array of bytes to write from</param>
         /// <param name="length">The number of bytes to write</param>
-        private void WriteInternal(Byte[] bytes, Int32 length)
+        private void WriteInternal(byte[] bytes, int length)
         {
             CheckDisposed();
             BaseStream.Write(bytes, 0, length);

@@ -50,13 +50,13 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Length in bytes of the tlv type and length fields
         /// </summary>
-        public const Int32 TypeLengthLength = 2;
+        public const int TypeLengthLength = 2;
 
-        private const Int32 TypeMask = 0xFE00;
-        private const Int32 LengthBits = 9;
-        private const Int32 LengthMask = 0x1FF;
+        private const int TypeMask = 0xFE00;
+        private const int LengthBits = 9;
+        private const int LengthMask = 0x1FF;
 
-        private const Int32 MaximumTLVLength = 511;
+        private const int MaximumTLVLength = 511;
 
         private readonly ByteArraySegment _byteArraySegment;
 
@@ -89,11 +89,11 @@ namespace PacketDotNet.LLDP
                 Log.DebugFormat("value of {0}", value);
 
                 // shift type into the type position
-                var type = (UInt16) ((UInt16) value << LengthBits);
+                var type = (ushort) ((ushort) value << LengthBits);
                 // save the old length
-                var length = (UInt16) (LengthMask & TypeAndLength);
+                var length = (ushort) (LengthMask & TypeAndLength);
                 // set the type
-                TypeAndLength = (UInt16) (type | length);
+                TypeAndLength = (ushort) (type | length);
             }
         }
 
@@ -102,7 +102,7 @@ namespace PacketDotNet.LLDP
         /// NOTE: Value is the length of the TLV Value only, does not include the length
         /// of the type and length fields
         /// </value>
-        public Int32 Length
+        public int Length
         {
             get
             {
@@ -129,16 +129,16 @@ namespace PacketDotNet.LLDP
                 }
 
                 // save the old type
-                var type = (UInt16) (TypeMask & TypeAndLength);
+                var type = (ushort) (TypeMask & TypeAndLength);
                 // set the length
-                TypeAndLength = (UInt16) (type | value);
+                TypeAndLength = (ushort) (type | value);
             }
         }
 
         /// <value>
         /// A unsigned short representing the concatenated Type and Length
         /// </value>
-        private UInt16 TypeAndLength
+        private ushort TypeAndLength
         {
             get => EndianBitConverter.Big.ToUInt16(_byteArraySegment.Bytes, _byteArraySegment.Offset);
             set => EndianBitConverter.Big.CopyBytes(value, _byteArraySegment.Bytes, _byteArraySegment.Offset);

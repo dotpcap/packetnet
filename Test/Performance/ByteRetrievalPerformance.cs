@@ -58,7 +58,7 @@ namespace Test.Performance
 
             // used to make sure we get the same byte[] reference returned each time
             // because thats what we expect
-            Byte[] theByteArray = null;
+            byte[] theByteArray = null;
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
@@ -69,7 +69,7 @@ namespace Test.Performance
             // now benchmark retrieving the byte[] for several seconds
             var startTime = DateTime.Now;
             var endTime = startTime.Add(new TimeSpan(0, 0, 2));
-            Int32 testRuns = 0;
+            int testRuns = 0;
             while(DateTime.Now < endTime)
             {
                 var theBytes = contiguousEthernetPacket.Bytes;
@@ -103,7 +103,7 @@ namespace Test.Performance
         {
             var ethernetPacket = BuildNonContiguousEthernetPacket();
 
-            Byte[] lastByteArray = null;
+            byte[] lastByteArray = null;
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
@@ -114,7 +114,7 @@ namespace Test.Performance
             // now benchmark retrieving the byte[] for several seconds
             var startTime = DateTime.Now;
             var endTime = startTime.Add(new TimeSpan(0, 0, 2));
-            Int32 testRuns = 0;
+            int testRuns = 0;
             while(DateTime.Now < endTime)
             {
                 var theBytes = ethernetPacket.Bytes;

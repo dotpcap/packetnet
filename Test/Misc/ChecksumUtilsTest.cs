@@ -29,8 +29,8 @@ namespace Test.Misc
         [Test]
         public void OnesSum()
         {
-            var bytes = new Byte[4096];
-            for(Int32 i = 0; i < bytes.Length; i++)
+            var bytes = new byte[4096];
+            for(int i = 0; i < bytes.Length; i++)
             {
                 bytes[i] = 0x7f;
             }

@@ -101,7 +101,6 @@ namespace PacketDotNet
             Type = PacketType;
         }
 
-
         /// <summary>
         /// The identity of the Backup Designated Router for this network,
         /// in the view of the sending router.
@@ -213,7 +212,6 @@ namespace PacketDotNet
                            address.Length);
             }
         }
-
 
         /// <summary>
         /// The number of seconds before declaring a silent router down.

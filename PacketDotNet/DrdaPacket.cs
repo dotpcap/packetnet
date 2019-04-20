@@ -24,9 +24,9 @@ using System.Reflection;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -96,10 +96,11 @@ namespace PacketDotNet
 
             // store the payload bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-            {
-                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.NextSegment()};
-                return result;
-            }, LazyThreadSafetyMode.PublicationOnly);
+                                                                     {
+                                                                         var result = new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() };
+                                                                         return result;
+                                                                     },
+                                                                     LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary>

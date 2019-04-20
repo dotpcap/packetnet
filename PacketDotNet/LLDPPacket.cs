@@ -29,9 +29,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using PacketDotNet.LLDP;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -181,6 +181,7 @@ namespace PacketDotNet
                 Log.DebugFormat("Adding tlv {0}, Type {1}",
                                 currentTlv.GetType(),
                                 currentTlv.Type);
+
                 TlvCollection.Add(currentTlv);
 
                 // stop at the first end tlv we run into

@@ -46,10 +46,13 @@ namespace PacketDotNet
             Header.Length = GREFields.FlagsLength + GREFields.ProtocolLength;
             if (HasCheckSum)
                 Header.Length += GREFields.ChecksumLength;
+
             if (HasReserved)
                 Header.Length += GREFields.ReservedLength;
+
             if (HasKey)
                 Header.Length += GREFields.KeyLength;
+
             if (HasSequence)
                 Header.Length += GREFields.SequenceLength;
 
@@ -58,11 +61,9 @@ namespace PacketDotNet
             ParentPacket = parentPacket;
         }
 
-
         /// <summary> Fetch the GRE header checksum.</summary>
         public short Checksum => BitConverter.ToInt16(Header.Bytes,
                                                       Header.Offset + GREFields.ChecksumPosition);
-
 
         /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.DarkGray;
@@ -78,16 +79,13 @@ namespace PacketDotNet
         public EthernetPacketType Protocol => (EthernetPacketType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                                                                    Header.Offset + GREFields.FlagsLength);
 
-
         public int Version => Header.Bytes[2] & 0x7;
-
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
-
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -107,7 +105,7 @@ namespace PacketDotNet
                 // collect the properties and their value
                 var unused = new Dictionary<string, string>
                 {
-                    {"Protocol ", Protocol + " (0x" + Protocol.ToString("x") + ")"}
+                    { "Protocol ", Protocol + " (0x" + Protocol.ToString("x") + ")" }
                 };
             }
 

@@ -70,7 +70,7 @@ namespace PacketDotNet.Utils
 
 
         #region Public Methods
-        
+
         /// <summary>Computes the hash value for the input data using the <see cref="DefaultPolynomial" />.</summary>
         public static int Compute(byte[] buffer, int offset, int count)
         {

@@ -24,9 +24,9 @@ using System.Reflection;
 using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet.LLDP
@@ -124,6 +124,7 @@ namespace PacketDotNet.LLDP
                          InterfaceNumberSubTypeLength +
                          InterfaceNumberLength +
                          ObjectIdentifierLengthLength;
+
             var bytes = new byte[length];
             var offset = 0;
             TLVData = new ByteArraySegment(bytes, offset, length);
@@ -290,6 +291,7 @@ namespace PacketDotNet.LLDP
                                     InterfaceNumberSubTypeLength +
                                     InterfaceNumberLength +
                                     ObjectIdentifierLengthLength;
+
                     var newLength = oldLength + oid.Length;
 
                     var newBytes = new byte[newLength];

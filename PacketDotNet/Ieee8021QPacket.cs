@@ -47,7 +47,8 @@ namespace PacketDotNet
 
             // parse the payload via an EthernetPacket method
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header,
-                                                                                                                 Type), LazyThreadSafetyMode.PublicationOnly);
+                                                                                                                 Type),
+                                                                     LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary>
@@ -187,10 +188,10 @@ namespace PacketDotNet
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>
                 {
-                    {"priority", PriorityControlPoint + " (0x" + PriorityControlPoint.ToString("x") + ")"},
-                    {"canonical format indicator", CanonicalFormatIndicator.ToString()},
-                    {"type", Type + " (0x" + Type.ToString("x") + ")"},
-                    {"VLANIdentifier", VLANIdentifier + " (0x" + VLANIdentifier.ToString("x") + ")"}
+                    { "priority", PriorityControlPoint + " (0x" + PriorityControlPoint.ToString("x") + ")" },
+                    { "canonical format indicator", CanonicalFormatIndicator.ToString() },
+                    { "type", Type + " (0x" + Type.ToString("x") + ")" },
+                    { "VLANIdentifier", VLANIdentifier + " (0x" + VLANIdentifier.ToString("x") + ")" }
                 };
 
                 // calculate the padding needed to right-justify the property names

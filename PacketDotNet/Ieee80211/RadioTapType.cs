@@ -83,7 +83,6 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         DbmAntennaNoise = 6,
 
-
         /// <summary>
         /// IEEE80211_RADIOTAP_LOCK_QUALITY     u_int16_t       unitless
         /// Quality of Barker code lock. Unitless. Monotonically
@@ -93,7 +92,6 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         LockQuality = 7,
 
-
         /// <summary>
         /// IEEE80211_RADIOTAP_TX_ATTENUATION    u_int16_t       unitless
         /// Transmit power expressed as unitless distance from max
@@ -102,7 +100,6 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         TxAttenuation = 8,
 
-
         /// <summary>
         /// IEEE80211_RADIOTAP_DB_TX_ATTENUATION u_int16_t       decibels (dB)
         /// Transmit power expressed as decibel distance from max power
@@ -110,7 +107,6 @@ namespace PacketDotNet.Ieee80211
         /// nondecreasing with lower power levels.
         /// </summary>
         DbTxAttenuation = 9,
-
 
         /// <summary>
         /// IEEE80211_RADIOTAP_DBM_TX_POWER      int8_t          decibels from
@@ -121,7 +117,6 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         DbmTxPower = 10,
 
-
         /// <summary>
         /// IEEE80211_RADIOTAP_ANTENNA           u_int8_t        antenna index
         /// Unitless indication of the Rx/Tx antenna for this packet.
@@ -129,14 +124,12 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         Antenna = 11,
 
-
         /// <summary>
         /// IEEE80211_RADIOTAP_DB_ANTSIGNAL      u_int8_t        decibel (dB)
         /// RF signal power at the antenna, decibel difference from an
         /// arbitrary, fixed reference.
         /// </summary>
         DbAntennaSignal = 12,
-
 
         /// <summary>
         /// IEEE80211_RADIOTAP_DB_ANTNOISE       u_int8_t        decibel (dB)

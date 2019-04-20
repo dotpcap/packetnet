@@ -50,10 +50,11 @@ namespace PacketDotNet
 
             // store the payload bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-            {
-                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.NextSegment()};
-                return result;
-            }, LazyThreadSafetyMode.PublicationOnly);
+                                                                     {
+                                                                         var result = new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() };
+                                                                         return result;
+                                                                     },
+                                                                     LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary>
@@ -138,11 +139,11 @@ namespace PacketDotNet
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>
                 {
-                    {"type", Type + " (0x" + Type.ToString("x") + ")"},
-                    {"max response time", $"{MaxResponseTime / 10:0.0}" + " sec (0x" + MaxResponseTime.ToString("x") + ")"},
+                    { "type", Type + " (0x" + Type.ToString("x") + ")" },
+                    { "max response time", $"{MaxResponseTime / 10:0.0}" + " sec (0x" + MaxResponseTime.ToString("x") + ")" },
                     // TODO: Implement checksum validation for IGMPv2
-                    {"header checksum", "0x" + Checksum.ToString("x")},
-                    {"group address", GroupAddress.ToString()}
+                    { "header checksum", "0x" + Checksum.ToString("x") },
+                    { "group address", GroupAddress.ToString() }
                 };
 
                 // calculate the padding needed to right-justify the property names

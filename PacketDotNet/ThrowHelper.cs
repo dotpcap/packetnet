@@ -139,7 +139,7 @@ namespace PacketDotNet
         /// Converts an ExceptionDescription enum value to the description string.
         /// </summary>
         /// <param name="description">The description.</param>
-        /// <returns><see cref="string"/>.</returns>
+        /// <returns><see cref="string" />.</returns>
         private static string GetDescription(ExceptionDescription description)
         {
             string result;
@@ -165,7 +165,7 @@ namespace PacketDotNet
             return result;
         }
     }
-    
+
     /// <summary>
     /// The convention for this enum is using the argument name as the enum name.
     /// </summary>

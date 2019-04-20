@@ -22,9 +22,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.ObjectModel;
 using System.Reflection;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet.LLDP
@@ -83,6 +83,7 @@ namespace PacketDotNet.LLDP
                                     this[Count - 1].GetType(),
                                     item.GetType(),
                                     item.Type);
+
                     SetItem(Count - 1, item);
                     return;
                 }

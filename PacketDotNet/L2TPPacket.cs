@@ -46,15 +46,17 @@ namespace PacketDotNet
 
             if (HasLength)
                 Header.Length += L2TPFields.LengthsLength;
+
             if (HasSequence)
                 Header.Length += L2TPFields.NsLength + L2TPFields.NrLength;
+
             if (HasOffset)
                 Header.Length += L2TPFields.OffsetSizeLength + L2TPFields.OffsetPadLength;
 
             var payload = Header.NextSegment();
             try
             {
-                PayloadPacket = new PPPPacket(payload) {ParentPacket = this};
+                PayloadPacket = new PPPPacket(payload) { ParentPacket = this };
             }
             catch (Exception)
             {
@@ -84,13 +86,11 @@ namespace PacketDotNet
 
         public int Version => Header.Bytes[Header.Offset + 1] & 0x7;
 
-
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
-
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -103,7 +103,6 @@ namespace PacketDotNet
                 buffer.AppendFormat("{0}[L2TPPacket",
                                     color);
             }
-
 
             // append the base string output
             buffer.Append(base.ToString(outputFormat));

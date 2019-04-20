@@ -88,7 +88,6 @@ namespace PacketDotNet
             }
         }
 
-
         /// <summary>
         /// Identifies the object that this router link connects to.  Value
         /// depends on the link's Type.
@@ -137,6 +136,7 @@ namespace PacketDotNet
                         TOS = (byte) ((metric & 0xFF000000) >> 3),
                         Metric = metric & 0x00FFFFFF
                     };
+
                     metrics.Add(m);
                 }
 

@@ -85,10 +85,10 @@ namespace PacketDotNet.Ieee80211
         /// The size of the frame.
         /// </value>
         public override int FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 3) +
-                                           MacFields.SequenceControlLength +
-                                           DeauthenticationFields.ReasonCodeLength;
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 3) +
+                                         MacFields.SequenceControlLength +
+                                         DeauthenticationFields.ReasonCodeLength;
 
         /// <summary>
         /// Gets the reason for deauthentication.

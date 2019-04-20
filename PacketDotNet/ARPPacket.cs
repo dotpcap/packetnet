@@ -27,9 +27,9 @@ using System.Reflection;
 using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -135,7 +135,6 @@ namespace PacketDotNet
                 if (value.AddressFamily != AddressFamily.InterNetwork)
                     ThrowHelper.ThrowInvalidAddressFamilyException(value.AddressFamily);
 
-
                 var address = value.GetAddressBytes();
                 Array.Copy(address,
                            0,
@@ -158,7 +157,6 @@ namespace PacketDotNet
                 // check that the address family is ipv4
                 if (value.AddressFamily != AddressFamily.InterNetwork)
                     ThrowHelper.ThrowInvalidAddressFamilyException(value.AddressFamily);
-
 
                 var address = value.GetAddressBytes();
                 Array.Copy(address,
@@ -184,6 +182,7 @@ namespace PacketDotNet
                            hwAddress,
                            0,
                            hwAddress.Length);
+
                 return new PhysicalAddress(hwAddress);
             }
 
@@ -218,6 +217,7 @@ namespace PacketDotNet
                            hwAddress,
                            0,
                            hwAddress.Length);
+
                 return new PhysicalAddress(hwAddress);
             }
             set
@@ -310,15 +310,13 @@ namespace PacketDotNet
             var color = "";
             var colorEscape = "";
 
-            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if ((outputFormat == StringOutputType.Colored) || (outputFormat == StringOutputType.VerboseColored))
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
-            {
-                // build the output string
+            if ((outputFormat == StringOutputType.Normal) || (outputFormat == StringOutputType.Colored))
                 buffer.AppendFormat("{0}[ARPPacket: Operation={2}, SenderHardwareAddress={3}, TargetHardwareAddress={4}, SenderProtocolAddress={5}, TargetProtocolAddress={6}]{1}",
                                     color,
                                     colorEscape,
@@ -327,20 +325,19 @@ namespace PacketDotNet
                                     HexPrinter.PrintMACAddress(TargetHardwareAddress),
                                     SenderProtocolAddress,
                                     TargetProtocolAddress);
-            }
 
-            if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            if ((outputFormat == StringOutputType.Verbose) || (outputFormat == StringOutputType.VerboseColored))
             {
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>
                 {
-                    {"hardware type", HardwareAddressType + " (0x" + HardwareAddressType.ToString("x") + ")"},
-                    {"protocol type", ProtocolAddressType + " (0x" + ProtocolAddressType.ToString("x") + ")"},
-                    {"operation", Operation + " (0x" + Operation.ToString("x") + ")"},
-                    {"source hardware address", HexPrinter.PrintMACAddress(SenderHardwareAddress)},
-                    {"destination hardware address", HexPrinter.PrintMACAddress(TargetHardwareAddress)},
-                    {"source protocol address", SenderProtocolAddress.ToString()},
-                    {"destination protocol address", TargetProtocolAddress.ToString()}
+                    { "hardware type", HardwareAddressType + " (0x" + HardwareAddressType.ToString("x") + ")" },
+                    { "protocol type", ProtocolAddressType + " (0x" + ProtocolAddressType.ToString("x") + ")" },
+                    { "operation", Operation + " (0x" + Operation.ToString("x") + ")" },
+                    { "source hardware address", HexPrinter.PrintMACAddress(SenderHardwareAddress) },
+                    { "destination hardware address", HexPrinter.PrintMACAddress(TargetHardwareAddress) },
+                    { "source protocol address", SenderProtocolAddress.ToString() },
+                    { "destination protocol address", TargetProtocolAddress.ToString() }
                 };
 
                 // calculate the padding needed to right-justify the property names
@@ -350,9 +347,7 @@ namespace PacketDotNet
                 buffer.AppendLine("ARP:  ******* ARP - \"Address Resolution Protocol\" - offset=? length=" + TotalPacketLength);
                 buffer.AppendLine("ARP:");
                 foreach (var property in properties)
-                {
                     buffer.AppendLine("ARP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
-                }
 
                 buffer.AppendLine("ARP:");
             }

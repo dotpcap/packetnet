@@ -126,16 +126,15 @@ namespace PacketDotNet.Ieee80211
         /// </value>
         public ushort BlockAckStartingSequenceControl { get; set; }
 
-
         /// <summary>
         /// Length of the frame
         /// </summary>
         public override int FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 2) +
-                                           BlockAcknowledgmentFields.BlockAckRequestControlLength +
-                                           BlockAcknowledgmentFields.BlockAckStartingSequenceControlLength +
-                                           GetBitmapLength();
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 2) +
+                                         BlockAcknowledgmentFields.BlockAckRequestControlLength +
+                                         BlockAcknowledgmentFields.BlockAckStartingSequenceControlLength +
+                                         GetBitmapLength();
 
         /// <summary>
         /// Receiver address
@@ -213,7 +212,6 @@ namespace PacketDotNet.Ieee80211
                                                        Header.Bytes,
                                                        Header.Offset + BlockAcknowledgmentFields.BlockAckStartingSequenceControlPosition);
         }
-
 
         private int GetBitmapLength()
         {

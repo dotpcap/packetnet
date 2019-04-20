@@ -23,9 +23,9 @@ using System;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet.LLDP

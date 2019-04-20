@@ -85,10 +85,10 @@ namespace PacketDotNet.Ieee80211
         /// The size of the frame.
         /// </value>
         public override int FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 3) +
-                                           MacFields.SequenceControlLength +
-                                           DisassociationFrameFields.ReasonCodeLength;
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 3) +
+                                         MacFields.SequenceControlLength +
+                                         DisassociationFrameFields.ReasonCodeLength;
 
         /// <summary>
         /// Gets or sets the reason for disassociation.

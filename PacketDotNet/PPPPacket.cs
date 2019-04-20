@@ -25,9 +25,9 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -160,7 +160,7 @@ namespace PacketDotNet
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>
                 {
-                    {"protocol", Protocol + " (0x" + Protocol.ToString("x") + ")"}
+                    { "protocol", Protocol + " (0x" + Protocol.ToString("x") + ")" }
                 };
 
                 // calculate the padding needed to right-justify the property names

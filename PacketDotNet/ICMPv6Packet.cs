@@ -24,9 +24,9 @@ using System.Reflection;
 using System.Text;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -169,16 +169,17 @@ namespace PacketDotNet
                                         colorEscape,
                                         Type,
                                         Code);
+
                     break;
                 case StringOutputType.Verbose:
                 case StringOutputType.VerboseColored:
                     // collect the properties and their value
                     var properties = new Dictionary<string, string>
                     {
-                        {"type", Type + " (" + (int) Type + ")"},
-                        {"code", Code.ToString()},
+                        { "type", Type + " (" + (int) Type + ")" },
+                        { "code", Code.ToString() },
                         // TODO: Implement a checksum verification for ICMPv6
-                        {"checksum", "0x" + Checksum.ToString("x")}
+                        { "checksum", "0x" + Checksum.ToString("x") }
                     };
                     // TODO: Implement ICMPv6 Option fields here?
 

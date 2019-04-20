@@ -14,7 +14,6 @@ namespace PacketDotNet
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum IPProtocolType : byte
     {
-
         /// <summary> IPv6 Hop-by-Hop options. </summary>
         HOPOPTS = 0,
 
@@ -104,7 +103,6 @@ namespace PacketDotNet
 
         /// <summary> reserved type 254, used in IPv6 Extionson Header. </summary>
         RESERVEDTYPE254 = 254,
-
 
         /// <summary> Raw IP packets. </summary>
         RAW = 255,

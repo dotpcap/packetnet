@@ -29,9 +29,9 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -57,7 +57,9 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        private static readonly HashSet<IPProtocolType> ExtensionHeaderTypes = new HashSet<IPProtocolType>{ IPProtocolType.HOPOPTS,
+        private static readonly HashSet<IPProtocolType> ExtensionHeaderTypes = new HashSet<IPProtocolType>
+        {
+            IPProtocolType.HOPOPTS,
             IPProtocolType.DSTOPTS,
             IPProtocolType.ROUTING,
             IPProtocolType.FRAGMENT,
@@ -68,8 +70,9 @@ namespace PacketDotNet
             IPProtocolType.HOSTIDENTITY,
             IPProtocolType.SHIM6,
             IPProtocolType.RESERVEDTYPE253,
-            IPProtocolType.RESERVEDTYPE254};
-        
+            IPProtocolType.RESERVEDTYPE254
+        };
+
         /// <value>
         /// The version of the IP protocol. The '6' in IPv6 indicates the version of the protocol
         /// </value>
@@ -205,13 +208,13 @@ namespace PacketDotNet
                     CalculateExtensionHeaders();
 
                 if (_totalExtensionHeadersLength == 0)
-                    return (IPProtocolType)Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
+                    return (IPProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
 
 
-                return (IPProtocolType)Header.Bytes[_protocolOffset];
+                return (IPProtocolType) Header.Bytes[_protocolOffset];
             }
-                
-            set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition + _totalExtensionHeadersLength] = (byte)value;
+
+            set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition + _totalExtensionHeadersLength] = (byte) value;
         }
 
         /// <summary>
@@ -246,7 +249,7 @@ namespace PacketDotNet
             {
                 var address = value.GetAddressBytes();
 
-                for (int i = 0; i < address.Length; i++)
+                for (var i = 0; i < address.Length; i++)
                     Header.Bytes[Header.Offset + IPv6Fields.SourceAddressPosition + i] = address[i];
             }
         }
@@ -262,8 +265,8 @@ namespace PacketDotNet
             set
             {
                 var address = value.GetAddressBytes();
-            
-                for (int i = 0; i < address.Length; i++)
+
+                for (var i = 0; i < address.Length; i++)
                     Header.Bytes[Header.Offset + IPv6Fields.DestinationAddressPosition + i] = address[i];
             }
         }
@@ -350,20 +353,21 @@ namespace PacketDotNet
             {
                 // parse the payload
                 PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-                {
-                    if (_totalExtensionHeadersLength == -1)
-                        CalculateExtensionHeaders();
+                                                                         {
+                                                                             if (_totalExtensionHeadersLength == -1)
+                                                                                 CalculateExtensionHeaders();
 
-                    var startingOffset = Header.Offset + Header.Length + _totalExtensionHeadersLength;
-                    var segmentLength = Math.Min(PayloadLength, Header.BytesLength - startingOffset);
-                    var bytesLength = startingOffset + segmentLength;
+                                                                             var startingOffset = Header.Offset + Header.Length + _totalExtensionHeadersLength;
+                                                                             var segmentLength = Math.Min(PayloadLength, Header.BytesLength - startingOffset);
+                                                                             var bytesLength = startingOffset + segmentLength;
 
-                    var payload = new ByteArraySegment(Header.Bytes, startingOffset, segmentLength, bytesLength);
+                                                                             var payload = new ByteArraySegment(Header.Bytes, startingOffset, segmentLength, bytesLength);
 
-                    return ParseEncapsulatedBytes(payload,
-                                                  Protocol,
-                                                  this);
-                }, LazyThreadSafetyMode.PublicationOnly);
+                                                                             return ParseEncapsulatedBytes(payload,
+                                                                                                           Protocol,
+                                                                                                           this);
+                                                                         },
+                                                                         LazyThreadSafetyMode.PublicationOnly);
             }
         }
 
@@ -388,8 +392,8 @@ namespace PacketDotNet
                 _extensionHeaders.Add(extensionHeader);
 
                 totalExtensionHeadersLength += extensionHeader.Length;
-                
-                nextHeader = (IPProtocolType)Header.Bytes[nextHeaderPosition];
+
+                nextHeader = (IPProtocolType) Header.Bytes[nextHeaderPosition];
             }
 
             _protocolOffset = nextHeaderPosition;
@@ -412,7 +416,6 @@ namespace PacketDotNet
         {
             ParentPacket = parentPacket;
         }
-
 
         internal override byte[] GetPseudoIPHeader(int originalHeaderLength)
         {

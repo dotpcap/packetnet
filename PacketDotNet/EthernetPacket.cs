@@ -26,9 +26,9 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -93,7 +93,7 @@ namespace PacketDotNet
             {
                 var hwAddress = new byte[EthernetFields.MacAddressLength];
 
-                for (int i = 0; i < EthernetFields.MacAddressLength; i++)
+                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
                     hwAddress[i] = Header.Bytes[Header.Offset + EthernetFields.SourceMacPosition + i];
 
                 return new PhysicalAddress(hwAddress);
@@ -105,7 +105,7 @@ namespace PacketDotNet
                 if (hwAddress.Length != EthernetFields.MacAddressLength)
                     ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
 
-                for (int i = 0; i < EthernetFields.MacAddressLength; i++)
+                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
                     Header.Bytes[Header.Offset + EthernetFields.SourceMacPosition + i] = hwAddress[i];
             }
         }
@@ -117,7 +117,7 @@ namespace PacketDotNet
             {
                 var hwAddress = new byte[EthernetFields.MacAddressLength];
 
-                for (int i = 0; i < EthernetFields.MacAddressLength; i++)
+                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
                     hwAddress[i] = Header.Bytes[Header.Offset + EthernetFields.DestinationMacPosition + i];
 
                 return new PhysicalAddress(hwAddress);
@@ -129,7 +129,7 @@ namespace PacketDotNet
                 if (hwAddress.Length != EthernetFields.MacAddressLength)
                     ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
 
-                for (int i = 0; i < EthernetFields.MacAddressLength; i++)
+                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
                     Header.Bytes[Header.Offset + EthernetFields.DestinationMacPosition + i] = hwAddress[i];
             }
         }
@@ -280,9 +280,9 @@ namespace PacketDotNet
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>
                 {
-                    {"destination", HexPrinter.PrintMACAddress(DestinationHwAddress)},
-                    {"source", HexPrinter.PrintMACAddress(SourceHwAddress)},
-                    {"type", Type + " (0x" + Type.ToString("x") + ")"}
+                    { "destination", HexPrinter.PrintMACAddress(DestinationHwAddress) },
+                    { "source", HexPrinter.PrintMACAddress(SourceHwAddress) },
+                    { "type", Type + " (0x" + Type.ToString("x") + ")" }
                 };
 
                 // calculate the padding needed to right-justify the property names

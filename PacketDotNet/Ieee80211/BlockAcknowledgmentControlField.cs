@@ -68,13 +68,9 @@ namespace PacketDotNet.Ieee80211
             set
             {
                 if (value)
-                {
                     Field |= 1 << 0x2;
-                }
                 else
-                {
                     Field &= unchecked((ushort) ~(1 << 0x2));
-                }
             }
         }
 
@@ -95,13 +91,9 @@ namespace PacketDotNet.Ieee80211
             set
             {
                 if (value)
-                {
                     Field |= 1 << 0x1;
-                }
                 else
-                {
                     Field &= unchecked((ushort) ~(1 << 0x1));
-                }
             }
         }
 
@@ -114,13 +106,9 @@ namespace PacketDotNet.Ieee80211
             set
             {
                 if (value == AcknowledgementPolicy.Immediate)
-                {
                     Field |= 0x1;
-                }
                 else
-                {
                     Field &= unchecked((ushort) ~0x1);
-                }
             }
         }
 

@@ -19,9 +19,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet.Utils
@@ -52,13 +52,13 @@ namespace PacketDotNet.Utils
         public byte[] Bytes { get; }
 
         /// <value>
-        /// Gets or sets the maximum number of bytes we should treat <see cref="Bytes"/> as having.
-        /// This allows for controlling the number of bytes produced by <see cref="NextSegment()"/>.
+        /// Gets or sets the maximum number of bytes we should treat <see cref="Bytes" /> as having.
+        /// This allows for controlling the number of bytes produced by <see cref="NextSegment()" />.
         /// </value>
         public int BytesLength { get; set; }
 
         /// <value>
-        /// Gets or sets the number of bytes beyond the offset into <see cref="Bytes"/>. 
+        /// Gets or sets the number of bytes beyond the offset into <see cref="Bytes" />.
         /// </value>
         /// <remarks>Take care when setting this parameter as many things are based on the value of this property being correct.</remarks>
         public int Length
@@ -79,19 +79,19 @@ namespace PacketDotNet.Utils
         }
 
         /// <value>
-        /// Gets or sets the offset into <see cref="Bytes"/>.
+        /// Gets or sets the offset into <see cref="Bytes" />.
         /// </value>
         public int Offset { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ByteArraySegment"/> class.
+        /// Initializes a new instance of the <see cref="ByteArraySegment" /> class.
         /// </summary>
         /// <param name="bytes">The bytes.</param>
         public ByteArraySegment(byte[] bytes) : this(bytes, 0, bytes.Length)
         { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ByteArraySegment"/> class.
+        /// Initializes a new instance of the <see cref="ByteArraySegment" /> class.
         /// </summary>
         /// <param name="bytes">The bytes.</param>
         /// <param name="offset">The offset into the byte array.</param>
@@ -100,7 +100,7 @@ namespace PacketDotNet.Utils
         { }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ByteArraySegment"/> class.
+        /// Initializes a new instance of the <see cref="ByteArraySegment" /> class.
         /// </summary>
         /// <param name="bytes">The bytes.</param>
         /// <param name="offset">The offset into the byte array.</param>
@@ -121,7 +121,7 @@ namespace PacketDotNet.Utils
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ByteArraySegment"/> class.
+        /// Initializes a new instance of the <see cref="ByteArraySegment" /> class.
         /// </summary>
         /// <param name="byteArraySegment">The original byte array segment.</param>
         public ByteArraySegment(ByteArraySegment byteArraySegment)
@@ -154,7 +154,7 @@ namespace PacketDotNet.Utils
         }
 
         /// <summary>
-        /// Gets a value indicating whether we need to perform a copy to get the <see cref="ActualBytes"/>.
+        /// Gets a value indicating whether we need to perform a copy to get the <see cref="ActualBytes" />.
         /// </summary>
         public bool NeedsCopyForActualBytes
         {
@@ -222,7 +222,7 @@ namespace PacketDotNet.Utils
         /// <inheritdoc />
         public IEnumerator<byte> GetEnumerator()
         {
-            for (int i = Offset; i < Offset + Length; i++)
+            for (var i = Offset; i < Offset + Length; i++)
                 yield return Bytes[i];
         }
     }

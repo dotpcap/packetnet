@@ -119,20 +119,19 @@ namespace PacketDotNet.Ieee80211
         /// The size of the frame.
         /// </value>
         public override int FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 3) +
-                                           MacFields.SequenceControlLength +
-                                           BeaconFields.TimestampLength +
-                                           BeaconFields.BeaconIntervalLength +
-                                           BeaconFields.CapabilityInformationLength +
-                                           InformationElements.Length;
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 3) +
+                                         MacFields.SequenceControlLength +
+                                         BeaconFields.TimestampLength +
+                                         BeaconFields.BeaconIntervalLength +
+                                         BeaconFields.CapabilityInformationLength +
+                                         InformationElements.Length;
 
         /// <summary>
         /// The information elements included in the frame
         /// Most (but not all) beacons frames will contain an Information element that contains the SSID.
         /// </summary>
         public InformationElementList InformationElements { get; }
-
 
         /// <summary>
         /// The number of microseconds the networks master timekeeper has been active.

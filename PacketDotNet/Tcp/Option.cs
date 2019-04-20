@@ -82,8 +82,8 @@ namespace PacketDotNet.Tcp
         /// </summary>
         public OptionTypes Kind
         {
-            get => (OptionTypes)OptionData.Bytes[OptionData.Offset + KindFieldOffset];
-            set => OptionData.Bytes[OptionData.Offset + KindFieldOffset] = (byte)value;
+            get => (OptionTypes) OptionData.Bytes[OptionData.Offset + KindFieldOffset];
+            set => OptionData.Bytes[OptionData.Offset + KindFieldOffset] = (byte) value;
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace PacketDotNet.Tcp
             }
             set
             {
-                for (int i = 0; i < value.Length; i++)
+                for (var i = 0; i < value.Length; i++)
                     OptionData.Bytes[OptionData.Offset + i] = value[i];
             }
         }

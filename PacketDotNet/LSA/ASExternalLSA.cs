@@ -80,6 +80,7 @@ namespace PacketDotNet.LSA
                     var l = new ASExternalLink(Header.Bytes,
                                                Header.Offset + ASExternalLSAFields.MetricPosition + i * ASExternalLink.Length,
                                                ASExternalLink.Length);
+
                     ret.Add(l);
                 }
 

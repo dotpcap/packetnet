@@ -9,6 +9,16 @@ namespace PacketDotNet.MiscUtil.Conversion
     /// </summary>
     public abstract class EndianBitConverter
     {
+        #region Endianness of this converter
+
+        /// <summary>
+        /// Indicates the byte order ("endianness") in which data is converted using this class.
+        /// </summary>
+        public abstract Endianness Endianness { get; }
+
+        #endregion
+
+
         #region Private struct used for Single/Int32 conversions
 
         /// <summary>
@@ -49,16 +59,6 @@ namespace PacketDotNet.MiscUtil.Conversion
             [field: FieldOffset(0)]
             internal float AsSingle { get; }
         }
-
-        #endregion
-
-
-        #region Endianness of this converter
-
-        /// <summary>
-        /// Indicates the byte order ("endianness") in which data is converted using this class.
-        /// </summary>
-        public abstract Endianness Endianness { get; }
 
         #endregion
 

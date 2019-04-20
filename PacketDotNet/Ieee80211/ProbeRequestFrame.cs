@@ -103,10 +103,10 @@ namespace PacketDotNet.Ieee80211
         /// would preceed any payload.
         /// </summary>
         public override int FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 3) +
-                                           MacFields.SequenceControlLength +
-                                           InformationElements.Length;
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 3) +
+                                         MacFields.SequenceControlLength +
+                                         InformationElements.Length;
 
         /// <summary>
         /// Gets or sets the information elements included in the frame.

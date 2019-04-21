@@ -134,7 +134,7 @@ namespace PacketDotNet
                         var startIndex = offset + DrdaDdmFields.ParameterLengthLength + DrdaDdmFields.ParameterCodePointLength;
                         var strLength = length - 4;
                         //For Type=Data or Type=QryDta,Decode bytes as utf-8 ascii string
-                        if (parameter.DrdaCodepoint == DrdaCodePointType.DATA || parameter.DrdaCodepoint == DrdaCodePointType.QRYDTA)
+                        if (parameter.DrdaCodepoint == DrdaCodePointType.Data || parameter.DrdaCodepoint == DrdaCodePointType.QueryAnswerSetData)
                         {
                             startIndex++;
                             strLength -= 2;

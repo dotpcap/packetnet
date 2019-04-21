@@ -25,8 +25,7 @@ using PacketDotNet.Utils;
 namespace PacketDotNet
 {
     /// <summary>
-    /// Encapsulates and ensures that we have either a Packet OR
-    /// a ByteArraySegment but not both
+    /// Encapsulates and ensures that we have either a Packet OR a ByteArraySegment, but not both.
     /// </summary>
     [Serializable]
     public sealed class PacketOrByteArraySegment
@@ -62,7 +61,7 @@ namespace PacketDotNet
         }
 
         /// <value>
-        /// Whether or not this container contains a packet, a byte[] or neither
+        /// Whether or not this container contains a packet, a byte[] or neither.
         /// </value>
         public PayloadType Type
         {
@@ -77,7 +76,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Appends either the byte array or the packet, if non-null, to the <see cref="MemoryStream"/>.
+        /// Appends either the byte array or the packet, if non-null, to the <see cref="MemoryStream" />.
         /// </summary>
         /// <param name="memoryStream">
         /// A <see cref="MemoryStream" />

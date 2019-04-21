@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace PacketDotNet
 {
-    /// <summary>Code constants for OSPF protocol versions. </summary>
+    /// <summary>Code constants for OSPF protocol versions.</summary>
     public enum OspfVersion : byte
     {
         /// <summary>OSPF protocol version 2.</summary>

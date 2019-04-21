@@ -27,33 +27,31 @@ namespace PacketDotNet
     // ReSharper disable once InconsistentNaming
     public class PppoeFields
     {
-        /// <summary>Size in bytes of the code field </summary>
+        /// <summary>Size in bytes of the code field.</summary>
         public static readonly int CodeLength = 1;
 
-        /// <summary>Offset from the start of the header to the Code field </summary>
+        /// <summary>Offset from the start of the header to the Code field.</summary>
         public static readonly int CodePosition;
 
-        /// <summary>
-        /// Length of the overall PPPoe header
-        /// </summary>
+        /// <summary>Length of the overall PPPoe header.</summary>
         public static readonly int HeaderLength;
 
-        /// <summary>Size in bytes of the Length field </summary>
+        /// <summary>Size in bytes of the Length field.</summary>
         public static readonly int LengthLength = 2;
 
-        /// <summary>Offset from the start of the header to the Length field </summary>
+        /// <summary>Offset from the start of the header to the Length field.</summary>
         public static readonly int LengthPosition;
 
-        /// <summary>Size in bytes of the SessionId field </summary>
+        /// <summary>Size in bytes of the SessionId field.</summary>
         public static readonly int SessionIdLength = 2;
 
-        /// <summary>Offset from the start of the header to the SessionId field </summary>
+        /// <summary>Offset from the start of the header to the SessionId field.</summary>
         public static readonly int SessionIdPosition;
 
-        /// <summary>Size in bytes of the version/type field </summary>
+        /// <summary>Size in bytes of the version/type field.</summary>
         public static readonly int VersionTypeLength = 1;
 
-        /// <summary>Offset from the start of the header to the version/type field </summary>
+        /// <summary>Offset from the start of the header to the version/type field.</summary>
         public static readonly int VersionTypePosition = 0;
 
         static PppoeFields()

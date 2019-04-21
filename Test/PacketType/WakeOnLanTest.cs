@@ -39,7 +39,7 @@ namespace Test.PacketType
             var wol = new WakeOnLanPacket(physicalAddress);
 
             Assert.IsTrue(wol.IsValid());
-            Assert.AreEqual(wol.DestinationMAC, physicalAddress);
+            Assert.AreEqual(wol.DestinationAddress, physicalAddress);
 
             // convert the wol packet back into bytes
             var wolBytes = wol.Bytes;
@@ -69,10 +69,10 @@ namespace Test.PacketType
                 Assert.IsNotNull(p);
 
                 if(packetIndex == 0)
-                    Assert.AreEqual(wol.DestinationMAC, PhysicalAddress.Parse("00-0D-56-DC-9E-35"));
+                    Assert.AreEqual(wol.DestinationAddress, PhysicalAddress.Parse("00-0D-56-DC-9E-35"));
 
                 if(packetIndex == 3)
-                    Assert.AreEqual(wol.DestinationMAC, PhysicalAddress.Parse("00-90-27-85-CF-01"));
+                    Assert.AreEqual(wol.DestinationAddress, PhysicalAddress.Parse("00-90-27-85-CF-01"));
 
                 packetIndex++;
             }

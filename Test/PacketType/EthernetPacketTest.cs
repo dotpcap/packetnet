@@ -57,10 +57,10 @@ namespace Test.PacketType
             Assert.AreEqual(4324, tcp.DestinationPort);
             Assert.IsTrue(tcp.Ack);
             Assert.AreEqual(3536, tcp.WindowSize);
-            Assert.AreEqual(0xc835, tcp.CalculateTCPChecksum());
+            Assert.AreEqual(0xc835, tcp.CalculateTcpChecksum());
             Console.WriteLine("tcp.Checksum is {0}", tcp.Checksum);
             Assert.AreEqual(0xc835, tcp.Checksum, "tcp.Checksum mismatch");
-            Assert.IsTrue(tcp.ValidTCPChecksum);
+            Assert.IsTrue(tcp.ValidTcpChecksum);
         }
 
         // tcp
@@ -86,9 +86,9 @@ namespace Test.PacketType
             Assert.IsTrue(tcp.Ack);
             Assert.IsTrue(tcp.Psh);
             Assert.AreEqual(16666, tcp.WindowSize);
-            Assert.AreEqual(0x9b02, tcp.CalculateTCPChecksum());
+            Assert.AreEqual(0x9b02, tcp.CalculateTcpChecksum());
             Assert.AreEqual(0x9b02, tcp.Checksum);
-            Assert.IsTrue(tcp.ValidTCPChecksum);
+            Assert.IsTrue(tcp.ValidTcpChecksum);
         }
 
         // udp

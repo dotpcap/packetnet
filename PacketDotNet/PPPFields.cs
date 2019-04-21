@@ -26,20 +26,13 @@ namespace PacketDotNet
     /// </summary>
     public class PppFields
     {
-        /// <summary>
-        /// Length of the Protocol field in bytes, the field is of type
-        /// PppProtocol
-        /// </summary>
+        /// <summary>Length of the Protocol field in bytes, the field is of type PppProtocol.</summary>
         public static readonly int ProtocolLength = 2;
 
-        /// <summary>
-        /// The length of the header
-        /// </summary>
+        /// <summary>The length of the header.</summary>
         public static readonly int HeaderLength = ProtocolLength;
 
-        /// <summary>
-        /// Offset from the start of the PPP packet where the Protocol field is located
-        /// </summary>
+        /// <summary>Offset from the start of the PPP packet where the Protocol field is located.</summary>
         public static readonly int ProtocolPosition = 0;
     }
 }

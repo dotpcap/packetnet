@@ -281,17 +281,17 @@ namespace Test.PacketType
                 Assert.AreEqual(t.Urg, fromFile.Urg);
                 Assert.AreEqual(t.UrgentPointer, fromFile.UrgentPointer);
                 Assert.AreEqual(t.ValidChecksum, fromFile.ValidChecksum);
-                Assert.AreEqual(t.ValidTCPChecksum, fromFile.ValidTCPChecksum);
+                Assert.AreEqual(t.ValidTcpChecksum, fromFile.ValidTcpChecksum);
                 Assert.AreEqual(t.WindowSize, fromFile.WindowSize);
 
                 //Method Invocations to make sure that a deserialized packet does not cause 
                 //additional errors.
 
-                t.CalculateTCPChecksum();
+                t.CalculateTcpChecksum();
                 t.IsValidChecksum(TransportPacket.TransportChecksumOption.None);
                 t.PrintHex();
                 t.UpdateCalculatedValues();
-                t.UpdateTCPChecksum();
+                t.UpdateTcpChecksum();
             }
 
             dev.Close();

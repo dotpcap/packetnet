@@ -1,6 +1,6 @@
 namespace PacketDotNet.Ieee80211
 {
-    public class AssociationRequestFields
+    public struct AssociationRequestFields
     {
         public static readonly int CapabilityInformationLength = 2;
         public static readonly int CapabilityInformationPosition;

@@ -1,6 +1,6 @@
 namespace PacketDotNet.Ieee80211
 {
-    public class BeaconFields
+    public struct BeaconFields
     {
         public static readonly int BeaconIntervalLength = 2;
         public static readonly int BeaconIntervalPosition;

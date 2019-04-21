@@ -25,7 +25,7 @@ namespace PacketDotNet
     /// See http://tools.ietf.org/html/rfc2516
     /// </summary>
     // ReSharper disable once InconsistentNaming
-    public class PppoeFields
+    public struct PppoeFields
     {
         /// <summary>Size in bytes of the code field.</summary>
         public static readonly int CodeLength = 1;

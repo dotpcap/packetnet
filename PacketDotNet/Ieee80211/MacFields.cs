@@ -20,13 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace PacketDotNet.Ieee80211
 {
-    /// <summary>
-    /// NOTE: All positions are not defined here because the frame type changes
-    /// whether some address fields are present or not, causing the sequence control
-    /// field to move. In addition the payload size determines where the frame control
-    /// sequence value is as it is after the payload bytes, if any payload is present
-    /// </summary>
-    internal class MacFields
+      public struct MacFields
     {
         public static readonly int Address1Position;
         public static readonly int AddressLength = EthernetFields.MacAddressLength;
@@ -42,6 +36,12 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         public static readonly int SequenceControlPosition;
 
+        /// <summary>
+        /// NOTE: All positions are not defined here because the frame type changes
+        /// whether some address fields are present or not, causing the sequence control
+        /// field to move. In addition the payload size determines where the frame control
+        /// sequence value is as it is after the payload bytes, if any payload is present
+        /// </summary>
         static MacFields()
         {
             DurationIDPosition = FrameControlPosition + FrameControlLength;

@@ -26,7 +26,7 @@ namespace PacketDotNet
         /// <summary>Length in bytes of a Ieee8021Q header.</summary>
         public static readonly int HeaderLength; // 4
 
-        /// <summary>Length of the tag control information in bytes. </summary>
+        /// <summary>Length of the tag control information in bytes.</summary>
         public static readonly int TagControlInformationLength = 2;
 
         /// <summary>Position of the tag control information </summary>

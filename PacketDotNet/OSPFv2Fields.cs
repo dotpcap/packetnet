@@ -67,7 +67,7 @@ namespace PacketDotNet
         /// <summary>Length of the DD sequence field in bytes </summary>
         public static readonly int DDSequenceLength = 4;
 
-        /// <summary>Position of the DD sequence. </summary>
+        /// <summary>Position of the DD sequence.</summary>
         public static readonly int DDSequencePosition;
 
         /// <summary>Length of the Designated Router ID (ip) field in bytes </summary>
@@ -112,7 +112,7 @@ namespace PacketDotNet
         /// <summary>Length of the LSA header in bytes </summary>
         public static readonly int LSAHeaderLength = 20;
 
-        /// <summary>Position of the LSA header. </summary>
+        /// <summary>Position of the LSA header.</summary>
         public static readonly int LSAHeaderPosition;
 
         // ------------------ ospf link state update

@@ -57,10 +57,7 @@ namespace PacketDotNet
         /// <summary>
         /// Create a new TCP packet from values
         /// </summary>
-        public TcpPacket
-        (
-            ushort sourcePort,
-            ushort destinationPort)
+        public TcpPacket(ushort sourcePort, ushort destinationPort)
         {
             Log.Debug("");
 
@@ -169,7 +166,7 @@ namespace PacketDotNet
             ParentPacket = parentPacket;
         }
 
-        /// <summary>Check the ACK flag, flag indicates if the ack number is valid.</summary>
+        /// <summary>Check the ACK flag, which indicates if the ack number is valid.</summary>
         public bool Ack
         {
             get => (Flags & TcpFields.TCPAckMask) != 0;
@@ -256,7 +253,7 @@ namespace PacketDotNet
             set => SetFlag(value, TcpFields.TCPEcnMask);
         }
 
-        /// <summary>Check the FIN flag, flag indicates the sender is finished sending.</summary>
+        /// <summary>Check the FIN flag, which indicates the sender is finished sending.</summary>
         public bool Fin
         {
             get => (Flags & TcpFields.TCPFinMask) != 0;
@@ -358,7 +355,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Check the PSH flag, flag indicates the receiver should pass the
+        /// Check the PSH flag, which indicates the receiver should pass the
         /// data to the application as soon as possible.
         /// </summary>
         public bool Psh
@@ -368,7 +365,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Check the RST flag, flag indicates the session should be reset between
+        /// Check the RST flag, which indicates the session should be reset between
         /// the sender and the receiver.
         /// </summary>
         public bool Rst
@@ -402,7 +399,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Check the SYN flag, flag indicates the sequence numbers should
+        /// Check the SYN flag, which indicates the sequence numbers should
         /// be synchronized between the sender and receiver to initiate
         /// a connection.
         /// </summary>
@@ -412,7 +409,7 @@ namespace PacketDotNet
             set => SetFlag(value, TcpFields.TCPSynMask);
         }
 
-        /// <summary>Check the URG flag, flag indicates if the urgent pointer is valid.</summary>
+        /// <summary>Check the URG flag, which indicates if the urgent pointer is valid.</summary>
         public bool Urg
         {
             get => (Flags & TcpFields.TCPUrgMask) != 0;
@@ -440,24 +437,24 @@ namespace PacketDotNet
             {
                 // IPv6 has no checksum so only the TCP checksum needs evaluation
                 if (ParentPacket is IPv6Packet)
-                    return ValidTCPChecksum;
+                    return ValidTcpChecksum;
 
 
                 // For IPv4 both the IP layer and the TCP layer contain checksums
-                return ((IPv4Packet) ParentPacket).ValidIPChecksum && ValidTCPChecksum;
+                return ((IPv4Packet) ParentPacket).ValidIPChecksum && ValidTcpChecksum;
             }
         }
 
         /// <value>
         /// True if the tcp checksum is valid
         /// </value>
-        public bool ValidTCPChecksum
+        public bool ValidTcpChecksum
         {
             get
             {
-                Log.Debug("ValidTCPChecksum");
+                Log.Debug("ValidTcpChecksum");
                 var result = IsValidChecksum(TransportChecksumOption.IncludePseudoIPHeader);
-                Log.DebugFormat("ValidTCPChecksum {0}", result);
+                Log.DebugFormat("ValidTcpChecksum {0}", result);
                 return result;
             }
         }
@@ -532,7 +529,7 @@ namespace PacketDotNet
         /// Computes the TCP checksum. Does not update the current checksum value
         /// </summary>
         /// <returns> The calculated TCP checksum.</returns>
-        public ushort CalculateTCPChecksum()
+        public ushort CalculateTcpChecksum()
         {
             return (ushort) CalculateChecksum(TransportChecksumOption.IncludePseudoIPHeader);
         }
@@ -540,9 +537,9 @@ namespace PacketDotNet
         /// <summary>
         /// Update the checksum value.
         /// </summary>
-        public void UpdateTCPChecksum()
+        public void UpdateTcpChecksum()
         {
-            Checksum = CalculateTCPChecksum();
+            Checksum = CalculateTcpChecksum();
         }
 
         /// <summary>

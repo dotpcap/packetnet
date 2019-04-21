@@ -105,7 +105,7 @@ namespace PacketDotNet
         /// <summary>
         /// The Physical Address (MAC) of the host being woken up from sleep
         /// </summary>
-        public PhysicalAddress DestinationMAC
+        public PhysicalAddress DestinationAddress
         {
             get
             {
@@ -212,7 +212,7 @@ namespace PacketDotNet
 
             var wol = (WakeOnLanPacket) obj;
 
-            return DestinationMAC.Equals(wol.DestinationMAC);
+            return DestinationAddress.Equals(wol.DestinationAddress);
         }
 
         /// <summary>
@@ -240,17 +240,17 @@ namespace PacketDotNet
             }
 
             if ((outputFormat == StringOutputType.Normal) || (outputFormat == StringOutputType.Colored))
-                buffer.AppendFormat("[{0}WakeOnLanPacket{1}: DestinationMAC={2}]",
+                buffer.AppendFormat("[{0}WakeOnLanPacket{1}: DestinationAddress={2}]",
                                     color,
                                     colorEscape,
-                                    DestinationMAC);
+                                    DestinationAddress);
 
             if ((outputFormat == StringOutputType.Verbose) || (outputFormat == StringOutputType.VerboseColored))
             {
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>
                 {
-                    { "destination", HexPrinter.PrintMACAddress(DestinationMAC) }
+                    { "destination", HexPrinter.PrintMACAddress(DestinationAddress) }
                 };
 
                 // calculate the padding needed to right-justify the property names

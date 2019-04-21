@@ -181,7 +181,7 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary>Fetch the type of service. </summary>
+        /// <summary>Fetch the type of service.</summary>
         public int DifferentiatedServices
         {
             get => Header.Bytes[Header.Offset + IPv4Fields.DifferentiatedServicesPosition];

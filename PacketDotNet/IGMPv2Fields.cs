@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace PacketDotNet
 {
-    /// <summary>IGMP protocol field encoding information. </summary>
+    /// <summary>IGMP protocol field encoding information.</summary>
     public class IgmpV2Fields
     {
         /// <summary>Length of the IGMP header checksum in bytes.</summary>

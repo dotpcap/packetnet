@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace PacketDotNet
 {
-    /// <summary>L2TP protocol field encoding information. </summary>
+    /// <summary>L2TP protocol field encoding information.</summary>
     // ReSharper disable once InconsistentNaming
     public class L2tpFields
     {

@@ -202,9 +202,8 @@ namespace PacketDotNet
 
         /// <summary>
         /// Packet that this packet carries if one is present.
-        /// Note that the packet MAY have a null PayloadPacket but
-        /// a non-null PayloadData
         /// </summary>
+        /// <remarks>The packet MAY have a null <see cref="PayloadPacket"/> but a non-null <see cref="PayloadData"/>.</remarks>
         public virtual Packet PayloadPacket
         {
             get => PayloadPacketOrData.Value.Packet;
@@ -269,6 +268,7 @@ namespace PacketDotNet
                 Log.Debug("");
 
                 var payloadType = PayloadPacketOrData.Value?.Type ?? PayloadType.None;
+
                 switch (payloadType)
                 {
                     case PayloadType.Bytes:
@@ -281,11 +281,9 @@ namespace PacketDotNet
                             Log.Debug("PayloadType.Bytes returning true");
                             return true;
                         }
-                        else
-                        {
-                            Log.Debug("PayloadType.Bytes returning false");
-                            return false;
-                        }
+
+                        Log.Debug("PayloadType.Bytes returning false");
+                        return false;
                     }
                     case PayloadType.Packet:
                     {
@@ -299,11 +297,9 @@ namespace PacketDotNet
                             Log.DebugFormat("PayloadType.Packet result {0}", result);
                             return result;
                         }
-                        else
-                        {
-                            Log.Debug("PayloadType.Packet returning false");
-                            return false;
-                        }
+
+                        Log.Debug("PayloadType.Packet returning false");
+                        return false;
                     }
                     case PayloadType.None:
                     {
@@ -333,10 +329,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="Packet" />
         /// </returns>
-        public static Packet ParsePacket
-        (
-            LinkLayers linkLayers,
-            byte[] packetData)
+        public static Packet ParsePacket(LinkLayers linkLayers, byte[] packetData)
         {
             Packet p;
             var byteArraySegment = new ByteArraySegment(packetData);

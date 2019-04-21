@@ -29,31 +29,31 @@ namespace Test.Misc
     /// packet classes to make it easier to identify and fix printing issues
     /// </summary>
     [TestFixture]
-    public class StringOutput
+    public class StringOutputTest
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly log4net.ILog Log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private class FileAndPacketIndexes
         {
-            public string Filename;
-            public List<int> PacketIndexes;
-            public List<string> PacketDescription;
+            public readonly string Filename;
+            public readonly List<int> PacketIndexes;
+            public readonly List<string> PacketDescription;
 
-            public FileAndPacketIndexes(string Filename,
-                                        List<int> PacketIndexes,
-                                        List<string> PacketDescription)
+            public FileAndPacketIndexes(string filename,
+                                        List<int> packetIndexes,
+                                        List<string> packetDescription)
             {
-                this.Filename = Filename;
-                this.PacketIndexes = PacketIndexes;
-                this.PacketDescription = PacketDescription;
+                Filename = filename;
+                PacketIndexes = packetIndexes;
+                PacketDescription = packetDescription;
             }
         }
 
-        private static List<FileAndPacketIndexes> fileAndPacketIndexes;
+        private static readonly List<FileAndPacketIndexes> FilePacketIndexes;
 
-        static StringOutput()
+        static StringOutputTest()
         {
-            fileAndPacketIndexes = new List<FileAndPacketIndexes>();
+            FilePacketIndexes = new List<FileAndPacketIndexes>();
 
             /*
              * TODO:
@@ -67,105 +67,105 @@ namespace Test.Misc
             // setup an array of file names and packet indexes
 
             // ethernet arp request and response
-            fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "arp_request_response.pcap",
+            FilePacketIndexes.Add(new FileAndPacketIndexes(prefix + "arp_request_response.pcap",
                                                               new List<int>(new int[] {0, 1}),
                                                               new List<string>(new string[] { "ethernet arp request",
                                                                                               "ethernet arp response"})));
 
             // linux cooked capture, ipv4, tcp
-            fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "LinuxCookedCapture.pcap",
+            FilePacketIndexes.Add(new FileAndPacketIndexes(prefix + "LinuxCookedCapture.pcap",
                                                               new List<int>(new int[] {2}),
                                                               new List<string>(new string[] { "linux cooked capture, ipv4, tcp"})));
 
             // ethernet, ipv6, icmpv6
-            fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "ipv6_icmpv6_packet.pcap",
+            FilePacketIndexes.Add(new FileAndPacketIndexes(prefix + "ipv6_icmpv6_packet.pcap",
                                                               new List<int>(new int[] {0}),
                                                               new List<string>(new string[] { "ethernet, ipv6, icmpv6"})));
 
             // ethernet, PPPoE, PPP, ipv4, udp
-            fileAndPacketIndexes.Add(new FileAndPacketIndexes(prefix + "PPPoEPPP.pcap",
+            FilePacketIndexes.Add(new FileAndPacketIndexes(prefix + "PPPoEPPP.pcap",
                                                               new List<int>(new int[] {1}),
                                                               new List<string>(new string[] { "ethernet, PPPoE, PPP, ipv4, udp"})));
 
-            expectedTotalPackets = 5;
+            ExpectedTotalPackets = 5;
         }
 
-        private static int fileAndPacketIndex;
+        private static int _fileAndPacketIndex;
 
         /// <summary>
         /// Index into FileAndPacketIndexes.PacketIndex
         /// </summary>
-        private static int currentPacketIndex;
+        private static int _currentPacketIndex;
 
-        private static string currentPacketDescription;
+        private static string _currentPacketDescription;
 
-        private static string packetFileName;
-        private static int indexIntoPacketFile;
+        private static string _packetFileName;
+        private static int _indexIntoPacketFile;
 
-        private static FileAndPacketIndexes currentFAPI;
+        private static FileAndPacketIndexes _currentFapi;
 
-        private static SharpPcap.LibPcap.CaptureFileReaderDevice captureFileReader;
+        private static SharpPcap.LibPcap.CaptureFileReaderDevice _captureFileReader;
 
-        private static int totalPacketsReturned;
-        private static int expectedTotalPackets;
+        private static int _totalPacketsReturned;
+        private static readonly int ExpectedTotalPackets;
 
         private static Packet GetNextPacket()
         {
-            if(currentFAPI != null)
+            if(_currentFapi != null)
             {
-                log.DebugFormat("currentFAPI.PacketIndexes.Count {0}," +
+                Log.DebugFormat("currentFAPI.PacketIndexes.Count {0}," +
                                 "currentPacketIndex {1}",
-                                currentFAPI.PacketIndexes.Count,
-                                currentPacketIndex);
+                                _currentFapi.PacketIndexes.Count,
+                                _currentPacketIndex);
             } else
             {
-                log.Debug("currentFAPI is null");
+                Log.Debug("currentFAPI is null");
             }
             // do we need to open a file up or are we done with the current file?
-            if((packetFileName == null) ||
-               (currentFAPI == null) ||
-               (currentFAPI.PacketIndexes.Count == currentPacketIndex))
+            if((_packetFileName == null) ||
+               (_currentFapi == null) ||
+               (_currentFapi.PacketIndexes.Count == _currentPacketIndex))
             {
-                log.Debug("opening a new file up");
+                Log.Debug("opening a new file up");
 
                 // close the open device if there was one
-                if(captureFileReader != null)
+                if(_captureFileReader != null)
                 {
-                    captureFileReader.Close();
-                    captureFileReader = null;
+                    _captureFileReader.Close();
+                    _captureFileReader = null;
                 }
 
                 // do we have any more files to process?
-                if(fileAndPacketIndex >= fileAndPacketIndexes.Count)
+                if(_fileAndPacketIndex >= FilePacketIndexes.Count)
                 {
-                    log.DebugFormat("totalPacketsReturned {0}, expectedTotalPackets {1}",
-                                    totalPacketsReturned,
-                                    expectedTotalPackets);
+                    Log.DebugFormat("totalPacketsReturned {0}, expectedTotalPackets {1}",
+                                    _totalPacketsReturned,
+                                    ExpectedTotalPackets);
 
-                    Assert.AreEqual(expectedTotalPackets, totalPacketsReturned,
+                    Assert.AreEqual(ExpectedTotalPackets, _totalPacketsReturned,
                                    "expectedTotalPackets does not match totalPacketsReturned");
 
                     return null;
                 } else
                 {
-                    currentFAPI = fileAndPacketIndexes[fileAndPacketIndex];
-                    currentPacketIndex = 0;
-                    packetFileName = currentFAPI.Filename;
+                    _currentFapi = FilePacketIndexes[_fileAndPacketIndex];
+                    _currentPacketIndex = 0;
+                    _packetFileName = _currentFapi.Filename;
 
                     // opening a new file, we are at the first index into the new file
-                    indexIntoPacketFile = 0;
+                    _indexIntoPacketFile = 0;
 
                     try
                     {
-                        log.DebugFormat("Opening {0}", currentFAPI.Filename);
+                        Log.DebugFormat("Opening {0}", _currentFapi.Filename);
 
-                        captureFileReader = new SharpPcap.LibPcap.CaptureFileReaderDevice(currentFAPI.Filename);
-                        captureFileReader.Open();
+                        _captureFileReader = new SharpPcap.LibPcap.CaptureFileReaderDevice(_currentFapi.Filename);
+                        _captureFileReader.Open();
 
-                        fileAndPacketIndex++;
+                        _fileAndPacketIndex++;
                     } catch(Exception e)
                     {
-                        log.Error("caught exception",e);
+                        Log.Error("caught exception",e);
                         throw;
                     }
                 }
@@ -175,48 +175,48 @@ namespace Test.Misc
 
             do
             {
-                log.DebugFormat("currentPacketIndex {0}", currentPacketIndex);
-                log.DebugFormat("indexIntoPacketFile {0}, currentFAPI.PacketIndexes[currentPacketIndex] {1}",
-                                indexIntoPacketFile,
-                                currentFAPI.PacketIndexes[currentPacketIndex]);
+                Log.DebugFormat("currentPacketIndex {0}", _currentPacketIndex);
+                Log.DebugFormat("indexIntoPacketFile {0}, currentFAPI.PacketIndexes[currentPacketIndex] {1}",
+                                _indexIntoPacketFile,
+                                _currentFapi.PacketIndexes[_currentPacketIndex]);
 
-                log.Debug("retrieving packet");
+                Log.Debug("retrieving packet");
 
                 // read the next packet
-                var packet = captureFileReader.GetNextPacket();
+                var packet = _captureFileReader.GetNextPacket();
                 Assert.IsNotNull(packet, "Expected a valid packet but it was null");
 
                 p = Packet.ParsePacket(packet.LinkLayerType, packet.Data);
 
-                currentPacketDescription = currentFAPI.PacketDescription[currentPacketIndex];
+                _currentPacketDescription = _currentFapi.PacketDescription[_currentPacketIndex];
 
                 // advance our index into the current packet file
-                indexIntoPacketFile++;
-            } while((indexIntoPacketFile -1) != currentFAPI.PacketIndexes[currentPacketIndex]);
+                _indexIntoPacketFile++;
+            } while((_indexIntoPacketFile -1) != _currentFapi.PacketIndexes[_currentPacketIndex]);
             // does the current index match the index of the packet we want?
 
             // and because we got a packet we advance our index into the FileAndPacketIndex class
-            currentPacketIndex++;
+            _currentPacketIndex++;
 
-            log.Debug("returning packet");
-            totalPacketsReturned++;
+            Log.Debug("returning packet");
+            _totalPacketsReturned++;
             return p;
         }
 
         private void ResetPacketPosition()
         {
-            fileAndPacketIndex = 0;
-            currentPacketIndex = 0;
-            packetFileName = null;
+            _fileAndPacketIndex = 0;
+            _currentPacketIndex = 0;
+            _packetFileName = null;
 
-            indexIntoPacketFile = 0;
+            _indexIntoPacketFile = 0;
 
-            totalPacketsReturned = 0;
+            _totalPacketsReturned = 0;
 
-            if(captureFileReader != null)
+            if(_captureFileReader != null)
             {
-                captureFileReader.Close();
-                captureFileReader = null;
+                _captureFileReader.Close();
+                _captureFileReader = null;
             }
         }
 
@@ -229,7 +229,7 @@ namespace Test.Misc
 
         private void OutputPacket(Packet p, StringOutputType outputType)
         {
-            Console.WriteLine(currentPacketDescription + " - " + outputType);
+            Console.WriteLine(_currentPacketDescription + " - " + outputType);
             Console.Write(p.ToString(outputType));
             if(outputType == StringOutputType.Verbose || outputType == StringOutputType.VerboseColored)
                 Console.Write(p.PrintHex());

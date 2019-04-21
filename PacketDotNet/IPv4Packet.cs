@@ -280,19 +280,6 @@ namespace PacketDotNet
         }
 
         /// <value>
-        /// The protocol of the ip packet's payload
-        /// Included along side Protocol for user convenience
-        /// </value>
-        [Obsolete("Use Protocol instead of NextHeader for IPv4 Packets.")]
-#pragma warning disable 0809
-        public override ProtocolType NextHeader
-#pragma warning restore 0809
-        {
-            get => Protocol;
-            set => Protocol = value;
-        }
-
-        /// <value>
         /// Forwards compatibility IPv6.PayloadLength property
         /// </value>
         public override ushort PayloadLength

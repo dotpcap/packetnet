@@ -31,9 +31,7 @@ namespace PacketDotNet
         /// <summary>Total length of an ethernet header in bytes.</summary>
         public static readonly int HeaderLength; // == 14
 
-        /// <summary>
-        /// size of an ethernet mac address in bytes
-        /// </summary>
+        /// <summary>Size of an ethernet mac address in bytes.</summary>
         public static readonly int MacAddressLength = 6;
 
         /// <summary>Position of the source MAC address within the ethernet header.</summary>

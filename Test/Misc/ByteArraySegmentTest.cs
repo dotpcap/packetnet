@@ -18,27 +18,45 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
+using System;
 using NUnit.Framework;
 using PacketDotNet;
+using PacketDotNet.Utils;
 
 namespace Test.Misc
 {
     [TestFixture]
-    public class PacketTest
+    public class ByteArraySegmentTest
     {
         [Test]
-        public void TestSettingPayloadData()
+        public void TestByteArraySegment()
         {
-            byte[] data = new byte[10];
+            byte[] data = new byte[20];
             for(int i = 0; i < data.Length; i++)
             {
                 data[i] = (byte)i;
             }
 
-            // NOTE: we use TcpPacket because it has a simple constructor. We can't
-            //       create a Packet() instance because Packet is an abstract class
-            var p = new TcpPacket(10, 10);
-            p.PayloadData = data;
+            var byteArraySegment = new ByteArraySegment(data);
+            Assert.AreEqual(byteArraySegment.Length, data.Length);
+            for (int i = 0; i < 20; i++)
+                Assert.AreEqual(byteArraySegment[i], i);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var _ = byteArraySegment[20];
+            });
+
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            {
+                var _ = byteArraySegment[-1];
+            });
+
+            var t = 0;
+            foreach (var c in byteArraySegment)
+            {
+                Assert.AreEqual(t++, c);
+            }
         }
     }
 }

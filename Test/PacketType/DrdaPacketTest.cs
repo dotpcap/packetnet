@@ -18,7 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2017 Andrew <pandipd@outlook.com>
  */
 
-using System;
 using NUnit.Framework;
 using SharpPcap;
 using SharpPcap.LibPcap;

@@ -270,9 +270,9 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Identifies the NextHeader, will be the protocol of the encapsulated in this ip packet unless there are extended headers
+        /// Identifies the next header field, which is the protocol of the encapsulated in packet unless there are extended headers.
         /// </summary>
-        public override ProtocolType NextHeader
+        public ProtocolType NextHeader
         {
             get => (ProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
             set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition] = (byte) value;

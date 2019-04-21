@@ -108,7 +108,6 @@ namespace PacketDotNet
         private static string GetArgumentName(ExceptionArgument argument)
         {
             string argumentName;
-
             switch (argument)
             {
                 case ExceptionArgument.buffer:
@@ -116,25 +115,26 @@ namespace PacketDotNet
                     argumentName = "buffer";
                     break;
                 }
-
+                case ExceptionArgument.index:
+                {
+                    argumentName = "index";
+                    break;
+                }
                 case ExceptionArgument.linkLayer:
                 {
                     argumentName = "linkLayers";
                     break;
                 }
-
                 case ExceptionArgument.startIndex:
                 {
                     argumentName = "startIndex";
                     break;
                 }
-
                 case ExceptionArgument.value:
                 {
                     argumentName = "value";
                     break;
                 }
-
                 default:
                 {
                     return String.Empty;
@@ -189,6 +189,7 @@ namespace PacketDotNet
     internal enum ExceptionArgument
     {
         buffer,
+        index,
         linkLayer,
         startIndex,
         value

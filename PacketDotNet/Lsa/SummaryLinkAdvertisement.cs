@@ -28,16 +28,16 @@ namespace PacketDotNet.Lsa
         /// <summary>
         /// Constructs a Summary LSA with a list of TOS metrics
         /// </summary>
-        public SummaryLinkAdvertisement(List<TosMetric> metrics)
+        public SummaryLinkAdvertisement(List<TypeOfServiceMetric> metrics)
         {
-            var length = SummaryLinkAdvertisementFields.TosMetricPosition + metrics.Count * TosMetric.TosMetricLength;
+            var length = SummaryLinkAdvertisementFields.TosMetricPosition + metrics.Count * TypeOfServiceMetric.Length;
             var offset = SummaryLinkAdvertisementFields.TosMetricPosition;
             var b = new byte[length];
 
             foreach (var m in metrics)
             {
-                Array.Copy(m.Bytes, 0, b, offset, TosMetric.TosMetricLength);
-                offset += TosMetric.TosMetricLength;
+                Array.Copy(m.Bytes, 0, b, offset, TypeOfServiceMetric.Length);
+                offset += TypeOfServiceMetric.Length;
             }
 
             Header = new ByteArraySegment(b);
@@ -105,25 +105,25 @@ namespace PacketDotNet.Lsa
         /// Additional TOS-specific information  for backward compatibility
         /// with previous versions of the OSPF specification
         /// </summary>
-        public List<TosMetric> TosMetrics
+        public List<TypeOfServiceMetric> TosMetrics
         {
             get
             {
-                var ret = new List<TosMetric>();
+                var ret = new List<TypeOfServiceMetric>();
 
-                if ((Length - SummaryLinkAdvertisementFields.TosMetricPosition) % TosMetric.TosMetricLength != 0)
+                if ((Length - SummaryLinkAdvertisementFields.TosMetricPosition) % TypeOfServiceMetric.Length != 0)
                 {
                     throw new Exception("Malformed summary LSA - bad TosMetrics size");
                 }
 
-                var tosCnt = (Length - SummaryLinkAdvertisementFields.TosMetricPosition) / TosMetric.TosMetricLength;
+                var tosCnt = (Length - SummaryLinkAdvertisementFields.TosMetricPosition) / TypeOfServiceMetric.Length;
 
                 for (var i = 0; i < tosCnt; i++)
                 {
-                    var metric = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + SummaryLinkAdvertisementFields.TosMetricPosition + i * TosMetric.TosMetricLength);
-                    var m = new TosMetric
+                    var metric = EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + SummaryLinkAdvertisementFields.TosMetricPosition + i * TypeOfServiceMetric.Length);
+                    var m = new TypeOfServiceMetric
                     {
-                        Tos = (byte) ((metric & 0xFF000000) >> 24),
+                        TypeOfService = (byte) ((metric & 0xFF000000) >> 24),
                         Metric = metric & 0x00FFFFFF
                     };
 

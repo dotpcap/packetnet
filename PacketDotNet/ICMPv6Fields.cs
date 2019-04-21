@@ -24,7 +24,7 @@ namespace PacketDotNet
     /// ICMP protocol field encoding information.
     /// See http://en.wikipedia.org/wiki/ICMPv6
     /// </summary>
-    public class IcmpV6Fields
+    public struct IcmpV6Fields
     {
         /// <summary>Length of the ICMP header checksum in bytes.</summary>
         public static readonly int ChecksumLength = 2;
@@ -38,20 +38,20 @@ namespace PacketDotNet
         /// <summary>Position of the ICMP message subcode.</summary>
         public static readonly int CodePosition;
 
-        /// <summary>Length in bytes of an ICMP header.</summary>
-        public static readonly int HeaderLength; // == 4
-
         /// <summary>Length of the ICMP message type code in bytes.</summary>
         public static readonly int TypeLength = 1;
 
         /// <summary>Position of the ICMP message type.</summary>
         public static readonly int TypePosition = 0;
 
+        /// <summary>The position of the ICMP message.</summary>
+        public static readonly int MessagePosition;
+
         static IcmpV6Fields()
         {
             CodePosition = TypePosition + TypeLength;
             ChecksumPosition = CodePosition + CodeLength;
-            HeaderLength = ChecksumPosition + ChecksumLength;
+            MessagePosition = ChecksumPosition + ChecksumLength;
         }
     }
 }

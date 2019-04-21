@@ -75,10 +75,7 @@ namespace PacketDotNet
         /// <param name="parentPacket">
         /// A <see cref="Packet" />
         /// </param>
-        public IcmpV6Packet
-        (
-            ByteArraySegment byteArraySegment,
-            Packet parentPacket) : this(byteArraySegment)
+        public IcmpV6Packet(ByteArraySegment byteArraySegment, Packet parentPacket) : this(byteArraySegment)
         {
             ParentPacket = parentPacket;
         }

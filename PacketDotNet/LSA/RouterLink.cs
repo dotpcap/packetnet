@@ -30,16 +30,16 @@ namespace PacketDotNet.Lsa
         /// <summary>
         /// Constructs router link from a list of TOS metrics
         /// </summary>
-        public RouterLink(IReadOnlyCollection<TosMetric> metrics)
+        public RouterLink(IReadOnlyCollection<TypeOfServiceMetric> metrics)
         {
-            var length = RouterLinkLength + metrics.Count * TosMetric.TosMetricLength;
+            var length = RouterLinkLength + metrics.Count * TypeOfServiceMetric.Length;
             var offset = RouterLinkFields.AdditionalMetricsPosition;
             var b = new byte[length];
 
             foreach (var m in metrics)
             {
-                Array.Copy(m.Bytes, 0, b, offset, TosMetric.TosMetricLength);
-                offset += TosMetric.TosMetricLength;
+                Array.Copy(m.Bytes, 0, b, offset, TypeOfServiceMetric.Length);
+                offset += TypeOfServiceMetric.Length;
             }
 
             _header = new ByteArraySegment(b);
@@ -122,18 +122,18 @@ namespace PacketDotNet.Lsa
         /// <summary>
         /// List of TOS metrics, contained in this LSA. Deprecated by RFC 4915
         /// </summary>
-        public List<TosMetric> TosMetrics
+        public List<TypeOfServiceMetric> TosMetrics
         {
             get
             {
-                var metrics = new List<TosMetric>();
+                var metrics = new List<TypeOfServiceMetric>();
 
                 for (var i = 0; i < TosNumber; i++)
                 {
-                    var metric = EndianBitConverter.Big.ToUInt32(_header.Bytes, _header.Offset + RouterLinkFields.AdditionalMetricsPosition + i * TosMetric.TosMetricLength);
-                    var m = new TosMetric
+                    var metric = EndianBitConverter.Big.ToUInt32(_header.Bytes, _header.Offset + RouterLinkFields.AdditionalMetricsPosition + i * TypeOfServiceMetric.Length);
+                    var m = new TypeOfServiceMetric
                     {
-                        Tos = (byte) ((metric & 0xFF000000) >> 3),
+                        TypeOfService = (byte) ((metric & 0xFF000000) >> 3),
                         Metric = metric & 0x00FFFFFF
                     };
 

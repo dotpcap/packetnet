@@ -4,7 +4,7 @@ namespace PacketDotNet.Lsa
     /// Represents the length (in bytes) and the relative position
     /// of the fields in a RouterLink
     /// </summary>
-    public class RouterLinkFields
+    public struct RouterLinkFields
     {
         /// <summary>The relative position of the AdditionalMetrics field</summary>
         public static readonly int AdditionalMetricsPosition;

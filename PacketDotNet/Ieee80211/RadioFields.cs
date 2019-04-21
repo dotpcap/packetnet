@@ -25,7 +25,7 @@ namespace PacketDotNet.Ieee80211
     /// NOTE: PresentPosition may not be the only position present
     /// as this the field can be extended if the high bit is set
     /// </summary>
-    public class RadioFields
+    public struct RadioFields
     {
         /// <summary>Default header length, assuming one present field entry</summary>
         public static readonly int DefaultHeaderLength;

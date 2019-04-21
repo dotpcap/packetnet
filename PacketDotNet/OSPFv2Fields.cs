@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace PacketDotNet
 {
-    internal class OspfV2Fields
+    public struct OspfV2Fields
     {
         /// <summary>Length of the OSPF area ID (ip) field in bytes </summary>
         public static readonly int AreaIDLength = 4;

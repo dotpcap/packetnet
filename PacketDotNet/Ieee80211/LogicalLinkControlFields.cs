@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace PacketDotNet.Ieee80211
 {
-    internal class LogicalLinkControlFields
+    public struct LogicalLinkControlFields
     {
         public static readonly int ControlOrganizationLength = 4;
         public static readonly int SsapLength = 1;

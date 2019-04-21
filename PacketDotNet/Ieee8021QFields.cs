@@ -21,7 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 namespace PacketDotNet
 {
     /// <summary>802.1Q fields </summary>
-    public class Ieee8021QFields
+    public struct Ieee8021QFields
     {
         /// <summary>Length in bytes of a Ieee8021Q header.</summary>
         public static readonly int HeaderLength; // 4

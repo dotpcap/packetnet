@@ -24,7 +24,7 @@ namespace PacketDotNet
     /// The fields in a PPP packet
     /// See http://en.wikipedia.org/wiki/Point-to-Point_Protocol
     /// </summary>
-    public class PppFields
+    public struct PppFields
     {
         /// <summary>Length of the Protocol field in bytes, the field is of type PppProtocol.</summary>
         public static readonly int ProtocolLength = 2;

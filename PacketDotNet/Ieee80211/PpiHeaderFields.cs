@@ -25,7 +25,7 @@ namespace PacketDotNet.Ieee80211
     /// NOTE: PresentPosition may not be the only position present
     /// as this the field can be extended if the high bit is set
     /// </summary>
-    public class PpiHeaderFields
+    public struct PpiHeaderFields
     {
         /// <summary>Length of the Data Link Type</summary>
         public static readonly int DataLinkTypeLength = 4;

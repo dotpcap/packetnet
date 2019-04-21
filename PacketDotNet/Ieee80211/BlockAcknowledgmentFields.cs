@@ -1,6 +1,6 @@
 namespace PacketDotNet.Ieee80211
 {
-    public class BlockAcknowledgmentFields
+    public struct BlockAcknowledgmentFields
     {
         public static readonly int BlockAckBitmapPosition;
         public static readonly int BlockAckRequestControlLength = 2;

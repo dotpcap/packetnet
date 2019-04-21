@@ -24,7 +24,7 @@ namespace PacketDotNet
     /// Lengths and offsets to the fields in the LinuxSll packet
     /// See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
     /// </summary>
-    public class LinuxSllFields
+    public struct LinuxSllFields
     {
         /// <summary>
         /// Length of the ethernet protocol field

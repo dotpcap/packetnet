@@ -1,6 +1,6 @@
 namespace PacketDotNet.Ieee80211
 {
-    public class AuthenticationFields
+    public struct AuthenticationFields
     {
         public static readonly int AuthAlgorithmNumLength = 2;
         public static readonly int AuthAlgorithmNumPosition;

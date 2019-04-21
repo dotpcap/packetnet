@@ -1,6 +1,6 @@
 namespace PacketDotNet.Ieee80211
 {
-    public class AssociationResponseFields
+    public struct AssociationResponseFields
     {
         public static readonly int AssociationIdLength = 2;
         public static readonly int AssociationIdPosition;

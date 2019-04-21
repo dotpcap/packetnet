@@ -24,7 +24,7 @@ namespace PacketDotNet
     /// The fields in a Null packet
     /// See http://www.tcpdump.org/linktypes.html
     /// </summary>
-    public class NullFields
+    public struct NullFields
     {
         /// <summary>
         /// Length of the Protocol field in bytes, the field is of type

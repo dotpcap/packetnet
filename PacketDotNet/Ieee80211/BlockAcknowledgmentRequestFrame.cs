@@ -92,8 +92,8 @@ namespace PacketDotNet.Ieee80211
         public override int FrameSize => MacFields.FrameControlLength +
                                          MacFields.DurationIDLength +
                                          (MacFields.AddressLength * 2) +
-                                         BlockAckRequestFields.BlockAckRequestControlLength +
-                                         BlockAckRequestFields.BlockAckStartingSequenceControlLength;
+                                         BlockAcknowledgmentRequestFields.BlockAckRequestControlLength +
+                                         BlockAcknowledgmentRequestFields.BlockAckStartingSequenceControlLength;
 
         /// <summary>
         /// Receiver address
@@ -113,18 +113,18 @@ namespace PacketDotNet.Ieee80211
             get
             {
                 if (Header.Length >=
-                    BlockAckRequestFields.BlockAckRequestControlPosition +
-                    BlockAckRequestFields.BlockAckRequestControlLength)
+                    BlockAcknowledgmentRequestFields.BlockAckRequestControlPosition +
+                    BlockAcknowledgmentRequestFields.BlockAckRequestControlLength)
                 {
                     return EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                              Header.Offset + BlockAckRequestFields.BlockAckRequestControlPosition);
+                                                              Header.Offset + BlockAcknowledgmentRequestFields.BlockAckRequestControlPosition);
                 }
 
                 return 0;
             }
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
-                                                       Header.Offset + BlockAckRequestFields.BlockAckRequestControlPosition);
+                                                       Header.Offset + BlockAcknowledgmentRequestFields.BlockAckRequestControlPosition);
         }
 
         /// <summary>
@@ -138,18 +138,18 @@ namespace PacketDotNet.Ieee80211
             get
             {
                 if (Header.Length >=
-                    BlockAckRequestFields.BlockAckStartingSequenceControlPosition +
-                    BlockAckRequestFields.BlockAckStartingSequenceControlLength)
+                    BlockAcknowledgmentRequestFields.BlockAckStartingSequenceControlPosition +
+                    BlockAcknowledgmentRequestFields.BlockAckStartingSequenceControlLength)
                 {
                     return EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                              Header.Offset + BlockAckRequestFields.BlockAckStartingSequenceControlPosition);
+                                                              Header.Offset + BlockAcknowledgmentRequestFields.BlockAckStartingSequenceControlPosition);
                 }
 
                 return 0;
             }
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
-                                                       Header.Offset + BlockAckRequestFields.BlockAckStartingSequenceControlPosition);
+                                                       Header.Offset + BlockAcknowledgmentRequestFields.BlockAckStartingSequenceControlPosition);
         }
 
         /// <summary>

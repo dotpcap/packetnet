@@ -25,7 +25,7 @@ using PacketDotNet;
 namespace Test.Misc
 {
     [TestFixture]
-    public class ConstructingPackets
+    public class ConstructingPacketsTest
     {
         /// <summary>
         /// Build a complete ethernet packet

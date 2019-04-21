@@ -119,7 +119,7 @@ namespace PacketDotNet.Lsa
         /// <summary>
         /// The Type of Service that the following fields concern.
         /// </summary>
-        public byte Tos
+        public byte TypeOfService
         {
             get
             {

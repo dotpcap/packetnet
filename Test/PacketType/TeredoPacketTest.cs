@@ -15,7 +15,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2018 Steven Haufe<haufes@hotmail.com>
  */
 
-using System;
 using NUnit.Framework;
 using SharpPcap.LibPcap;
 using PacketDotNet;

@@ -18,10 +18,10 @@ namespace PacketDotNet.Lsa
         /// <summary>The relative position of the NetworkMask field</summary>
         public static readonly int NetworkMaskPosition;
 
-        /// <summary>The length of the TosMetric field in bytes</summary>
+        /// <summary>The length of the TypeOfServiceMetric field in bytes</summary>
         public static readonly int TosMetricLength = 4;
 
-        /// <summary>The relative position of the TosMetric field</summary>
+        /// <summary>The relative position of the TypeOfServiceMetric field</summary>
         public static readonly int TosMetricPosition;
 
         static SummaryLinkAdvertisementFields()

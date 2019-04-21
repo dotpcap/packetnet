@@ -18,10 +18,10 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections;
 using System.Collections.Generic;
-
 #if DEBUG
 using log4net;
 using System.Reflection;
+
 #endif
 
 namespace PacketDotNet.Utils
@@ -106,6 +106,29 @@ namespace PacketDotNet.Utils
         /// </value>
         public int BytesLength { get; set; }
 
+        /// <summary>
+        /// Gets or sets the <see cref="byte" /> at the specified index.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns><see cref="byte" />.</returns>
+        public byte this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= Length)
+                    ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.index);
+                
+                return Bytes[Offset + index];
+            }
+            set
+            {
+                if (index < 0 || index >= Length)
+                    ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.index);
+
+                Bytes[Offset + index] = value;
+            }
+        }
+
         /// <value>
         /// Gets or sets the number of bytes beyond the offset into <see cref="Bytes" />.
         /// </value>
@@ -136,8 +159,7 @@ namespace PacketDotNet.Utils
             {
                 // we need a copy unless we are at the start of the byte[]
                 // and the length is the total byte[] length
-                var okWithoutCopy = Offset == 0 && Length == Bytes.Length;
-                var result = !okWithoutCopy;
+                var result = Offset != 0 || Length != Bytes.Length;
 
                 Log.DebugFormat("result {0}", result);
 

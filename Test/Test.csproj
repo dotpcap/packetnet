@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="EndianBinaryReader.cs" />
     <Compile Include="EndianBinaryWriter.cs" />
+    <Compile Include="Misc\ByteArraySegmentTest.cs" />
     <Compile Include="PacketType\DrdaPacketTest.cs" />
     <Compile Include="PacketType\L2TPPacketTest.cs" />
     <Compile Include="PacketType\Ieee80211\CapabilityInformationFieldTest.cs" />
@@ -82,10 +83,10 @@
     <Compile Include="LoggingConfiguration.cs" />
     <Compile Include="Performance\BitConversionPerformance.cs" />
     <Compile Include="Performance\ByteCopyPerformance.cs" />
-    <Compile Include="Misc\ConstructingPackets.cs" />
+    <Compile Include="Misc\ConstructingPacketsTest.cs" />
     <Compile Include="Misc\ChecksumUtilsTest.cs" />
     <Compile Include="Misc\PacketTest.cs" />
-    <Compile Include="Misc\StringOutput.cs" />
+    <Compile Include="Misc\StringOutputTest.cs" />
     <Compile Include="PacketType\ArpPacketTest.cs" />
     <Compile Include="PacketType\EthernetPacketTest.cs" />
     <Compile Include="PacketType\ICMPv4PacketTest.cs" />

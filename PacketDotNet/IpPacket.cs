@@ -74,16 +74,6 @@ namespace PacketDotNet
             set => TimeToLive = value;
         }
 
-        /// <value>
-        /// The protocol of the ip packet's payload
-        /// Included along side Protocol for user convenience
-        /// </value>
-        public virtual ProtocolType NextHeader
-        {
-            get => Protocol;
-            set => Protocol = value;
-        }
-
         /// <summary>
         /// ipv6 payload length in bytes,
         /// calculate from ipv4.TotalLength - (ipv4.HeaderLength * 4)

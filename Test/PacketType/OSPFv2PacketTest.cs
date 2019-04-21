@@ -552,7 +552,7 @@ namespace Test.PacketType
             Assert.AreEqual(aslink.EBit, 1);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
-            Assert.AreEqual(0, aslink.Tos);
+            Assert.AreEqual(0, aslink.TypeOfService);
             Assert.AreEqual(System.Net.IPAddress.Parse("0.0.0.0"), aslink.ForwardingAddress);
 
             l = lsaHolder.Updates[8];
@@ -573,7 +573,7 @@ namespace Test.PacketType
             Assert.AreEqual(aslink.EBit, 1);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
-            Assert.AreEqual(0, aslink.Tos);
+            Assert.AreEqual(0, aslink.TypeOfService);
             Assert.AreEqual(System.Net.IPAddress.Parse("0.0.0.0"), aslink.ForwardingAddress);
         }
 
@@ -993,15 +993,15 @@ namespace Test.PacketType
             Assert.AreEqual(28, sl.Length);
             Assert.AreEqual(0, sl.TosMetrics.Count);
 
-            List<TosMetric> tms = new List<TosMetric>();
+            List<TypeOfServiceMetric> tms = new List<TypeOfServiceMetric>();
 
-            TosMetric tm = new TosMetric();
-            tm.Tos = 1;
+            TypeOfServiceMetric tm = new TypeOfServiceMetric();
+            tm.TypeOfService = 1;
             tm.Metric = 11;
             tms.Add(tm);
 
-            tm = new TosMetric();
-            tm.Tos = 2;
+            tm = new TypeOfServiceMetric();
+            tm.TypeOfService = 2;
             tm.Metric = 22;
             tms.Add(tm);
 
@@ -1030,9 +1030,9 @@ namespace Test.PacketType
             Assert.AreEqual(36, sl.Length);
             Assert.AreEqual(2, sl.TosMetrics.Count);
 
-            Assert.AreEqual(1, sl.TosMetrics[0].Tos);
+            Assert.AreEqual(1, sl.TosMetrics[0].TypeOfService);
             Assert.AreEqual(11, sl.TosMetrics[0].Metric);
-            Assert.AreEqual(2, sl.TosMetrics[1].Tos);
+            Assert.AreEqual(2, sl.TosMetrics[1].TypeOfService);
             Assert.AreEqual(22, sl.TosMetrics[1].Metric);
         }
 
@@ -1068,7 +1068,7 @@ namespace Test.PacketType
             aslink.EBit = 1;
             aslink.Metric = 100;
             aslink.ExternalRouteTag = 0;
-            aslink.Tos = 0;
+            aslink.TypeOfService = 0;
             aslink.ForwardingAddress = System.Net.IPAddress.Parse("0.0.0.0");
 
             List<ASExternalLink> links = new List<ASExternalLink>();
@@ -1101,7 +1101,7 @@ namespace Test.PacketType
             Assert.AreEqual(1, aslink.EBit);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
-            Assert.AreEqual(0, aslink.Tos);
+            Assert.AreEqual(0, aslink.TypeOfService);
             Assert.AreEqual(System.Net.IPAddress.Parse("0.0.0.0"), aslink.ForwardingAddress);
         }
 
@@ -1186,15 +1186,15 @@ namespace Test.PacketType
             nl.NetworkMask = System.Net.IPAddress.Parse("255.255.255.252");
 
             //add summary lsa
-            List<TosMetric> tms = new List<TosMetric>();
+            List<TypeOfServiceMetric> tms = new List<TypeOfServiceMetric>();
 
-            TosMetric tm = new TosMetric();
-            tm.Tos = 1;
+            TypeOfServiceMetric tm = new TypeOfServiceMetric();
+            tm.TypeOfService = 1;
             tm.Metric = 11;
             tms.Add(tm);
 
-            tm = new TosMetric();
-            tm.Tos = 2;
+            tm = new TypeOfServiceMetric();
+            tm.TypeOfService = 2;
             tm.Metric = 22;
             tms.Add(tm);
 
@@ -1215,7 +1215,7 @@ namespace Test.PacketType
             aslink.EBit = 1;
             aslink.Metric = 100;
             aslink.ExternalRouteTag = 0;
-            aslink.Tos = 0;
+            aslink.TypeOfService = 0;
             aslink.ForwardingAddress = System.Net.IPAddress.Parse("0.0.0.0");
 
             List<ASExternalLink> links = new List<ASExternalLink>();
@@ -1310,9 +1310,9 @@ namespace Test.PacketType
             Assert.AreEqual(36, sl.Length);
             Assert.AreEqual(2, sl.TosMetrics.Count);
 
-            Assert.AreEqual(1, sl.TosMetrics[0].Tos);
+            Assert.AreEqual(1, sl.TosMetrics[0].TypeOfService);
             Assert.AreEqual(11, sl.TosMetrics[0].Metric);
-            Assert.AreEqual(2, sl.TosMetrics[1].Tos);
+            Assert.AreEqual(2, sl.TosMetrics[1].TypeOfService);
             Assert.AreEqual(22, sl.TosMetrics[1].Metric);
 
             //test AS-External-LSA
@@ -1332,7 +1332,7 @@ namespace Test.PacketType
             Assert.AreEqual(1, aslink.EBit);
             Assert.AreEqual(100, aslink.Metric);
             Assert.AreEqual(0, aslink.ExternalRouteTag);
-            Assert.AreEqual(0, aslink.Tos);
+            Assert.AreEqual(0, aslink.TypeOfService);
             Assert.AreEqual(System.Net.IPAddress.Parse("0.0.0.0"), aslink.ForwardingAddress);
         }
 

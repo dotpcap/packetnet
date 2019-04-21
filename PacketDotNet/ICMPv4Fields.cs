@@ -24,7 +24,7 @@ namespace PacketDotNet
     /// ICMP protocol field encoding information.
     /// See http://en.wikipedia.org/wiki/ICMPv6
     /// </summary>
-    public class IcmpV4Fields
+    public struct IcmpV4Fields
     {
         /// <summary>Length of the ICMP header checksum in bytes.</summary>
         public static readonly int ChecksumLength = 2;

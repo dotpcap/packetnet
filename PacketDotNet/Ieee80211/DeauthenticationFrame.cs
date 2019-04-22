@@ -18,10 +18,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
 using System.Net.NetworkInformation;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Ieee80211
 {
@@ -33,12 +32,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public DeauthenticationFrame(ByteArraySegment bas)
+        public DeauthenticationFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -85,11 +84,11 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The size of the frame.
         /// </value>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 3) +
-                                           MacFields.SequenceControlLength +
-                                           DeauthenticationFields.ReasonCodeLength;
+        public override int FrameSize => MacFields.FrameControlLength +
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 3) +
+                                         MacFields.SequenceControlLength +
+                                         DeauthenticationFields.ReasonCodeLength;
 
         /// <summary>
         /// Gets the reason for deauthentication.
@@ -111,8 +110,7 @@ namespace PacketDotNet.Ieee80211
 
                 return ReasonCode.Unspecified;
             }
-
-            set => EndianBitConverter.Little.CopyBytes((UInt16) value,
+            set => EndianBitConverter.Little.CopyBytes((ushort) value,
                                                        Header.Bytes,
                                                        Header.Offset + DeauthenticationFields.ReasonCodePosition);
         }
@@ -124,7 +122,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;

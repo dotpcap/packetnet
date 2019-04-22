@@ -19,7 +19,6 @@ using System;
 using System.Net.Sockets;
 
 // ReSharper disable InconsistentNaming
-
 namespace PacketDotNet
 {
     internal static class ThrowHelper
@@ -105,31 +104,41 @@ namespace PacketDotNet
         /// Converts an ExceptionArgument enum value to the argument name string.
         /// </summary>
         /// <param name="argument">The argument.</param>
-        /// <returns><see cref="System.String" />.</returns>
+        /// <returns><see cref="string" />.</returns>
         private static string GetArgumentName(ExceptionArgument argument)
         {
             string argumentName;
-
             switch (argument)
             {
                 case ExceptionArgument.buffer:
+                {
                     argumentName = "buffer";
                     break;
-
-                case ExceptionArgument.linkLayer:
-                    argumentName = "linkLayer";
+                }
+                case ExceptionArgument.index:
+                {
+                    argumentName = "index";
                     break;
-
+                }
+                case ExceptionArgument.linkLayer:
+                {
+                    argumentName = "linkLayers";
+                    break;
+                }
                 case ExceptionArgument.startIndex:
+                {
                     argumentName = "startIndex";
                     break;
-
+                }
                 case ExceptionArgument.value:
+                {
                     argumentName = "value";
                     break;
-
+                }
                 default:
+                {
                     return String.Empty;
+                }
             }
 
             return argumentName;
@@ -139,7 +148,7 @@ namespace PacketDotNet
         /// Converts an ExceptionDescription enum value to the description string.
         /// </summary>
         /// <param name="description">The description.</param>
-        /// <returns><see cref="System.String"/>.</returns>
+        /// <returns><see cref="string" />.</returns>
         private static string GetDescription(ExceptionDescription description)
         {
             string result;
@@ -147,31 +156,40 @@ namespace PacketDotNet
             switch (description)
             {
                 case ExceptionDescription.PacketAsPayloadPacket:
+                {
                     result = "A packet cannot have itself as its payload.";
                     break;
+                }
 
                 case ExceptionDescription.TotalLengthBelowMinimumHeaderLength:
+                {
                     result = "The total length is below the minimum header length.";
                     break;
+                }
 
                 case ExceptionDescription.UrgentPointerSet:
+                {
                     result = "Options with the urgent pointer set are not yet implemented.";
                     break;
+                }
 
                 default:
+                {
                     return String.Empty;
+                }
             }
 
             return result;
         }
     }
-    
+
     /// <summary>
     /// The convention for this enum is using the argument name as the enum name.
     /// </summary>
     internal enum ExceptionArgument
     {
         buffer,
+        index,
         linkLayer,
         startIndex,
         value

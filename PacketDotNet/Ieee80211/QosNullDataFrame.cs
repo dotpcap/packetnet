@@ -18,9 +18,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Ieee80211
 {
@@ -33,12 +32,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Initializes a new instance of the <see cref="QosNullDataFrame" /> class.
         /// </summary>
-        /// <param name='bas'>
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public QosNullDataFrame(ByteArraySegment bas)
+        public QosNullDataFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -66,9 +65,9 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Length of the frame header.
         /// This does not include the FCS, it represents only the header bytes that would
-        /// would preceed any payload.
+        /// would proceed any payload.
         /// </summary>
-        public override Int32 FrameSize
+        public override int FrameSize
         {
             get
             {
@@ -79,7 +78,7 @@ namespace PacketDotNet.Ieee80211
                        MacFields.DurationIDLength +
                        (MacFields.AddressLength * numOfAddressFields) +
                        MacFields.SequenceControlLength +
-                       QosNullDataField.QosControlLength;
+                       QosNullDataFrameFields.QosControlLength;
             }
         }
 
@@ -89,24 +88,23 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The qos control field.
         /// </value>
-        public UInt16 QosControl { get; set; }
+        public ushort QosControl { get; set; }
 
-        private UInt16 QosControlBytes
+        private ushort QosControlBytes
         {
             get
             {
-                if (Header.Length >= QosNullDataField.QosControlPosition + QosNullDataField.QosControlLength)
+                if (Header.Length >= QosNullDataFrameFields.QosControlPosition + QosNullDataFrameFields.QosControlLength)
                 {
                     return EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                              Header.Offset + QosNullDataField.QosControlPosition);
+                                                              Header.Offset + QosNullDataFrameFields.QosControlPosition);
                 }
 
                 return 0;
             }
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
-                                                       Header.Offset + QosNullDataField.QosControlPosition);
+                                                       Header.Offset + QosNullDataFrameFields.QosControlPosition);
         }
 
         /// <summary>
@@ -116,7 +114,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;
@@ -124,18 +122,6 @@ namespace PacketDotNet.Ieee80211
             SequenceControlBytes = SequenceControl.Field;
             QosControlBytes = QosControl;
             WriteAddressBytes();
-        }
-
-        private class QosNullDataField
-        {
-            public static readonly Int32 QosControlLength = 2;
-
-            public static readonly Int32 QosControlPosition;
-
-            static QosNullDataField()
-            {
-                QosControlPosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
-            }
         }
     }
 }

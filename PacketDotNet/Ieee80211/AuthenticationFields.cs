@@ -1,16 +1,14 @@
-using System;
-
 namespace PacketDotNet.Ieee80211
 {
-    public class AuthenticationFields
+    public struct AuthenticationFields
     {
-        public static readonly Int32 AuthAlgorithmNumLength = 2;
-        public static readonly Int32 AuthAlgorithmNumPosition;
-        public static readonly Int32 AuthAlgorithmTransactionSequenceNumLength = 2;
-        public static readonly Int32 AuthAlgorithmTransactionSequenceNumPosition;
-        public static readonly Int32 InformationElement1Position;
-        public static readonly Int32 StatusCodeLength = 2;
-        public static readonly Int32 StatusCodePosition;
+        public static readonly int AuthAlgorithmNumLength = 2;
+        public static readonly int AuthAlgorithmNumPosition;
+        public static readonly int AuthAlgorithmTransactionSequenceNumLength = 2;
+        public static readonly int AuthAlgorithmTransactionSequenceNumPosition;
+        public static readonly int InformationElement1Position;
+        public static readonly int StatusCodeLength = 2;
+        public static readonly int StatusCodePosition;
 
         static AuthenticationFields()
         {

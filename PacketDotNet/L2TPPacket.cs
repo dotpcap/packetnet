@@ -20,8 +20,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Text;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet
 {
@@ -30,31 +30,33 @@ namespace PacketDotNet
     /// </summary>
     [Serializable]
     // ReSharper disable once InconsistentNaming
-    public sealed class L2TPPacket : Packet
+    public sealed class L2tpPacket : Packet
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">A <see cref="ByteArraySegment" /></param>
+        /// <param name="byteArraySegment">A <see cref="ByteArraySegment" /></param>
         /// <param name="parentPacket">The parent packet.</param>
-        public L2TPPacket(ByteArraySegment bas, Packet parentPacket)
+        public L2tpPacket(ByteArraySegment byteArraySegment, Packet parentPacket)
         {
             // slice off the header portion
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
-            Header.Length = L2TPFields.HeaderLength;
+            Header = new ByteArraySegment(byteArraySegment);
+            Header.Length = L2tpFields.HeaderLength;
 
             if (HasLength)
-                Header.Length += L2TPFields.LengthsLength;
-            if (HasSequence)
-                Header.Length += L2TPFields.NsLength + L2TPFields.NrLength;
-            if (HasOffset)
-                Header.Length += L2TPFields.OffsetSizeLength + L2TPFields.OffsetPadLength;
+                Header.Length += L2tpFields.LengthsLength;
 
-            var payload = Header.EncapsulatedBytes();
+            if (HasSequence)
+                Header.Length += L2tpFields.NsLength + L2tpFields.NrLength;
+
+            if (HasOffset)
+                Header.Length += L2tpFields.OffsetSizeLength + L2tpFields.OffsetPadLength;
+
+            var payload = Header.NextSegment();
             try
             {
-                PayloadPacket = new PPPPacket(payload) {ParentPacket = this};
+                PayloadPacket = new PppPacket(payload) { ParentPacket = this };
             }
             catch (Exception)
             {
@@ -65,32 +67,30 @@ namespace PacketDotNet
             ParentPacket = parentPacket;
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.DarkGray;
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override string Color => AnsiEscapeSequences.DarkGray;
 
-        public Boolean DataMessage => 8 == (Header.Bytes[Header.Offset] & 0x8);
+        public bool DataMessage => 8 == (Header.Bytes[Header.Offset] & 0x8);
 
-        public Boolean HasLength => 4 == (Header.Bytes[Header.Offset] & 0x4);
+        public bool HasLength => 4 == (Header.Bytes[Header.Offset] & 0x4);
 
-        public Boolean HasOffset => 2 == (Header.Bytes[Header.Offset] & 0x2);
+        public bool HasOffset => 2 == (Header.Bytes[Header.Offset] & 0x2);
 
-        public Boolean HasSequence => 2 == (Header.Bytes[Header.Offset] & 0x2);
+        public bool HasSequence => 2 == (Header.Bytes[Header.Offset] & 0x2);
 
-        public Boolean IsPriority => 2 == (Header.Bytes[Header.Offset] & 0x2);
+        public bool IsPriority => 2 == (Header.Bytes[Header.Offset] & 0x2);
 
-        public Int32 SessionID => HasLength ? EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 5) : EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 4);
+        public int SessionID => HasLength ? EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 5) : EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 4);
 
-        public Int32 TunnelID => HasLength ? EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 3) : EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 2);
+        public int TunnelID => HasLength ? EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 3) : EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 2);
 
-        public Int32 Version => Header.Bytes[Header.Offset + 1] & 0x7;
-
+        public int Version => Header.Bytes[Header.Offset + 1] & 0x7;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
-
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -100,10 +100,9 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
-                buffer.AppendFormat("{0}[L2TPPacket",
+                buffer.AppendFormat("{0}[L2tpPacket",
                                     color);
             }
-
 
             // append the base string output
             buffer.Append(base.ToString(outputFormat));

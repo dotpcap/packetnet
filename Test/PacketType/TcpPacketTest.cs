@@ -20,15 +20,15 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using NUnit.Framework;
-using SharpPcap.LibPcap;
-using PacketDotNet;
-using PacketDotNet.Utils;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
+using NUnit.Framework;
+using PacketDotNet;
 using PacketDotNet.Tcp;
+using PacketDotNet.Utils;
 using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -36,14 +36,76 @@ namespace Test.PacketType
     public class TcpPacketTest
     {
         [Test]
-        public void CreationAndReparsing()
+        public void BinarySerialization()
         {
-            var tcpPacket = TcpPacket.RandomPacket();
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            dev.Open();
 
-            var tcpPacket2 = new TcpPacket(new ByteArraySegment(tcpPacket.Bytes));
+            RawCapture rawCapture;
+            var foundTcpPacket = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
-            Console.WriteLine("tcpPacket {0}", tcpPacket);
-            Console.WriteLine("tcpPacket2 {0}", tcpPacket2);
+                var t = p.Extract<TcpPacket>();
+                if (t == null)
+                {
+                    continue;
+                }
+
+                foundTcpPacket = true;
+
+                var memoryStream = new MemoryStream();
+                var serializer = new BinaryFormatter();
+                serializer.Serialize(memoryStream, t);
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                var deserializer = new BinaryFormatter();
+                var fromFile = (TcpPacket) deserializer.Deserialize(memoryStream);
+                
+                Assert.AreEqual(t.Bytes, fromFile.Bytes);
+                Assert.AreEqual(t.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(t.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(t.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(t.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(t.BytesSegment.Offset, fromFile.BytesSegment.Offset);
+                Assert.AreEqual(t.Color, fromFile.Color);
+                Assert.AreEqual(t.HeaderData, fromFile.HeaderData);
+                Assert.AreEqual(t.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(t.Acknowledgment, fromFile.Acknowledgment);
+                Assert.AreEqual(t.AcknowledgmentNumber, fromFile.AcknowledgmentNumber);
+                Assert.AreEqual(t.Flags, fromFile.Flags);
+                Assert.AreEqual(t.Checksum, fromFile.Checksum);
+                Assert.AreEqual(t.NonceSum, fromFile.NonceSum);
+                Assert.AreEqual(t.CongestionWindowReduced, fromFile.CongestionWindowReduced);
+                Assert.AreEqual(t.DataOffset, fromFile.DataOffset);
+                Assert.AreEqual(t.DestinationPort, fromFile.DestinationPort);
+                Assert.AreEqual(t.ExplicitCongestionNotificationEcho, fromFile.ExplicitCongestionNotificationEcho);
+                Assert.AreEqual(t.Finished, fromFile.Finished);
+                Assert.AreEqual(t.Options, fromFile.Options);
+                Assert.AreEqual(t.Push, fromFile.Push);
+                Assert.AreEqual(t.Reset, fromFile.Reset);
+                Assert.AreEqual(t.SequenceNumber, fromFile.SequenceNumber);
+                Assert.AreEqual(t.SourcePort, fromFile.SourcePort);
+                Assert.AreEqual(t.Synchronize, fromFile.Synchronize);
+                Assert.AreEqual(t.Urgent, fromFile.Urgent);
+                Assert.AreEqual(t.UrgentPointer, fromFile.UrgentPointer);
+                Assert.AreEqual(t.ValidChecksum, fromFile.ValidChecksum);
+                Assert.AreEqual(t.ValidTcpChecksum, fromFile.ValidTcpChecksum);
+                Assert.AreEqual(t.WindowSize, fromFile.WindowSize);
+
+                //Method Invocations to make sure that a deserialized packet does not cause 
+                //additional errors.
+
+                t.CalculateTcpChecksum();
+                t.IsValidChecksum(TransportPacket.TransportChecksumOption.None);
+                t.PrintHex();
+                t.UpdateCalculatedValues();
+                t.UpdateTcpChecksum();
+            }
+
+            dev.Close();
+            Assert.IsTrue(foundTcpPacket, "Capture file contained no tcpPacket packets");
         }
 
         [Test]
@@ -58,13 +120,13 @@ namespace Test.PacketType
             Assert.IsNotNull(p);
 
             Console.WriteLine(p.GetType());
-            var t = (TcpPacket)p.Extract(typeof(TcpPacket));
+            var t = p.Extract<TcpPacket>();
             Assert.IsNotNull(t, "Expected t not to be null");
 
             // even though the packet has 6 bytes of extra data, the ip packet shows a size of
             // 40 and the ip header has a length of 20. The TCP header is also 20 bytes so
             // there should be zero bytes in the TCPData value
-            Int32 expectedTcpDataLength = 0;
+            var expectedTcpDataLength = 0;
             Assert.AreEqual(expectedTcpDataLength, t.PayloadData.Length);
 
             dev.Close();
@@ -83,7 +145,7 @@ namespace Test.PacketType
 
             Console.WriteLine(p.GetType());
 
-            var t = (TcpPacket)p.Extract (typeof(TcpPacket));
+            var t = p.Extract<TcpPacket>();
             Assert.IsNotNull(t, "Expected t to not be null");
             Console.WriteLine("Checksum: " + t.Checksum.ToString("X"));
             Assert.IsTrue(t.ValidChecksum, "ValidChecksum indicates invalid checksum");
@@ -92,10 +154,21 @@ namespace Test.PacketType
         }
 
         [Test]
+        public void CreationAndReparsing()
+        {
+            var tcpPacket = TcpPacket.RandomPacket();
+
+            var tcpPacket2 = new TcpPacket(new ByteArraySegment(tcpPacket.Bytes));
+
+            Console.WriteLine("tcpPacket {0}", tcpPacket);
+            Console.WriteLine("tcpPacket2 {0}", tcpPacket2);
+        }
+
+        [Test]
         public void PayloadModification()
         {
-            String s = "-++++=== HELLLLOOO ===++++-";
-            Byte[] data = System.Text.Encoding.UTF8.GetBytes(s);
+            var s = "-++++=== HELLLLOOO ===++++-";
+            var data = System.Text.Encoding.UTF8.GetBytes(s);
 
             //create random pkt
             var p = TcpPacket.RandomPacket();
@@ -107,24 +180,55 @@ namespace Test.PacketType
             Assert.AreEqual(s, System.Text.Encoding.Default.GetString(p.PayloadData));
         }
 
-        /// <summary>
-        /// Test that TSO works, see http://en.wikipedia.org/wiki/TCP_offload_engine
-        /// </summary>
         [Test]
-        public void TcpSegmentOffload()
+        public void PrintString()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv4_tso_frame.pcap");
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
-
+            Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            Console.WriteLine("Parsing");
+            var t = p.Extract<TcpPacket>();
 
-            var t = (TcpPacket)p.Extract (typeof(TcpPacket));
-            Assert.IsNotNull(t, "Expected t to not be null");
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(t.ToString());
+        }
 
-            dev.Close();            
+        [Test]
+        public void PrintVerboseString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            dev.Open();
+            Console.WriteLine("Reading packet data");
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+            Console.WriteLine("Parsing");
+            var t = p.Extract<TcpPacket>();
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(t.ToString(StringOutputType.Verbose));
+        }
+
+        [Test]
+        public void RandomPacket()
+        {
+            TcpPacket.RandomPacket();
+        }
+
+        [Test]
+        public void TCPConstructorFromValues()
+        {
+            ushort sourcePort = 100;
+            ushort destinationPort = 101;
+            var tcpPacket = new TcpPacket(sourcePort, destinationPort);
+
+            Assert.AreEqual(sourcePort, tcpPacket.SourcePort);
+            Assert.AreEqual(destinationPort, tcpPacket.DestinationPort);
         }
 
         [Test]
@@ -138,12 +242,16 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var t = (TcpPacket)p.Extract (typeof(TcpPacket));
+            var t = p.Extract<TcpPacket>();
             Assert.IsNotNull(t, "Expected t to not be null");
 
             // verify that the options byte match what we expect
-            Byte[] expectedOptions = new Byte[] { 0x1, 0x1, 0x8, 0xa, 0x0, 0x14,
-                                                  0x3d, 0xe5, 0x1d, 0xf5, 0xf8, 0x84 };
+            byte[] expectedOptions =
+            {
+                0x1, 0x1, 0x8, 0xa, 0x0, 0x14,
+                0x3d, 0xe5, 0x1d, 0xf5, 0xf8, 0x84
+            };
+
             Assert.AreEqual(expectedOptions, t.Options);
 
             var options = t.OptionsCollection;
@@ -176,126 +284,24 @@ namespace Test.PacketType
             dev.Close();
         }
 
+        /// <summary>
+        /// Test that TSO works, see http://en.wikipedia.org/wiki/TCP_offload_engine
+        /// </summary>
         [Test]
-        public void TCPConstructorFromValues()
+        public void TcpSegmentOffload()
         {
-            UInt16 sourcePort = 100;
-            UInt16 destinationPort = 101;
-            var tcpPacket = new TcpPacket(sourcePort, destinationPort);
-
-            Assert.AreEqual(sourcePort, tcpPacket.SourcePort);
-            Assert.AreEqual(destinationPort, tcpPacket.DestinationPort);
-        }
-
-        [Test]
-        public void PrintString()
-        {
-            Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv4_tso_frame.pcap");
             dev.Open();
-            Console.WriteLine("Reading packet data");
+
             var rawCapture = dev.GetNextPacket();
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
-            Console.WriteLine("Parsing");
-            var tcp = (TcpPacket)p.Extract (typeof(TcpPacket));
+            Assert.IsNotNull(p);
 
-            Console.WriteLine("Printing human readable string");
-            Console.WriteLine(tcp.ToString());
-        }
-
-        [Test]
-        public void PrintVerboseString()
-        {
-            Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
-            dev.Open();
-            Console.WriteLine("Reading packet data");
-            var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-            Console.WriteLine("Parsing");
-            var tcp = (TcpPacket)p.Extract (typeof(TcpPacket));
-
-            Console.WriteLine("Printing human readable string");
-            Console.WriteLine(tcp.ToString(StringOutputType.Verbose));
-        }
-
-        [Test]
-        public void RandomPacket()
-        {
-            TcpPacket.RandomPacket();
-        }
-        [Test]
-        public void BinarySerialization()
-        {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
-            dev.Open();
-
-            RawCapture rawCapture;
-            Boolean foundtcpPacket = false;
-            while ((rawCapture = dev.GetNextPacket()) != null)
-            {
-                var p = PacketDotNet.Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-                var tcpPacket = (TcpPacket)p.Extract(typeof(TcpPacket));
-                if (tcpPacket == null)
-                {
-                    continue;
-                }
-                foundtcpPacket = true;
-
-                var memoryStream = new MemoryStream();
-                BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, tcpPacket);
-
-                memoryStream.Seek (0, SeekOrigin.Begin);
-                BinaryFormatter deserializer = new BinaryFormatter();
-                TcpPacket fromFile = (TcpPacket)deserializer.Deserialize(memoryStream);
-
-                Assert.AreEqual(tcpPacket.Bytes, fromFile.Bytes);
-                Assert.AreEqual(tcpPacket.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(tcpPacket.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(tcpPacket.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(tcpPacket.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(tcpPacket.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
-                Assert.AreEqual(tcpPacket.Color, fromFile.Color);
-                Assert.AreEqual(tcpPacket.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(tcpPacket.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(tcpPacket.Ack, fromFile.Ack);
-                Assert.AreEqual(tcpPacket.AcknowledgmentNumber, fromFile.AcknowledgmentNumber);
-                Assert.AreEqual(tcpPacket.AllFlags, fromFile.AllFlags);
-                Assert.AreEqual(tcpPacket.Checksum, fromFile.Checksum);
-                Assert.AreEqual(tcpPacket.NS, fromFile.NS);
-                Assert.AreEqual(tcpPacket.CWR, fromFile.CWR);
-                Assert.AreEqual(tcpPacket.DataOffset, fromFile.DataOffset);
-                Assert.AreEqual(tcpPacket.DestinationPort, fromFile.DestinationPort);
-                Assert.AreEqual(tcpPacket.ECN, fromFile.ECN);
-                Assert.AreEqual(tcpPacket.Fin, fromFile.Fin);
-                Assert.AreEqual(tcpPacket.Options, fromFile.Options);
-                Assert.AreEqual(tcpPacket.Psh, fromFile.Psh);
-                Assert.AreEqual(tcpPacket.Rst, fromFile.Rst);
-                Assert.AreEqual(tcpPacket.SequenceNumber, fromFile.SequenceNumber);
-                Assert.AreEqual(tcpPacket.SourcePort, fromFile.SourcePort);
-                Assert.AreEqual(tcpPacket.Syn, fromFile.Syn);
-                Assert.AreEqual(tcpPacket.Urg, fromFile.Urg);
-                Assert.AreEqual(tcpPacket.UrgentPointer, fromFile.UrgentPointer);
-                Assert.AreEqual(tcpPacket.ValidChecksum, fromFile.ValidChecksum);
-                Assert.AreEqual(tcpPacket.ValidTCPChecksum, fromFile.ValidTCPChecksum);
-                Assert.AreEqual(tcpPacket.WindowSize, fromFile.WindowSize);
-
-                //Method Invocations to make sure that a deserialized packet does not cause 
-                //additional errors.
-
-                tcpPacket.CalculateTCPChecksum();
-                tcpPacket.IsValidChecksum(TransportPacket.TransportChecksumOption.None);
-                tcpPacket.PrintHex();
-                tcpPacket.UpdateCalculatedValues();
-                tcpPacket.UpdateTCPChecksum();
-            }
+            var t = p.Extract<TcpPacket>();
+            Assert.IsNotNull(t, "Expected t to not be null");
 
             dev.Close();
-            Assert.IsTrue(foundtcpPacket, "Capture file contained no tcpPacket packets");
         }
     }
 }

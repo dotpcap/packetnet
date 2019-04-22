@@ -20,14 +20,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using System.Threading;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 #if DEBUG
 using log4net;
+using System.Reflection;
 #endif
 
 namespace PacketDotNet
@@ -49,24 +49,129 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        /// <summary> Fetch the port number on the source host.</summary>
-        public override UInt16 SourcePort
+        /// <summary>
+        /// Create from values
+        /// </summary>
+        /// <param name="sourcePort">
+        /// A <see cref="ushort" />
+        /// </param>
+        /// <param name="destinationPort">
+        /// A <see cref="ushort" />
+        /// </param>
+        public UdpPacket(ushort sourcePort, ushort destinationPort)
         {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
+            Log.Debug("");
 
+            // allocate memory for this packet
+            var length = UdpFields.HeaderLength;
+            var headerBytes = new byte[length];
+            Header = new ByteArraySegment(headerBytes, 0, length);
+
+            // set instance values
+            SourcePort = sourcePort;
+            DestinationPort = destinationPort;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="byteArraySegment">
+        /// A <see cref="ByteArraySegment" />
+        /// </param>
+        public UdpPacket(ByteArraySegment byteArraySegment)
+        {
+            Log.DebugFormat("ByteArraySegment {0}", byteArraySegment);
+
+            // set the header field, header field values are retrieved from this byte array
+            Header = new ByteArraySegment(byteArraySegment)
+            {
+                Length = UdpFields.HeaderLength
+            };
+
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+                                                                     {
+                                                                         const int wakeOnLanPort0 = 0;
+                                                                         const int wakeOnLanPort7 = 7;
+                                                                         const int wakeOnLanPort9 = 9;
+                                                                         const int l2TpPort = 1701;
+                                                                         const int teredoPort = 3544;
+
+                                                                         var result = new PacketOrByteArraySegment();
+                                                                         var destinationPort = DestinationPort;
+                                                                         var sourcePort = SourcePort;
+                                                                         var payload = Header.NextSegment();
+
+                                                                         // If this packet is going to port 0, 7 or 9, then it might be a WakeOnLan packet.
+                                                                         if ((destinationPort == wakeOnLanPort0) || (destinationPort == wakeOnLanPort7) || (destinationPort == wakeOnLanPort9))
+                                                                             if (WakeOnLanPacket.IsValid(payload))
+                                                                             {
+                                                                                 result.Packet = new WakeOnLanPacket(payload);
+                                                                                 return result;
+                                                                             }
+
+                                                                         if ((destinationPort == l2TpPort) || (sourcePort == l2TpPort))
+                                                                         {
+                                                                             result.Packet = new L2tpPacket(payload, this);
+                                                                             return result;
+                                                                         }
+
+                                                                         // Teredo encapsulates IPv6 traffic into UDP packets, parse out the bytes in the payload into packets.
+                                                                         // If it contains a IPV6 packet, it to this current packet as a payload.
+                                                                         // https://tools.ietf.org/html/rfc4380#section-5.1.1
+                                                                         if ((destinationPort == teredoPort) || (sourcePort == teredoPort))
+                                                                             if (ContainsIPv6Packet(payload))
+                                                                             {
+                                                                                 result.Packet = new IPv6Packet(payload);
+                                                                                 return result;
+                                                                             }
+
+                                                                         // store the payload bytes
+                                                                         result.ByteArraySegment = payload;
+                                                                         return result;
+                                                                     },
+                                                                     LazyThreadSafetyMode.PublicationOnly);
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="byteArraySegment">
+        /// A <see cref="ByteArraySegment" />
+        /// </param>
+        /// <param name="parentPacket">
+        /// A <see cref="Packet" />
+        /// </param>
+        public UdpPacket
+        (
+            ByteArraySegment byteArraySegment,
+            Packet parentPacket) :
+            this(byteArraySegment)
+        {
+            ParentPacket = parentPacket;
+        }
+
+        /// <summary>Fetch the header checksum.</summary>
+        public override ushort Checksum
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                   Header.Offset + UdpFields.ChecksumPosition);
             set
             {
                 var val = value;
-                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
+                EndianBitConverter.Big.CopyBytes(val,
+                                                 Header.Bytes,
+                                                 Header.Offset + UdpFields.ChecksumPosition);
             }
         }
 
-        /// <summary> Fetch the port number on the target host.</summary>
-        public override UInt16 DestinationPort
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override string Color => AnsiEscapeSequences.LightGreen;
+
+        /// <summary>Fetch the port number on the target host.</summary>
+        public override ushort DestinationPort
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + UdpFields.DestinationPortPosition);
-
             set
             {
                 var val = value;
@@ -80,68 +185,59 @@ namespace PacketDotNet
         /// Length in bytes of the header and payload, minimum size of 8,
         /// the size of the Udp header
         /// </value>
-        public Int32 Length
+        public int Length
         {
             get => EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                   Header.Offset + UdpFields.HeaderLengthPosition);
-
-            // Internal because it is updated based on the payload when
-            // its bytes are retrieved
             internal set
             {
-                var val = (Int16) value;
+                // Internal because it is updated based on the payload when its bytes are retrieved.
+                var val = (short) value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  Header.Bytes,
                                                  Header.Offset + UdpFields.HeaderLengthPosition);
             }
         }
 
-        /// <summary> Fetch the header checksum.</summary>
-        public override UInt16 Checksum
+        /// <summary>Fetch the port number on the source host.</summary>
+        public override ushort SourcePort
         {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + UdpFields.ChecksumPosition);
-
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
             set
             {
                 var val = value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 Header.Bytes,
-                                                 Header.Offset + UdpFields.ChecksumPosition);
+                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
             }
         }
 
-        /// <summary> Check if the UDP packet is valid, checksum-wise.</summary>
-        public Boolean ValidChecksum
+        /// <summary>Check if the UDP packet is valid, checksum-wise.</summary>
+        public bool ValidChecksum
         {
             get
             {
                 // IPv6 has no checksum so only the TCP checksum needs evaluation
                 if (ParentPacket is IPv6Packet)
-                    return ValidUDPChecksum;
+                    return ValidUdpChecksum;
                 // For IPv4 both the IP layer and the TCP layer contain checksums
 
 
-                return ((IPv4Packet) ParentPacket).ValidIPChecksum && ValidUDPChecksum;
+                return ((IPv4Packet) ParentPacket).ValidIPChecksum && ValidUdpChecksum;
             }
         }
 
         /// <value>
-        /// True if the udp checksum is valid
+        /// True if the UDP checksum is valid
         /// </value>
-        public Boolean ValidUDPChecksum
+        public bool ValidUdpChecksum
         {
             get
             {
-                Log.Debug("ValidUDPChecksum");
+                Log.Debug("ValidUdpChecksum");
                 var result = IsValidChecksum(TransportChecksumOption.IncludePseudoIPHeader);
-                Log.DebugFormat("ValidUDPChecksum {0}", result);
+                Log.DebugFormat("ValidUdpChecksum {0}", result);
                 return result;
             }
         }
-
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.LightGreen;
 
         /// <summary>
         /// Update the Udp length
@@ -154,131 +250,10 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Create from values
-        /// </summary>
-        /// <param name="sourcePort">
-        /// A <see cref="System.UInt16" />
-        /// </param>
-        /// <param name="destinationPort">
-        /// A <see cref="System.UInt16" />
-        /// </param>
-        public UdpPacket(UInt16 sourcePort, UInt16 destinationPort)
-        {
-            Log.Debug("");
-
-            // allocate memory for this packet
-            var offset = 0;
-            var length = UdpFields.HeaderLength;
-            var headerBytes = new Byte[length];
-            Header = new ByteArraySegment(headerBytes, offset, length);
-
-            // set instance values
-            SourcePort = sourcePort;
-            DestinationPort = destinationPort;
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="bas">
-        /// A <see cref="ByteArraySegment" />
-        /// </param>
-        public UdpPacket(ByteArraySegment bas)
-        {
-            Log.DebugFormat("ByteArraySegment {0}", bas);
-
-            // set the header field, header field values are retrieved from this byte array
-            Header = new ByteArraySegment(bas)
-            {
-                Length = UdpFields.HeaderLength
-            };
-
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-            {
-                const Int32 wakeOnLanPort0 = 0;
-                const Int32 wakeOnLanPort7 = 7;
-                const Int32 wakeOnLanPort9 = 9;
-                const Int32 l2TpPort = 1701;
-                const Int32 teredoPort = 3544;
-
-                var result = new PacketOrByteArraySegment();
-                var destinationPort = DestinationPort;
-                var sourcePort = SourcePort;
-                var payload = Header.EncapsulatedBytes();
-
-                // If this packet is going to port 0, 7 or 9, then it might be a WakeOnLan packet.
-                if (destinationPort == wakeOnLanPort0 || destinationPort == wakeOnLanPort7 || destinationPort == wakeOnLanPort9)
-                {
-                    if (WakeOnLanPacket.IsValid(payload))
-                    {
-                        result.Packet = new WakeOnLanPacket(payload);
-                        return result;
-                    }
-                }
-                
-                if (destinationPort == l2TpPort || sourcePort == l2TpPort)
-                {
-                    result.Packet = new L2TPPacket(payload, this);
-                    return result;
-                }
-                
-                // Teredo encapsulates IPv6 traffic into UDP packets, parse out the bytes in the payload into packets.
-                // If it contains a IPV6 packet, it to this current packet as a payload.
-                // https://tools.ietf.org/html/rfc4380#section-5.1.1
-                if (destinationPort == teredoPort || sourcePort == teredoPort)
-                {
-                    if (ContainsIPv6Packet(payload))
-                    {
-                        result.Packet = new IPv6Packet(payload);
-                        return result;
-                    }
-                }
-
-                // store the payload bytes
-                result.ByteArraySegment = payload;
-                return result;
-            }, LazyThreadSafetyMode.PublicationOnly);
-        }
-
-        /// <summary>
-        /// Determines whether the specified byte array segment contains an IPv6 packet.
-        /// </summary>
-        /// <param name="packetBytes">The packet bytes.</param>
-        /// <returns>
-        ///   <c>true</c> if it contains an IPv6 packet; otherwise, <c>false</c>.
-        /// </returns>
-        private static bool ContainsIPv6Packet(ByteArraySegment packetBytes)
-        {
-            // Packet bytes must be greater than or equal to the IPV6 header length, start with the version number, 
-            // and be greater in length than the payload length + the header length.
-            return packetBytes.Length >= IPv6Fields.HeaderLength
-                   && packetBytes.Bytes[packetBytes.Offset] >> 4 == (int)RawIPPacketProtocol.IPv6
-                   && packetBytes.Length >= IPv6Fields.HeaderLength + packetBytes.Bytes[packetBytes.Offset + IPv6Fields.PayloadLengthPosition];
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="bas">
-        /// A <see cref="ByteArraySegment" />
-        /// </param>
-        /// <param name="parentPacket">
-        /// A <see cref="Packet" />
-        /// </param>
-        public UdpPacket
-        (
-            ByteArraySegment bas,
-            Packet parentPacket) :
-            this(bas)
-        {
-            ParentPacket = parentPacket;
-        }
-
-        /// <summary>
         /// Calculates the UDP checksum, optionally updating the UDP checksum header.
         /// </summary>
         /// <returns>The calculated UDP checksum.</returns>
-        public UInt16 CalculateUDPChecksum()
+        public ushort CalculateUdpChecksum()
         {
             return (ushort) CalculateChecksum(TransportChecksumOption.IncludePseudoIPHeader);
         }
@@ -286,54 +261,50 @@ namespace PacketDotNet
         /// <summary>
         /// Update the checksum value.
         /// </summary>
-        public void UpdateUDPChecksum()
+        public void UpdateUdpChecksum()
         {
-            Checksum = CalculateUDPChecksum();
+            Checksum = CalculateUdpChecksum();
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
             var colorEscape = "";
 
-            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if ((outputFormat == StringOutputType.Colored) || (outputFormat == StringOutputType.VerboseColored))
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
-            {
+            if ((outputFormat == StringOutputType.Normal) || (outputFormat == StringOutputType.Colored))
                 buffer.AppendFormat("{0}[UDPPacket: SourcePort={2}, DestinationPort={3}]{1}",
                                     color,
                                     colorEscape,
                                     SourcePort,
                                     DestinationPort);
-            }
 
-            if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            if ((outputFormat == StringOutputType.Verbose) || (outputFormat == StringOutputType.VerboseColored))
             {
                 // collect the properties and their value
-                var properties = new Dictionary<String, String>
+                var properties = new Dictionary<string, string>
                 {
-                    {"source", SourcePort.ToString()},
-                    {"destination", DestinationPort.ToString()},
-                    {"length", Length.ToString()},
-                    {"checksum", "0x" + Checksum.ToString("x") + " [" + (ValidUDPChecksum ? "valid" : "invalid") + "]"}
+                    { "source", SourcePort.ToString() },
+                    { "destination", DestinationPort.ToString() },
+                    { "length", Length.ToString() },
+                    { "checksum", "0x" + Checksum.ToString("x") + " [" + (ValidUdpChecksum ? "valid" : "invalid") + "]" }
                 };
 
                 // calculate the padding needed to right-justify the property names
-                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("UDP:  ******* UDP - \"User Datagram Protocol\" - offset=? length=" + TotalPacketLength);
                 buffer.AppendLine("UDP:");
                 foreach (var property in properties)
-                {
                     buffer.AppendLine("UDP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
-                }
 
                 buffer.AppendLine("UDP:");
             }
@@ -353,10 +324,26 @@ namespace PacketDotNet
         public static UdpPacket RandomPacket()
         {
             var rnd = new Random();
-            var sourcePort = (UInt16) rnd.Next(UInt16.MinValue, UInt16.MaxValue);
-            var destinationPort = (UInt16) rnd.Next(UInt16.MinValue, UInt16.MaxValue);
+            var sourcePort = (ushort) rnd.Next(UInt16.MinValue, UInt16.MaxValue);
+            var destinationPort = (ushort) rnd.Next(UInt16.MinValue, UInt16.MaxValue);
 
             return new UdpPacket(sourcePort, destinationPort);
+        }
+
+        /// <summary>
+        /// Determines whether the specified byte array segment contains an IPv6 packet.
+        /// </summary>
+        /// <param name="packetBytes">The packet bytes.</param>
+        /// <returns>
+        /// <c>true</c> if it contains an IPv6 packet; otherwise, <c>false</c>.
+        /// </returns>
+        private static bool ContainsIPv6Packet(ByteArraySegment packetBytes)
+        {
+            // Packet bytes must be greater than or equal to the IPV6 header length, start with the version number, 
+            // and be greater in length than the payload length + the header length.
+            return (packetBytes.Length >= IPv6Fields.HeaderLength) &&
+                   (packetBytes.Bytes[packetBytes.Offset] >> 4 == (int) RawIPPacketProtocol.IPv6) &&
+                   (packetBytes.Length >= IPv6Fields.HeaderLength + packetBytes.Bytes[packetBytes.Offset + IPv6Fields.PayloadLengthPosition]);
         }
     }
 }

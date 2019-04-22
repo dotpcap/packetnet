@@ -21,53 +21,44 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using NUnit.Framework;
 using PacketDotNet.Ieee80211;
 
-namespace Test.PacketType
+namespace Test.PacketType.Ieee80211
 {
-    namespace Ieee80211
+    [TestFixture]
+    public class BlockAcknowledgmentControlFieldTest
     {
-        [TestFixture]
-        public class BlockAcknowledgmentControlFieldTest
+        [Test]
+        public void Test_SetCompressedBitmapProperty()
         {
-            [Test]
-            public void Test_SetPolicyProperty ()
-            {
-                BlockAcknowledgmentControlField blockAckControl = new BlockAcknowledgmentControlField ();
-                
-                blockAckControl.Policy = BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed;
-                Assert.AreEqual (BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed, blockAckControl.Policy);
-                
-                blockAckControl.Policy = BlockAcknowledgmentControlField.AcknowledgementPolicy.Immediate;
-                Assert.AreEqual (BlockAcknowledgmentControlField.AcknowledgementPolicy.Immediate, blockAckControl.Policy);
-                
-            }
-            
-            [Test]
-            public void Test_SetMultiTidProperty ()
-            {
-                BlockAcknowledgmentControlField blockAckControl = new BlockAcknowledgmentControlField ();
-                
-                blockAckControl.MultiTid = true;
-                Assert.IsTrue(blockAckControl.MultiTid);
-            }
-            
-            [Test]
-            public void Test_SetCompressedBitmapProperty ()
-            {
-                BlockAcknowledgmentControlField blockAckControl = new BlockAcknowledgmentControlField ();
-                
-                blockAckControl.CompressedBitmap = true;
-                Assert.IsTrue (blockAckControl.CompressedBitmap);
-            }
-            
-            [Test]
-            public void Test_SetTidProperty ()
-            {
-                BlockAcknowledgmentControlField blockAckControl = new BlockAcknowledgmentControlField ();
-                
-                blockAckControl.Tid = 0xF;
-                Assert.AreEqual (0xF, blockAckControl.Tid);
-            }
+            var blockAckControl = new BlockAcknowledgmentControlField { CompressedBitmap = true };
+
+            Assert.IsTrue(blockAckControl.CompressedBitmap);
+        }
+
+        [Test]
+        public void Test_SetMultiTidProperty()
+        {
+            var blockAckControl = new BlockAcknowledgmentControlField { MultiTid = true };
+
+            Assert.IsTrue(blockAckControl.MultiTid);
+        }
+
+        [Test]
+        public void Test_SetPolicyProperty()
+        {
+            var blockAckControl = new BlockAcknowledgmentControlField { Policy = BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed };
+
+            Assert.AreEqual(BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed, blockAckControl.Policy);
+
+            blockAckControl.Policy = BlockAcknowledgmentControlField.AcknowledgementPolicy.Immediate;
+            Assert.AreEqual(BlockAcknowledgmentControlField.AcknowledgementPolicy.Immediate, blockAckControl.Policy);
+        }
+
+        [Test]
+        public void Test_SetTidProperty()
+        {
+            var blockAckControl = new BlockAcknowledgmentControlField { Tid = 0xF };
+
+            Assert.AreEqual(0xF, blockAckControl.Tid);
         }
     }
 }
-

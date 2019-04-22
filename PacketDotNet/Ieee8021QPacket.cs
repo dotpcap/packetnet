@@ -22,8 +22,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet
 {
@@ -37,18 +37,18 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public Ieee8021QPacket(ByteArraySegment bas)
+        public Ieee8021QPacket(ByteArraySegment byteArraySegment)
         {
             // set the header field, header field values are retrieved from this byte array
-            Header = new ByteArraySegment(bas);
-            Header.Length = Ieee8021QFields.HeaderLength;
+            Header = new ByteArraySegment(byteArraySegment) { Length = Ieee8021QFields.HeaderLength };
 
             // parse the payload via an EthernetPacket method
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header,
-                                                                                                                 Type), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header,
+                                                                                                           Type),
+                                                                     LazyThreadSafetyMode.PublicationOnly);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace PacketDotNet
         /// <value>
         /// <c>true</c> if the mac address is in non-canonical format <c>false</c> if otherwise.
         /// </value>
-        public Boolean CanonicalFormatIndicator
+        public bool CanonicalFormatIndicator
         {
             get
             {
@@ -65,20 +65,19 @@ namespace PacketDotNet
                 tci >>= 12;
                 return (tci & 0x1) == 1;
             }
-
             set
             {
                 var tci = TagControlInformation;
 
                 // mask the existing CFI off and then back in from value
                 var val = value ? 1 : 0;
-                tci = (UInt16) ((tci & 0xEFFF) | (val << 12));
+                tci = (ushort) ((tci & 0xEFFF) | (val << 12));
                 TagControlInformation = tci;
             }
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.LightCyan;
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override string Color => AnsiEscapeSequences.LightCyan;
 
         /// <summary>
         /// Gets or sets the priority control point.
@@ -94,14 +93,13 @@ namespace PacketDotNet
                 tci >>= 16 - 3; // priority is the upper 3 bits
                 return (IeeeP8021PPriorities) tci;
             }
-
             set
             {
                 var tci = TagControlInformation;
 
                 // mask the existing Priority off and then back in from value
-                var val = (UInt16) value;
-                tci = (UInt16) ((tci & 0x1FFF) | ((val & 0x7) << (16 - 3)));
+                var val = (ushort) value;
+                tci = (ushort) ((tci & 0x1FFF) | ((val & 0x7) << (16 - 3)));
                 TagControlInformation = tci;
             }
         }
@@ -109,14 +107,13 @@ namespace PacketDotNet
         /// <value>
         /// Type of packet that this vlan packet encapsulates
         /// </value>
-        public virtual EthernetPacketType Type
+        public virtual EthernetType Type
         {
-            get => (EthernetPacketType) EndianBitConverter.Big.ToInt16(Header.Bytes,
-                                                                       Header.Offset + Ieee8021QFields.TypePosition);
-
+            get => (EthernetType) EndianBitConverter.Big.ToInt16(Header.Bytes,
+                                                                 Header.Offset + Ieee8021QFields.TypePosition);
             set
             {
-                var val = (Int16) value;
+                var val = (short) value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  Header.Bytes,
                                                  Header.Offset + Ieee8021QFields.TypePosition);
@@ -129,32 +126,30 @@ namespace PacketDotNet
         /// <value>
         /// The VLAN identifier.
         /// </value>
-        public UInt16 VLANIdentifier
+        public ushort VlanIdentifier
         {
             get
             {
                 var tci = TagControlInformation;
-                return (UInt16) (tci & 0xFFF);
+                return (ushort) (tci & 0xFFF);
             }
-
             set
             {
                 var tci = TagControlInformation;
 
                 // mask the existing vlan id off
-                tci = (UInt16) ((tci & 0xF000) | (value & 0xFFF));
+                tci = (ushort) ((tci & 0xF000) | (value & 0xFFF));
                 TagControlInformation = tci;
             }
         }
 
-        private UInt16 TagControlInformation
+        private ushort TagControlInformation
         {
-            get => (UInt16) EndianBitConverter.Big.ToInt16(Header.Bytes,
+            get => (ushort) EndianBitConverter.Big.ToInt16(Header.Bytes,
                                                            Header.Offset + Ieee8021QFields.TagControlInformationPosition);
-
             set
             {
-                var val = (Int16) value;
+                var val = (short) value;
                 EndianBitConverter.Big.CopyBytes(val,
                                                  Header.Bytes,
                                                  Header.Offset + Ieee8021QFields.TagControlInformationPosition);
@@ -162,7 +157,7 @@ namespace PacketDotNet
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
@@ -188,16 +183,16 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                var properties = new Dictionary<String, String>
+                var properties = new Dictionary<string, string>
                 {
-                    {"priority", PriorityControlPoint + " (0x" + PriorityControlPoint.ToString("x") + ")"},
-                    {"canonical format indicator", CanonicalFormatIndicator.ToString()},
-                    {"type", Type + " (0x" + Type.ToString("x") + ")"},
-                    {"VLANIdentifier", VLANIdentifier + " (0x" + VLANIdentifier.ToString("x") + ")"}
+                    { "priority", PriorityControlPoint + " (0x" + PriorityControlPoint.ToString("x") + ")" },
+                    { "canonical format indicator", CanonicalFormatIndicator.ToString() },
+                    { "type", Type + " (0x" + Type.ToString("x") + ")" },
+                    { "VlanIdentifier", VlanIdentifier + " (0x" + VlanIdentifier.ToString("x") + ")" }
                 };
 
                 // calculate the padding needed to right-justify the property names
-                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Ieee802.1Q:  ******* Ieee802.1Q - \"VLan tag\" - offset=? length=" + TotalPacketLength);

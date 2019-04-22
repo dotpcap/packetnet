@@ -9,40 +9,6 @@ namespace PacketDotNet.Ieee80211
     /// </summary>
     public class PpiAggregation : PpiFields
     {
-        #region Properties
-
-        /// <summary>Type of the field</summary>
-        public override PpiFieldType FieldType => PpiFieldType.PpiAggregation;
-
-        /// <summary>
-        /// Gets the length of the field data.
-        /// </summary>
-        /// <value>
-        /// The length.
-        /// </value>
-        public override Int32 Length => 4;
-
-        /// <summary>
-        /// Zero-based index of the physical interface the packet was captured from.
-        /// </summary>
-        /// <value>
-        /// The interface id.
-        /// </value>
-        public UInt32 InterfaceId { get; set; }
-
-        /// <summary>
-        /// Gets the field bytes. This doesn't include the PPI field header.
-        /// </summary>
-        /// <value>
-        /// The bytes.
-        /// </value>
-        public override Byte[] Bytes => BitConverter.GetBytes(InterfaceId);
-
-        #endregion Properties
-
-
-        #region Constructors
-
         /// <summary>
         /// Initializes a new instance of the <see cref="PpiAggregation" /> class from the
         /// provided stream.
@@ -65,7 +31,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='interfaceId'>
         /// The interface id.
         /// </param>
-        public PpiAggregation(UInt32 interfaceId)
+        public PpiAggregation(uint interfaceId)
         {
             InterfaceId = interfaceId;
         }
@@ -76,6 +42,31 @@ namespace PacketDotNet.Ieee80211
         public PpiAggregation()
         { }
 
-        #endregion Constructors
+        /// <summary>
+        /// Gets the field bytes. This doesn't include the PPI field header.
+        /// </summary>
+        /// <value>
+        /// The bytes.
+        /// </value>
+        public override byte[] Bytes => BitConverter.GetBytes(InterfaceId);
+
+        /// <summary>Type of the field</summary>
+        public override PpiFieldType FieldType => PpiFieldType.PpiAggregation;
+
+        /// <summary>
+        /// Zero-based index of the physical interface the packet was captured from.
+        /// </summary>
+        /// <value>
+        /// The interface id.
+        /// </value>
+        public uint InterfaceId { get; set; }
+
+        /// <summary>
+        /// Gets the length of the field data.
+        /// </summary>
+        /// <value>
+        /// The length.
+        /// </value>
+        public override int Length => 4;
     }
 }

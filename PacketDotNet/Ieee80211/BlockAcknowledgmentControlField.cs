@@ -18,8 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
-
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
@@ -55,7 +53,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='field'>
         /// Field.
         /// </param>
-        public BlockAcknowledgmentControlField(UInt16 field)
+        public BlockAcknowledgmentControlField(ushort field)
         {
             Field = field;
         }
@@ -64,20 +62,15 @@ namespace PacketDotNet.Ieee80211
         /// True if the frame is using a compressed acknowledgement bitmap.
         /// Newer standards used a compressed bitmap reducing its size
         /// </summary>
-        public Boolean CompressedBitmap
+        public bool CompressedBitmap
         {
             get => ((Field >> 2) & 0x1) == 1;
-
             set
             {
                 if (value)
-                {
                     Field |= 1 << 0x2;
-                }
                 else
-                {
-                    Field &= unchecked((UInt16) ~(1 << 0x2));
-                }
+                    Field &= unchecked((ushort) ~(1 << 0x2));
             }
         }
 
@@ -87,25 +80,20 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The field.
         /// </value>
-        public UInt16 Field { get; set; }
+        public ushort Field { get; set; }
 
         /// <summary>
         /// True if the acknowledgement can ack multi traffic ids
         /// </summary>
-        public Boolean MultiTid
+        public bool MultiTid
         {
             get => ((Field >> 1) & 0x1) == 1;
-
             set
             {
                 if (value)
-                {
                     Field |= 1 << 0x1;
-                }
                 else
-                {
-                    Field &= unchecked((UInt16) ~(1 << 0x1));
-                }
+                    Field &= unchecked((ushort) ~(1 << 0x1));
             }
         }
 
@@ -115,31 +103,25 @@ namespace PacketDotNet.Ieee80211
         public AcknowledgementPolicy Policy
         {
             get => (AcknowledgementPolicy) (Field & 0x1);
-
             set
             {
                 if (value == AcknowledgementPolicy.Immediate)
-                {
                     Field |= 0x1;
-                }
                 else
-                {
-                    Field &= unchecked((UInt16) ~0x1);
-                }
+                    Field &= unchecked((ushort) ~0x1);
             }
         }
 
         /// <summary>
         /// The traffic id being ack'd
         /// </summary>
-        public Byte Tid
+        public byte Tid
         {
-            get => (Byte) (Field >> 12);
-
+            get => (byte) (Field >> 12);
             set
             {
                 Field &= 0x0FFF;
-                Field |= (UInt16) (value << 12);
+                Field |= (ushort) (value << 12);
             }
         }
     }

@@ -18,9 +18,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
 using System.Net.NetworkInformation;
-using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Ieee80211
 {
@@ -62,7 +61,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Frame control bytes are the first two bytes of the frame
         /// </summary>
-        protected UInt16 SequenceControlBytes
+        protected ushort SequenceControlBytes
         {
             get
             {
@@ -74,7 +73,6 @@ namespace PacketDotNet.Ieee80211
 
                 return 0;
             }
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
                                                        Header.Offset + MacFields.Address1Position + (MacFields.AddressLength * 3));
@@ -132,7 +130,7 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary>
-        /// Writes the address properties into the backing <see cref="PacketDotNet.Utils.ByteArraySegment" />.
+        /// Writes the address properties into the backing <see cref="Utils.ByteArraySegment" />.
         /// </summary>
         /// <remarks>
         /// The address position into which a particular address property is written is determined by the
@@ -169,14 +167,14 @@ namespace PacketDotNet.Ieee80211
 
         /// <summary>
         /// Returns a string with a description of the addresses used in the packet.
-        /// This is used as a compoent of the string returned by ToString().
+        /// This is used as a component of the string returned by ToString().
         /// </summary>
         /// <returns>
         /// The address string.
         /// </returns>
-        protected override String GetAddressString()
+        protected override string GetAddressString()
         {
-            String addresses;
+            string addresses;
             if (FrameControl.ToDS && FrameControl.FromDS)
             {
                 addresses = $"SA {SourceAddress} DA {DestinationAddress} TA {TransmitterAddress} RA {ReceiverAddress}";

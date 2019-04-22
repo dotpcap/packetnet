@@ -81,25 +81,28 @@ namespace PacketDotNet
         RawLegacy = 12,
 
         /// <summary>BSD Slip.</summary>
-        SlipBSD = 15,
+        SlipBsd = 15,
 
         /// <summary>BSD PPP.</summary>
-        PppBSD = 16,
+        PppBsd = 16,
 
         /// <summary>IP over ATM.</summary>
         AtmClip = 19,
 
         /// <summary>PPP over HDLC.</summary>
-        PppSerial = 50,
+        PppOverHdlc = 50,
+
+        /// <summary>PPPoE.</summary>
+        Pppoe = 51,
 
         /// <summary>LLC/SNAP encapsulated atm.</summary>
-        AtmRfc1483 = 100,
+        LlcSnapAtm = 100,
 
         /// <summary>Raw IP.</summary>
         Raw = 101,
 
         /// <summary>Cisco HDLC.</summary>
-        CiscoHDLC = 104,
+        CiscoHdlc = 104,
 
         /// <summary>IEEE 802.11 wireless.</summary>
         Ieee80211 = 105,
@@ -108,20 +111,20 @@ namespace PacketDotNet
         Loop = 108,
 
         /// <summary>Linux cooked sockets.</summary>
-        LinuxSLL = 113,
+        LinuxSll = 113,
 
         /// <summary>
         /// Header for 802.11 plus a number of bits of link-layer information
         /// including radio information, used by some recent BSD drivers as
         /// well as the madwifi Atheros driver for Linux.
         /// </summary>
-        Ieee80211_Radio = 127,
+        Ieee80211Radio = 127,
 
         /// <summary>
         /// Per Packet Information encapsulated packets.
         /// DLT_ requested by Gianluca Varenni &lt;gianluca.varenni@cacetech.com&gt;.
         /// See http://www.cacetech.com/documents/PPI%20Header%20format%201.0.7.pdf
         /// </summary>
-        PerPacketInformation = 192
+        Ppi = 192
     }
 }

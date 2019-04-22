@@ -20,35 +20,32 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Reflection;
-
 #if DEBUG
+using System.Reflection;
 using log4net;
+
 #endif
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
-    /// A System Description TLV
+    /// A System Description Tlv
     /// </summary>
     [Serializable]
-    public class SystemDescription : StringTLV
+    public class SystemDescription : String
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-// NOTE: No need to warn about lack of use, the compiler won't
-//       put any calls to 'log' here but we need 'log' to exist to compile
+        // NOTE: No need to warn about lack of use, the compiler won't
+        //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
-
-        #region Constructors
-
         /// <summary>
-        /// Creates a System Description TLV
+        /// Creates a System Description Tlv
         /// </summary>
         /// <param name="bytes">
         /// </param>
@@ -56,7 +53,7 @@ namespace PacketDotNet.LLDP
         /// The System Description TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public SystemDescription(Byte[] bytes, Int32 offset) :
+        public SystemDescription(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Log.Debug("");
@@ -68,26 +65,18 @@ namespace PacketDotNet.LLDP
         /// <param name="description">
         /// A textual Description of the system
         /// </param>
-        public SystemDescription(String description) : base(TLVTypes.SystemDescription,
-                                                            description)
+        public SystemDescription(string description) : base(TlvType.SystemDescription, description)
         {
             Log.Debug("");
         }
 
-        #endregion
-
-
-        #region Properties
-
         /// <value>
         /// A textual Description of the system
         /// </value>
-        public String Description
+        public string Description
         {
-            get => StringValue;
-            set => StringValue = value;
+            get => Value;
+            set => Value = value;
         }
-
-        #endregion
     }
 }

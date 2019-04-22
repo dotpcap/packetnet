@@ -18,16 +18,15 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
 using System.Net.NetworkInformation;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
     /// Format of an 802.11 management beacon frame.
-    /// Beacon frames are used to annouce the existance of a wireless network. If an
+    /// Beacon frames are used to announce the existence of a wireless network. If an
     /// access point has been configured to not broadcast its SSID then it may not transmit
     /// beacon frames.
     /// </summary>
@@ -36,12 +35,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public BeaconFrame(ByteArraySegment bas)
+        public BeaconFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -53,12 +52,12 @@ namespace PacketDotNet.Ieee80211
             BeaconInterval = BeaconIntervalBytes;
             CapabilityInformation = new CapabilityInformationField(CapabilityInformationBytes);
 
-            if (bas.Length > BeaconFields.InformationElement1Position)
+            if (byteArraySegment.Length > BeaconFields.InformationElement1Position)
             {
                 //create a segment that just refers to the info element section
-                var infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                               bas.Offset + BeaconFields.InformationElement1Position,
-                                                               bas.Length - BeaconFields.InformationElement1Position);
+                var infoElementsSegment = new ByteArraySegment(byteArraySegment.Bytes,
+                                                               byteArraySegment.Offset + BeaconFields.InformationElement1Position,
+                                                               byteArraySegment.Length - BeaconFields.InformationElement1Position);
 
                 InformationElements = new InformationElementList(infoElementsSegment);
             }
@@ -106,7 +105,7 @@ namespace PacketDotNet.Ieee80211
         /// The number of "time units" between beacon frames.
         /// A time unit is 1,024 microseconds. This interval is usually set to 100 which equates to approximately 100 milliseconds or 0.1 seconds.
         /// </summary>
-        public UInt16 BeaconInterval { get; set; }
+        public ushort BeaconInterval { get; set; }
 
         /// <summary>
         /// Defines the capabilities of the network.
@@ -119,29 +118,28 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The size of the frame.
         /// </value>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 3) +
-                                           MacFields.SequenceControlLength +
-                                           BeaconFields.TimestampLength +
-                                           BeaconFields.BeaconIntervalLength +
-                                           BeaconFields.CapabilityInformationLength +
-                                           InformationElements.Length;
+        public override int FrameSize => MacFields.FrameControlLength +
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 3) +
+                                         MacFields.SequenceControlLength +
+                                         BeaconFields.TimestampLength +
+                                         BeaconFields.BeaconIntervalLength +
+                                         BeaconFields.CapabilityInformationLength +
+                                         InformationElements.Length;
 
         /// <summary>
         /// The information elements included in the frame
         /// Most (but not all) beacons frames will contain an Information element that contains the SSID.
         /// </summary>
-        public InformationElementList InformationElements { get; private set; }
-
+        public InformationElementList InformationElements { get; }
 
         /// <summary>
         /// The number of microseconds the networks master timekeeper has been active.
-        /// Used for synchronisation between stations in an IBSS. When it reaches the maximum value the timestamp will wrap (not very likely).
+        /// Used for synchronization between stations in an IBSS. When it reaches the maximum value the timestamp will wrap (not very likely).
         /// </summary>
-        public UInt64 Timestamp { get; set; }
+        public ulong Timestamp { get; set; }
 
-        private UInt16 BeaconIntervalBytes
+        private ushort BeaconIntervalBytes
         {
             get
             {
@@ -152,7 +150,6 @@ namespace PacketDotNet.Ieee80211
 
                 return 0;
             }
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
                                                        Header.Offset + BeaconFields.BeaconIntervalPosition);
@@ -161,7 +158,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Frame control bytes are the first two bytes of the frame
         /// </summary>
-        private UInt16 CapabilityInformationBytes
+        private ushort CapabilityInformationBytes
         {
             get
             {
@@ -173,13 +170,12 @@ namespace PacketDotNet.Ieee80211
 
                 return 0;
             }
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
                                                        Header.Offset + BeaconFields.CapabilityInformationPosition);
         }
 
-        private UInt64 TimestampBytes
+        private ulong TimestampBytes
         {
             get
             {
@@ -190,7 +186,6 @@ namespace PacketDotNet.Ieee80211
 
                 return 0;
             }
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
                                                        Header.Offset + BeaconFields.TimestampPosition);
@@ -203,8 +198,8 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                //the backing buffer isnt big enough to accommodate the info elements so we need to resize it
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                //the backing buffer isn't big enough to accommodate the info elements so we need to resize it
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;

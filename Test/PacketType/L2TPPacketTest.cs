@@ -20,32 +20,31 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
-using SharpPcap.LibPcap;
 using PacketDotNet;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
     [TestFixture]
-    public class L2TPPacketTest
+    public class L2tpPacketTest
     {
         // L2TP
         [Test]
-        public void L2TPParsing()
+        public void L2tpParsing()
         {
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/l2tp.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Assert.IsNotNull(p);
 
-            var l2tp = (L2TPPacket)p.Extract(typeof(L2TPPacket));
+            var l2tp = p.Extract<L2tpPacket>();
             Assert.AreEqual(l2tp.TunnelID, 18994);
             Assert.AreEqual(l2tp.SessionID, 54110);
             Console.WriteLine(l2tp.GetType());
-
-        }        
+        }
     }
 }

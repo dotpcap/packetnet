@@ -20,27 +20,27 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Reflection;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
+using PacketDotNet.Utils.Converters;
 #if DEBUG
+using System.Reflection;
 using log4net;
+
 #endif
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
-    /// A Time to Live TLV
+    /// A Time to Live Tlv
     /// </summary>
     [Serializable]
-    public class TimeToLive : TLV
+    public class TimeToLive : Tlv
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-// NOTE: No need to warn about lack of use, the compiler won't
-//       put any calls to 'log' here but we need 'log' to exist to compile
+        // NOTE: No need to warn about lack of use, the compiler won't
+        //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
@@ -49,13 +49,10 @@ namespace PacketDotNet.LLDP
         /// <summary>
         /// Number of bytes in the value portion of this tlv
         /// </summary>
-        private const Int32 ValueLength = 2;
-
-
-        #region Constructors
+        private const int ValueLength = 2;
 
         /// <summary>
-        /// Creates a TTL TLV
+        /// Creates a TTL Tlv
         /// </summary>
         /// <param name="bytes">
         /// </param>
@@ -63,7 +60,7 @@ namespace PacketDotNet.LLDP
         /// The TTL TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public TimeToLive(Byte[] bytes, Int32 offset) :
+        public TimeToLive(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Log.Debug("");
@@ -76,23 +73,18 @@ namespace PacketDotNet.LLDP
         /// The length in seconds until the LLDP
         /// is refreshed
         /// </param>
-        public TimeToLive(UInt16 seconds)
+        public TimeToLive(ushort seconds)
         {
             Log.Debug("");
 
-            var bytes = new Byte[TLVTypeLength.TypeLengthLength + ValueLength];
+            var bytes = new byte[TlvTypeLength.TypeLengthLength + ValueLength];
             var offset = 0;
             var length = bytes.Length;
-            TLVData = new ByteArraySegment(bytes, offset, length);
+            Data = new ByteArraySegment(bytes, offset, length);
 
-            Type = TLVTypes.TimeToLive;
+            Type = TlvType.TimeToLive;
             Seconds = seconds;
         }
-
-        #endregion
-
-
-        #region Properties
 
         /// <value>
         /// The number of seconds until the LLDP needs
@@ -100,13 +92,13 @@ namespace PacketDotNet.LLDP
         /// A value of 0 means that the LLDP source is
         /// closed and should no longer be refreshed
         /// </value>
-        public UInt16 Seconds
+        public ushort Seconds
         {
-            get => EndianBitConverter.Big.ToUInt16(TLVData.Bytes,
-                                                   TLVData.Offset + TLVTypeLength.TypeLengthLength);
+            get => EndianBitConverter.Big.ToUInt16(Data.Bytes,
+                                                   Data.Offset + TlvTypeLength.TypeLengthLength);
             set => EndianBitConverter.Big.CopyBytes(value,
-                                                    TLVData.Bytes,
-                                                    TLVData.Offset + TLVTypeLength.TypeLengthLength);
+                                                    Data.Bytes,
+                                                    Data.Offset + TlvTypeLength.TypeLengthLength);
         }
 
         /// <summary>
@@ -115,11 +107,9 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A human readable string
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return $"[TimeToLive: Seconds={Seconds}]";
         }
-
-        #endregion
     }
 }

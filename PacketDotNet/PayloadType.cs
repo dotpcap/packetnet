@@ -27,17 +27,17 @@ namespace PacketDotNet
     public enum PayloadType
     {
         /// <summary>
-        /// Constant packet.
+        /// The payload is a packet.
         /// </summary>
         Packet,
 
         /// <summary>
-        /// Constant bytes.
+        /// The payload is a byte array.
         /// </summary>
         Bytes,
 
         /// <summary>
-        /// Constant none.
+        /// There is no payload.
         /// </summary>
         None
     }

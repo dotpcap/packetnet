@@ -18,8 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
-
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
@@ -29,7 +27,7 @@ namespace PacketDotNet.Ieee80211
     public class SequenceControlField
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PacketDotNet.Ieee80211.SequenceControlField" /> class.
+        /// Initializes a new instance of the <see cref="SequenceControlField" /> class.
         /// </summary>
         public SequenceControlField()
         { }
@@ -40,7 +38,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name="field">
         /// A <see cref="ushort" />
         /// </param>
-        public SequenceControlField(UInt16 field)
+        public SequenceControlField(ushort field)
         {
             Field = field;
         }
@@ -51,7 +49,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The field.
         /// </value>
-        public UInt16 Field { get; set; }
+        public ushort Field { get; set; }
 
         /// <summary>
         /// Gets or sets the fragment number.
@@ -59,14 +57,13 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The fragment number.
         /// </value>
-        public Byte FragmentNumber
+        public byte FragmentNumber
         {
-            get => (Byte) (Field & 0x000F);
-
+            get => (byte) (Field & 0x000F);
             set
             {
-                Field &= unchecked((UInt16) ~0xF);
-                Field |= (UInt16) (value & 0x0F);
+                Field &= unchecked((ushort) ~0xF);
+                Field |= (ushort) (value & 0x0F);
             }
         }
 
@@ -76,15 +73,14 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The sequence number.
         /// </value>
-        public Int16 SequenceNumber
+        public short SequenceNumber
         {
-            get => (Int16) (Field >> 4);
-
+            get => (short) (Field >> 4);
             set
             {
                 //Use the & mask to make sure we only overwrite the sequence number part of the field
                 Field &= 0xF;
-                Field |= (UInt16) (value << 4);
+                Field |= (ushort) (value << 4);
             }
         }
     }

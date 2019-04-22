@@ -1,9 +1,9 @@
 using System;
 using System.Net;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.LSA
+namespace PacketDotNet.Lsa
 {
     /// <summary>
     /// Link state request, send by the LSR packets
@@ -13,34 +13,34 @@ namespace PacketDotNet.LSA
         /// <summary>
         /// Size of LinkStateRequest in bytes
         /// </summary>
-        public static readonly Int32 Length = 12;
+        public static readonly int Length = 12;
 
-        internal ByteArraySegment Header;
+        private readonly ByteArraySegment _header;
 
         /// <summary>
         /// Default constructor
         /// </summary>
         public LinkStateRequest()
         {
-            var b = new Byte[Length];
-            Header = new ByteArraySegment(b);
+            var b = new byte[Length];
+            _header = new ByteArraySegment(b);
         }
 
         /// <summary>
         /// Constructs a packet from bytes and offset abd length
         /// </summary>
         /// <param name="packet">
-        /// A <see cref="System.Byte" />
+        /// A <see cref="byte" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
-        public LinkStateRequest(Byte[] packet, Int32 offset, Int32 length)
+        public LinkStateRequest(byte[] packet, int offset, int length)
         {
-            Header = new ByteArraySegment(packet, offset, length);
+            _header = new ByteArraySegment(packet, offset, length);
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace PacketDotNet.LSA
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + LinkStateRequestFields.AdvertisingRouterPosition);
+                var val = EndianBitConverter.Little.ToUInt32(_header.Bytes, _header.Offset + LinkStateRequestFields.AdvertisingRouterPosition);
                 return new IPAddress(val);
             }
             set
@@ -58,8 +58,8 @@ namespace PacketDotNet.LSA
                 var address = value.GetAddressBytes();
                 Array.Copy(address,
                            0,
-                           Header.Bytes,
-                           Header.Offset + LinkStateRequestFields.AdvertisingRouterPosition,
+                           _header.Bytes,
+                           _header.Offset + LinkStateRequestFields.AdvertisingRouterPosition,
                            address.Length);
             }
         }
@@ -68,7 +68,7 @@ namespace PacketDotNet.LSA
         /// Gets the bytes.
         /// </summary>
         /// <value>The bytes.</value>
-        public virtual Byte[] Bytes => Header.ActualBytes();
+        public virtual byte[] Bytes => _header.ActualBytes();
 
         /// <summary>
         /// This field identifies the portion of the internet environment
@@ -78,7 +78,7 @@ namespace PacketDotNet.LSA
         {
             get
             {
-                var val = EndianBitConverter.Little.ToUInt32(Header.Bytes, Header.Offset + LinkStateRequestFields.LinkStateIdPosition);
+                var val = EndianBitConverter.Little.ToUInt32(_header.Bytes, _header.Offset + LinkStateRequestFields.LinkStateIdPosition);
                 return new IPAddress(val);
             }
             set
@@ -86,8 +86,8 @@ namespace PacketDotNet.LSA
                 var address = value.GetAddressBytes();
                 Array.Copy(address,
                            0,
-                           Header.Bytes,
-                           Header.Offset + LinkStateRequestFields.LinkStateIdPosition,
+                           _header.Bytes,
+                           _header.Offset + LinkStateRequestFields.LinkStateIdPosition,
                            address.Length);
             }
         }
@@ -95,10 +95,10 @@ namespace PacketDotNet.LSA
         /// <summary>
         /// The type of the request
         /// </summary>
-        public LSAType LSType
+        public LinkStateAdvertisementType LSType
         {
-            get => (LSAType) EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + LinkStateRequestFields.LSTypePosition);
-            set => EndianBitConverter.Big.CopyBytes((UInt32) value, Header.Bytes, Header.Offset + LinkStateRequestFields.LSTypePosition);
+            get => (LinkStateAdvertisementType) EndianBitConverter.Big.ToUInt32(_header.Bytes, _header.Offset + LinkStateRequestFields.LinkStateTypePosition);
+            set => EndianBitConverter.Big.CopyBytes((uint) value, _header.Bytes, _header.Offset + LinkStateRequestFields.LinkStateTypePosition);
         }
     }
 }

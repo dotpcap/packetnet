@@ -20,32 +20,30 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
-using SharpPcap.LibPcap;
 using PacketDotNet;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
     [TestFixture]
-    public class GREIPv6PacketTest
+    public class GreIPv6PacketTest
     {
         // GREIPv6
         [Test]
-        public void GREIPv6Parsing()
+        public void GreIPv6Parsing()
         {
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/gre_ipv6.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Assert.IsNotNull(p);
 
-            var gerp = (GREPacket)p.Extract(typeof(GREPacket));
-            Assert.AreEqual(gerp.Protocol, PacketDotNet.EthernetPacketType.IPv6);
+            var gerp = p.Extract<GrePacket>();
+            Assert.AreEqual(gerp.Protocol, EthernetType.IPv6);
             Console.WriteLine(gerp.GetType());
-
-
-        }        
+        }
     }
 }

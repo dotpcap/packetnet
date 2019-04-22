@@ -18,10 +18,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
 using System.Net.NetworkInformation;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Ieee80211
 {
@@ -33,12 +32,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public AssociationResponseFrame(ByteArraySegment bas)
+        public AssociationResponseFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -51,12 +50,12 @@ namespace PacketDotNet.Ieee80211
             StatusCode = StatusCodeBytes;
             AssociationId = AssociationIdBytes;
 
-            if (bas.Length > AssociationResponseFields.InformationElement1Position)
+            if (byteArraySegment.Length > AssociationResponseFields.InformationElement1Position)
             {
                 //create a segment that just refers to the info element section
-                var infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                               bas.Offset + AssociationResponseFields.InformationElement1Position,
-                                                               bas.Length - AssociationResponseFields.InformationElement1Position);
+                var infoElementsSegment = new ByteArraySegment(byteArraySegment.Bytes,
+                                                               byteArraySegment.Offset + AssociationResponseFields.InformationElement1Position,
+                                                               byteArraySegment.Length - AssociationResponseFields.InformationElement1Position);
 
                 InformationElements = new InformationElementList(infoElementsSegment);
             }
@@ -110,7 +109,7 @@ namespace PacketDotNet.Ieee80211
         /// Although this is a 16bit field only 14 of the bits are used to represent the id. Therefore the available values
         /// for this field are inthe range 1-2,007.
         /// </summary>
-        public UInt16 AssociationId { get; set; }
+        public ushort AssociationId { get; set; }
 
         /// <summary>
         /// The capability information field that describes the networks capabilities.
@@ -123,14 +122,14 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The size of the frame.
         /// </value>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 3) +
-                                           MacFields.SequenceControlLength +
-                                           AssociationResponseFields.CapabilityInformationLength +
-                                           AssociationResponseFields.StatusCodeLength +
-                                           AssociationResponseFields.AssociationIdLength +
-                                           InformationElements.Length;
+        public override int FrameSize => MacFields.FrameControlLength +
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 3) +
+                                         MacFields.SequenceControlLength +
+                                         AssociationResponseFields.CapabilityInformationLength +
+                                         AssociationResponseFields.StatusCodeLength +
+                                         AssociationResponseFields.AssociationIdLength +
+                                         InformationElements.Length;
 
         /// <summary>
         /// The information elements included in the frame
@@ -142,22 +141,21 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         public AuthenticationStatusCode StatusCode { get; set; }
 
-        private UInt16 AssociationIdBytes
+        private ushort AssociationIdBytes
         {
             get
             {
                 if (Header.Length >= AssociationResponseFields.AssociationIdPosition + AssociationResponseFields.AssociationIdLength)
                 {
                     var associationID = EndianBitConverter.Little.ToUInt16(Header.Bytes, Header.Offset + AssociationResponseFields.AssociationIdPosition);
-                    return (UInt16) (associationID & 0xCF);
+                    return (ushort) (associationID & 0xCF);
                 }
 
                 return 0;
             }
-
             set
             {
-                var associationID = (UInt16) (value & 0xCF);
+                var associationID = (ushort) (value & 0xCF);
                 EndianBitConverter.Little.CopyBytes(associationID,
                                                     Header.Bytes,
                                                     Header.Offset + AssociationResponseFields.AssociationIdPosition);
@@ -167,7 +165,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// The raw capability information bytes
         /// </summary>
-        private UInt16 CapabilityInformationBytes
+        private ushort CapabilityInformationBytes
         {
             get
             {
@@ -180,7 +178,6 @@ namespace PacketDotNet.Ieee80211
 
                 return 0;
             }
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
                                                        Header.Offset + AssociationResponseFields.CapabilityInformationPosition);
@@ -200,8 +197,7 @@ namespace PacketDotNet.Ieee80211
                 //to extract a meaningful value
                 return AuthenticationStatusCode.UnspecifiedFailure;
             }
-
-            set => EndianBitConverter.Little.CopyBytes((UInt16) value,
+            set => EndianBitConverter.Little.CopyBytes((ushort) value,
                                                        Header.Bytes,
                                                        Header.Offset + AssociationResponseFields.StatusCodePosition);
         }
@@ -213,7 +209,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;

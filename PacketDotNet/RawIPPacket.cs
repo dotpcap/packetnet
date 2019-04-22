@@ -35,16 +35,12 @@ namespace PacketDotNet
     public class RawIPPacket : Packet
     {
         /// <summary>
-        /// </summary>
-        public RawIPPacketProtocol Protocol;
-
-        /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public RawIPPacket(ByteArraySegment bas)
+        public RawIPPacket(ByteArraySegment byteArraySegment)
         {
             // Pcap raw link layer format does not have any header
             // you need to identify whether you have ipv4 or ipv6
@@ -52,36 +48,48 @@ namespace PacketDotNet
             // If the first nibble is 0x04, then you have IP v4
             // If the first nibble is 0x06, then you have IP v6
             // The RawIPPacketProtocol enum has been defined to match this.
-            var firstNibble = bas.Bytes[0] >> 4;
+            var firstNibble = byteArraySegment.Bytes[0] >> 4;
             Protocol = (RawIPPacketProtocol) firstNibble;
 
-            Header = new ByteArraySegment(bas) {Length = 0};
+            Header = new ByteArraySegment(byteArraySegment) { Length = 0 };
 
             // parse the encapsulated bytes
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-            {
-                var result = new PacketOrByteArraySegment();
-                switch (Protocol)
-                {
-                    case RawIPPacketProtocol.IPv4:
-                        result.Packet = new IPv4Packet(Header.EncapsulatedBytes());
-                        break;
-                    case RawIPPacketProtocol.IPv6:
-                        result.Packet = new IPv6Packet(Header.EncapsulatedBytes());
-                        break;
-                    default:
-                        throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");
-                }
+                                                                     {
+                                                                         var result = new PacketOrByteArraySegment();
+                                                                         switch (Protocol)
+                                                                         {
+                                                                             case RawIPPacketProtocol.IPv4:
+                                                                             {
+                                                                                 result.Packet = new IPv4Packet(Header.NextSegment());
+                                                                                 break;
+                                                                             }
+                                                                             case RawIPPacketProtocol.IPv6:
+                                                                             {
+                                                                                 result.Packet = new IPv6Packet(Header.NextSegment());
+                                                                                 break;
+                                                                             }
+                                                                             default:
+                                                                             {
+                                                                                 throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");
+                                                                             }
+                                                                         }
 
-                return result;
-            }, LazyThreadSafetyMode.PublicationOnly);
+                                                                         return result;
+                                                                     },
+                                                                     LazyThreadSafetyMode.PublicationOnly);
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.DarkGray;
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override string Color => AnsiEscapeSequences.DarkGray;
+
+        /// <summary>
+        /// Gets or sets the protocol.
+        /// </summary>
+        public RawIPPacketProtocol Protocol { get; set; }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
@@ -105,13 +113,13 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                var properties = new Dictionary<String, String>
+                var properties = new Dictionary<string, string>
                 {
-                    {"protocol", Protocol + " (0x" + Protocol.ToString("x") + ")"}
+                    { "protocol", Protocol + " (0x" + Protocol.ToString("x") + ")" }
                 };
 
                 // calculate the padding needed to right-justify the property names
-                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Raw:  ******* Raw - \"Raw IP Packet\" - offset=? length=" + TotalPacketLength);

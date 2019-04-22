@@ -18,28 +18,26 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2017 Andrew <pandipd@outlook.com>
  */
 
-using System;
-
 namespace PacketDotNet
 {
     /// <summary>
     /// The DDM Parameter subsection field
     /// </summary>
-    public class DrdaDDMParameter
+    public class DrdaDdmParameter
     {
         /// <summary>
         /// The Other Data field
         /// </summary>
-        public String Data { set; get; }
+        public string Data { set; get; }
 
         /// <summary>
         /// The Drda Code Point Type field
         /// </summary>
-        public DrdaCodepointType DrdaCodepoint { set; get; }
+        public DrdaCodePointType DrdaCodepoint { set; get; }
 
         /// <summary>
         /// The Length field
         /// </summary>
-        public Int32 Length { set; get; }
+        public int Length { set; get; }
     }
 }

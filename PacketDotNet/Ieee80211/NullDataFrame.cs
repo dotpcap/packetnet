@@ -18,7 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet.Ieee80211
@@ -32,12 +31,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Initializes a new instance of the <see cref="NullDataFrame" /> class.
         /// </summary>
-        /// <param name='bas'>
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public NullDataFrame(ByteArraySegment bas)
+        public NullDataFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -63,9 +62,9 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Length of the frame header.
         /// This does not include the FCS, it represents only the header bytes that would
-        /// would preceed any payload.
+        /// would proceed any payload.
         /// </summary>
-        public override Int32 FrameSize
+        public override int FrameSize
         {
             get
             {
@@ -86,7 +85,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;

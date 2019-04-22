@@ -56,9 +56,9 @@ namespace PacketDotNet.Ieee80211
         AuthenticationAlgorithmNotSupported = 13,
 
         /// <summary>
-        /// Constant unexpected sequenec number.
+        /// Constant unexpected sequence number.
         /// </summary>
-        UnexpectedSequenecNumber = 14,
+        UnexpectedSequenceNumber = 14,
 
         /// <summary>
         /// Constant response to challenge failed.
@@ -76,22 +76,22 @@ namespace PacketDotNet.Ieee80211
         AccessPointResourceConstrained = 17,
 
         /// <summary>
-        /// Constant station doesnt support data rates.
+        /// Constant station doesn't support data rates.
         /// </summary>
         StationDoesntSupportDataRates = 18,
 
         /// <summary>
-        /// Constant station doesnt support preamble.
+        /// Constant station doesn't support preamble.
         /// </summary>
         StationDoesntSupportPreamble = 19,
 
         /// <summary>
-        /// Constant station doesnt support pbcc modulation.
+        /// Constant station doesn't support pbcc modulation.
         /// </summary>
         StationDoesntSupportPbccModulation = 20,
 
         /// <summary>
-        /// Constant station doesnt support channel agility.
+        /// Constant station doesn't support channel agility.
         /// </summary>
         StationDoesntSupportChannelAgility = 21,
 
@@ -111,12 +111,12 @@ namespace PacketDotNet.Ieee80211
         UnacceptableSupportedChannelsValue = 24,
 
         /// <summary>
-        /// Constant station doesnt support short time slot.
+        /// Constant station doesn't support short time slot.
         /// </summary>
         StationDoesntSupportShortTimeSlot = 25,
 
         /// <summary>
-        /// Constant station doesnt support dsss ofdm.
+        /// Constant station doesn't support dsss ofdm.
         /// </summary>
         StationDoesntSupportDsssOfdm = 26,
 

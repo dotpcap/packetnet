@@ -7,8 +7,6 @@
  * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
-
 namespace PacketDotNet.Utils
 {
     /// <summary>
@@ -30,16 +28,16 @@ namespace PacketDotNet.Utils
         /// <summary>
         /// Delimits the start of an ansi color sequence, the color code goes after this
         /// </summary>
-        public static readonly String EscapeBegin;
+        public static readonly string EscapeBegin;
 
         /// <summary>
         /// Delimits the stop of the ansi color sequence, the color code comes before this
         /// </summary>
-        public static readonly String EscapeEnd = "m";
+        public static readonly string EscapeEnd = "m";
 
         static AnsiEscapeSequences()
         {
-            EscapeBegin = "" + (Char) 27 + "[";
+            EscapeBegin = "" + (char) 27 + "[";
             Reset = BuildValue("0");
             Bold = BuildValue("0;1");
             Underline = BuildValue("0;4");
@@ -69,39 +67,39 @@ namespace PacketDotNet.Utils
             LightGrayBackground = BuildValue("0;47");
         }
 
-        private static String BuildValue(String colorCode)
+        private static string BuildValue(string colorCode)
         {
             return EscapeBegin + colorCode + EscapeEnd;
         }
 
 #pragma warning disable 1591
-        public static readonly String Reset;
-        public static readonly String Bold;
-        public static readonly String Underline;
-        public static readonly String Inverse;
-        public static readonly String Black;
-        public static readonly String Blue;
-        public static readonly String Green;
-        public static readonly String Cyan;
-        public static readonly String Red;
-        public static readonly String Purple;
-        public static readonly String Brown;
-        public static readonly String LightGray;
-        public static readonly String DarkGray;
-        public static readonly String LightBlue;
-        public static readonly String LightGreen;
-        public static readonly String LightCyan;
-        public static readonly String LightRed;
-        public static readonly String LightPurple;
-        public static readonly String Yellow;
-        public static readonly String White;
-        public static readonly String RedBackground;
-        public static readonly String GreenBackground;
-        public static readonly String YellowBackground;
-        public static readonly String BlueBackground;
-        public static readonly String PurpleBackground;
-        public static readonly String CyanBackground;
-        public static readonly String LightGrayBackground;
+        public static readonly string Reset;
+        public static readonly string Bold;
+        public static readonly string Underline;
+        public static readonly string Inverse;
+        public static readonly string Black;
+        public static readonly string Blue;
+        public static readonly string Green;
+        public static readonly string Cyan;
+        public static readonly string Red;
+        public static readonly string Purple;
+        public static readonly string Brown;
+        public static readonly string LightGray;
+        public static readonly string DarkGray;
+        public static readonly string LightBlue;
+        public static readonly string LightGreen;
+        public static readonly string LightCyan;
+        public static readonly string LightRed;
+        public static readonly string LightPurple;
+        public static readonly string Yellow;
+        public static readonly string White;
+        public static readonly string RedBackground;
+        public static readonly string GreenBackground;
+        public static readonly string YellowBackground;
+        public static readonly string BlueBackground;
+        public static readonly string PurpleBackground;
+        public static readonly string CyanBackground;
+        public static readonly string LightGrayBackground;
 #pragma warning restore 1591
     }
 }

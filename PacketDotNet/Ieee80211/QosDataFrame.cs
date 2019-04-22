@@ -19,13 +19,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2017 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
-using System.Reflection;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 #if DEBUG
 using log4net;
+using System.Reflection;
 #endif
 
 namespace PacketDotNet.Ieee80211
@@ -52,9 +51,9 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The qos control field.
         /// </value>
-        public UInt16 QosControl { get; set; }
+        public ushort QosControl { get; set; }
 
-        private UInt16 QosControlBytes
+        private ushort QosControlBytes
         {
             get
             {
@@ -66,7 +65,6 @@ namespace PacketDotNet.Ieee80211
 
                 return 0;
             }
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
                                                        Header.Offset + QosDataFields.QosControlPosition);
@@ -75,9 +73,9 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Length of the frame header.
         /// This does not include the FCS, it represents only the header bytes that would
-        /// would preceed any payload.
+        /// would proceed any payload.
         /// </summary>
-        public override Int32 FrameSize
+        public override int FrameSize
         {
             get
             {
@@ -92,18 +90,17 @@ namespace PacketDotNet.Ieee80211
             }
         }
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="QosDataFrame" /> class.
         /// </summary>
-        /// <param name='bas'>
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public QosDataFrame(ByteArraySegment bas)
+        public QosDataFrame(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -119,11 +116,11 @@ namespace PacketDotNet.Ieee80211
                 // should parse it
                 if (FrameControl.Protected)
                 {
-                    PayloadPacketOrData.Value.ByteArraySegment = Header.EncapsulatedBytes(availablePayloadLength);
+                    PayloadPacketOrData.Value.ByteArraySegment = Header.NextSegment(availablePayloadLength);
                 }
                 else
                 {
-                    PayloadPacketOrData.Value.Packet = new LogicalLinkControl(Header.EncapsulatedBytes());
+                    PayloadPacketOrData.Value.Packet = new LogicalLinkControl(Header.NextSegment());
                 }
             }
         }
@@ -148,7 +145,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;

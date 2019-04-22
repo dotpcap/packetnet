@@ -18,8 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
-using System;
-
 namespace PacketDotNet.Tcp
 {
     /// <summary>
@@ -32,17 +30,10 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class NoOperation : Option
     {
-        #region Members
-
         /// <summary>
         /// The length (in bytes) of the NoOperation option
         /// </summary>
-        internal const Int32 OptionLength = 1;
-
-        #endregion
-
-
-        #region Constructors
+        internal const int OptionLength = 1;
 
         /// <summary>
         /// Creates a No Operation Option
@@ -51,19 +42,14 @@ namespace PacketDotNet.Tcp
         /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
-        public NoOperation(Byte[] bytes, Int32 offset, Int32 length) :
+        public NoOperation(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
-
-        #endregion
-
-
-        #region Properties
 
         /// <summary>
         /// The length of the NoOperation field
@@ -71,8 +57,6 @@ namespace PacketDotNet.Tcp
         /// the NoOperation option is only 1 byte long and doesn't
         /// contain a length field
         /// </summary>
-        public override Byte Length => OptionLength;
-
-        #endregion
+        public override byte Length => OptionLength;
     }
 }

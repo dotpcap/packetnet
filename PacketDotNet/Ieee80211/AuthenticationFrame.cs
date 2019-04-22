@@ -18,10 +18,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
 using System.Net.NetworkInformation;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Ieee80211
 {
@@ -33,12 +32,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public AuthenticationFrame(ByteArraySegment bas)
+        public AuthenticationFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -49,12 +48,12 @@ namespace PacketDotNet.Ieee80211
             AuthenticationAlgorithmNumber = AuthenticationAlgorithmNumberBytes;
             AuthenticationAlgorithmTransactionSequenceNumber = AuthenticationAlgorithmTransactionSequenceNumberBytes;
 
-            if (bas.Length > AuthenticationFields.InformationElement1Position)
+            if (byteArraySegment.Length > AuthenticationFields.InformationElement1Position)
             {
                 //create a segment that just refers to the info element section
-                var infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                               bas.Offset + AuthenticationFields.InformationElement1Position,
-                                                               bas.Length - AuthenticationFields.InformationElement1Position);
+                var infoElementsSegment = new ByteArraySegment(byteArraySegment.Bytes,
+                                                               byteArraySegment.Offset + AuthenticationFields.InformationElement1Position,
+                                                               byteArraySegment.Length - AuthenticationFields.InformationElement1Position);
 
                 InformationElements = new InformationElementList(infoElementsSegment);
             }
@@ -62,7 +61,6 @@ namespace PacketDotNet.Ieee80211
             {
                 InformationElements = new InformationElementList();
             }
-
 
             //cant set length until after we have handled the information elements
             //as they vary in length
@@ -105,12 +103,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Number used for selection of authentication algorithm
         /// </summary>
-        public UInt16 AuthenticationAlgorithmNumber { get; set; }
+        public ushort AuthenticationAlgorithmNumber { get; set; }
 
         /// <summary>
         /// Sequence number to define the step of the authentication algorithm
         /// </summary>
-        public UInt16 AuthenticationAlgorithmTransactionSequenceNumber { get; set; }
+        public ushort AuthenticationAlgorithmTransactionSequenceNumber { get; set; }
 
         /// <summary>
         /// Gets the size of the frame.
@@ -118,14 +116,14 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The size of the frame.
         /// </value>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 3) +
-                                           MacFields.SequenceControlLength +
-                                           AuthenticationFields.AuthAlgorithmNumLength +
-                                           AuthenticationFields.AuthAlgorithmTransactionSequenceNumLength +
-                                           AuthenticationFields.StatusCodeLength +
-                                           InformationElements.Length;
+        public override int FrameSize => MacFields.FrameControlLength +
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 3) +
+                                         MacFields.SequenceControlLength +
+                                         AuthenticationFields.AuthAlgorithmNumLength +
+                                         AuthenticationFields.AuthAlgorithmTransactionSequenceNumLength +
+                                         AuthenticationFields.StatusCodeLength +
+                                         InformationElements.Length;
 
         /// <summary>
         /// The information elements included in the frame
@@ -137,7 +135,7 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         public AuthenticationStatusCode StatusCode { get; set; }
 
-        private UInt16 AuthenticationAlgorithmNumberBytes
+        private ushort AuthenticationAlgorithmNumberBytes
         {
             get
             {
@@ -150,13 +148,12 @@ namespace PacketDotNet.Ieee80211
 
                 return 0;
             }
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
                                                        Header.Offset + AuthenticationFields.AuthAlgorithmNumPosition);
         }
 
-        private UInt16 AuthenticationAlgorithmTransactionSequenceNumberBytes
+        private ushort AuthenticationAlgorithmTransactionSequenceNumberBytes
         {
             get
             {
@@ -169,7 +166,6 @@ namespace PacketDotNet.Ieee80211
 
                 return 0;
             }
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
                                                        Header.Offset + AuthenticationFields.AuthAlgorithmTransactionSequenceNumPosition);
@@ -177,7 +173,7 @@ namespace PacketDotNet.Ieee80211
 
         private AuthenticationStatusCode StatusCodeBytes
         {
-            set => EndianBitConverter.Little.CopyBytes((UInt16) value,
+            set => EndianBitConverter.Little.CopyBytes((ushort) value,
                                                        Header.Bytes,
                                                        Header.Offset + AuthenticationFields.StatusCodePosition);
         }
@@ -189,7 +185,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;

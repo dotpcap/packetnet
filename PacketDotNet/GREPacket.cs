@@ -22,8 +22,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet
 {
@@ -31,63 +31,63 @@ namespace PacketDotNet
     /// An GRE packet.
     /// </summary>
     [Serializable]
-    public sealed class GREPacket : Packet
+    public sealed class GrePacket : Packet
     {
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">A <see cref="ByteArraySegment" /></param>
+        /// <param name="byteArraySegment">A <see cref="ByteArraySegment" /></param>
         /// <param name="parentPacket">The parent packet.</param>
-        public GREPacket(ByteArraySegment bas, Packet parentPacket)
+        public GrePacket(ByteArraySegment byteArraySegment, Packet parentPacket)
         {
             // slice off the header portion
-            // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
-            Header.Length = GREFields.FlagsLength + GREFields.ProtocolLength;
+            Header = new ByteArraySegment(byteArraySegment)
+            {
+                Length = GreFields.FlagsLength + GreFields.ProtocolLength
+            };
+
             if (HasCheckSum)
-                Header.Length += GREFields.ChecksumLength;
+                Header.Length += GreFields.ChecksumLength;
+
             if (HasReserved)
-                Header.Length += GREFields.ReservedLength;
+                Header.Length += GreFields.ReservedLength;
+
             if (HasKey)
-                Header.Length += GREFields.KeyLength;
+                Header.Length += GreFields.KeyLength;
+
             if (HasSequence)
-                Header.Length += GREFields.SequenceLength;
+                Header.Length += GreFields.SequenceLength;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseEncapsulatedBytes(Header, Protocol), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header, Protocol), LazyThreadSafetyMode.PublicationOnly);
             ParentPacket = parentPacket;
         }
 
+        /// <summary>Fetch the GRE header checksum.</summary>
+        public short Checksum => BitConverter.ToInt16(Header.Bytes,
+                                                      Header.Offset + GreFields.ChecksumPosition);
 
-        /// <summary> Fetch the GRE header checksum.</summary>
-        public Int16 Checksum => BitConverter.ToInt16(Header.Bytes,
-                                                      Header.Offset + GREFields.ChecksumPosition);
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override string Color => AnsiEscapeSequences.DarkGray;
 
+        public bool HasCheckSum => 8 == (Header.Bytes[Header.Offset + 1] & 0x8);
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.DarkGray;
+        public bool HasKey => 2 == (Header.Bytes[Header.Offset + 1] & 0x2);
 
-        public Boolean HasCheckSum => 8 == (Header.Bytes[Header.Offset + 1] & 0x8);
+        public bool HasReserved => 4 == (Header.Bytes[Header.Offset + 1] & 0x4);
 
-        public Boolean HasKey => 2 == (Header.Bytes[Header.Offset + 1] & 0x2);
+        public bool HasSequence => 1 == (Header.Bytes[Header.Offset + 1] & 0x1);
 
-        public Boolean HasReserved => 4 == (Header.Bytes[Header.Offset + 1] & 0x4);
+        public EthernetType Protocol => (EthernetType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                                                       Header.Offset + GreFields.FlagsLength);
 
-        public Boolean HasSequence => 1 == (Header.Bytes[Header.Offset + 1] & 0x1);
-
-        public EthernetPacketType Protocol => (EthernetPacketType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                                                                   Header.Offset + GREFields.FlagsLength);
-
-
-        public Int32 Version => Header.Bytes[2] & 0x7;
-
+        public int Version => Header.Bytes[2] & 0x7;
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
-
 
             if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
@@ -97,7 +97,7 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
-                buffer.AppendFormat("{0}[GREPacket: Type={1}",
+                buffer.AppendFormat("{0}[GrePacket: Type={1}",
                                     color,
                                     Protocol);
             }
@@ -105,9 +105,9 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                var unused = new Dictionary<String, String>
+                var unused = new Dictionary<string, string>
                 {
-                    {"Protocol ", Protocol + " (0x" + Protocol.ToString("x") + ")"}
+                    { "Protocol ", Protocol + " (0x" + Protocol.ToString("x") + ")" }
                 };
             }
 

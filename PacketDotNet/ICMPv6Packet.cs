@@ -20,13 +20,13 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 #if DEBUG
 using log4net;
+using System.Reflection;
 #endif
 
 namespace PacketDotNet
@@ -36,7 +36,7 @@ namespace PacketDotNet
     /// See http://en.wikipedia.org/wiki/ICMPv6
     /// </summary>
     [Serializable]
-    public sealed class ICMPv6Packet : InternetPacket
+    public sealed class IcmpV6Packet : InternetPacket
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -48,76 +48,73 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        /// <value>
-        /// The Type value
-        /// </value>
-        public ICMPv6Types Type
-        {
-            get => (ICMPv6Types) Header.Bytes[Header.Offset + ICMPv6Fields.TypePosition];
-
-            set => Header.Bytes[Header.Offset + ICMPv6Fields.TypePosition] = (Byte) value;
-        }
-
-        /// <summary> Fetch the ICMP code </summary>
-        public Byte Code
-        {
-            get => Header.Bytes[Header.Offset + ICMPv6Fields.CodePosition];
-
-            set => Header.Bytes[Header.Offset + ICMPv6Fields.CodePosition] = value;
-        }
-
-        /// <value>
-        /// Checksum value
-        /// </value>
-        public UInt16 Checksum
-        {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + ICMPv6Fields.ChecksumPosition);
-
-            set
-            {
-                var theValue = value;
-                EndianBitConverter.Big.CopyBytes(theValue,
-                                                 Header.Bytes,
-                                                 Header.Offset + ICMPv6Fields.ChecksumPosition);
-            }
-        }
+        /// <summary>
+        /// Used to prevent a recursive stack overflow
+        /// when recalculating in UpdateCalculatedValues()
+        /// </summary>
+        private bool _skipUpdating;
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public ICMPv6Packet(ByteArraySegment bas)
+        public IcmpV6Packet(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
         }
 
         /// <summary>
         /// Constructor with parent packet
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
         /// <param name="parentPacket">
         /// A <see cref="Packet" />
         /// </param>
-        public ICMPv6Packet
-        (
-            ByteArraySegment bas,
-            Packet parentPacket) : this(bas)
+        public IcmpV6Packet(ByteArraySegment byteArraySegment, Packet parentPacket) : this(byteArraySegment)
         {
             ParentPacket = parentPacket;
         }
 
-        /// <summary>
-        /// Used to prevent a recursive stack overflow
-        /// when recalculating in UpdateCalculatedValues()
-        /// </summary>
-        private Boolean _skipUpdating;
+        /// <value>
+        /// Checksum value
+        /// </value>
+        public ushort Checksum
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
+                                                   Header.Offset + IcmpV6Fields.ChecksumPosition);
+            set
+            {
+                var v = value;
+                EndianBitConverter.Big.CopyBytes(v,
+                                                 Header.Bytes,
+                                                 Header.Offset + IcmpV6Fields.ChecksumPosition);
+            }
+        }
+
+        /// <summary>Fetch the ICMP code </summary>
+        public byte Code
+        {
+            get => Header.Bytes[Header.Offset + IcmpV6Fields.CodePosition];
+            set => Header.Bytes[Header.Offset + IcmpV6Fields.CodePosition] = value;
+        }
+
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override string Color => AnsiEscapeSequences.LightBlue;
+
+        /// <value>
+        /// The Type value
+        /// </value>
+        public IcmpV6Types Type
+        {
+            get => (IcmpV6Types) Header.Bytes[Header.Offset + IcmpV6Fields.TypePosition];
+            set => Header.Bytes[Header.Offset + IcmpV6Fields.TypePosition] = (byte) value;
+        }
 
         /// <summary>
         /// Recalculate the checksum
@@ -137,7 +134,7 @@ namespace PacketDotNet
             // start with this packet with a zeroed out checksum field
             Checksum = 0;
 
-            var dataToChecksum = BytesHighPerformance;
+            var dataToChecksum = BytesSegment;
             var ipv6Parent = ParentPacket as IPv6Packet;
 
             Checksum = (ushort) ChecksumUtils.OnesComplementSum(dataToChecksum, ipv6Parent?.GetPseudoIPHeader(dataToChecksum.Length) ?? new byte[0]);
@@ -146,11 +143,8 @@ namespace PacketDotNet
             _skipUpdating = false;
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.LightBlue;
-
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
@@ -166,27 +160,31 @@ namespace PacketDotNet
             {
                 case StringOutputType.Normal:
                 case StringOutputType.Colored:
+                {
                     // build the output string
-                    buffer.AppendFormat("{0}[ICMPv6Packet: Type={2}, Code={3}]{1}",
+                    buffer.AppendFormat("{0}[IcmpV6Packet: Type={2}, Code={3}]{1}",
                                         color,
                                         colorEscape,
                                         Type,
                                         Code);
+
                     break;
+                }
                 case StringOutputType.Verbose:
                 case StringOutputType.VerboseColored:
+                {
                     // collect the properties and their value
-                    var properties = new Dictionary<String, String>
+                    var properties = new Dictionary<string, string>
                     {
-                        {"type", Type + " (" + (Int32) Type + ")"},
-                        {"code", Code.ToString()},
+                        { "type", Type + " (" + (int) Type + ")" },
+                        { "code", Code.ToString() },
                         // TODO: Implement a checksum verification for ICMPv6
-                        {"checksum", "0x" + Checksum.ToString("x")}
+                        { "checksum", "0x" + Checksum.ToString("x") }
                     };
                     // TODO: Implement ICMPv6 Option fields here?
 
                     // calculate the padding needed to right-justify the property names
-                    var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                    var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                     // build the output string
                     buffer.AppendLine("ICMP:  ******* ICMPv6 - \"Internet Control Message Protocol (Version 6)\"- offset=? length=" + TotalPacketLength);
@@ -198,6 +196,7 @@ namespace PacketDotNet
 
                     buffer.AppendLine("ICMP:");
                     break;
+                }
             }
 
             // append the base string output

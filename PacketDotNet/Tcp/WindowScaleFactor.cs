@@ -18,8 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
-using System;
-
 namespace PacketDotNet.Tcp
 {
     /// <summary>
@@ -32,15 +30,8 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class WindowScaleFactor : Option
     {
-        #region Members
-
         // the offset (in bytes) of the ScaleFactor Field
-        private const Int32 ScaleFactorFieldOffset = 2;
-
-        #endregion
-
-
-        #region Constructors
+        private const int ScaleFactorFieldOffset = 2;
 
         /// <summary>
         /// Creates a Window Scale Factor Option
@@ -49,19 +40,14 @@ namespace PacketDotNet.Tcp
         /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
-        public WindowScaleFactor(Byte[] bytes, Int32 offset, Int32 length) :
+        public WindowScaleFactor(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
-
-        #endregion
-
-
-        #region Properties
 
         /// <summary>
         /// The Window Scale Factor
@@ -69,16 +55,11 @@ namespace PacketDotNet.Tcp
         /// The multiplier is equal to 1 left-shifted by the ScaleFactor
         /// So a scale factor of 7 would equal 1 &lt;&lt; 7 = 128
         /// </summary>
-        public Byte ScaleFactor
+        public byte ScaleFactor
         {
             get => Bytes[ScaleFactorFieldOffset];
             set => Bytes[ScaleFactorFieldOffset] = value;
         }
-
-        #endregion
-
-
-        #region Methods
 
         /// <summary>
         /// Returns the Option info as a string
@@ -87,11 +68,9 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return "[" + Kind + ": ScaleFactor=" + ScaleFactor + " (multiply by " + (1 << ScaleFactor) + ")]";
         }
-
-        #endregion
     }
 }

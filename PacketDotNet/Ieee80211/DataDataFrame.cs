@@ -18,7 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet.Ieee80211
@@ -31,12 +30,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Initializes a new instance of the <see cref="DataDataFrame" /> class.
         /// </summary>
-        /// <param name='bas'>
-        /// Bas.
+        /// <param name="byteArraySegment">
+        /// byteArraySegment.
         /// </param>
-        public DataDataFrame(ByteArraySegment bas)
+        public DataDataFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -47,7 +46,7 @@ namespace PacketDotNet.Ieee80211
             var availablePayloadLength = GetAvailablePayloadLength();
             if (availablePayloadLength > 0)
             {
-                PayloadPacketOrData.Value.ByteArraySegment = Header.EncapsulatedBytes(availablePayloadLength);
+                PayloadPacketOrData.Value.ByteArraySegment = Header.NextSegment(availablePayloadLength);
             }
         }
 
@@ -70,7 +69,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The size of the frame.
         /// </value>
-        public sealed override Int32 FrameSize
+        public sealed override int FrameSize
         {
             get
             {
@@ -91,7 +90,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;

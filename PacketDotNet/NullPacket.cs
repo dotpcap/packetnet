@@ -19,14 +19,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Reflection;
 using System.Text;
 using System.Threading;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 #if DEBUG
 using log4net;
+using System.Reflection;
 #endif
 
 namespace PacketDotNet
@@ -49,23 +49,6 @@ namespace PacketDotNet
 #endif
 
         /// <summary>
-        /// See http://www.tcpdump.org/linktypes.html
-        /// </summary>
-        public NullPacketType Protocol
-        {
-            get => (NullPacketType) EndianBitConverter.Little.ToUInt32(Header.Bytes,
-                                                                       Header.Offset + NullFields.ProtocolPosition);
-
-            set
-            {
-                var val = (UInt32) value;
-                EndianBitConverter.Little.CopyBytes(val,
-                                                    Header.Bytes,
-                                                    Header.Offset + NullFields.ProtocolPosition);
-            }
-        }
-
-        /// <summary>
         /// Construct a new NullPacket from source and destination mac addresses
         /// </summary>
         public NullPacket(NullPacketType nullPacketType)
@@ -73,10 +56,9 @@ namespace PacketDotNet
             Log.Debug("");
 
             // allocate memory for this packet
-            const int offset = 0;
             var length = NullFields.HeaderLength;
-            var headerBytes = new Byte[length];
-            Header = new ByteArraySegment(headerBytes, offset, length);
+            var headerBytes = new byte[length];
+            Header = new ByteArraySegment(headerBytes, 0, length);
 
             // setup some typical values and default values
             Protocol = nullPacketType;
@@ -85,29 +67,48 @@ namespace PacketDotNet
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public NullPacket(ByteArraySegment bas)
+        public NullPacket(ByteArraySegment byteArraySegment)
         {
             Log.Debug("");
 
             // slice off the header portion as our header
             // ReSharper disable once UseObjectOrCollectionInitializer
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
             Header.Length = NullFields.HeaderLength;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, Protocol), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header, Protocol), LazyThreadSafetyMode.PublicationOnly);
         }
 
-        internal static PacketOrByteArraySegment ParseEncapsulatedBytes
+        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        public override string Color => AnsiEscapeSequences.LightPurple;
+
+        /// <summary>
+        /// See http://www.tcpdump.org/linktypes.html
+        /// </summary>
+        public NullPacketType Protocol
+        {
+            get => (NullPacketType) EndianBitConverter.Little.ToUInt32(Header.Bytes,
+                                                                       Header.Offset + NullFields.ProtocolPosition);
+            set
+            {
+                var val = (uint) value;
+                EndianBitConverter.Little.CopyBytes(val,
+                                                    Header.Bytes,
+                                                    Header.Offset + NullFields.ProtocolPosition);
+            }
+        }
+
+        internal static PacketOrByteArraySegment ParseNextSegment
         (
             ByteArraySegment header,
             NullPacketType protocol)
         {
             // slice off the payload
-            var payload = header.EncapsulatedBytes();
+            var payload = header.NextSegment();
 
             Log.DebugFormat("Protocol: {0}, payload: {1}", protocol, payload);
 
@@ -116,26 +117,29 @@ namespace PacketDotNet
             switch (protocol)
             {
                 case NullPacketType.IPv4:
+                {
                     payloadPacketOrData.Packet = new IPv4Packet(payload);
                     break;
+                }
                 case NullPacketType.IPv6:
                 case NullPacketType.IPv6_28:
                 case NullPacketType.IPv6_30:
+                {
                     payloadPacketOrData.Packet = new IPv6Packet(payload);
                     break;
+                }
                 //case NullPacketType.IPX:
                 default:
+                {
                     throw new NotImplementedException("Protocol of " + protocol + " is not implemented");
+                }
             }
 
             return payloadPacketOrData;
         }
 
-        /// <summary> Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override String Color => AnsiEscapeSequences.LightPurple;
-
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             buffer.Append(base.ToString(outputFormat));

@@ -28,7 +28,20 @@ namespace PacketDotNet.Tcp
     /// </summary>
     public abstract class Option
     {
-        #region Constructors
+        /// <summary>The length (in bytes) of the Kind field</summary>
+        internal const int KindFieldLength = 1;
+
+        /// <summary>The offset (in bytes) of the Kind Field</summary>
+        internal const int KindFieldOffset = 0;
+
+        /// <summary>The length (in bytes) of the Length field</summary>
+        internal const int LengthFieldLength = 1;
+
+        /// <summary>The offset (in bytes) of the Length field</summary>
+        internal const int LengthFieldOffset = 1;
+
+        // stores the data/length/offset of the option
+        protected readonly ByteArraySegment OptionData;
 
         /// <summary>
         /// Creates an Option from a byte[]
@@ -37,44 +50,32 @@ namespace PacketDotNet.Tcp
         /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
-        protected Option(Byte[] bytes, Int32 offset, Int32 length)
+        protected Option(byte[] bytes, int offset, int length)
         {
             OptionData = new ByteArraySegment(bytes, offset, length);
         }
 
-        #endregion
-
-
-        #region Methods
-
         /// <summary>
-        /// Returns the Option info as a string
+        /// Gets or sets a the underlying bytes.
         /// </summary>
-        /// <returns>
-        /// A <see cref="string" />
-        /// </returns>
-        public override String ToString()
+        public byte[] Bytes
         {
-            return "[" + Kind + "]";
-        }
-
-        #endregion
-
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets the length of the option.
-        /// </summary>
-        public virtual Byte Length
-        {
-            get => OptionData.Bytes[OptionData.Offset + LengthFieldOffset];
-            set => OptionData.Bytes[OptionData.Offset + LengthFieldOffset] = value;
+            get
+            {
+                var bytes = new byte[OptionData.Length];
+                Array.Copy(OptionData.Bytes, OptionData.Offset, bytes, 0, OptionData.Length);
+                return bytes;
+            }
+            set
+            {
+                for (var i = 0; i < value.Length; i++)
+                    OptionData.Bytes[OptionData.Offset + i] = value[i];
+            }
         }
 
         /// <summary>
@@ -82,48 +83,28 @@ namespace PacketDotNet.Tcp
         /// </summary>
         public OptionTypes Kind
         {
-            get => (OptionTypes)OptionData.Bytes[OptionData.Offset + KindFieldOffset];
-            set => OptionData.Bytes[OptionData.Offset + KindFieldOffset] = (byte)value;
+            get => (OptionTypes) OptionData.Bytes[OptionData.Offset + KindFieldOffset];
+            set => OptionData.Bytes[OptionData.Offset + KindFieldOffset] = (byte) value;
         }
 
         /// <summary>
-        /// Gets or sets a the underlying bytes.
+        /// Gets or sets the length of the option.
         /// </summary>
-        public Byte[] Bytes
+        public virtual byte Length
         {
-            get
-            {
-                var bytes = new Byte[OptionData.Length];
-                Array.Copy(OptionData.Bytes, OptionData.Offset, bytes, 0, OptionData.Length);
-                return bytes;
-            }
-            set
-            {
-                for (int i = 0; i < value.Length; i++)
-                    OptionData.Bytes[OptionData.Offset + i] = value[i];
-            }
+            get => OptionData.Bytes[OptionData.Offset + LengthFieldOffset];
+            set => OptionData.Bytes[OptionData.Offset + LengthFieldOffset] = value;
         }
 
-        #endregion
-
-
-        #region Members
-
-        // stores the data/length/offset of the option
-        protected readonly ByteArraySegment OptionData;
-
-        /// <summary>The length (in bytes) of the Kind field</summary>
-        internal const Int32 KindFieldLength = 1;
-
-        /// <summary>The length (in bytes) of the Length field</summary>
-        internal const Int32 LengthFieldLength = 1;
-
-        /// <summary>The offset (in bytes) of the Kind Field</summary>
-        internal const Int32 KindFieldOffset = 0;
-
-        /// <summary>The offset (in bytes) of the Length field</summary>
-        internal const Int32 LengthFieldOffset = 1;
-
-        #endregion
+        /// <summary>
+        /// Returns the Option info as a string
+        /// </summary>
+        /// <returns>
+        /// A <see cref="string" />
+        /// </returns>
+        public override string ToString()
+        {
+            return "[" + Kind + "]";
+        }
     }
 }

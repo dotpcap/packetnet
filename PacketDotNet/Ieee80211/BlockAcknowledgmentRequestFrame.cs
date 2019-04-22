@@ -18,10 +18,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
 using System.Net.NetworkInformation;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Ieee80211
 {
@@ -33,12 +32,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public BlockAcknowledgmentRequestFrame(ByteArraySegment bas)
+        public BlockAcknowledgmentRequestFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -85,17 +84,16 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The block ack starting sequence control field value
         /// </value>
-        public UInt16 BlockAckStartingSequenceControl { get; set; }
-
+        public ushort BlockAckStartingSequenceControl { get; set; }
 
         /// <summary>
         /// Length of the frame
         /// </summary>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 2) +
-                                           BlockAckRequestFields.BlockAckRequestControlLength +
-                                           BlockAckRequestFields.BlockAckStartingSequenceControlLength;
+        public override int FrameSize => MacFields.FrameControlLength +
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 2) +
+                                         BlockAcknowledgmentRequestFields.BlockAckRequestControlLength +
+                                         BlockAcknowledgmentRequestFields.BlockAckStartingSequenceControlLength;
 
         /// <summary>
         /// Receiver address
@@ -110,24 +108,23 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Block acknowledgment control bytes are the first two bytes of the frame
         /// </summary>
-        private UInt16 BlockAckRequestControlBytes
+        private ushort BlockAckRequestControlBytes
         {
             get
             {
                 if (Header.Length >=
-                    BlockAckRequestFields.BlockAckRequestControlPosition +
-                    BlockAckRequestFields.BlockAckRequestControlLength)
+                    BlockAcknowledgmentRequestFields.BlockAckRequestControlPosition +
+                    BlockAcknowledgmentRequestFields.BlockAckRequestControlLength)
                 {
                     return EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                              Header.Offset + BlockAckRequestFields.BlockAckRequestControlPosition);
+                                                              Header.Offset + BlockAcknowledgmentRequestFields.BlockAckRequestControlPosition);
                 }
 
                 return 0;
             }
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
-                                                       Header.Offset + BlockAckRequestFields.BlockAckRequestControlPosition);
+                                                       Header.Offset + BlockAcknowledgmentRequestFields.BlockAckRequestControlPosition);
         }
 
         /// <summary>
@@ -136,24 +133,23 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The block ack starting sequence control.
         /// </value>
-        private UInt16 BlockAckStartingSequenceControlBytes
+        private ushort BlockAckStartingSequenceControlBytes
         {
             get
             {
                 if (Header.Length >=
-                    BlockAckRequestFields.BlockAckStartingSequenceControlPosition +
-                    BlockAckRequestFields.BlockAckStartingSequenceControlLength)
+                    BlockAcknowledgmentRequestFields.BlockAckStartingSequenceControlPosition +
+                    BlockAcknowledgmentRequestFields.BlockAckStartingSequenceControlLength)
                 {
                     return EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                              Header.Offset + BlockAckRequestFields.BlockAckStartingSequenceControlPosition);
+                                                              Header.Offset + BlockAcknowledgmentRequestFields.BlockAckStartingSequenceControlPosition);
                 }
 
                 return 0;
             }
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
-                                                       Header.Offset + BlockAckRequestFields.BlockAckStartingSequenceControlPosition);
+                                                       Header.Offset + BlockAcknowledgmentRequestFields.BlockAckStartingSequenceControlPosition);
         }
 
         /// <summary>
@@ -163,7 +159,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;
@@ -179,12 +175,12 @@ namespace PacketDotNet.Ieee80211
 
         /// <summary>
         /// Returns a string with a description of the addresses used in the packet.
-        /// This is used as a compoent of the string returned by ToString().
+        /// This is used as a component of the string returned by ToString().
         /// </summary>
         /// <returns>
         /// The address string.
         /// </returns>
-        protected override String GetAddressString()
+        protected override string GetAddressString()
         {
             return $"RA {ReceiverAddress} TA {TransmitterAddress}";
         }

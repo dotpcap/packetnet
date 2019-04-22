@@ -1,5 +1,3 @@
-#region Header
-
 /*
 This file is part of PacketDotNet
 
@@ -20,10 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2011 David Thedens <dthedens@metageek.net>
  */
 
-#endregion Header
-
-
-using System;
 using System.IO;
 
 namespace PacketDotNet.Ieee80211
@@ -33,57 +27,13 @@ namespace PacketDotNet.Ieee80211
     /// </summary>
     public abstract class PpiFields
     {
-        #region Public Methods
-
         /// <summary>
-        /// Parse a PPI indicated by type, from a given BinaryReader
+        /// Gets the field bytes. This doesn't include the PPI field header.
         /// </summary>
-        /// <param name="fieldType">
-        /// A <see cref="System.Int32" />
-        /// </param>
-        /// <param name="br">
-        /// A <see cref="BinaryReader" />
-        /// </param>
-        /// <param name="fieldLength">
-        /// The maximum number of bytes that the field to be parsed can encompass.
-        /// </param>
-        /// <returns>
-        /// A <see cref="PpiFields" />
-        /// </returns>
-        public static PpiFields Parse(Int32 fieldType, BinaryReader br, UInt16 fieldLength)
-        {
-            var type = (PpiFieldType) fieldType;
-            switch (type)
-            {
-                case PpiFieldType.PpiReserved0:
-                    return new PpiUnknown(fieldType, br, fieldLength);
-                case PpiFieldType.PpiReserved1:
-                    return new PpiUnknown(fieldType, br, fieldLength);
-                case PpiFieldType.PpiCommon:
-                    return new PpiCommon(br);
-                case PpiFieldType.PpiMacExtensions:
-                    return new PpiMacExtensions(br);
-                case PpiFieldType.PpiMacPhy:
-                    return new PpiMacPhy(br);
-                case PpiFieldType.PpiSpectrum:
-                    return new PpiSpectrum(br);
-                case PpiFieldType.PpiProcessInfo:
-                    return new PpiProcessInfo(br);
-                case PpiFieldType.PpiCaptureInfo:
-                    return new PpiCaptureInfo();
-                case PpiFieldType.PpiAggregation:
-                    return new PpiAggregation(br);
-                case PpiFieldType.Ppi802_3:
-                    return new Ppi8023(br);
-                default:
-                    return new PpiUnknown(fieldType, br, fieldLength);
-            }
-        }
-
-        #endregion Public Methods
-
-
-        #region Properties
+        /// <value>
+        /// The bytes.
+        /// </value>
+        public abstract byte[] Bytes { get; }
 
         /// <summary>Type of the field</summary>
         public abstract PpiFieldType FieldType { get; }
@@ -94,16 +44,73 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public abstract Int32 Length { get; }
+        public abstract int Length { get; }
 
         /// <summary>
-        /// Gets the field bytes. This doesn't include the PPI field header.
+        /// Parse a PPI indicated by type, from a given BinaryReader
         /// </summary>
-        /// <value>
-        /// The bytes.
-        /// </value>
-        public abstract Byte[] Bytes { get; }
-
-        #endregion Properties
+        /// <param name="fieldType">
+        /// A <see cref="int" />
+        /// </param>
+        /// <param name="br">
+        /// A <see cref="BinaryReader" />
+        /// </param>
+        /// <param name="fieldLength">
+        /// The maximum number of bytes that the field to be parsed can encompass.
+        /// </param>
+        /// <returns>
+        /// A <see cref="PpiFields" />
+        /// </returns>
+        public static PpiFields Parse(int fieldType, BinaryReader br, ushort fieldLength)
+        {
+            var type = (PpiFieldType) fieldType;
+            switch (type)
+            {
+                case PpiFieldType.PpiReserved0:
+                {
+                    return new PpiUnknown(fieldType, br, fieldLength);
+                }
+                case PpiFieldType.PpiReserved1:
+                {
+                    return new PpiUnknown(fieldType, br, fieldLength);
+                }
+                case PpiFieldType.PpiCommon:
+                {
+                    return new PpiCommon(br);
+                }
+                case PpiFieldType.PpiMacExtensions:
+                {
+                    return new PpiMacExtensions(br);
+                }
+                case PpiFieldType.PpiMacPhy:
+                {
+                    return new PpiMacPhy(br);
+                }
+                case PpiFieldType.PpiSpectrum:
+                {
+                    return new PpiSpectrum(br);
+                }
+                case PpiFieldType.PpiProcessInfo:
+                {
+                    return new PpiProcessInfo(br);
+                }
+                case PpiFieldType.PpiCaptureInfo:
+                {
+                    return new PpiCaptureInfo();
+                }
+                case PpiFieldType.PpiAggregation:
+                {
+                    return new PpiAggregation(br);
+                }
+                case PpiFieldType.Ppi802_3:
+                {
+                    return new Ppi8023(br);
+                }
+                default:
+                {
+                    return new PpiUnknown(fieldType, br, fieldLength);
+                }
+            }
+        }
     }
 }

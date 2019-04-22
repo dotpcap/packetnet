@@ -24,10 +24,10 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using System.Reflection;
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -203,7 +203,7 @@ namespace PacketDotNet
         /// <summary>
         /// Packet that this packet carries if one is present.
         /// </summary>
-        /// <remarks>The packet MAY have a null <see cref="PayloadPacket"/> but a non-null <see cref="PayloadData"/>.</remarks>
+        /// <remarks>The packet MAY have a null <see cref="PayloadPacket" /> but a non-null <see cref="PayloadData" />.</remarks>
         public virtual Packet PayloadPacket
         {
             get => PayloadPacketOrData.Value.Packet;
@@ -513,9 +513,9 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Extracts a packet of <see cref="T"/>, or the current packet if it's <see cref="T"/>, or <c>null</c> if it isn't found.
+        /// Extracts a packet of <see cref="T" />, or the current packet if it's <see cref="T" />, or <c>null</c> if it isn't found.
         /// </summary>
-        /// <returns>The packet of type <see cref="T"/>.</returns>
+        /// <returns>The packet of type <see cref="T" />.</returns>
         public T Extract<T>() where T : Packet
         {
             var t = this;

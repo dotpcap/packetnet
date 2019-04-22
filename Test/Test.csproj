@@ -51,7 +51,7 @@
     <Compile Include="EndianBinaryWriter.cs" />
     <Compile Include="Misc\ByteArraySegmentTest.cs" />
     <Compile Include="PacketType\DrdaPacketTest.cs" />
-    <Compile Include="PacketType\L2TPPacketTest.cs" />
+    <Compile Include="PacketType\L2tpPacketTest.cs" />
     <Compile Include="PacketType\Ieee80211\CapabilityInformationFieldTest.cs" />
     <Compile Include="PacketType\Ieee80211\ActionFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211\BlockAcknowledgmentFrameTest.cs" />

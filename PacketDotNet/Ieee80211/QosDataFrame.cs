@@ -24,6 +24,7 @@ using PacketDotNet.Utils.Converters;
 #if DEBUG
 using log4net;
 using System.Reflection;
+
 #endif
 
 namespace PacketDotNet.Ieee80211

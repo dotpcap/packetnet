@@ -202,6 +202,6 @@ namespace PacketDotNet
         SqlStatementVariableDescriptions = 0x2419,
         QueryAnswerSetDescription = 0x241A,
         QueryAnswerSetData = 0x241B,
-        SqlStatementAttributes = 0x2450,
+        SqlStatementAttributes = 0x2450
     }
 }

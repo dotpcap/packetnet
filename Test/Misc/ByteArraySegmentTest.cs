@@ -30,15 +30,15 @@ namespace Test.Misc
         [Test]
         public void TestByteArraySegment()
         {
-            byte[] data = new byte[20];
-            for(int i = 0; i < data.Length; i++)
+            var data = new byte[20];
+            for (var i = 0; i < data.Length; i++)
             {
-                data[i] = (byte)i;
+                data[i] = (byte) i;
             }
 
             var byteArraySegment = new ByteArraySegment(data);
             Assert.AreEqual(byteArraySegment.Length, data.Length);
-            for (int i = 0; i < 20; i++)
+            for (var i = 0; i < 20; i++)
                 Assert.AreEqual(byteArraySegment[i], i);
 
             Assert.Throws<ArgumentOutOfRangeException>(() =>

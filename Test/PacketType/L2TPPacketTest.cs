@@ -20,8 +20,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
-using SharpPcap.LibPcap;
 using PacketDotNet;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -37,7 +37,7 @@ namespace Test.PacketType
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Assert.IsNotNull(p);
 
@@ -45,6 +45,6 @@ namespace Test.PacketType
             Assert.AreEqual(l2tp.TunnelID, 18994);
             Assert.AreEqual(l2tp.SessionID, 54110);
             Console.WriteLine(l2tp.GetType());
-        }        
+        }
     }
 }

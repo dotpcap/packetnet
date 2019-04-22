@@ -19,38 +19,73 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using NUnit.Framework;
-using SharpPcap.LibPcap;
-using PacketDotNet;
-using SharpPcap;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using NUnit.Framework;
+using PacketDotNet;
+using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
     [TestFixture]
     public class IPPacketTest
     {
-        /// <summary>
-        /// Test that parsing an ip packet yields the proper field values
-        /// </summary>
         [Test]
-        public void IpPacketFields()
+        public void BinarySerialization()
         {
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
-            var rawCapture = dev.GetNextPacket();
+
+            RawCapture rawCapture;
+            var foundip = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var ip = p.Extract<IPPacket>();
+                if (ip == null)
+                {
+                    continue;
+                }
+
+                foundip = true;
+
+                var memoryStream = new MemoryStream();
+                var serializer = new BinaryFormatter();
+                serializer.Serialize(memoryStream, ip);
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                var deserializer = new BinaryFormatter();
+                var fromFile = (IPPacket) deserializer.Deserialize(memoryStream);
+
+                Assert.AreEqual(ip.Bytes, fromFile.Bytes);
+                Assert.AreEqual(ip.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(ip.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(ip.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(ip.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(ip.BytesSegment.Offset, fromFile.BytesSegment.Offset);
+                Assert.AreEqual(ip.Color, fromFile.Color);
+                Assert.AreEqual(ip.HeaderData, fromFile.HeaderData);
+                Assert.AreEqual(ip.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(ip.DestinationAddress, fromFile.DestinationAddress);
+                Assert.AreEqual(ip.HeaderLength, fromFile.HeaderLength);
+                Assert.AreEqual(ip.HopLimit, fromFile.HopLimit);
+                Assert.AreEqual(ip.PayloadLength, fromFile.PayloadLength);
+                Assert.AreEqual(ip.Protocol, fromFile.Protocol);
+                Assert.AreEqual(ip.SourceAddress, fromFile.SourceAddress);
+                Assert.AreEqual(ip.TimeToLive, fromFile.TimeToLive);
+                Assert.AreEqual(ip.TotalLength, fromFile.TotalLength);
+                Assert.AreEqual(ip.Version, fromFile.Version);
+
+                //Method Invocations to make sure that a deserialized packet does not cause 
+                //additional errors.
+
+                ip.PrintHex();
+                ip.UpdateCalculatedValues();
+            }
+
             dev.Close();
-
-            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-            Assert.IsNotNull(p);
-
-            var ip = p.Extract<IPPacket>();
-            Console.WriteLine(ip.GetType());
-
-            Assert.AreEqual(20, ip.HeaderData.Length, "Header.Length doesn't match expected length");
-            Console.WriteLine(ip.ToString());
+            Assert.IsTrue(foundip, "Capture file contained no ip packets");
         }
 
         [Test]
@@ -97,61 +132,27 @@ namespace Test.PacketType
             Assert.AreEqual(5060, udpPacket.DestinationPort, "We should have extracted the correct destination port");
             Assert.AreEqual(5060, udpPacket.SourcePort, "We should have extracted the correct source port");
         }
+
+        /// <summary>
+        /// Test that parsing an ip packet yields the proper field values
+        /// </summary>
         [Test]
-        public void BinarySerialization()
+        public void IpPacketFields()
         {
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
             dev.Open();
-
-            RawCapture rawCapture;
-            bool foundip = false;
-            while ((rawCapture = dev.GetNextPacket()) != null)
-            {
-                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var ip = p.Extract<IPPacket>();
-                if (ip == null)
-                {
-                    continue;
-                }
-                foundip = true;
-
-                var memoryStream = new MemoryStream();
-                BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, ip);
-
-                memoryStream.Seek (0, SeekOrigin.Begin);
-                BinaryFormatter deserializer = new BinaryFormatter();
-                IPPacket fromFile = (IPPacket)deserializer.Deserialize(memoryStream);
-
-                Assert.AreEqual(ip.Bytes, fromFile.Bytes);
-                Assert.AreEqual(ip.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
-                Assert.AreEqual(ip.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
-                Assert.AreEqual(ip.BytesSegment.Length, fromFile.BytesSegment.Length);
-                Assert.AreEqual(ip.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
-                Assert.AreEqual(ip.BytesSegment.Offset, fromFile.BytesSegment.Offset);
-                Assert.AreEqual(ip.Color, fromFile.Color);
-                Assert.AreEqual(ip.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(ip.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(ip.DestinationAddress, fromFile.DestinationAddress);
-                Assert.AreEqual(ip.HeaderLength, fromFile.HeaderLength);
-                Assert.AreEqual(ip.HopLimit, fromFile.HopLimit);
-                Assert.AreEqual(ip.PayloadLength, fromFile.PayloadLength);
-                Assert.AreEqual(ip.Protocol, fromFile.Protocol);
-                Assert.AreEqual(ip.SourceAddress, fromFile.SourceAddress);
-                Assert.AreEqual(ip.TimeToLive, fromFile.TimeToLive);
-                Assert.AreEqual(ip.TotalLength, fromFile.TotalLength);
-                Assert.AreEqual(ip.Version, fromFile.Version);
-
-                //Method Invocations to make sure that a deserialized packet does not cause 
-                //additional errors.
-
-                ip.PrintHex();
-                ip.UpdateCalculatedValues();
-            }
-
+            var rawCapture = dev.GetNextPacket();
             dev.Close();
-            Assert.IsTrue(foundip, "Capture file contained no ip packets");
+
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+            Assert.IsNotNull(p);
+
+            var ip = p.Extract<IPPacket>();
+            Console.WriteLine(ip.GetType());
+
+            Assert.AreEqual(20, ip.HeaderData.Length, "Header.Length doesn't match expected length");
+            Console.WriteLine(ip.ToString());
         }
-    
     }
 }

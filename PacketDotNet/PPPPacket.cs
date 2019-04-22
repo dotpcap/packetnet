@@ -27,6 +27,7 @@ using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -107,7 +108,7 @@ namespace PacketDotNet
         /// </summary>
         /// <param name="header">The header.</param>
         /// <param name="protocol">The protocol.</param>
-        /// <returns><see cref="PacketOrByteArraySegment"/>.</returns>
+        /// <returns><see cref="PacketOrByteArraySegment" />.</returns>
         private static PacketOrByteArraySegment ParseNextSegment
         (
             ByteArraySegment header,

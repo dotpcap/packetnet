@@ -19,41 +19,63 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using NUnit.Framework;
-using SharpPcap;
-using SharpPcap.LibPcap;
-using PacketDotNet;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using NUnit.Framework;
+using PacketDotNet;
+using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
     [TestFixture]
     public class IcmpV6PacketTest
     {
-        /// <summary>
-        /// Test that we can parse a icmp v4 request and reply
-        /// </summary>
         [Test]
-        public void IcmpV6Parsing ()
+        public void BinarySerialization()
         {
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
             dev.Open();
-            var rawCapture = dev.GetNextPacket();
+
+            RawCapture rawCapture;
+            var foundicmpv6 = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var icmpv6 = p.Extract<IcmpV6Packet>();
+                if (icmpv6 == null)
+                {
+                    continue;
+                }
+
+                foundicmpv6 = true;
+
+                Stream outFile = File.Create("icmpv6.dat");
+                var serializer = new BinaryFormatter();
+                serializer.Serialize(outFile, icmpv6);
+                outFile.Close();
+
+                Stream inFile = File.OpenRead("icmpv6.dat");
+                var deserializer = new BinaryFormatter();
+                var fromFile = (IcmpV6Packet) deserializer.Deserialize(inFile);
+                inFile.Close();
+
+                Assert.AreEqual(icmpv6.Bytes, fromFile.Bytes);
+                Assert.AreEqual(icmpv6.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(icmpv6.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(icmpv6.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(icmpv6.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(icmpv6.BytesSegment.Offset, fromFile.BytesSegment.Offset);
+                Assert.AreEqual(icmpv6.Checksum, fromFile.Checksum);
+                Assert.AreEqual(icmpv6.Color, fromFile.Color);
+                Assert.AreEqual(icmpv6.HeaderData, fromFile.HeaderData);
+                Assert.AreEqual(icmpv6.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(icmpv6.Code, fromFile.Code);
+                Assert.AreEqual(icmpv6.Type, fromFile.Type);
+            }
+
             dev.Close();
-
-            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-            Assert.IsNotNull(p);
-
-            var icmpv6 = p.Extract<IcmpV6Packet>();
-            Console.WriteLine(icmpv6.GetType());
-
-            Assert.AreEqual(IcmpV6Types.RouterSolicitation, icmpv6.Type);
-            Assert.AreEqual(0, icmpv6.Code);
-            Assert.AreEqual(0x5d50, icmpv6.Checksum);
-
-            // Payload differs based on the icmp.Type field
+            Assert.IsTrue(foundicmpv6, "Capture file contained no icmpv6 packets");
         }
 
         /// <summary>
@@ -67,7 +89,7 @@ namespace Test.PacketType
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             // save the checksum
             var icmpv6 = p.Extract<IcmpV6Packet>();
@@ -84,15 +106,39 @@ namespace Test.PacketType
             Assert.AreEqual(savedChecksum, icmpv6.Checksum);
         }
 
+        /// <summary>
+        /// Test that we can parse a icmp v4 request and reply
+        /// </summary>
+        [Test]
+        public void IcmpV6Parsing()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
+            dev.Open();
+            var rawCapture = dev.GetNextPacket();
+            dev.Close();
+
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+            Assert.IsNotNull(p);
+
+            var icmpv6 = p.Extract<IcmpV6Packet>();
+            Console.WriteLine(icmpv6.GetType());
+
+            Assert.AreEqual(IcmpV6Types.RouterSolicitation, icmpv6.Type);
+            Assert.AreEqual(0, icmpv6.Code);
+            Assert.AreEqual(0x5d50, icmpv6.Checksum);
+
+            // Payload differs based on the icmp.Type field
+        }
+
         [Test]
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
             dev.Open();
-            RawCapture rawCapture;
             Console.WriteLine("Reading packet data");
-            rawCapture = dev.GetNextPacket();
+            var rawCapture = dev.GetNextPacket();
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
@@ -108,9 +154,8 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
             dev.Open();
-            RawCapture rawCapture;
             Console.WriteLine("Reading packet data");
-            rawCapture = dev.GetNextPacket();
+            var rawCapture = dev.GetNextPacket();
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
@@ -119,59 +164,5 @@ namespace Test.PacketType
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(icmpV6.ToString(StringOutputType.Verbose));
         }
-        [Test]
-        public void BinarySerialization()
-        {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
-            dev.Open();
-
-            RawCapture rawCapture;
-            bool foundicmpv6 = false;
-            while ((rawCapture = dev.GetNextPacket()) != null)
-            {
-
-                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var icmpv6 = p.Extract<IcmpV6Packet>();
-                if (icmpv6 == null)
-                {
-                    continue;
-                }
-                foundicmpv6 = true;
-
-                Stream outFile = File.Create("icmpv6.dat");
-                BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(outFile, icmpv6);
-                outFile.Close();
-
-                Stream inFile = File.OpenRead("icmpv6.dat");
-                BinaryFormatter deserializer = new BinaryFormatter();
-                IcmpV6Packet fromFile = (IcmpV6Packet)deserializer.Deserialize(inFile);
-                inFile.Close();
-
-
-                Assert.AreEqual(icmpv6.Bytes, fromFile.Bytes);
-                Assert.AreEqual(icmpv6.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
-                Assert.AreEqual(icmpv6.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
-                Assert.AreEqual(icmpv6.BytesSegment.Length, fromFile.BytesSegment.Length);
-                Assert.AreEqual(icmpv6.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
-                Assert.AreEqual(icmpv6.BytesSegment.Offset, fromFile.BytesSegment.Offset);
-                Assert.AreEqual(icmpv6.Checksum, fromFile.Checksum);
-                Assert.AreEqual(icmpv6.Color, fromFile.Color);
-                Assert.AreEqual(icmpv6.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(icmpv6.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(icmpv6.Code, fromFile.Code);
-                Assert.AreEqual(icmpv6.Type, fromFile.Type);
-
-
-
-            }
-
-            dev.Close();
-            Assert.IsTrue(foundicmpv6, "Capture file contained no icmpv6 packets");
-
-
-        }
-    
     }
 }
-

@@ -8,11 +8,15 @@ namespace Test
     public class Rate
     {
         private readonly TimeSpan _elapsed;
-        private readonly string _eventType;
         private readonly int _eventCount;
+        private readonly string _eventType;
 
-        public Rate(DateTime start, DateTime end,
-                    int eventCount, string eventType)
+        public Rate
+        (
+            DateTime start,
+            DateTime end,
+            int eventCount,
+            string eventType)
         {
             _elapsed = end - start;
             _eventCount = eventCount;
@@ -22,9 +26,9 @@ namespace Test
         /// <value>
         /// Returns the rate in terms of events per second
         /// </value>
-        public double RatePerSecond => _eventCount / (double)_elapsed.Ticks * TimeSpan.TicksPerSecond;
+        public double RatePerSecond => _eventCount / (double) _elapsed.Ticks * TimeSpan.TicksPerSecond;
 
-        public override string ToString ()
+        public override string ToString()
         {
             return $" {_eventCount,10} {_eventType} at a rate of {RatePerSecond,12:n} / second ({_elapsed} seconds elapsed)";
         }

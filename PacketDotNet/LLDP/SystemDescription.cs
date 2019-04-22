@@ -20,10 +20,10 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-
 #if DEBUG
 using System.Reflection;
 using log4net;
+
 #endif
 
 namespace PacketDotNet.Lldp

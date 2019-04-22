@@ -22,10 +22,10 @@ using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
-
 #if DEBUG
 using log4net;
 using System.Reflection;
+
 #endif
 
 namespace PacketDotNet
@@ -78,9 +78,9 @@ namespace PacketDotNet
         public DrdaCodePointType CodePoint => (DrdaCodePointType) EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDdmFields.CodePointPosition);
 
         /// <summary>
-        /// The CorrelId field
+        /// The correlation Id field
         /// </summary>
-        public ushort CorrelId => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDdmFields.CorrelIdPosition);
+        public ushort CorrelationId => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + DrdaDdmFields.CorrelationIdPosition);
 
         /// <summary>
         /// The Format field
@@ -171,13 +171,13 @@ namespace PacketDotNet
             if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
             {
                 // build the output string
-                buffer.AppendFormat("{0}[DrdaDdmPacket: Length={2}, Magic=0x{3:x2}, Format=0x{4:x2}, CorrelId={5}, Length2={6}, CodePoint={7}]{1}",
+                buffer.AppendFormat("{0}[DrdaDdmPacket: Length={2}, Magic=0x{3:x2}, Format=0x{4:x2}, CorrelationId={5}, Length2={6}, CodePoint={7}]{1}",
                                     color,
                                     colorEscape,
                                     Length,
                                     Magic,
                                     Format,
-                                    CorrelId,
+                                    CorrelationId,
                                     Length2,
                                     CodePoint);
 

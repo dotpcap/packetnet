@@ -11,31 +11,6 @@ namespace Test
     /// </summary>
     public class EndianBinaryWriter : IDisposable
     {
-        #region IDisposable Members
-
-        /// <summary>
-        /// Disposes of the underlying stream.
-        /// </summary>
-        public void Dispose()
-        {
-            if (!_disposed)
-            {
-                Flush();
-                _disposed = true;
-                ((IDisposable) BaseStream).Dispose();
-            }
-        }
-
-        #endregion
-
-
-        #region Fields not directly related to properties
-
-        /// <summary>
-        /// Whether or not this writer has been disposed yet.
-        /// </summary>
-        private bool _disposed;
-
         /// <summary>
         /// Buffer used for temporary storage during conversion from primitives
         /// </summary>
@@ -46,10 +21,10 @@ namespace Test
         /// </summary>
         private readonly char[] _charBuffer = new char[1];
 
-        #endregion
-
-
-        #region Constructors
+        /// <summary>
+        /// Whether or not this writer has been disposed yet.
+        /// </summary>
+        private bool _disposed;
 
         /// <summary>
         /// Constructs a new binary writer with the given bit converter, writing
@@ -75,7 +50,6 @@ namespace Test
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
 
-
             if (!stream.CanWrite)
                 throw new ArgumentException("Stream isn't writable", nameof(stream));
 
@@ -85,10 +59,10 @@ namespace Test
             Encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
         }
 
-        #endregion
-
-
-        #region Properties
+        /// <summary>
+        /// Gets the underlying stream of the EndianBinaryWriter.
+        /// </summary>
+        public Stream BaseStream { get; }
 
         /// <summary>
         /// The bit converter used to write values to the stream
@@ -101,14 +75,17 @@ namespace Test
         public Encoding Encoding { get; }
 
         /// <summary>
-        /// Gets the underlying stream of the EndianBinaryWriter.
+        /// Disposes of the underlying stream.
         /// </summary>
-        public Stream BaseStream { get; }
-
-        #endregion
-
-
-        #region Public methods
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                Flush();
+                _disposed = true;
+                ((IDisposable) BaseStream).Dispose();
+            }
+        }
 
         /// <summary>
         /// Closes the writer, including the underlying stream.
@@ -363,11 +340,6 @@ namespace Test
             BaseStream.Write(_buffer, 0, index);
         }
 
-        #endregion
-
-
-        #region Private methods
-
         /// <summary>
         /// Checks whether or not the writer has been disposed, throwing an exception if so.
         /// </summary>
@@ -390,7 +362,5 @@ namespace Test
             CheckDisposed();
             BaseStream.Write(bytes, 0, length);
         }
-
-        #endregion
     }
 }

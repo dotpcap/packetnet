@@ -16,8 +16,8 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using NUnit.Framework;
-using SharpPcap.LibPcap;
 using PacketDotNet;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -32,26 +32,25 @@ namespace Test.PacketType
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            Packet ethernetPacket = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var ethernetPacket = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
             Assert.IsNotNull(ethernetPacket);
             Assert.AreEqual(typeof(EthernetPacket), ethernetPacket.GetType());
 
-            Packet ip4Packet = ethernetPacket.PayloadPacket;
+            var ip4Packet = ethernetPacket.PayloadPacket;
             Assert.IsNotNull(ip4Packet);
             Assert.AreEqual(typeof(IPv4Packet), ip4Packet.GetType());
 
-            Packet udpPacket = ip4Packet.PayloadPacket;
+            var udpPacket = ip4Packet.PayloadPacket;
             Assert.IsNotNull(udpPacket);
             Assert.AreEqual(typeof(UdpPacket), udpPacket.GetType());
 
-            Packet tunneledIp6Packet = udpPacket.PayloadPacket;
+            var tunneledIp6Packet = udpPacket.PayloadPacket;
             Assert.IsNotNull(tunneledIp6Packet);
             Assert.AreEqual(typeof(IPv6Packet), tunneledIp6Packet.GetType());
 
-            Packet tunneledTcpPacket = tunneledIp6Packet.PayloadPacket;
+            var tunneledTcpPacket = tunneledIp6Packet.PayloadPacket;
             Assert.IsNotNull(tunneledTcpPacket);
             Assert.AreEqual(typeof(IcmpV6Packet), tunneledTcpPacket.GetType());
-
         }
     }
 }

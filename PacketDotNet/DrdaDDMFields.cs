@@ -36,14 +36,14 @@ namespace PacketDotNet
         public static readonly int CodePointPosition;
 
         /// <summary>
-        /// Length of the CorrelId field in bytes.
+        /// Length of the CorrelationId field in bytes.
         /// </summary>
-        public static readonly int CorrelIdLength = 2;
+        public static readonly int CorrelationIdLength = 2;
 
         /// <summary>
-        /// Position of the CorrlId field
+        /// Position of the CorrelationId field
         /// </summary>
-        public static readonly int CorrelIdPosition;
+        public static readonly int CorrelationIdPosition;
 
         /// <summary>
         /// Total Length for DDM Head
@@ -104,8 +104,8 @@ namespace PacketDotNet
         {
             MagicPosition = LengthPosition + LengthLength;
             FormatPosition = MagicPosition + MagicLength;
-            CorrelIdPosition = FormatPosition + FormatLength;
-            Length2Position = CorrelIdPosition + CorrelIdLength;
+            CorrelationIdPosition = FormatPosition + FormatLength;
+            Length2Position = CorrelationIdPosition + CorrelationIdLength;
             CodePointPosition = Length2Position + Length2Length;
             DDMHeadTotalLength = CodePointPosition + CodePointLength;
         }

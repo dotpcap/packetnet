@@ -17,8 +17,10 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 /*
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
+
 using System;
 using System.Collections.Generic;
+using log4net.Core;
 using NUnit.Framework;
 using PacketDotNet;
 
@@ -36,12 +38,14 @@ namespace Test.Misc
         private class FileAndPacketIndexes
         {
             public readonly string Filename;
-            public readonly List<int> PacketIndexes;
             public readonly List<string> PacketDescription;
+            public readonly List<int> PacketIndexes;
 
-            public FileAndPacketIndexes(string filename,
-                                        List<int> packetIndexes,
-                                        List<string> packetDescription)
+            public FileAndPacketIndexes
+            (
+                string filename,
+                List<int> packetIndexes,
+                List<string> packetDescription)
             {
                 Filename = filename;
                 PacketIndexes = packetIndexes;
@@ -68,24 +72,27 @@ namespace Test.Misc
 
             // ethernet arp request and response
             FilePacketIndexes.Add(new FileAndPacketIndexes(prefix + "arp_request_response.pcap",
-                                                              new List<int>(new int[] {0, 1}),
-                                                              new List<string>(new string[] { "ethernet arp request",
-                                                                                              "ethernet arp response"})));
+                                                           new List<int>(new[] { 0, 1 }),
+                                                           new List<string>(new[]
+                                                           {
+                                                               "ethernet arp request",
+                                                               "ethernet arp response"
+                                                           })));
 
             // linux cooked capture, ipv4, tcp
             FilePacketIndexes.Add(new FileAndPacketIndexes(prefix + "LinuxCookedCapture.pcap",
-                                                              new List<int>(new int[] {2}),
-                                                              new List<string>(new string[] { "linux cooked capture, ipv4, tcp"})));
+                                                           new List<int>(new[] { 2 }),
+                                                           new List<string>(new[] { "linux cooked capture, ipv4, tcp" })));
 
             // ethernet, ipv6, icmpv6
             FilePacketIndexes.Add(new FileAndPacketIndexes(prefix + "ipv6_icmpv6_packet.pcap",
-                                                              new List<int>(new int[] {0}),
-                                                              new List<string>(new string[] { "ethernet, ipv6, icmpv6"})));
+                                                           new List<int>(new[] { 0 }),
+                                                           new List<string>(new[] { "ethernet, ipv6, icmpv6" })));
 
             // ethernet, PPPoE, PPP, ipv4, udp
             FilePacketIndexes.Add(new FileAndPacketIndexes(prefix + "PPPoEPPP.pcap",
-                                                              new List<int>(new int[] {1}),
-                                                              new List<string>(new string[] { "ethernet, PPPoE, PPP, ipv4, udp"})));
+                                                           new List<int>(new[] { 1 }),
+                                                           new List<string>(new[] { "ethernet, PPPoE, PPP, ipv4, udp" })));
 
             ExpectedTotalPackets = 5;
         }
@@ -111,67 +118,70 @@ namespace Test.Misc
 
         private static Packet GetNextPacket()
         {
-            if(_currentFapi != null)
+            if (_currentFapi != null)
             {
                 Log.DebugFormat("currentFAPI.PacketIndexes.Count {0}," +
                                 "currentPacketIndex {1}",
                                 _currentFapi.PacketIndexes.Count,
                                 _currentPacketIndex);
-            } else
+            }
+            else
             {
                 Log.Debug("currentFAPI is null");
             }
+
             // do we need to open a file up or are we done with the current file?
-            if((_packetFileName == null) ||
-               (_currentFapi == null) ||
-               (_currentFapi.PacketIndexes.Count == _currentPacketIndex))
+            if ((_packetFileName == null) ||
+                (_currentFapi == null) ||
+                (_currentFapi.PacketIndexes.Count == _currentPacketIndex))
             {
                 Log.Debug("opening a new file up");
 
                 // close the open device if there was one
-                if(_captureFileReader != null)
+                if (_captureFileReader != null)
                 {
                     _captureFileReader.Close();
                     _captureFileReader = null;
                 }
 
                 // do we have any more files to process?
-                if(_fileAndPacketIndex >= FilePacketIndexes.Count)
+                if (_fileAndPacketIndex >= FilePacketIndexes.Count)
                 {
                     Log.DebugFormat("totalPacketsReturned {0}, expectedTotalPackets {1}",
                                     _totalPacketsReturned,
                                     ExpectedTotalPackets);
 
-                    Assert.AreEqual(ExpectedTotalPackets, _totalPacketsReturned,
-                                   "expectedTotalPackets does not match totalPacketsReturned");
+                    Assert.AreEqual(ExpectedTotalPackets,
+                                    _totalPacketsReturned,
+                                    "expectedTotalPackets does not match totalPacketsReturned");
 
                     return null;
-                } else
+                }
+
+                _currentFapi = FilePacketIndexes[_fileAndPacketIndex];
+                _currentPacketIndex = 0;
+                _packetFileName = _currentFapi.Filename;
+
+                // opening a new file, we are at the first index into the new file
+                _indexIntoPacketFile = 0;
+
+                try
                 {
-                    _currentFapi = FilePacketIndexes[_fileAndPacketIndex];
-                    _currentPacketIndex = 0;
-                    _packetFileName = _currentFapi.Filename;
+                    Log.DebugFormat("Opening {0}", _currentFapi.Filename);
 
-                    // opening a new file, we are at the first index into the new file
-                    _indexIntoPacketFile = 0;
+                    _captureFileReader = new SharpPcap.LibPcap.CaptureFileReaderDevice(_currentFapi.Filename);
+                    _captureFileReader.Open();
 
-                    try
-                    {
-                        Log.DebugFormat("Opening {0}", _currentFapi.Filename);
-
-                        _captureFileReader = new SharpPcap.LibPcap.CaptureFileReaderDevice(_currentFapi.Filename);
-                        _captureFileReader.Open();
-
-                        _fileAndPacketIndex++;
-                    } catch(Exception e)
-                    {
-                        Log.Error("caught exception",e);
-                        throw;
-                    }
+                    _fileAndPacketIndex++;
+                }
+                catch (Exception e)
+                {
+                    Log.Error("caught exception", e);
+                    throw;
                 }
             }
 
-            Packet p = null;
+            Packet p;
 
             do
             {
@@ -192,7 +202,8 @@ namespace Test.Misc
 
                 // advance our index into the current packet file
                 _indexIntoPacketFile++;
-            } while((_indexIntoPacketFile -1) != _currentFapi.PacketIndexes[_currentPacketIndex]);
+            }
+            while ((_indexIntoPacketFile - 1) != _currentFapi.PacketIndexes[_currentPacketIndex]);
             // does the current index match the index of the packet we want?
 
             // and because we got a packet we advance our index into the FileAndPacketIndex class
@@ -213,26 +224,20 @@ namespace Test.Misc
 
             _totalPacketsReturned = 0;
 
-            if(_captureFileReader != null)
+            if (_captureFileReader != null)
             {
                 _captureFileReader.Close();
                 _captureFileReader = null;
             }
         }
 
-        enum OutputType
-        {
-            ToString,
-            ToColoredString,
-            ToColoredVerboseString
-        }
-
         private void OutputPacket(Packet p, StringOutputType outputType)
         {
             Console.WriteLine(_currentPacketDescription + " - " + outputType);
             Console.Write(p.ToString(outputType));
-            if(outputType == StringOutputType.Verbose || outputType == StringOutputType.VerboseColored)
+            if (outputType == StringOutputType.Verbose || outputType == StringOutputType.VerboseColored)
                 Console.Write(p.PrintHex());
+
             Console.WriteLine();
         }
 
@@ -245,10 +250,10 @@ namespace Test.Misc
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to reduce console output
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             Packet p;
-            while((p = GetNextPacket()) != null)
+            while ((p = GetNextPacket()) != null)
             {
                 OutputPacket(p, StringOutputType.Normal);
             }
@@ -265,32 +270,12 @@ namespace Test.Misc
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to reduce console output
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             Packet p;
-            while((p = GetNextPacket()) != null)
+            while ((p = GetNextPacket()) != null)
             {
                 OutputPacket(p, StringOutputType.Colored);
-            }
-
-            LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
-        }
-
-        [Test]
-        public void ToVerboseString()
-        {
-            ResetPacketPosition();
-
-            // store the logging value
-            var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
-
-            // disable logging to reduce console output
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
-
-            Packet p;
-            while((p = GetNextPacket()) != null)
-            {
-                OutputPacket(p, StringOutputType.Verbose);
             }
 
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
@@ -305,12 +290,32 @@ namespace Test.Misc
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to reduce console output
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             Packet p;
-            while((p = GetNextPacket()) != null)
+            while ((p = GetNextPacket()) != null)
             {
                 OutputPacket(p, StringOutputType.VerboseColored);
+            }
+
+            LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
+        }
+
+        [Test]
+        public void ToVerboseString()
+        {
+            ResetPacketPosition();
+
+            // store the logging value
+            var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
+
+            // disable logging to reduce console output
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
+
+            Packet p;
+            while ((p = GetNextPacket()) != null)
+            {
+                OutputPacket(p, StringOutputType.Verbose);
             }
 
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;

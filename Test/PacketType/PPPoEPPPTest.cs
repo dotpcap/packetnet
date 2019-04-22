@@ -21,7 +21,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using NUnit.Framework;
 using PacketDotNet;
-using SharpPcap;
 using SharpPcap.LibPcap;
 
 namespace Test.PacketType
@@ -29,30 +28,6 @@ namespace Test.PacketType
     [TestFixture]
     public class PppoePppTest
     {
-        [Test]
-        public void TestParsingPppoePppPacket()
-        {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/PPPoEPPP.pcap");
-            dev.Open();
-
-            RawCapture rawCapture;
-            Packet packet;
-
-            // first packet is a udp packet
-            rawCapture = dev.GetNextPacket();
-            packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-            var udpPacket = packet.Extract<UdpPacket>();
-            Assert.IsNotNull(udpPacket, "Expected a valid udp packet for the first packet");
-
-            // second packet is the PPPoe Ptp packet
-            rawCapture = dev.GetNextPacket();
-            packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-            var anotherUdpPacket = packet.Extract<UdpPacket>();
-            Assert.IsNotNull(anotherUdpPacket, "Expected a valid udp packet for the second packet as well");
-
-            dev.Close();
-        }
-
         [Test]
         public void PrintString()
         {
@@ -90,6 +65,26 @@ namespace Test.PacketType
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(pppoe.ToString(StringOutputType.Verbose));
         }
+
+        [Test]
+        public void TestParsingPppoePppPacket()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/PPPoEPPP.pcap");
+            dev.Open();
+
+            // first packet is a udp packet
+            var rawCapture = dev.GetNextPacket();
+            var packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var udpPacket = packet.Extract<UdpPacket>();
+            Assert.IsNotNull(udpPacket, "Expected a valid udp packet for the first packet");
+
+            // second packet is the PPPoe Ptp packet
+            rawCapture = dev.GetNextPacket();
+            packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var anotherUdpPacket = packet.Extract<UdpPacket>();
+            Assert.IsNotNull(anotherUdpPacket, "Expected a valid udp packet for the second packet as well");
+
+            dev.Close();
+        }
     }
 }
-

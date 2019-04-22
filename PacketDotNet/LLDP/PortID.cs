@@ -98,7 +98,7 @@ namespace PacketDotNet.Lldp
             var length = TlvTypeLength.TypeLengthLength + SubTypeLength;
             var bytes = new byte[length];
             var offset = 0;
-            TLVData = new ByteArraySegment(bytes, offset, length);
+            Data = new ByteArraySegment(bytes, offset, length);
 
             Type = TlvType.PortId;
             SubType = PortSubType.NetworkAddress;
@@ -110,8 +110,8 @@ namespace PacketDotNet.Lldp
         /// </value>
         public PortSubType SubType
         {
-            get => (PortSubType) TLVData.Bytes[TLVData.Offset + TlvTypeLength.TypeLengthLength];
-            set => TLVData.Bytes[TLVData.Offset + TlvTypeLength.TypeLengthLength] = (byte) value;
+            get => (PortSubType) Data.Bytes[Data.Offset + TlvTypeLength.TypeLengthLength];
+            set => Data.Bytes[Data.Offset + TlvTypeLength.TypeLengthLength] = (byte) value;
         }
 
         /// <value>
@@ -141,7 +141,7 @@ namespace PacketDotNet.Lldp
             var length = TlvTypeLength.TypeLengthLength + SubTypeLength;
             var bytes = new byte[length];
             var offset = 0;
-            TLVData = new ByteArraySegment(bytes, offset, length);
+            Data = new ByteArraySegment(bytes, offset, length);
         }
 
         private object GetSubTypeValue()
@@ -158,14 +158,14 @@ namespace PacketDotNet.Lldp
                 {
                     // get the address
                     arrAddress = new byte[DataLength];
-                    Array.Copy(TLVData.Bytes, DataOffset, arrAddress, 0, DataLength);
+                    Array.Copy(Data.Bytes, DataOffset, arrAddress, 0, DataLength);
                     return arrAddress;
                 }
                 case PortSubType.MacAddress:
                 {
                     // get the address
                     arrAddress = new byte[DataLength];
-                    Array.Copy(TLVData.Bytes, DataOffset, arrAddress, 0, DataLength);
+                    Array.Copy(Data.Bytes, DataOffset, arrAddress, 0, DataLength);
                     var address = new PhysicalAddress(arrAddress);
                     return address;
                 }
@@ -222,19 +222,19 @@ namespace PacketDotNet.Lldp
                 var newBytes = new byte[newLength];
 
                 // copy the header data over
-                Array.Copy(TLVData.Bytes,
-                           TLVData.Offset,
+                Array.Copy(Data.Bytes,
+                           Data.Offset,
                            newBytes,
                            0,
                            headerLength);
 
                 var offset = 0;
-                TLVData = new ByteArraySegment(newBytes, offset, newLength);
+                Data = new ByteArraySegment(newBytes, offset, newLength);
             }
 
             Array.Copy(val,
                        0,
-                       TLVData.Bytes,
+                       Data.Bytes,
                        ValueOffset + SubTypeLength,
                        val.Length);
         }
@@ -246,7 +246,7 @@ namespace PacketDotNet.Lldp
                 throw new ArgumentOutOfRangeException(nameof(SubType), "SubType != PortSubTypes.NetworkAddress");
             }
 
-            var networkAddress = new NetworkAddress(TLVData.Bytes, DataOffset, DataLength);
+            var networkAddress = new NetworkAddress(Data.Bytes, DataOffset, DataLength);
 
             return networkAddress;
         }

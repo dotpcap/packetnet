@@ -85,7 +85,7 @@ namespace PacketDotNet.Lldp
             var length = TlvTypeLength.TypeLengthLength + OUILength + OUISubTypeLength;
             var bytes = new byte[length];
             var offset = 0;
-            TLVData = new ByteArraySegment(bytes, offset, length);
+            Data = new ByteArraySegment(bytes, offset, length);
 
             Type = TlvType.OrganizationSpecific;
 
@@ -104,7 +104,7 @@ namespace PacketDotNet.Lldp
                 var length = Length - (OUILength + OUISubTypeLength);
 
                 var bytes = new byte[length];
-                Array.Copy(TLVData.Bytes,
+                Array.Copy(Data.Bytes,
                            ValueOffset + OUILength + OUISubTypeLength,
                            bytes,
                            0,
@@ -126,21 +126,21 @@ namespace PacketDotNet.Lldp
                     var bytes = new byte[newLength];
 
                     // copy the header bytes over
-                    Array.Copy(TLVData.Bytes,
-                               TLVData.Offset,
+                    Array.Copy(Data.Bytes,
+                               Data.Offset,
                                bytes,
                                0,
                                headerLength);
 
                     // assign a new ByteArrayAndOffset to tlvData
                     var offset = 0;
-                    TLVData = new ByteArraySegment(bytes, offset, newLength);
+                    Data = new ByteArraySegment(bytes, offset, newLength);
                 }
 
                 // copy the byte array in
                 Array.Copy(value,
                            0,
-                           TLVData.Bytes,
+                           Data.Bytes,
                            ValueOffset + OUILength + OUISubTypeLength,
                            value.Length);
             }
@@ -151,8 +151,8 @@ namespace PacketDotNet.Lldp
         /// </summary>
         public int OrganizationDefinedSubType
         {
-            get => TLVData.Bytes[ValueOffset + OUILength];
-            set => TLVData.Bytes[ValueOffset + OUILength] = (byte) value;
+            get => Data.Bytes[ValueOffset + OUILength];
+            set => Data.Bytes[ValueOffset + OUILength] = (byte) value;
         }
 
         /// <summary>
@@ -163,7 +163,7 @@ namespace PacketDotNet.Lldp
             get
             {
                 var oui = new byte[OUILength];
-                Array.Copy(TLVData.Bytes,
+                Array.Copy(Data.Bytes,
                            ValueOffset,
                            oui,
                            0,
@@ -173,7 +173,7 @@ namespace PacketDotNet.Lldp
             }
             set => Array.Copy(value,
                               0,
-                              TLVData.Bytes,
+                              Data.Bytes,
                               ValueOffset,
                               OUILength);
         }

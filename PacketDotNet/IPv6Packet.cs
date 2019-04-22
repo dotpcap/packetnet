@@ -29,10 +29,10 @@ using System.Text;
 using System.Threading;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
+
 #if DEBUG
 using log4net;
 using System.Reflection;
-
 #endif
 
 namespace PacketDotNet
@@ -108,10 +108,9 @@ namespace PacketDotNet
             Log.Debug("");
 
             // allocate memory for this packet
-            const int offset = 0;
             var length = IPv6Fields.HeaderLength;
             var headerBytes = new byte[length];
-            Header = new ByteArraySegment(headerBytes, offset, length);
+            Header = new ByteArraySegment(headerBytes, 0, length);
 
             // set some default values to make this packet valid
             PayloadLength = 0;

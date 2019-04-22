@@ -56,8 +56,7 @@ namespace PacketDotNet.Lldp
         public String(TlvType tlvType, string value)
         {
             var bytes = new byte[TlvTypeLength.TypeLengthLength];
-            const int offset = 0;
-            TLVData = new ByteArraySegment(bytes, offset, bytes.Length);
+            Data = new ByteArraySegment(bytes, 0, bytes.Length);
 
             Type = tlvType;
             Value = value;
@@ -68,7 +67,7 @@ namespace PacketDotNet.Lldp
         /// </value>
         public string Value
         {
-            get => Encoding.ASCII.GetString(TLVData.Bytes,
+            get => Encoding.ASCII.GetString(Data.Bytes,
                                             ValueOffset,
                                             Length);
             set
@@ -77,26 +76,26 @@ namespace PacketDotNet.Lldp
                 var length = TlvTypeLength.TypeLengthLength + bytes.Length;
 
                 // is the TLV the correct size?
-                if (TLVData.Length != length)
+                if (Data.Length != length)
                 {
                     // allocate new memory for this tlv
                     var newTLVBytes = new byte[length];
                     var offset = 0;
 
                     // copy header over
-                    Array.Copy(TLVData.Bytes,
-                               TLVData.Offset,
+                    Array.Copy(Data.Bytes,
+                               Data.Offset,
                                newTLVBytes,
                                0,
                                TlvTypeLength.TypeLengthLength);
 
-                    TLVData = new ByteArraySegment(newTLVBytes, offset, length);
+                    Data = new ByteArraySegment(newTLVBytes, offset, length);
                 }
 
                 // set the description
                 Array.Copy(bytes,
                            0,
-                           TLVData.Bytes,
+                           Data.Bytes,
                            ValueOffset,
                            bytes.Length);
             }

@@ -80,7 +80,7 @@ namespace PacketDotNet.Lldp
             var bytes = new byte[TlvTypeLength.TypeLengthLength + ValueLength];
             var offset = 0;
             var length = bytes.Length;
-            TLVData = new ByteArraySegment(bytes, offset, length);
+            Data = new ByteArraySegment(bytes, offset, length);
 
             Type = TlvType.TimeToLive;
             Seconds = seconds;
@@ -94,11 +94,11 @@ namespace PacketDotNet.Lldp
         /// </value>
         public ushort Seconds
         {
-            get => EndianBitConverter.Big.ToUInt16(TLVData.Bytes,
-                                                   TLVData.Offset + TlvTypeLength.TypeLengthLength);
+            get => EndianBitConverter.Big.ToUInt16(Data.Bytes,
+                                                   Data.Offset + TlvTypeLength.TypeLengthLength);
             set => EndianBitConverter.Big.CopyBytes(value,
-                                                    TLVData.Bytes,
-                                                    TLVData.Offset + TlvTypeLength.TypeLengthLength);
+                                                    Data.Bytes,
+                                                    Data.Offset + TlvTypeLength.TypeLengthLength);
         }
 
         /// <summary>

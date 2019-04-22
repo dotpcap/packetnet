@@ -210,8 +210,8 @@ namespace PacketDotNet.Lldp
         /// </value>
         public ChassisSubType SubType
         {
-            get => (ChassisSubType) TLVData.Bytes[ValueOffset];
-            set => TLVData.Bytes[ValueOffset] = (byte) value;
+            get => (ChassisSubType) Data.Bytes[ValueOffset];
+            set => Data.Bytes[ValueOffset] = (byte) value;
         }
 
         /// <value>
@@ -231,7 +231,7 @@ namespace PacketDotNet.Lldp
             var length = TlvTypeLength.TypeLengthLength + SubTypeLength;
             var bytes = new byte[length];
             var offset = 0;
-            TLVData = new ByteArraySegment(bytes, offset, length);
+            Data = new ByteArraySegment(bytes, offset, length);
         }
 
         private object GetSubTypeValue()
@@ -248,7 +248,7 @@ namespace PacketDotNet.Lldp
                 case ChassisSubType.PortComponent:
                 {
                     val = new byte[dataLength];
-                    Array.Copy(TLVData.Bytes,
+                    Array.Copy(Data.Bytes,
                                dataOffset,
                                val,
                                0,
@@ -258,14 +258,14 @@ namespace PacketDotNet.Lldp
                 }
                 case ChassisSubType.NetworkAddress:
                 {
-                    return new NetworkAddress(TLVData.Bytes,
+                    return new NetworkAddress(Data.Bytes,
                                               dataOffset,
                                               dataLength);
                 }
                 case ChassisSubType.MacAddress:
                 {
                     val = new byte[dataLength];
-                    Array.Copy(TLVData.Bytes,
+                    Array.Copy(Data.Bytes,
                                dataOffset,
                                val,
                                0,
@@ -275,7 +275,7 @@ namespace PacketDotNet.Lldp
                 }
                 case ChassisSubType.InterfaceName:
                 {
-                    return Encoding.ASCII.GetString(TLVData.Bytes, dataOffset, dataLength);
+                    return Encoding.ASCII.GetString(Data.Bytes, dataOffset, dataLength);
                 }
                 default:
                 {
@@ -356,15 +356,15 @@ namespace PacketDotNet.Lldp
                 var newTlvMemory = new byte[headerLength + subTypeValue.Length];
 
                 // copy the header data over
-                Array.Copy(TLVData.Bytes, TLVData.Offset, newTlvMemory, 0, headerLength);
+                Array.Copy(Data.Bytes, Data.Offset, newTlvMemory, 0, headerLength);
 
                 // update the TLV memory pointer, offset and length
-                TLVData = new ByteArraySegment(newTlvMemory, 0, newTlvMemory.Length);
+                Data = new ByteArraySegment(newTlvMemory, 0, newTlvMemory.Length);
             }
 
             Array.Copy(subTypeValue,
                        0,
-                       TLVData.Bytes,
+                       Data.Bytes,
                        ValueOffset + SubTypeLength,
                        subTypeValue.Length);
         }

@@ -59,7 +59,7 @@ namespace Test.Performance
 
             // used to make sure we get the same byte[] reference returned each time
             // because thats what we expect
-            byte[] theByteArray = null;
+            byte[] bArray = null;
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
@@ -73,17 +73,17 @@ namespace Test.Performance
             var testRuns = 0;
             while (DateTime.Now < endTime)
             {
-                var theBytes = contiguousEthernetPacket.Bytes;
+                var bs = contiguousEthernetPacket.Bytes;
 
                 // make sure that we always get back the same reference
                 // for the byte[]
-                if (theByteArray == null)
+                if (bArray == null)
                 {
-                    theByteArray = theBytes;
+                    bArray = bs;
                 }
                 else
                 {
-                    Assert.AreSame(theByteArray, theBytes);
+                    Assert.AreSame(bArray, bs);
                 }
 
                 testRuns++;
@@ -119,17 +119,17 @@ namespace Test.Performance
             var testRuns = 0;
             while (DateTime.Now < endTime)
             {
-                var theBytes = ethernetPacket.Bytes;
+                var bs = ethernetPacket.Bytes;
 
                 // make sure we don't get back the same reference
                 if (lastByteArray == null)
                 {
-                    lastByteArray = theBytes;
+                    lastByteArray = bs;
                 }
                 else
                 {
-                    Assert.AreNotSame(lastByteArray, theBytes);
-                    lastByteArray = theBytes;
+                    Assert.AreNotSame(lastByteArray, bs);
+                    lastByteArray = bs;
                 }
 
                 testRuns++;

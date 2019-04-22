@@ -21,10 +21,10 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
+
 #if DEBUG
 using log4net;
 using System.Reflection;
-
 #endif
 
 namespace PacketDotNet.Ieee80211

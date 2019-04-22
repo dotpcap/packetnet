@@ -21,10 +21,10 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using PacketDotNet.Utils;
+
 #if DEBUG
 using log4net;
 using System.Reflection;
-
 #endif
 
 namespace PacketDotNet.Lldp
@@ -44,6 +44,8 @@ namespace PacketDotNet.Lldp
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
+
+        private ByteArraySegment _data;
 
         /// <summary>
         /// Create a tlv
@@ -72,7 +74,7 @@ namespace PacketDotNet.Lldp
 
             // set the tlvData assuming we have at least the bytes required for the
             // type/length fields
-            TLVData = new ByteArraySegment(bytes, offset, TypeLength.Length + TlvTypeLength.TypeLengthLength)
+            Data = new ByteArraySegment(bytes, offset, TypeLength.Length + TlvTypeLength.TypeLengthLength)
             {
                 Length = TypeLength.Length + TlvTypeLength.TypeLengthLength
             };
@@ -94,7 +96,7 @@ namespace PacketDotNet.Lldp
         /// <summary>
         /// Total length of the Tlv, including the length of the Type and Length fields
         /// </summary>
-        public int TotalLength => TLVData.Length;
+        public int TotalLength => Data.Length;
 
         /// <summary>
         /// TLV type
@@ -112,27 +114,22 @@ namespace PacketDotNet.Lldp
         /// <summary>
         /// Offset to the value bytes of the Tlv
         /// </summary>
-        internal int ValueOffset => TLVData.Offset + TlvTypeLength.TypeLengthLength;
+        internal int ValueOffset => Data.Offset + TlvTypeLength.TypeLengthLength;
 
         /// <summary>
         /// Return a byte[] that contains the tlv
         /// </summary>
-        public virtual byte[] Bytes => TLVData.ActualBytes();
+        public virtual byte[] Bytes => Data.ActualBytes();
 
         /// <summary>
         /// Points to the TLV data
         /// </summary>
-        private ByteArraySegment _tlvData;
-
-        /// <summary>
-        /// Points to the TLV data
-        /// </summary>
-        internal ByteArraySegment TLVData
+        protected ByteArraySegment Data
         {
-            get => _tlvData;
+            get => _data;
             set
             {
-                _tlvData = value;
+                _data = value;
 
                 // create a new TypeLength that points at the new ByteArrayAndOffset
                 TypeLength = new TlvTypeLength(value)

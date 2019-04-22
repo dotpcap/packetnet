@@ -71,10 +71,9 @@ namespace PacketDotNet
             IPAddress destinationAddress)
         {
             // allocate memory for this packet
-            const int offset = 0;
             var length = IPv4Fields.HeaderLength;
             var headerBytes = new byte[length];
-            Header = new ByteArraySegment(headerBytes, offset, length);
+            Header = new ByteArraySegment(headerBytes, 0, length);
 
             // set some default values to make this packet valid
             PayloadLength = 0;
@@ -256,13 +255,13 @@ namespace PacketDotNet
             set
             {
                 // read the original value
-                var theByte = Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition];
+                var b = Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition];
 
                 // mask in the header length bits
-                theByte = (byte) ((theByte & 0xF0) | ((byte) value & 0x0F));
+                b = (byte) ((b & 0xF0) | ((byte) value & 0x0F));
 
                 // write back the modified value
-                Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] = theByte;
+                Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] = b;
             }
         }
 
@@ -394,13 +393,13 @@ namespace PacketDotNet
             set
             {
                 // read the original value
-                var theByte = Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition];
+                var b = Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition];
 
                 // mask in the version bits
-                theByte = (byte) ((theByte & 0x0F) | (((byte) value << 4) & 0xF0));
+                b = (byte) ((b & 0x0F) | (((byte) value << 4) & 0xF0));
 
                 // write back the modified value
-                Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] = theByte;
+                Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] = b;
             }
         }
 

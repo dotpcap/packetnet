@@ -63,11 +63,9 @@ namespace PacketDotNet
             Log.Debug("");
 
             // allocate memory for this packet
-            const int offset = 0;
-
             var length = TcpFields.HeaderLength;
             var headerBytes = new byte[length];
-            Header = new ByteArraySegment(headerBytes, offset, length);
+            Header = new ByteArraySegment(headerBytes, 0, length);
 
             // make this packet valid
             DataOffset = length / 4;

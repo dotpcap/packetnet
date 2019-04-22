@@ -62,7 +62,7 @@ namespace PacketDotNet.Lldp
             const int length = TlvTypeLength.TypeLengthLength + SystemCapabilitiesLength + EnabledCapabilitiesLength;
             var bytes = new byte[length];
 
-            TLVData = new ByteArraySegment(bytes, 0, length);
+            Data = new ByteArraySegment(bytes, 0, length);
 
             Type = TlvType.SystemCapabilities;
             Capabilities = capabilities;
@@ -74,11 +74,11 @@ namespace PacketDotNet.Lldp
         /// </value>
         public ushort Capabilities
         {
-            get => EndianBitConverter.Big.ToUInt16(TLVData.Bytes,
-                                                   TLVData.Offset + TlvTypeLength.TypeLengthLength);
+            get => EndianBitConverter.Big.ToUInt16(Data.Bytes,
+                                                   Data.Offset + TlvTypeLength.TypeLengthLength);
             set => EndianBitConverter.Big.CopyBytes(value,
-                                                    TLVData.Bytes,
-                                                    TLVData.Offset + TlvTypeLength.TypeLengthLength);
+                                                    Data.Bytes,
+                                                    Data.Offset + TlvTypeLength.TypeLengthLength);
         }
 
         /// <value>
@@ -86,10 +86,10 @@ namespace PacketDotNet.Lldp
         /// </value>
         public ushort Enabled
         {
-            get => EndianBitConverter.Big.ToUInt16(TLVData.Bytes,
-                                                   TLVData.Offset + TlvTypeLength.TypeLengthLength + SystemCapabilitiesLength);
+            get => EndianBitConverter.Big.ToUInt16(Data.Bytes,
+                                                   Data.Offset + TlvTypeLength.TypeLengthLength + SystemCapabilitiesLength);
             set => EndianBitConverter.Big.CopyBytes(value,
-                                                    TLVData.Bytes,
+                                                    Data.Bytes,
                                                     ValueOffset + SystemCapabilitiesLength);
         }
 

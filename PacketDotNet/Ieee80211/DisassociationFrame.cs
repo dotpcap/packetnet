@@ -18,10 +18,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
 using System.Net.NetworkInformation;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Ieee80211
 {
@@ -33,12 +32,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public DisassociationFrame(ByteArraySegment bas)
+        public DisassociationFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -85,11 +84,11 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The size of the frame.
         /// </value>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 3) +
-                                           MacFields.SequenceControlLength +
-                                           DisassociationFields.ReasonCodeLength;
+        public override int FrameSize => MacFields.FrameControlLength +
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 3) +
+                                         MacFields.SequenceControlLength +
+                                         DisassociationFrameFields.ReasonCodeLength;
 
         /// <summary>
         /// Gets or sets the reason for disassociation.
@@ -103,18 +102,17 @@ namespace PacketDotNet.Ieee80211
         {
             get
             {
-                if (Header.Length >= DisassociationFields.ReasonCodePosition + DisassociationFields.ReasonCodeLength)
+                if (Header.Length >= DisassociationFrameFields.ReasonCodePosition + DisassociationFrameFields.ReasonCodeLength)
                 {
                     return (ReasonCode) EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                                           Header.Offset + DisassociationFields.ReasonCodePosition);
+                                                                           Header.Offset + DisassociationFrameFields.ReasonCodePosition);
                 }
 
                 return ReasonCode.Unspecified;
             }
-
-            set => EndianBitConverter.Little.CopyBytes((UInt16) value,
+            set => EndianBitConverter.Little.CopyBytes((ushort) value,
                                                        Header.Bytes,
-                                                       Header.Offset + DisassociationFields.ReasonCodePosition);
+                                                       Header.Offset + DisassociationFrameFields.ReasonCodePosition);
         }
 
         /// <summary>
@@ -124,7 +122,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;
@@ -136,18 +134,6 @@ namespace PacketDotNet.Ieee80211
             ReasonBytes = Reason;
 
             Header.Length = FrameSize;
-        }
-
-        private class DisassociationFields
-        {
-            public static readonly Int32 ReasonCodeLength = 2;
-
-            public static readonly Int32 ReasonCodePosition;
-
-            static DisassociationFields()
-            {
-                ReasonCodePosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
-            }
         }
     }
 }

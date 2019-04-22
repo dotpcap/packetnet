@@ -18,7 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-
 namespace PacketDotNet.Ieee80211
 {
     public partial class FrameControlField

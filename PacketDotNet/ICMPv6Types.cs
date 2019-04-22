@@ -18,22 +18,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace PacketDotNet
 {
     /// <summary>
     /// ICMPv6 types, see http://en.wikipedia.org/wiki/ICMPv6 and
     /// http://www.iana.org/assignments/icmpv6-parameters
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public enum ICMPv6Types : byte
+    public enum IcmpV6Types : byte
     {
-#pragma warning disable 1591
-
-
-        #region ICMPv6 Error Messages
-
         DestinationUnreachable = 1, // [RFC4443]
         PacketTooBig = 2, // [RFC4443]
         TimeExceeded = 3, // [RFC4443]
@@ -41,12 +33,6 @@ namespace PacketDotNet
         PrivateExperimentation1 = 100, // [RFC4443]
         PrivateExperimentation2 = 101, // [RFC4443]
         ReservedForExpansion1 = 127, // [RFC4443]
-
-        #endregion
-
-
-        #region ICMPv6 Informational Messages
-
         EchoRequest = 128, // [RFC4443]
         EchoReply = 129, // [RFC4443]
         MulticastListenerQuery = 130, // [RFC2710]
@@ -73,21 +59,16 @@ namespace PacketDotNet
         MulticastRouterAdvertisement = 151, // [RFC4286]
         MulticastRouterSolicitation = 152, // [RFC4286]
         MulticastRouterTermination = 153, // [RFC4286]
-        FMIPv6Messages = 154, // [RFC5568]
-        RPLControlMessage = 155, // [RFC6550]
-        ILNPv6LocatorUpdateMessage = 156, // [RFC6743]
+        FmIPv6Messages = 154, // [RFC5568]
+        RplControlMessage = 155, // [RFC6550]
+        IlnpV6LocatorUpdateMessage = 156, // [RFC6743]
         DuplicateAddressRequest = 157, // [RFC6775]
         DuplicateAddressConfirmation = 158, // [RFC6775]
-        MPLControlMessage = 159, // [RFC7731]
+        MplControlMessage = 159, // [RFC7731]
         ExtendedEchoRequest = 160, // [RFC8335]
         ExtendedEchoReply = 161, // [RFC8335]
         PrivateExperimentation3 = 200, // [RFC4443]
         PrivateExperimentation4 = 201, // [RFC4443]
         ReservedForExpansion2 = 255 // [RFC4443]
-
-        #endregion
-
-
-#pragma warning restore 1591
     }
 }

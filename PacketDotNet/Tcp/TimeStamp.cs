@@ -18,8 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
-using System;
-using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Tcp
 {
@@ -27,7 +26,7 @@ namespace PacketDotNet.Tcp
     /// A Time Stamp Option
     /// Used for RTTM (Round Trip Time Measurement)
     /// and PAWS (Protect Against Wrapped Sequences)
-    /// Opsoletes the Echo and EchoReply option fields
+    /// Obsoletes the Echo and EchoReply option fields
     /// </summary>
     /// <remarks>
     /// References:
@@ -35,7 +34,11 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class TimeStamp : Option
     {
-        #region Constructors
+        // the offset (in bytes) of the Echo Reply Field
+        private const int EchoReplyFieldOffset = 6;
+
+        // the offset (in bytes) of the Value Field
+        private const int ValueFieldOffset = 2;
 
         /// <summary>
         /// Creates a Timestamp Option
@@ -44,19 +47,28 @@ namespace PacketDotNet.Tcp
         /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
-        public TimeStamp(Byte[] bytes, Int32 offset, Int32 length) :
+        public TimeStamp(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
 
-        #endregion
+        /// <summary>
+        /// The Echo Reply
+        /// </summary>
+        public uint EchoReply => EndianBitConverter.Big.ToUInt32(OptionData.Bytes, OptionData.Offset + EchoReplyFieldOffset);
 
-
-        #region Methods
+        /// <summary>
+        /// The Timestamp value
+        /// </summary>
+        public uint Value
+        {
+            get => EndianBitConverter.Big.ToUInt32(OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
+            set => EndianBitConverter.Big.CopyBytes(value, OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
+        }
 
         /// <summary>
         /// Returns the Option info as a string
@@ -64,41 +76,9 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return "[" + Kind + ": Value=" + Value + " EchoReply=" + EchoReply + "]";
         }
-
-        #endregion
-
-
-        #region Properties
-
-        /// <summary>
-        /// The Timestamp value
-        /// </summary>
-        public UInt32 Value
-        {
-            get => EndianBitConverter.Big.ToUInt32(OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
-            set => EndianBitConverter.Big.CopyBytes(value, OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
-        }
-
-        /// <summary>
-        /// The Echo Reply
-        /// </summary>
-        public UInt32 EchoReply => EndianBitConverter.Big.ToUInt32(OptionData.Bytes, OptionData.Offset + EchoReplyFieldOffset);
-
-        #endregion
-
-
-        #region Members
-
-        // the offset (in bytes) of the Value Field
-        private const Int32 ValueFieldOffset = 2;
-
-        // the offset (in bytes) of the Echo Reply Field
-        private const Int32 EchoReplyFieldOffset = 6;
-
-        #endregion
     }
 }

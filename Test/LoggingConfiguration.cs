@@ -29,13 +29,12 @@ namespace Test
         {
             get
             {
-                Logger rootLogger = ((Hierarchy)LogManager.GetRepository()).Root;
+                var rootLogger = ((Hierarchy) LogManager.GetRepository()).Root;
                 return rootLogger.Level;
             }
-
             set
             {
-                Logger rootLogger = ((Hierarchy)LogManager.GetRepository()).Root;
+                var rootLogger = ((Hierarchy) LogManager.GetRepository()).Root;
                 rootLogger.Level = value;
             }
         }

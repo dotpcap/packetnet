@@ -1,15 +1,12 @@
-using System;
-
 namespace PacketDotNet.Ieee80211
 {
-    public class BlockAcknowledgmentFields
+    public struct BlockAcknowledgmentFields
     {
-        public static readonly Int32 BlockAckBitmapPosition;
-        public static readonly Int32 BlockAckRequestControlLength = 2;
-
-        public static readonly Int32 BlockAckRequestControlPosition;
-        public static readonly Int32 BlockAckStartingSequenceControlLength = 2;
-        public static readonly Int32 BlockAckStartingSequenceControlPosition;
+        public static readonly int BlockAckBitmapPosition;
+        public static readonly int BlockAckRequestControlLength = 2;
+        public static readonly int BlockAckRequestControlPosition;
+        public static readonly int BlockAckStartingSequenceControlLength = 2;
+        public static readonly int BlockAckStartingSequenceControlPosition;
 
         static BlockAcknowledgmentFields()
         {

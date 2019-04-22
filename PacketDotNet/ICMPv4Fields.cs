@@ -18,49 +18,47 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
-
 namespace PacketDotNet
 {
     /// <summary>
     /// ICMP protocol field encoding information.
     /// See http://en.wikipedia.org/wiki/ICMPv6
     /// </summary>
-    public class ICMPv4Fields
+    public struct IcmpV4Fields
     {
-        /// <summary> Length of the ICMP header checksum in bytes.</summary>
-        public static readonly Int32 ChecksumLength = 2;
+        /// <summary>Length of the ICMP header checksum in bytes.</summary>
+        public static readonly int ChecksumLength = 2;
 
-        /// <summary> Position of the ICMP header checksum.</summary>
-        public static readonly Int32 ChecksumPosition;
+        /// <summary>Position of the ICMP header checksum.</summary>
+        public static readonly int ChecksumPosition;
 
-        /// <summary> Length in bytes of an ICMP header.</summary>
-        public static readonly Int32 HeaderLength;
+        /// <summary>Length in bytes of an ICMP header.</summary>
+        public static readonly int HeaderLength;
 
-        /// <summary> Length of the ICMP ID field in bytes.</summary>
-        public static readonly Int32 IDLength = 2;
+        /// <summary>Length of the ICMP ID field in bytes.</summary>
+        public static readonly int IDLength = 2;
 
-        /// <summary> Position of the ICMP ID field </summary>
-        public static readonly Int32 IDPosition;
+        /// <summary>Position of the ICMP ID field </summary>
+        public static readonly int IdPosition;
 
-        /// <summary> Length of the ICMP Sequence field in bytes </summary>
-        public static readonly Int32 SequenceLength = 2;
+        /// <summary>Length of the ICMP Sequence field in bytes </summary>
+        public static readonly int SequenceLength = 2;
 
-        /// <summary> Position of the Sequence field </summary>
-        public static readonly Int32 SequencePosition;
+        /// <summary>Position of the Sequence field </summary>
+        public static readonly int SequencePosition;
 
-        /// <summary> Length of the ICMP message type code in bytes.</summary>
-        public static readonly Int32 TypeCodeLength = 2;
+        /// <summary>Length of the ICMP message type code in bytes.</summary>
+        public static readonly int TypeCodeLength = 2;
 
-        /// <summary> Position of the ICMP message type/code.</summary>
-        public static readonly Int32 TypeCodePosition;
+        /// <summary>Position of the ICMP message type/code.</summary>
+        public static readonly int TypeCodePosition;
 
-        static ICMPv4Fields()
+        static IcmpV4Fields()
         {
             TypeCodePosition = 0;
             ChecksumPosition = TypeCodePosition + TypeCodeLength;
-            IDPosition = ChecksumPosition + ChecksumLength;
-            SequencePosition = IDPosition + IDLength;
+            IdPosition = ChecksumPosition + ChecksumLength;
+            SequencePosition = IdPosition + IDLength;
             HeaderLength = SequencePosition + SequenceLength;
         }
     }

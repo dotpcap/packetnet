@@ -33,21 +33,21 @@ namespace PacketDotNet.Utils
         /// A <see cref="IPVersion" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Net.IPAddress" />
+        /// A <see cref="IPAddress" />
         /// </returns>
         public static IPAddress GetIPAddress(IPVersion version)
         {
             var rnd = new Random();
-            Byte[] randomAddressBytes;
+            byte[] randomAddressBytes;
 
             if (version == IPVersion.IPv4)
             {
-                randomAddressBytes = new Byte[IPv4Fields.AddressLength];
+                randomAddressBytes = new byte[IPv4Fields.AddressLength];
                 rnd.NextBytes(randomAddressBytes);
             }
             else if (version == IPVersion.IPv6)
             {
-                randomAddressBytes = new Byte[IPv6Fields.AddressLength];
+                randomAddressBytes = new byte[IPv6Fields.AddressLength];
                 rnd.NextBytes(randomAddressBytes);
             }
             else
@@ -65,9 +65,9 @@ namespace PacketDotNet.Utils
         /// A <see cref="T:List{System.String}" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </returns>
-        public static Int32 LongestStringLength(List<String> stringsList)
+        public static int LongestStringLength(List<string> stringsList)
         {
             var longest = "";
 

@@ -20,14 +20,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
-
 #if DEBUG
+using System.Reflection;
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -61,226 +61,18 @@ namespace PacketDotNet
         protected Lazy<PacketOrByteArraySegment> PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(LazyThreadSafetyMode.None);
 
         /// <summary>
-        /// Gets the total length of the packet by recursively finding the length of this packet and all of the packets encapsulated by this packet.
+        /// Gets the actual bytes containing this packet and its payload.
         /// </summary>
+        /// <remarks>Use <see cref="BytesSegment" /> for optimal performance.</remarks>
+        public virtual byte[] Bytes => BytesSegment.ActualBytes();
+
         /// <value>
-        /// The total length of the packet.
+        /// Gets a <see cref="ByteArraySegment" /> with the data that can start at an offset other than the first byte.
         /// </value>
-        public Int32 TotalPacketLength
+        public virtual ByteArraySegment BytesSegment
         {
             get
             {
-                var totalLength = 0;
-                if (Header != null)
-                    totalLength += Header.Length;
-
-                if (PayloadPacketOrData.Value != null)
-                {
-                    switch (PayloadPacketOrData.Value.Type)
-                    {
-                        case PayloadType.Bytes:
-                            totalLength += PayloadPacketOrData.Value.ByteArraySegment.Length;
-                            break;
-                        case PayloadType.Packet:
-                            totalLength += PayloadPacketOrData.Value.Packet.TotalPacketLength;
-                            break;
-                    }
-                }
-
-                return totalLength;
-            }
-        }
-
-        /// <value>
-        /// Returns true if we already have a contiguous byte[] in either
-        /// of these conditions:
-        /// - This packet's header byte[] and payload byte[] are the same instance
-        /// or
-        /// - This packet's header byte[] and this packet's payload packet
-        /// are the same instance and the offsets indicate that the bytes
-        /// are contiguous
-        /// </value>
-        protected Boolean SharesMemoryWithSubPackets
-        {
-            get
-            {
-                Log.Debug("");
-
-                var payloadType = PayloadPacketOrData.Value?.Type ?? PayloadType.None;
-                switch (payloadType)
-                {
-                    case PayloadType.Bytes:
-                        // is the byte array payload the same byte[] and does the offset indicate
-                        // that the bytes are contiguous?
-                        if (Header.Bytes == PayloadPacketOrData.Value?.ByteArraySegment.Bytes &&
-                            Header.Offset + Header.Length == PayloadPacketOrData.Value?.ByteArraySegment.Offset)
-                        {
-                            Log.Debug("PayloadType.Bytes returning true");
-                            return true;
-                        }
-                        else
-                        {
-                            Log.Debug("PayloadType.Bytes returning false");
-                            return false;
-                        }
-                    case PayloadType.Packet:
-                        // is the byte array payload the same as the payload packet header and does
-                        // the offset indicate that the bytes are contiguous?
-                        if (Header.Bytes == PayloadPacketOrData.Value?.Packet.Header.Bytes &&
-                            Header.Offset + Header.Length == PayloadPacketOrData.Value?.Packet.Header.Offset)
-                        {
-                            // and does the sub packet share memory with its sub packets?
-                            var result = PayloadPacketOrData.Value.Packet.SharesMemoryWithSubPackets;
-                            Log.DebugFormat("PayloadType.Packet result {0}", result);
-                            return result;
-                        }
-                        else
-                        {
-                            Log.Debug("PayloadType.Packet returning false");
-                            return false;
-                        }
-                    case PayloadType.None:
-                        // no payload data or packet thus we must share memory with
-                        // our non-existent sub packets
-                        Log.Debug("PayloadType.None, returning true");
-                        return true;
-                    default:
-                    {
-                        ThrowHelper.ThrowNotImplementedException();
-                        return false;
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// The packet that is carrying this one
-        /// </summary>
-        public virtual Packet ParentPacket { get; set; }
-        
-        /// <value>
-        /// Gets the header's data.
-        /// </value>
-        public virtual Byte[] HeaderData => Header.ActualBytes();
-
-        /// <summary>
-        /// Gets the header's data high performance.
-        /// </summary>
-        public virtual ByteArraySegment HeaderDataHighPerformance => Header.EncapsulatedBytes();
-
-        /// <summary>
-        /// Packet that this packet carries if one is present.
-        /// Note that the packet MAY have a null PayloadPacket but
-        /// a non-null PayloadData
-        /// </summary>
-        public virtual Packet PayloadPacket
-        {
-            get => PayloadPacketOrData.Value.Packet;
-            set
-            {
-                if (this == value)
-                    ThrowHelper.ThrowInvalidOperationException(ExceptionDescription.PacketAsPayloadPacket);
-
-
-                PayloadPacketOrData.Value.Packet = value;
-                PayloadPacketOrData.Value.Packet.ParentPacket = this;
-            }
-        }
-
-        /// <summary>
-        /// Payload byte[] if one is present.
-        /// Note that the packet MAY have a null PayloadData but a
-        /// non-null PayloadPacket
-        /// </summary>
-        public Byte[] PayloadData
-        {
-            get => PayloadDataHighPerformance?.ActualBytes();
-            set
-            {
-                Log.DebugFormat("value.Length {0}", value.Length);
-
-                PayloadDataHighPerformance = new ByteArraySegment(value, 0, value.Length);
-            }
-        }
-
-        /// <summary>
-        /// Payload if one is present.
-        /// Note that the packet MAY have a null PayloadData but a
-        /// non-null PayloadPacket
-        /// </summary>
-        public ByteArraySegment PayloadDataHighPerformance
-        {
-            get
-            {
-                if (PayloadPacketOrData.Value.ByteArraySegment == null)
-                {
-                    Log.Debug("returning null");
-                    return null;
-                }
-
-                Log.DebugFormat("result.Length: {0}", PayloadPacketOrData.Value.ByteArraySegment.Length);
-                return PayloadPacketOrData.Value.ByteArraySegment;
-            }
-
-            set => PayloadPacketOrData.Value.ByteArraySegment = value;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this packet has payload data.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this packet has payload data; otherwise, <c>false</c>.
-        /// </value>
-        public virtual bool HasPayloadData => PayloadPacketOrData.Value.Type == PayloadType.Bytes;
-
-        /// <summary>
-        /// Gets a value indicating whether this packet has a payload packet.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if this packet has a payload packet; otherwise, <c>false</c>.
-        /// </value>
-        public virtual bool HasPayloadPacket => PayloadPacketOrData.Value.Type == PayloadType.Packet;
-
-        /// <summary>
-        /// Gets a value indicating whether the payload is initialized.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if the payload is initialized; otherwise, <c>false</c>.
-        /// </value>
-        public virtual bool IsPayloadInitialized => PayloadPacketOrData.IsValueCreated;
-
-
-        /// <summary>
-        /// byte[] containing this packet and its payload
-        /// NOTE: Use 'public virtual ByteArraySegment BytesHighPerformance' for highest performance
-        /// </summary>
-        public virtual Byte[] Bytes
-        {
-            get
-            {
-                Log.Debug("");
-
-                // Retrieve the byte array container
-                var bytesHighPerformance = BytesHighPerformance;
-
-                // ActualBytes() will copy bytes if necessary but will avoid a copy in the
-                // case where our offset is zero and the byte[] length matches the
-                // encapsulated Length
-                return bytesHighPerformance.ActualBytes();
-            }
-        }
-
-        /// <value>
-        /// The option to return a ByteArraySegment means that this method
-        /// is higher performance as the data can start at an offset other than
-        /// the first byte.
-        /// </value>
-        public virtual ByteArraySegment BytesHighPerformance
-        {
-            get
-            {
-                Log.Debug("");
-
                 // ensure calculated values are properly updated
                 RecursivelyUpdateCalculatedValues();
 
@@ -298,11 +90,11 @@ namespace PacketDotNet
                                                                 Header.Offset,
                                                                 Header.Length + PayloadPacket.TotalPacketLength);
                     }
-                    else if (PayloadPacketOrData.IsValueCreated && PayloadPacketOrData.Value.Type == PayloadType.Bytes && PayloadDataHighPerformance != null)
+                    else if (PayloadPacketOrData.IsValueCreated && PayloadPacketOrData.Value.Type == PayloadType.Bytes && PayloadDataSegment != null)
                     {
                         byteArraySegment = new ByteArraySegment(Header.Bytes,
                                                                 Header.Offset,
-                                                                Header.Length + PayloadDataHighPerformance.Length);
+                                                                Header.Length + PayloadDataSegment.Length);
                     }
                     else
                     {
@@ -329,59 +121,270 @@ namespace PacketDotNet
             }
         }
 
+        /// <value>
+        /// Color used when generating the text description of a packet
+        /// </value>
+        public virtual string Color => AnsiEscapeSequences.Black;
+
+        /// <summary>
+        /// Gets a value indicating whether this packet has payload data.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this packet has payload data; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool HasPayloadData => PayloadPacketOrData.Value.Type == PayloadType.Bytes;
+
+        /// <summary>
+        /// Gets a value indicating whether this packet has a payload packet.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this packet has a payload packet; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool HasPayloadPacket => PayloadPacketOrData.Value.Type == PayloadType.Packet;
+
+        /// <value>
+        /// Gets the bytes of the header's data.
+        /// </value>
+        public virtual byte[] HeaderData => Header.ActualBytes();
+
+        /// <summary>
+        /// Gets the header's data as a <see cref="ByteArraySegment" />.
+        /// </summary>
+        public virtual ByteArraySegment HeaderDataSegment => Header.NextSegment();
+
+        /// <summary>
+        /// Gets a value indicating whether the payload is initialized.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if the payload is initialized; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool IsPayloadInitialized => PayloadPacketOrData.IsValueCreated;
+
+        /// <summary>
+        /// The packet that is carrying this one
+        /// </summary>
+        public virtual Packet ParentPacket { get; set; }
+
+        /// <summary>
+        /// Gets or sets the bytes of the payload if present.
+        /// </summary>
+        /// <remarks>The packet MAY have a null <see cref="PayloadData" /> but a non-null <see cref="PayloadPacket" />.</remarks>
+        public byte[] PayloadData
+        {
+            get => PayloadDataSegment?.ActualBytes();
+            set
+            {
+                Log.DebugFormat("value.Length {0}", value.Length);
+
+                PayloadDataSegment = new ByteArraySegment(value, 0, value.Length);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the <see cref="ByteArraySegment" /> of the payload if present.
+        /// </summary>
+        /// <remarks>The packet MAY have a null <see cref="PayloadData" /> but a non-null <see cref="PayloadPacket" />.</remarks>
+        public ByteArraySegment PayloadDataSegment
+        {
+            get
+            {
+                if (PayloadPacketOrData.Value.ByteArraySegment == null)
+                {
+                    Log.Debug("returning null");
+                    return null;
+                }
+
+                Log.DebugFormat("result.Length: {0}", PayloadPacketOrData.Value.ByteArraySegment.Length);
+                return PayloadPacketOrData.Value.ByteArraySegment;
+            }
+            set => PayloadPacketOrData.Value.ByteArraySegment = value;
+        }
+
+        /// <summary>
+        /// Packet that this packet carries if one is present.
+        /// </summary>
+        /// <remarks>The packet MAY have a null <see cref="PayloadPacket" /> but a non-null <see cref="PayloadData" />.</remarks>
+        public virtual Packet PayloadPacket
+        {
+            get => PayloadPacketOrData.Value.Packet;
+            set
+            {
+                if (this == value)
+                    ThrowHelper.ThrowInvalidOperationException(ExceptionDescription.PacketAsPayloadPacket);
+
+                PayloadPacketOrData.Value.Packet = value;
+                PayloadPacketOrData.Value.Packet.ParentPacket = this;
+            }
+        }
+
+        /// <summary>
+        /// Gets the total length of the packet by recursively finding the length of this packet and all of the packets encapsulated by this packet.
+        /// </summary>
+        /// <value>
+        /// The total length of the packet.
+        /// </value>
+        public int TotalPacketLength
+        {
+            get
+            {
+                var totalLength = 0;
+                if (Header != null)
+                    totalLength += Header.Length;
+
+                if (PayloadPacketOrData.Value != null)
+                {
+                    switch (PayloadPacketOrData.Value.Type)
+                    {
+                        case PayloadType.Bytes:
+                        {
+                            totalLength += PayloadPacketOrData.Value.ByteArraySegment.Length;
+                            break;
+                        }
+                        case PayloadType.Packet:
+                        {
+                            totalLength += PayloadPacketOrData.Value.Packet.TotalPacketLength;
+                            break;
+                        }
+                    }
+                }
+
+                return totalLength;
+            }
+        }
+
+        /// <value>
+        /// Returns true if we already have a contiguous byte[] in either
+        /// of these conditions:
+        /// - This packet's header byte[] and payload byte[] are the same instance
+        /// or
+        /// - This packet's header byte[] and this packet's payload packet
+        /// are the same instance and the offsets indicate that the bytes
+        /// are contiguous
+        /// </value>
+        protected bool SharesMemoryWithSubPackets
+        {
+            get
+            {
+                Log.Debug("");
+
+                var payloadType = PayloadPacketOrData.Value?.Type ?? PayloadType.None;
+
+                switch (payloadType)
+                {
+                    case PayloadType.Bytes:
+                    {
+                        // is the byte array payload the same byte[] and does the offset indicate
+                        // that the bytes are contiguous?
+                        if (Header.Bytes == PayloadPacketOrData.Value?.ByteArraySegment.Bytes &&
+                            Header.Offset + Header.Length == PayloadPacketOrData.Value?.ByteArraySegment.Offset)
+                        {
+                            Log.Debug("PayloadType.Bytes returning true");
+                            return true;
+                        }
+
+                        Log.Debug("PayloadType.Bytes returning false");
+                        return false;
+                    }
+                    case PayloadType.Packet:
+                    {
+                        // is the byte array payload the same as the payload packet header and does
+                        // the offset indicate that the bytes are contiguous?
+                        if (Header.Bytes == PayloadPacketOrData.Value?.Packet.Header.Bytes &&
+                            Header.Offset + Header.Length == PayloadPacketOrData.Value?.Packet.Header.Offset)
+                        {
+                            // and does the sub packet share memory with its sub packets?
+                            var result = PayloadPacketOrData.Value.Packet.SharesMemoryWithSubPackets;
+                            Log.DebugFormat("PayloadType.Packet result {0}", result);
+                            return result;
+                        }
+
+                        Log.Debug("PayloadType.Packet returning false");
+                        return false;
+                    }
+                    case PayloadType.None:
+                    {
+                        // no payload data or packet thus we must share memory with
+                        // our non-existent sub packets
+                        Log.Debug("PayloadType.None, returning true");
+                        return true;
+                    }
+                    default:
+                    {
+                        ThrowHelper.ThrowNotImplementedException();
+                        return false;
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Parse bytes into a packet
         /// </summary>
-        /// <param name="linkLayer">
+        /// <param name="linkLayers">
         /// A <see cref="LinkLayers" />
         /// </param>
         /// <param name="packetData">
-        /// A <see cref="System.Byte" />
+        /// A <see cref="byte" />
         /// </param>
         /// <returns>
         /// A <see cref="Packet" />
         /// </returns>
-        public static Packet ParsePacket
-        (
-            LinkLayers linkLayer,
-            Byte[] packetData)
+        public static Packet ParsePacket(LinkLayers linkLayers, byte[] packetData)
         {
             Packet p;
-            var bas = new ByteArraySegment(packetData);
+            var byteArraySegment = new ByteArraySegment(packetData);
 
-            Log.DebugFormat("LinkLayer {0}", linkLayer);
+            Log.DebugFormat("LinkLayer {0}", linkLayers);
 
-            switch (linkLayer)
+            switch (linkLayers)
             {
                 case LinkLayers.Ethernet:
-                    p = new EthernetPacket(bas);
+                {
+                    p = new EthernetPacket(byteArraySegment);
                     break;
-                case LinkLayers.LinuxSLL:
-                    p = new LinuxSLLPacket(bas);
+                }
+                case LinkLayers.LinuxSll:
+                {
+                    p = new LinuxSllPacket(byteArraySegment);
                     break;
+                }
                 case LinkLayers.Null:
-                    p = new NullPacket(bas);
+                {
+                    p = new NullPacket(byteArraySegment);
                     break;
+                }
                 case LinkLayers.Ppp:
-                    p = new PPPPacket(bas);
+                {
+                    p = new PppPacket(byteArraySegment);
                     break;
+                }
                 case LinkLayers.Ieee80211:
-                    p = MacFrame.ParsePacket(bas);
+                {
+                    p = MacFrame.ParsePacket(byteArraySegment);
                     break;
-                case LinkLayers.Ieee80211_Radio:
-                    p = new RadioPacket(bas);
+                }
+                case LinkLayers.Ieee80211Radio:
+                {
+                    p = new RadioPacket(byteArraySegment);
                     break;
-                case LinkLayers.PerPacketInformation:
-                    p = new PpiPacket(bas);
+                }
+                case LinkLayers.Ppi:
+                {
+                    p = new PpiPacket(byteArraySegment);
                     break;
+                }
                 case LinkLayers.Raw:
                 case LinkLayers.RawLegacy:
-                    p = new RawIPPacket(bas);
+                {
+                    p = new RawIPPacket(byteArraySegment);
                     break;
+                }
                 default:
+                {
                     ThrowHelper.ThrowNotImplementedException(ExceptionArgument.linkLayer);
                     p = null;
                     break;
+                }
             }
 
             return p;
@@ -414,12 +417,12 @@ namespace PacketDotNet
         { }
 
         /// <summary>Output this packet as a readable string</summary>
-        public override String ToString()
+        public override string ToString()
         {
             return ToString(StringOutputType.Normal);
         }
 
-        /// <summary cref="Packet.ToString()">
+        /// <summary cref="ToString()">
         /// Output the packet information in the specified format
         /// Normal - outputs the packet info to a single line
         /// Colored - outputs the packet info to a single line with coloring
@@ -429,7 +432,7 @@ namespace PacketDotNet
         /// <param name="outputFormat">
         ///     <see cref="StringOutputType" />
         /// </param>
-        public virtual String ToString(StringOutputType outputFormat)
+        public virtual string ToString(StringOutputType outputFormat)
         {
             return PayloadPacketOrData.Value.Type == PayloadType.Packet ? PayloadPacketOrData.Value.Packet.ToString(outputFormat) : String.Empty;
         }
@@ -443,9 +446,9 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public String PrintHex()
+        public string PrintHex()
         {
-            var data = BytesHighPerformance.Bytes;
+            var data = BytesSegment.Bytes;
             var buffer = new StringBuilder();
             var bytes = "";
             var ascii = "";
@@ -467,7 +470,7 @@ namespace PacketDotNet
                 }
                 else
                 {
-                    ascii += Encoding.ASCII.GetString(new[] {data[i - 1]});
+                    ascii += Encoding.ASCII.GetString(new[] { data[i - 1] });
                 }
 
                 // add an additional space to split the bytes into
@@ -510,35 +513,22 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Extract a packet of a specific type or null if a packet of the given type isn't found
-        /// NOTE: a 'dynamic' return type is possible here but costs ~7.8% in performance
+        /// Extracts a packet of <see cref="T" />, or the current packet if it's <see cref="T" />, or <c>null</c> if it isn't found.
         /// </summary>
-        /// <param name='type'>
-        /// Type.
-        /// </param>
-        public Packet Extract(Type type)
+        /// <returns>The packet of type <see cref="T" />.</returns>
+        public T Extract<T>() where T : Packet
         {
-            var p = this;
-
-            // search for a packet type that matches the given one
-            do
+            var t = this;
+            while (t != null)
             {
-                if (type.IsInstanceOfType(p))
-                {
-                    return p;
-                }
+                if (t is T packet)
+                    return packet;
 
-                // move to the PayloadPacket
-                p = p.PayloadPacket;
+
+                t = t.PayloadPacket;
             }
-            while (p != null);
 
             return null;
         }
-
-        /// <value>
-        /// Color used when generating the text description of a packet
-        /// </value>
-        public virtual String Color => AnsiEscapeSequences.Black;
     }
 }

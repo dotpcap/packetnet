@@ -18,8 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
-using System;
-using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Tcp
 {
@@ -34,7 +33,12 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class UserTimeout : Option
     {
-        #region Constructors
+        // the mask used to strip the Granularity field from the
+        //  Values filed to expose the UserTimeout field
+        private const int TimeoutMask = 0x7FFF;
+
+        // the offset (in bytes) of the Value Fields
+        private const int ValuesFieldOffset = 2;
 
         /// <summary>
         /// Creates a User Timeout Option
@@ -43,40 +47,19 @@ namespace PacketDotNet.Tcp
         /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
-        public UserTimeout(Byte[] bytes, Int32 offset, Int32 length) :
+        public UserTimeout(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
-
-        #endregion
-
-
-        #region Methods
-
-        /// <summary>
-        /// Returns the Option info as a string
-        /// </summary>
-        /// <returns>
-        /// A <see cref="string" />
-        /// </returns>
-        public override String ToString()
-        {
-            return "[" + Kind + ": Granularity=" + (Granularity ? "minutes" : "seconds") + " Timeout=" + Timeout + "]";
-        }
-
-        #endregion
-
-
-        #region Properties
 
         /// <summary>
         /// The Granularity
         /// </summary>
-        public Boolean Granularity
+        public bool Granularity
         {
             get
             {
@@ -88,27 +71,24 @@ namespace PacketDotNet.Tcp
         /// <summary>
         /// The User Timeout
         /// </summary>
-        public UInt16 Timeout => (UInt16) (Values & TimeoutMask);
+        public ushort Timeout => (ushort) (Values & TimeoutMask);
 
         // a convenient property to grab the value fields for further processing
-        public UInt16 Values
+        public ushort Values
         {
             get => EndianBitConverter.Big.ToUInt16(OptionData.Bytes, OptionData.Offset + ValuesFieldOffset);
             set => EndianBitConverter.Big.CopyBytes(value, OptionData.Bytes, OptionData.Offset + ValuesFieldOffset);
         }
 
-        #endregion
-
-
-        #region Members
-
-        // the offset (in bytes) of the Value Fields
-        private const Int32 ValuesFieldOffset = 2;
-
-        // the mask used to strip the Granularity field from the
-        //  Values filed to expose the UserTimeout field
-        private const Int32 TimeoutMask = 0x7FFF;
-
-        #endregion
+        /// <summary>
+        /// Returns the Option info as a string
+        /// </summary>
+        /// <returns>
+        /// A <see cref="string" />
+        /// </returns>
+        public override string ToString()
+        {
+            return "[" + Kind + ": Granularity=" + (Granularity ? "minutes" : "seconds") + " Timeout=" + Timeout + "]";
+        }
     }
 }

@@ -33,15 +33,8 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class MD5Signature : Option
     {
-        #region Members
-
         // the offset (in bytes) of the MD5 Digest field
-        private const Int32 MD5DigestFieldOffset = 2;
-
-        #endregion
-
-
-        #region Constructors
+        private const int MD5DigestFieldOffset = 2;
 
         /// <summary>
         /// Creates a MD5 Signature Option
@@ -50,38 +43,28 @@ namespace PacketDotNet.Tcp
         /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
-        public MD5Signature(Byte[] bytes, Int32 offset, Int32 length) :
+        public MD5Signature(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
-
-        #endregion
-
-
-        #region Properties
 
         /// <summary>
         /// The MD5 Digest
         /// </summary>
-        public Byte[] MD5Digest
+        public byte[] MD5Digest
         {
             get
             {
-                var data = new Byte[Length - MD5DigestFieldOffset];
+                var data = new byte[Length - MD5DigestFieldOffset];
                 Array.Copy(OptionData.Bytes, OptionData.Offset + MD5DigestFieldOffset, data, 0, data.Length);
                 return data;
             }
             set => Array.Copy(value, 0, OptionData.Bytes, OptionData.Offset + MD5DigestFieldOffset, value.Length);
         }
-
-        #endregion
-
-
-        #region Methods
 
         /// <summary>
         /// Returns the Option info as a string
@@ -89,11 +72,9 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return "[" + Kind + ": MD5Digest=0x" + MD5Digest + "]";
         }
-
-        #endregion
     }
 }

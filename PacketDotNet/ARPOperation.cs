@@ -31,7 +31,7 @@ namespace PacketDotNet
     /// - http://www.networksorcery.com/enp/default1101.htm
     /// </remarks>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public enum ARPOperation : ushort
+    public enum ArpOperation : ushort
     {
         /// <summary>Request</summary>
         /// <remarks>See RFC 826, RFC 5227</remarks>
@@ -51,73 +51,73 @@ namespace PacketDotNet
 
         /// <summary>DRARP Request</summary>
         /// <remarks>See RFC 1931</remarks>
-        DRARPRequest = 5,
+        DrarpRequest = 5,
 
         /// <summary>DRARP Reply</summary>
         /// <remarks>See RFC 1931</remarks>
-        DRARPReply = 6,
+        DrarpReply = 6,
 
         /// <summary>DRARP Error</summary>
         /// <remarks>See RFC 1931</remarks>
-        DRARPError = 7,
+        DrarpError = 7,
 
         /// <summary>InARP Request</summary>
         /// <remarks>See RFC 1293</remarks>
-        InARPRequest = 8,
+        InArpRequest = 8,
 
         /// <summary>InARP Reply</summary>
         /// <remarks>See RFC 1293</remarks>
-        InARPReply = 9,
+        InArpReply = 9,
 
         /// <summary>ARP NAK</summary>
         /// <remarks>See RFC 1577</remarks>
-        ARPNAK = 10,
+        ArpNak = 10,
 
         /// <summary>MARS Request</summary>
-        MARSRequest = 11,
+        MarsRequest = 11,
 
         /// <summary>MARS Multi</summary>
-        MARSMulti = 12,
+        MarsMulti = 12,
 
         /// <summary>MARS MServ</summary>
-        MARSMServ = 13,
+        MarsMServ = 13,
 
         /// <summary>MARS Join</summary>
-        MARSJoin = 14,
+        MarsJoin = 14,
 
         /// <summary>MARS Leave</summary>
-        MARSLeave = 15,
+        MarsLeave = 15,
 
         /// <summary>MARS NAK</summary>
-        MARSNAK = 16,
+        MarsNak = 16,
 
         /// <summary>MARS Unserv</summary>
-        MARSUnserv = 17,
+        MarsUnserv = 17,
 
         /// <summary>MARS SJoin</summary>
-        MARSSJoin = 18,
+        MarsSJoin = 18,
 
         /// <summary>MARS SLeave</summary>
-        MARSSLeave = 19,
+        MarsSLeave = 19,
 
         /// <summary>MARS Grouplist Request</summary>
-        MARSGrouplistRequest = 20,
+        MarsGroupListRequest = 20,
 
         /// <summary>MARS Grouplist Reply</summary>
-        MARSGrouplistReply = 21,
+        MarsGroupListReply = 21,
 
         /// <summary>MARS Redirect Map</summary>
-        MARSRedirectMap = 22,
+        MarsRedirectMap = 22,
 
         /// <summary>MARS UNARP</summary>
         /// <remarks>See RFC 2176</remarks>
-        MaposUnarp = 23,
+        MarsUnArp = 23,
 
         /// <summary>OP_EXP1</summary>
         /// <remarks>See RFC 5494</remarks>
-        OP_EXP1 = 24,
+        OpExp1 = 24,
 
         /// <summary>OP_EXP2</summary>
-        OP_EXP2 = 25
+        OpExp2 = 25
     }
 }

@@ -19,43 +19,38 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using NUnit.Framework;
-using SharpPcap.LibPcap;
 using PacketDotNet;
+using SharpPcap.LibPcap;
 
-namespace Test.PacketType
+namespace Test.PacketType.Ieee80211
 {
-    namespace Ieee80211
+    [TestFixture]
+    public class RawPacketTest
     {
-        [TestFixture]
-        public class RawPacketTest
+        [Test]
+        public void ReadingRawPacketWithFcs()
         {
-            [Test]
-            public void ReadingRawPacketWithFcs ()
-            {
-                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_raw_with_fcs.pcap");
-                dev.Open ();
-                var rawCapture = dev.GetNextPacket ();
-                dev.Close ();
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_raw_with_fcs.pcap");
+            dev.Open();
+            var rawCapture = dev.GetNextPacket();
+            dev.Close();
 
-                Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
-                Assert.IsNotNull (p);
-              
-            }
-            
-            [Test]
-            public void ReadingRawPacketWithoutFcs ()
-            {
-                var dev = new CaptureFileReaderDevice ("../../CaptureFiles/80211_raw_without_fcs.pcap");
-                dev.Open ();
-                var rawCapture = dev.GetNextPacket ();
-                dev.Close ();
+            Assert.IsNotNull(p);
+        }
 
-                Packet p = Packet.ParsePacket (rawCapture.LinkLayerType, rawCapture.Data);
+        [Test]
+        public void ReadingRawPacketWithoutFcs()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_raw_without_fcs.pcap");
+            dev.Open();
+            var rawCapture = dev.GetNextPacket();
+            dev.Close();
 
-                Assert.IsNotNull (p);
-              
-            }
-        } 
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+            Assert.IsNotNull(p);
+        }
     }
 }

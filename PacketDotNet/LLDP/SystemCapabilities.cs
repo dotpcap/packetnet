@@ -20,26 +20,23 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
-    /// A System Capabilities TLV
+    /// A System Capabilities Tlv
     /// [TLVTypeLength - 2 bytes][System Capabilities - 2 bytes][Enabled Capabilities - 2 bytes]
     /// </summary>
     [Serializable]
-    public class SystemCapabilities : TLV
+    public class SystemCapabilities : Tlv
     {
-        private const Int32 EnabledCapabilitiesLength = 2;
-        private const Int32 SystemCapabilitiesLength = 2;
-
-
-        #region Constructors
+        private const int EnabledCapabilitiesLength = 2;
+        private const int SystemCapabilitiesLength = 2;
 
         /// <summary>
-        /// Creates a System Capabilities TLV
+        /// Creates a System Capabilities Tlv
         /// </summary>
         /// <param name="bytes">
         /// </param>
@@ -47,7 +44,7 @@ namespace PacketDotNet.LLDP
         /// The System Capabilities TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public SystemCapabilities(Byte[] bytes, Int32 offset) :
+        public SystemCapabilities(byte[] bytes, int offset) :
             base(bytes, offset)
         { }
 
@@ -60,52 +57,41 @@ namespace PacketDotNet.LLDP
         /// <param name="enabled">
         /// A bitmap containing the enabled System Capabilities
         /// </param>
-        public SystemCapabilities(UInt16 capabilities, UInt16 enabled)
+        public SystemCapabilities(ushort capabilities, ushort enabled)
         {
-            var length = TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength + EnabledCapabilitiesLength;
-            var bytes = new Byte[length];
-            var offset = 0;
-            TLVData = new ByteArraySegment(bytes, offset, length);
+            const int length = TlvTypeLength.TypeLengthLength + SystemCapabilitiesLength + EnabledCapabilitiesLength;
+            var bytes = new byte[length];
 
-            Type = TLVTypes.SystemCapabilities;
+            Data = new ByteArraySegment(bytes, 0, length);
+
+            Type = TlvType.SystemCapabilities;
             Capabilities = capabilities;
             Enabled = enabled;
         }
 
-        #endregion
-
-
-        #region Properties
-
         /// <value>
         /// A bitmap containing the available System Capabilities
         /// </value>
-        public UInt16 Capabilities
+        public ushort Capabilities
         {
-            get => EndianBitConverter.Big.ToUInt16(TLVData.Bytes,
-                                                   TLVData.Offset + TLVTypeLength.TypeLengthLength);
+            get => EndianBitConverter.Big.ToUInt16(Data.Bytes,
+                                                   Data.Offset + TlvTypeLength.TypeLengthLength);
             set => EndianBitConverter.Big.CopyBytes(value,
-                                                    TLVData.Bytes,
-                                                    TLVData.Offset + TLVTypeLength.TypeLengthLength);
+                                                    Data.Bytes,
+                                                    Data.Offset + TlvTypeLength.TypeLengthLength);
         }
 
         /// <value>
         /// A bitmap containing the Enabled System Capabilities
         /// </value>
-        public UInt16 Enabled
+        public ushort Enabled
         {
-            get => EndianBitConverter.Big.ToUInt16(TLVData.Bytes,
-                                                   TLVData.Offset + TLVTypeLength.TypeLengthLength + SystemCapabilitiesLength);
-
+            get => EndianBitConverter.Big.ToUInt16(Data.Bytes,
+                                                   Data.Offset + TlvTypeLength.TypeLengthLength + SystemCapabilitiesLength);
             set => EndianBitConverter.Big.CopyBytes(value,
-                                                    TLVData.Bytes,
+                                                    Data.Bytes,
                                                     ValueOffset + SystemCapabilitiesLength);
         }
-
-        #endregion
-
-
-        #region Methods
 
         /// <summary>
         /// Checks whether the system is capable of a certain function
@@ -116,9 +102,9 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// Whether or not the system is capable of the function being tested
         /// </returns>
-        public Boolean IsCapable(CapabilityOptions capability)
+        public bool IsCapable(CapabilityOptions capability)
         {
-            var mask = (UInt16) capability;
+            var mask = (ushort) capability;
             if ((Capabilities & mask) != 0)
             {
                 return true;
@@ -136,9 +122,9 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// Whether or not the specified function is enabled
         /// </returns>
-        public Boolean IsEnabled(CapabilityOptions capability)
+        public bool IsEnabled(CapabilityOptions capability)
         {
-            var mask = (UInt16) capability;
+            var mask = (ushort) capability;
             if ((Enabled & mask) != 0)
             {
                 return true;
@@ -153,11 +139,9 @@ namespace PacketDotNet.LLDP
         /// <returns>
         /// A human readable string
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return $"[SystemCapabilities: Capabilities={Capabilities}, Enabled={Enabled}]";
         }
-
-        #endregion
     }
 }

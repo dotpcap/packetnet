@@ -22,10 +22,10 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Net.NetworkInformation;
 using NUnit.Framework;
-using SharpPcap;
-using SharpPcap.LibPcap;
 using PacketDotNet;
 using PacketDotNet.Utils;
+using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -39,7 +39,7 @@ namespace Test.PacketType
             var wol = new WakeOnLanPacket(physicalAddress);
 
             Assert.IsTrue(wol.IsValid());
-            Assert.AreEqual(wol.DestinationMAC, physicalAddress);
+            Assert.AreEqual(wol.DestinationAddress, physicalAddress);
 
             // convert the wol packet back into bytes
             var wolBytes = wol.Bytes;
@@ -49,40 +49,6 @@ namespace Test.PacketType
 
             // make sure the packets match
             Assert.AreEqual(wol, wol2);
-        }
-
-        [Test]
-        public void WakeOnLanParsing()
-        {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/wol.pcap");
-            dev.Open();
-
-            RawCapture rawCapture;
-
-            Int32 packetIndex = 0;
-            while((rawCapture = dev.GetNextPacket()) != null)
-            {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                Assert.IsNotNull(p);
-
-                var wol = (WakeOnLanPacket)p.Extract(typeof(WakeOnLanPacket));
-                Assert.IsNotNull(p);
-
-                if(packetIndex == 0)
-                    Assert.AreEqual(wol.DestinationMAC, PhysicalAddress.Parse("00-0D-56-DC-9E-35"));
-
-                if(packetIndex == 3)
-                    Assert.AreEqual(wol.DestinationMAC, PhysicalAddress.Parse("00-90-27-85-CF-01"));
-
-                packetIndex++;
-            }
-            dev.Close();
-        }
-
-        [Test]
-        public void RandomPacket()
-        {
-            WakeOnLanPacket.RandomPacket();
         }
 
         [Test]
@@ -96,7 +62,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var wol = (WakeOnLanPacket)p.Extract(typeof(WakeOnLanPacket));
+            var wol = p.Extract<WakeOnLanPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(wol.ToString());
@@ -113,10 +79,45 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var wol = (WakeOnLanPacket)p.Extract (typeof(WakeOnLanPacket));
+            var wol = p.Extract<WakeOnLanPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(wol.ToString(StringOutputType.Verbose));
+        }
+
+        [Test]
+        public void RandomPacket()
+        {
+            WakeOnLanPacket.RandomPacket();
+        }
+
+        [Test]
+        public void WakeOnLanParsing()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/wol.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+
+            var packetIndex = 0;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                Assert.IsNotNull(p);
+
+                var wol = p.Extract<WakeOnLanPacket>();
+                Assert.IsNotNull(p);
+
+                if (packetIndex == 0)
+                    Assert.AreEqual(wol.DestinationAddress, PhysicalAddress.Parse("00-0D-56-DC-9E-35"));
+
+                if (packetIndex == 3)
+                    Assert.AreEqual(wol.DestinationAddress, PhysicalAddress.Parse("00-90-27-85-CF-01"));
+
+                packetIndex++;
+            }
+
+            dev.Close();
         }
     }
 }

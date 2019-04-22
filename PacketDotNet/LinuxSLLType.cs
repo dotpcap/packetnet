@@ -24,7 +24,7 @@ namespace PacketDotNet
     /// The types of cooked packets
     /// See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
     /// </summary>
-    public enum LinuxSLLType
+    public enum LinuxSllType
     {
         /// <summary>
         /// Packet was sent to us by somebody else

@@ -18,8 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
-
 namespace PacketDotNet
 {
     /// <summary>
@@ -27,38 +25,36 @@ namespace PacketDotNet
     /// See http://tools.ietf.org/html/rfc2516
     /// </summary>
     // ReSharper disable once InconsistentNaming
-    public class PPPoEFields
+    public struct PppoeFields
     {
-        /// <summary> Size in bytes of the code field </summary>
-        public static readonly Int32 CodeLength = 1;
+        /// <summary>Size in bytes of the code field.</summary>
+        public static readonly int CodeLength = 1;
 
-        /// <summary> Offset from the start of the header to the Code field </summary>
-        public static readonly Int32 CodePosition;
+        /// <summary>Offset from the start of the header to the Code field.</summary>
+        public static readonly int CodePosition;
 
-        /// <summary>
-        /// Length of the overall PPPoe header
-        /// </summary>
-        public static readonly Int32 HeaderLength;
+        /// <summary>Length of the overall PPPoe header.</summary>
+        public static readonly int HeaderLength;
 
-        /// <summary> Size in bytes of the Length field </summary>
-        public static readonly Int32 LengthLength = 2;
+        /// <summary>Size in bytes of the Length field.</summary>
+        public static readonly int LengthLength = 2;
 
-        /// <summary> Offset from the start of the header to the Length field </summary>
-        public static readonly Int32 LengthPosition;
+        /// <summary>Offset from the start of the header to the Length field.</summary>
+        public static readonly int LengthPosition;
 
-        /// <summary> Size in bytes of the SessionId field </summary>
-        public static readonly Int32 SessionIdLength = 2;
+        /// <summary>Size in bytes of the SessionId field.</summary>
+        public static readonly int SessionIdLength = 2;
 
-        /// <summary> Offset from the start of the header to the SessionId field </summary>
-        public static readonly Int32 SessionIdPosition;
+        /// <summary>Offset from the start of the header to the SessionId field.</summary>
+        public static readonly int SessionIdPosition;
 
-        /// <summary> Size in bytes of the version/type field </summary>
-        public static readonly Int32 VersionTypeLength = 1;
+        /// <summary>Size in bytes of the version/type field.</summary>
+        public static readonly int VersionTypeLength = 1;
 
-        /// <summary> Offset from the start of the header to the version/type field </summary>
-        public static readonly Int32 VersionTypePosition = 0;
+        /// <summary>Offset from the start of the header to the version/type field.</summary>
+        public static readonly int VersionTypePosition = 0;
 
-        static PPPoEFields()
+        static PppoeFields()
         {
             CodePosition = VersionTypePosition + VersionTypeLength;
             SessionIdPosition = CodePosition + CodeLength;

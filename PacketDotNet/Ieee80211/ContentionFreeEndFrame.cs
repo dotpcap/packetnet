@@ -18,7 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 
@@ -32,12 +31,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public ContentionFreeEndFrame(ByteArraySegment bas)
+        public ContentionFreeEndFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -77,9 +76,9 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Length of the frame
         /// </summary>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 2);
+        public override int FrameSize => MacFields.FrameControlLength +
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 2);
 
         /// <summary>
         /// Receiver address
@@ -93,7 +92,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;
@@ -106,12 +105,12 @@ namespace PacketDotNet.Ieee80211
 
         /// <summary>
         /// Returns a string with a description of the addresses used in the packet.
-        /// This is used as a compoent of the string returned by ToString().
+        /// This is used as a component of the string returned by ToString().
         /// </summary>
         /// <returns>
         /// The address string.
         /// </returns>
-        protected override String GetAddressString()
+        protected override string GetAddressString()
         {
             return $"RA {ReceiverAddress} BSSID {BssId}";
         }

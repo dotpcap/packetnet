@@ -1,10 +1,8 @@
-using System;
-
 namespace PacketDotNet.Ieee80211
 {
     public class ProbeRequestFields
     {
-        public static readonly Int32 InformationElement1Position;
+        public static readonly int InformationElement1Position;
 
         static ProbeRequestFields()
         {

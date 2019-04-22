@@ -27,15 +27,15 @@ namespace PacketDotNet
     /// See http://www.iana.org/assignments/ppp-numbers
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public enum PPPProtocol : ushort
+    public enum PppProtocol : ushort
     {
-        /// <summary> Padding </summary>
+        /// <summary>Padding.</summary>
         Padding = 0x1,
 
-        /// <summary> IPv4 </summary>
+        /// <summary>IPv4.</summary>
         IPv4 = 0x21,
 
-        /// <summary> IPv6 </summary>
+        /// <summary>IPv6.</summary>
         IPv6 = 0x57
     }
 }

@@ -19,6 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using log4net.Core;
 using NUnit.Framework;
 using PacketDotNet;
 
@@ -58,30 +59,31 @@ namespace Test.Performance
 
             // used to make sure we get the same byte[] reference returned each time
             // because thats what we expect
-            Byte[] theByteArray = null;
+            byte[] bArray = null;
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to improve performance
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             // now benchmark retrieving the byte[] for several seconds
             var startTime = DateTime.Now;
             var endTime = startTime.Add(new TimeSpan(0, 0, 2));
-            Int32 testRuns = 0;
-            while(DateTime.Now < endTime)
+            var testRuns = 0;
+            while (DateTime.Now < endTime)
             {
-                var theBytes = contiguousEthernetPacket.Bytes;
+                var bs = contiguousEthernetPacket.Bytes;
 
                 // make sure that we always get back the same reference
                 // for the byte[]
-                if(theByteArray == null)
+                if (bArray == null)
                 {
-                    theByteArray = theBytes;
-                } else
+                    bArray = bs;
+                }
+                else
                 {
-                    Assert.AreSame(theByteArray, theBytes);
+                    Assert.AreSame(bArray, bs);
                 }
 
                 testRuns++;
@@ -103,30 +105,31 @@ namespace Test.Performance
         {
             var ethernetPacket = BuildNonContiguousEthernetPacket();
 
-            Byte[] lastByteArray = null;
+            byte[] lastByteArray = null;
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to improve performance
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             // now benchmark retrieving the byte[] for several seconds
             var startTime = DateTime.Now;
             var endTime = startTime.Add(new TimeSpan(0, 0, 2));
-            Int32 testRuns = 0;
-            while(DateTime.Now < endTime)
+            var testRuns = 0;
+            while (DateTime.Now < endTime)
             {
-                var theBytes = ethernetPacket.Bytes;
+                var bs = ethernetPacket.Bytes;
 
                 // make sure we don't get back the same reference
-                if(lastByteArray == null)
+                if (lastByteArray == null)
                 {
-                    lastByteArray = theBytes;
-                } else
+                    lastByteArray = bs;
+                }
+                else
                 {
-                    Assert.AreNotSame(lastByteArray, theBytes);
-                    lastByteArray = theBytes;
+                    Assert.AreNotSame(lastByteArray, bs);
+                    lastByteArray = bs;
                 }
 
                 testRuns++;

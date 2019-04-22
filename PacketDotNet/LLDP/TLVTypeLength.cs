@@ -20,81 +20,56 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Reflection;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
-
+using PacketDotNet.Utils.Converters;
 #if DEBUG
+using System.Reflection;
 using log4net;
+
 #endif
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
-    /// Tlv type and length are 2 bytes
+    /// TLV type and length are 2 bytes
     /// See http://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol#Frame_structure
     /// </summary>
     [Serializable]
-    public class TLVTypeLength
+    public class TlvTypeLength
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
-// NOTE: No need to warn about lack of use, the compiler won't
-//       put any calls to 'log' here but we need 'log' to exist to compile
+        // NOTE: No need to warn about lack of use, the compiler won't
+        //       put any calls to 'log' here but we need 'log' to exist to compile
 #pragma warning disable 0169, 0649
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
 
         /// <summary>
-        /// Length in bytes of the tlv type and length fields
+        /// Length in bytes of the TLV type and length fields
         /// </summary>
-        public const Int32 TypeLengthLength = 2;
+        public const int TypeLengthLength = 2;
 
-        private const Int32 TypeMask = 0xFE00;
-        private const Int32 LengthBits = 9;
-        private const Int32 LengthMask = 0x1FF;
+        private const int LengthBits = 9;
+        private const int LengthMask = 0x1FF;
 
-        private const Int32 MaximumTLVLength = 511;
+        private const int MaximumTLVLength = 511;
+
+        private const int TypeMask = 0xFE00;
 
         private readonly ByteArraySegment _byteArraySegment;
 
         /// <summary>
-        /// Construct a TLVTypeLength for a TLV
+        /// Construct a TLVTypeLength for a Tlv
         /// </summary>
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public TLVTypeLength(ByteArraySegment byteArraySegment)
+        public TlvTypeLength(ByteArraySegment byteArraySegment)
         {
             _byteArraySegment = byteArraySegment;
-        }
-
-        /// <value>
-        /// The TLV Value's Type
-        /// </value>
-        public TLVTypes Type
-        {
-            get
-            {
-                // get the type
-                var typeAndLength = TypeAndLength;
-                // remove the length info
-                return (TLVTypes) (typeAndLength >> LengthBits);
-            }
-
-            set
-            {
-                Log.DebugFormat("value of {0}", value);
-
-                // shift type into the type position
-                var type = (UInt16) ((UInt16) value << LengthBits);
-                // save the old length
-                var length = (UInt16) (LengthMask & TypeAndLength);
-                // set the type
-                TypeAndLength = (UInt16) (type | length);
-            }
         }
 
         /// <value>
@@ -102,7 +77,7 @@ namespace PacketDotNet.LLDP
         /// NOTE: Value is the length of the TLV Value only, does not include the length
         /// of the type and length fields
         /// </value>
-        public Int32 Length
+        public int Length
         {
             get
             {
@@ -112,8 +87,8 @@ namespace PacketDotNet.LLDP
                 return LengthMask & typeAndLength;
             }
 
-            // Length set is internal as the length of a tlv is automatically set based on
-            // the tlvs content
+            // Length set is internal as the length of a TLV is automatically set based on
+            // the TLVs content
             internal set
             {
                 Log.DebugFormat("value {0}", value);
@@ -129,19 +104,43 @@ namespace PacketDotNet.LLDP
                 }
 
                 // save the old type
-                var type = (UInt16) (TypeMask & TypeAndLength);
+                var type = (ushort) (TypeMask & TypeAndLength);
                 // set the length
-                TypeAndLength = (UInt16) (type | value);
+                TypeAndLength = (ushort) (type | value);
+            }
+        }
+
+        /// <value>
+        /// The TLV Value's Type
+        /// </value>
+        public TlvType Type
+        {
+            get
+            {
+                // get the type
+                var typeAndLength = TypeAndLength;
+                // remove the length info
+                return (TlvType) (typeAndLength >> LengthBits);
+            }
+            set
+            {
+                Log.DebugFormat("value of {0}", value);
+
+                // shift type into the type position
+                var type = (ushort) ((ushort) value << LengthBits);
+                // save the old length
+                var length = (ushort) (LengthMask & TypeAndLength);
+                // set the type
+                TypeAndLength = (ushort) (type | length);
             }
         }
 
         /// <value>
         /// A unsigned short representing the concatenated Type and Length
         /// </value>
-        private UInt16 TypeAndLength
+        private ushort TypeAndLength
         {
             get => EndianBitConverter.Big.ToUInt16(_byteArraySegment.Bytes, _byteArraySegment.Offset);
-
             set => EndianBitConverter.Big.CopyBytes(value, _byteArraySegment.Bytes, _byteArraySegment.Offset);
         }
     }

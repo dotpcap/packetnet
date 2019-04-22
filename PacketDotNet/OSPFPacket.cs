@@ -27,59 +27,77 @@ namespace PacketDotNet
     /// OSPF Version 2 (for IPv4) is defined in RFC 2328.
     /// OSPF Version 3 (for IPv6) is defined in RFC 5340.
     /// </summary>
-    public abstract class OSPFPacket : Packet
+    public abstract class OspfPacket : Packet
     {
         /// <summary>
-        /// Constructs the right version and type of an OSPFPacket
+        /// Constructs the right version and type of an OspfPacket
         /// </summary>
-        /// <param name="payload">The bytes from which the packet is conctructed</param>
+        /// <param name="payload">The bytes from which the packet is constructed</param>
         /// <param name="offset">The offset of this packet from the parent packet</param>
         /// <returns>an OSPF packet</returns>
-        public static OSPFPacket ConstructOSPFPacket(Byte[] payload, Int32 offset)
+        public static OspfPacket ConstructOspfPacket(byte[] payload, int offset)
         {
-            var v = (OSPFVersion) payload[offset + OSPFv2Fields.VersionPosition];
+            var v = (OspfVersion) payload[offset + OspfV2Fields.VersionPosition];
 
             switch (v)
             {
-                case OSPFVersion.OSPFv2:
+                case OspfVersion.OspfV2:
+                {
                     return ConstructV2Packet(payload, offset);
-                case OSPFVersion.OSPFv3:
-                    return ConstructV3Packet(payload, offset);
+                }
+                case OspfVersion.OspfV3:
+                {
+                    return ConstructV3Packet();
+                }
                 default:
+                {
                     throw new InvalidOperationException("No such OSPF version: " + v);
+                }
             }
         }
 
-        private static OSPFv2Packet ConstructV2Packet(Byte[] payload, Int32 offset)
+        private static OspfV2Packet ConstructV2Packet(byte[] payload, int offset)
         {
-            OSPFv2Packet p;
-            var type = (OSPFPacketType) payload[offset + OSPFv2Fields.TypePosition];
+            OspfV2Packet p;
+            var type = (OspfPacketType) payload[offset + OspfV2Fields.TypePosition];
 
             switch (type)
             {
-                case OSPFPacketType.Hello:
-                    p = new OSPFv2HelloPacket(payload, offset);
+                case OspfPacketType.Hello:
+                {
+                    p = new OspfV2HelloPacket(payload, offset);
                     break;
-                case OSPFPacketType.DatabaseDescription:
-                    p = new OSPFv2DDPacket(payload, offset);
+                }
+                case OspfPacketType.DatabaseDescription:
+                {
+                    p = new OspfV2DatabaseDescriptorPacket(payload, offset);
                     break;
-                case OSPFPacketType.LinkStateAcknowledgment:
-                    p = new OSPFv2LSAPacket(payload, offset);
+                }
+                case OspfPacketType.LinkStateAcknowledgment:
+                {
+                    p = new OspfV2LinkStateAcknowledgmentPacket(payload, offset);
                     break;
-                case OSPFPacketType.LinkStateRequest:
-                    p = new OSPFv2LSRequestPacket(payload, offset);
+                }
+                case OspfPacketType.LinkStateRequest:
+                {
+                    p = new OspfV2LinkStateRequestPacket(payload, offset);
                     break;
-                case OSPFPacketType.LinkStateUpdate:
-                    p = new OSPFv2LSUpdatePacket(payload, offset);
+                }
+                case OspfPacketType.LinkStateUpdate:
+                {
+                    p = new OspfV2LinkStateUpdatePacket(payload, offset);
                     break;
+                }
                 default:
+                {
                     throw new Exception("Malformed OSPF packet");
+                }
             }
 
             return p;
         }
 
-        private static OSPFPacket ConstructV3Packet(Byte[] payload, Int32 offset)
+        private static OspfPacket ConstructV3Packet()
         {
             throw new NotImplementedException("OSPFv3 is not supported yet");
         }

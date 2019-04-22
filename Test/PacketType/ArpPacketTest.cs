@@ -19,13 +19,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.IO;
 using System.Net;
+using System.Net.NetworkInformation;
+using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
-using SharpPcap.LibPcap;
 using PacketDotNet;
 using SharpPcap;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -35,17 +36,17 @@ namespace Test.PacketType
         // arp request
         private void VerifyPacket0(Packet p)
         {
-            var arpPacket = (ARPPacket)p.Extract(typeof(ARPPacket));
+            var arpPacket = p.Extract<ArpPacket>();
             Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
-            IPAddress senderIp = IPAddress.Parse("192.168.1.202");
-            IPAddress targetIp = IPAddress.Parse("192.168.1.214");
+            var senderIp = IPAddress.Parse("192.168.1.202");
+            var targetIp = IPAddress.Parse("192.168.1.214");
 
             Assert.AreEqual(senderIp, arpPacket.SenderProtocolAddress);
             Assert.AreEqual(targetIp, arpPacket.TargetProtocolAddress);
 
-            String senderMacAddress = "000461990154";
-            String targetMacAddress = "000000000000";
+            var senderMacAddress = "000461990154";
+            var targetMacAddress = "000000000000";
             Assert.AreEqual(senderMacAddress, arpPacket.SenderHardwareAddress.ToString());
             Assert.AreEqual(targetMacAddress, arpPacket.TargetHardwareAddress.ToString());
         }
@@ -53,19 +54,101 @@ namespace Test.PacketType
         // arp response
         private void VerifyPacket1(Packet p)
         {
-            var arpPacket = (ARPPacket)p.Extract (typeof(ARPPacket));
-            Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
+            var arp = p.Extract<ArpPacket>();
+            Assert.IsNotNull(arp, "Expected arpPacket to not be null");
 
-            IPAddress senderIp = IPAddress.Parse("192.168.1.214");
-            IPAddress targetIp = IPAddress.Parse("192.168.1.202");
+            var senderIp = IPAddress.Parse("192.168.1.214");
+            var targetIp = IPAddress.Parse("192.168.1.202");
 
-            Assert.AreEqual(senderIp, arpPacket.SenderProtocolAddress);
-            Assert.AreEqual(targetIp, arpPacket.TargetProtocolAddress);
+            Assert.AreEqual(senderIp, arp.SenderProtocolAddress);
+            Assert.AreEqual(targetIp, arp.TargetProtocolAddress);
 
-            String senderMacAddress = "00216A020854";
-            String targetMacAddress = "000461990154";
-            Assert.AreEqual(senderMacAddress, arpPacket.SenderHardwareAddress.ToString());
-            Assert.AreEqual(targetMacAddress, arpPacket.TargetHardwareAddress.ToString());
+            var senderMacAddress = "00216A020854";
+            var targetMacAddress = "000461990154";
+            Assert.AreEqual(senderMacAddress, arp.SenderHardwareAddress.ToString());
+            Assert.AreEqual(targetMacAddress, arp.TargetHardwareAddress.ToString());
+        }
+
+        [Test]
+        public void BinarySerialization()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/arp_request_response.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+            var foundARP = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+                var arp = p.Extract<ArpPacket>();
+                if (arp == null)
+                {
+                    continue;
+                }
+
+                foundARP = true;
+
+                var memoryStream = new MemoryStream();
+                var serializer = new BinaryFormatter();
+                serializer.Serialize(memoryStream, arp);
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                var deserializer = new BinaryFormatter();
+                var fromFile = (ArpPacket) deserializer.Deserialize(memoryStream);
+
+                CollectionAssert.AreEqual(arp.Bytes, fromFile.Bytes);
+                Assert.AreEqual(arp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(arp.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(arp.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(arp.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(arp.BytesSegment.Offset, fromFile.BytesSegment.Offset);
+                Assert.AreEqual(arp.Color, fromFile.Color);
+                Assert.AreEqual(arp.HardwareAddressLength, fromFile.HardwareAddressLength);
+                Assert.AreEqual(arp.HardwareAddressType, fromFile.HardwareAddressType);
+                CollectionAssert.AreEqual(arp.HeaderData, fromFile.HeaderData);
+                Assert.AreEqual(arp.Operation, fromFile.Operation);
+                Assert.AreEqual(arp.ParentPacket, fromFile.ParentPacket);
+                CollectionAssert.AreEqual(arp.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(arp.PayloadPacket, fromFile.PayloadPacket);
+                Assert.AreEqual(arp.ProtocolAddressLength, fromFile.ProtocolAddressLength);
+                Assert.AreEqual(arp.ProtocolAddressType, fromFile.ProtocolAddressType);
+                Assert.AreEqual(arp.SenderHardwareAddress, fromFile.SenderHardwareAddress);
+                Assert.AreEqual(arp.SenderProtocolAddress, fromFile.SenderProtocolAddress);
+                Assert.AreEqual(arp.TargetHardwareAddress, fromFile.TargetHardwareAddress);
+                Assert.AreEqual(arp.TargetProtocolAddress, fromFile.TargetProtocolAddress);
+
+                //Method Invocations to make sure that a deserialized packet does not cause 
+                //additional errors.
+
+                arp.PrintHex();
+                arp.UpdateCalculatedValues();
+            }
+
+            dev.Close();
+
+            Assert.IsTrue(foundARP, "Capture file contained no ARP packets");
+        }
+
+        /// <summary>
+        /// Test that we can build an ArpPacket from values
+        /// </summary>
+        [Test]
+        public void ConstructingFromValues()
+        {
+            var localIPBytes = new byte[] { 124, 10, 10, 20 };
+            var localIP = new IPAddress(localIPBytes);
+
+            var destinationIPBytes = new byte[] { 192, 168, 1, 10 };
+            var destinationIP = new IPAddress(destinationIPBytes);
+
+            var localMac = PhysicalAddress.Parse("AA-BB-CC-DD-EE-FF");
+
+            var _ = new ArpPacket(ArpOperation.Request,
+                                  PhysicalAddress.Parse("00-00-00-00-00-00"),
+                                  destinationIP,
+                                  localMac,
+                                  localIP);
         }
 
         [Test]
@@ -75,24 +158,30 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            Int32 packetIndex = 0;
-            while((rawCapture = dev.GetNextPacket()) != null)
+            var packetIndex = 0;
+            while ((rawCapture = dev.GetNextPacket()) != null)
             {
                 var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
                 Console.WriteLine("got packet");
-                Console.WriteLine("{0}", p.ToString());
-                switch(packetIndex)
+                Console.WriteLine("{0}", p);
+                switch (packetIndex)
                 {
-                case 0:
-                    VerifyPacket0(p);
-                    break;
-                case 1:
-                    VerifyPacket1(p);
-                    break;
-                default:
-                    Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
-                    break;
+                    case 0:
+                    {
+                        VerifyPacket0(p);
+                        break;
+                    }
+                    case 1:
+                    {
+                        VerifyPacket1(p);
+                        break;
+                    }
+                    default:
+                    {
+                        Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
+                        break;
+                    }
                 }
 
                 packetIndex++;
@@ -101,40 +190,18 @@ namespace Test.PacketType
             dev.Close();
         }
 
-        /// <summary>
-        /// Test that we can build an ARPPacket from values
-        /// </summary>
-        [Test]
-        public void ConstructingFromValues()
-        {
-            var localIPBytes = new Byte[4] {124, 10, 10, 20};
-            var localIP = new System.Net.IPAddress(localIPBytes);
-
-            var destinationIPBytes = new Byte[4] {192, 168, 1, 10};
-            var destinationIP = new System.Net.IPAddress(destinationIPBytes);
-
-            var localMac = System.Net.NetworkInformation.PhysicalAddress.Parse("AA-BB-CC-DD-EE-FF");
-
-            new PacketDotNet.ARPPacket(PacketDotNet.ARPOperation.Request,
-                                       System.Net.NetworkInformation.PhysicalAddress.Parse("00-00-00-00-00-00"),
-                                       destinationIP,
-                                       localMac,
-                                       localIP);
-        }
-
         [Test]
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/arp_request_response.pcap");
             dev.Open();
-            RawCapture rawCapture;
             Console.WriteLine("Reading packet data");
-            rawCapture = dev.GetNextPacket();
+            var rawCapture = dev.GetNextPacket();
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var arp = (ARPPacket)p.Extract(typeof(ARPPacket));
+            var arp = p.Extract<ArpPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(arp.ToString());
@@ -146,76 +213,15 @@ namespace Test.PacketType
             Console.WriteLine("Loading the sample capture file");
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/arp_request_response.pcap");
             dev.Open();
-            RawCapture rawCapture;
             Console.WriteLine("Reading packet data");
-            rawCapture = dev.GetNextPacket();
+            var rawCapture = dev.GetNextPacket();
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var arp = (ARPPacket)p.Extract (typeof(ARPPacket));
+            var arp = p.Extract<ArpPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(arp.ToString(StringOutputType.Verbose));
-        }
-
-        [Test]
-        public void BinarySerialization()
-        {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/arp_request_response.pcap");
-            dev.Open();
-
-            RawCapture rawCapture;
-            Boolean foundARP = false;
-            while ((rawCapture = dev.GetNextPacket()) != null)
-            {
-                var p = PacketDotNet.Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-                var arpPacket = (ARPPacket)p.Extract(typeof(ARPPacket));
-                if (arpPacket == null)
-                {
-                    continue;
-                }
-                foundARP = true;
-
-                var memoryStream = new MemoryStream();
-                BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, arpPacket);
-
-                memoryStream.Seek (0, SeekOrigin.Begin);
-                BinaryFormatter deserializer = new BinaryFormatter();
-                ARPPacket fromFile = (ARPPacket)deserializer.Deserialize(memoryStream);
-
-                CollectionAssert.AreEqual(arpPacket.Bytes, fromFile.Bytes);
-                Assert.AreEqual(arpPacket.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(arpPacket.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(arpPacket.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(arpPacket.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(arpPacket.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
-                Assert.AreEqual(arpPacket.Color, fromFile.Color);
-                Assert.AreEqual(arpPacket.HardwareAddressLength, fromFile.HardwareAddressLength);
-                Assert.AreEqual(arpPacket.HardwareAddressType, fromFile.HardwareAddressType);
-                CollectionAssert.AreEqual(arpPacket.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(arpPacket.Operation, fromFile.Operation);
-                Assert.AreEqual(arpPacket.ParentPacket, fromFile.ParentPacket);
-                CollectionAssert.AreEqual(arpPacket.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(arpPacket.PayloadPacket, fromFile.PayloadPacket);
-                Assert.AreEqual(arpPacket.ProtocolAddressLength, fromFile.ProtocolAddressLength);
-                Assert.AreEqual(arpPacket.ProtocolAddressType, fromFile.ProtocolAddressType);
-                Assert.AreEqual(arpPacket.SenderHardwareAddress, fromFile.SenderHardwareAddress);
-                Assert.AreEqual(arpPacket.SenderProtocolAddress, fromFile.SenderProtocolAddress);
-                Assert.AreEqual(arpPacket.TargetHardwareAddress, fromFile.TargetHardwareAddress);
-                Assert.AreEqual(arpPacket.TargetProtocolAddress, fromFile.TargetProtocolAddress);
-
-                //Method Invocations to make sure that a deserialized packet does not cause 
-                //additional errors.
-
-                arpPacket.PrintHex();
-                arpPacket.UpdateCalculatedValues();
-            }
-
-            dev.Close();
-
-            Assert.IsTrue(foundARP, "Capture file contained no ARP packets");
         }
     }
 }

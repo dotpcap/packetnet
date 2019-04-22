@@ -33,15 +33,8 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class AlternateChecksumData : Option
     {
-        #region Members
-
         // the offset (in bytes) of the Data Field
-        private const Int32 DataFieldOffset = 2;
-
-        #endregion
-
-
-        #region Constructors
+        private const int DataFieldOffset = 2;
 
         /// <summary>
         /// Creates an Alternate Checksum Data Option
@@ -50,38 +43,28 @@ namespace PacketDotNet.Tcp
         /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
-        public AlternateChecksumData(Byte[] bytes, Int32 offset, Int32 length) :
+        public AlternateChecksumData(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
-
-        #endregion
-
-
-        #region Properties
 
         /// <summary>
         /// The array of attached Checksum
         /// </summary>
-        public Byte[] Data
+        public byte[] Data
         {
             get
             {
-                var data = new Byte[Length - DataFieldOffset];
+                var data = new byte[Length - DataFieldOffset];
                 Array.Copy(OptionData.Bytes, OptionData.Offset + DataFieldOffset, data, 0, data.Length);
                 return data;
             }
             set => Array.Copy(value, 0, OptionData.Bytes, OptionData.Offset + DataFieldOffset, value.Length);
         }
-
-        #endregion
-
-
-        #region Methods
 
         /// <summary>
         /// Returns the Option info as a string
@@ -89,11 +72,9 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return "[" + Kind + ": Data=0x" + Data + "]";
         }
-
-        #endregion
     }
 }

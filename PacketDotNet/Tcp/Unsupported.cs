@@ -15,8 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
-
 namespace PacketDotNet.Tcp
 {
     public class Unsupported : Option
@@ -36,7 +34,7 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return "[" + Kind + ": Currently unsupported by PacketDotNet]";
         }

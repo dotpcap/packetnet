@@ -22,24 +22,29 @@ using System;
 using PacketDotNet.Utils;
 
 // ReSharper disable InconsistentNaming
-
 namespace PacketDotNet
 {
     [Serializable]
     public class IPv6ExtensionHeader
     {
+        protected ByteArraySegment ByteArraySegment;
         private ByteArraySegment _data;
-        protected ByteArraySegment _encapsulatedBytes;
 
         /// <summary>
-        /// Gets the payload of the extension header.
+        /// Initializes a new instance of the <see cref="IPv6ExtensionHeader" /> class.
         /// </summary>
-        public ByteArraySegment Payload => _data ?? (_data = new ByteArraySegment(_encapsulatedBytes.Bytes, _encapsulatedBytes.Offset + IPv6Fields.HeaderExtensionDataPosition, Length - IPv6Fields.HeaderExtensionDataPosition));
+        /// <param name="header">The header.</param>
+        /// <param name="byteArraySegment">The byte array segment.</param>
+        public IPv6ExtensionHeader(ProtocolType header, ByteArraySegment byteArraySegment)
+        {
+            Header = header;
+            ByteArraySegment = byteArraySegment;
+        }
 
         /// <summary>
         /// Gets the header.
         /// </summary>
-        public IPProtocolType Header { get; }
+        public ProtocolType Header { get; }
 
         /// <summary>
         /// Gets or sets the length of the header extension in 8-octets (bytes) units, not including the first 8 octets.
@@ -48,46 +53,40 @@ namespace PacketDotNet
         {
             get
             {
-                if (Header == IPProtocolType.FRAGMENT)
+                if (Header == ProtocolType.IPv6FragmentHeader)
                     return 0;
 
 
-                return _encapsulatedBytes.Bytes[_encapsulatedBytes.Offset + IPv6Fields.HeaderExtensionLengthPosition];
+                return ByteArraySegment.Bytes[ByteArraySegment.Offset + IPv6Fields.HeaderExtensionLengthPosition];
             }
             set
             {
-                if (Header == IPProtocolType.FRAGMENT)
+                if (Header == ProtocolType.IPv6FragmentHeader)
                     return;
 
 
-                _encapsulatedBytes.Bytes[_encapsulatedBytes.Offset + IPv6Fields.HeaderExtensionLengthPosition] = (byte) value;
+                ByteArraySegment.Bytes[ByteArraySegment.Offset + IPv6Fields.HeaderExtensionLengthPosition] = (byte) value;
             }
         }
 
         /// <summary>
         /// Gets the length.
         /// </summary>
-        public UInt16 Length => (UInt16) ((HeaderExtensionLength + 1) * 8);
+        public ushort Length => (ushort) ((HeaderExtensionLength + 1) * 8);
 
         /// <summary>
         /// Gets or sets the next header.
         /// </summary>
-        public IPProtocolType NextHeader
+        public ProtocolType NextHeader
         {
-            get => (IPProtocolType)_encapsulatedBytes.Bytes[_encapsulatedBytes.Offset];
+            get => (ProtocolType) ByteArraySegment.Bytes[ByteArraySegment.Offset];
+            set => ByteArraySegment.Bytes[ByteArraySegment.Offset] = (byte) value;
+        }
 
-            set => _encapsulatedBytes.Bytes[_encapsulatedBytes.Offset] = (byte) value;
-        }
-        
         /// <summary>
-        /// Initializes a new instance of the <see cref="IPv6ExtensionHeader" /> class.
+        /// Gets the payload of the extension header.
         /// </summary>
-        /// <param name="header">The header.</param>
-        /// <param name="byteArraySegment">The byte array segment.</param>
-        public IPv6ExtensionHeader(IPProtocolType header, ByteArraySegment byteArraySegment)
-        {
-            Header = header;
-            _encapsulatedBytes = byteArraySegment;
-        }
+        public ByteArraySegment Payload =>
+            _data ?? (_data = new ByteArraySegment(ByteArraySegment.Bytes, ByteArraySegment.Offset + IPv6Fields.HeaderExtensionDataPosition, Length - IPv6Fields.HeaderExtensionDataPosition));
     }
 }

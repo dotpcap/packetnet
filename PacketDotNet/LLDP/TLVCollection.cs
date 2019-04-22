@@ -21,22 +21,22 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.ObjectModel;
-using System.Reflection;
 
 #if DEBUG
 using log4net;
+using System.Reflection;
 #endif
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
     /// Custom collection for TLV types
     /// Special behavior includes:
-    /// - Preventing an EndOfLLDPDU tlv from being added out of place
+    /// - Preventing an EndOfLldpdu TLV from being added out of place
     /// - Checking and throwing exceptions if one-per-LLDP packet TLVs are added multiple times
     /// </summary>
     [Serializable]
-    public class TLVCollection : Collection<TLV>
+    public class TlvCollection : Collection<Tlv>
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -50,46 +50,47 @@ namespace PacketDotNet.LLDP
 
         /// <summary>
         /// Override to:
-        /// - Prevent duplicate end tlvs from being added
-        /// - Ensure that an end tlv is present
-        /// - Replace any automatically added end tlvs with the user provided tlv
+        /// - Prevent duplicate end TLVs from being added
+        /// - Ensure that an end TLV is present
+        /// - Replace any automatically added end TLVs with the user provided tlv
         /// </summary>
         /// <param name="index">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="item">
-        /// A <see cref="TLV" />
+        /// A <see cref="Tlv" />
         /// </param>
-        protected override void InsertItem(Int32 index, TLV item)
+        protected override void InsertItem(int index, Tlv item)
         {
-            Log.DebugFormat("index {0}, TLV.GetType {1}, TLV.Type {2}",
+            Log.DebugFormat("index {0}, Tlv.GetType {1}, Tlv.Type {2}",
                             index,
                             item.GetType(),
                             item.Type);
 
             // if this is the first item and it isn't an End TLV we should add the end tlv
-            if (Count == 0 && item.Type != TLVTypes.EndOfLLDPU)
+            if (Count == 0 && item.Type != TlvType.EndOfLldpu)
             {
-                Log.Debug("Inserting EndOfLLDPDU");
-                base.InsertItem(0, new EndOfLLDPDU());
+                Log.Debug("Inserting EndOfLldpdu");
+                base.InsertItem(0, new EndOfLldpdu());
             }
             else if (Count != 0)
             {
-                // if the user is adding their own End tlv we should replace ours
+                // if the user is adding their own End TLV we should replace ours
                 // with theirs
-                if (item.Type == TLVTypes.EndOfLLDPU)
+                if (item.Type == TlvType.EndOfLldpu)
                 {
                     Log.DebugFormat("Replacing {0} with user provided {1}, Type {2}",
                                     this[Count - 1].GetType(),
                                     item.GetType(),
                                     item.Type);
+
                     SetItem(Count - 1, item);
                     return;
                 }
             }
 
             // if we have no items insert the first item wherever
-            // if we have items insert the item befor the last item as the last item is a EndOfLLDPDU
+            // if we have items insert the item before the last item as the last item is a EndOfLldpdu
             var insertPosition = Count == 0 ? 0 : Count - 1;
 
             Log.DebugFormat("Inserting item at position {0}", insertPosition);

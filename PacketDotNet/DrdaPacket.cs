@@ -20,13 +20,13 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 #if DEBUG
 using log4net;
+using System.Reflection;
 #endif
 
 namespace PacketDotNet
@@ -48,18 +48,50 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        private List<DrdaDDMPacket> _ddmList;
+        private List<DrdaDdmPacket> _ddmList;
 
         /// <summary>
-        /// Decde DDM Packet into List
+        /// Constructor
         /// </summary>
-        public List<DrdaDDMPacket> DrdaDDMPackets
+        /// <param name="byteArraySegment"></param>
+        public DrdaPacket(ByteArraySegment byteArraySegment)
+        {
+            Log.Debug("");
+
+            // set the header field, header field values are retrieved from this byte array
+            Header = new ByteArraySegment(byteArraySegment);
+
+            // store the payload bytes
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
+                                                                     {
+                                                                         var result = new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() };
+                                                                         return result;
+                                                                     },
+                                                                     LazyThreadSafetyMode.PublicationOnly);
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="byteArraySegment"></param>
+        /// <param name="parentPacket"></param>
+        public DrdaPacket(ByteArraySegment byteArraySegment, Packet parentPacket) : this(byteArraySegment)
+        {
+            Log.DebugFormat("ParentPacket.GetType() {0}", parentPacket.GetType());
+
+            ParentPacket = parentPacket;
+        }
+
+        /// <summary>
+        /// Decoded DDM Packet as a list.
+        /// </summary>
+        public List<DrdaDdmPacket> DrdaDdmPackets
         {
             get
             {
                 if (_ddmList == null)
                 {
-                    _ddmList = new List<DrdaDDMPacket>();
+                    _ddmList = new List<DrdaDdmPacket>();
                 }
 
                 if (_ddmList.Count > 0) return _ddmList;
@@ -72,46 +104,15 @@ namespace PacketDotNet
                     if (startOffset + length <= Header.BytesLength)
                     {
                         var ddmBas = new ByteArraySegment(Header.Bytes, startOffset, length);
-                        _ddmList.Add(new DrdaDDMPacket(ddmBas, this));
+                        _ddmList.Add(new DrdaDdmPacket(ddmBas, this));
                     }
 
                     startOffset += length;
                 }
 
-                Log.DebugFormat("DrdaDDMPacket.Count {0}", _ddmList.Count);
+                Log.DebugFormat("DrdaDdmPacket.Count {0}", _ddmList.Count);
                 return _ddmList;
             }
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="bas"></param>
-        public DrdaPacket(ByteArraySegment bas)
-        {
-            Log.Debug("");
-
-            // set the header field, header field values are retrieved from this byte array
-            Header = new ByteArraySegment(bas);
-
-            // store the payload bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-            {
-                var result = new PacketOrByteArraySegment {ByteArraySegment = Header.EncapsulatedBytes()};
-                return result;
-            }, LazyThreadSafetyMode.PublicationOnly);
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="bas"></param>
-        /// <param name="parentPacket"></param>
-        public DrdaPacket(ByteArraySegment bas, Packet parentPacket) : this(bas)
-        {
-            Log.DebugFormat("ParentPacket.GetType() {0}", parentPacket.GetType());
-
-            ParentPacket = parentPacket;
         }
     }
 }

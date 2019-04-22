@@ -29,8 +29,58 @@ using SharpPcap.LibPcap;
 namespace Test.PacketType
 {
     [TestFixture]
-    public class PPPPacketTest
+    public class PppPacketTest
     {
+        [Test]
+        public void BinarySerialization()
+        {
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/PPPoEPPP.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+            var foundPPP = false;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var ppp = p.Extract<PppPacket>();
+
+                if (ppp == null)
+                {
+                    continue;
+                }
+
+                foundPPP = true;
+
+                var memoryStream = new MemoryStream();
+                var serializer = new BinaryFormatter();
+                serializer.Serialize(memoryStream, ppp);
+
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                var deserializer = new BinaryFormatter();
+                var fromFile = (PppPacket) deserializer.Deserialize(memoryStream);
+
+                Assert.AreEqual(ppp.Bytes, fromFile.Bytes);
+                Assert.AreEqual(ppp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
+                Assert.AreEqual(ppp.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
+                Assert.AreEqual(ppp.BytesSegment.Length, fromFile.BytesSegment.Length);
+                Assert.AreEqual(ppp.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
+                Assert.AreEqual(ppp.BytesSegment.Offset, fromFile.BytesSegment.Offset);
+                Assert.AreEqual(ppp.Color, fromFile.Color);
+                Assert.AreEqual(ppp.HeaderData, fromFile.HeaderData);
+                Assert.AreEqual(ppp.PayloadData, fromFile.PayloadData);
+                Assert.AreEqual(ppp.Protocol, fromFile.Protocol);
+
+                //Method Invocations to make sure that a deserialized packet does not cause 
+                //additional errors.
+
+                ppp.UpdateCalculatedValues();
+            }
+
+            dev.Close();
+
+            Assert.IsTrue(foundPPP, "Capture file contained no PPP packets");
+        }
+
         [Test]
         public void PrintString()
         {
@@ -44,7 +94,7 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var ppp = (PPPPacket)p.Extract (typeof(PPPPacket));
+            var ppp = p.Extract<PppPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ppp.ToString());
@@ -63,60 +113,10 @@ namespace Test.PacketType
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var ppp = (PPPPacket)p.Extract (typeof(PPPPacket));
+            var ppp = p.Extract<PppPacket>();
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(ppp.ToString(StringOutputType.Verbose));
         }
-
-        [Test]
-        public void BinarySerialization()
-        {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/PPPoEPPP.pcap");
-            dev.Open();
-
-            RawCapture rawCapture;
-            Boolean foundPPP = false;
-            while ((rawCapture = dev.GetNextPacket()) != null)
-            {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var ppp = (PPPPacket)p.Extract(typeof(PPPPacket));
-
-                if (ppp == null)
-                {
-                    continue;
-                }
-                foundPPP = true;
-
-                var memoryStream = new MemoryStream();
-                BinaryFormatter serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, ppp);
-
-                memoryStream.Seek (0, SeekOrigin.Begin);
-                BinaryFormatter deserializer = new BinaryFormatter();
-                PPPPacket fromFile = (PPPPacket)deserializer.Deserialize(memoryStream);
-
-                Assert.AreEqual(ppp.Bytes, fromFile.Bytes);
-                Assert.AreEqual(ppp.BytesHighPerformance.Bytes, fromFile.BytesHighPerformance.Bytes);
-                Assert.AreEqual(ppp.BytesHighPerformance.BytesLength, fromFile.BytesHighPerformance.BytesLength);
-                Assert.AreEqual(ppp.BytesHighPerformance.Length, fromFile.BytesHighPerformance.Length);
-                Assert.AreEqual(ppp.BytesHighPerformance.NeedsCopyForActualBytes, fromFile.BytesHighPerformance.NeedsCopyForActualBytes);
-                Assert.AreEqual(ppp.BytesHighPerformance.Offset, fromFile.BytesHighPerformance.Offset);
-                Assert.AreEqual(ppp.Color, fromFile.Color);
-                Assert.AreEqual(ppp.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(ppp.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(ppp.Protocol, fromFile.Protocol);
-
-                //Method Invocations to make sure that a deserialized packet does not cause 
-                //additional errors.
-
-                ppp.UpdateCalculatedValues();
-            }
-
-            dev.Close();
-
-            Assert.IsTrue(foundPPP, "Capture file contained no PPP packets");
-        }
     }
 }
-

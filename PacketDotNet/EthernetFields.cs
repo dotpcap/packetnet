@@ -18,34 +18,30 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
-
 namespace PacketDotNet
 {
     /// <summary>
     /// Ethernet protocol field encoding information.
     /// </summary>
-    public class EthernetFields
+    public struct EthernetFields
     {
-        /// <summary> Position of the destination MAC address within the ethernet header.</summary>
-        public static readonly Int32 DestinationMacPosition = 0;
+        /// <summary>Position of the destination MAC address within the ethernet header.</summary>
+        public static readonly int DestinationMacPosition = 0;
 
-        /// <summary> Total length of an ethernet header in bytes.</summary>
-        public static readonly Int32 HeaderLength; // == 14
+        /// <summary>Total length of an ethernet header in bytes.</summary>
+        public static readonly int HeaderLength; // == 14
 
-        /// <summary>
-        /// size of an ethernet mac address in bytes
-        /// </summary>
-        public static readonly Int32 MacAddressLength = 6;
+        /// <summary>Size of an ethernet mac address in bytes.</summary>
+        public static readonly int MacAddressLength = 6;
 
-        /// <summary> Position of the source MAC address within the ethernet header.</summary>
-        public static readonly Int32 SourceMacPosition;
+        /// <summary>Position of the source MAC address within the ethernet header.</summary>
+        public static readonly int SourceMacPosition;
 
-        /// <summary> Width of the ethernet type code in bytes.</summary>
-        public static readonly Int32 TypeLength = 2;
+        /// <summary>Width of the ethernet type code in bytes.</summary>
+        public static readonly int TypeLength = 2;
 
-        /// <summary> Position of the ethernet type field within the ethernet header.</summary>
-        public static readonly Int32 TypePosition;
+        /// <summary>Position of the ethernet type field within the ethernet header.</summary>
+        public static readonly int TypePosition;
 
         static EthernetFields()
         {

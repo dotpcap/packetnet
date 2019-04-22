@@ -23,14 +23,12 @@ namespace PacketDotNet
     /// <summary>
     /// The five different OSPF packet types
     /// </summary>
-    public enum OSPFPacketType : byte
+    public enum OspfPacketType : byte
     {
-#pragma warning disable 1591
         Hello = 0x0001,
         DatabaseDescription = 0x0002,
         LinkStateRequest = 0x0003,
         LinkStateUpdate = 0x0004,
-        LinkStateAcknowledgment = 0x0005,
-#pragma warning restore 1591
+        LinkStateAcknowledgment = 0x0005
     }
 }

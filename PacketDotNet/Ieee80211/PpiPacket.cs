@@ -1,5 +1,3 @@
-#region Header
-
 /*
 This file is part of PacketDotNet
 
@@ -20,17 +18,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2011 David Thedens
  */
 
-#endregion Header
-
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Ieee80211
 {
@@ -51,13 +46,69 @@ namespace PacketDotNet.Ieee80211
             Alignment32Bit = 1
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PpiPacket" /> class.
+        /// </summary>
+        /// <param name="byteArraySegment">
+        /// A <see cref="ByteArraySegment" />
+        /// </param>
+        public PpiPacket(ByteArraySegment byteArraySegment)
+        {
+            // slice off the header portion
+            Header = new ByteArraySegment(byteArraySegment);
 
-        #region Properties
+            Version = VersionBytes;
+            Flags = FlagsBytes;
+
+            // update the header size based on the headers packet length
+            Header.Length = LengthBytes;
+            LinkType = LinkTypeBytes;
+            PpiFields = ReadPpiFields();
+
+            var commonField = FindFirstByType(PpiFieldType.PpiCommon) as PpiCommon;
+
+            // parse the encapsulated bytes
+            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header, commonField), LazyThreadSafetyMode.PublicationOnly);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PpiPacket" /> class.
+        /// </summary>
+        public PpiPacket()
+        {
+            PpiFields = new List<PpiFields>();
+            Version = 0;
+            LinkType = LinkLayers.Ieee80211;
+        }
+
+        /// <summary>
+        /// Returns the number of PPI fields in the PPI packet.
+        /// </summary>
+        /// <value>
+        /// The number of fields.
+        /// </value>
+        public int Count => PpiFields.Count;
+
+        /// <summary>
+        /// Gets or sets the PPI header flags.
+        /// </summary>
+        /// <value>
+        /// The PPI header flags.
+        /// </value>
+        public HeaderFlags Flags { get; set; }
+
+        /// <summary>
+        /// Gets the <see cref="PpiPacket" /> at the specified index.
+        /// </summary>
+        /// <param name='index'>
+        /// Index.
+        /// </param>
+        public PpiFields this[int index] => PpiFields[index];
 
         /// <summary>
         /// Length of the whole header in bytes
         /// </summary>
-        public UInt16 Length
+        public ushort Length
         {
             get
             {
@@ -72,47 +123,8 @@ namespace PacketDotNet.Ieee80211
                     }
                 }
 
-                return (UInt16) length;
+                return (ushort) length;
             }
-        }
-
-        private UInt16 LengthBytes
-        {
-            get => EndianBitConverter.Little.ToUInt16(Header.Bytes,
-                                                      Header.Offset + PpiHeaderFields.LengthPosition);
-
-            set => EndianBitConverter.Little.CopyBytes(value,
-                                                       Header.Bytes,
-                                                       Header.Offset + PpiHeaderFields.LengthPosition);
-        }
-
-
-        /// <summary>
-        /// Version 0. Only increases for drastic changes, introduction of compatible
-        /// new fields does not count.
-        /// </summary>
-        public Byte Version { get; set; }
-
-        private Byte VersionBytes
-        {
-            get => Header.Bytes[Header.Offset + PpiHeaderFields.VersionPosition];
-
-            set => Header.Bytes[Header.Offset + PpiHeaderFields.VersionPosition] = value;
-        }
-
-        /// <summary>
-        /// Gets or sets the PPI header flags.
-        /// </summary>
-        /// <value>
-        /// The PPI header flags.
-        /// </value>
-        public HeaderFlags Flags { get; set; }
-
-        private HeaderFlags FlagsBytes
-        {
-            get => (HeaderFlags) Header.Bytes[Header.Offset + PpiHeaderFields.FlagsPosition];
-
-            set => Header.Bytes[Header.Offset + PpiHeaderFields.FlagsPosition] = (Byte) value;
         }
 
         /// <summary>
@@ -124,79 +136,56 @@ namespace PacketDotNet.Ieee80211
         /// </value>
         public LinkLayers LinkType { get; set; }
 
+        /// <summary>
+        /// Version 0. Only increases for drastic changes, introduction of compatible
+        /// new fields does not count.
+        /// </summary>
+        public byte Version { get; set; }
+
+        private HeaderFlags FlagsBytes
+        {
+            get => (HeaderFlags) Header.Bytes[Header.Offset + PpiHeaderFields.FlagsPosition];
+            set => Header.Bytes[Header.Offset + PpiHeaderFields.FlagsPosition] = (byte) value;
+        }
+
+        private ushort LengthBytes
+        {
+            get => EndianBitConverter.Little.ToUInt16(Header.Bytes,
+                                                      Header.Offset + PpiHeaderFields.LengthPosition);
+            set => EndianBitConverter.Little.CopyBytes(value,
+                                                       Header.Bytes,
+                                                       Header.Offset + PpiHeaderFields.LengthPosition);
+        }
+
         private LinkLayers LinkTypeBytes
         {
             get => (LinkLayers) EndianBitConverter.Little.ToUInt32(Header.Bytes,
                                                                    Header.Offset + PpiHeaderFields.DataLinkTypePosition);
 
             // ReSharper disable once ValueParameterNotUsed
-            set => EndianBitConverter.Little.CopyBytes((UInt32) LinkType,
+            set => EndianBitConverter.Little.CopyBytes((uint) LinkType,
                                                        Header.Bytes,
                                                        Header.Offset + PpiHeaderFields.DataLinkTypePosition);
         }
 
-        /// <summary>
-        /// Returns the number of PPI fields in the PPI packet.
-        /// </summary>
-        /// <value>
-        /// The number of fields.
-        /// </value>
-        public Int32 Count => PpiFields.Count;
+        private List<PpiFields> PpiFields { get; }
 
-        /// <summary>
-        /// Gets the <see cref="PpiPacket" /> at the specified index.
-        /// </summary>
-        /// <param name='index'>
-        /// Index.
-        /// </param>
-        public PpiFields this[Int32 index] => PpiFields[index];
-
-        private List<PpiFields> PpiFields { get; set; }
-
-        #endregion Properties
-
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PpiPacket" /> class.
-        /// </summary>
-        /// <param name='bas'>
-        /// A <see cref="ByteArraySegment" />
-        /// </param>
-        public PpiPacket(ByteArraySegment bas)
+        private byte VersionBytes
         {
-            // slice off the header portion
-            Header = new ByteArraySegment(bas);
-
-            Version = VersionBytes;
-            Flags = FlagsBytes;
-
-            // update the header size based on the headers packet length
-            Header.Length = LengthBytes;
-            LinkType = LinkTypeBytes;
-            PpiFields = ReadPpiFields();
-
-            var commonField = FindFirstByType(PpiFieldType.PpiCommon) as PpiCommon;
-
-            // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseEncapsulatedBytes(Header, commonField), LazyThreadSafetyMode.PublicationOnly);
+            get => Header.Bytes[Header.Offset + PpiHeaderFields.VersionPosition];
+            set => Header.Bytes[Header.Offset + PpiHeaderFields.VersionPosition] = value;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PpiPacket" /> class.
+        /// Gets the enumerator of PPI fields.
         /// </summary>
-        public PpiPacket()
+        /// <returns>
+        /// The field enumerator.
+        /// </returns>
+        public IEnumerator GetEnumerator()
         {
-            PpiFields = new List<PpiFields>();
-            Version = 0;
-            LinkType = LinkLayers.Ieee80211;
+            return PpiFields.GetEnumerator();
         }
-
-        #endregion Constructors
-
-
-        #region Public Methods
 
         /// <summary>
         /// Add the specified field to the packet.
@@ -243,7 +232,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='field'>
         /// <c>true</c> if the field is in the packet, <c>false</c> if not.
         /// </param>
-        public Boolean Contains(PpiFields field)
+        public bool Contains(PpiFields field)
         {
             return PpiFields.Contains(field);
         }
@@ -254,7 +243,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name='type'>
         /// <c>true</c> if there is a field of the specified type in the packet, <c>false</c> if not.
         /// </param>
-        public Boolean Contains(PpiFieldType type)
+        public bool Contains(PpiFieldType type)
         {
             return PpiFields.Find(field => field.FieldType == type) != null;
         }
@@ -295,7 +284,7 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
-        public override String ToString(StringOutputType outputFormat)
+        public override string ToString(StringOutputType outputFormat)
         {
             PayloadPacketOrData.Evaluate();
 
@@ -323,10 +312,10 @@ namespace PacketDotNet.Ieee80211
             if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
-                var properties = new Dictionary<String, String>
+                var properties = new Dictionary<string, string>
                 {
-                    {"version", Version.ToString()},
-                    {"length", Length.ToString()}
+                    { "version", Version.ToString() },
+                    { "length", Length.ToString() }
                 };
 
                 var ppiField = PpiFields;
@@ -338,7 +327,7 @@ namespace PacketDotNet.Ieee80211
                 }
 
                 // calculate the padding needed to right-justify the property names
-                var padLength = RandomUtils.LongestStringLength(new List<String>(properties.Keys));
+                var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
                 buffer.AppendLine("Ieee80211PpiPacket");
@@ -357,17 +346,6 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary>
-        /// Gets the enumerator of PPI fields.
-        /// </summary>
-        /// <returns>
-        /// The field enumerator.
-        /// </returns>
-        public IEnumerator GetEnumerator()
-        {
-            return PpiFields.GetEnumerator();
-        }
-
-        /// <summary>
         /// Called to ensure that field values are updated before
         /// the packet bytes are retrieved
         /// </summary>
@@ -383,7 +361,7 @@ namespace PacketDotNet.Ieee80211
 
             if (Header == null || totalFieldLength > Header.Length)
             {
-                Header = new ByteArraySegment(new Byte[totalFieldLength]);
+                Header = new ByteArraySegment(new byte[totalFieldLength]);
             }
 
             Header.Length = totalFieldLength;
@@ -396,24 +374,20 @@ namespace PacketDotNet.Ieee80211
             var ms = new MemoryStream(Header.Bytes,
                                       Header.Offset + PpiHeaderFields.FirstFieldPosition,
                                       totalFieldLength - PpiHeaderFields.FirstFieldPosition);
+
             var writer = new BinaryWriter(ms);
             foreach (var field in PpiFields)
             {
-                writer.Write((UInt16) field.FieldType);
-                writer.Write((UInt16) field.Length);
+                writer.Write((ushort) field.FieldType);
+                writer.Write((ushort) field.Length);
                 writer.Write(field.Bytes);
                 var paddingBytesRequired = GetDistanceTo32BitAlignment(field.Length);
                 if (aligned && paddingBytesRequired > 0)
                 {
-                    writer.Write(new Byte[paddingBytesRequired]);
+                    writer.Write(new byte[paddingBytesRequired]);
                 }
             }
         }
-
-        #endregion Public Methods
-
-
-        #region Private Methods
 
         /// <summary>
         /// Array of PPI fields
@@ -431,6 +405,7 @@ namespace PacketDotNet.Ieee80211
             var br = new BinaryReader(new MemoryStream(Header.Bytes,
                                                        offset,
                                                        Header.Length - offset));
+
             var length = PpiHeaderFields.FirstFieldPosition;
             while (length < Header.Length)
             {
@@ -462,10 +437,10 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="PacketOrByteArraySegment" />
         /// </returns>
-        internal static PacketOrByteArraySegment ParseEncapsulatedBytes(ByteArraySegment header, PpiCommon commonField)
+        internal static PacketOrByteArraySegment ParseNextSegment(ByteArraySegment header, PpiCommon commonField)
         {
             // slice off the payload
-            var payload = header.EncapsulatedBytes();
+            var payload = header.NextSegment();
             var payloadPacketOrData = new PacketOrByteArraySegment();
             MacFrame frame;
 
@@ -492,11 +467,9 @@ namespace PacketDotNet.Ieee80211
             return payloadPacketOrData;
         }
 
-        private Int32 GetDistanceTo32BitAlignment(Int32 length)
+        private int GetDistanceTo32BitAlignment(int length)
         {
             return length % 4 == 0 ? 0 : 4 - (length % 4);
         }
-
-        #endregion Private Methods
     }
 }

@@ -42,7 +42,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name="field">
         /// A <see cref="ushort" />
         /// </param>
-        public FrameControlField(UInt16 field)
+        public FrameControlField(ushort field)
         {
             Field = field;
         }
@@ -53,15 +53,14 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The field.
         /// </value>
-        public UInt16 Field { get; set; }
+        public ushort Field { get; set; }
 
         /// <summary>
         /// Is set to 1 when the frame is received from the Distribution System (DS)
         /// </summary>
-        public Boolean FromDS
+        public bool FromDS
         {
             get => ((Field >> 1) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -70,7 +69,7 @@ namespace PacketDotNet.Ieee80211
                 }
                 else
                 {
-                    Field &= unchecked((UInt16) ~(1 << 0x1));
+                    Field &= unchecked((ushort) ~(1 << 0x1));
                 }
             }
         }
@@ -78,10 +77,9 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Indicates that there are more frames buffered for this station
         /// </summary>
-        public Boolean MoreData
+        public bool MoreData
         {
             get => ((Field >> 5) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -90,7 +88,7 @@ namespace PacketDotNet.Ieee80211
                 }
                 else
                 {
-                    Field &= unchecked((UInt16) ~(1 << 0x5));
+                    Field &= unchecked((ushort) ~(1 << 0x5));
                 }
             }
         }
@@ -99,10 +97,9 @@ namespace PacketDotNet.Ieee80211
         /// More Fragment is set to 1 when there are more fragments belonging to the same
         /// frame following the current fragment
         /// </summary>
-        public Boolean MoreFragments
+        public bool MoreFragments
         {
             get => ((Field >> 2) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -111,7 +108,7 @@ namespace PacketDotNet.Ieee80211
                 }
                 else
                 {
-                    Field &= unchecked((UInt16) ~(1 << 0x2));
+                    Field &= unchecked((ushort) ~(1 << 0x2));
                 }
             }
         }
@@ -120,10 +117,9 @@ namespace PacketDotNet.Ieee80211
         /// Bit is set when the "strict ordering" delivery method is employed. Frames and
         /// fragments are not always sent in order as it causes a transmission performance penalty.
         /// </summary>
-        public Boolean Order
+        public bool Order
         {
             get => ((Field >> 0x7) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -132,7 +128,7 @@ namespace PacketDotNet.Ieee80211
                 }
                 else
                 {
-                    Field &= unchecked((UInt16) ~(1 << 0x7));
+                    Field &= unchecked((ushort) ~(1 << 0x7));
                 }
             }
         }
@@ -140,10 +136,9 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Indicates the power management mode that the station will be in after the transmission of the frame
         /// </summary>
-        public Boolean PowerManagement
+        public bool PowerManagement
         {
             get => ((Field >> 4) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -152,7 +147,7 @@ namespace PacketDotNet.Ieee80211
                 }
                 else
                 {
-                    Field &= unchecked((UInt16) ~(1 << 0x4));
+                    Field &= unchecked((ushort) ~(1 << 0x4));
                 }
             }
         }
@@ -160,10 +155,9 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Indicates whether the frame body is encrypted with one of several encryption standards
         /// </summary>
-        public Boolean Protected
+        public bool Protected
         {
             get => ((Field >> 6) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -172,7 +166,7 @@ namespace PacketDotNet.Ieee80211
                 }
                 else
                 {
-                    Field &= unchecked((UInt16) ~(1 << 0x6));
+                    Field &= unchecked((ushort) ~(1 << 0x6));
                 }
             }
         }
@@ -180,10 +174,9 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Protocol version
         /// </summary>
-        public Byte ProtocolVersion
+        public byte ProtocolVersion
         {
-            get => (Byte) ((Field >> 0x8) & 0x3);
-
+            get => (byte) ((Field >> 0x8) & 0x3);
             set
             {
                 if (value > 3)
@@ -192,8 +185,8 @@ namespace PacketDotNet.Ieee80211
                 }
 
                 //unset the two bits before setting them to the value
-                Field &= unchecked((UInt16) ~0x0300);
-                Field |= (UInt16) (value << 0x8);
+                Field &= unchecked((ushort) ~0x0300);
+                Field |= (ushort) (value << 0x8);
             }
         }
 
@@ -201,10 +194,9 @@ namespace PacketDotNet.Ieee80211
         /// Indicates that this fragment is a retransmission of a previously transmitted fragment.
         /// (For receiver to recognize duplicate transmissions of frames)
         /// </summary>
-        public Boolean Retry
+        public bool Retry
         {
             get => ((Field >> 3) & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -213,7 +205,7 @@ namespace PacketDotNet.Ieee80211
                 }
                 else
                 {
-                    Field &= unchecked((UInt16) ~(1 << 0x3));
+                    Field &= unchecked((ushort) ~(1 << 0x3));
                 }
             }
         }
@@ -230,27 +222,25 @@ namespace PacketDotNet.Ieee80211
                 var type = ((typeAndSubtype & 0x0C) << 2) | (typeAndSubtype >> 4);
                 return (FrameSubTypes) type;
             }
-
             set
             {
-                var val = (UInt32) value;
+                var val = (uint) value;
                 var typeAndSubtype = ((val & 0x0F) << 4) | ((val >> 4) << 2);
                 //shift it into the right position in the field
                 typeAndSubtype = typeAndSubtype << 0x8;
                 //Unset all the bits related to the type and subtype
                 Field &= 0x03FF;
                 //Set the type bits
-                Field |= (UInt16) typeAndSubtype;
+                Field |= (ushort) typeAndSubtype;
             }
         }
 
         /// <summary>
         /// Is set to 1 when the frame is sent to Distribution System (DS)
         /// </summary>
-        public Boolean ToDS
+        public bool ToDS
         {
             get => (Field & 0x1) == 1;
-
             set
             {
                 if (value)
@@ -259,7 +249,7 @@ namespace PacketDotNet.Ieee80211
                 }
                 else
                 {
-                    Field &= unchecked((UInt16) ~0x1);
+                    Field &= unchecked((ushort) ~0x1);
                 }
             }
         }
@@ -284,7 +274,7 @@ namespace PacketDotNet.Ieee80211
         /// Indicates that the frame body is encrypted according to the WEP (wired equivalent privacy) algorithm
         /// </summary>
         [Obsolete("This property is obsolete. Use Protected instead.", false)]
-        public Boolean Wep
+        public bool Wep
         {
             get => Protected;
             set => Protected = value;
@@ -296,9 +286,9 @@ namespace PacketDotNet.Ieee80211
         /// <returns>
         /// A <see cref="string" /> that represents the current <see cref="FrameControlField" />.
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
-            var flags = new List<String>
+            var flags = new List<string>
             {
                 SubType.ToString()
             };

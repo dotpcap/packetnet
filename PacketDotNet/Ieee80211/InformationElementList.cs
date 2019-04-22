@@ -27,7 +27,7 @@ namespace PacketDotNet.Ieee80211
 {
     /// <summary>
     /// A <see cref="T:System.Collections.Generic.List" /> of
-    /// <see cref="PacketDotNet.Ieee80211.InformationElement">InformationElements</see>.
+    /// <see cref="InformationElement">InformationElements</see>.
     /// </summary>
     /// <remarks>
     /// The order and set of Information Elements allowed in a particular 802.11 frame type is dictated
@@ -54,37 +54,37 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Initializes a new instance of the <see cref="InformationElementList" /> class.
         /// </summary>
-        /// <param name='bas'>
-        /// A <see cref="PacketDotNet.Utils.ByteArraySegment" /> containing one or more information elements.
-        /// bas.Offset should point to the first byte of the first Information Element.
+        /// <param name="byteArraySegment">
+        /// A <see cref="ByteArraySegment" /> containing one or more information elements.
+        /// byteArraySegment.Offset should point to the first byte of the first Information Element.
         /// </param>
-        public InformationElementList(ByteArraySegment bas)
+        public InformationElementList(ByteArraySegment byteArraySegment)
         {
             var index = 0;
-            while (index + InformationElement.ElementLengthPosition < bas.Length)
+            while (index + InformationElement.ElementLengthPosition < byteArraySegment.Length)
             {
-                var ieStartPosition = bas.Offset + index;
-                var valueLength = bas.Bytes[ieStartPosition + InformationElement.ElementLengthPosition];
+                var ieStartPosition = byteArraySegment.Offset + index;
+                var valueLength = byteArraySegment.Bytes[ieStartPosition + InformationElement.ElementLengthPosition];
                 var ieLength = InformationElement.ElementIdLength + InformationElement.ElementLengthLength + valueLength;
-                var availableLength = Math.Min(ieLength, bas.Length - index);
-                Add(new InformationElement(new ByteArraySegment(bas.Bytes, ieStartPosition, availableLength)));
+                var availableLength = Math.Min(ieLength, byteArraySegment.Length - index);
+                Add(new InformationElement(new ByteArraySegment(byteArraySegment.Bytes, ieStartPosition, availableLength)));
 
                 index += ieLength;
             }
         }
 
         /// <summary>
-        /// Gets a Byte[] containing the serialised
+        /// Gets a Byte[] containing the serialized
         /// <see cref="InformationElement">InformationElements</see>
         /// </summary>
         /// <value>
-        /// The serialised <see cref="InformationElement">InformationElements</see>
+        /// The serialized <see cref="InformationElement">InformationElements</see>
         /// </value>
-        public Byte[] Bytes
+        public byte[] Bytes
         {
             get
             {
-                var bytes = new Byte[Length];
+                var bytes = new byte[Length];
                 var index = 0;
                 foreach (var ie in this)
                 {
@@ -99,12 +99,12 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary>
-        /// Gets the total length in bytes of the list if its elements were serialised into a byte array
+        /// Gets the total length in bytes of the list if its elements were serialized into a byte array
         /// </summary>
         /// <value>
         /// The length
         /// </value>
-        public Int32 Length
+        public int Length
         {
             get
             {
@@ -119,7 +119,7 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary>
-        /// Finds all <see cref="InformationElement">InformatonElements</see> in the lists
+        /// Finds all <see cref="InformationElement"></see> in the lists
         /// with the provided id.
         /// </summary>
         /// <returns>
@@ -157,16 +157,16 @@ namespace PacketDotNet.Ieee80211
         /// in the list into the provided buffer.
         /// </summary>
         /// <param name='destination'>
-        /// The <see cref="PacketDotNet.Utils.ByteArraySegment" /> to copy the elements into.
+        /// The <see cref="ByteArraySegment" /> to copy the elements into.
         /// </param>
         /// <param name='offset'>
         /// The offset into destination at which to start copy the <see cref="InformationElement">InformationElements</see>
         /// </param>
         /// <remarks>
-        /// Ensure that the destination is large enough to contain serialised elements
+        /// Ensure that the destination is large enough to contain serialized elements
         /// before calling this method
         /// </remarks>
-        public void CopyTo(ByteArraySegment destination, Int32 offset)
+        public void CopyTo(ByteArraySegment destination, int offset)
         {
             var index = 0;
             foreach (var ie in this)

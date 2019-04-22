@@ -28,10 +28,10 @@ namespace PacketDotNet
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum IPVersion
     {
-        /// <summary> Internet protocol version 4.</summary>
+        /// <summary>Internet protocol version 4.</summary>
         IPv4 = 4,
 
-        /// <summary> Internet protocol version 6.</summary>
+        /// <summary>Internet protocol version 6.</summary>
         IPv6 = 6
     }
 }

@@ -20,19 +20,19 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using System.Reflection;
 
 #if DEBUG
 using log4net;
+using System.Reflection;
 #endif
 
-namespace PacketDotNet.LLDP
+namespace PacketDotNet.Lldp
 {
     /// <summary>
-    /// A Port Description TLV
+    /// A Port Description Tlv
     /// </summary>
     [Serializable]
-    public class PortDescription : StringTLV
+    public class PortDescription : String
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -44,11 +44,8 @@ namespace PacketDotNet.LLDP
 #pragma warning restore 0169, 0649
 #endif
 
-
-        #region Constructors
-
         /// <summary>
-        /// Creates a Port Description TLV
+        /// Creates a Port Description Tlv
         /// </summary>
         /// <param name="bytes">
         /// </param>
@@ -56,7 +53,7 @@ namespace PacketDotNet.LLDP
         /// The Port Description TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public PortDescription(Byte[] bytes, Int32 offset) :
+        public PortDescription(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Log.Debug("");
@@ -68,25 +65,18 @@ namespace PacketDotNet.LLDP
         /// <param name="description">
         /// A textual description of the port
         /// </param>
-        public PortDescription(String description) : base(TLVTypes.PortDescription, description)
+        public PortDescription(string description) : base(TlvType.PortDescription, description)
         {
             Log.Debug("");
         }
 
-        #endregion
-
-
-        #region Properties
-
         /// <value>
         /// A textual Description of the port
         /// </value>
-        public String Description
+        public string Description
         {
-            get => StringValue;
-            set => StringValue = value;
+            get => Value;
+            set => Value = value;
         }
-
-        #endregion
     }
 }

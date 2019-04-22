@@ -1,15 +1,13 @@
-using System;
-
 namespace PacketDotNet.Ieee80211
 {
-    public class ReassociationRequestFields
+    public struct ReassociationRequestFields
     {
-        public static readonly Int32 CapabilityInformationLength = 2;
-        public static readonly Int32 CapabilityInformationPosition;
-        public static readonly Int32 CurrentAccessPointPosition;
-        public static readonly Int32 InformationElement1Position;
-        public static readonly Int32 ListenIntervalLength = 2;
-        public static readonly Int32 ListenIntervalPosition;
+        public static readonly int CapabilityInformationLength = 2;
+        public static readonly int CapabilityInformationPosition;
+        public static readonly int CurrentAccessPointPosition;
+        public static readonly int InformationElement1Position;
+        public static readonly int ListenIntervalLength = 2;
+        public static readonly int ListenIntervalPosition;
 
         static ReassociationRequestFields()
         {

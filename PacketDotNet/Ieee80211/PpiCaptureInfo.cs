@@ -1,5 +1,3 @@
-using System;
-
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
@@ -8,12 +6,13 @@ namespace PacketDotNet.Ieee80211
     /// </summary>
     public class PpiCaptureInfo : PpiFields
     {
-        #region Constructors
-
-        #endregion Constructors
-
-
-        #region Properties
+        /// <summary>
+        /// Gets the field bytes. This doesn't include the PPI field header.
+        /// </summary>
+        /// <value>
+        /// The bytes.
+        /// </value>
+        public override byte[] Bytes => new byte[0];
 
         /// <summary>Type of the field</summary>
         public override PpiFieldType FieldType => PpiFieldType.PpiCaptureInfo;
@@ -24,16 +23,6 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The length.
         /// </value>
-        public override Int32 Length => 0;
-
-        /// <summary>
-        /// Gets the field bytes. This doesn't include the PPI field header.
-        /// </summary>
-        /// <value>
-        /// The bytes.
-        /// </value>
-        public override Byte[] Bytes => new Byte[0];
-
-        #endregion Properties
+        public override int Length => 0;
     }
 }

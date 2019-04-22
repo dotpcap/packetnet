@@ -18,10 +18,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-using System;
 using System.Net.NetworkInformation;
-using PacketDotNet.MiscUtil.Conversion;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Ieee80211
 {
@@ -35,12 +34,12 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="bas">
+        /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public ProbeResponseFrame(ByteArraySegment bas)
+        public ProbeResponseFrame(ByteArraySegment byteArraySegment)
         {
-            Header = new ByteArraySegment(bas);
+            Header = new ByteArraySegment(byteArraySegment);
 
             FrameControl = new FrameControlField(FrameControlBytes);
             Duration = new DurationField(DurationBytes);
@@ -52,12 +51,12 @@ namespace PacketDotNet.Ieee80211
             BeaconInterval = BeaconIntervalBytes;
             CapabilityInformation = new CapabilityInformationField(CapabilityInformationBytes);
 
-            if (bas.Length > ProbeResponseFields.InformationElement1Position)
+            if (byteArraySegment.Length > ProbeResponseFields.InformationElement1Position)
             {
                 //create a segment that just refers to the info element section
-                var infoElementsSegment = new ByteArraySegment(bas.Bytes,
-                                                               bas.Offset + ProbeResponseFields.InformationElement1Position,
-                                                               bas.Length - ProbeResponseFields.InformationElement1Position);
+                var infoElementsSegment = new ByteArraySegment(byteArraySegment.Bytes,
+                                                               byteArraySegment.Offset + ProbeResponseFields.InformationElement1Position,
+                                                               byteArraySegment.Length - ProbeResponseFields.InformationElement1Position);
 
                 InformationElements = new InformationElementList(infoElementsSegment);
             }
@@ -111,7 +110,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The beacon interval.
         /// </value>
-        public UInt16 BeaconInterval { get; set; }
+        public ushort BeaconInterval { get; set; }
 
         /// <summary>
         /// Get or set the capability information field that defines the capabilities of the network.
@@ -121,16 +120,16 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Length of the frame header.
         /// This does not include the FCS, it represents only the header bytes that would
-        /// would preceed any payload.
+        /// would proceed any payload.
         /// </summary>
-        public override Int32 FrameSize => MacFields.FrameControlLength +
-                                           MacFields.DurationIDLength +
-                                           (MacFields.AddressLength * 3) +
-                                           MacFields.SequenceControlLength +
-                                           ProbeResponseFields.TimestampLength +
-                                           ProbeResponseFields.BeaconIntervalLength +
-                                           ProbeResponseFields.CapabilityInformationLength +
-                                           InformationElements.Length;
+        public override int FrameSize => MacFields.FrameControlLength +
+                                         MacFields.DurationIDLength +
+                                         (MacFields.AddressLength * 3) +
+                                         MacFields.SequenceControlLength +
+                                         ProbeResponseFields.TimestampLength +
+                                         ProbeResponseFields.BeaconIntervalLength +
+                                         ProbeResponseFields.CapabilityInformationLength +
+                                         InformationElements.Length;
 
         /// <summary>
         /// Gets or sets the information elements included in the frame.
@@ -147,9 +146,9 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The timestamp.
         /// </value>
-        public UInt64 Timestamp { get; set; }
+        public ulong Timestamp { get; set; }
 
-        private UInt16 BeaconIntervalBytes
+        private ushort BeaconIntervalBytes
         {
             get
             {
@@ -165,7 +164,7 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Frame control bytes are the first two bytes of the frame
         /// </summary>
-        private UInt16 CapabilityInformationBytes
+        private ushort CapabilityInformationBytes
         {
             get
             {
@@ -178,13 +177,12 @@ namespace PacketDotNet.Ieee80211
 
                 return 0;
             }
-
             set => EndianBitConverter.Little.CopyBytes(value,
                                                        Header.Bytes,
                                                        Header.Offset + ProbeResponseFields.CapabilityInformationPosition);
         }
 
-        private UInt64 TimestampBytes
+        private ulong TimestampBytes
         {
             get
             {
@@ -204,7 +202,7 @@ namespace PacketDotNet.Ieee80211
         {
             if (Header == null || Header.Length > Header.BytesLength - Header.Offset || Header.Length < FrameSize)
             {
-                Header = new ByteArraySegment(new Byte[FrameSize]);
+                Header = new ByteArraySegment(new byte[FrameSize]);
             }
 
             FrameControlBytes = FrameControl.Field;

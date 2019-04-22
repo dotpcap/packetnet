@@ -1,4 +1,5 @@
 using System;
+using log4net.Core;
 using NUnit.Framework;
 using PacketDotNet;
 
@@ -8,7 +9,7 @@ namespace Test.Performance
     public class ByteCopyPerformance
     {
         // The number of times the test is run
-        Int32 testRuns = 40000;
+        readonly int testRuns = 40000;
 
         [Test]
         public void ArrayCopyPerformance()
@@ -16,22 +17,25 @@ namespace Test.Performance
             // create a realistic packet for testing
             var ethernetPacket = EthernetPacket.RandomPacket();
             // create the array to store the copy result
-            Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
+            var hwAddress = new byte[EthernetFields.MacAddressLength];
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to improve performance
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             // Store the time before the processing starts
             var startTime = DateTime.Now;
 
             // run the test
-            for (Int32 i = 0; i < testRuns; i++)
+            for (var i = 0; i < testRuns; i++)
             {
-                Array.Copy(ethernetPacket.Bytes, EthernetFields.SourceMacPosition,
-                    hwAddress, 0, EthernetFields.MacAddressLength);
+                Array.Copy(ethernetPacket.Bytes,
+                           EthernetFields.SourceMacPosition,
+                           hwAddress,
+                           0,
+                           EthernetFields.MacAddressLength);
             }
 
             // store the time after the processing is finished
@@ -53,22 +57,25 @@ namespace Test.Performance
             // create a realistic packet for testing
             var ethernetPacket = EthernetPacket.RandomPacket();
             // create the array to store the copy result
-            Byte[] hwAddress = new Byte[EthernetFields.MacAddressLength];
+            var hwAddress = new byte[EthernetFields.MacAddressLength];
 
             // store the logging value
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to improve performance
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             // Store the time before the processing starts
             var startTime = DateTime.Now;
 
             // run the test
-            for (Int32 i = 0; i < testRuns; i++)
+            for (var i = 0; i < testRuns; i++)
             {
-                Buffer.BlockCopy(ethernetPacket.Bytes, EthernetFields.SourceMacPosition,
-                    hwAddress, 0, EthernetFields.MacAddressLength);
+                Buffer.BlockCopy(ethernetPacket.Bytes,
+                                 EthernetFields.SourceMacPosition,
+                                 hwAddress,
+                                 0,
+                                 EthernetFields.MacAddressLength);
             }
 
             // store the time after the processing is finished
@@ -83,6 +90,5 @@ namespace Test.Performance
             // output the statistics to the console
             Console.WriteLine(rate.ToString());
         }
-
     }
 }

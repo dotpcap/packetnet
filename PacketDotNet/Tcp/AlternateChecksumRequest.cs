@@ -18,8 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
-using System;
-
 namespace PacketDotNet.Tcp
 {
     /// <summary>
@@ -27,15 +25,8 @@ namespace PacketDotNet.Tcp
     /// </summary>
     public class AlternateChecksumRequest : Option
     {
-        #region Members
-
         // the offset (in bytes) of the Checksum field
-        private const Int32 ChecksumFieldOffset = 2;
-
-        #endregion
-
-
-        #region Constructors
+        private const int ChecksumFieldOffset = 2;
 
         /// <summary>
         /// Creates an Alternate Checksum Request Option
@@ -45,23 +36,18 @@ namespace PacketDotNet.Tcp
         /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <remarks>
         /// References:
         /// http://datatracker.ietf.org/doc/rfc1146/
         /// </remarks>
-        public AlternateChecksumRequest(Byte[] bytes, Int32 offset, Int32 length) :
+        public AlternateChecksumRequest(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
-
-        #endregion
-
-
-        #region Properties
 
         /// <summary>
         /// The Checksum
@@ -72,22 +58,15 @@ namespace PacketDotNet.Tcp
             set => OptionData.Bytes[OptionData.Offset + ChecksumFieldOffset] = (byte) value;
         }
 
-        #endregion
-
-
-        #region Methods
-
         /// <summary>
         /// Returns the Option info as a string
         /// </summary>
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return "[" + Kind + ": ChecksumType=" + Checksum + "]";
         }
-
-        #endregion
     }
 }

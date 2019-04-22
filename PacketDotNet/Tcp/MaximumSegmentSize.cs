@@ -18,8 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
-using System;
-using PacketDotNet.MiscUtil.Conversion;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Tcp
 {
@@ -34,15 +33,8 @@ namespace PacketDotNet.Tcp
     /// </remarks>
     public class MaximumSegmentSize : Option
     {
-        #region Members
-
         // the offset (in bytes) of the Value Field
-        private const Int32 ValueFieldOffset = 2;
-
-        #endregion
-
-
-        #region Constructors
+        private const int ValueFieldOffset = 2;
 
         /// <summary>
         /// Creates a Maximum Segment Size Option
@@ -51,33 +43,23 @@ namespace PacketDotNet.Tcp
         /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
         /// <param name="length">
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </param>
-        public MaximumSegmentSize(Byte[] bytes, Int32 offset, Int32 length) :
+        public MaximumSegmentSize(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
-
-        #endregion
-
-
-        #region Properties
 
         /// <summary>
         /// The Maximum Segment Size
         /// </summary>
-        public UInt16 Value
+        public ushort Value
         {
             get => EndianBitConverter.Big.ToUInt16(OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
             set => EndianBitConverter.Big.CopyBytes(value, OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
         }
-
-        #endregion
-
-
-        #region Methods
 
         /// <summary>
         /// Returns the Option info as a string
@@ -85,11 +67,9 @@ namespace PacketDotNet.Tcp
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public override String ToString()
+        public override string ToString()
         {
             return "[" + Kind + ": Value=" + Value + " bytes]";
         }
-
-        #endregion
     }
 }

@@ -16,10 +16,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System;
-using System.Reflection;
+using System.Collections;
+using System.Collections.Generic;
 
 #if DEBUG
 using log4net;
+using System.Reflection;
 #endif
 
 namespace PacketDotNet.Utils
@@ -30,7 +32,7 @@ namespace PacketDotNet.Utils
     /// be avoided
     /// </summary>
     [Serializable]
-    public class ByteArraySegment
+    public sealed class ByteArraySegment : IEnumerable<byte>
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -42,24 +44,96 @@ namespace PacketDotNet.Utils
 #pragma warning restore 0169, 0649
 #endif
 
-        private Int32 _length;
+        private int _length;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ByteArraySegment" /> class.
+        /// </summary>
+        /// <param name="bytes">The bytes.</param>
+        public ByteArraySegment(byte[] bytes) : this(bytes, 0, bytes.Length)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ByteArraySegment" /> class.
+        /// </summary>
+        /// <param name="bytes">The bytes.</param>
+        /// <param name="offset">The offset into the byte array.</param>
+        /// <param name="length">The length beyond the offset.</param>
+        public ByteArraySegment(byte[] bytes, int offset, int length) : this(bytes, offset, length, bytes.Length)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ByteArraySegment" /> class.
+        /// </summary>
+        /// <param name="bytes">The bytes.</param>
+        /// <param name="offset">The offset into the byte array.</param>
+        /// <param name="length">The length beyond the offset.</param>
+        /// <param name="bytesLength">Length of the bytes.</param>
+        public ByteArraySegment(byte[] bytes, int offset, int length, int bytesLength)
+        {
+            Log.DebugFormat("Bytes.Length {0}, Offset {1}, Length {2}, BytesLength {3}",
+                            bytes.Length,
+                            offset,
+                            length,
+                            bytesLength);
+
+            Bytes = bytes;
+            Offset = offset;
+            Length = length;
+            BytesLength = Math.Min(bytesLength, bytes.Length);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ByteArraySegment" /> class.
+        /// </summary>
+        /// <param name="byteArraySegment">The original byte array segment.</param>
+        public ByteArraySegment(ByteArraySegment byteArraySegment)
+        {
+            Bytes = byteArraySegment.Bytes;
+            Offset = byteArraySegment.Offset;
+            Length = byteArraySegment.Length;
+            BytesLength = byteArraySegment.BytesLength;
+        }
 
         /// <value>
-        /// Gets the byte array.
+        /// Gets the underlying byte array.
         /// </value>
-        public Byte[] Bytes { get; }
+        public byte[] Bytes { get; }
 
         /// <value>
-        /// Gets the maximum number of bytes we should treat <see cref="Bytes"/> as having.
-        /// This allows for controlling the number of bytes produced by <see cref="EncapsulatedBytes()"/>.
+        /// Gets or sets the maximum number of bytes we should treat <see cref="Bytes" /> as having.
+        /// This allows for controlling the number of bytes produced by <see cref="NextSegment()" />.
         /// </value>
-        public Int32 BytesLength { get; }
+        public int BytesLength { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="byte" /> at the specified index.
+        /// </summary>
+        /// <param name="index">The index.</param>
+        /// <returns><see cref="byte" />.</returns>
+        public byte this[int index]
+        {
+            get
+            {
+                if (index < 0 || index >= Length)
+                    ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.index);
+
+                return Bytes[Offset + index];
+            }
+            set
+            {
+                if (index < 0 || index >= Length)
+                    ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.index);
+
+                Bytes[Offset + index] = value;
+            }
+        }
 
         /// <value>
-        /// Gets or sets the number of bytes beyond the offset into <see cref="Bytes"/>. 
+        /// Gets or sets the number of bytes beyond the offset into <see cref="Bytes" />.
         /// </value>
         /// <remarks>Take care when setting this parameter as many things are based on the value of this property being correct.</remarks>
-        public Int32 Length
+        public int Length
         {
             get => _length;
             set
@@ -76,75 +150,55 @@ namespace PacketDotNet.Utils
             }
         }
 
-        /// <value>
-        /// Gets the offset into <see cref="Bytes"/>.
-        /// </value>
-        public Int32 Offset { get; }
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="ByteArraySegment"/> class.
+        /// Gets a value indicating whether we need to perform a copy to get the <see cref="ActualBytes" />.
         /// </summary>
-        /// <param name="bytes">The bytes.</param>
-        public ByteArraySegment(Byte[] bytes) :
-            this(bytes, 0, bytes.Length)
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ByteArraySegment"/> class.
-        /// </summary>
-        /// <param name="bytes">The bytes.</param>
-        /// <param name="offset">The offset into the byte array.</param>
-        /// <param name="length">The length beyond the offset.</param>
-        public ByteArraySegment(Byte[] bytes, Int32 offset, Int32 length)
-            : this(bytes, offset, length, bytes.Length)
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ByteArraySegment"/> class.
-        /// </summary>
-        /// <param name="bytes">The bytes.</param>
-        /// <param name="offset">The offset into the byte array.</param>
-        /// <param name="length">The length beyond the offset.</param>
-        /// <param name="bytesLength">Length of the bytes.</param>
-        public ByteArraySegment(Byte[] bytes, Int32 offset, Int32 length, Int32 bytesLength)
+        public bool NeedsCopyForActualBytes
         {
-            Log.DebugFormat("Bytes.Length {0}, Offset {1}, Length {2}, BytesLength {3}",
-                            bytes.Length,
-                            offset,
-                            length,
-                            bytesLength);
+            get
+            {
+                // we need a copy unless we are at the start of the byte[]
+                // and the length is the total byte[] length
+                var result = Offset != 0 || Length != Bytes.Length;
 
-            Bytes = bytes;
-            Offset = offset;
-            Length = length;
-            BytesLength = Math.Min(bytesLength, bytes.Length);
+                Log.DebugFormat("result {0}", result);
+
+                return result;
+            }
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ByteArraySegment"/> class.
-        /// </summary>
-        /// <param name="byteArraySegment">The original byte array segment.</param>
-        public ByteArraySegment(ByteArraySegment byteArraySegment)
+        /// <value>
+        /// Gets or sets the offset into <see cref="Bytes" />.
+        /// </value>
+        public int Offset { get; set; }
+
+        /// <inheritdoc />
+        IEnumerator IEnumerable.GetEnumerator()
         {
-            Bytes = byteArraySegment.Bytes;
-            Offset = byteArraySegment.Offset;
-            Length = byteArraySegment.Length;
-            BytesLength = byteArraySegment.BytesLength;
+            return GetEnumerator();
+        }
+
+        /// <inheritdoc />
+        public IEnumerator<byte> GetEnumerator()
+        {
+            var to = Offset + Length;
+            for (var i = Offset; i < to; i++)
+                yield return Bytes[i];
         }
 
         /// <summary>
         /// Returns a contiguous byte array from this instance, if necessary, by copying the bytes from the current offset into a newly allocated byte array.
         /// <see cref="NeedsCopyForActualBytes" /> can be used to determine if the copy is necessary.
         /// </summary>
-        /// <returns>A <see cref="System.Byte" /></returns>
-        public Byte[] ActualBytes()
+        /// <returns>A <see cref="byte" /></returns>
+        public byte[] ActualBytes()
         {
             Log.DebugFormat("{0}", ToString());
 
             if (NeedsCopyForActualBytes)
             {
                 Log.Debug("needs copy");
-                var bytes = new Byte[Length];
+                var bytes = new byte[Length];
                 Array.Copy(Bytes, Offset, bytes, 0, Length);
                 return bytes;
             }
@@ -154,41 +208,23 @@ namespace PacketDotNet.Utils
         }
 
         /// <summary>
-        /// Gets a value indicating whether we need to perform a copy to get the bytes represented by this instance.
-        /// </summary>
-        public Boolean NeedsCopyForActualBytes
-        {
-            get
-            {
-                // we need a copy unless we are at the start of the byte[]
-                // and the length is the total byte[] length
-                var okWithoutCopy = Offset == 0 && Length == Bytes.Length;
-                var result = !okWithoutCopy;
-
-                Log.DebugFormat("result {0}", result);
-
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// Returns the segment after this instance.
+        /// Returns the segment immediately after this segment.
         /// </summary>
         /// <returns>
         /// A <see cref="ByteArraySegment" />
         /// </returns>
-        public ByteArraySegment EncapsulatedBytes()
+        public ByteArraySegment NextSegment()
         {
             var numberOfBytesAfterThisSegment = BytesLength - (Offset + Length);
-            return EncapsulatedBytes(numberOfBytesAfterThisSegment);
+            return NextSegment(numberOfBytesAfterThisSegment);
         }
 
         /// <summary>
-        /// Returns the segment after this instance.
+        /// Returns the segment immediately after this segment.
         /// </summary>
-        /// <param name="segmentLength">A <see cref="System.Int32" /> that can be used to limit the length of the segment that is to be returned.</param>
+        /// <param name="segmentLength">A <see cref="int" /> that can be used to limit the length of the segment that is to be returned.</param>
         /// <returns>A <see cref="ByteArraySegment" /></returns>
-        public ByteArraySegment EncapsulatedBytes(Int32 segmentLength)
+        public ByteArraySegment NextSegment(int segmentLength)
         {
             Log.DebugFormat("SegmentLength {0}", segmentLength);
 
@@ -208,7 +244,7 @@ namespace PacketDotNet.Utils
         }
 
         /// <inheritdoc />
-        public override String ToString()
+        public override string ToString()
         {
             return $"[ByteArraySegment: Length={Length}, Bytes.Length={Bytes.Length}, BytesLength={BytesLength}, Offset={Offset}, NeedsCopyForActualBytes={NeedsCopyForActualBytes}]";
         }

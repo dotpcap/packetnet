@@ -16,11 +16,11 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 using System;
-using System.Reflection;
 using PacketDotNet.Utils;
 
 #if DEBUG
 using log4net;
+using System.Reflection;
 #endif
 
 namespace PacketDotNet
@@ -41,28 +41,44 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        /// <value>
-        /// The Checksum version
-        /// </value>
-        public abstract UInt16 Checksum { get; set; }
+        /// <summary>
+        /// Options for use when creating a transport layer checksum
+        /// </summary>
+        public enum TransportChecksumOption
+        {
+            /// <summary>
+            /// No extra options
+            /// </summary>
+            None,
 
-        /// <summary> Fetch the port number on the target host.</summary>
-        public abstract UInt16 DestinationPort { get; set; }
+            /// <summary>
+            /// Includes a pseudo IP header to the transport data being checksummed.
+            /// </summary>
+            IncludePseudoIPHeader
+        }
 
-        /// <summary> Fetch the port number on the source host.</summary>
-        public abstract UInt16 SourcePort { get; set; }
+        /// <summary>
+        /// The transport packet's checksum.
+        /// </summary>
+        public abstract ushort Checksum { get; set; }
+
+        /// <summary>Fetch the port number on the target host.</summary>
+        public abstract ushort DestinationPort { get; set; }
+
+        /// <summary>Fetch the port number on the source host.</summary>
+        public abstract ushort SourcePort { get; set; }
 
         /// <summary>
         /// Calculates the transport layer checksum, either for the
         /// tcp or udp packet
         /// </summary>
         /// <param name="option">
-        ///     <see cref="TransportPacket.TransportChecksumOption" />
+        ///     <see cref="TransportChecksumOption" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Int32" />
+        /// A <see cref="int" />
         /// </returns>
-        internal Int32 CalculateChecksum(TransportChecksumOption option)
+        internal int CalculateChecksum(TransportChecksumOption option)
         {
             // save the checksum field value so it can be restored, altering the checksum is not
             // an intended side effect of this method
@@ -73,7 +89,7 @@ namespace PacketDotNet
             Checksum = 0;
 
             // copy the tcp section with data
-            var dataToChecksum = ((IPPacket) ParentPacket).PayloadPacket.BytesHighPerformance;
+            var dataToChecksum = ((IPPacket) ParentPacket).PayloadPacket.BytesSegment;
 
             var bytes = option == TransportChecksumOption.IncludePseudoIPHeader
                 ? ((IPPacket) ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
@@ -95,11 +111,11 @@ namespace PacketDotNet
         /// A <see cref="TransportChecksumOption" />
         /// </param>
         /// <returns>
-        /// A <see cref="System.Boolean" />
+        /// A <see cref="bool" />
         /// </returns>
-        public virtual Boolean IsValidChecksum(TransportChecksumOption option)
+        public virtual bool IsValidChecksum(TransportChecksumOption option)
         {
-            var dataToChecksum = ((IPPacket) ParentPacket).PayloadPacket.BytesHighPerformance;
+            var dataToChecksum = ((IPPacket) ParentPacket).PayloadPacket.BytesSegment;
 
             var bytes = option == TransportChecksumOption.IncludePseudoIPHeader
                 ? ((IPPacket) ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
@@ -111,28 +127,12 @@ namespace PacketDotNet
                             option,
                             bytes.Length);
 
-            const Int32 expectedOnesSum = 0xffff;
+            const int expectedOnesSum = 0xffff;
             Log.DebugFormat("onesSum {0} expected {1}",
                             onesSum,
                             expectedOnesSum);
 
             return onesSum == expectedOnesSum;
-        }
-
-        /// <summary>
-        /// Options for use when creating a transport layer checksum
-        /// </summary>
-        public enum TransportChecksumOption
-        {
-            /// <summary>
-            /// No extra options
-            /// </summary>
-            None,
-
-            /// <summary>
-            /// Includes a pseudo IP header to the transport data being checksummed.
-            /// </summary>
-            IncludePseudoIPHeader
         }
     }
 }

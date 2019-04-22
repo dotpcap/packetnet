@@ -18,8 +18,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
-
 namespace PacketDotNet
 {
     /// <summary>
@@ -28,60 +26,60 @@ namespace PacketDotNet
     /// FIXME: These fields are partially broken because they assume the offset for
     /// several fields and the offset is actually based on the accumulated offset
     /// into the structure determined by the fields that indicate sizes
-    public class ARPFields
+    public struct ArpFields
     {
         /// <summary>
         /// The length of the address length fields in bytes.
         /// </summary>
-        public static readonly Int32 AddressLengthLength = 1;
+        public static readonly int AddressLengthLength = 1;
 
         /// <summary>
         /// The length of the address type fields in bytes,
         /// eg. the length of hardware type or protocol type
         /// </summary>
-        public static readonly Int32 AddressTypeLength = 2;
+        public static readonly int AddressTypeLength = 2;
 
-        /// <summary> Type code for ethernet addresses.</summary>
-        public static readonly Int32 EthernetProtocolType = 0x0001;
+        /// <summary>Type code for ethernet addresses.</summary>
+        public static readonly int EthernetProtocolType = 0x0001;
 
-        /// <summary> Position of the hardware address length.</summary>
-        public static readonly Int32 HardwareAddressLengthPosition;
+        /// <summary>Position of the hardware address length.</summary>
+        public static readonly int HardwareAddressLengthPosition;
 
-        /// <summary> Position of the hardware address type.</summary>
-        public static readonly Int32 HardwareAddressTypePosition = 0;
+        /// <summary>Position of the hardware address type.</summary>
+        public static readonly int HardwareAddressTypePosition = 0;
 
-        /// <summary> Total length in bytes of an ARP header.</summary>
-        public static readonly Int32 HeaderLength; // == 28
+        /// <summary>Total length in bytes of an ARP header.</summary>
+        public static readonly int HeaderLength; // == 28
 
-        /// <summary> Type code for MAC addresses.</summary>
+        /// <summary>Type code for MAC addresses.</summary>
         // ReSharper disable once InconsistentNaming
-        public static readonly Int32 IPv4ProtocolType = 0x0800;
+        public static readonly int IPv4ProtocolType = 0x0800;
 
-        /// <summary> Operation type length in bytes.</summary>
-        public static readonly Int32 OperationLength = 2;
+        /// <summary>Operation type length in bytes.</summary>
+        public static readonly int OperationLength = 2;
 
-        /// <summary> Position of the operation type.</summary>
-        public static readonly Int32 OperationPosition;
+        /// <summary>Position of the operation type.</summary>
+        public static readonly int OperationPosition;
 
-        /// <summary> Position of the protocol address length.</summary>
-        public static readonly Int32 ProtocolAddressLengthPosition;
+        /// <summary>Position of the protocol address length.</summary>
+        public static readonly int ProtocolAddressLengthPosition;
 
-        /// <summary> Position of the protocol address type.</summary>
-        public static readonly Int32 ProtocolAddressTypePosition;
+        /// <summary>Position of the protocol address type.</summary>
+        public static readonly int ProtocolAddressTypePosition;
 
-        /// <summary> Position of the sender hardware address.</summary>
-        public static readonly Int32 SenderHardwareAddressPosition;
+        /// <summary>Position of the sender hardware address.</summary>
+        public static readonly int SenderHardwareAddressPosition;
 
-        /// <summary> Position of the sender protocol address.</summary>
-        public static readonly Int32 SenderProtocolAddressPosition;
+        /// <summary>Position of the sender protocol address.</summary>
+        public static readonly int SenderProtocolAddressPosition;
 
-        /// <summary> Position of the target hardware address.</summary>
-        public static readonly Int32 TargetHardwareAddressPosition;
+        /// <summary>Position of the target hardware address.</summary>
+        public static readonly int TargetHardwareAddressPosition;
 
-        /// <summary> Position of the target protocol address.</summary>
-        public static readonly Int32 TargetProtocolAddressPosition;
+        /// <summary>Position of the target protocol address.</summary>
+        public static readonly int TargetProtocolAddressPosition;
 
-        static ARPFields()
+        static ArpFields()
         {
             // NOTE: We use IPv4Fields_Fields.IP_ADDRESS_WIDTH because arp packets are
             //       only used in IPv4 networks. Neighbor discovery is used with IPv6

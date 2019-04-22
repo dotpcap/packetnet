@@ -26,6 +26,7 @@ using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet

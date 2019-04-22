@@ -29,6 +29,6 @@ namespace PacketDotNet
         DatabaseDescription = 0x0002,
         LinkStateRequest = 0x0003,
         LinkStateUpdate = 0x0004,
-        LinkStateAcknowledgment = 0x0005,
+        LinkStateAcknowledgment = 0x0005
     }
 }

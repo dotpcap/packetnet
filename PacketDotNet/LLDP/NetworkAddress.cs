@@ -70,7 +70,7 @@ namespace PacketDotNet.Lldp
         {
             get
             {
-                var length = LengthFromAddressFamily(AddressFamily);
+                var length = GetAddressFamilyLength(AddressFamily);
                 var bytes = new byte[length];
                 Array.Copy(Data.Bytes,
                            Data.Offset + AddressFamilyLength,
@@ -83,7 +83,7 @@ namespace PacketDotNet.Lldp
             set
             {
                 // do we have enough bytes for the address?
-                var length = LengthFromAddressFamily(AddressFamilyFromSocketAddress(value));
+                var length = GetAddressFamilyLength(AddressFamilyFromSocketAddress(value));
                 length += AddressFamilyLength;
 
                 if (Data == null || Data.Length != length)
@@ -138,22 +138,31 @@ namespace PacketDotNet.Lldp
         /// </summary>
         internal int Length => AddressFamilyLength + Address.GetAddressBytes().Length;
 
-        private static int LengthFromAddressFamily(IanaAddressFamily addressFamily)
+        /// <summary>
+        /// Gets the length of the address family.
+        /// </summary>
+        /// <param name="addressFamily">The address family.</param>
+        private static int GetAddressFamilyLength(IanaAddressFamily addressFamily)
         {
             int length;
 
             switch (addressFamily)
             {
                 case IanaAddressFamily.IPv4:
+                {
                     length = IPv4Fields.AddressLength;
                     break;
+                }
                 case IanaAddressFamily.IPv6:
+                {
                     length = IPv6Fields.AddressLength;
                     break;
+                }
                 default:
+                {
                     throw new NotImplementedException("Unknown addressFamily of " + addressFamily);
+                }
             }
-
 
             return length;
         }

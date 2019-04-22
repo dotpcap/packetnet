@@ -2,11 +2,15 @@ namespace Test
 {
     public class ByteSetupMethods
     {
-        public static void Setup(out byte[] bytes, out int testRuns, out int startIndex,
-                            out int expectedValue)
+        public static void Setup
+        (
+            out byte[] bytes,
+            out int testRuns,
+            out int startIndex,
+            out int expectedValue)
         {
             testRuns = 40000000; // needs to be enough runs, taking at least seconds, to get
-                                 // an accurate result
+            // an accurate result
 
             // presume that bytes contains a network ordered 32bit value
             bytes = new byte[5];

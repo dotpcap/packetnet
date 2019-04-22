@@ -23,9 +23,9 @@ using System.Net;
 using System.Net.Sockets;
 using System.Reflection;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet

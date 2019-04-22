@@ -20,25 +20,25 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using NUnit.Framework;
+using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
-using PacketDotNet;
 
 namespace Test.PacketType
 {
     [TestFixture]
     public class LinktypeNullCaptureTest
     {
-        private void VerifyPacket0(Packet p)
+        private static void VerifyPacket0(Packet p)
         {
-            Assert.AreEqual (p.PayloadPacket.GetType(), typeof(IPv4Packet));
-            Assert.AreEqual (p.PayloadPacket.PayloadPacket.GetType(), typeof(TcpPacket));
+            Assert.AreEqual(p.PayloadPacket.GetType(), typeof(IPv4Packet));
+            Assert.AreEqual(p.PayloadPacket.PayloadPacket.GetType(), typeof(TcpPacket));
         }
 
-        private void VerifyPacket1(Packet p)
+        private static void VerifyPacket1(Packet p)
         {
-            Assert.AreEqual (p.PayloadPacket.GetType(), typeof(IPv6Packet));
-            Assert.AreEqual (p.PayloadPacket.PayloadPacket.GetType(), typeof(TcpPacket));
+            Assert.AreEqual(p.PayloadPacket.GetType(), typeof(IPv6Packet));
+            Assert.AreEqual(p.PayloadPacket.PayloadPacket.GetType(), typeof(TcpPacket));
         }
 
         [Test]
@@ -48,22 +48,28 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            int packetIndex = 0;
-            while((rawCapture = dev.GetNextPacket()) != null)
+            var packetIndex = 0;
+            while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                Console.WriteLine ("LinkLayers: {0}", rawCapture.LinkLayerType);
-                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                switch(packetIndex)
+                Console.WriteLine("LinkLayers: {0}", rawCapture.LinkLayerType);
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                switch (packetIndex)
                 {
-                case 0:
-                    VerifyPacket0(p);
-                    break;
-                case 1:
-                    VerifyPacket1(p);
-                    break;
-                default:
-                    Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
-                    break;
+                    case 0:
+                    {
+                        VerifyPacket0(p);
+                        break;
+                    }
+                    case 1:
+                    {
+                        VerifyPacket1(p);
+                        break;
+                    }
+                    default:
+                    {
+                        Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
+                        break;
+                    }
                 }
 
                 packetIndex++;
@@ -80,10 +86,10 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var np = (NullPacket)p;
+            var np = (NullPacket) p;
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(np.ToString());
@@ -97,10 +103,10 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Console.WriteLine("Parsing");
-            var np = (NullPacket)p;
+            var np = (NullPacket) p;
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(np.ToString(StringOutputType.Verbose));

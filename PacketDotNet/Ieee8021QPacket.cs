@@ -47,7 +47,7 @@ namespace PacketDotNet
 
             // parse the payload via an EthernetPacket method
             PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header,
-                                                                                                                 Type),
+                                                                                                           Type),
                                                                      LazyThreadSafetyMode.PublicationOnly);
         }
 
@@ -110,7 +110,7 @@ namespace PacketDotNet
         public virtual EthernetType Type
         {
             get => (EthernetType) EndianBitConverter.Big.ToInt16(Header.Bytes,
-                                                                       Header.Offset + Ieee8021QFields.TypePosition);
+                                                                 Header.Offset + Ieee8021QFields.TypePosition);
             set
             {
                 var val = (short) value;

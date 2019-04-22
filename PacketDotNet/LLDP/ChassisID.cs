@@ -23,10 +23,10 @@ using System;
 using System.Net.NetworkInformation;
 using System.Text;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using System.Reflection;
 using log4net;
+
 #endif
 
 namespace PacketDotNet.Lldp

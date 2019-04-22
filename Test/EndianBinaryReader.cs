@@ -12,35 +12,6 @@ namespace Test
     /// </summary>
     public class EndianBinaryReader : IDisposable
     {
-        #region IDisposable Members
-
-        /// <summary>
-        /// Disposes of the underlying stream.
-        /// </summary>
-        public void Dispose()
-        {
-            if (!_disposed)
-            {
-                _disposed = true;
-                ((IDisposable) BaseStream).Dispose();
-            }
-        }
-
-        #endregion
-
-
-        #region Fields not directly related to properties
-
-        /// <summary>
-        /// Whether or not this reader has been disposed yet.
-        /// </summary>
-        private bool _disposed;
-
-        /// <summary>
-        /// Decoder to use for string conversions.
-        /// </summary>
-        private readonly Decoder _decoder;
-
         /// <summary>
         /// Buffer used for temporary storage before conversion into primitives
         /// </summary>
@@ -52,14 +23,19 @@ namespace Test
         private readonly char[] _charBuffer = new char[1];
 
         /// <summary>
+        /// Decoder to use for string conversions.
+        /// </summary>
+        private readonly Decoder _decoder;
+
+        /// <summary>
         /// Minimum number of bytes used to encode a character
         /// </summary>
         private readonly int _minBytesPerChar;
 
-        #endregion
-
-
-        #region Constructors
+        /// <summary>
+        /// Whether or not this reader has been disposed yet.
+        /// </summary>
+        private bool _disposed;
 
         /// <summary>
         /// Equivalent of System.IO.BinaryWriter, but with either endianness, depending on
@@ -85,7 +61,6 @@ namespace Test
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
 
-
             if (!stream.CanRead)
                 throw new ArgumentException("Stream isn't writable", nameof(stream));
 
@@ -102,10 +77,10 @@ namespace Test
             }
         }
 
-        #endregion
-
-
-        #region Properties
+        /// <summary>
+        /// Gets the underlying stream of the EndianBinaryReader.
+        /// </summary>
+        public Stream BaseStream { get; }
 
         /// <summary>
         /// The bit converter used to read values from the stream
@@ -118,14 +93,16 @@ namespace Test
         public Encoding Encoding { get; }
 
         /// <summary>
-        /// Gets the underlying stream of the EndianBinaryReader.
+        /// Disposes of the underlying stream.
         /// </summary>
-        public Stream BaseStream { get; }
-
-        #endregion
-
-
-        #region Public methods
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _disposed = true;
+                ((IDisposable) BaseStream).Dispose();
+            }
+        }
 
         /// <summary>
         /// Closes the reader, including the underlying stream..
@@ -310,14 +287,11 @@ namespace Test
             if (_buffer == null)
                 throw new ArgumentNullException(nameof(_buffer));
 
-
             if (index < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-
             if (count < 0)
                 throw new ArgumentOutOfRangeException(nameof(index));
-
 
             if (count + index > data.Length)
                 throw new ArgumentException("Not enough space in buffer for specified number of characters starting at specified index");
@@ -548,11 +522,6 @@ namespace Test
             return Encoding.GetString(data, 0, data.Length);
         }
 
-        #endregion
-
-
-        #region Private methods
-
         /// <summary>
         /// Checks whether or not the reader has been disposed, throwing an exception if so.
         /// </summary>
@@ -612,7 +581,5 @@ namespace Test
 
             return index;
         }
-
-        #endregion
     }
 }

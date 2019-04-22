@@ -20,7 +20,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace PacketDotNet.Ieee80211
 {
-      public struct MacFields
+    public struct MacFields
     {
         public static readonly int Address1Position;
         public static readonly int AddressLength = EthernetFields.MacAddressLength;

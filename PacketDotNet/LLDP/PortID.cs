@@ -22,10 +22,10 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using System.Reflection;
 using log4net;
+
 #endif
 
 namespace PacketDotNet.Lldp

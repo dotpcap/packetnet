@@ -5,10 +5,6 @@ namespace Test
     [SetUpFixture]
     public class MySetUpClass
     {
-        public MySetUpClass()
-        {
-        }
-
         // NOTE: These are used by nunit but they appear to the compiler to be unused
         //       so silence the incorrect warning CS0169
 #pragma warning disable 0169

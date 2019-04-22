@@ -81,6 +81,15 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Used to sequence the collection of Database Description Packets.
+        /// </summary>
+        public uint DDSequence
+        {
+            get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + OspfV2Fields.DDSequencePosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OspfV2Fields.DDSequencePosition);
+        }
+
+        /// <summary>
         /// DD Packet bits - See http://www.ietf.org/rfc/rfc2328.txt for details.
         /// </summary>
         public byte DescriptionBits
@@ -96,25 +105,6 @@ namespace PacketDotNet
         {
             get => Header.Bytes[Header.Offset + OspfV2Fields.DescriptionOptionsPosition];
             set => Header.Bytes[Header.Offset + OspfV2Fields.DescriptionOptionsPosition] = value;
-        }
-
-        /// <summary>
-        /// Used to sequence the collection of Database Description Packets.
-        /// </summary>
-        public uint DDSequence
-        {
-            get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + OspfV2Fields.DDSequencePosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OspfV2Fields.DDSequencePosition);
-        }
-
-        /// <summary>
-        /// The size in bytes of the largest IP datagram that can be sent
-        /// out the associated interface, without fragmentation.
-        /// </summary>
-        public ushort InterfaceMtu
-        {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + OspfV2Fields.InterfaceMTUPosition);
-            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OspfV2Fields.InterfaceMTUPosition);
         }
 
         /// <summary>
@@ -148,6 +138,16 @@ namespace PacketDotNet
 
                 return ret;
             }
+        }
+
+        /// <summary>
+        /// The size in bytes of the largest IP datagram that can be sent
+        /// out the associated interface, without fragmentation.
+        /// </summary>
+        public ushort InterfaceMtu
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + OspfV2Fields.InterfaceMTUPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + OspfV2Fields.InterfaceMTUPosition);
         }
 
         /// <summary>

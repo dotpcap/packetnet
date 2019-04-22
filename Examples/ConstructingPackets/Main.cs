@@ -11,17 +11,17 @@ namespace ConstructingPackets
     {
         public static void Main(string[] args)
         {
-            ushort tcpSourcePort = 123;
-            ushort tcpDestinationPort = 321;
+            const ushort tcpSourcePort = 123;
+            const ushort tcpDestinationPort = 321;
             var tcpPacket = new TcpPacket(tcpSourcePort, tcpDestinationPort);
 
             var ipSourceAddress = System.Net.IPAddress.Parse("192.168.1.1");
             var ipDestinationAddress = System.Net.IPAddress.Parse("192.168.1.2");
             var ipPacket = new IPv4Packet(ipSourceAddress, ipDestinationAddress);
 
-            var sourceHwAddress = "90-90-90-90-90-90";
+            const string sourceHwAddress = "90-90-90-90-90-90";
             var ethernetSourceHwAddress = System.Net.NetworkInformation.PhysicalAddress.Parse(sourceHwAddress);
-            var destinationHwAddress = "80-80-80-80-80-80";
+            const string destinationHwAddress = "80-80-80-80-80-80";
             var ethernetDestinationHwAddress = System.Net.NetworkInformation.PhysicalAddress.Parse(destinationHwAddress);
             // NOTE: using EthernetType.None to illustrate that the ethernet
             //       protocol type is updated based on the packet payload that is

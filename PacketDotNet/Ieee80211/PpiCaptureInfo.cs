@@ -6,6 +6,14 @@ namespace PacketDotNet.Ieee80211
     /// </summary>
     public class PpiCaptureInfo : PpiFields
     {
+        /// <summary>
+        /// Gets the field bytes. This doesn't include the PPI field header.
+        /// </summary>
+        /// <value>
+        /// The bytes.
+        /// </value>
+        public override byte[] Bytes => new byte[0];
+
         /// <summary>Type of the field</summary>
         public override PpiFieldType FieldType => PpiFieldType.PpiCaptureInfo;
 
@@ -16,13 +24,5 @@ namespace PacketDotNet.Ieee80211
         /// The length.
         /// </value>
         public override int Length => 0;
-
-        /// <summary>
-        /// Gets the field bytes. This doesn't include the PPI field header.
-        /// </summary>
-        /// <value>
-        /// The bytes.
-        /// </value>
-        public override byte[] Bytes => new byte[0];
     }
 }

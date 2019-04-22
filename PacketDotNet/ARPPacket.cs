@@ -26,10 +26,10 @@ using System.Net.Sockets;
 using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
-
 #if DEBUG
 using System.Reflection;
 using log4net;
+
 #endif
 
 namespace PacketDotNet

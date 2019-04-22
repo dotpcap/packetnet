@@ -23,10 +23,10 @@ using System.Collections.Generic;
 using System.Threading;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
-
 #if DEBUG
 using log4net;
 using System.Reflection;
+
 #endif
 
 namespace PacketDotNet

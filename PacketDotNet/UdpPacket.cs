@@ -27,6 +27,7 @@ using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -341,7 +342,7 @@ namespace PacketDotNet
             // Packet bytes must be greater than or equal to the IPV6 header length, start with the version number, 
             // and be greater in length than the payload length + the header length.
             return (packetBytes.Length >= IPv6Fields.HeaderLength) &&
-                   (packetBytes.Bytes[packetBytes.Offset] >> 4 == (int)RawIPPacketProtocol.IPv6) &&
+                   (packetBytes.Bytes[packetBytes.Offset] >> 4 == (int) RawIPPacketProtocol.IPv6) &&
                    (packetBytes.Length >= IPv6Fields.HeaderLength + packetBytes.Bytes[packetBytes.Offset + IPv6Fields.PayloadLengthPosition]);
         }
     }

@@ -29,9 +29,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using PacketDotNet.Lldp;
 using PacketDotNet.Utils;
-
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -87,7 +87,7 @@ namespace PacketDotNet
             Header = new ByteArraySegment(byteArraySegment);
 
             // Initiate the TLV list from the existing data
-            ParseByteArrayIntoTLVs(Header.Bytes, Header.Offset);
+            ParseByteArrayIntoTlvs(Header.Bytes, Header.Offset);
         }
 
         /// <summary>
@@ -109,9 +109,8 @@ namespace PacketDotNet
                     memoryStream.Write(tlvBytes, 0, tlvBytes.Length);
                 }
 
-                var offset = 0;
                 var msArray = memoryStream.ToArray();
-                return new ByteArraySegment(msArray, offset, msArray.Length);
+                return new ByteArraySegment(msArray, 0, msArray.Length);
             }
         }
 
@@ -143,7 +142,7 @@ namespace PacketDotNet
         /// <summary>
         /// Parse byte[] into TLVs
         /// </summary>
-        public void ParseByteArrayIntoTLVs(byte[] bytes, int offset)
+        public void ParseByteArrayIntoTlvs(byte[] bytes, int offset)
         {
             Log.DebugFormat("bytes.Length {0}, offset {1}", bytes.Length, offset);
 
@@ -157,8 +156,7 @@ namespace PacketDotNet
                 var byteArraySegment = new ByteArraySegment(bytes, offset + position, TlvTypeLength.TypeLengthLength);
                 var typeLength = new TlvTypeLength(byteArraySegment);
 
-                // create a TLV based on the type and
-                // add it to the collection
+                // create a TLV based on the type and add it to the collection
                 var currentTlv = TLVFactory(bytes, offset + position, typeLength.Type);
                 if (currentTlv == null)
                 {
@@ -298,24 +296,24 @@ namespace PacketDotNet
                 case StringOutputType.Colored:
                 {
                     // build the string of TLVs
-                    var TLVs = "{";
+                    var tlvs = "{";
                     var r = new Regex(@"[^(\.)]([^\.]*)$");
                     foreach (var tlv in TlvCollection)
                     {
                         // regex trim the parent namespaces from the class type
                         //   (ex. "PacketDotNet.LLDP.TimeToLive" becomes "TimeToLive")
                         var m = r.Match(tlv.GetType().ToString());
-                        TLVs += m.Groups[0].Value + "|";
+                        tlvs += m.Groups[0].Value + "|";
                     }
 
-                    TLVs = TLVs.TrimEnd('|');
-                    TLVs += "}";
+                    tlvs = tlvs.TrimEnd('|');
+                    tlvs += "}";
 
                     // build the output string
                     buffer.AppendFormat("{0}[LldpPacket: TLVs={2}]{1}",
                                         color,
                                         colorEscape,
-                                        TLVs);
+                                        tlvs);
 
                     break;
                 }

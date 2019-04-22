@@ -117,7 +117,7 @@ namespace PacketDotNet.Utils
             {
                 if (index < 0 || index >= Length)
                     ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.index);
-                
+
                 return Bytes[Offset + index];
             }
             set

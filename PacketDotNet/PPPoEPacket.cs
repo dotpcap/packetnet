@@ -27,6 +27,7 @@ using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 #if DEBUG
 using log4net;
+
 #endif
 
 namespace PacketDotNet
@@ -192,7 +193,7 @@ namespace PacketDotNet
         /// Parses the next segment.
         /// </summary>
         /// <param name="header">The header.</param>
-        /// <returns><see cref="PacketOrByteArraySegment"/>.</returns>
+        /// <returns><see cref="PacketOrByteArraySegment" />.</returns>
         private static PacketOrByteArraySegment ParseNextSegment(ByteArraySegment header)
         {
             // slice off the payload

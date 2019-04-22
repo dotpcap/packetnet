@@ -19,12 +19,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
-using NUnit.Framework;
-using SharpPcap;
-using SharpPcap.LibPcap;
-using PacketDotNet;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using NUnit.Framework;
+using PacketDotNet;
+using SharpPcap;
+using SharpPcap.LibPcap;
 
 namespace Test.PacketType
 {
@@ -44,7 +44,7 @@ namespace Test.PacketType
             dev.Close();
 
             // Parse an icmp request
-            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
 
             Assert.IsNotNull(p);
             Assert.AreEqual(linkLayers, rawCapture.LinkLayerType);
@@ -58,46 +58,11 @@ namespace Test.PacketType
             Assert.AreEqual(0x6b00, icmp.Sequence);
 
             // check that the message matches
-            string expectedString = "abcdefghijklmnopqrstuvwabcdefghi";
-            byte[] expectedData = System.Text.ASCIIEncoding.ASCII.GetBytes(expectedString);
+            const string expectedString = "abcdefghijklmnopqrstuvwabcdefghi";
+            var expectedData = System.Text.Encoding.ASCII.GetBytes(expectedString);
             Assert.AreEqual(expectedData, icmp.Data);
         }
 
-        [Test]
-        public void PrintString()
-        {
-            Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ICMPv4.pcap");
-            dev.Open();
-            RawCapture rawCapture;
-            Console.WriteLine("Reading packet data");
-            rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-            Console.WriteLine("Parsing");
-            var icmp = p.Extract<IcmpV4Packet>();
-
-            Console.WriteLine("Printing human readable string");
-            Console.WriteLine(icmp.ToString());
-        }
-
-        [Test]
-        public void PrintVerboseString()
-        {
-            Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ICMPv4.pcap");
-            dev.Open();
-            RawCapture rawCapture;
-            Console.WriteLine("Reading packet data");
-            rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-            Console.WriteLine("Parsing");
-            var icmp = p.Extract<IcmpV4Packet>();
-
-            Console.WriteLine("Printing human readable string");
-            Console.WriteLine(icmp.ToString(StringOutputType.Verbose));
-        }
         [Test]
         public void BinarySerialization()
         {
@@ -105,24 +70,25 @@ namespace Test.PacketType
             dev.Open();
 
             RawCapture rawCapture;
-            bool foundicmp = false;
+            var foundicmp = false;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
                 var icmp = p.Extract<IcmpV4Packet>();
                 if (icmp == null)
                 {
                     continue;
                 }
+
                 foundicmp = true;
 
                 var memoryStream = new MemoryStream();
-                BinaryFormatter serializer = new BinaryFormatter();
+                var serializer = new BinaryFormatter();
                 serializer.Serialize(memoryStream, icmp);
 
-                memoryStream.Seek (0, SeekOrigin.Begin);
-                BinaryFormatter deserializer = new BinaryFormatter();
-                IcmpV4Packet fromFile = (IcmpV4Packet)deserializer.Deserialize(memoryStream);
+                memoryStream.Seek(0, SeekOrigin.Begin);
+                var deserializer = new BinaryFormatter();
+                var fromFile = (IcmpV4Packet) deserializer.Deserialize(memoryStream);
 
                 Assert.AreEqual(icmp.Bytes, fromFile.Bytes);
                 Assert.AreEqual(icmp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
@@ -143,7 +109,39 @@ namespace Test.PacketType
             dev.Close();
             Assert.IsTrue(foundicmp, "Capture file contained no icmp packets");
         }
-    
+
+        [Test]
+        public void PrintString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ICMPv4.pcap");
+            dev.Open();
+            Console.WriteLine("Reading packet data");
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+            Console.WriteLine("Parsing");
+            var icmp = p.Extract<IcmpV4Packet>();
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(icmp.ToString());
+        }
+
+        [Test]
+        public void PrintVerboseString()
+        {
+            Console.WriteLine("Loading the sample capture file");
+            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ICMPv4.pcap");
+            dev.Open();
+            Console.WriteLine("Reading packet data");
+            var rawCapture = dev.GetNextPacket();
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+
+            Console.WriteLine("Parsing");
+            var icmp = p.Extract<IcmpV4Packet>();
+
+            Console.WriteLine("Printing human readable string");
+            Console.WriteLine(icmp.ToString(StringOutputType.Verbose));
+        }
     }
 }
-

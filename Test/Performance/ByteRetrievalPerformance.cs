@@ -19,6 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using log4net.Core;
 using NUnit.Framework;
 using PacketDotNet;
 
@@ -64,22 +65,23 @@ namespace Test.Performance
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to improve performance
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             // now benchmark retrieving the byte[] for several seconds
             var startTime = DateTime.Now;
             var endTime = startTime.Add(new TimeSpan(0, 0, 2));
-            int testRuns = 0;
-            while(DateTime.Now < endTime)
+            var testRuns = 0;
+            while (DateTime.Now < endTime)
             {
                 var theBytes = contiguousEthernetPacket.Bytes;
 
                 // make sure that we always get back the same reference
                 // for the byte[]
-                if(theByteArray == null)
+                if (theByteArray == null)
                 {
                     theByteArray = theBytes;
-                } else
+                }
+                else
                 {
                     Assert.AreSame(theByteArray, theBytes);
                 }
@@ -109,21 +111,22 @@ namespace Test.Performance
             var oldThreshold = LoggingConfiguration.GlobalLoggingLevel;
 
             // disable logging to improve performance
-            LoggingConfiguration.GlobalLoggingLevel = log4net.Core.Level.Off;
+            LoggingConfiguration.GlobalLoggingLevel = Level.Off;
 
             // now benchmark retrieving the byte[] for several seconds
             var startTime = DateTime.Now;
             var endTime = startTime.Add(new TimeSpan(0, 0, 2));
-            int testRuns = 0;
-            while(DateTime.Now < endTime)
+            var testRuns = 0;
+            while (DateTime.Now < endTime)
             {
                 var theBytes = ethernetPacket.Bytes;
 
                 // make sure we don't get back the same reference
-                if(lastByteArray == null)
+                if (lastByteArray == null)
                 {
                     lastByteArray = theBytes;
-                } else
+                }
+                else
                 {
                     Assert.AreNotSame(lastByteArray, theBytes);
                     lastByteArray = theBytes;

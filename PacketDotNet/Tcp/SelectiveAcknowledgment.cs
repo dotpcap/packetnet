@@ -23,7 +23,7 @@ using PacketDotNet.Utils.Converters;
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// SelectiveAck (Selective Ack) Option
+    /// SelectiveAcknowledgment (Selective Ack) Option
     /// Provides a means for a receiver to notify the sender about
     /// all the segments that have arrived successfully.
     /// Used to cut down on the number of unnecessary re-transmissions.
@@ -33,16 +33,16 @@ namespace PacketDotNet.Tcp
     /// http://datatracker.ietf.org/doc/rfc2018/
     /// http://datatracker.ietf.org/doc/rfc2883/
     /// </remarks>
-    public class SelectiveAck : Option
+    public class SelectiveAcknowledgment : Option
     {
-        // the length (in bytes) of a SelectiveAck block
+        // the length (in bytes) of a SelectiveAcknowledgment block
         private const int BlockLength = 2;
 
         // the offset (in bytes) of the ScaleFactor Field
         private const int SACKBlocksFieldOffset = 2;
 
         /// <summary>
-        /// Creates a SelectiveAck (Selective Ack) Option
+        /// Creates a SelectiveAcknowledgment (Selective Ack) Option
         /// </summary>
         /// <param name="bytes">
         /// A <see cref="T:System.Byte[]" />
@@ -53,7 +53,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        public SelectiveAck(byte[] bytes, int offset, int length) :
+        public SelectiveAcknowledgment(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
 

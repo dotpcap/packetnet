@@ -54,7 +54,7 @@ namespace Test.PacketType
 
             Assert.AreEqual(IcmpV4TypeCode.EchoRequest, icmp.TypeCode);
             Assert.AreEqual(0xe05b, icmp.Checksum);
-            Assert.AreEqual(0x0200, icmp.ID);
+            Assert.AreEqual(0x0200, icmp.Id);
             Assert.AreEqual(0x6b00, icmp.Sequence);
 
             // check that the message matches
@@ -100,7 +100,7 @@ namespace Test.PacketType
                 Assert.AreEqual(icmp.Color, fromFile.Color);
                 Assert.AreEqual(icmp.Data, fromFile.Data);
                 Assert.AreEqual(icmp.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(icmp.ID, fromFile.ID);
+                Assert.AreEqual(icmp.Id, fromFile.Id);
                 Assert.AreEqual(icmp.PayloadData, fromFile.PayloadData);
                 Assert.AreEqual(icmp.Sequence, fromFile.Sequence);
                 Assert.AreEqual(icmp.TypeCode, fromFile.TypeCode);

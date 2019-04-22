@@ -21,14 +21,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
+
 #if DEBUG
 using log4net;
-
+using System.Reflection;
 #endif
 
 namespace PacketDotNet
@@ -54,8 +54,8 @@ namespace PacketDotNet
         /// </summary>
         public EthernetPacket
         (
-            PhysicalAddress sourceHwAddress,
-            PhysicalAddress destinationHwAddress,
+            PhysicalAddress sourceHardwareAddress,
+            PhysicalAddress destinationHardwareAddress,
             EthernetType ethernetType)
         {
             Log.Debug("");
@@ -67,8 +67,8 @@ namespace PacketDotNet
             Header = new ByteArraySegment(headerBytes, offset, length);
 
             // set the instance values
-            SourceHwAddress = sourceHwAddress;
-            DestinationHwAddress = destinationHwAddress;
+            SourceHardwareAddress = sourceHardwareAddress;
+            DestinationHardwareAddress = destinationHardwareAddress;
             Type = ethernetType;
         }
 
@@ -95,7 +95,7 @@ namespace PacketDotNet
         public override string Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary>MAC address of the host where the packet originated from.</summary>
-        public PhysicalAddress DestinationHwAddress
+        public PhysicalAddress DestinationHardwareAddress
         {
             get
             {
@@ -167,7 +167,7 @@ namespace PacketDotNet
         }
 
         /// <summary>MAC address of the host where the packet originated from.</summary>
-        public PhysicalAddress SourceHwAddress
+        public PhysicalAddress SourceHardwareAddress
         {
             get
             {
@@ -296,11 +296,11 @@ namespace PacketDotNet
                 case StringOutputType.Colored:
                 {
                     // build the output string
-                    buffer.AppendFormat("{0}[EthernetPacket: SourceHwAddress={2}, DestinationHwAddress={3}, Type={4}]{1}",
+                    buffer.AppendFormat("{0}[EthernetPacket: SourceHardwareAddress={2}, DestinationHardwareAddress={3}, Type={4}]{1}",
                                         color,
                                         colorEscape,
-                                        HexPrinter.PrintMACAddress(SourceHwAddress),
-                                        HexPrinter.PrintMACAddress(DestinationHwAddress),
+                                        HexPrinter.PrintMACAddress(SourceHardwareAddress),
+                                        HexPrinter.PrintMACAddress(DestinationHardwareAddress),
                                         Type.ToString());
 
                     break;
@@ -311,8 +311,8 @@ namespace PacketDotNet
                     // collect the properties and their value
                     var properties = new Dictionary<string, string>
                     {
-                        { "destination", HexPrinter.PrintMACAddress(DestinationHwAddress) },
-                        { "source", HexPrinter.PrintMACAddress(SourceHwAddress) },
+                        { "destination", HexPrinter.PrintMACAddress(DestinationHardwareAddress) },
+                        { "source", HexPrinter.PrintMACAddress(SourceHardwareAddress) },
                         { "type", Type + " (0x" + Type.ToString("x") + ")" }
                     };
 

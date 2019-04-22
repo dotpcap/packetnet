@@ -50,13 +50,13 @@ namespace PacketDotNet.Tcp
         /// <remarks>See RFC 1323</remarks>
         WindowScaleFactor = 3,
 
-        /// <summary>SelectiveAck (Selective Ack) Permitted</summary>
+        /// <summary>Selective acknowledgment (SACK) Permitted</summary>
         /// <remarks>See RFC 2018</remarks>
-        SelectiveAckPermitted = 4,
+        SelectiveAcknowledgmentPermitted = 4,
 
-        /// <summary>SelectiveAck (Selective Ack)</summary>
+        /// <summary>Selective acknowledgment (SACK)</summary>
         /// <remarks>See RFC 2018 and RFC 2883</remarks>
-        SelectiveAck = 5,
+        SelectiveAcknowledgment = 5,
 
         /// <summary>Echo (obsolete)</summary>
         /// <remarks>See RFC 1072</remarks>
@@ -72,11 +72,11 @@ namespace PacketDotNet.Tcp
 
         /// <summary>Partial Order Connection Permitted (experimental)</summary>
         /// <remarks>See RFC 1693</remarks>
-        POConnectionPermitted = 9,
+        PartialOrderConnectionPermitted = 9,
 
         /// <summary>Partial Order Service Profile (experimental)</summary>
         /// <remarks>See RFC 1693</remarks>
-        POServiceProfile = 10,
+        PartialOrderServiceProfile = 10,
 
         /// <summary>Connection Count (experimental)</summary>
         /// <remarks>See RFC 1644</remarks>

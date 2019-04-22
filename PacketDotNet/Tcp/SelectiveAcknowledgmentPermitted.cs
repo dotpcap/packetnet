@@ -22,14 +22,14 @@ namespace PacketDotNet.Tcp
 {
     /// <summary>
     /// SACK (Selective Ack) Permitted Option
-    /// Notifies the receiver that SelectiveAck is allowed.
+    /// Notifies the receiver that SelectiveAcknowledgment is allowed.
     /// Must only be sent in a SYN segment
     /// </summary>
     /// <remarks>
     /// References:
     /// http://datatracker.ietf.org/doc/rfc2018/
     /// </remarks>
-    public class SelectiveAckPermitted : Option
+    public class SelectiveAcknowledgmentPermitted : Option
     {
         /// <summary>
         /// Creates a Sack Permitted Option
@@ -43,7 +43,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        public SelectiveAckPermitted(byte[] bytes, int offset, int length) :
+        public SelectiveAcknowledgmentPermitted(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
     }

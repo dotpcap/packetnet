@@ -26,15 +26,15 @@ namespace PacketDotNet
     public struct TcpFields
     {
         // flag bit masks
-        public static readonly int TCPNsMask = 0x0100;
-        public static readonly int TCPCwrMask = 0x0080;
-        public static readonly int TCPEcnMask = 0x0040;
-        public static readonly int TCPUrgMask = 0x0020;
+        public static readonly int NonceSumMask = 0x0100;
+        public static readonly int CongestionWindowReducedMask = 0x0080;
+        public static readonly int ExplicitCongestionNotificationEchoMask = 0x0040;
+        public static readonly int UrgentMask = 0x0020;
         public static readonly int TCPAckMask = 0x0010;
-        public static readonly int TCPPshMask = 0x0008;
-        public static readonly int TCPRstMask = 0x0004;
-        public static readonly int TCPSynMask = 0x0002;
-        public static readonly int TCPFinMask = 0x0001;
+        public static readonly int PushMask = 0x0008;
+        public static readonly int ResetMask = 0x0004;
+        public static readonly int SynchronizationMask = 0x0002;
+        public static readonly int FinishedMask = 0x0001;
 
         /// <summary>Length of a TCP port in bytes.</summary>
         public static readonly int PortLength = 2;
@@ -43,7 +43,7 @@ namespace PacketDotNet
         public static readonly int SequenceNumberLength = 4;
 
         /// <summary>Length of the acknowledgment number in bytes.</summary>
-        public static readonly int AckNumberLength = 4;
+        public static readonly int AcknowledgmentNumberLength = 4;
 
         /// <summary>Length of the data offset and flags field in bytes.</summary>
         public static readonly int DataOffsetAndFlagsLength = 2;
@@ -67,7 +67,7 @@ namespace PacketDotNet
         public static readonly int SequenceNumberPosition;
 
         /// <summary>Position of the acknowledgment number field.</summary>
-        public static readonly int AckNumberPosition;
+        public static readonly int AcknowledgmentNumberPosition;
 
         /// <summary>Position of the data offset </summary>
         public static readonly int DataOffsetAndFlagsPosition;
@@ -88,8 +88,8 @@ namespace PacketDotNet
         {
             DestinationPortPosition = PortLength;
             SequenceNumberPosition = DestinationPortPosition + PortLength;
-            AckNumberPosition = SequenceNumberPosition + SequenceNumberLength;
-            DataOffsetAndFlagsPosition = AckNumberPosition + AckNumberLength;
+            AcknowledgmentNumberPosition = SequenceNumberPosition + SequenceNumberLength;
+            DataOffsetAndFlagsPosition = AcknowledgmentNumberPosition + AcknowledgmentNumberLength;
             WindowSizePosition = DataOffsetAndFlagsPosition + DataOffsetAndFlagsLength;
             ChecksumPosition = WindowSizePosition + WindowSizeLength;
             UrgentPointerPosition = ChecksumPosition + ChecksumLength;

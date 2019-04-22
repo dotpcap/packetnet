@@ -372,13 +372,13 @@ namespace PacketDotNet
             get => (IPVersion) ((VersionTrafficClassFlowLabel >> 28) & 0xF);
             set
             {
-                var theValue = (int) value;
+                var v = (int) value;
 
                 // read the existing value
                 var field = (uint) VersionTrafficClassFlowLabel;
 
                 // mask the new field into place
-                field = (uint) ((field & 0x0FFFFFFF) | ((theValue << 28) & 0xF0000000));
+                field = (uint) ((field & 0x0FFFFFFF) | ((v << 28) & 0xF0000000));
 
                 // write the updated value back
                 VersionTrafficClassFlowLabel = (int) field;

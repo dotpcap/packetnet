@@ -20,13 +20,13 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
+
 #if DEBUG
 using log4net;
-
+using System.Reflection;
 #endif
 
 namespace PacketDotNet
@@ -90,8 +90,8 @@ namespace PacketDotNet
                                                    Header.Offset + IcmpV6Fields.ChecksumPosition);
             set
             {
-                var theValue = value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + IcmpV6Fields.ChecksumPosition);
             }

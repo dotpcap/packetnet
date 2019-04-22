@@ -24,14 +24,14 @@ using System.Collections;
 using System.IO;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using PacketDotNet.Lldp;
 using PacketDotNet.Utils;
+
 #if DEBUG
 using log4net;
-
+using System.Reflection;
 #endif
 
 namespace PacketDotNet

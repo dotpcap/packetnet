@@ -136,8 +136,8 @@ namespace PacketDotNet
                                                                 Header.Offset + ArpFields.HardwareAddressTypePosition);
             set
             {
-                var theValue = (ushort) value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = (ushort) value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + ArpFields.HardwareAddressTypePosition);
             }
@@ -152,8 +152,8 @@ namespace PacketDotNet
                                                                  Header.Offset + ArpFields.OperationPosition);
             set
             {
-                var theValue = (short) value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = (short) value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + ArpFields.OperationPosition);
             }
@@ -177,8 +177,8 @@ namespace PacketDotNet
                                                                   Header.Offset + ArpFields.ProtocolAddressTypePosition);
             set
             {
-                var theValue = (ushort) value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = (ushort) value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + ArpFields.ProtocolAddressTypePosition);
             }

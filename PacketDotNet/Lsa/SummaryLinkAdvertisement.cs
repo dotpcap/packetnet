@@ -73,8 +73,8 @@ namespace PacketDotNet.Lsa
             }
             set
             {
-                var theValue = value & 0x00FFFFFF;
-                EndianBitConverter.Big.CopyBytes(theValue, Header.Bytes, Header.Offset + SummaryLinkAdvertisementFields.MetricPosition);
+                var v = value & 0x00FFFFFF;
+                EndianBitConverter.Big.CopyBytes(v, Header.Bytes, Header.Offset + SummaryLinkAdvertisementFields.MetricPosition);
             }
         }
 

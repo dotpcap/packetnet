@@ -81,8 +81,8 @@ namespace PacketDotNet
                                         Header.Offset + IgmpV2Fields.ChecksumPosition);
             set
             {
-                var theValue = BitConverter.GetBytes(value);
-                Array.Copy(theValue, 0, Header.Bytes, Header.Offset + IgmpV2Fields.ChecksumPosition, 2);
+                var v = BitConverter.GetBytes(value);
+                Array.Copy(v, 0, Header.Bytes, Header.Offset + IgmpV2Fields.ChecksumPosition, 2);
             }
         }
 

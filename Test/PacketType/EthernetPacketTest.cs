@@ -39,8 +39,8 @@ namespace Test.PacketType
             Console.WriteLine(p.ToString());
 
             var e = (EthernetPacket) p;
-            Assert.AreEqual(PhysicalAddress.Parse("00-13-10-03-71-47"), e.SourceHwAddress);
-            Assert.AreEqual(PhysicalAddress.Parse("00-E0-4C-E5-73-AD"), e.DestinationHwAddress);
+            Assert.AreEqual(PhysicalAddress.Parse("00-13-10-03-71-47"), e.SourceHardwareAddress);
+            Assert.AreEqual(PhysicalAddress.Parse("00-E0-4C-E5-73-AD"), e.DestinationHardwareAddress);
 
             var ip = (IPPacket) e.PayloadPacket;
             Assert.AreEqual(System.Net.IPAddress.Parse("82.165.240.134"), ip.SourceAddress);
@@ -55,7 +55,7 @@ namespace Test.PacketType
             var tcp = (TcpPacket) ip.PayloadPacket;
             Assert.AreEqual(80, tcp.SourcePort);
             Assert.AreEqual(4324, tcp.DestinationPort);
-            Assert.IsTrue(tcp.Ack);
+            Assert.IsTrue(tcp.Acknowledgment);
             Assert.AreEqual(3536, tcp.WindowSize);
             Assert.AreEqual(0xc835, tcp.CalculateTcpChecksum());
             Console.WriteLine("tcp.Checksum is {0}", tcp.Checksum);
@@ -69,8 +69,8 @@ namespace Test.PacketType
             Console.WriteLine(p.ToString());
 
             var e = (EthernetPacket) p;
-            Assert.AreEqual("0016CFC91E29", e.SourceHwAddress.ToString());
-            Assert.AreEqual("0014BFF2EF0A", e.DestinationHwAddress.ToString());
+            Assert.AreEqual("0016CFC91E29", e.SourceHardwareAddress.ToString());
+            Assert.AreEqual("0014BFF2EF0A", e.DestinationHardwareAddress.ToString());
 
             var ip = (IPPacket) p.PayloadPacket;
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.104"), ip.SourceAddress);
@@ -83,8 +83,8 @@ namespace Test.PacketType
             var tcp = (TcpPacket) ip.PayloadPacket;
             Assert.AreEqual(56925, tcp.SourcePort);
             Assert.AreEqual(50199, tcp.DestinationPort);
-            Assert.IsTrue(tcp.Ack);
-            Assert.IsTrue(tcp.Psh);
+            Assert.IsTrue(tcp.Acknowledgment);
+            Assert.IsTrue(tcp.Push);
             Assert.AreEqual(16666, tcp.WindowSize);
             Assert.AreEqual(0x9b02, tcp.CalculateTcpChecksum());
             Assert.AreEqual(0x9b02, tcp.Checksum);
@@ -96,8 +96,8 @@ namespace Test.PacketType
         {
             Console.WriteLine(p.ToString());
             var e = (EthernetPacket) p;
-            Assert.AreEqual("0014BFF2EF0A", e.SourceHwAddress.ToString());
-            Assert.AreEqual("0016CFC91E29", e.DestinationHwAddress.ToString());
+            Assert.AreEqual("0014BFF2EF0A", e.SourceHardwareAddress.ToString());
+            Assert.AreEqual("0016CFC91E29", e.DestinationHardwareAddress.ToString());
 
             var ip = p.Extract<IPPacket>();
             Assert.AreEqual(System.Net.IPAddress.Parse("172.210.164.56"), ip.SourceAddress);
@@ -121,8 +121,8 @@ namespace Test.PacketType
         {
             Console.WriteLine(p.ToString());
             var e = (EthernetPacket) p;
-            Assert.AreEqual("0016CFC91E29", e.SourceHwAddress.ToString());
-            Assert.AreEqual("0014BFF2EF0A", e.DestinationHwAddress.ToString());
+            Assert.AreEqual("0016CFC91E29", e.SourceHardwareAddress.ToString());
+            Assert.AreEqual("0014BFF2EF0A", e.DestinationHardwareAddress.ToString());
 
             var ip = p.Extract<IPPacket>();
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.172"), ip.SourceAddress);
@@ -142,8 +142,8 @@ namespace Test.PacketType
         {
             Console.WriteLine(p.ToString());
             var e = (EthernetPacket) p;
-            Assert.AreEqual("0018F84B17A0", e.SourceHwAddress.ToString());
-            Assert.AreEqual("FFFFFFFFFFFF", e.DestinationHwAddress.ToString());
+            Assert.AreEqual("0018F84B17A0", e.SourceHardwareAddress.ToString());
+            Assert.AreEqual("FFFFFFFFFFFF", e.DestinationHardwareAddress.ToString());
         }
 
         // icmp
@@ -151,8 +151,8 @@ namespace Test.PacketType
         {
             Console.WriteLine(p.ToString());
             var e = (EthernetPacket) p;
-            Assert.AreEqual("0016CFC91E29", e.SourceHwAddress.ToString());
-            Assert.AreEqual("0014BFF2EF0A", e.DestinationHwAddress.ToString());
+            Assert.AreEqual("0016CFC91E29", e.SourceHardwareAddress.ToString());
+            Assert.AreEqual("0014BFF2EF0A", e.DestinationHardwareAddress.ToString());
 
             var ip = p.Extract<IPPacket>();
             Assert.AreEqual(System.Net.IPAddress.Parse("192.168.1.104"), ip.SourceAddress);
@@ -188,11 +188,11 @@ namespace Test.PacketType
                 Assert.AreEqual(ethernetPacket.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
                 Assert.AreEqual(ethernetPacket.BytesSegment.Offset, fromFile.BytesSegment.Offset);
                 Assert.AreEqual(ethernetPacket.Color, fromFile.Color);
-                Assert.AreEqual(ethernetPacket.DestinationHwAddress, fromFile.DestinationHwAddress);
+                Assert.AreEqual(ethernetPacket.DestinationHardwareAddress, fromFile.DestinationHardwareAddress);
                 Assert.AreEqual(ethernetPacket.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(ethernetPacket.ParentPacket, fromFile.ParentPacket);
                 Assert.AreEqual(ethernetPacket.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(ethernetPacket.SourceHwAddress, fromFile.SourceHwAddress);
+                Assert.AreEqual(ethernetPacket.SourceHardwareAddress, fromFile.SourceHardwareAddress);
                 Assert.AreEqual(ethernetPacket.Type, fromFile.Type);
             }
 
@@ -239,8 +239,8 @@ namespace Test.PacketType
             var e = new EthernetPacket(new ByteArraySegment(p.Data));
             Console.WriteLine("ethernet.ToString() {0}", e);
 
-            Assert.AreEqual(PhysicalAddress.Parse("00-13-10-03-71-47"), e.SourceHwAddress);
-            Assert.AreEqual(PhysicalAddress.Parse("00-E0-4C-E5-73-AD"), e.DestinationHwAddress);
+            Assert.AreEqual(PhysicalAddress.Parse("00-13-10-03-71-47"), e.SourceHardwareAddress);
+            Assert.AreEqual(PhysicalAddress.Parse("00-E0-4C-E5-73-AD"), e.DestinationHardwareAddress);
 
             Assert.AreEqual(EthernetType.IPv4, e.Type);
 

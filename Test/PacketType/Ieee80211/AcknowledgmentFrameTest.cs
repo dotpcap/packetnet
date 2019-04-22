@@ -28,7 +28,7 @@ using SharpPcap.LibPcap;
 namespace Test.PacketType.Ieee80211
 {
     [TestFixture]
-    public class AckFrameTest
+    public class AcknowledgmentFrameTest
     {
         [Test]
         public void Test_Constructor()
@@ -39,7 +39,7 @@ namespace Test.PacketType.Ieee80211
             dev.Close();
 
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-            var frame = (AckFrame) p.PayloadPacket;
+            var frame = (AcknowledgmentFrame) p.PayloadPacket;
 
             Assert.AreEqual(0, frame.FrameControl.ProtocolVersion);
             Assert.AreEqual(FrameControlField.FrameSubTypes.ControlAck, frame.FrameControl.SubType);
@@ -60,7 +60,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_Constructor_ConstructWithValues()
         {
-            var frame = new AckFrame(PhysicalAddress.Parse("111111111111"))
+            var frame = new AcknowledgmentFrame(PhysicalAddress.Parse("111111111111"))
             {
                 FrameControl = { ToDS = false, FromDS = true, MoreFragments = true },
                 Duration = { Field = 0x1234 }
@@ -74,7 +74,7 @@ namespace Test.PacketType.Ieee80211
             var byteArraySegment = new ByteArraySegment(bytes);
 
             //create a new frame that should be identical to the original
-            var recreatedFrame = MacFrame.ParsePacket(byteArraySegment) as AckFrame;
+            var recreatedFrame = MacFrame.ParsePacket(byteArraySegment) as AcknowledgmentFrame;
             recreatedFrame.UpdateFrameCheckSequence();
 
             Assert.AreEqual(FrameControlField.FrameSubTypes.ControlAck, recreatedFrame.FrameControl.SubType);
@@ -92,7 +92,7 @@ namespace Test.PacketType.Ieee80211
         {
             //buffer is way too short for frame. We are just checking it doesn't throw
             byte[] corruptBuffer = { 0x01 };
-            var frame = new AckFrame(new ByteArraySegment(corruptBuffer));
+            var frame = new AcknowledgmentFrame(new ByteArraySegment(corruptBuffer));
             Assert.IsFalse(frame.FcsValid);
         }
     }

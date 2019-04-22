@@ -62,7 +62,7 @@ namespace Test.PacketType
                 memoryStream.Seek(0, SeekOrigin.Begin);
                 var deserializer = new BinaryFormatter();
                 var fromFile = (TcpPacket) deserializer.Deserialize(memoryStream);
-
+                
                 Assert.AreEqual(t.Bytes, fromFile.Bytes);
                 Assert.AreEqual(t.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
                 Assert.AreEqual(t.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
@@ -72,23 +72,23 @@ namespace Test.PacketType
                 Assert.AreEqual(t.Color, fromFile.Color);
                 Assert.AreEqual(t.HeaderData, fromFile.HeaderData);
                 Assert.AreEqual(t.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(t.Ack, fromFile.Ack);
+                Assert.AreEqual(t.Acknowledgment, fromFile.Acknowledgment);
                 Assert.AreEqual(t.AcknowledgmentNumber, fromFile.AcknowledgmentNumber);
                 Assert.AreEqual(t.Flags, fromFile.Flags);
                 Assert.AreEqual(t.Checksum, fromFile.Checksum);
-                Assert.AreEqual(t.NS, fromFile.NS);
-                Assert.AreEqual(t.Cwr, fromFile.Cwr);
+                Assert.AreEqual(t.NonceSum, fromFile.NonceSum);
+                Assert.AreEqual(t.CongestionWindowReduced, fromFile.CongestionWindowReduced);
                 Assert.AreEqual(t.DataOffset, fromFile.DataOffset);
                 Assert.AreEqual(t.DestinationPort, fromFile.DestinationPort);
-                Assert.AreEqual(t.Ecn, fromFile.Ecn);
-                Assert.AreEqual(t.Fin, fromFile.Fin);
+                Assert.AreEqual(t.ExplicitCongestionNotificationEcho, fromFile.ExplicitCongestionNotificationEcho);
+                Assert.AreEqual(t.Finished, fromFile.Finished);
                 Assert.AreEqual(t.Options, fromFile.Options);
-                Assert.AreEqual(t.Psh, fromFile.Psh);
-                Assert.AreEqual(t.Rst, fromFile.Rst);
+                Assert.AreEqual(t.Push, fromFile.Push);
+                Assert.AreEqual(t.Reset, fromFile.Reset);
                 Assert.AreEqual(t.SequenceNumber, fromFile.SequenceNumber);
                 Assert.AreEqual(t.SourcePort, fromFile.SourcePort);
-                Assert.AreEqual(t.Syn, fromFile.Syn);
-                Assert.AreEqual(t.Urg, fromFile.Urg);
+                Assert.AreEqual(t.Synchronize, fromFile.Synchronize);
+                Assert.AreEqual(t.Urgent, fromFile.Urgent);
                 Assert.AreEqual(t.UrgentPointer, fromFile.UrgentPointer);
                 Assert.AreEqual(t.ValidChecksum, fromFile.ValidChecksum);
                 Assert.AreEqual(t.ValidTcpChecksum, fromFile.ValidTcpChecksum);

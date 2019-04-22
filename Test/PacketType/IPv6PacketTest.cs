@@ -45,8 +45,8 @@ namespace Test.PacketType
             if (linkLayers == LinkLayers.Ethernet)
             {
                 var e = (EthernetPacket) p;
-                Assert.AreEqual(PhysicalAddress.Parse("00-A0-CC-D9-41-75"), e.SourceHwAddress);
-                Assert.AreEqual(PhysicalAddress.Parse("33-33-00-00-00-02"), e.DestinationHwAddress);
+                Assert.AreEqual(PhysicalAddress.Parse("00-A0-CC-D9-41-75"), e.SourceHardwareAddress);
+                Assert.AreEqual(PhysicalAddress.Parse("33-33-00-00-00-02"), e.DestinationHardwareAddress);
             }
 
             var ip = p.Extract<IPPacket>();
@@ -73,8 +73,8 @@ namespace Test.PacketType
             if (linkLayers == LinkLayers.Ethernet)
             {
                 var e = (EthernetPacket) p;
-                Assert.AreEqual(PhysicalAddress.Parse("F894C22EFAD1"), e.SourceHwAddress);
-                Assert.AreEqual(PhysicalAddress.Parse("333300000016"), e.DestinationHwAddress);
+                Assert.AreEqual(PhysicalAddress.Parse("F894C22EFAD1"), e.SourceHardwareAddress);
+                Assert.AreEqual(PhysicalAddress.Parse("333300000016"), e.DestinationHardwareAddress);
             }
 
             var ip = p.Extract<IPv6Packet>();

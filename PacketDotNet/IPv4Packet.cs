@@ -22,14 +22,14 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
+
 #if DEBUG
 using log4net;
-
+using System.Reflection;
 #endif
 
 namespace PacketDotNet
@@ -335,8 +335,8 @@ namespace PacketDotNet
                                                    Header.Offset + IPv4Fields.TotalLengthPosition);
             set
             {
-                var theValue = (ushort) value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = (ushort) value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + IPv4Fields.TotalLengthPosition);
             }
@@ -494,7 +494,7 @@ namespace PacketDotNet
                 var diffServices = Convert.ToString(DifferentiatedServices, 2).PadLeft(8, '0').Insert(4, " ");
                 properties.Add("differentiated services", "0x" + DifferentiatedServices.ToString("x").PadLeft(2, '0'));
                 properties.Add("", diffServices.Substring(0, 7) + ".. = [" + (DifferentiatedServices >> 2) + "] code point");
-                properties.Add(" ", ".... .." + diffServices[6] + ". = [" + diffServices[6] + "] Ecn");
+                properties.Add(" ", ".... .." + diffServices[6] + ". = [" + diffServices[6] + "] ECN");
                 properties.Add("  ", ".... ..." + diffServices[7] + " = [" + diffServices[7] + "] ECE");
                 properties.Add("total length", TotalLength.ToString());
                 properties.Add("identification", "0x" + Id.ToString("x") + " (" + Id + ")");

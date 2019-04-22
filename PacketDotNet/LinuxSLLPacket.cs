@@ -59,8 +59,8 @@ namespace PacketDotNet
                                                                  Header.Offset + LinuxSllFields.EthernetProtocolTypePosition);
             set
             {
-                var theValue = (short) value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = (short) value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + LinuxSllFields.EthernetProtocolTypePosition);
             }
@@ -112,8 +112,8 @@ namespace PacketDotNet
                     throw new InvalidOperationException("value of " + value + " out of range of 0 to 8");
                 }
 
-                var theValue = (short) value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = (short) value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + LinuxSllFields.LinkLayerAddressLengthPosition);
             }
@@ -128,8 +128,8 @@ namespace PacketDotNet
                                                   Header.Offset + LinuxSllFields.LinkLayerAddressTypePosition);
             set
             {
-                var theValue = (short) value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = (short) value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + LinuxSllFields.LinkLayerAddressTypePosition);
             }
@@ -144,8 +144,8 @@ namespace PacketDotNet
                                                                  Header.Offset + LinuxSllFields.PacketTypePosition);
             set
             {
-                var theValue = (short) value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = (short) value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + LinuxSllFields.PacketTypePosition);
             }

@@ -106,7 +106,7 @@
     <Compile Include="PacketType\Ieee80211\MacFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211\BlockAcknowledgmentControlFieldTest.cs" />
     <Compile Include="PacketType\Ieee80211\ReassociationRequestFrameTest.cs" />
-    <Compile Include="PacketType\Ieee80211\AckFrameTest.cs" />
+    <Compile Include="PacketType\Ieee80211\AcknowledgmentFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211\CtsFrameTest.cs" />
     <Compile Include="PacketType\Ieee80211\RadioTapFieldsTest.cs" />
     <Compile Include="PacketType\Ieee80211\SequenceControlFieldTest.cs" />

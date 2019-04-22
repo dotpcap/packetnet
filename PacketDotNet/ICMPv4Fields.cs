@@ -39,7 +39,7 @@ namespace PacketDotNet
         public static readonly int IDLength = 2;
 
         /// <summary>Position of the ICMP ID field </summary>
-        public static readonly int IDPosition;
+        public static readonly int IdPosition;
 
         /// <summary>Length of the ICMP Sequence field in bytes </summary>
         public static readonly int SequenceLength = 2;
@@ -57,8 +57,8 @@ namespace PacketDotNet
         {
             TypeCodePosition = 0;
             ChecksumPosition = TypeCodePosition + TypeCodeLength;
-            IDPosition = ChecksumPosition + ChecksumLength;
-            SequencePosition = IDPosition + IDLength;
+            IdPosition = ChecksumPosition + ChecksumLength;
+            SequencePosition = IdPosition + IDLength;
             HeaderLength = SequencePosition + SequenceLength;
         }
     }

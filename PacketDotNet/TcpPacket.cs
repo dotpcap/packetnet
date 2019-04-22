@@ -20,15 +20,15 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using PacketDotNet.Tcp;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
+
 #if DEBUG
 using log4net;
-
+using System.Reflection;
 #endif
 
 namespace PacketDotNet
@@ -167,8 +167,8 @@ namespace PacketDotNet
             ParentPacket = parentPacket;
         }
 
-        /// <summary>Check the ACK flag, which indicates if the ack number is valid.</summary>
-        public bool Ack
+        /// <summary>Gets or sets the acknowledgment (ACK) flag, which indicates if the <see cref="AcknowledgmentNumber" /> is valid.</summary>
+        public bool Acknowledgment
         {
             get => (Flags & TcpFields.TCPAckMask) != 0;
             set => SetFlag(value, TcpFields.TCPAckMask);
@@ -178,10 +178,10 @@ namespace PacketDotNet
         public uint AcknowledgmentNumber
         {
             get => EndianBitConverter.Big.ToUInt32(Header.Bytes,
-                                                   Header.Offset + TcpFields.AckNumberPosition);
+                                                   Header.Offset + TcpFields.AcknowledgmentNumberPosition);
             set => EndianBitConverter.Big.CopyBytes(value,
                                                     Header.Bytes,
-                                                    Header.Offset + TcpFields.AckNumberPosition);
+                                                    Header.Offset + TcpFields.AcknowledgmentNumberPosition);
         }
 
         /// <value>
@@ -193,8 +193,8 @@ namespace PacketDotNet
                                                    Header.Offset + TcpFields.ChecksumPosition);
             set
             {
-                var theValue = value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + TcpFields.ChecksumPosition);
             }
@@ -204,12 +204,12 @@ namespace PacketDotNet
         public override string Color => AnsiEscapeSequences.Yellow;
 
         /// <value>
-        /// Cwr flag
+        /// Congestion Window Reduced flag
         /// </value>
-        public bool Cwr
+        public bool CongestionWindowReduced
         {
-            get => (Flags & TcpFields.TCPCwrMask) != 0;
-            set => SetFlag(value, TcpFields.TCPCwrMask);
+            get => (Flags & TcpFields.CongestionWindowReducedMask) != 0;
+            set => SetFlag(value, TcpFields.CongestionWindowReducedMask);
         }
 
         /// <summary>The size of the tcp header in 32bit words </summary>
@@ -238,27 +238,28 @@ namespace PacketDotNet
                                                    Header.Offset + TcpFields.DestinationPortPosition);
             set
             {
-                var theValue = value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + TcpFields.DestinationPortPosition);
             }
         }
 
         /// <value>
-        /// Ecn flag
+        /// Gets or sets the explicit congestion notification echo (ECE) flag, which indicates that the TCP peer is ECN capable if the <see cref="Synchronize" /> flag is <c>true</c>,
+        /// or otherwise that a packet with Congestion Experienced flag set in the IP header was received during normal transmission.
         /// </value>
-        public bool Ecn
+        public bool ExplicitCongestionNotificationEcho
         {
-            get => (Flags & TcpFields.TCPEcnMask) != 0;
-            set => SetFlag(value, TcpFields.TCPEcnMask);
+            get => (Flags & TcpFields.ExplicitCongestionNotificationEchoMask) != 0;
+            set => SetFlag(value, TcpFields.ExplicitCongestionNotificationEchoMask);
         }
 
-        /// <summary>Check the FIN flag, which indicates the sender is finished sending.</summary>
-        public bool Fin
+        /// <summary>Gets or sets the finished (FIN) flag, which indicates whether the sender has finished sending.</summary>
+        public bool Finished
         {
-            get => (Flags & TcpFields.TCPFinMask) != 0;
-            set => SetFlag(value, TcpFields.TCPFinMask);
+            get => (Flags & TcpFields.FinishedMask) != 0;
+            set => SetFlag(value, TcpFields.FinishedMask);
         }
 
         /// <summary>
@@ -281,12 +282,12 @@ namespace PacketDotNet
         }
 
         /// <value>
-        /// NS flag
+        /// Gets or sets the nonce sum (NS) flag.
         /// </value>
-        public bool NS
+        public bool NonceSum
         {
-            get => (Flags & TcpFields.TCPNsMask) != 0;
-            set => SetFlag(value, TcpFields.TCPNsMask);
+            get => (Flags & TcpFields.NonceSumMask) != 0;
+            set => SetFlag(value, TcpFields.NonceSumMask);
         }
 
         /// <summary>
@@ -296,7 +297,7 @@ namespace PacketDotNet
         {
             get
             {
-                if (Urg)
+                if (Urgent)
                     ThrowHelper.ThrowNotImplementedException(ExceptionDescription.UrgentPointerSet);
 
                 var optionsOffset = TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
@@ -340,12 +341,12 @@ namespace PacketDotNet
         /// <summary>
         /// Gets the TCP options as a <see cref="ByteArraySegment" />.
         /// </summary>
-        /// <exception cref="NotImplementedException">Urg == true not implemented yet</exception>
+        /// <exception cref="NotImplementedException">Urgent == true not implemented yet</exception>
         public ByteArraySegment OptionsSegment
         {
             get
             {
-                if (Urg)
+                if (Urgent)
                     ThrowHelper.ThrowNotImplementedException(ExceptionDescription.UrgentPointerSet);
 
                 var optionsOffset = TcpFields.UrgentPointerPosition + TcpFields.UrgentPointerLength;
@@ -356,23 +357,22 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Check the PSH flag, which indicates the receiver should pass the
-        /// data to the application as soon as possible.
+        /// Gets or sets the push (PSH) flag, which indicates the receiver should pass the data to the application as soon as possible.
         /// </summary>
-        public bool Psh
+        public bool Push
         {
-            get => (Flags & TcpFields.TCPPshMask) != 0;
-            set => SetFlag(value, TcpFields.TCPPshMask);
+            get => (Flags & TcpFields.PushMask) != 0;
+            set => SetFlag(value, TcpFields.PushMask);
         }
 
         /// <summary>
-        /// Check the RST flag, which indicates the session should be reset between
+        /// Gets or sets the reset (RST) flag, which indicates the session should be reset between
         /// the sender and the receiver.
         /// </summary>
-        public bool Rst
+        public bool Reset
         {
-            get => (Flags & TcpFields.TCPRstMask) != 0;
-            set => SetFlag(value, TcpFields.TCPRstMask);
+            get => (Flags & TcpFields.ResetMask) != 0;
+            set => SetFlag(value, TcpFields.ResetMask);
         }
 
         /// <summary>Fetch the packet sequence number.</summary>
@@ -392,29 +392,27 @@ namespace PacketDotNet
                                                    Header.Offset + TcpFields.SourcePortPosition);
             set
             {
-                var theValue = value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + TcpFields.SourcePortPosition);
             }
         }
 
         /// <summary>
-        /// Check the SYN flag, which indicates the sequence numbers should
-        /// be synchronized between the sender and receiver to initiate
-        /// a connection.
+        /// Gets or sets the synchronize (SYN flag), which indicates the sequence numbers should be synchronized between the sender and receiver to initiate a connection.
         /// </summary>
-        public bool Syn
+        public bool Synchronize
         {
-            get => (Flags & TcpFields.TCPSynMask) != 0;
-            set => SetFlag(value, TcpFields.TCPSynMask);
+            get => (Flags & TcpFields.SynchronizationMask) != 0;
+            set => SetFlag(value, TcpFields.SynchronizationMask);
         }
 
-        /// <summary>Check the URG flag, which indicates if the urgent pointer is valid.</summary>
-        public bool Urg
+        /// <summary>Gets or sets the urgent (URG) flag, which indicates if the <see cref="UrgentPointer" /> is valid.</summary>
+        public bool Urgent
         {
-            get => (Flags & TcpFields.TCPUrgMask) != 0;
-            set => SetFlag(value, TcpFields.TCPUrgMask);
+            get => (Flags & TcpFields.UrgentMask) != 0;
+            set => SetFlag(value, TcpFields.UrgentMask);
         }
 
         /// <summary>Fetch the urgent pointer.</summary>
@@ -424,8 +422,8 @@ namespace PacketDotNet
                                                   Header.Offset + TcpFields.UrgentPointerPosition);
             set
             {
-                var theValue = (short) value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = (short) value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + TcpFields.UrgentPointerPosition);
             }
@@ -605,15 +603,15 @@ namespace PacketDotNet
                         offset += length;
                         break;
                     }
-                    case OptionTypes.SelectiveAckPermitted:
+                    case OptionTypes.SelectiveAcknowledgmentPermitted:
                     {
-                        options.Add(new SelectiveAckPermitted(optionBytes.Bytes, offset, length));
+                        options.Add(new SelectiveAcknowledgmentPermitted(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }
-                    case OptionTypes.SelectiveAck:
+                    case OptionTypes.SelectiveAcknowledgment:
                     {
-                        options.Add(new SelectiveAck(optionBytes.Bytes, offset, length));
+                        options.Add(new SelectiveAcknowledgment(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }
@@ -660,8 +658,8 @@ namespace PacketDotNet
                         break;
                     }
                     // These fields aren't supported because they're still considered experimental in their respective RFC specifications.
-                    //case OptionTypes.POConnectionPermitted:
-                    //case OptionTypes.POServiceProfile:
+                    //case OptionTypes.PartialOrderConnectionPermitted:
+                    //case OptionTypes.PartialOrderServiceProfile:
                     //case OptionTypes.ConnectionCount:
                     //case OptionTypes.ConnectionCountNew:
                     //case OptionTypes.ConnectionCountEcho:
@@ -698,19 +696,19 @@ namespace PacketDotNet
                 {
                     // build flag string
                     var flags = "{";
-                    if (Urg)
+                    if (Urgent)
                         flags += "urg[0x" + Convert.ToString(UrgentPointer, 16) + "]|";
 
-                    if (Ack)
+                    if (Acknowledgment)
                         flags += "ack[" + AcknowledgmentNumber + " (0x" + Convert.ToString(AcknowledgmentNumber, 16) + ")]|";
 
-                    if (Psh)
+                    if (Push)
                         flags += "psh|";
 
-                    if (Rst)
+                    if (Reset)
                         flags += "rst|";
 
-                    if (Syn)
+                    if (Synchronize)
                         flags += "syn[0x" + Convert.ToString(SequenceNumber, 16) + "," + SequenceNumber + "]|";
 
                     flags = flags.TrimEnd('|');

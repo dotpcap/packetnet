@@ -408,7 +408,7 @@ namespace PacketDotNet.Ieee80211
                 }
                 case FrameControlField.FrameSubTypes.ControlAck:
                 {
-                    macFrame = new AckFrame(byteArraySegment);
+                    macFrame = new AcknowledgmentFrame(byteArraySegment);
                     break;
                 }
                 case FrameControlField.FrameSubTypes.ControlCFEnd:

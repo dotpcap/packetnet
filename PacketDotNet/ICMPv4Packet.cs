@@ -20,14 +20,14 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Text;
 using System.Threading;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
+
 #if DEBUG
 using log4net;
-
+using System.Reflection;
 #endif
 
 namespace PacketDotNet
@@ -93,8 +93,8 @@ namespace PacketDotNet
                                                    Header.Offset + IcmpV4Fields.ChecksumPosition);
             set
             {
-                var theValue = value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + IcmpV4Fields.ChecksumPosition);
             }
@@ -113,18 +113,18 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// ID field
+        /// Gets or sets the identifier field.
         /// </summary>
-        public ushort ID
+        public ushort Id
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + IcmpV4Fields.IDPosition);
+                                                   Header.Offset + IcmpV4Fields.IdPosition);
             set
             {
-                var theValue = value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
-                                                 Header.Offset + IcmpV4Fields.IDPosition);
+                                                 Header.Offset + IcmpV4Fields.IdPosition);
             }
         }
 
@@ -154,8 +154,8 @@ namespace PacketDotNet
             }
             set
             {
-                var theValue = (ushort) value;
-                EndianBitConverter.Big.CopyBytes(theValue,
+                var v = (ushort) value;
+                EndianBitConverter.Big.CopyBytes(v,
                                                  Header.Bytes,
                                                  Header.Offset + IcmpV4Fields.TypeCodePosition);
             }
@@ -196,7 +196,7 @@ namespace PacketDotNet
                         { "type/code", TypeCode + " (0x" + TypeCode.ToString("x") + ")" },
                         // TODO: Implement checksum verification for ICMPv4
                         { "checksum", Checksum.ToString("x") },
-                        { "identifier", "0x" + ID.ToString("x") },
+                        { "identifier", "0x" + Id.ToString("x") },
                         { "sequence number", Sequence + " (0x" + Sequence.ToString("x") + ")" }
                     };
 

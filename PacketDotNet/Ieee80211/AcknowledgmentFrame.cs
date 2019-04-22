@@ -26,7 +26,7 @@ namespace PacketDotNet.Ieee80211
     /// <summary>
     /// Format of an ACK frame
     /// </summary>
-    public sealed class AckFrame : MacFrame
+    public sealed class AcknowledgmentFrame : MacFrame
     {
         /// <summary>
         /// Constructor
@@ -34,7 +34,7 @@ namespace PacketDotNet.Ieee80211
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        public AckFrame(ByteArraySegment byteArraySegment)
+        public AcknowledgmentFrame(ByteArraySegment byteArraySegment)
         {
             Header = new ByteArraySegment(byteArraySegment);
 
@@ -46,12 +46,12 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AckFrame" /> class.
+        /// Initializes a new instance of the <see cref="AcknowledgmentFrame" /> class.
         /// </summary>
         /// <param name='receiverAddress'>
         /// Receiver address.
         /// </param>
-        public AckFrame(PhysicalAddress receiverAddress)
+        public AcknowledgmentFrame(PhysicalAddress receiverAddress)
         {
             FrameControl = new FrameControlField();
             Duration = new DurationField();

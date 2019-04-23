@@ -48,7 +48,7 @@ namespace Test.PacketType
             Console.WriteLine(p.ToString(StringOutputType.Verbose));
 
             var vlanTag = p.Extract<Ieee8021QPacket>();
-            Assert.AreEqual(IeeeP8021PPriorities.BestEffort_1, vlanTag.PriorityControlPoint);
+            Assert.AreEqual(IeeeP8021PPriority.BestEffort, vlanTag.PriorityControlPoint);
             var tagId = 102;
             Assert.AreEqual(tagId, vlanTag.VlanIdentifier);
             Assert.AreEqual(false, vlanTag.CanonicalFormatIndicator);

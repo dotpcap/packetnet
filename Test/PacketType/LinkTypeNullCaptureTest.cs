@@ -27,7 +27,7 @@ using SharpPcap.LibPcap;
 namespace Test.PacketType
 {
     [TestFixture]
-    public class LinktypeNullCaptureTest
+    public class LinkTypeNullCaptureTest
     {
         private static void VerifyPacket0(Packet p)
         {
@@ -42,7 +42,7 @@ namespace Test.PacketType
         }
 
         [Test]
-        public void LinktypeOfNullCaptureTest()
+        public void LinkTypeOfNullCaptureTest()
         {
             var dev = new CaptureFileReaderDevice("../../CaptureFiles/linktype_null_capture.pcap");
             dev.Open();

@@ -26,7 +26,6 @@ namespace PacketDotNet.Ieee80211
     /// <summary>
     /// from PPI v 1.0.10
     /// </summary>
-    [Flags]
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum PpiFieldType
     {

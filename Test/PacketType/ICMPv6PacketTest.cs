@@ -124,7 +124,7 @@ namespace Test.PacketType
             var icmpv6 = p.Extract<IcmpV6Packet>();
             Console.WriteLine(icmpv6.GetType());
 
-            Assert.AreEqual(IcmpV6Types.RouterSolicitation, icmpv6.Type);
+            Assert.AreEqual(IcmpV6Type.RouterSolicitation, icmpv6.Type);
             Assert.AreEqual(0, icmpv6.Code);
             Assert.AreEqual(0x5d50, icmpv6.Checksum);
 

@@ -30,7 +30,6 @@ namespace PacketDotNet.Ieee80211
     /// IEEE80211_RADIOTAP_TX_ATTENUATION:
     /// IEEE80211_RADIOTAP_DB_TX_ATTENUATION:
     /// </summary>
-    [Flags]
     public enum RadioTapType
     {
         /// <summary>

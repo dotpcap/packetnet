@@ -110,9 +110,9 @@ namespace PacketDotNet
         /// <value>
         /// The Type value
         /// </value>
-        public IcmpV6Types Type
+        public IcmpV6Type Type
         {
-            get => (IcmpV6Types) Header.Bytes[Header.Offset + IcmpV6Fields.TypePosition];
+            get => (IcmpV6Type) Header.Bytes[Header.Offset + IcmpV6Fields.TypePosition];
             set => Header.Bytes[Header.Offset + IcmpV6Fields.TypePosition] = (byte) value;
         }
 

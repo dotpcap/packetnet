@@ -27,46 +27,46 @@ namespace PacketDotNet
     /// http://en.wikipedia.org/wiki/IEEE_802.1p
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public enum IeeeP8021PPriorities : byte
+    public enum IeeeP8021PPriority : byte
     {
         /// <summary>
         /// Background
         /// </summary>
-        Background_0 = 1,
+        Background = 1,
 
         /// <summary>
         /// Best effort
         /// </summary>
-        BestEffort_1 = 0,
+        BestEffort = 0,
 
         /// <summary>
         /// Excellent effort
         /// </summary>
-        ExcellentEffort_2 = 2,
+        ExcellentEffort = 2,
 
         /// <summary>
         /// Critical application
         /// </summary>
-        CriticalApplications_3 = 3,
+        CriticalApplications = 3,
 
         /// <summary>
         /// Video, &lt; 100ms latency and jitter
         /// </summary>
-        Video_4 = 4,
+        Video100ms = 4,
 
         /// <summary>
         /// Voice, &lt; 10ms latency and jitter
         /// </summary>
-        Voice_5 = 5,
+        Voice10ms = 5,
 
         /// <summary>
-        /// Internetwork control
+        /// InterNetwork control
         /// </summary>
-        InternetworkControl_6 = 6,
+        InterNetworkControl = 6,
 
         /// <summary>
         /// Network control
         /// </summary>
-        NetworkControl_7 = 7
+        NetworkControl = 7
     }
 }

@@ -85,13 +85,13 @@ namespace PacketDotNet
         /// <value>
         /// The priority control point.
         /// </value>
-        public IeeeP8021PPriorities PriorityControlPoint
+        public IeeeP8021PPriority PriorityControlPoint
         {
             get
             {
                 var tci = TagControlInformation;
                 tci >>= 16 - 3; // priority is the upper 3 bits
-                return (IeeeP8021PPriorities) tci;
+                return (IeeeP8021PPriority) tci;
             }
             set
             {

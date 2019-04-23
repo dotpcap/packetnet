@@ -24,7 +24,7 @@ namespace PacketDotNet
     /// ICMPv6 types, see http://en.wikipedia.org/wiki/ICMPv6 and
     /// http://www.iana.org/assignments/icmpv6-parameters
     /// </summary>
-    public enum IcmpV6Types : byte
+    public enum IcmpV6Type : byte
     {
         DestinationUnreachable = 1, // [RFC4443]
         PacketTooBig = 2, // [RFC4443]

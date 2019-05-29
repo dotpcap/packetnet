@@ -75,7 +75,7 @@
     <Compile Include="PacketType\Ieee80211\ProbeRequestTest.cs" />
     <Compile Include="PacketType\Ieee80211\ProbeResponseTest.cs" />
     <Compile Include="PacketType\GreIPv6PacketTest.cs" />
-    <Compile Include="PacketType\OSPFv2PacketTest.cs" />
+    <Compile Include="PacketType\Ospfv2PacketTest.cs" />
     <Compile Include="PacketType\TeredoPacketTest.cs" />
     <Compile Include="Rate.cs" />
     <Compile Include="ByteSetupMethods.cs" />

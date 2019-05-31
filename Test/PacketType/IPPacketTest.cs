@@ -34,7 +34,7 @@ namespace Test.PacketType
         [Test]
         public void BinarySerialization()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "tcp.pcap");
             dev.Open();
 
             RawCapture rawCapture;
@@ -92,7 +92,7 @@ namespace Test.PacketType
         public void IpPacket_WhenGettingPacketFragment_LeavesPacketAsPayload()
         {
             // Arrange
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/udp-ip-fragmented.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "udp-ip-fragmented.pcap");
             dev.Open();
             var firstRawPacket = dev.GetNextPacket();
             var secondRawPacket = dev.GetNextPacket();
@@ -114,7 +114,7 @@ namespace Test.PacketType
         public void IpPacket_WhenGettingPacketThatIsNotAFragment_ParsesPacketProperly()
         {
             // Arrange
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/udp-ip-fragmented.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "udp-ip-fragmented.pcap");
             dev.Open();
             var firstRawPacket = dev.GetNextPacket();
             dev.Close();
@@ -139,7 +139,7 @@ namespace Test.PacketType
         [Test]
         public void IpPacketFields()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "tcp.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();

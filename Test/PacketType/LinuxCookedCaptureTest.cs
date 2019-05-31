@@ -66,7 +66,7 @@ namespace Test.PacketType
         [Test]
         public void CookedCaptureTest()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/LinuxCookedCapture.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "LinuxCookedCapture.pcap");
             dev.Open();
 
             RawCapture rawCapture;
@@ -108,7 +108,7 @@ namespace Test.PacketType
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/LinuxCookedCapture.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "LinuxCookedCapture.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
@@ -125,7 +125,7 @@ namespace Test.PacketType
         public void PrintVerboseString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/LinuxCookedCapture.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "LinuxCookedCapture.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();

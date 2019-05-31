@@ -195,10 +195,13 @@ namespace Test.PacketType.Ieee80211
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "Invalid protocol version value. Value must be in the range 0-3.")]
         public void Test_SetProtocolVersionProperty_ValueTooLarge()
         {
-            var _ = new FrameControlField { ProtocolVersion = 4 };
+            var ex = Assert.Throws<ArgumentException>(
+                () => { var _ = new FrameControlField { ProtocolVersion = 4 }; }
+                );
+
+            Assert.That(ex.Message, Is.EqualTo("Invalid protocol version value. Value must be in the range 0-3."));
         }
 
         [Test]

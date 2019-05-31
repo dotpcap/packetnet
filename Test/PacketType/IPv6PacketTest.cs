@@ -96,11 +96,11 @@ namespace Test.PacketType
 
         // Test that we can load and parse an IPv6 packet
         // for multiple LinkLayers types
-        [TestCase("../../CaptureFiles/ipv6_icmpv6_packet.pcap", LinkLayers.Ethernet)]
-        [TestCase("../../CaptureFiles/ipv6_icmpv6_packet_raw_linklayer.pcap", LinkLayers.RawLegacy)]
+        [TestCase("ipv6_icmpv6_packet.pcap", LinkLayers.Ethernet)]
+        [TestCase("ipv6_icmpv6_packet_raw_linklayer.pcap", LinkLayers.RawLegacy)]
         public void IPv6PacketTestParsing(string pcapPath, LinkLayers linkLayers)
         {
-            var dev = new CaptureFileReaderDevice(pcapPath);
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + pcapPath);
             dev.Open();
 
             RawCapture rawCapture;
@@ -130,10 +130,10 @@ namespace Test.PacketType
         }
 
         // Test that we can load and parse an with IPv6 packet with an extended (Hop by Hop) header 
-        [TestCase("../../CaptureFiles/ipv6_icmpv6_hopbyhop_packet.pcap", LinkLayers.Ethernet)]
+        [TestCase("ipv6_icmpv6_hopbyhop_packet.pcap", LinkLayers.Ethernet)]
         public void IPv6PacketHopByHopTestParsing(string pcapPath, LinkLayers linkLayers)
         {
-            var dev = new CaptureFileReaderDevice(pcapPath);
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + pcapPath);
             dev.Open();
 
             RawCapture rawCapture;
@@ -164,7 +164,7 @@ namespace Test.PacketType
         [Test]
         public void BinarySerialization()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ipv6_icmpv6_packet.pcap");
             dev.Open();
 
             RawCapture rawCapture;
@@ -236,7 +236,7 @@ namespace Test.PacketType
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_http.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ipv6_http.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
@@ -253,7 +253,7 @@ namespace Test.PacketType
         public void PrintVerboseString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_http.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ipv6_http.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
@@ -279,7 +279,7 @@ namespace Test.PacketType
         [Test]
         public void TCPChecksumIPv6()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_http.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ipv6_http.pcap");
             dev.Open();
 
             // checksums from wireshark of the capture file

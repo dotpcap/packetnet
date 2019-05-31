@@ -30,7 +30,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void ReadingRawPacketWithFcs()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_raw_with_fcs.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_raw_with_fcs.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -43,7 +43,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void ReadingRawPacketWithoutFcs()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_raw_without_fcs.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_raw_without_fcs.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();

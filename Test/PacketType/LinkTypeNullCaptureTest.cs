@@ -44,7 +44,7 @@ namespace Test.PacketType
         [Test]
         public void LinkTypeOfNullCaptureTest()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/linktype_null_capture.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "linktype_null_capture.pcap");
             dev.Open();
 
             RawCapture rawCapture;
@@ -82,7 +82,7 @@ namespace Test.PacketType
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/linktype_null_capture.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "linktype_null_capture.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
@@ -99,7 +99,7 @@ namespace Test.PacketType
         public void PrintVerboseString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/linktype_null_capture.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "linktype_null_capture.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();

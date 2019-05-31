@@ -27,7 +27,7 @@ namespace Test.PacketType
         [Test]
         public void TeredoParsing()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/teredo.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "teredo.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();

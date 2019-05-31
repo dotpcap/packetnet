@@ -38,7 +38,7 @@ namespace Test.PacketType
 
 
             RawCapture raw;
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/db2_select.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "db2_select.pcap");
             dev.Open();
 
             while ((raw = dev.GetNextPacket()) != null)

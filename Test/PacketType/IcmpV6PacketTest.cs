@@ -34,7 +34,7 @@ namespace Test.PacketType
         [Test]
         public void BinarySerialization()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ipv6_icmpv6_packet.pcap");
             dev.Open();
 
             RawCapture rawCapture;
@@ -50,15 +50,19 @@ namespace Test.PacketType
 
                 foundicmpv6 = true;
 
-                Stream outFile = File.Create("icmpv6.dat");
+                var outputFilename = Path.GetTempFileName();
+
+                Stream outFile = File.Create(outputFilename);
                 var serializer = new BinaryFormatter();
                 serializer.Serialize(outFile, icmpv6);
                 outFile.Close();
 
-                Stream inFile = File.OpenRead("icmpv6.dat");
+                Stream inFile = File.OpenRead(outputFilename);
                 var deserializer = new BinaryFormatter();
                 var fromFile = (IcmpV6Packet) deserializer.Deserialize(inFile);
                 inFile.Close();
+
+                File.Delete(outputFilename);
 
                 Assert.AreEqual(icmpv6.Bytes, fromFile.Bytes);
                 Assert.AreEqual(icmpv6.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
@@ -84,7 +88,7 @@ namespace Test.PacketType
         [Test]
         public void Checksum()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ipv6_icmpv6_packet.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -112,7 +116,7 @@ namespace Test.PacketType
         [Test]
         public void IcmpV6Parsing()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ipv6_icmpv6_packet.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -135,7 +139,7 @@ namespace Test.PacketType
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ipv6_icmpv6_packet.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
@@ -152,7 +156,7 @@ namespace Test.PacketType
         public void PrintVerboseString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv6_icmpv6_packet.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ipv6_icmpv6_packet.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();

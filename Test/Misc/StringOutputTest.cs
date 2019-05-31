@@ -65,13 +65,11 @@ namespace Test.Misc
              * igmpv2
              */
 
-            var prefix = "../../CaptureFiles/";
-
             /////////////////////////
             // setup an array of file names and packet indexes
 
             // ethernet arp request and response
-            FilePacketIndexes.Add(new FileAndPacketIndexes(prefix + "arp_request_response.pcap",
+            FilePacketIndexes.Add(new FileAndPacketIndexes(NUnitSetupClass.CaptureDirectory + "arp_request_response.pcap",
                                                            new List<int>(new[] { 0, 1 }),
                                                            new List<string>(new[]
                                                            {
@@ -80,17 +78,17 @@ namespace Test.Misc
                                                            })));
 
             // linux cooked capture, ipv4, tcp
-            FilePacketIndexes.Add(new FileAndPacketIndexes(prefix + "LinuxCookedCapture.pcap",
+            FilePacketIndexes.Add(new FileAndPacketIndexes(NUnitSetupClass.CaptureDirectory + "LinuxCookedCapture.pcap",
                                                            new List<int>(new[] { 2 }),
                                                            new List<string>(new[] { "linux cooked capture, ipv4, tcp" })));
 
             // ethernet, ipv6, icmpv6
-            FilePacketIndexes.Add(new FileAndPacketIndexes(prefix + "ipv6_icmpv6_packet.pcap",
+            FilePacketIndexes.Add(new FileAndPacketIndexes(NUnitSetupClass.CaptureDirectory + "ipv6_icmpv6_packet.pcap",
                                                            new List<int>(new[] { 0 }),
                                                            new List<string>(new[] { "ethernet, ipv6, icmpv6" })));
 
             // ethernet, PPPoE, PPP, ipv4, udp
-            FilePacketIndexes.Add(new FileAndPacketIndexes(prefix + "PPPoEPPP.pcap",
+            FilePacketIndexes.Add(new FileAndPacketIndexes(NUnitSetupClass.CaptureDirectory + "PPPoEPPP.pcap",
                                                            new List<int>(new[] { 1 }),
                                                            new List<string>(new[] { "ethernet, PPPoE, PPP, ipv4, udp" })));
 

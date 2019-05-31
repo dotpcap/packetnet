@@ -33,7 +33,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_Constructor()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_ack_frame.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_ack_frame.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();

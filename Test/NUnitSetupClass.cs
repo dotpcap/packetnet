@@ -1,3 +1,4 @@
+using System.Reflection;
 using NUnit.Framework;
 
 namespace Test
@@ -26,7 +27,8 @@ namespace Test
         public void RunBeforeAnyTests()
         {
             // load the configuration file
-            log4net.Config.XmlConfigurator.Configure(new System.IO.FileInfo("../../log4net.config"));
+            var logRepository = log4net.LogManager.GetRepository(Assembly.GetEntryAssembly());
+            log4net.Config.XmlConfigurator.Configure(logRepository, new System.IO.FileInfo("../../log4net.config"));
         }
 
         [OneTimeTearDown]

@@ -18,6 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
+using System.Reflection;
 using log4net;
 using log4net.Repository.Hierarchy;
 
@@ -29,12 +30,12 @@ namespace Test
         {
             get
             {
-                var rootLogger = ((Hierarchy) LogManager.GetRepository()).Root;
+                var rootLogger = ((Hierarchy) LogManager.GetRepository(Assembly.GetCallingAssembly())).Root;
                 return rootLogger.Level;
             }
             set
             {
-                var rootLogger = ((Hierarchy) LogManager.GetRepository()).Root;
+                var rootLogger = ((Hierarchy) LogManager.GetRepository(Assembly.GetCallingAssembly())).Root;
                 rootLogger.Level = value;
             }
         }

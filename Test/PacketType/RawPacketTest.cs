@@ -33,11 +33,11 @@ namespace Test.PacketType
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new OfflinePcapDevice("../../CaptureFiles/arp_request_response.pcap");
+            var dev = new SharpPcap.LibPcap.CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "arp_request_response.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
-            dev.GetNextRawPacket();
-            var rawPacket = dev.GetNextRawPacket();
+            dev.GetNextPacket();
+            var rawPacket = dev.GetNextPacket();
             dev.Close();
 
             Console.WriteLine("Printing human readable string");

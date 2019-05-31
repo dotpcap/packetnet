@@ -32,63 +32,6 @@ namespace Test.PacketType
     [TestFixture]
     public class UdpTest
     {
-        [Test]
-        public void BinarySerialization()
-        {
-            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "udp_dns_request_response.pcap");
-            dev.Open();
-
-            RawCapture rawCapture;
-            var foundUdpPacket = false;
-            while ((rawCapture = dev.GetNextPacket()) != null)
-            {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-                var udp = p.Extract<UdpPacket>();
-                if (udp == null)
-                {
-                    continue;
-                }
-
-                foundUdpPacket = true;
-
-                var memoryStream = new MemoryStream();
-                var serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, udp);
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                var deserializer = new BinaryFormatter();
-                var fromFile = (UdpPacket) deserializer.Deserialize(memoryStream);
-
-                Assert.AreEqual(udp.Bytes, fromFile.Bytes);
-                Assert.AreEqual(udp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
-                Assert.AreEqual(udp.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
-                Assert.AreEqual(udp.BytesSegment.Length, fromFile.BytesSegment.Length);
-                Assert.AreEqual(udp.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
-                Assert.AreEqual(udp.BytesSegment.Offset, fromFile.BytesSegment.Offset);
-                Assert.AreEqual(udp.Color, fromFile.Color);
-                Assert.AreEqual(udp.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(udp.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(udp.DestinationPort, fromFile.DestinationPort);
-                Assert.AreEqual(udp.Length, fromFile.Length);
-                Assert.AreEqual(udp.SourcePort, fromFile.SourcePort);
-                Assert.AreEqual(udp.ValidChecksum, fromFile.ValidChecksum);
-                Assert.AreEqual(udp.ValidUdpChecksum, fromFile.ValidUdpChecksum);
-
-                //Method Invocations to make sure that a deserialized packet does not cause 
-                //additional errors.
-
-                udp.CalculateUdpChecksum();
-                udp.IsValidChecksum(TransportPacket.TransportChecksumOption.None);
-                udp.PrintHex();
-                udp.UpdateCalculatedValues();
-                udp.UpdateUdpChecksum();
-            }
-
-            dev.Close();
-            Assert.IsTrue(foundUdpPacket, "Capture file contained no udpPacket packets");
-        }
-
         /// <summary>
         /// Test that we can build a udp packet from values, convert it into a byte[]
         /// and then re-parse it back into a UdpPacket.

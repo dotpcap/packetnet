@@ -32,7 +32,7 @@ namespace Test.PacketType
         [Test]
         public void L2tpParsing()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/l2tp.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "l2tp.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();

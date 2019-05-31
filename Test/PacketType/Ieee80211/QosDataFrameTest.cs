@@ -37,7 +37,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_Constructor()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_qos_data_frame.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_qos_data_frame.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -129,7 +129,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_QosDataFrameParsingWithIpV4Tcp()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_qos_data_frame_ipv4_tcp.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_qos_data_frame_ipv4_tcp.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();

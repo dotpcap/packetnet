@@ -37,7 +37,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void FCSTest()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_association_request_frame.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_association_request_frame.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -56,7 +56,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_AppendFcs_Raw80211WithFcs()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_raw_with_fcs.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_raw_with_fcs.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -73,7 +73,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_AppendFcs_Raw80211WithoutFcs()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_raw_without_fcs.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_raw_without_fcs.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -144,7 +144,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_Bytes_ParsedPacketWithFcsIncluded()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_unencrypted_data_frame.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_unencrypted_data_frame.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -165,7 +165,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_Bytes_ParsedPacketWithFcsNotIncluded()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_unencrypted_data_frame.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_unencrypted_data_frame.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -187,7 +187,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_NoFCS()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_beacon_no_fcs.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_beacon_no_fcs.pcap");
 
             dev.Open();
 

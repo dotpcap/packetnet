@@ -101,12 +101,17 @@ namespace Test.PacketType.Ieee80211
         }
 
         [Test]
-        [ExpectedException(typeof(ArgumentException), ExpectedMessage = "The provided value is too long. Maximum allowed length is 255 bytes.")]
         public void Test_Constructor_ValueTooLong()
         {
-            var value = new byte[300];
-            new InformationElement(InformationElement.ElementId.CfParameterSet,
-                                   value);
+            var ex = Assert.Throws<ArgumentException>(
+                () =>
+                {
+                    var value = new byte[300];
+                    new InformationElement(InformationElement.ElementId.CfParameterSet,
+                                           value);
+                });
+
+            Assert.That(ex.Message, Is.EqualTo("The provided value is too long. Maximum allowed length is 255 bytes."));
         }
 
         [Test]

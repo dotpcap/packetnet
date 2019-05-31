@@ -32,7 +32,7 @@ namespace Test.PacketType
         [Test]
         public void GreIPv6Parsing()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/gre_ipv6.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "gre_ipv6.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();

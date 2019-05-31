@@ -36,7 +36,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_Constructor_EncryptedDataFrame()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_encrypted_data_frame.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_encrypted_data_frame.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -114,7 +114,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_Constructor_UnencryptedDataFrame()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_unencrypted_data_frame.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_unencrypted_data_frame.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();

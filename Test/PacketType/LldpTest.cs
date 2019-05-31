@@ -35,63 +35,6 @@ namespace Test.PacketType
     public class LldpTest
     {
         [Test]
-        public void BinarySerialization()
-        {
-            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "lldp.pcap");
-            dev.Open();
-
-            RawCapture rawCapture;
-            var foundlldp = false;
-            while ((rawCapture = dev.GetNextPacket()) != null)
-            {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var l = p.Extract<LldpPacket>();
-                if (l == null)
-                {
-                    continue;
-                }
-
-                foundlldp = true;
-
-                var memoryStream = new MemoryStream();
-                var serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, l);
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                var deserializer = new BinaryFormatter();
-                var fromFile = (LldpPacket) deserializer.Deserialize(memoryStream);
-
-                Assert.AreEqual(l.Bytes, fromFile.Bytes);
-                Assert.AreEqual(l.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
-                Assert.AreEqual(l.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
-                Assert.AreEqual(l.BytesSegment.Length, fromFile.BytesSegment.Length);
-                Assert.AreEqual(l.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
-                Assert.AreEqual(l.BytesSegment.Offset, fromFile.BytesSegment.Offset);
-                Assert.AreEqual(l.Color, fromFile.Color);
-                Assert.AreEqual(l.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(l.PayloadData, fromFile.PayloadData);
-
-                for (var i = 0; i < l.TlvCollection.Count; i++)
-                {
-                    Assert.AreEqual(l.TlvCollection[i].Bytes, fromFile.TlvCollection[i].Bytes);
-                    Assert.AreEqual(l.TlvCollection[i].Length, fromFile.TlvCollection[i].Length);
-                    Assert.AreEqual(l.TlvCollection[i].TotalLength, fromFile.TlvCollection[i].TotalLength);
-                    Assert.AreEqual(l.TlvCollection[i].Type, fromFile.TlvCollection[i].Type);
-                }
-
-                //Method Invocations to make sure that a deserialized packet does not cause 
-                //additional errors.
-
-                l.ParseByteArrayIntoTlvs(new byte[] { 0, 0 }, 0);
-                l.PrintHex();
-                l.UpdateCalculatedValues();
-            }
-
-            dev.Close();
-            Assert.IsTrue(foundlldp, "Capture file contained no lldp packets");
-        }
-
-        [Test]
         public void ConstructFromValues()
         {
             var expectedChassisIDType = ChassisSubType.NetworkAddress;

@@ -64,53 +64,6 @@ namespace Test.PacketType
         }
 
         [Test]
-        public void BinarySerialization()
-        {
-            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ICMPv4.pcap");
-            dev.Open();
-
-            RawCapture rawCapture;
-            var foundicmp = false;
-            while ((rawCapture = dev.GetNextPacket()) != null)
-            {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var icmp = p.Extract<IcmpV4Packet>();
-                if (icmp == null)
-                {
-                    continue;
-                }
-
-                foundicmp = true;
-
-                var memoryStream = new MemoryStream();
-                var serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, icmp);
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                var deserializer = new BinaryFormatter();
-                var fromFile = (IcmpV4Packet) deserializer.Deserialize(memoryStream);
-
-                Assert.AreEqual(icmp.Bytes, fromFile.Bytes);
-                Assert.AreEqual(icmp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
-                Assert.AreEqual(icmp.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
-                Assert.AreEqual(icmp.BytesSegment.Length, fromFile.BytesSegment.Length);
-                Assert.AreEqual(icmp.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
-                Assert.AreEqual(icmp.BytesSegment.Offset, fromFile.BytesSegment.Offset);
-                Assert.AreEqual(icmp.Checksum, fromFile.Checksum);
-                Assert.AreEqual(icmp.Color, fromFile.Color);
-                Assert.AreEqual(icmp.Data, fromFile.Data);
-                Assert.AreEqual(icmp.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(icmp.Id, fromFile.Id);
-                Assert.AreEqual(icmp.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(icmp.Sequence, fromFile.Sequence);
-                Assert.AreEqual(icmp.TypeCode, fromFile.TypeCode);
-            }
-
-            dev.Close();
-            Assert.IsTrue(foundicmp, "Capture file contained no icmp packets");
-        }
-
-        [Test]
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");

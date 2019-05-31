@@ -160,47 +160,6 @@ namespace Test.PacketType
         }
 
         [Test]
-        public void BinarySerialization()
-        {
-            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "tcp.pcap");
-            dev.Open();
-
-            RawCapture rawCapture;
-            var foundEthernet = false;
-            while ((rawCapture = dev.GetNextPacket()) != null)
-            {
-                var ethernetPacket = new EthernetPacket(new ByteArraySegment(rawCapture.Data));
-
-                foundEthernet = true;
-
-                var memoryStream = new MemoryStream();
-                var serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, ethernetPacket);
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                var deserializer = new BinaryFormatter();
-                var fromFile = (EthernetPacket) deserializer.Deserialize(memoryStream);
-
-                Assert.AreEqual(ethernetPacket.Bytes, fromFile.Bytes);
-                Assert.AreEqual(ethernetPacket.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
-                Assert.AreEqual(ethernetPacket.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
-                Assert.AreEqual(ethernetPacket.BytesSegment.Length, fromFile.BytesSegment.Length);
-                Assert.AreEqual(ethernetPacket.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
-                Assert.AreEqual(ethernetPacket.BytesSegment.Offset, fromFile.BytesSegment.Offset);
-                Assert.AreEqual(ethernetPacket.Color, fromFile.Color);
-                Assert.AreEqual(ethernetPacket.DestinationHardwareAddress, fromFile.DestinationHardwareAddress);
-                Assert.AreEqual(ethernetPacket.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(ethernetPacket.ParentPacket, fromFile.ParentPacket);
-                Assert.AreEqual(ethernetPacket.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(ethernetPacket.SourceHardwareAddress, fromFile.SourceHardwareAddress);
-                Assert.AreEqual(ethernetPacket.Type, fromFile.Type);
-            }
-
-            dev.Close();
-            Assert.IsTrue(foundEthernet, "Capture file contained no Ethernet packets");
-        }
-
-        [Test]
         public void EthernetConstructorFromMacAddresses()
         {
             var srcHwAddressBytes = new byte[EthernetFields.MacAddressLength];

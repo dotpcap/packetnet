@@ -33,63 +33,6 @@ namespace Test.PacketType
     public class IgmpV2PacketTest
     {
         [Test]
-        public void BinarySerialization()
-        {
-            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "IGMP dataset.pcap");
-            dev.Open();
-
-            RawCapture rawCapture;
-            var foundigmp = false;
-            while ((rawCapture = dev.GetNextPacket()) != null)
-            {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-                var igmp = p.Extract<IgmpV2Packet>();
-                if (igmp == null)
-                {
-                    continue;
-                }
-
-                foundigmp = true;
-
-                var memoryStream = new MemoryStream();
-                var serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, igmp);
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                var deserializer = new BinaryFormatter();
-                var fromFile = (IgmpV2Packet) deserializer.Deserialize(memoryStream);
-
-                Assert.AreEqual(igmp.Bytes, fromFile.Bytes);
-                Assert.AreEqual(igmp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
-                Assert.AreEqual(igmp.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
-                Assert.AreEqual(igmp.BytesSegment.Length, fromFile.BytesSegment.Length);
-                Assert.AreEqual(igmp.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
-                Assert.AreEqual(igmp.BytesSegment.Offset, fromFile.BytesSegment.Offset);
-                Assert.AreEqual(igmp.Checksum, fromFile.Checksum);
-                Assert.AreEqual(igmp.Color, fromFile.Color);
-                Assert.AreEqual(igmp.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(igmp.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(igmp.Type, fromFile.Type);
-                Assert.AreEqual(igmp.GroupAddress.GetAddressBytes(), fromFile.GroupAddress.GetAddressBytes());
-                Assert.AreEqual(igmp.GroupAddress.AddressFamily, fromFile.GroupAddress.AddressFamily);
-                Assert.AreEqual(igmp.GroupAddress.IsIPv6LinkLocal, fromFile.GroupAddress.IsIPv6LinkLocal);
-                Assert.AreEqual(igmp.GroupAddress.IsIPv6Multicast, fromFile.GroupAddress.IsIPv6Multicast);
-                Assert.AreEqual(igmp.GroupAddress.IsIPv6SiteLocal, fromFile.GroupAddress.IsIPv6SiteLocal);
-                Assert.AreEqual(igmp.GroupAddress.IsIPv6Teredo, fromFile.GroupAddress.IsIPv6Teredo);
-                Assert.AreEqual(igmp.MaxResponseTime, fromFile.MaxResponseTime);
-
-                //Method Invocations to make sure that a deserialized packet does not cause 
-                //additional errors.
-
-                igmp.PrintHex();
-                igmp.UpdateCalculatedValues();
-            }
-
-            dev.Close();
-            Assert.IsTrue(foundigmp, "Capture file contained no igmp packets");
-        }
-
-        [Test]
         public void Parsing()
         {
             var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "IGMP dataset.pcap");

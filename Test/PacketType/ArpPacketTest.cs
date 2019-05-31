@@ -69,67 +69,6 @@ namespace Test.PacketType
             Assert.AreEqual(targetMacAddress, arp.TargetHardwareAddress.ToString());
         }
 
-        [Test]
-        public void BinarySerialization()
-        {
-            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "arp_request_response.pcap");
-            dev.Open();
-
-            RawCapture rawCapture;
-            var foundARP = false;
-            while ((rawCapture = dev.GetNextPacket()) != null)
-            {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
-
-                var arp = p.Extract<ArpPacket>();
-                if (arp == null)
-                {
-                    continue;
-                }
-
-                foundARP = true;
-
-                var memoryStream = new MemoryStream();
-                var serializer = new BinaryFormatter();
-                serializer.Serialize(memoryStream, arp);
-
-                memoryStream.Seek(0, SeekOrigin.Begin);
-                var deserializer = new BinaryFormatter();
-                var fromFile = (ArpPacket) deserializer.Deserialize(memoryStream);
-
-                CollectionAssert.AreEqual(arp.Bytes, fromFile.Bytes);
-                Assert.AreEqual(arp.BytesSegment.Bytes, fromFile.BytesSegment.Bytes);
-                Assert.AreEqual(arp.BytesSegment.BytesLength, fromFile.BytesSegment.BytesLength);
-                Assert.AreEqual(arp.BytesSegment.Length, fromFile.BytesSegment.Length);
-                Assert.AreEqual(arp.BytesSegment.NeedsCopyForActualBytes, fromFile.BytesSegment.NeedsCopyForActualBytes);
-                Assert.AreEqual(arp.BytesSegment.Offset, fromFile.BytesSegment.Offset);
-                Assert.AreEqual(arp.Color, fromFile.Color);
-                Assert.AreEqual(arp.HardwareAddressLength, fromFile.HardwareAddressLength);
-                Assert.AreEqual(arp.HardwareAddressType, fromFile.HardwareAddressType);
-                CollectionAssert.AreEqual(arp.HeaderData, fromFile.HeaderData);
-                Assert.AreEqual(arp.Operation, fromFile.Operation);
-                Assert.AreEqual(arp.ParentPacket, fromFile.ParentPacket);
-                CollectionAssert.AreEqual(arp.PayloadData, fromFile.PayloadData);
-                Assert.AreEqual(arp.PayloadPacket, fromFile.PayloadPacket);
-                Assert.AreEqual(arp.ProtocolAddressLength, fromFile.ProtocolAddressLength);
-                Assert.AreEqual(arp.ProtocolAddressType, fromFile.ProtocolAddressType);
-                Assert.AreEqual(arp.SenderHardwareAddress, fromFile.SenderHardwareAddress);
-                Assert.AreEqual(arp.SenderProtocolAddress, fromFile.SenderProtocolAddress);
-                Assert.AreEqual(arp.TargetHardwareAddress, fromFile.TargetHardwareAddress);
-                Assert.AreEqual(arp.TargetProtocolAddress, fromFile.TargetProtocolAddress);
-
-                //Method Invocations to make sure that a deserialized packet does not cause 
-                //additional errors.
-
-                arp.PrintHex();
-                arp.UpdateCalculatedValues();
-            }
-
-            dev.Close();
-
-            Assert.IsTrue(foundARP, "Capture file contained no ARP packets");
-        }
-
         /// <summary>
         /// Test that we can build an ArpPacket from values
         /// </summary>

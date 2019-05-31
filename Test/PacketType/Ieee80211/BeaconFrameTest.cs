@@ -36,7 +36,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void ReadingPacketsFromFile()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_beacon_frame.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_beacon_frame.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();

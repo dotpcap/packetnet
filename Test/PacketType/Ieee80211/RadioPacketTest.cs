@@ -80,7 +80,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void ReadingPacketsFromFile()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_plus_radiotap_header.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_plus_radiotap_header.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -103,7 +103,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void ReadPacketWithNoFcs()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_radio_without_fcs.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_radio_without_fcs.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -153,7 +153,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void RemoveRadioTapField()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_plus_radiotap_header.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_plus_radiotap_header.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -196,7 +196,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void TestContainsField()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_plus_radiotap_header.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_plus_radiotap_header.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -220,7 +220,7 @@ namespace Test.PacketType.Ieee80211
             bs.Write((ushort) 0x0010); //Flags field (FCS included flag set)
             bs.Write((ushort) 0x1234); //a made up field that we want to keep even though we dont know what it is
 
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_plus_radiotap_header.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_plus_radiotap_header.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();

@@ -21,7 +21,7 @@ namespace Test.PacketType
 
             RawCapture raw;
             var packetIndex = 0;
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ospfv2.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ospfv2.pcap");
             dev.Open();
 
             while ((raw = dev.GetNextPacket()) != null)
@@ -1223,7 +1223,7 @@ namespace Test.PacketType
         public void TestOspfv2Auth()
         {
             RawCapture raw;
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ospfv2_md5.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ospfv2_md5.pcap");
             var testSubjects = new OspfV2HelloPacket[4];
             var i = 0;
 

@@ -35,7 +35,7 @@ namespace Test.PacketType
         public void ParsingVlanPacket()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/802.1q_vlan_ipv4_tcp.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "802.1q_vlan_ipv4_tcp.pcap");
             dev.Open();
 
             Console.WriteLine("Reading packet data");

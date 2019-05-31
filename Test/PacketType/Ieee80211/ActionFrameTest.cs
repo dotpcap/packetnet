@@ -36,7 +36,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_Constructor_AddBlockAckResponseReport()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_block_ack_response_action_frame.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_block_ack_response_action_frame.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();

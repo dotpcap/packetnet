@@ -38,7 +38,7 @@ namespace Test.PacketType
         [Test]
         public void BinarySerialization()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "tcp.pcap");
             dev.Open();
 
             RawCapture rawCapture;
@@ -111,7 +111,7 @@ namespace Test.PacketType
         [Test]
         public void ByteLengthInternalLengthMismatch()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp_with_extra_bytes.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "tcp_with_extra_bytes.pcap");
             dev.Open();
 
             var rawCapture = dev.GetNextPacket();
@@ -135,7 +135,7 @@ namespace Test.PacketType
         [Test]
         public virtual void Checksum()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "tcp.pcap");
             dev.Open();
 
             var rawCapture = dev.GetNextPacket();
@@ -184,7 +184,7 @@ namespace Test.PacketType
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "tcp.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
@@ -201,7 +201,7 @@ namespace Test.PacketType
         public void PrintVerboseString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "tcp.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
@@ -234,7 +234,7 @@ namespace Test.PacketType
         [Test]
         public void TCPOptions()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/tcp.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "tcp.pcap");
             dev.Open();
 
             var rawCapture = dev.GetNextPacket();
@@ -290,7 +290,7 @@ namespace Test.PacketType
         [Test]
         public void TcpSegmentOffload()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ipv4_tso_frame.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ipv4_tso_frame.pcap");
             dev.Open();
 
             var rawCapture = dev.GetNextPacket();

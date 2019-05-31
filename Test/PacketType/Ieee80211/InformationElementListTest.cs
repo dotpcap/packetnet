@@ -185,7 +185,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_Constuctor_FromBeaconFrame()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_beacon_frame.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_beacon_frame.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -214,7 +214,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_FindById_ElementNotPresent()
         {
-            var beaconFrame = LoadBeaconFrameFromFile("../../CaptureFiles/80211_beacon_frame.pcap");
+            var beaconFrame = LoadBeaconFrameFromFile(NUnitSetupClass.CaptureDirectory + "80211_beacon_frame.pcap");
 
             var infoElements = beaconFrame.InformationElements.FindById(InformationElement.ElementId.ChallengeText);
             Assert.AreEqual(0, infoElements.Length);
@@ -223,7 +223,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_FindById_FindRepeatedElement()
         {
-            var beaconFrame = LoadBeaconFrameFromFile("../../CaptureFiles/80211_beacon_frame.pcap");
+            var beaconFrame = LoadBeaconFrameFromFile(NUnitSetupClass.CaptureDirectory + "80211_beacon_frame.pcap");
 
             var infoElements = beaconFrame.InformationElements.FindById(InformationElement.ElementId.VendorSpecific);
 
@@ -239,7 +239,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_FindFirstById_ElementNotPresent()
         {
-            var beaconFrame = LoadBeaconFrameFromFile("../../CaptureFiles/80211_beacon_frame.pcap");
+            var beaconFrame = LoadBeaconFrameFromFile(NUnitSetupClass.CaptureDirectory + "80211_beacon_frame.pcap");
 
             var infoElement = beaconFrame.InformationElements.FindFirstById(InformationElement.ElementId.ChallengeText);
             Assert.IsNull(infoElement);
@@ -248,7 +248,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_FindFirstById_FindElement()
         {
-            var beaconFrame = LoadBeaconFrameFromFile("../../CaptureFiles/80211_beacon_frame.pcap");
+            var beaconFrame = LoadBeaconFrameFromFile(NUnitSetupClass.CaptureDirectory + "80211_beacon_frame.pcap");
 
             var infoElement = beaconFrame.InformationElements.FindFirstById(InformationElement.ElementId.DsParameterSet);
             Assert.AreEqual(InformationElement.ElementId.DsParameterSet, infoElement.Id);

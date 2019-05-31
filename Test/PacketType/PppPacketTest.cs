@@ -34,7 +34,7 @@ namespace Test.PacketType
         [Test]
         public void BinarySerialization()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/PPPoEPPP.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "PPPoEPPP.pcap");
             dev.Open();
 
             RawCapture rawCapture;
@@ -85,7 +85,7 @@ namespace Test.PacketType
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/PPPoEPPP.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "PPPoEPPP.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             dev.GetNextPacket();
@@ -104,7 +104,7 @@ namespace Test.PacketType
         public void PrintVerboseString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/PPPoEPPP.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "PPPoEPPP.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             dev.GetNextPacket();

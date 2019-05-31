@@ -31,7 +31,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void AddUnknownField()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_ppi_multiplefields.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_ppi_multiplefields.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -151,7 +151,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void ContainsField()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_ppi_multiplefields.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_ppi_multiplefields.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -168,7 +168,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void ReadingPacketsFromFile()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_per_packet_information.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_per_packet_information.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -201,7 +201,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void ReadPacketWithInvalidFcs()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_ppi_fcs_present_and_invalid.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_ppi_fcs_present_and_invalid.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -217,7 +217,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void ReadPacketWithNoFcs()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_ppi_without_fcs.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_ppi_without_fcs.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -232,7 +232,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void ReadPacketWithValidFcs()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_ppi_fcs_present_and_valid.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_ppi_fcs_present_and_valid.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -247,7 +247,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void RemoveField()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_ppi_multiplefields.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_ppi_multiplefields.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -269,7 +269,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void RemoveFieldByType()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/80211_ppi_multiplefields.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_ppi_multiplefields.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();

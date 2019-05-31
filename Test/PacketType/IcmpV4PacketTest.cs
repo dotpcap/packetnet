@@ -34,11 +34,11 @@ namespace Test.PacketType
         /// <summary>
         /// Test that we can parse a icmp v4 request and reply
         /// </summary>
-        [TestCase("../../CaptureFiles/ICMPv4.pcap", LinkLayers.Ethernet)]
-        [TestCase("../../CaptureFiles/ICMPv4_raw_linklayer.pcap", LinkLayers.RawLegacy)]
+        [TestCase("ICMPv4.pcap", LinkLayers.Ethernet)]
+        [TestCase("ICMPv4_raw_linklayer.pcap", LinkLayers.RawLegacy)]
         public void IcmpV4Parsing(string pcapPath, LinkLayers linkLayers)
         {
-            var dev = new CaptureFileReaderDevice(pcapPath);
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + pcapPath);
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
@@ -66,7 +66,7 @@ namespace Test.PacketType
         [Test]
         public void BinarySerialization()
         {
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ICMPv4.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ICMPv4.pcap");
             dev.Open();
 
             RawCapture rawCapture;
@@ -114,7 +114,7 @@ namespace Test.PacketType
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ICMPv4.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ICMPv4.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
@@ -131,7 +131,7 @@ namespace Test.PacketType
         public void PrintVerboseString()
         {
             Console.WriteLine("Loading the sample capture file");
-            var dev = new CaptureFileReaderDevice("../../CaptureFiles/ICMPv4.pcap");
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ICMPv4.pcap");
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();

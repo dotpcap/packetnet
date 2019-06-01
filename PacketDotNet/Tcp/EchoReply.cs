@@ -45,7 +45,6 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        [Obsolete]
         public EchoReply(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }

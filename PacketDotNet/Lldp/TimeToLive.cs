@@ -33,7 +33,6 @@ namespace PacketDotNet.Lldp
     /// <summary>
     /// A Time to Live Tlv
     /// </summary>
-    [Serializable]
     public class TimeToLive : Tlv
     {
 #if DEBUG

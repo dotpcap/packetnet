@@ -30,7 +30,6 @@ namespace PacketDotNet
     /// <summary>
     /// An GRE packet.
     /// </summary>
-    [Serializable]
     public sealed class GrePacket : Packet
     {
         /// <summary>

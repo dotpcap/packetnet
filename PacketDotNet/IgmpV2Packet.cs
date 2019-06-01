@@ -32,7 +32,6 @@ namespace PacketDotNet
     /// <summary>
     /// An IGMP packet.
     /// </summary>
-    [Serializable]
     public sealed class IgmpV2Packet : InternetPacket
     {
         /// <summary>

@@ -28,7 +28,6 @@ namespace PacketDotNet
     /// <summary>
     /// An L2TP packet.
     /// </summary>
-    [Serializable]
     // ReSharper disable once InconsistentNaming
     public sealed class L2tpPacket : Packet
     {

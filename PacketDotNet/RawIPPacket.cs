@@ -31,7 +31,6 @@ namespace PacketDotNet
     /// Raw IP packet
     /// See http://www.tcpdump.org/linktypes.html look for LINKTYPE_RAW or DLT_RAW
     /// </summary>
-    [Serializable]
     public class RawIPPacket : Packet
     {
         /// <summary>

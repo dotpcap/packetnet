@@ -37,7 +37,6 @@ namespace PacketDotNet
     /// Defines helper methods and accessors for the architecture that underlies how
     /// packets interact and store their data.
     /// </summary>
-    [Serializable]
     public abstract class Packet
     {
 #if DEBUG

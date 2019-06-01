@@ -44,7 +44,6 @@ namespace PacketDotNet
     /// See http://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol for general info
     /// See IETF 802.1AB for the full specification
     /// </remarks>
-    [Serializable]
     public class LldpPacket : InternetLinkLayerPacket, IEnumerable
     {
 #if DEBUG

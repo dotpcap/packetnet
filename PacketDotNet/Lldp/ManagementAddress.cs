@@ -36,7 +36,6 @@ namespace PacketDotNet.Lldp
     /// [Tlv Type Length : 2][Mgmt Addr length : 1][Mgmt Addr Subtype : 1][Mgmt Addr : 1-31]
     /// [Interface Subtype : 1][Interface number : 4][OID length : 1][OID : 0-128]
     /// </summary>
-    [Serializable]
     public class ManagementAddress : Tlv
     {
 #if DEBUG

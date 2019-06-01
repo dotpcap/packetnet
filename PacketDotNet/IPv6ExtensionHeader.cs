@@ -24,7 +24,6 @@ using PacketDotNet.Utils;
 // ReSharper disable InconsistentNaming
 namespace PacketDotNet
 {
-    [Serializable]
     public class IPv6ExtensionHeader
     {
         protected ByteArraySegment ByteArraySegment;

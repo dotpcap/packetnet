@@ -32,7 +32,6 @@ namespace PacketDotNet.Lldp
     /// <summary>
     /// A Type-Length-Value object
     /// </summary>
-    [Serializable]
     public class Tlv
     {
 #if DEBUG

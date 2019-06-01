@@ -35,7 +35,6 @@ namespace PacketDotNet
     /// DrdaPacket
     /// See: https://en.wikipedia.org/wiki/Distributed_Data_Management_Architecture
     /// </summary>
-    [Serializable]
     public sealed class DrdaPacket : Packet
     {
 #if DEBUG

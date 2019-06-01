@@ -26,7 +26,6 @@ namespace PacketDotNet
     /// Internet Link layer packet
     /// See http://en.wikipedia.org/wiki/Link_Layer
     /// </summary>
-    [Serializable]
     public class InternetLinkLayerPacket : Packet
     { }
 }

@@ -26,7 +26,6 @@ namespace PacketDotNet.Lldp
     /// <summary>
     /// A System Name Tlv
     /// </summary>
-    [Serializable]
     public class SystemName : String
     {
         /// <summary>

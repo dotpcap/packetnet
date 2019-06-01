@@ -34,7 +34,6 @@ namespace PacketDotNet.Lldp
     /// <summary>
     /// A Chassis ID TLV
     /// </summary>
-    [Serializable]
     public class ChassisId : Tlv
     {
 #if DEBUG

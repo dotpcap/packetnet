@@ -33,7 +33,6 @@ namespace PacketDotNet.Lldp
     /// <summary>
     /// A Port ID TLV
     /// </summary>
-    [Serializable]
     public class PortId : Tlv
     {
 #if DEBUG

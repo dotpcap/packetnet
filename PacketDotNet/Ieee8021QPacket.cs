@@ -31,7 +31,6 @@ namespace PacketDotNet
     /// 802.1Q vlan packet
     /// http://en.wikipedia.org/wiki/IEEE_802.1Q
     /// </summary>
-    [Serializable]
     public class Ieee8021QPacket : InternetPacket
     {
         /// <summary>

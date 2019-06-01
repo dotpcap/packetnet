@@ -38,7 +38,6 @@ namespace PacketDotNet
     /// IPv4 packet
     /// See http://en.wikipedia.org/wiki/IPv4 for into
     /// </summary>
-    [Serializable]
     // ReSharper disable once InconsistentNaming
     public sealed class IPv4Packet : IPPacket
     {

@@ -34,7 +34,6 @@ namespace PacketDotNet
     /// <summary>
     /// OSPFv2 packet.
     /// </summary>
-    [Serializable]
     public abstract class OspfV2Packet : OspfPacket
     {
 #if DEBUG

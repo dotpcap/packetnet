@@ -35,7 +35,6 @@ namespace PacketDotNet
     /// A packet of link type null.
     /// See http://www.tcpdump.org/linktypes.html
     /// </summary>
-    [Serializable]
     public class NullPacket : Packet
     {
 #if DEBUG

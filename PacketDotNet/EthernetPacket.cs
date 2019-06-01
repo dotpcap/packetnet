@@ -36,7 +36,6 @@ namespace PacketDotNet
     /// <summary>
     /// See http://en.wikipedia.org/wiki/Ethernet#Ethernet_frame_types_and_the_EtherType_field
     /// </summary>
-    [Serializable]
     public sealed class EthernetPacket : InternetLinkLayerPacket
     {
 #if DEBUG

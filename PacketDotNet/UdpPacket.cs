@@ -36,7 +36,6 @@ namespace PacketDotNet
     /// User datagram protocol
     /// See http://en.wikipedia.org/wiki/Udp
     /// </summary>
-    [Serializable]
     public sealed class UdpPacket : TransportPacket
     {
 #if DEBUG

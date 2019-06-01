@@ -31,7 +31,6 @@ namespace PacketDotNet.Lldp
     /// <summary>
     /// A System Description Tlv
     /// </summary>
-    [Serializable]
     public class SystemDescription : String
     {
 #if DEBUG

@@ -36,7 +36,6 @@ namespace PacketDotNet
     /// An ICMP packet
     /// See http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol
     /// </summary>
-    [Serializable]
     public sealed class IcmpV4Packet : InternetPacket
     {
 #if DEBUG

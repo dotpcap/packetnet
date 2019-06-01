@@ -36,7 +36,6 @@ namespace PacketDotNet
     /// PPP packet
     /// See http://en.wikipedia.org/wiki/Point-to-Point_Protocol
     /// </summary>
-    [Serializable]
     public class PppPacket : Packet
     {
 #if DEBUG

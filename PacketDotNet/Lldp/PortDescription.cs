@@ -31,7 +31,6 @@ namespace PacketDotNet.Lldp
     /// <summary>
     /// A Port Description Tlv
     /// </summary>
-    [Serializable]
     public class PortDescription : String
     {
 #if DEBUG

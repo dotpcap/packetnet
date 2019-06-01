@@ -27,7 +27,6 @@ namespace PacketDotNet.Lldp
     /// <summary>
     /// An End Of LLDPDU Tlv
     /// </summary>
-    [Serializable]
     public class EndOfLldpdu : Tlv
     {
         /// <summary>

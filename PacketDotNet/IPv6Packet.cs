@@ -44,7 +44,6 @@ namespace PacketDotNet
     /// http://tools.ietf.org/html/rfc2460
     /// http://en.wikipedia.org/wiki/IPv6
     /// </summary>
-    [Serializable]
     // ReSharper disable once InconsistentNaming
     public sealed class IPv6Packet : IPPacket
     {

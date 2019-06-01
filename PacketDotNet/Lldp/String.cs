@@ -28,7 +28,6 @@ namespace PacketDotNet.Lldp
     /// <summary>
     /// Base class for several TLV types that all contain strings
     /// </summary>
-    [Serializable]
     public class String : Tlv
     {
         /// <summary>

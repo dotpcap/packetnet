@@ -34,7 +34,6 @@ namespace PacketDotNet
     /// Base class for IPv4 and IPv6 packets that exports the common
     /// functionality that both of these classes has in common
     /// </summary>
-    [Serializable]
     public abstract class IPPacket : InternetPacket
     {
 #if DEBUG

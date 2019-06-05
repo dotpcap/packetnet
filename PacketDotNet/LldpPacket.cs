@@ -149,14 +149,14 @@ namespace PacketDotNet
 
             TlvCollection.Clear();
 
-            while (position < bytes.Length)
+            while (offset + position < bytes.Length)
             {
                 // The payload type
                 var byteArraySegment = new ByteArraySegment(bytes, offset + position, TlvTypeLength.TypeLengthLength);
                 var typeLength = new TlvTypeLength(byteArraySegment);
 
                 // create a TLV based on the type and add it to the collection
-                var currentTlv = TLVFactory(bytes, offset + position, typeLength.Type);
+                var currentTlv = GetTlv(bytes, offset + position, typeLength.Type);
                 if (currentTlv == null)
                 {
                     Log.Debug("currentTlv == null");
@@ -171,9 +171,8 @@ namespace PacketDotNet
 
                 // stop at the first end TLV we run into
                 if (currentTlv is EndOfLldpdu)
-                {
                     break;
-                }
+
 
                 // Increment the position to seek the next Tlv
                 position += currentTlv.TotalLength;
@@ -183,6 +182,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Gets the TLV for the specified <see cref="type" />
         /// </summary>
         /// <param name="bytes">
         /// A <see cref="T:System.Byte[]" />
@@ -196,7 +196,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="Tlv" />
         /// </returns>
-        private static Tlv TLVFactory(byte[] bytes, int offset, TlvType type)
+        private static Tlv GetTlv(byte[] bytes, int offset, TlvType type)
         {
             switch (type)
             {
@@ -242,7 +242,7 @@ namespace PacketDotNet
                 }
                 default:
                 {
-                    throw new ArgumentOutOfRangeException();
+                    return null;
                 }
             }
         }

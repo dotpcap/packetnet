@@ -238,5 +238,19 @@ namespace Test.PacketType.Ieee80211
             Assert.AreEqual(24, finalFrame.Length);
             Assert.AreEqual(0x1234, EndianBitConverter.Little.ToUInt16(finalFrame.Bytes, finalFrame.Length - 2));
         }
+
+        [Test]
+        public void ExtendedPresenceMaskFlags()
+        {
+            //Test for https://www.radiotap.org/#extended-presence-masks
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_radiotap_with_extended_presence_mask.pcap");
+            dev.Open();
+            var rawCapture = dev.GetNextPacket();
+            dev.Close();
+            
+            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
+            var rate = ((RateRadioTapField)radioPacket[RadioTapType.Rate]).RateMbps;
+            Assert.AreEqual(1.0f, rate);
+        }
     }
 }

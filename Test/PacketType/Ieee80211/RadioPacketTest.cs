@@ -249,7 +249,7 @@ namespace Test.PacketType.Ieee80211
             dev.Close();
             
             var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
-            var rate = ((RateRadioTapField)radioPacket[RadioTapType.Rate]).RateMbps;
+            var rate = ((RateRadioTapField)p[RadioTapType.Rate]).RateMbps;
             Assert.AreEqual(1.0f, rate);
         }
     }

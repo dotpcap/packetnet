@@ -152,7 +152,7 @@ namespace PacketDotNet.Ieee80211
 
             bitmaskFields.Add(bitmask);
             var bitmaskOffsetInBytes = 4;
-            while ((bitmask & (1 << 31)) == 1)
+            while (((bitmask >> 31) & 0x1) == 1)
             {
                 // retrieve the next field
                 bitmask = EndianBitConverter.Little.ToUInt32(Header.Bytes,

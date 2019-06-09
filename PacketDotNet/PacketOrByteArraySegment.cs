@@ -18,7 +18,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
+using System.Text;
 using System.IO;
 using PacketDotNet.Utils;
 
@@ -92,6 +92,20 @@ namespace PacketDotNet
                 foreach (var b in ByteArraySegment)
                     memoryStream.WriteByte(b);
             }
+        }
+
+        public override string ToString()
+        {
+            var buffer = new StringBuilder();
+            if (Type == PayloadType.Bytes)
+            {
+                buffer.AppendFormat("ByteArraySegment: [" + ByteArraySegment + "]");
+            } else
+            {
+                buffer.AppendFormat("Packet: [" + Packet + "]");
+            }
+
+            return buffer.ToString();
         }
     }
 }

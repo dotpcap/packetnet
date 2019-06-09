@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.IO;
 using NUnit.Framework;
 
 namespace Test
@@ -10,11 +11,10 @@ namespace Test
             get {
                 var testDirectory = TestContext.CurrentContext.TestDirectory;
 
-                // trim off everything after '\\bin'
-                var index = testDirectory.IndexOf("\\bin");
+                var index = testDirectory.IndexOf(Path.DirectorySeparatorChar + "bin");
 
-                // and affix the directory
-                var captureDirectory = testDirectory.Remove(index) + "\\CaptureFiles\\";
+                // trim off everything after 'Path.DirectorySeparatorCharPath' and affix the directory
+                var captureDirectory = testDirectory.Remove(index) + Path.DirectorySeparatorChar + "CaptureFiles" + Path.DirectorySeparatorChar;
 
                 return captureDirectory;
             }

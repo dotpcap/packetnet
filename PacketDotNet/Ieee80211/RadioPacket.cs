@@ -303,9 +303,9 @@ namespace PacketDotNet.Ieee80211
 
             // now go through each of the bitmask fields looking at the least significant
             // bit first to retrieve each field
+            var bitmaskArray = new int[1];
             foreach (var bitmask in bitmasks)
             {
-                var bitmaskArray = new int[1];
                 bitmaskArray[0] = (int) bitmask;
                 var ba = new BitArray(bitmaskArray);
 

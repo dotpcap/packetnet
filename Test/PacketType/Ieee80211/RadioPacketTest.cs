@@ -214,28 +214,38 @@ namespace Test.PacketType.Ieee80211
             var bs = new BinaryWriter(ms);
             bs.Write((byte) 0x0); //version
             bs.Write((byte) 0x0); //pad
-            bs.Write((ushort) 0x0010); //length
+            var originalLength = 0x10;
+            bs.Write((ushort) originalLength); //length
             bs.Write(0x80000002); //present 1 (wth flags field)
             bs.Write((uint) 0x00010000); //present 2 (with unhandled field)
             bs.Write((ushort) 0x0010); //Flags field (FCS included flag set)
             bs.Write((ushort) 0x1234); //a made up field that we want to keep even though we dont know what it is
 
+            // write the content of the packet in the captured file, without header, to the memory stream to continue to build up the generated
+            // radiotap packet
             var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "80211_plus_radiotap_header.pcap");
             dev.Open();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
             var anotherRadioPacket = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
-            bs.Write(anotherRadioPacket.PayloadPacket.Bytes);
+            var anotherRadioPacketBytes = anotherRadioPacket.PayloadPacket.Bytes;
+            bs.Write(anotherRadioPacketBytes);
 
             var radioTap = ms.ToArray();
 
             var p = Packet.ParsePacket(LinkLayers.Ieee80211Radio, radioTap) as RadioPacket;
-            Assert.AreEqual(16, p.Length);
-            p.Add(new TsftRadioTapField(0x123456789));
-            var finalFrame = Packet.ParsePacket(LinkLayers.Ieee80211Radio, p.Bytes) as RadioPacket;
 
-            Assert.AreEqual(24, finalFrame.Length);
+            var numberOfPayloadBytesWrittenFromAnotherRadioPacket = 14;
+            Assert.AreEqual(numberOfPayloadBytesWrittenFromAnotherRadioPacket, p.PayloadPacket.Bytes.Length);
+            Assert.AreEqual(originalLength, p.Length);
+            p.Add(new TsftRadioTapField(0x123456789));
+            var addedLength = TsftRadioTapField.FieldLength;
+            var radioTapWithTsftBytes = p.Bytes;
+
+            var finalFrame = Packet.ParsePacket(LinkLayers.Ieee80211Radio, radioTapWithTsftBytes) as RadioPacket;
+
+            Assert.AreEqual(originalLength + addedLength, finalFrame.Length);
             Assert.AreEqual(0x1234, EndianBitConverter.Little.ToUInt16(finalFrame.Bytes, finalFrame.Length - 2));
         }
 

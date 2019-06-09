@@ -237,10 +237,10 @@ namespace PacketDotNet.Ieee80211
             RadioTapFields[field.FieldType] = field;
             Length += field.Length;
             var presenceBit = (int) field.FieldType;
-            var presenceField = presenceBit / 32;
-            if (Present.Length <= presenceField)
+            var presenceFieldIndex = presenceBit / 32;
+            if (Present.Length <= presenceFieldIndex)
             {
-                var newPresentFields = new uint[presenceField];
+                var newPresentFields = new uint[presenceFieldIndex];
                 Array.Copy(Present, newPresentFields, Present.Length);
                 //set bit 31 to true for every present field except the last one
                 for (var i = 0; i < newPresentFields.Length - 1; i++)
@@ -251,7 +251,7 @@ namespace PacketDotNet.Ieee80211
                 Present = newPresentFields;
             }
 
-            Present[presenceField] |= (uint) (1 << presenceBit);
+            Present[presenceFieldIndex] |= (uint) (1 << presenceBit);
         }
 
         /// <summary>

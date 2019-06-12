@@ -233,20 +233,25 @@ namespace Test.PacketType.Ieee80211
             bs.Write(anotherRadioPacketBytes);
 
             var radioTap = ms.ToArray();
-
             var p = Packet.ParsePacket(LinkLayers.Ieee80211Radio, radioTap) as RadioPacket;
 
             var numberOfPayloadBytesWrittenFromAnotherRadioPacket = 14;
             Assert.AreEqual(numberOfPayloadBytesWrittenFromAnotherRadioPacket, p.PayloadPacket.Bytes.Length);
             Assert.AreEqual(originalLength, p.Length);
-            p.Add(new TsftRadioTapField(0x123456789));
-            var addedLength = TsftRadioTapField.FieldLength;
+            ulong newTsftValue = 0x123456789;
+            p.Add(new TsftRadioTapField(newTsftValue));
+            var timestampUsec = ((TsftRadioTapField)p[RadioTapType.Tsft]).TimestampUsec;
+            Assert.AreEqual(newTsftValue, timestampUsec);
+            var paddingByteCount = 4;
+            var tsftLength = 8; // TODO: We have no way to get this without creating an instance of this RadioTapField
+            var addedLength = tsftLength + paddingByteCount;
             var radioTapWithTsftBytes = p.Bytes;
 
             var finalFrame = Packet.ParsePacket(LinkLayers.Ieee80211Radio, radioTapWithTsftBytes) as RadioPacket;
 
             Assert.AreEqual(originalLength + addedLength, finalFrame.Length);
             Assert.AreEqual(0x1234, EndianBitConverter.Little.ToUInt16(finalFrame.Bytes, finalFrame.Length - 2));
+            Assert.AreEqual(numberOfPayloadBytesWrittenFromAnotherRadioPacket, p.PayloadPacket.Bytes.Length);
         }
 
         [Test]

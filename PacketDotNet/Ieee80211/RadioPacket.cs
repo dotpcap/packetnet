@@ -235,7 +235,6 @@ namespace PacketDotNet.Ieee80211
         public void Add(RadioTapField field)
         {
             RadioTapFields[field.FieldType] = field;
-            Length += field.Length;
             var presenceBit = (int) field.FieldType;
             var presenceFieldIndex = presenceBit / 32;
             if (Present.Length <= presenceFieldIndex)
@@ -252,6 +251,8 @@ namespace PacketDotNet.Ieee80211
             }
 
             Present[presenceFieldIndex] |= (uint) (1 << presenceBit);
+
+            Length = UpdatePresentAndBeyond(null);
         }
 
         /// <summary>
@@ -265,10 +266,10 @@ namespace PacketDotNet.Ieee80211
             if (RadioTapFields.TryGetValue(fieldType, out var field))
             {
                 RadioTapFields.Remove(fieldType);
-                Length -= field.Length;
                 var presenceBit = (int) field.FieldType;
                 var presenceField = presenceBit / 32;
                 Present[presenceField] &= (uint) ~(1 << presenceBit);
+                Length = UpdatePresentAndBeyond(null);
             }
         }
 
@@ -293,13 +294,14 @@ namespace PacketDotNet.Ieee80211
             var bitIndex = 0;
 
             // create a binary reader that points to the memory immediately after the bitmasks
-            var offset = Header.Offset +
+            var offsetAfterBitmasks = Header.Offset +
                          RadioFields.PresentPosition +
                          bitmasks.Length * Marshal.SizeOf(typeof(uint));
+            var remainingHeaderBytes = Length - offsetAfterBitmasks;
 
             var br = new BinaryReader(new MemoryStream(Header.Bytes,
-                                                       offset,
-                                                       Length - offset));
+                                                       offsetAfterBitmasks,
+                                                       remainingHeaderBytes));
 
             // now go through each of the bitmask fields looking at the least significant
             // bit first to retrieve each field
@@ -317,6 +319,20 @@ namespace PacketDotNet.Ieee80211
                 {
                     if (ba[x])
                     {
+                        var wasFieldAlignmentFound = RadioTapField.FieldAlignment(bitIndex, out ushort fieldAlignment);
+
+                        if (wasFieldAlignmentFound)
+                        {
+                            // skip over the padding bytes to align to the field we are trying to read
+                            var remainder = (offsetAfterBitmasks + br.BaseStream.Position) % fieldAlignment;
+                            long toAdvance = 0;
+                            if (remainder != 0)
+                            {
+                                toAdvance = fieldAlignment - remainder;
+                            }
+                            br.BaseStream.Position += toAdvance;
+                        }
+
                         var field = RadioTapField.Parse(bitIndex, br);
                         if (field != null)
                         {
@@ -349,6 +365,71 @@ namespace PacketDotNet.Ieee80211
         }
 
         /// <summary>
+        /// Updates the present and beyond bytes in the header.
+        /// </summary>
+        /// <returns>The number of bytes in the <paramref name="header"/>, including the bytes prior to the
+        /// present bytes that aren't written here.</returns>
+        /// <param name="header">Header bytes. If null no bytes are to be written</param>
+        private ushort UpdatePresentAndBeyond(ByteArraySegment header)
+        {
+            var offset = 0;
+            if (header != null)
+            {
+                offset = header.Offset;
+            }
+
+            var index = RadioFields.PresentPosition;
+            foreach (var presentField in Present)
+            {
+                if (header != null)
+                {
+                    EndianBitConverter.Little.CopyBytes(presentField,
+                                                        header.Bytes,
+                                                        offset + index);
+                }
+
+                index += RadioFields.PresentLength;
+            }
+
+            foreach (var field in RadioTapFields)
+            {
+                // align the offset to the field alignment by adding padding if necessary, as per the radiotap spec
+                var paddingByteCount = 0;
+                var remainder = (offset + index) % field.Value.Alignment;
+                if (remainder != 0)
+                {
+                    paddingByteCount = field.Value.Alignment - remainder;
+                    for (var i = 0; i < paddingByteCount; i++)
+                    {
+                        if (header != null)
+                        {
+                            header.Bytes[header.Offset + index] = 0;
+                        }
+                        index++;
+                    }
+                }
+
+                if(header != null)
+                {
+                    //then copy the field data to the appropriate index
+                    field.Value.CopyTo(header.Bytes, offset + index);
+                }
+                index += field.Value.Length;
+            }
+
+            if (UnhandledFieldBytes != null && UnhandledFieldBytes.Length > 0)
+            {
+                if(header != null)
+                {
+                    Array.Copy(UnhandledFieldBytes, 0, header.Bytes, offset + index, UnhandledFieldBytes.Length);
+                }
+                index += UnhandledFieldBytes.Length;
+            }
+
+            return(ushort)index;
+        }
+
+        /// <summary>
         /// Called to ensure that field values are updated before
         /// the packet bytes are retrieved
         /// </summary>
@@ -362,27 +443,7 @@ namespace PacketDotNet.Ieee80211
 
             VersionBytes = Version;
             LengthBytes = Length;
-            var index = RadioFields.PresentPosition;
-            foreach (var presentField in Present)
-            {
-                EndianBitConverter.Little.CopyBytes(presentField,
-                                                    Header.Bytes,
-                                                    Header.Offset + index);
-
-                index += RadioFields.PresentLength;
-            }
-
-            foreach (var field in RadioTapFields)
-            {
-                //then copy the field data to the appropriate index
-                field.Value.CopyTo(Header.Bytes, Header.Offset + index);
-                index += field.Value.Length;
-            }
-
-            if (UnhandledFieldBytes != null && UnhandledFieldBytes.Length > 0)
-            {
-                Array.Copy(UnhandledFieldBytes, 0, Header.Bytes, Header.Offset + index, UnhandledFieldBytes.Length);
-            }
+            UpdatePresentAndBeyond(Header);
         }
 
         internal static PacketOrByteArraySegment ParseNextSegment(ByteArraySegment payload, FlagsRadioTapField flagsField)

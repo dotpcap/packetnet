@@ -87,6 +87,12 @@ namespace PacketDotNet.Ieee80211
         public override ushort Length => 4;
 
         /// <summary>
+        /// Note that the alignment of the channel field is two bytes as it is comprised of two 2 byte fields
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => 2;
+
+        /// <summary>
         /// Convert a frequency to a channel
         /// </summary>
         /// <remarks>
@@ -386,6 +392,12 @@ namespace PacketDotNet.Ieee80211
         public override ushort Length => 2;
 
         /// <summary>
+        /// Gets the alignment.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => Length;
+
+        /// <summary>
         /// Hop pattern
         /// </summary>
         public byte Pattern { get; set; }
@@ -462,6 +474,12 @@ namespace PacketDotNet.Ieee80211
         public override ushort Length => 1;
 
         /// <summary>
+        /// Gets the alignment.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => Length;
+
+        /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
         public override void CopyTo(byte[] dest, int offset)
@@ -525,6 +543,12 @@ namespace PacketDotNet.Ieee80211
         /// The length.
         /// </value>
         public override ushort Length => 1;
+
+        /// <summary>
+        /// Gets the alignment.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => Length;
 
         /// <summary>
         /// Rate in Mbps
@@ -594,6 +618,12 @@ namespace PacketDotNet.Ieee80211
         /// The length.
         /// </value>
         public override ushort Length => 1;
+
+        /// <summary>
+        /// Gets the alignment.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => Length;
 
         /// <summary>
         /// Signal strength in dB
@@ -670,6 +700,12 @@ namespace PacketDotNet.Ieee80211
         public override ushort Length => 1;
 
         /// <summary>
+        /// Gets the alignment.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => Length;
+
+        /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
         public override void CopyTo(byte[] dest, int offset)
@@ -737,6 +773,12 @@ namespace PacketDotNet.Ieee80211
         /// The length.
         /// </value>
         public override ushort Length => 1;
+
+        /// <summary>
+        /// Gets the alignment.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => Length;
 
         /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
@@ -808,6 +850,12 @@ namespace PacketDotNet.Ieee80211
         public override ushort Length => 1;
 
         /// <summary>
+        /// Gets the alignment.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => Length;
+
+        /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
         public override void CopyTo(byte[] dest, int offset)
@@ -877,6 +925,12 @@ namespace PacketDotNet.Ieee80211
         public override ushort Length => 1;
 
         /// <summary>
+        /// Gets the alignment.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => Length;
+
+        /// <summary>
         /// Copies the field data to the destination buffer at the specified offset.
         /// </summary>
         public override void CopyTo(byte[] dest, int offset)
@@ -939,6 +993,12 @@ namespace PacketDotNet.Ieee80211
         /// The length.
         /// </value>
         public override ushort Length => 2;
+
+        /// <summary>
+        /// Gets the alignment.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => Length;
 
         /// <summary>
         /// Signal quality
@@ -1010,6 +1070,12 @@ namespace PacketDotNet.Ieee80211
         public override ushort Length => 8;
 
         /// <summary>
+        /// Gets the alignment.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => Length;
+
+        /// <summary>
         /// Timestamp in microseconds
         /// </summary>
         public ulong TimestampUsec { get; set; }
@@ -1078,6 +1144,12 @@ namespace PacketDotNet.Ieee80211
         /// The length.
         /// </value>
         public override ushort Length => 2;
+
+        /// <summary>
+        /// Gets the alignment.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => Length;
 
         /// <summary>
         /// Gets or sets a value indicating whether the frame failed the PLCP CRC check.
@@ -1155,6 +1227,12 @@ namespace PacketDotNet.Ieee80211
         public override ushort Length => 2;
 
         /// <summary>
+        /// Gets the alignment.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => Length;
+
+        /// <summary>
         /// Transmit power
         /// </summary>
         public int TxPower { get; set; }
@@ -1225,6 +1303,12 @@ namespace PacketDotNet.Ieee80211
         /// The length.
         /// </value>
         public override ushort Length => 2;
+
+        /// <summary>
+        /// Gets the alignment.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => Length;
 
         /// <summary>
         /// Transmit power
@@ -1299,6 +1383,12 @@ namespace PacketDotNet.Ieee80211
         public override ushort Length => 1;
 
         /// <summary>
+        /// Gets the alignment.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => Length;
+
+        /// <summary>
         /// Tx power in dBm
         /// </summary>
         public sbyte TxPowerdBm { get; set; }
@@ -1338,6 +1428,38 @@ namespace PacketDotNet.Ieee80211
         /// The length.
         /// </value>
         public abstract ushort Length { get; }
+
+        /// <summary>
+        /// Gets the alignment length for this field.
+        /// </summary>
+        /// <value>The alignment.</value>
+        public abstract ushort Alignment { get; }
+
+        /// <summary>
+        /// Based on the radiotap bitfield determine the fieldAlignment
+        /// </summary>
+        /// <returns><c>true</c>, if field was found, <c>false</c> otherwise.</returns>
+        /// <param name="bitIndex">Bit index.</param>
+        /// <param name="fieldAlignment">Field length.</param>
+        public static bool FieldAlignment(int bitIndex, out ushort fieldAlignment)
+        {
+            // leverage the existing Parse() routine with a dummy buffer to decode a
+            // RadioTapField instance so we can retrieve its length
+            var emptyBuffer = new byte[32];
+            var ms = new MemoryStream(emptyBuffer);
+            var br = new BinaryReader(ms);
+
+            var field = Parse(bitIndex, br);
+
+            if (field != null)
+            {
+                fieldAlignment = field.Alignment;
+                return true;
+            }
+
+            fieldAlignment = 0;
+            return false;
+        }
 
         /// <summary>
         /// Parse a radio tap field, indicated by bitIndex, from a given BinaryReader

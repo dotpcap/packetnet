@@ -86,7 +86,7 @@ namespace PacketDotNet
             Header.Length = EthernetFields.HeaderLength;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header, Type), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => ParseNextSegment(Header, Type));
         }
 
         /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>

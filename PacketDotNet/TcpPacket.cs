@@ -93,12 +93,11 @@ namespace PacketDotNet
             // we need the header to be valid to retrieve the value of DataOffset
 
             // store the payload bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-                                                                     {
-                                                                         var result = new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() };
-                                                                         return result;
-                                                                     },
-                                                                     LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
+            {
+                var result = new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() };
+                return result;
+            });
         }
 
         /// <summary>
@@ -126,38 +125,37 @@ namespace PacketDotNet
             Header.Length = DataOffset * 4;
 
             // store the payload bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-                                                                     {
-                                                                         var result = new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() };
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
+            {
+                var result = new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() };
 
-                                                                         // if the parent packet is an IPv4Packet we need to adjust
-                                                                         // the payload length because it is possible for us to have
-                                                                         // X bytes of data but only (X - Y) bytes are actually valid
-                                                                         if (ParentPacket is IPv4Packet ipv4Parent)
-                                                                         {
-                                                                             // actual total length (tcp header + tcp payload)
-                                                                             var ipPayloadTotalLength = ipv4Parent.TotalLength - (ipv4Parent.HeaderLength * 4);
+                // if the parent packet is an IPv4Packet we need to adjust
+                // the payload length because it is possible for us to have
+                // X bytes of data but only (X - Y) bytes are actually valid
+                if (ParentPacket is IPv4Packet ipv4Parent)
+                {
+                    // actual total length (tcp header + tcp payload)
+                    var ipPayloadTotalLength = ipv4Parent.TotalLength - (ipv4Parent.HeaderLength * 4);
 
-                                                                             Log.DebugFormat("ipv4Parent.TotalLength {0}, ipv4Parent.HeaderLength {1}",
-                                                                                             ipv4Parent.TotalLength,
-                                                                                             ipv4Parent.HeaderLength * 4);
+                    Log.DebugFormat("ipv4Parent.TotalLength {0}, ipv4Parent.HeaderLength {1}",
+                                    ipv4Parent.TotalLength,
+                                    ipv4Parent.HeaderLength * 4);
 
-                                                                             var newTcpPayloadLength = ipPayloadTotalLength - Header.Length;
+                    var newTcpPayloadLength = ipPayloadTotalLength - Header.Length;
 
-                                                                             Log.DebugFormat("Header.Length {0}, Current payload length: {1}, new payload length {2}",
-                                                                                             Header.Length,
-                                                                                             result.ByteArraySegment.Length,
-                                                                                             newTcpPayloadLength);
+                    Log.DebugFormat("Header.Length {0}, Current payload length: {1}, new payload length {2}",
+                                    Header.Length,
+                                    result.ByteArraySegment.Length,
+                                    newTcpPayloadLength);
 
-                                                                             // the length of the payload is the total payload length
-                                                                             // above, minus the length of the tcp header
-                                                                             result.ByteArraySegment.Length = newTcpPayloadLength;
-                                                                             DecodePayload(result);
-                                                                         }
+                    // the length of the payload is the total payload length
+                    // above, minus the length of the tcp header
+                    result.ByteArraySegment.Length = newTcpPayloadLength;
+                    DecodePayload(result);
+                }
 
-                                                                         return result;
-                                                                     },
-                                                                     LazyThreadSafetyMode.PublicationOnly);
+                return result;
+            });
 
             Log.DebugFormat("ParentPacket.GetType() {0}", parentPacket.GetType());
 

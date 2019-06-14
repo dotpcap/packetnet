@@ -121,14 +121,13 @@ namespace PacketDotNet
             Log.DebugFormat("header {0}", Header);
 
             // parse the payload
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-                                                                     {
-                                                                         var payload = Header.NextSegment(PayloadLength);
-                                                                         return ParseNextSegment(payload,
-                                                                                                 Protocol,
-                                                                                                 this);
-                                                                     },
-                                                                     LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
+            {
+                var payload = Header.NextSegment(PayloadLength);
+                return ParseNextSegment(payload,
+                                        Protocol,
+                                        this);
+            });
         }
 
         /// <summary>

@@ -45,9 +45,8 @@ namespace PacketDotNet
             Header = new ByteArraySegment(byteArraySegment) { Length = LinuxSllFields.SLLHeaderLength };
 
             // parse the payload via an EthernetPacket method
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header,
-                                                                                                           EthernetProtocolType),
-                                                                     LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header,
+                                                                                                           EthernetProtocolType));
         }
 
         /// <value>

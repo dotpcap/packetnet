@@ -90,7 +90,7 @@ namespace PacketDotNet
             Header.Length = PppoeFields.HeaderLength;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => ParseNextSegment(Header));
         }
 
         /// <summary>

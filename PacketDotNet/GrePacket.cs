@@ -58,7 +58,7 @@ namespace PacketDotNet
                 Header.Length += GreFields.SequenceLength;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header, Protocol), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header, Protocol));
             ParentPacket = parentPacket;
         }
 

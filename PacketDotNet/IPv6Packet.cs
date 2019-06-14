@@ -142,22 +142,21 @@ namespace PacketDotNet
             if (PayloadLength > 0)
             {
                 // parse the payload
-                PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-                                                                         {
-                                                                             if (_totalExtensionHeadersLength == -1)
-                                                                                 CalculateExtensionHeaders();
+                PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
+                {
+                    if (_totalExtensionHeadersLength == -1)
+                        CalculateExtensionHeaders();
 
-                                                                             var startingOffset = Header.Offset + Header.Length + _totalExtensionHeadersLength;
-                                                                             var segmentLength = Math.Min(PayloadLength, Header.BytesLength - startingOffset);
-                                                                             var bytesLength = startingOffset + segmentLength;
+                    var startingOffset = Header.Offset + Header.Length + _totalExtensionHeadersLength;
+                    var segmentLength = Math.Min(PayloadLength, Header.BytesLength - startingOffset);
+                    var bytesLength = startingOffset + segmentLength;
 
-                                                                             var payload = new ByteArraySegment(Header.Bytes, startingOffset, segmentLength, bytesLength);
+                    var payload = new ByteArraySegment(Header.Bytes, startingOffset, segmentLength, bytesLength);
 
-                                                                             return ParseNextSegment(payload,
-                                                                                                     Protocol,
-                                                                                                     this);
-                                                                         },
-                                                                         LazyThreadSafetyMode.PublicationOnly);
+                    return ParseNextSegment(payload,
+                                            Protocol,
+                                            this);
+                });
             }
         }
 

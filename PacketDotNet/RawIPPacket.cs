@@ -53,30 +53,29 @@ namespace PacketDotNet
             Header = new ByteArraySegment(byteArraySegment) { Length = 0 };
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-                                                                     {
-                                                                         var result = new PacketOrByteArraySegment();
-                                                                         switch (Protocol)
-                                                                         {
-                                                                             case RawIPPacketProtocol.IPv4:
-                                                                             {
-                                                                                 result.Packet = new IPv4Packet(Header.NextSegment());
-                                                                                 break;
-                                                                             }
-                                                                             case RawIPPacketProtocol.IPv6:
-                                                                             {
-                                                                                 result.Packet = new IPv6Packet(Header.NextSegment());
-                                                                                 break;
-                                                                             }
-                                                                             default:
-                                                                             {
-                                                                                 throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");
-                                                                             }
-                                                                         }
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
+            {
+                var result = new PacketOrByteArraySegment();
+                switch (Protocol)
+                {
+                    case RawIPPacketProtocol.IPv4:
+                    {
+                        result.Packet = new IPv4Packet(Header.NextSegment());
+                        break;
+                    }
+                    case RawIPPacketProtocol.IPv6:
+                    {
+                        result.Packet = new IPv6Packet(Header.NextSegment());
+                        break;
+                    }
+                    default:
+                    {
+                        throw new NotImplementedException("Protocol of " + Protocol + " is not implemented");
+                    }
+                }
 
-                                                                         return result;
-                                                                     },
-                                                                     LazyThreadSafetyMode.PublicationOnly);
+                return result;
+            });
         }
 
         /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>

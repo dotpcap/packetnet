@@ -68,7 +68,7 @@ namespace PacketDotNet.Ieee80211
             var commonField = FindFirstByType(PpiFieldType.PpiCommon) as PpiCommon;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header, commonField), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => ParseNextSegment(Header, commonField));
         }
 
         /// <summary>

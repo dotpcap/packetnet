@@ -87,48 +87,47 @@ namespace PacketDotNet
                 Length = UdpFields.HeaderLength
             };
 
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-                                                                     {
-                                                                         const int wakeOnLanPort0 = 0;
-                                                                         const int wakeOnLanPort7 = 7;
-                                                                         const int wakeOnLanPort9 = 9;
-                                                                         const int l2TpPort = 1701;
-                                                                         const int teredoPort = 3544;
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
+            {
+                const int wakeOnLanPort0 = 0;
+                const int wakeOnLanPort7 = 7;
+                const int wakeOnLanPort9 = 9;
+                const int l2TpPort = 1701;
+                const int teredoPort = 3544;
 
-                                                                         var result = new PacketOrByteArraySegment();
-                                                                         var destinationPort = DestinationPort;
-                                                                         var sourcePort = SourcePort;
-                                                                         var payload = Header.NextSegment();
+                var result = new PacketOrByteArraySegment();
+                var destinationPort = DestinationPort;
+                var sourcePort = SourcePort;
+                var payload = Header.NextSegment();
 
-                                                                         // If this packet is going to port 0, 7 or 9, then it might be a WakeOnLan packet.
-                                                                         if ((destinationPort == wakeOnLanPort0) || (destinationPort == wakeOnLanPort7) || (destinationPort == wakeOnLanPort9))
-                                                                             if (WakeOnLanPacket.IsValid(payload))
-                                                                             {
-                                                                                 result.Packet = new WakeOnLanPacket(payload);
-                                                                                 return result;
-                                                                             }
+                // If this packet is going to port 0, 7 or 9, then it might be a WakeOnLan packet.
+                if ((destinationPort == wakeOnLanPort0) || (destinationPort == wakeOnLanPort7) || (destinationPort == wakeOnLanPort9))
+                    if (WakeOnLanPacket.IsValid(payload))
+                    {
+                        result.Packet = new WakeOnLanPacket(payload);
+                        return result;
+                    }
 
-                                                                         if ((destinationPort == l2TpPort) || (sourcePort == l2TpPort))
-                                                                         {
-                                                                             result.Packet = new L2tpPacket(payload, this);
-                                                                             return result;
-                                                                         }
+                if ((destinationPort == l2TpPort) || (sourcePort == l2TpPort))
+                {
+                    result.Packet = new L2tpPacket(payload, this);
+                    return result;
+                }
 
-                                                                         // Teredo encapsulates IPv6 traffic into UDP packets, parse out the bytes in the payload into packets.
-                                                                         // If it contains a IPV6 packet, it to this current packet as a payload.
-                                                                         // https://tools.ietf.org/html/rfc4380#section-5.1.1
-                                                                         if ((destinationPort == teredoPort) || (sourcePort == teredoPort))
-                                                                             if (ContainsIPv6Packet(payload))
-                                                                             {
-                                                                                 result.Packet = new IPv6Packet(payload);
-                                                                                 return result;
-                                                                             }
+                // Teredo encapsulates IPv6 traffic into UDP packets, parse out the bytes in the payload into packets.
+                // If it contains a IPV6 packet, it to this current packet as a payload.
+                // https://tools.ietf.org/html/rfc4380#section-5.1.1
+                if ((destinationPort == teredoPort) || (sourcePort == teredoPort))
+                    if (ContainsIPv6Packet(payload))
+                    {
+                        result.Packet = new IPv6Packet(payload);
+                        return result;
+                    }
 
-                                                                         // store the payload bytes
-                                                                         result.ByteArraySegment = payload;
-                                                                         return result;
-                                                                     },
-                                                                     LazyThreadSafetyMode.PublicationOnly);
+                // store the payload bytes
+                result.ByteArraySegment = payload;
+                return result;
+            });
         }
 
         /// <summary>

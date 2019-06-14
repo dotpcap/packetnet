@@ -21,13 +21,12 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.IO;
 using System.Text;
-using System.Threading;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
+
 #if DEBUG
 using System.Reflection;
 using log4net;
-
 #endif
 
 namespace PacketDotNet
@@ -57,7 +56,7 @@ namespace PacketDotNet
         /// <summary>
         /// Used internally when building new packet dissectors
         /// </summary>
-        protected Lazy<PacketOrByteArraySegment> PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(LazyThreadSafetyMode.None);
+        protected LazySlim<PacketOrByteArraySegment> PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(null);
 
         /// <summary>
         /// Gets the actual bytes containing this packet and its payload.

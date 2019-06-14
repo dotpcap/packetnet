@@ -45,9 +45,8 @@ namespace PacketDotNet
             Header = new ByteArraySegment(byteArraySegment) { Length = Ieee8021QFields.HeaderLength };
 
             // parse the payload via an EthernetPacket method
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header,
-                                                                                                           Type),
-                                                                     LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header,
+                                                                                                           Type));
         }
 
         /// <summary>

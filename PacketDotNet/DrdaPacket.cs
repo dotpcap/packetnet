@@ -61,12 +61,11 @@ namespace PacketDotNet
             Header = new ByteArraySegment(byteArraySegment);
 
             // store the payload bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() =>
-                                                                     {
-                                                                         var result = new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() };
-                                                                         return result;
-                                                                     },
-                                                                     LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
+            {
+                var result = new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() };
+                return result;
+            });
         }
 
         /// <summary>

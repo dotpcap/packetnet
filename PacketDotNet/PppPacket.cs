@@ -79,7 +79,7 @@ namespace PacketDotNet
             Header.Length = PppFields.HeaderLength;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new Lazy<PacketOrByteArraySegment>(() => ParseNextSegment(Header, Protocol), LazyThreadSafetyMode.PublicationOnly);
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => ParseNextSegment(Header, Protocol));
         }
 
         /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>

@@ -1446,11 +1446,10 @@ namespace PacketDotNet.Ieee80211
             // leverage the existing Parse() routine with a dummy buffer to decode a
             // RadioTapField instance so we can retrieve its length
             var emptyBuffer = new byte[32];
-            var ms = new MemoryStream(emptyBuffer);
-            var br = new BinaryReader(ms);
+            var memoryStream = new MemoryStream(emptyBuffer);
+            var binaryReader = new BinaryReader(memoryStream);
 
-            var field = Parse(bitIndex, br);
-
+            var field = Parse(bitIndex, binaryReader);
             if (field != null)
             {
                 fieldAlignment = field.Alignment;

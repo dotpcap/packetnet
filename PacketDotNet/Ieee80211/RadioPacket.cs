@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
@@ -295,8 +294,9 @@ namespace PacketDotNet.Ieee80211
 
             // create a binary reader that points to the memory immediately after the bitmasks
             var offsetAfterBitmasks = Header.Offset +
-                         RadioFields.PresentPosition +
-                         bitmasks.Length * Marshal.SizeOf(typeof(uint));
+                                      RadioFields.PresentPosition +
+                                      bitmasks.Length * Marshal.SizeOf(typeof(uint));
+
             var remainingHeaderBytes = Length - offsetAfterBitmasks;
 
             var br = new BinaryReader(new MemoryStream(Header.Bytes,
@@ -330,6 +330,7 @@ namespace PacketDotNet.Ieee80211
                             {
                                 toAdvance = fieldAlignment - remainder;
                             }
+
                             br.BaseStream.Position += toAdvance;
                         }
 
@@ -367,8 +368,10 @@ namespace PacketDotNet.Ieee80211
         /// <summary>
         /// Updates the present and beyond bytes in the header.
         /// </summary>
-        /// <returns>The number of bytes in the <paramref name="header"/>, including the bytes prior to the
-        /// present bytes that aren't written here.</returns>
+        /// <returns>
+        /// The number of bytes in the <paramref name="header" />, including the bytes prior to the
+        /// present bytes that aren't written here.
+        /// </returns>
         /// <param name="header">Header bytes. If null no bytes are to be written</param>
         private ushort UpdatePresentAndBeyond(ByteArraySegment header)
         {
@@ -405,28 +408,31 @@ namespace PacketDotNet.Ieee80211
                         {
                             header.Bytes[header.Offset + index] = 0;
                         }
+
                         index++;
                     }
                 }
 
-                if(header != null)
+                if (header != null)
                 {
                     //then copy the field data to the appropriate index
                     field.Value.CopyTo(header.Bytes, offset + index);
                 }
+
                 index += field.Value.Length;
             }
 
             if (UnhandledFieldBytes != null && UnhandledFieldBytes.Length > 0)
             {
-                if(header != null)
+                if (header != null)
                 {
                     Array.Copy(UnhandledFieldBytes, 0, header.Bytes, offset + index, UnhandledFieldBytes.Length);
                 }
+
                 index += UnhandledFieldBytes.Length;
             }
 
-            return(ushort)index;
+            return (ushort) index;
         }
 
         /// <summary>

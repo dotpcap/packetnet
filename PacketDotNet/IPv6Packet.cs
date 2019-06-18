@@ -60,7 +60,7 @@ namespace PacketDotNet
         /// <value>
         /// The version of the IP protocol. The '6' in IPv6 indicates the version of the protocol
         /// </value>
-        public static IPVersion IPVersion = IPVersion.IPv6;
+        public static readonly IPVersion IPVersion = IPVersion.IPv6;
 
         private static readonly HashSet<ProtocolType> ExtensionHeaderTypes = new HashSet<ProtocolType>
         {

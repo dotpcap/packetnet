@@ -21,7 +21,9 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 #if DEBUG
 using log4net;
@@ -201,17 +203,15 @@ namespace PacketDotNet
             {
                 case AddressFamily.InterNetwork:
                 {
-                    // IPv4: it's possible to avoid a copy by doing the same as IPAddress.
-                    // --> m_Address = ((address[3] << 24 | address[2] <<16 | address[1] << 8| address[0]) & 0x0FFFFFFFF);
-                    var address = (bytes[3 + fieldOffset] << 24 | bytes[2 + fieldOffset] << 16 | bytes[1 + fieldOffset] << 8 | bytes[fieldOffset]) & 0x0FFFFFFFF;
+                    var address = Unsafe.As<byte, long>(ref bytes[fieldOffset]) & 0x0FFFFFFFF;
                     return new IPAddress(address);
                 }
                 case AddressFamily.InterNetworkV6:
                 {
-                    // IPv6: not possible due to not accepting parameters for it.
                     var address = new byte[IPv6Fields.AddressLength];
-                    for (var i = 0; i < IPv6Fields.AddressLength; i++)
-                        address[i] = bytes[fieldOffset + i];
+
+                    Unsafe.WriteUnaligned(ref address[0], Unsafe.As<byte, long>(ref bytes[fieldOffset]));
+                    Unsafe.WriteUnaligned(ref address[8], Unsafe.As<byte, long>(ref bytes[fieldOffset + 8]));
 
                     return new IPAddress(address);
                 }

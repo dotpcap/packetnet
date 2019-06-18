@@ -129,7 +129,6 @@ namespace PacketDotNet.Utils.Converters
         /// <returns>true if the byte at startIndex in value is nonzero; otherwise, false.</returns>
         public bool ToBoolean(byte[] value, int startIndex)
         {
-            CheckByteArgument(value, startIndex, 1);
             return BitConverter.ToBoolean(value, startIndex);
         }
 
@@ -141,7 +140,7 @@ namespace PacketDotNet.Utils.Converters
         /// <returns>A character formed by two bytes beginning at startIndex.</returns>
         public char ToChar(byte[] value, int startIndex)
         {
-            return unchecked((char) CheckedFromBytes(value, startIndex, 2));
+            return unchecked((char) FromBytes(value, startIndex, 2));
         }
 
         /// <summary>
@@ -176,7 +175,7 @@ namespace PacketDotNet.Utils.Converters
         /// <returns>A 16-bit signed integer formed by two bytes beginning at startIndex.</returns>
         public short ToInt16(byte[] value, int startIndex)
         {
-            return unchecked((short) CheckedFromBytes(value, startIndex, 2));
+            return unchecked((short) FromBytes(value, startIndex, 2));
         }
 
         /// <summary>
@@ -187,7 +186,7 @@ namespace PacketDotNet.Utils.Converters
         /// <returns>A 32-bit signed integer formed by four bytes beginning at startIndex.</returns>
         public int ToInt32(byte[] value, int startIndex)
         {
-            return unchecked((int) CheckedFromBytes(value, startIndex, 4));
+            return unchecked((int) FromBytes(value, startIndex, 4));
         }
 
         /// <summary>
@@ -198,7 +197,7 @@ namespace PacketDotNet.Utils.Converters
         /// <returns>A 64-bit signed integer formed by eight bytes beginning at startIndex.</returns>
         public long ToInt64(byte[] value, int startIndex)
         {
-            return CheckedFromBytes(value, startIndex, 8);
+            return FromBytes(value, startIndex, 8);
         }
 
         /// <summary>
@@ -209,7 +208,7 @@ namespace PacketDotNet.Utils.Converters
         /// <returns>A 16-bit unsigned integer formed by two bytes beginning at startIndex.</returns>
         public ushort ToUInt16(byte[] value, int startIndex)
         {
-            return unchecked((ushort) CheckedFromBytes(value, startIndex, 2));
+            return unchecked((ushort) FromBytes(value, startIndex, 2));
         }
 
         /// <summary>
@@ -220,7 +219,7 @@ namespace PacketDotNet.Utils.Converters
         /// <returns>A 32-bit unsigned integer formed by four bytes beginning at startIndex.</returns>
         public uint ToUInt32(byte[] value, int startIndex)
         {
-            return unchecked((uint) CheckedFromBytes(value, startIndex, 4));
+            return unchecked((uint) FromBytes(value, startIndex, 4));
         }
 
         /// <summary>
@@ -231,41 +230,7 @@ namespace PacketDotNet.Utils.Converters
         /// <returns>A 64-bit unsigned integer formed by eight bytes beginning at startIndex.</returns>
         public ulong ToUInt64(byte[] value, int startIndex)
         {
-            return unchecked((ulong) CheckedFromBytes(value, startIndex, 8));
-        }
-
-        /// <summary>
-        /// Checks the given argument for validity.
-        /// </summary>
-        /// <param name="value">The byte array passed in</param>
-        /// <param name="startIndex">The start index passed in</param>
-        /// <param name="bytesRequired">The number of bytes required</param>
-        /// <exception cref="ArgumentNullException">value is a null reference</exception>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// startIndex is less than zero or greater than the length of value minus bytesRequired.
-        /// </exception>
-        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
-        private static void CheckByteArgument(byte[] value, int startIndex, int bytesRequired)
-        {
-            if (value == null)
-                ThrowHelper.ThrowArgumentNullException(ExceptionArgument.value);
-
-            if (startIndex < 0 || startIndex > value.Length - bytesRequired)
-                ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.startIndex);
-        }
-
-        /// <summary>
-        /// Checks the arguments for validity before calling FromBytes
-        /// (which can therefore assume the arguments are valid).
-        /// </summary>
-        /// <param name="value">The bytes to convert after checking</param>
-        /// <param name="startIndex">The index of the first byte to convert</param>
-        /// <param name="bytesToConvert">The number of bytes to convert</param>
-        /// <returns></returns>
-        private long CheckedFromBytes(byte[] value, int startIndex, int bytesToConvert)
-        {
-            CheckByteArgument(value, startIndex, bytesToConvert);
-            return FromBytes(value, startIndex, bytesToConvert);
+            return unchecked((ulong) FromBytes(value, startIndex, 8));
         }
 
         /// <summary>

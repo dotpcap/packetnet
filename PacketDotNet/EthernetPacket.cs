@@ -93,25 +93,38 @@ namespace PacketDotNet
         public override string Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary>MAC address of the host where the packet originated from.</summary>
-        public PhysicalAddress DestinationHardwareAddress
+        public unsafe PhysicalAddress DestinationHardwareAddress
         {
             get
             {
                 var hwAddress = new byte[EthernetFields.MacAddressLength];
 
-                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
-                    hwAddress[i] = Header.Bytes[Header.Offset + EthernetFields.DestinationMacPosition + i];
+                fixed (byte* srcOrigin = Header.Bytes)
+                    fixed (byte* pDst = hwAddress)
+                    {
+                        var pSrc = srcOrigin + Header.Offset + EthernetFields.DestinationMacPosition;
+
+                        *(int*)pDst = *(int*)pSrc;
+                        *(short*)(pDst + 4) = *(short*)(pSrc + 4);
+                    }
 
                 return new PhysicalAddress(hwAddress);
             }
             set
             {
                 var hwAddress = value.GetAddressBytes();
+
                 if (hwAddress.Length != EthernetFields.MacAddressLength)
                     ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
 
-                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
-                    Header.Bytes[Header.Offset + EthernetFields.DestinationMacPosition + i] = hwAddress[i];
+                fixed (byte* dstOrigin = Header.Bytes)
+                    fixed (byte* pSrc = hwAddress)
+                    {
+                        var pDst = dstOrigin + Header.Offset + EthernetFields.DestinationMacPosition;
+
+                        *(int*)pDst = *(int*)pSrc;
+                        *(short*)(pDst + 4) = *(short*)(pSrc + 4);
+                    }
             }
         }
 
@@ -163,27 +176,40 @@ namespace PacketDotNet
                 }
             }
         }
-
+        
         /// <summary>MAC address of the host where the packet originated from.</summary>
-        public PhysicalAddress SourceHardwareAddress
+        public unsafe PhysicalAddress SourceHardwareAddress
         {
-            get
+            get 
             {
                 var hwAddress = new byte[EthernetFields.MacAddressLength];
 
-                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
-                    hwAddress[i] = Header.Bytes[Header.Offset + EthernetFields.SourceMacPosition + i];
+                fixed (byte* srcOrigin = Header.Bytes)
+                    fixed (byte* pDst = hwAddress)
+                    {
+                        var pSrc = srcOrigin + Header.Offset + EthernetFields.SourceMacPosition;
+
+                        *(int*)pDst = *(int*)pSrc;
+                        *(short*)(pDst + 4) = *(short*)(pSrc + 4);
+                    }
 
                 return new PhysicalAddress(hwAddress);
             }
             set
             {
                 var hwAddress = value.GetAddressBytes();
+
                 if (hwAddress.Length != EthernetFields.MacAddressLength)
                     ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
 
-                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
-                    Header.Bytes[Header.Offset + EthernetFields.SourceMacPosition + i] = hwAddress[i];
+                fixed (byte* dstOrigin = Header.Bytes)
+                    fixed (byte* pSrc = hwAddress)
+                    {
+                        var pDst = dstOrigin + Header.Offset + EthernetFields.SourceMacPosition;
+
+                        *(int*)pDst = * (int*)pSrc;
+                        *(short*) (pDst + 4) = *(short*) (pSrc + 4);
+                    }
             }
         }
 

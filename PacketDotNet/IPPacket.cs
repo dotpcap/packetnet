@@ -210,8 +210,18 @@ namespace PacketDotNet
                 {
                     // IPv6: not possible due to not accepting parameters for it.
                     var address = new byte[IPv6Fields.AddressLength];
-                    for (var i = 0; i < IPv6Fields.AddressLength; i++)
-                        address[i] = bytes[fieldOffset + i];
+
+                    unsafe
+                    {
+                        fixed (byte* srcOrigin = bytes)
+                            fixed (byte* pDst = address)
+                            {
+                                var pSrc = srcOrigin + fieldOffset;
+
+                                *(long*)pDst = *(long*)pSrc;
+                                *(long*)(pDst + 8) = *(long*)(pSrc + 8);
+                            }
+                    }
 
                     return new IPAddress(address);
                 }

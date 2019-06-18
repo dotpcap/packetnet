@@ -203,14 +203,11 @@ namespace PacketDotNet
             {
                 case AddressFamily.InterNetwork:
                 {
-                    // IPv4: it's possible to avoid a copy by doing the same as IPAddress.
-                    // --> m_Address = ((address[3] << 24 | address[2] <<16 | address[1] << 8| address[0]) & 0x0FFFFFFFF);
                     var address = Unsafe.As<byte, long>(ref bytes[fieldOffset]) & 0x0FFFFFFFF;
                     return new IPAddress(address);
                 }
                 case AddressFamily.InterNetworkV6:
                 {
-                    // IPv6: not possible due to not accepting parameters for it.
                     var address = new byte[IPv6Fields.AddressLength];
 
                     Unsafe.WriteUnaligned(ref address[0], Unsafe.As<byte, long>(ref bytes[fieldOffset]));

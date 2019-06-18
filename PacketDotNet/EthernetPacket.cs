@@ -94,7 +94,7 @@ namespace PacketDotNet
         public override string Color => AnsiEscapeSequences.DarkGray;
 
         /// <summary>MAC address of the host where the packet originated from.</summary>
-        public unsafe PhysicalAddress DestinationHardwareAddress
+        public PhysicalAddress DestinationHardwareAddress
         {
             get
             {

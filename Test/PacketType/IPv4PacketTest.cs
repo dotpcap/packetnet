@@ -56,6 +56,14 @@ namespace Test.PacketType
         }
 
         [Test]
+        public void ChangeValues()
+        {
+            var packet = IPv4Packet.RandomPacket();
+            packet.Id = 12345;
+            Assert.AreEqual(12345, packet.Id);
+        }
+
+        [Test]
         public void PrintString()
         {
             Console.WriteLine("Loading the sample capture file");

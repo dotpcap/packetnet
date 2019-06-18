@@ -52,14 +52,14 @@ namespace PacketDotNet
 #endif
 
         /// <value>
-        /// Number of bytes in the smallest valid ipv4 packet
+        /// Number of bytes in the smallest valid IPv4 packet
         /// </value>
         public const int HeaderMinimumLength = 20;
 
         /// <value>
         /// Version number of the IP protocol being used
         /// </value>
-        public static IPVersion IPVersion = IPVersion.IPv4;
+        public static readonly IPVersion IPVersion = IPVersion.IPv4;
 
         /// <summary>
         /// Construct an instance by values
@@ -97,7 +97,7 @@ namespace PacketDotNet
 
             Header = new ByteArraySegment(byteArraySegment);
 
-            // TOS? See http://en.wikipedia.org/wiki/TCP_offload_engine
+            // TCP offload engine (TOE), see http://en.wikipedia.org/wiki/TCP_offload_engine
             var totalLength = TotalLength;
             if (totalLength == 0)
             {
@@ -107,12 +107,10 @@ namespace PacketDotNet
 
             // Check that the TotalLength is valid, at least HeaderMinimumLength long
             if (totalLength < HeaderMinimumLength)
-            {
                 ThrowHelper.ThrowInvalidOperationException(ExceptionDescription.TotalLengthBelowMinimumHeaderLength);
-            }
 
             // update the header length with the correct value
-            // NOTE: we take care to convert from 32bit words into bytes
+            // NOTE: we take care to convert from 32-bit words into bytes
             // NOTE: we do this *after* setting header because we need header to be valid
             //       before we can retrieve the HeaderLength property
             Header.Length = HeaderLength * 4;
@@ -152,13 +150,9 @@ namespace PacketDotNet
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + IPv4Fields.ChecksumPosition);
-            set
-            {
-                var val = value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 Header.Bytes,
-                                                 Header.Offset + IPv4Fields.ChecksumPosition);
-            }
+            set => EndianBitConverter.Big.CopyBytes(value,
+                                                    Header.Bytes,
+                                                    Header.Offset + IPv4Fields.ChecksumPosition);
         }
 
         /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
@@ -253,13 +247,13 @@ namespace PacketDotNet
             set
             {
                 // read the original value
-                var b = Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition];
+                var length = Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition];
 
                 // mask in the header length bits
-                b = (byte) ((b & 0xF0) | ((byte) value & 0x0F));
+                length = (byte) ((length & 0xF0) | ((byte) value & 0x0F));
 
                 // write back the modified value
-                Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] = b;
+                Header.Bytes[Header.Offset + IPv4Fields.VersionAndHeaderLengthPosition] = length;
             }
         }
 
@@ -332,8 +326,7 @@ namespace PacketDotNet
                                                    Header.Offset + IPv4Fields.TotalLengthPosition);
             set
             {
-                var v = (ushort) value;
-                EndianBitConverter.Big.CopyBytes(v,
+                EndianBitConverter.Big.CopyBytes((ushort)value,
                                                  Header.Bytes,
                                                  Header.Offset + IPv4Fields.TotalLengthPosition);
             }

@@ -164,15 +164,11 @@ namespace Test.PacketType
         {
             var srcHwAddressBytes = new byte[EthernetFields.MacAddressLength];
             for (var i = 0; i < srcHwAddressBytes.Length; i++)
-            {
                 srcHwAddressBytes[i] = (byte) i;
-            }
 
             var dstHwAddressBytes = new byte[EthernetFields.MacAddressLength];
             for (var i = 0; i < dstHwAddressBytes.Length; i++)
-            {
                 dstHwAddressBytes[i] = (byte) (dstHwAddressBytes.Length - i);
-            }
 
             var srcHwAddress = new PhysicalAddress(srcHwAddressBytes);
             var dstHwAddress = new PhysicalAddress(dstHwAddressBytes);
@@ -180,11 +176,17 @@ namespace Test.PacketType
                                                     dstHwAddress,
                                                     EthernetType.None);
 
-            var expectedLength = 14;
-            Assert.AreEqual(expectedLength, ethernetPacket.Bytes.Length);
-            //TODO: improve this here
-            Console.WriteLine("ethernetPacket.ToString() {0}",
-                              ethernetPacket);
+            Assert.AreEqual(14, ethernetPacket.Bytes.Length);
+            Assert.AreEqual(srcHwAddress, ethernetPacket.SourceHardwareAddress);
+            Assert.AreEqual(dstHwAddress, ethernetPacket.DestinationHardwareAddress);
+
+            ethernetPacket.SourceHardwareAddress = dstHwAddress;
+            ethernetPacket.DestinationHardwareAddress = srcHwAddress;
+
+            Assert.AreEqual(dstHwAddress, ethernetPacket.SourceHardwareAddress);
+            Assert.AreEqual(srcHwAddress, ethernetPacket.DestinationHardwareAddress);
+
+            Console.WriteLine("ethernetPacket.ToString() {0}", ethernetPacket);
         }
 
         [Test]

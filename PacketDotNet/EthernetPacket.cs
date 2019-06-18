@@ -21,6 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using PacketDotNet.Utils;
@@ -99,19 +100,23 @@ namespace PacketDotNet
             {
                 var hwAddress = new byte[EthernetFields.MacAddressLength];
 
-                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
-                    hwAddress[i] = Header.Bytes[Header.Offset + EthernetFields.DestinationMacPosition + i];
+                var start = Header.Offset + EthernetFields.DestinationMacPosition;
+
+                Unsafe.WriteUnaligned(ref hwAddress[0], Unsafe.As<byte, int>(ref Header.Bytes[start]));
+                Unsafe.WriteUnaligned(ref hwAddress[4], Unsafe.As<byte, short>(ref Header.Bytes[start + 4]));
 
                 return new PhysicalAddress(hwAddress);
             }
             set
             {
                 var hwAddress = value.GetAddressBytes();
+
                 if (hwAddress.Length != EthernetFields.MacAddressLength)
                     ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
-
-                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
-                    Header.Bytes[Header.Offset + EthernetFields.DestinationMacPosition + i] = hwAddress[i];
+                
+                var start = Header.Offset + EthernetFields.DestinationMacPosition;
+                Unsafe.WriteUnaligned(ref Header.Bytes[start], Unsafe.As<byte, int>(ref hwAddress[0]));
+                Unsafe.WriteUnaligned(ref Header.Bytes[start + 4], Unsafe.As<byte, short>(ref hwAddress[4]));
             }
         }
 
@@ -163,27 +168,30 @@ namespace PacketDotNet
                 }
             }
         }
-
+        
         /// <summary>MAC address of the host where the packet originated from.</summary>
         public PhysicalAddress SourceHardwareAddress
         {
-            get
+            get 
             {
                 var hwAddress = new byte[EthernetFields.MacAddressLength];
+                var start = Header.Offset + EthernetFields.SourceMacPosition;
 
-                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
-                    hwAddress[i] = Header.Bytes[Header.Offset + EthernetFields.SourceMacPosition + i];
+                Unsafe.WriteUnaligned(ref hwAddress[0], Unsafe.As<byte, int>(ref Header.Bytes[start]));
+                Unsafe.WriteUnaligned(ref hwAddress[4], Unsafe.As<byte, short>(ref Header.Bytes[start + 4]));
 
                 return new PhysicalAddress(hwAddress);
             }
             set
             {
                 var hwAddress = value.GetAddressBytes();
+
                 if (hwAddress.Length != EthernetFields.MacAddressLength)
                     ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
 
-                for (var i = 0; i < EthernetFields.MacAddressLength; i++)
-                    Header.Bytes[Header.Offset + EthernetFields.SourceMacPosition + i] = hwAddress[i];
+                var start = Header.Offset + EthernetFields.SourceMacPosition;
+                Unsafe.WriteUnaligned(ref Header.Bytes[start], Unsafe.As<byte, int>(ref hwAddress[0]));
+                Unsafe.WriteUnaligned(ref Header.Bytes[start + 4], Unsafe.As<byte, short>(ref hwAddress[4]));
             }
         }
 

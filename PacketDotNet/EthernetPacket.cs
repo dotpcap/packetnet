@@ -21,6 +21,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using PacketDotNet.Utils;
@@ -99,14 +100,10 @@ namespace PacketDotNet
             {
                 var hwAddress = new byte[EthernetFields.MacAddressLength];
 
-                fixed (byte* srcOrigin = Header.Bytes)
-                    fixed (byte* pDst = hwAddress)
-                    {
-                        var pSrc = srcOrigin + Header.Offset + EthernetFields.DestinationMacPosition;
+                var start = Header.Offset + EthernetFields.DestinationMacPosition;
 
-                        *(int*)pDst = *(int*)pSrc;
-                        *(short*)(pDst + 4) = *(short*)(pSrc + 4);
-                    }
+                Unsafe.WriteUnaligned(ref hwAddress[0], Unsafe.As<byte, int>(ref Header.Bytes[start]));
+                Unsafe.WriteUnaligned(ref hwAddress[4], Unsafe.As<byte, short>(ref Header.Bytes[start + 4]));
 
                 return new PhysicalAddress(hwAddress);
             }
@@ -116,15 +113,10 @@ namespace PacketDotNet
 
                 if (hwAddress.Length != EthernetFields.MacAddressLength)
                     ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
-
-                fixed (byte* dstOrigin = Header.Bytes)
-                    fixed (byte* pSrc = hwAddress)
-                    {
-                        var pDst = dstOrigin + Header.Offset + EthernetFields.DestinationMacPosition;
-
-                        *(int*)pDst = *(int*)pSrc;
-                        *(short*)(pDst + 4) = *(short*)(pSrc + 4);
-                    }
+                
+                var start = Header.Offset + EthernetFields.DestinationMacPosition;
+                Unsafe.WriteUnaligned(ref Header.Bytes[start], Unsafe.As<byte, int>(ref hwAddress[0]));
+                Unsafe.WriteUnaligned(ref Header.Bytes[start + 4], Unsafe.As<byte, short>(ref hwAddress[4]));
             }
         }
 
@@ -178,20 +170,15 @@ namespace PacketDotNet
         }
         
         /// <summary>MAC address of the host where the packet originated from.</summary>
-        public unsafe PhysicalAddress SourceHardwareAddress
+        public PhysicalAddress SourceHardwareAddress
         {
             get 
             {
                 var hwAddress = new byte[EthernetFields.MacAddressLength];
+                var start = Header.Offset + EthernetFields.SourceMacPosition;
 
-                fixed (byte* srcOrigin = Header.Bytes)
-                    fixed (byte* pDst = hwAddress)
-                    {
-                        var pSrc = srcOrigin + Header.Offset + EthernetFields.SourceMacPosition;
-
-                        *(int*)pDst = *(int*)pSrc;
-                        *(short*)(pDst + 4) = *(short*)(pSrc + 4);
-                    }
+                Unsafe.WriteUnaligned(ref hwAddress[0], Unsafe.As<byte, int>(ref Header.Bytes[start]));
+                Unsafe.WriteUnaligned(ref hwAddress[4], Unsafe.As<byte, short>(ref Header.Bytes[start + 4]));
 
                 return new PhysicalAddress(hwAddress);
             }
@@ -202,14 +189,9 @@ namespace PacketDotNet
                 if (hwAddress.Length != EthernetFields.MacAddressLength)
                     ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
 
-                fixed (byte* dstOrigin = Header.Bytes)
-                    fixed (byte* pSrc = hwAddress)
-                    {
-                        var pDst = dstOrigin + Header.Offset + EthernetFields.SourceMacPosition;
-
-                        *(int*)pDst = * (int*)pSrc;
-                        *(short*) (pDst + 4) = *(short*) (pSrc + 4);
-                    }
+                var start = Header.Offset + EthernetFields.SourceMacPosition;
+                Unsafe.WriteUnaligned(ref Header.Bytes[start], Unsafe.As<byte, int>(ref hwAddress[0]));
+                Unsafe.WriteUnaligned(ref Header.Bytes[start + 4], Unsafe.As<byte, short>(ref hwAddress[4]));
             }
         }
 

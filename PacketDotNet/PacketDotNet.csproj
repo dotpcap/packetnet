@@ -21,5 +21,8 @@
   </PropertyGroup>  
   <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PackageReference Include="log4net" Version="2.0.8" />
+  </ItemGroup>  
+  <ItemGroup>
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
   </ItemGroup>
 </Project>

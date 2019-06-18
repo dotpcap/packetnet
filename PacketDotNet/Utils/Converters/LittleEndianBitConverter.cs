@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 namespace PacketDotNet.Utils.Converters
 {
     /// <summary>
@@ -27,22 +29,88 @@ namespace PacketDotNet.Utils.Converters
             }
         }
 
-        /// <summary>
-        /// Returns a value built from the specified number of bytes from the given buffer,
-        /// starting at index.
-        /// </summary>
-        /// <param name="buffer">The data in byte array format</param>
-        /// <param name="startIndex">The first index to use</param>
-        /// <param name="bytesToConvert">The number of bytes to use</param>
-        /// <returns>The value built from the given bytes</returns>
-        protected override long FromBytes(byte[] buffer, int startIndex, int bytesToConvert)
+        /// <inheritdoc />
+        public override void CopyBytes(char value, byte[] buffer, int index)
         {
-            long ret = 0;
+            Unsafe.WriteUnaligned(ref buffer[index], value);
+        }
 
-            for (var i = 0; i < bytesToConvert; i++)
-                ret = unchecked((ret << 8) | buffer[startIndex + bytesToConvert - 1 - i]);
+        /// <inheritdoc />
+        public override void CopyBytes(short value, byte[] buffer, int index)
+        {
+            Unsafe.WriteUnaligned(ref buffer[index], value);
+        }
 
-            return ret;
+        /// <inheritdoc />
+        public override void CopyBytes(int value, byte[] buffer, int index)
+        {
+            Unsafe.WriteUnaligned(ref buffer[index], value);
+        }
+
+        /// <inheritdoc />
+        public override void CopyBytes(long value, byte[] buffer, int index)
+        {
+            Unsafe.WriteUnaligned(ref buffer[index], value);
+        }
+
+        /// <inheritdoc />
+        public override void CopyBytes(ushort value, byte[] buffer, int index)
+        {
+            Unsafe.WriteUnaligned(ref buffer[index], value);
+        }
+
+        /// <inheritdoc />
+        public override void CopyBytes(uint value, byte[] buffer, int index)
+        {
+            Unsafe.WriteUnaligned(ref buffer[index], value);
+        }
+
+        /// <inheritdoc />
+        public override void CopyBytes(ulong value, byte[] buffer, int index)
+        {
+            Unsafe.WriteUnaligned(ref buffer[index], value);
+        }
+
+        /// <inheritdoc />
+        public override char ToChar(byte[] buffer, int startIndex)
+        {
+            return (char) Unsafe.As<byte, ushort>(ref buffer[startIndex]);
+        }
+
+        /// <inheritdoc />
+        public override ushort ToUInt16(byte[] buffer, int startIndex)
+        {
+            return Unsafe.As<byte, ushort>(ref buffer[startIndex]);
+        }
+
+        /// <inheritdoc />
+        public override uint ToUInt32(byte[] buffer, int startIndex)
+        {
+            return Unsafe.As<byte, uint>(ref buffer[startIndex]);
+        }
+
+        /// <inheritdoc />
+        public override ulong ToUInt64(byte[] buffer, int startIndex)
+        {
+            return Unsafe.As<byte, ulong>(ref buffer[startIndex]);
+        }
+
+        /// <inheritdoc />
+        public override short ToInt16(byte[] buffer, int startIndex)
+        {
+            return Unsafe.As<byte, short>(ref buffer[startIndex]);
+        }
+
+        /// <inheritdoc />
+        public override int ToInt32(byte[] buffer, int startIndex)
+        {
+            return Unsafe.As<byte, int>(ref buffer[startIndex]);
+        }
+
+        /// <inheritdoc />
+        public override long ToInt64(byte[] buffer, int startIndex)
+        {
+            return Unsafe.As<byte, long>(ref buffer[startIndex]);
         }
     }
 }

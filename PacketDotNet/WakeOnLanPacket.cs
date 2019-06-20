@@ -148,6 +148,37 @@ namespace PacketDotNet
                 }
                 return new byte[0];
             }
+            set
+            { 
+                var bytes = value;
+                var headerLength = WakeOnLanFields.PasswordPosition;
+                var newLength = headerLength + bytes.Length;
+                var prevValueLength = Password.Length;
+
+                //If Wake-On-Lan packet size is not matching, create a new ByteArraySegment.
+                if (bytes.Length != prevValueLength)
+                {
+
+                    // allocate new memory for this packet
+                    var newByte = new byte[newLength];
+
+                    // copy the header bytes over
+                    Array.Copy(Header.Bytes, Header.Offset,
+                               newByte, 0,
+                               headerLength);
+
+                    Header = new ByteArraySegment(newByte, 0, newLength);
+                }
+
+                // copy the byte array in
+                if (bytes.Length == 6 || bytes.Length == 4)
+                {
+                    // set the password
+                    Array.Copy(bytes, 0,
+                           Header.Bytes, Header.Offset + headerLength,
+                           bytes.Length);
+                }
+            }
         }
 
         /// <summary>

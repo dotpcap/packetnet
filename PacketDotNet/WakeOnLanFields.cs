@@ -37,9 +37,9 @@ namespace PacketDotNet
 
         /// <summary>Size of an Destination Address in bytes.</summary>
         public static readonly int DestinationAddressLength;
-        
+
         /// <summary>Number of times Destination Address is repeated in Wake-On-Lan.</summary>
-        public static readonly int MacAddressRepetition=16;
+        public static readonly int MacAddressRepetition = 16;
 
         /// <summary>Position of the Password within the Wake-On-Lan header.</summary>
         public static readonly int PasswordPosition;

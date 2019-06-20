@@ -25,6 +25,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Net.NetworkInformation;
 using System.Text;
 using PacketDotNet.Utils;
+using System.Linq;
 
 #if DEBUG
 using log4net;
@@ -49,6 +50,9 @@ namespace PacketDotNet
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
+
+        // the position of password if it is available.
+        private const int PasswordLocation = 102;
 
         // the number of times the Destination MAC appears in the payload
         private const int MACRepetitions = 16;
@@ -126,6 +130,35 @@ namespace PacketDotNet
                            Header.Bytes,
                            Header.Offset + SyncSequence.Length,
                            EthernetFields.MacAddressLength);
+            }
+        }
+
+        /// <summary>
+        /// The Password field is optional, but if present, contains either 4 bytes or 6 bytes.
+        /// If a 4-byte password is present, it will be dissected as an IPv4 address 
+        /// and if a 6-byte password is present, it will be dissected as an Ethernet address.
+        /// </summary>
+        public string Password
+        {
+            get
+            {
+                // If 6-byte length, it will be dissected as an Ethernet address.
+                if (HeaderData.Length == 108)
+                {
+                    byte[] hwAddress = new byte[EthernetFields.MacAddressLength];
+                    Array.Copy(Header.Bytes, Header.Offset + PasswordLocation,
+                               hwAddress, 0, hwAddress.Length);
+                    return string.Join(":", (from z in new PhysicalAddress(hwAddress).GetAddressBytes() select z.ToString("X2")).ToArray());
+                }
+                // If 4-byte length, it will be dissected as an IPv4 address.
+                else if (HeaderData.Length == 106)
+                {
+                    return IPPacket.GetIPAddress(System.Net.Sockets.AddressFamily.InterNetwork,
+                                                 Header.Offset + PasswordLocation, Header.Bytes).ToString();
+                }
+                else
+                    return string.Empty;
+
             }
         }
 

@@ -8,13 +8,13 @@ The high level design goals of Packet.Net are:
 
 Packet.Net is a rewrite of SharpPcap's packet parsers.
 
-SharpPcap's packet parsers have a few shortcomings in their design. To understand
+SharpPcap's packet parsers had a few shortcomings in their design. To understand
 what these are it is important to know more about SharpPcap's design.
 
 
 SharpPcap's packet parsing
 --------------------------
-SharpPcap considers all packets to be of type 'Packet'. Packet types are subclassed, so
+SharpPcap considered all packets to be of type 'Packet'. Packet types are subclassed, so
 a UdpPacket is an IpPacket which is an EthernetPacket which is a Packet. This is useful
 because a user can have a 'UdpPacket udp' and can access the source mac address via
 'udp.SourceHwAddress', without having to jump through any hoops.

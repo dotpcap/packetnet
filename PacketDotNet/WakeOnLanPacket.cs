@@ -49,10 +49,7 @@ namespace PacketDotNet
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
-
-        // the number of times the Destination MAC appears in the payload
-        private const int MACRepetitions = 16;
-
+        
         // the WOL synchronization sequence
         private static readonly byte[] SyncSequence = { 0xff, 0xff, 0xff, 0xff, 0xff, 0xff };
 
@@ -67,7 +64,7 @@ namespace PacketDotNet
             Log.Debug("");
 
             // allocate memory for this packet
-            var packetLength = SyncSequence.Length + (EthernetFields.MacAddressLength * MACRepetitions);
+            var packetLength = SyncSequence.Length + (EthernetFields.MacAddressLength * WakeOnLanFields.MacAddressRepetition);
             var packetBytes = new byte[packetLength];
             var destinationMACBytes = destinationMAC.GetAddressBytes();
 
@@ -111,7 +108,7 @@ namespace PacketDotNet
             {
                 var destinationMAC = new byte[EthernetFields.MacAddressLength];
                 Array.Copy(Header.Bytes,
-                           Header.Offset + SyncSequence.Length,
+                           Header.Offset + WakeOnLanFields.DestinationAddressPosition,
                            destinationMAC,
                            0,
                            EthernetFields.MacAddressLength);
@@ -126,6 +123,49 @@ namespace PacketDotNet
                            Header.Bytes,
                            Header.Offset + SyncSequence.Length,
                            EthernetFields.MacAddressLength);
+            }
+        }
+
+        /// <summary>
+        /// The Password field is optional, but if present, contains either 4 bytes or 6 bytes.
+        /// If a 4-byte password is present, it will be dissected as an IPv4 address 
+        /// and if a 6-byte password is present, it will be dissected as an Ethernet address.
+        /// </summary>
+        public byte[] Password
+        {
+            get
+            {
+                int passwordLength = HeaderData.Length - WakeOnLanFields.PasswordPosition;
+
+                // If 6-byte length, it will be dissected as an Ethernet address.
+                // If 4-byte length, it will be dissected as an IPv4 address.
+                if (passwordLength == 6 || passwordLength == 4)
+                {
+                    byte[] hwAddress = new byte[passwordLength];
+                    Array.Copy(Header.Bytes, Header.Offset + WakeOnLanFields.PasswordPosition,
+                               hwAddress, 0, hwAddress.Length);
+                    return hwAddress;
+                }
+                return new byte[0];
+            }
+            set
+            {
+                var bytes = value;
+                var headerLength = WakeOnLanFields.PasswordPosition;
+                
+                // checks if the new value matches with the specification.
+                if (bytes.Length == 6 || bytes.Length == 4)
+                {
+                    // checks if the byte can fit the current byteArraySegment.
+                    if (bytes.Length == Password.Length)
+                    {
+                        // set the password
+                        Array.Copy(bytes, 0,
+                               Header.Bytes, Header.Offset + WakeOnLanFields.PasswordPosition,
+                               bytes.Length);
+
+                    }
+                }
             }
         }
 
@@ -172,7 +212,7 @@ namespace PacketDotNet
         {
             // validate the 16 repetitions of the wolDestinationMAC
             // - verify that the wolDestinationMAC address repeats 16 times in sequence
-            for (var i = 0; i < EthernetFields.MacAddressLength * MACRepetitions; i += EthernetFields.MacAddressLength)
+            for (var i = 0; i < EthernetFields.MacAddressLength * WakeOnLanFields.MacAddressRepetition; i += EthernetFields.MacAddressLength)
             {
                 var basOffset = byteArraySegment.Offset + i;
 

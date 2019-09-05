@@ -164,10 +164,9 @@ namespace PacketDotNet
         /// <summary>
         /// PPPoe version, must be 0x1 according to RFC
         /// </summary>
-        /// FIXME: This currently outputs the wrong version number
         public byte Version
         {
-            get => (byte) ((VersionType >> 4) & 0xF0);
+            get => (byte)((VersionType >> 4) & 0x0F);
             set
             {
                 var versionType = VersionType;

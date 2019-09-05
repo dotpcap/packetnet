@@ -119,5 +119,37 @@ namespace Test.PacketType
 
             dev.Close();
         }
+
+        [Test]
+        public void PasswordChecking()
+        {
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "wol.pcap");
+            dev.Open();
+
+            RawCapture rawCapture;
+
+            var packetIndex = 0;
+            while ((rawCapture = dev.GetNextPacket()) != null)
+            {
+                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                Assert.IsNotNull(p);
+
+                var wol = p.Extract<WakeOnLanPacket>();
+                Assert.IsNotNull(p);
+
+                if (packetIndex == 0|| packetIndex == 3)
+                    Assert.AreEqual(wol.Password, new byte[0]);
+
+                if (packetIndex == 1)
+                    Assert.AreEqual(wol.Password, new byte[] { 0xc0, 0xa8, 0x01, 0x01 });
+
+                if (packetIndex == 2)
+                    Assert.AreEqual(wol.Password, new byte[] { 0x01, 0x23, 0x45, 0x67, 0x89, 0xab });
+                
+                packetIndex++;
+            }
+
+            dev.Close();
+        }
     }
 }

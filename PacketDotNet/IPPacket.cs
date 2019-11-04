@@ -261,6 +261,17 @@ namespace PacketDotNet
                     return payloadPacketOrData;
                 }
             }
+            else if (parentPacket is IPv6Packet ipv6Packet)
+            {
+                foreach (var extensionHeader in ipv6Packet.ExtensionHeaders)
+                {
+                    if (extensionHeader is IPv6FragmentationExtensionHeader fragmentationExtensionHeader && fragmentationExtensionHeader.FragmentOffset > 0)
+                    {
+                        payloadPacketOrData.ByteArraySegment = payload;
+                        return payloadPacketOrData;
+                    }
+                }
+            }
 
             switch (protocolType)
             {

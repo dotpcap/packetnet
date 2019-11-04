@@ -118,11 +118,13 @@ namespace PacketDotNet
                 // If it contains a IPV6 packet, it to this current packet as a payload.
                 // https://tools.ietf.org/html/rfc4380#section-5.1.1
                 if ((destinationPort == teredoPort) || (sourcePort == teredoPort))
+                {
                     if (ContainsIPv6Packet(payload))
                     {
                         result.Packet = new IPv6Packet(payload);
                         return result;
                     }
+                }
 
                 // store the payload bytes
                 result.ByteArraySegment = payload;

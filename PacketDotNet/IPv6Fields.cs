@@ -38,6 +38,11 @@ namespace PacketDotNet
         public static readonly int HeaderExtensionLengthPosition = 1;
 
         /// <summary>
+        /// The fragment offset position.
+        /// </summary>
+        public static readonly int FragmentOffsetPosition = 2;
+
+        /// <summary>
         /// The header extension data position.
         /// </summary>
         public static readonly int HeaderExtensionDataPosition = 2;

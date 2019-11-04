@@ -15,15 +15,68 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
- * Copyright 2018 Steven Haufe<haufes@hotmail.com>
+ * Copyright 2018 Steven Haufe <haufes@hotmail.com>
  */
 
-using System;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 
 // ReSharper disable InconsistentNaming
+
 namespace PacketDotNet
 {
+    public class IPv6FragmentationExtensionHeader : IPv6ExtensionHeader
+    {
+        /// <inheritdoc />
+        public IPv6FragmentationExtensionHeader(ProtocolType header, ByteArraySegment byteArraySegment) : base(header, byteArraySegment)
+        { }
+
+        /// <summary>
+        /// Gets or sets the offset, in 8-octet units, relative to the start of the fragmentable part of the original packet.
+        /// </summary>
+        public int FragmentOffset
+        {
+            get => (FragmentOffsetReservedMore >> 3) & 0x1FFF;
+            set
+            {
+                // read the original value
+                var field = (ushort) FragmentOffsetReservedMore;
+
+                // mask in the new field
+                field = (ushort) ((field & 0x7) | ((ushort) value << 3) & 0xFFF8);
+
+                // write the updated value back
+                FragmentOffsetReservedMore = (short) field;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating  where more fragments follow.
+        /// </summary>
+        public bool More
+        {
+            get => (FragmentOffsetReservedMore & 1) != 0;
+            set
+            {
+                // read the original value
+                var field = (ushort) FragmentOffsetReservedMore;
+
+                // mask in the new field
+                field = (ushort) ((field & 0xFFFE) | (value ? 1 : 0) & 0x1);
+
+                // write the updated value back
+                FragmentOffsetReservedMore = (short) field;
+            }
+        }
+
+        private short FragmentOffsetReservedMore
+        {
+            get => EndianBitConverter.Big.ToInt16(ByteArraySegment.Bytes,
+                                                  ByteArraySegment.Offset + IPv6Fields.FragmentOffsetPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, ByteArraySegment.Bytes, ByteArraySegment.Offset + IPv6Fields.FragmentOffsetPosition);
+        }
+    }
+
     public class IPv6ExtensionHeader
     {
         protected ByteArraySegment ByteArraySegment;

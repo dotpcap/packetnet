@@ -6,6 +6,8 @@
     <Description>.Net assembly for dissecting and constructing network packets</Description>
     <Authors>Chris Morgan (chmorgan@gmail.com)</Authors>
     <Version>1.0.1</Version>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\packetnet.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE;RELEASE;</DefineConstants>
@@ -23,6 +25,6 @@
     <PackageReference Include="log4net" Version="2.0.8" />
   </ItemGroup>  
   <ItemGroup>
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.5.2" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="4.6.0" />
   </ItemGroup>
 </Project>

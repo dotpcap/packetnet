@@ -38,7 +38,7 @@ namespace Test.PacketType
             dev.GetNextPacket();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var pppoe = p.Extract<PppoePacket>();
@@ -57,7 +57,7 @@ namespace Test.PacketType
             dev.GetNextPacket();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var pppoe = p.Extract<PppoePacket>();
@@ -74,13 +74,13 @@ namespace Test.PacketType
 
             // first packet is a udp packet
             var rawCapture = dev.GetNextPacket();
-            var packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var packet = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var udpPacket = packet.Extract<UdpPacket>();
             Assert.IsNotNull(udpPacket, "Expected a valid udp packet for the first packet");
 
             // second packet is the PPPoe Ptp packet
             rawCapture = dev.GetNextPacket();
-            packet = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            packet = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var anotherUdpPacket = packet.Extract<UdpPacket>();
             Assert.IsNotNull(anotherUdpPacket, "Expected a valid udp packet for the second packet as well");
 

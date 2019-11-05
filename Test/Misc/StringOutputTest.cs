@@ -193,8 +193,8 @@ namespace Test.Misc
                 // read the next packet
                 var packet = _captureFileReader.GetNextPacket();
                 Assert.IsNotNull(packet, "Expected a valid packet but it was null");
-
-                p = Packet.ParsePacket(packet.LinkLayerType, packet.Data);
+                
+                p = Packet.ParsePacket(packet.GetLinkLayers(), packet.Data);
 
                 _currentPacketDescription = _currentFapi.PacketDescription[_currentPacketIndex];
 

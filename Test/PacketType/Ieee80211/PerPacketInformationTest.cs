@@ -36,7 +36,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as PpiPacket;
 
             var unknownField = new PpiUnknown(99, new byte[] { 0xAA, 0xBB, 0xCC, 0xDD });
             p.Add(unknownField);
@@ -156,7 +156,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as PpiPacket;
             Assert.IsTrue(p.Contains(PpiFieldType.PpiCommon));
             Assert.IsTrue(p.Contains(PpiFieldType.PpiMacPhy));
             Assert.IsFalse(p.Contains(PpiFieldType.PpiProcessInfo));
@@ -173,7 +173,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as PpiPacket;
 
             Assert.IsNotNull(p);
             Assert.AreEqual(0, p.Version);
@@ -206,7 +206,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as PpiPacket;
 
             //The packet is corrupted in such a way that the type field has been changed
             //to a reserved/unused type. Therefore we don't expect there to be a packet
@@ -222,7 +222,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as PpiPacket;
             Assert.IsNotNull(p.PayloadPacket);
             var macFrame = p.PayloadPacket as MacFrame;
             Assert.IsFalse(macFrame.FcsValid);
@@ -237,7 +237,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as PpiPacket;
             Assert.IsNotNull(p.PayloadPacket);
             var macFrame = p.PayloadPacket as MacFrame;
             Assert.IsTrue(macFrame.FcsValid);
@@ -252,7 +252,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as PpiPacket;
             var expectedLength = p.Length - p[1].Length - PpiHeaderFields.FieldHeaderLength;
             p.Remove(p[1]);
 
@@ -274,7 +274,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as PpiPacket;
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as PpiPacket;
             p.RemoveAll(PpiFieldType.PpiMacPhy);
 
             var recreatedPacket = Packet.ParsePacket(LinkLayers.Ppi, p.Bytes) as PpiPacket;

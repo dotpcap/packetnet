@@ -100,7 +100,7 @@ namespace Test.PacketType
             var packetIndex = 0;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
                 Console.WriteLine("got packet");
                 Console.WriteLine("{0}", p);
@@ -137,7 +137,7 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var arp = p.Extract<ArpPacket>();
@@ -154,7 +154,7 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var arp = p.Extract<ArpPacket>();

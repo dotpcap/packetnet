@@ -43,7 +43,7 @@ namespace Test.PacketType.Ieee80211
             dev.Close();
 
             // check that the fcs can be calculated correctly
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var frame = (AssociationRequestFrame) p.PayloadPacket;
             Assert.AreEqual(0xde82c216, frame.FrameCheckSequence, "FCS mismatch");
             Assert.IsTrue(frame.FcsValid);
@@ -62,7 +62,7 @@ namespace Test.PacketType.Ieee80211
             dev.Close();
 
             //For this test we are just going to ignore the radio packet that precedes the data frame
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var macFrame = p as MacFrame;
 
             //When its raw 802.11 we cant tell if there is an FCS there so even though
@@ -79,7 +79,7 @@ namespace Test.PacketType.Ieee80211
             dev.Close();
 
             //For this test we are just going to ignore the radio packet that precedes the data frame
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var macFrame = p as MacFrame;
             Assert.IsFalse(macFrame.AppendFcs);
         }
@@ -150,7 +150,7 @@ namespace Test.PacketType.Ieee80211
             dev.Close();
 
             //For this test we are just going to ignore the radio packet that precedes the data frame
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             var frame = (DataDataFrame) p.PayloadPacket;
             frame.AppendFcs = true;
@@ -171,7 +171,7 @@ namespace Test.PacketType.Ieee80211
             dev.Close();
 
             //For this test we are just going to ignore the radio packet that precedes the data frame
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             var frame = (DataDataFrame) p.PayloadPacket;
             frame.AppendFcs = false;
@@ -194,7 +194,7 @@ namespace Test.PacketType.Ieee80211
             RawCapture rawCapture;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
                 Assert.IsNotNull(p.PayloadPacket);
             }
 

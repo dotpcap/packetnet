@@ -41,7 +41,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var beaconFrame = (BeaconFrame) p.PayloadPacket;
 
             Assert.AreEqual(0, beaconFrame.FrameControl.ProtocolVersion);

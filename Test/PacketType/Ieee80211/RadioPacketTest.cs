@@ -85,7 +85,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as RadioPacket;
             Assert.IsNotNull(p);
             Assert.IsNotNull(p[RadioTapType.Flags]);
             Assert.IsNotNull(p[RadioTapType.Rate]);
@@ -108,7 +108,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as RadioPacket;
             Assert.IsNotNull(p.PayloadPacket);
 
             var tsftField = p[RadioTapType.Tsft] as TsftRadioTapField;
@@ -158,7 +158,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as RadioPacket;
             Assert.IsNotNull(p);
             Assert.IsNotNull(p[RadioTapType.Flags]);
             Assert.IsNotNull(p[RadioTapType.Rate]);
@@ -177,7 +177,7 @@ namespace Test.PacketType.Ieee80211
             p.Remove(RadioTapType.Rate);
             p.Remove(RadioTapType.Antenna);
 
-            var recreatedFrame = Packet.ParsePacket(rawCapture.LinkLayerType, p.Bytes) as RadioPacket;
+            var recreatedFrame = Packet.ParsePacket(rawCapture.GetLinkLayers(), p.Bytes) as RadioPacket;
             Assert.IsNotNull(recreatedFrame);
             Assert.IsNotNull(recreatedFrame[RadioTapType.Flags]);
             Assert.IsNull(recreatedFrame[RadioTapType.Rate]);
@@ -201,7 +201,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as RadioPacket;
             Assert.IsNotNull(p);
             Assert.IsTrue(p.Contains(RadioTapType.Flags));
             Assert.IsFalse(p.Contains(RadioTapType.Fhss));
@@ -228,7 +228,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var anotherRadioPacket = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
+            var anotherRadioPacket = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as RadioPacket;
             var anotherRadioPacketBytes = anotherRadioPacket.PayloadPacket.Bytes;
             bs.Write(anotherRadioPacketBytes);
 
@@ -263,7 +263,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as RadioPacket;
 
             var timestampUsec = ((TsftRadioTapField)p[RadioTapType.Tsft]).TimestampUsec;
             Assert.AreEqual(5508414380885, timestampUsec);

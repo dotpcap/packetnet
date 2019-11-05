@@ -42,7 +42,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var frame = (QosDataFrame) p.PayloadPacket;
 
             Assert.AreEqual(0, frame.FrameControl.ProtocolVersion);
@@ -134,7 +134,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            Packet p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data) as RadioPacket;
+            Packet p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as RadioPacket;
 
             // test that we can access the lowest level tcp packet
             var t = p.Extract<TcpPacket>();

@@ -71,7 +71,7 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var ip = p.Extract<IPv4Packet>();
@@ -88,7 +88,7 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var ip = p.Extract<IPv4Packet>();

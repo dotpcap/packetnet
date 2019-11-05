@@ -51,8 +51,8 @@ namespace Test.PacketType
             var packetIndex = 0;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                Console.WriteLine("LinkLayers: {0}", rawCapture.LinkLayerType);
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                Console.WriteLine("LinkLayers: {0}", rawCapture.GetLinkLayers());
+                var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
                 switch (packetIndex)
                 {
                     case 0:
@@ -86,7 +86,7 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var np = (NullPacket) p;
@@ -103,7 +103,7 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var np = (NullPacket) p;

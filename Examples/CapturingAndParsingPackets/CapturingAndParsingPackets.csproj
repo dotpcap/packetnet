@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SharpPcap" Version="4.6.1" />
+    <PackageReference Include="SharpPcap" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

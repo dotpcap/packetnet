@@ -37,7 +37,7 @@ namespace Test.PacketType
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Assert.IsNotNull(p);
 

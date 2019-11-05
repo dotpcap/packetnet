@@ -42,7 +42,7 @@ namespace Test.PacketType
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             // save the checksum
             var icmpv6 = p.Extract<IcmpV6Packet>();
@@ -70,7 +70,7 @@ namespace Test.PacketType
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Assert.IsNotNull(p);
 
@@ -92,7 +92,7 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var icmpv6 = p.Extract<IcmpV6Packet>();
@@ -109,7 +109,7 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var icmpV6 = p.Extract<IcmpV6Packet>();

@@ -43,7 +43,7 @@ namespace Test.PacketType
 
             while ((raw = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(raw.LinkLayerType, raw.Data).Extract<DrdaPacket>();
+                var p = Packet.ParsePacket(raw.GetLinkLayers(), raw.Data).Extract<DrdaPacket>();
                 if (p != null)
                 {
                     foreach (var ddm in p.DrdaDdmPackets)

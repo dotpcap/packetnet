@@ -42,7 +42,7 @@ namespace Test.PacketType
             var rawCapture = dev.GetNextPacket();
 
             Console.WriteLine("Parsing");
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Printing human readable string");
             Console.WriteLine(p.ToString(StringOutputType.Verbose));

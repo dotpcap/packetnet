@@ -40,7 +40,7 @@ namespace Test.PacketType
             Assert.IsNotNull(p);
             Console.WriteLine(p.ToString());
 
-            Assert.AreEqual(linkLayers, rawCapture.LinkLayerType);
+            Assert.AreEqual(linkLayers, rawCapture.GetLinkLayers());
 
             if (linkLayers == LinkLayers.Ethernet)
             {
@@ -68,7 +68,7 @@ namespace Test.PacketType
             Assert.IsNotNull(p);
             Console.WriteLine(p.ToString());
 
-            Assert.AreEqual(linkLayers, rawCapture.LinkLayerType);
+            Assert.AreEqual(linkLayers, rawCapture.GetLinkLayers());
 
             if (linkLayers == LinkLayers.Ethernet)
             {
@@ -107,7 +107,7 @@ namespace Test.PacketType
             var packetIndex = 0;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
                 Console.WriteLine("got packet");
                 switch (packetIndex)
                 {
@@ -140,7 +140,7 @@ namespace Test.PacketType
             var packetIndex = 0;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
                 switch (packetIndex)
                 {
                     case 0:
@@ -180,7 +180,7 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var ip = p.Extract<IPv6Packet>();
@@ -197,7 +197,7 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var ip = p.Extract<IPv6Packet>();
@@ -241,7 +241,7 @@ namespace Test.PacketType
             RawCapture rawCapture;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
                 var t = p.Extract<TcpPacket>();
                 Assert.IsNotNull(t, "Expected t to not be null");
                 Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");

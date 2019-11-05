@@ -44,10 +44,10 @@ namespace Test.PacketType
             dev.Close();
 
             // Parse an icmp request
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Assert.IsNotNull(p);
-            Assert.AreEqual(linkLayers, rawCapture.LinkLayerType);
+            Assert.AreEqual(linkLayers, rawCapture.GetLinkLayers());
 
             var icmp = p.Extract<IcmpV4Packet>();
             Console.WriteLine(icmp.GetType());
@@ -71,7 +71,7 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var icmp = p.Extract<IcmpV4Packet>();
@@ -88,7 +88,7 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var icmp = p.Extract<IcmpV4Packet>();

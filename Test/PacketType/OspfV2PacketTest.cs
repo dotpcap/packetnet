@@ -26,7 +26,7 @@ namespace Test.PacketType
 
             while ((raw = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(raw.LinkLayerType, raw.Data).Extract<OspfV2Packet>();
+                var p = Packet.ParsePacket(raw.GetLinkLayers(), raw.Data).Extract<OspfV2Packet>();
 
                 switch (packetIndex)
                 {
@@ -1230,7 +1230,7 @@ namespace Test.PacketType
             dev.Open();
             while ((raw = dev.GetNextPacket()) != null && i < 4)
             {
-                testSubjects[i] = Packet.ParsePacket(raw.LinkLayerType, raw.Data).Extract<OspfV2HelloPacket>();
+                testSubjects[i] = Packet.ParsePacket(raw.GetLinkLayers(), raw.Data).Extract<OspfV2HelloPacket>();
                 i++;
             }
 

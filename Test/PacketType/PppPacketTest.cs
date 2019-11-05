@@ -41,7 +41,7 @@ namespace Test.PacketType
             dev.GetNextPacket();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var ppp = p.Extract<PppPacket>();
@@ -60,7 +60,7 @@ namespace Test.PacketType
             dev.GetNextPacket();
             var rawCapture = dev.GetNextPacket();
             dev.Close();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var ppp = p.Extract<PppPacket>();

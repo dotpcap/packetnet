@@ -72,7 +72,7 @@ namespace CapturingAndParsingPackets
 
                 // use PacketDotNet to parse this packet and print out
                 // its high level information
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
                 Console.WriteLine(p.ToString());
             }

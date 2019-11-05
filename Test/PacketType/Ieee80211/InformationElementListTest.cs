@@ -38,7 +38,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var beaconFrame = (BeaconFrame) p.PayloadPacket;
             return beaconFrame;
         }
@@ -190,7 +190,7 @@ namespace Test.PacketType.Ieee80211
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var beaconFrame = (BeaconFrame) p.PayloadPacket;
 
             List<InformationElement> infoElements = beaconFrame.InformationElements;

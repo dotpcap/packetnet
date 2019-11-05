@@ -42,8 +42,8 @@ namespace Test.PacketType
             dev.Close();
 
             // Act
-            Packet.ParsePacket(firstRawPacket.LinkLayerType, firstRawPacket.Data); // read and discard first packet
-            var secondPacket = Packet.ParsePacket(secondRawPacket.LinkLayerType, secondRawPacket.Data);
+            Packet.ParsePacket(firstRawPacket.GetLinkLayers(), firstRawPacket.Data); // read and discard first packet
+            var secondPacket = Packet.ParsePacket(secondRawPacket.GetLinkLayers(), secondRawPacket.Data);
             var ip = secondPacket.Extract<IPPacket>();
 
             // Assert
@@ -63,7 +63,7 @@ namespace Test.PacketType
             dev.Close();
 
             // Act
-            var firstPacket = Packet.ParsePacket(firstRawPacket.LinkLayerType, firstRawPacket.Data);
+            var firstPacket = Packet.ParsePacket(firstRawPacket.GetLinkLayers(), firstRawPacket.Data);
             var ip = firstPacket.Extract<IPPacket>();
             var udpPacket = ip.Extract<UdpPacket>();
 
@@ -87,7 +87,7 @@ namespace Test.PacketType
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Assert.IsNotNull(p);
 

@@ -82,7 +82,7 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var udp = p.Extract<UdpPacket>();
@@ -99,7 +99,7 @@ namespace Test.PacketType
             dev.Open();
             Console.WriteLine("Reading packet data");
             var rawCapture = dev.GetNextPacket();
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Console.WriteLine("Parsing");
             var udp = p.Extract<UdpPacket>();
@@ -143,7 +143,7 @@ namespace Test.PacketType
             RawCapture rawCapture;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
                 var t = p.Extract<UdpPacket>();
                 Assert.IsNotNull(t, "Expected t to not be null");
                 Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
@@ -172,7 +172,7 @@ namespace Test.PacketType
             // check the first packet
             var rawCapture = dev.GetNextPacket();
 
-            var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             Assert.IsNotNull(p);
 
             var u = p.Extract<UdpPacket>();
@@ -183,7 +183,7 @@ namespace Test.PacketType
 
             // check the second packet
             rawCapture = dev.GetNextPacket();
-            p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Assert.IsNotNull(p);
 
@@ -211,7 +211,7 @@ namespace Test.PacketType
             RawCapture rawCapture;
             while ((rawCapture = dev.GetNextPacket()) != null)
             {
-                var p = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+                var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
                 Console.WriteLine("Converted a raw packet to a Packet");
                 Console.WriteLine(p.ToString());
                 var udp = p.Extract<UdpPacket>();

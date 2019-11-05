@@ -32,7 +32,7 @@ namespace Test.PacketType
             var rawCapture = dev.GetNextPacket();
             dev.Close();
 
-            var ethernetPacket = Packet.ParsePacket(rawCapture.LinkLayerType, rawCapture.Data);
+            var ethernetPacket = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             Assert.IsNotNull(ethernetPacket);
             Assert.AreEqual(typeof(EthernetPacket), ethernetPacket.GetType());
 

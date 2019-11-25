@@ -151,6 +151,11 @@ namespace PacketDotNet
         public virtual ByteArraySegment HeaderDataSegment => Header.NextSegment();
 
         /// <summary>
+        /// Gets the header as a <see cref="ByteArraySegment"/>.
+        /// </summary>
+        public virtual ByteArraySegment HeaderSegment => Header;
+
+        /// <summary>
         /// Gets a value indicating whether the payload is initialized.
         /// </summary>
         /// <value>

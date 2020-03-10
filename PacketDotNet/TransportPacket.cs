@@ -15,7 +15,6 @@ You should have received a copy of the GNU Lesser General Public License
 along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
 using PacketDotNet.Utils;
 
 #if DEBUG
@@ -83,8 +82,7 @@ namespace PacketDotNet
             // an intended side effect of this method
             var originalChecksum = Checksum;
 
-            // reset the checksum field (checksum is calculated when this field is
-            // zeroed)
+            // reset the checksum field (checksum is calculated when this field is zeroed)
             Checksum = 0;
 
             // copy the tcp section with data
@@ -115,6 +113,9 @@ namespace PacketDotNet
         public virtual bool IsValidChecksum(TransportChecksumOption option)
         {
             var dataToChecksum = ((IPPacket) ParentPacket).PayloadPacket.BytesSegment;
+            if (dataToChecksum.Offset + dataToChecksum.Length > dataToChecksum.BytesLength)
+                return false;
+
 
             var bytes = option == TransportChecksumOption.IncludePseudoIPHeader
                 ? ((IPPacket) ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
@@ -126,7 +127,7 @@ namespace PacketDotNet
                             option,
                             bytes.Length);
 
-            const int expectedOnesSum = 0xffff;
+            const int expectedOnesSum = 0xFFFF;
             Log.DebugFormat("onesSum {0} expected {1}",
                             onesSum,
                             expectedOnesSum);

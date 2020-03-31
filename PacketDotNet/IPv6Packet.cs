@@ -267,15 +267,8 @@ namespace PacketDotNet
         /// </value>
         public override ProtocolType Protocol
         {
-            get
-            {
-                if (ExtensionHeadersLength == 0)
-                    return (ProtocolType) Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition];
-
-
-                return (ProtocolType) Header.Bytes[_protocolOffset];
-            }
-            set => Header.Bytes[Header.Offset + IPv6Fields.NextHeaderPosition + ExtensionHeadersLength] = (byte) value;
+            get => (ProtocolType)Header.Bytes[ExtensionHeadersLength == 0 ? Header.Offset + IPv6Fields.NextHeaderPosition : _protocolOffset];
+            set => Header.Bytes[ExtensionHeadersLength == 0 ? Header.Offset + IPv6Fields.NextHeaderPosition : _protocolOffset] = (byte) value;
         }
 
         /// <summary>
@@ -369,9 +362,9 @@ namespace PacketDotNet
         private void ParseExtensionHeaders()
         {
             var extensionHeaders = new List<IPv6ExtensionHeader>();
+            var extensionHeadersLength = 0;
 
             var nextHeaderPosition = Header.Offset + IPv6Fields.NextHeaderPosition;
-            var extensionHeadersLength = 0;
 
             var headerBytes = Header.Bytes;
             var nextHeader = (ProtocolType) headerBytes[nextHeaderPosition];
@@ -411,8 +404,11 @@ namespace PacketDotNet
                 extensionHeadersLength += extensionHeader.Length;
 
                 if (nextHeaderPosition >= headerBytes.Length)
+                {
+                    // If the next header is out of range, the packet is just a bunch of extension headers.
+                    nextHeaderPosition = Header.Offset + IPv6Fields.NextHeaderPosition;
                     break;
-
+                }
 
                 nextHeader = (ProtocolType) headerBytes[nextHeaderPosition];
             }

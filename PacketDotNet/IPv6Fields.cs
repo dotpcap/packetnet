@@ -104,6 +104,11 @@ namespace PacketDotNet
         public static readonly int HeaderLength; // == 40
 
         /// <summary>
+        /// The teredo port.
+        /// </summary>
+        public static readonly int TeredoPort = 3544;
+
+        /// <summary>
         /// Commutes the field positions.
         /// </summary>
         static IPv6Fields()

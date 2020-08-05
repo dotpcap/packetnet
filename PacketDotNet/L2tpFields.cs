@@ -44,5 +44,8 @@ namespace PacketDotNet
 
         /// <summary>Length of the Offset Size in bytes (Optional).</summary>
         public static readonly int OffsetSizeLength = 2;
+
+        /// <summary>The port of L2TP.</summary>
+        public static readonly int Port = 1701;
     }
 }

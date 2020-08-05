@@ -34,7 +34,7 @@ namespace PacketDotNet.Lldp
     /// [Tlv Type Length : 2][Organizationally Unique Identifier OUI : 3]
     /// [Organizationally Defined Subtype : 1][Organizationally Defined Information String : 0 - 507]
     /// </summary>
-    public class OrganizationSpecific : Tlv
+    public class OrganizationSpecificTlv : Tlv
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -59,7 +59,7 @@ namespace PacketDotNet.Lldp
         /// The Organization Specific TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public OrganizationSpecific(byte[] bytes, int offset) :
+        public OrganizationSpecificTlv(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Log.Debug("");
@@ -77,7 +77,7 @@ namespace PacketDotNet.Lldp
         /// <param name="infoString">
         /// An Organizationally Defined Information String
         /// </param>
-        public OrganizationSpecific(byte[] oui, int subType, byte[] infoString)
+        public OrganizationSpecificTlv(byte[] oui, int subType, byte[] infoString)
         {
             Log.Debug("");
 

@@ -23,25 +23,26 @@ using PacketDotNet.Utils.Converters;
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// User Timeout Option
-    /// The TCP user timeout controls how long transmitted data may remain
-    /// unacknowledged before a connection is forcefully closed
+    /// SelectiveAcknowledgment (Selective Ack) Option
+    /// Provides a means for a receiver to notify the sender about
+    /// all the segments that have arrived successfully.
+    /// Used to cut down on the number of unnecessary re-transmissions.
     /// </summary>
     /// <remarks>
     /// References:
-    /// http://datatracker.ietf.org/doc/rfc5482/
+    /// http://datatracker.ietf.org/doc/rfc2018/
+    /// http://datatracker.ietf.org/doc/rfc2883/
     /// </remarks>
-    public class UserTimeout : Option
+    public class SelectiveAcknowledgmentOption : TcpOption
     {
-        // the mask used to strip the Granularity field from the
-        //  Values filed to expose the UserTimeout field
-        private const int TimeoutMask = 0x7FFF;
+        // the length (in bytes) of a SelectiveAcknowledgment block
+        private const int BlockLength = 2;
 
-        // the offset (in bytes) of the Value Fields
-        private const int ValuesFieldOffset = 2;
+        // the offset (in bytes) of the ScaleFactor Field
+        private const int SACKBlocksFieldOffset = 2;
 
         /// <summary>
-        /// Creates a User Timeout Option
+        /// Creates a SelectiveAcknowledgment (Selective Ack) Option
         /// </summary>
         /// <param name="bytes">
         /// A <see cref="T:System.Byte[]" />
@@ -52,32 +53,27 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        public UserTimeout(byte[] bytes, int offset, int length) :
+        public SelectiveAcknowledgmentOption(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
 
         /// <summary>
-        /// The Granularity
+        /// Contains an array of selective ack blocks.
         /// </summary>
-        public bool Granularity
+        public ushort[] Blocks
         {
             get
             {
-                var granularity = Values >> 15;
-                return granularity != 0;
+                var numOfBlocks = (Length - SACKBlocksFieldOffset) / BlockLength;
+                var blocks = new ushort[numOfBlocks];
+                for (var i = 0; i < numOfBlocks; i++)
+                {
+                    var offset = SACKBlocksFieldOffset + (i * BlockLength);
+                    blocks[i] = EndianBitConverter.Big.ToUInt16(Bytes, offset);
+                }
+
+                return blocks;
             }
-        }
-
-        /// <summary>
-        /// The User Timeout
-        /// </summary>
-        public ushort Timeout => (ushort) (Values & TimeoutMask);
-
-        // a convenient property to grab the value fields for further processing
-        public ushort Values
-        {
-            get => EndianBitConverter.Big.ToUInt16(OptionData.Bytes, OptionData.Offset + ValuesFieldOffset);
-            set => EndianBitConverter.Big.CopyBytes(value, OptionData.Bytes, OptionData.Offset + ValuesFieldOffset);
         }
 
         /// <summary>
@@ -88,7 +84,17 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override string ToString()
         {
-            return "[" + Kind + ": Granularity=" + (Granularity ? "minutes" : "seconds") + " Timeout=" + Timeout + "]";
+            var output = "[" + Kind + ": ";
+
+            for (var i = 0; i < Blocks.Length; i++)
+            {
+                output += "Block" + i + "=" + Blocks[i] + " ";
+            }
+
+            output = output.TrimEnd();
+            output += "]";
+
+            return output;
         }
     }
 }

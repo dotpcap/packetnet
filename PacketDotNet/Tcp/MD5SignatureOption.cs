@@ -18,30 +18,26 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
-using PacketDotNet.Utils.Converters;
+using System;
 
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// A Time Stamp Option
-    /// Used for RTTM (Round Trip Time Measurement)
-    /// and PAWS (Protect Against Wrapped Sequences)
-    /// Obsoletes the Echo and EchoReply option fields
+    /// MD5 Signature
+    /// Carries the MD5 Digest used by the BGP protocol to
+    /// ensure security between two endpoints
     /// </summary>
     /// <remarks>
     /// References:
-    /// http://datatracker.ietf.org/doc/rfc1323/
+    /// http://datatracker.ietf.org/doc/rfc2385/
     /// </remarks>
-    public class TimeStamp : Option
+    public class MD5SignatureOption : TcpOption
     {
-        // the offset (in bytes) of the Echo Reply Field
-        private const int EchoReplyFieldOffset = 6;
-
-        // the offset (in bytes) of the Value Field
-        private const int ValueFieldOffset = 2;
+        // the offset (in bytes) of the MD5 Digest field
+        private const int MD5DigestFieldOffset = 2;
 
         /// <summary>
-        /// Creates a Timestamp Option
+        /// Creates a MD5 Signature Option
         /// </summary>
         /// <param name="bytes">
         /// A <see cref="T:System.Byte[]" />
@@ -52,22 +48,22 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        public TimeStamp(byte[] bytes, int offset, int length) :
+        public MD5SignatureOption(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
 
         /// <summary>
-        /// The Echo Reply
+        /// The MD5 Digest
         /// </summary>
-        public uint EchoReply => EndianBitConverter.Big.ToUInt32(OptionData.Bytes, OptionData.Offset + EchoReplyFieldOffset);
-
-        /// <summary>
-        /// The Timestamp value
-        /// </summary>
-        public uint Value
+        public byte[] MD5Digest
         {
-            get => EndianBitConverter.Big.ToUInt32(OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
-            set => EndianBitConverter.Big.CopyBytes(value, OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
+            get
+            {
+                var data = new byte[Length - MD5DigestFieldOffset];
+                Array.Copy(OptionData.Bytes, OptionData.Offset + MD5DigestFieldOffset, data, 0, data.Length);
+                return data;
+            }
+            set => Array.Copy(value, 0, OptionData.Bytes, OptionData.Offset + MD5DigestFieldOffset, value.Length);
         }
 
         /// <summary>
@@ -78,7 +74,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override string ToString()
         {
-            return "[" + Kind + ": Value=" + Value + " EchoReply=" + EchoReply + "]";
+            return "[" + Kind + ": MD5Digest=0x" + MD5Digest + "]";
         }
     }
 }

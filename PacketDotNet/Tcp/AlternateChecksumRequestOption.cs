@@ -18,26 +18,19 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
-using PacketDotNet.Utils.Converters;
-
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// Maximum Segment Size Option
-    /// An extension to the DataOffset/HeaderLength field to
-    /// allow sizes greater than 65,535
+    /// AlternateChecksumRequestOption Option
     /// </summary>
-    /// <remarks>
-    /// References:
-    /// http://datatracker.ietf.org/doc/rfc793/
-    /// </remarks>
-    public class MaximumSegmentSize : Option
+    public class AlternateChecksumRequestOption : TcpOption
     {
-        // the offset (in bytes) of the Value Field
-        private const int ValueFieldOffset = 2;
+        // the offset (in bytes) of the Checksum field
+        private const int ChecksumFieldOffset = 2;
 
         /// <summary>
-        /// Creates a Maximum Segment Size Option
+        /// Creates an Alternate Checksum Request Option
+        /// Used to negotiate an alternative checksum algorithm in a connection
         /// </summary>
         /// <param name="bytes">
         /// A <see cref="T:System.Byte[]" />
@@ -48,17 +41,21 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        public MaximumSegmentSize(byte[] bytes, int offset, int length) :
+        /// <remarks>
+        /// References:
+        /// http://datatracker.ietf.org/doc/rfc1146/
+        /// </remarks>
+        public AlternateChecksumRequestOption(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
 
         /// <summary>
-        /// The Maximum Segment Size
+        /// The Checksum
         /// </summary>
-        public ushort Value
+        public ChecksumAlgorithmType Checksum
         {
-            get => EndianBitConverter.Big.ToUInt16(OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
-            set => EndianBitConverter.Big.CopyBytes(value, OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
+            get => (ChecksumAlgorithmType) OptionData.Bytes[OptionData.Offset + ChecksumFieldOffset];
+            set => OptionData.Bytes[OptionData.Offset + ChecksumFieldOffset] = (byte) value;
         }
 
         /// <summary>
@@ -69,7 +66,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override string ToString()
         {
-            return "[" + Kind + ": Value=" + Value + " bytes]";
+            return "[" + Kind + ": ChecksumType=" + Checksum + "]";
         }
     }
 }

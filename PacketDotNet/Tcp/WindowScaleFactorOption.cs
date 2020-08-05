@@ -28,7 +28,7 @@ namespace PacketDotNet.Tcp
     /// References:
     /// http://datatracker.ietf.org/doc/rfc1323/
     /// </remarks>
-    public class WindowScaleFactor : Option
+    public class WindowScaleFactorOption : TcpOption
     {
         // the offset (in bytes) of the ScaleFactor Field
         private const int ScaleFactorFieldOffset = 2;
@@ -45,7 +45,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        public WindowScaleFactor(byte[] bytes, int offset, int length) :
+        public WindowScaleFactorOption(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
 

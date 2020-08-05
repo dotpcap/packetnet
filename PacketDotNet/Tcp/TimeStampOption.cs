@@ -18,19 +18,30 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
+using PacketDotNet.Utils.Converters;
+
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// AlternateChecksumRequest Option
+    /// A Time Stamp Option
+    /// Used for RTTM (Round Trip Time Measurement)
+    /// and PAWS (Protect Against Wrapped Sequences)
+    /// Obsoletes the Echo and EchoReply option fields
     /// </summary>
-    public class AlternateChecksumRequest : Option
+    /// <remarks>
+    /// References:
+    /// http://datatracker.ietf.org/doc/rfc1323/
+    /// </remarks>
+    public class TimeStampOption : TcpOption
     {
-        // the offset (in bytes) of the Checksum field
-        private const int ChecksumFieldOffset = 2;
+        // the offset (in bytes) of the Echo Reply Field
+        private const int EchoReplyFieldOffset = 6;
+
+        // the offset (in bytes) of the Value Field
+        private const int ValueFieldOffset = 2;
 
         /// <summary>
-        /// Creates an Alternate Checksum Request Option
-        /// Used to negotiate an alternative checksum algorithm in a connection
+        /// Creates a Timestamp Option
         /// </summary>
         /// <param name="bytes">
         /// A <see cref="T:System.Byte[]" />
@@ -41,21 +52,22 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        /// <remarks>
-        /// References:
-        /// http://datatracker.ietf.org/doc/rfc1146/
-        /// </remarks>
-        public AlternateChecksumRequest(byte[] bytes, int offset, int length) :
+        public TimeStampOption(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
 
         /// <summary>
-        /// The Checksum
+        /// The Echo Reply
         /// </summary>
-        public ChecksumAlgorithmType Checksum
+        public uint EchoReply => EndianBitConverter.Big.ToUInt32(OptionData.Bytes, OptionData.Offset + EchoReplyFieldOffset);
+
+        /// <summary>
+        /// The Timestamp value
+        /// </summary>
+        public uint Value
         {
-            get => (ChecksumAlgorithmType) OptionData.Bytes[OptionData.Offset + ChecksumFieldOffset];
-            set => OptionData.Bytes[OptionData.Offset + ChecksumFieldOffset] = (byte) value;
+            get => EndianBitConverter.Big.ToUInt32(OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
+            set => EndianBitConverter.Big.CopyBytes(value, OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
         }
 
         /// <summary>
@@ -66,7 +78,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override string ToString()
         {
-            return "[" + Kind + ": ChecksumType=" + Checksum + "]";
+            return "[" + Kind + ": Value=" + Value + " EchoReply=" + EchoReply + "]";
         }
     }
 }

@@ -56,25 +56,25 @@ namespace Test.PacketType
 
             var valuesLLDPPacket = new LldpPacket();
             Console.WriteLine("valuesLLDPPacket.ToString() {0}", valuesLLDPPacket);
-            valuesLLDPPacket.TlvCollection.Add(new ChassisId(expectedChassisIDType, expectedChassisIDNetworkAddress));
+            valuesLLDPPacket.TlvCollection.Add(new ChassisIdTlv(expectedChassisIDType, expectedChassisIDNetworkAddress));
             Console.WriteLine("valuesLLDPPacket.ToString() {0}", valuesLLDPPacket);
             //valuesLLDPPacket.TlvCollection.Add(new PortId(lldpPacket, PortSubTypes.MacAddress, new PhysicalAddress(new byte[6] { 0x00, 0x1C, 0x23, 0xAF, 0x08, 0xF3 })));
-            valuesLLDPPacket.TlvCollection.Add(new PortId(PortSubType.LocallyAssigned, expectedPortIDBytes));
-            valuesLLDPPacket.TlvCollection.Add(new TimeToLive(expectedTimeToLive));
-            valuesLLDPPacket.TlvCollection.Add(new PortDescription(expectedPortDescription));
-            valuesLLDPPacket.TlvCollection.Add(new SystemName(expectedSystemName));
-            valuesLLDPPacket.TlvCollection.Add(new SystemDescription(expectedSystemDescription));
-            valuesLLDPPacket.TlvCollection.Add(new SystemCapabilities(expectedSystemCapabilitiesCapability, expectedSystemCapabilitiesEnabled));
-            valuesLLDPPacket.TlvCollection.Add(new ManagementAddress(managementAddressNetworkAddress,
+            valuesLLDPPacket.TlvCollection.Add(new PortIdTlv(PortSubType.LocallyAssigned, expectedPortIDBytes));
+            valuesLLDPPacket.TlvCollection.Add(new TimeToLiveTlv(expectedTimeToLive));
+            valuesLLDPPacket.TlvCollection.Add(new PortDescriptionTlv(expectedPortDescription));
+            valuesLLDPPacket.TlvCollection.Add(new SystemNameTlv(expectedSystemName));
+            valuesLLDPPacket.TlvCollection.Add(new SystemDescriptionTlv(expectedSystemDescription));
+            valuesLLDPPacket.TlvCollection.Add(new SystemCapabilitiesTlv(expectedSystemCapabilitiesCapability, expectedSystemCapabilitiesEnabled));
+            valuesLLDPPacket.TlvCollection.Add(new ManagementAddressTlv(managementAddressNetworkAddress,
                                                                      InterfaceNumber.SystemPortNumber,
                                                                      managementAddressInterfaceNumber,
                                                                      managementAddressObjectIdentifier));
 
-            valuesLLDPPacket.TlvCollection.Add(new OrganizationSpecific(expectedOrganizationUniqueIdentifier,
+            valuesLLDPPacket.TlvCollection.Add(new OrganizationSpecificTlv(expectedOrganizationUniqueIdentifier,
                                                                         expectedOrganizationSubType,
                                                                         expectedOrganizationSpecificBytes));
 
-            valuesLLDPPacket.TlvCollection.Add(new EndOfLldpdu());
+            valuesLLDPPacket.TlvCollection.Add(new EndOfLldpduTlv());
 
             var lldpBytes = valuesLLDPPacket.Bytes;
 
@@ -96,8 +96,8 @@ namespace Test.PacketType
                 {
                     case 1:
                     {
-                        Assert.AreEqual(typeof(ChassisId), tlv.GetType());
-                        var chassisID = (ChassisId) tlv;
+                        Assert.AreEqual(typeof(ChassisIdTlv), tlv.GetType());
+                        var chassisID = (ChassisIdTlv) tlv;
                         Assert.AreEqual(ChassisSubType.NetworkAddress, chassisID.SubType);
                         Assert.AreEqual(typeof(NetworkAddress), chassisID.SubTypeValue.GetType());
                         Console.WriteLine(expectedChassisIDNetworkAddress.ToString());
@@ -107,8 +107,8 @@ namespace Test.PacketType
                     }
                     case 2:
                     {
-                        Assert.AreEqual(typeof(PortId), tlv.GetType());
-                        var portID = (PortId) tlv;
+                        Assert.AreEqual(typeof(PortIdTlv), tlv.GetType());
+                        var portID = (PortIdTlv) tlv;
                         Assert.AreEqual(PortSubType.LocallyAssigned, portID.SubType);
                         Assert.AreEqual(expectedPortIDBytes, portID.SubTypeValue);
                         //Assert.AreEqual(PortSubTypes.MacAddress, portID.SubType);
@@ -118,32 +118,32 @@ namespace Test.PacketType
                     }
                     case 3:
                     {
-                        Assert.AreEqual(typeof(TimeToLive), tlv.GetType());
-                        Assert.AreEqual(expectedTimeToLive, ((TimeToLive) tlv).Seconds);
+                        Assert.AreEqual(typeof(TimeToLiveTlv), tlv.GetType());
+                        Assert.AreEqual(expectedTimeToLive, ((TimeToLiveTlv) tlv).Seconds);
                         break;
                     }
                     case 4:
                     {
-                        Assert.AreEqual(typeof(PortDescription), tlv.GetType());
-                        Assert.AreEqual(expectedPortDescription, ((PortDescription) tlv).Description);
+                        Assert.AreEqual(typeof(PortDescriptionTlv), tlv.GetType());
+                        Assert.AreEqual(expectedPortDescription, ((PortDescriptionTlv) tlv).Description);
                         break;
                     }
                     case 5:
                     {
-                        Assert.AreEqual(typeof(SystemName), tlv.GetType());
-                        Assert.AreEqual(expectedSystemName, ((SystemName) tlv).Name);
+                        Assert.AreEqual(typeof(SystemNameTlv), tlv.GetType());
+                        Assert.AreEqual(expectedSystemName, ((SystemNameTlv) tlv).Name);
                         break;
                     }
                     case 6:
                     {
-                        Assert.AreEqual(typeof(SystemDescription), tlv.GetType());
-                        Assert.AreEqual(expectedSystemDescription, ((SystemDescription) tlv).Description);
+                        Assert.AreEqual(typeof(SystemDescriptionTlv), tlv.GetType());
+                        Assert.AreEqual(expectedSystemDescription, ((SystemDescriptionTlv) tlv).Description);
                         break;
                     }
                     case 7:
                     {
-                        Assert.AreEqual(typeof(SystemCapabilities), tlv.GetType());
-                        var capabilities = (SystemCapabilities) tlv;
+                        Assert.AreEqual(typeof(SystemCapabilitiesTlv), tlv.GetType());
+                        var capabilities = (SystemCapabilitiesTlv) tlv;
                         Assert.IsTrue(capabilities.IsCapable(CapabilityOptions.Repeater));
                         Assert.IsTrue(capabilities.IsEnabled(CapabilityOptions.Router));
                         Assert.IsFalse(capabilities.IsCapable(CapabilityOptions.Bridge));
@@ -156,8 +156,8 @@ namespace Test.PacketType
                     }
                     case 8:
                     {
-                        Assert.AreEqual(typeof(ManagementAddress), tlv.GetType());
-                        var mgmtAdd = (ManagementAddress) tlv;
+                        Assert.AreEqual(typeof(ManagementAddressTlv), tlv.GetType());
+                        var mgmtAdd = (ManagementAddressTlv) tlv;
                         Assert.AreEqual(IanaAddressFamily.IPv4, mgmtAdd.AddressSubType);
                         Assert.AreEqual(managementAddressNetworkAddress, mgmtAdd.Address);
                         Assert.AreEqual(InterfaceNumber.SystemPortNumber, mgmtAdd.InterfaceSubType);
@@ -169,8 +169,8 @@ namespace Test.PacketType
                     }
                     case 9:
                     {
-                        Assert.AreEqual(typeof(OrganizationSpecific), tlv.GetType());
-                        var orgSpecifig = (OrganizationSpecific) tlv;
+                        Assert.AreEqual(typeof(OrganizationSpecificTlv), tlv.GetType());
+                        var orgSpecifig = (OrganizationSpecificTlv) tlv;
                         Assert.AreEqual(expectedOrganizationUniqueIdentifier, orgSpecifig.OrganizationUniqueID);
                         Assert.AreEqual(expectedOrganizationSubType, orgSpecifig.OrganizationDefinedSubType);
                         Assert.AreEqual(expectedOrganizationSpecificBytes, orgSpecifig.OrganizationDefinedInfoString);
@@ -178,7 +178,7 @@ namespace Test.PacketType
                     }
                     case 10:
                     {
-                        Assert.AreEqual(typeof(EndOfLldpdu), tlv.GetType());
+                        Assert.AreEqual(typeof(EndOfLldpduTlv), tlv.GetType());
                         break;
                     }
                     default:
@@ -214,8 +214,8 @@ namespace Test.PacketType
                 {
                     case 1:
                     {
-                        Assert.AreEqual(typeof(ChassisId), tlv.GetType());
-                        var chassisID = (ChassisId) tlv;
+                        Assert.AreEqual(typeof(ChassisIdTlv), tlv.GetType());
+                        var chassisID = (ChassisIdTlv) tlv;
                         Assert.AreEqual(chassisID.SubType, ChassisSubType.NetworkAddress);
                         Assert.AreEqual(typeof(NetworkAddress), chassisID.SubTypeValue.GetType());
                         var testAddress = new NetworkAddress(new IPAddress(new byte[] { 0xac, 0x10, 0x0a, 0x6d }));
@@ -224,8 +224,8 @@ namespace Test.PacketType
                     }
                     case 2:
                     {
-                        Assert.AreEqual(typeof(PortId), tlv.GetType());
-                        var portID = (PortId) tlv;
+                        Assert.AreEqual(typeof(PortIdTlv), tlv.GetType());
+                        var portID = (PortIdTlv) tlv;
                         Assert.AreEqual(PortSubType.LocallyAssigned, portID.SubType);
                         var subTypeValue = new byte[] { 0x30, 0x30, 0x31, 0x42, 0x35, 0x34, 0x39, 0x34, 0x35, 0x41, 0x38, 0x42, 0x3a, 0x50, 0x32 };
                         Assert.AreEqual(subTypeValue, portID.SubTypeValue);
@@ -233,32 +233,32 @@ namespace Test.PacketType
                     }
                     case 3:
                     {
-                        Assert.AreEqual(typeof(TimeToLive), tlv.GetType());
-                        Assert.AreEqual(180, ((TimeToLive) tlv).Seconds);
+                        Assert.AreEqual(typeof(TimeToLiveTlv), tlv.GetType());
+                        Assert.AreEqual(180, ((TimeToLiveTlv) tlv).Seconds);
                         break;
                     }
                     case 4:
                     {
-                        Assert.AreEqual(typeof(PortDescription), tlv.GetType());
-                        Assert.AreEqual("PC Port", ((PortDescription) tlv).Description);
+                        Assert.AreEqual(typeof(PortDescriptionTlv), tlv.GetType());
+                        Assert.AreEqual("PC Port", ((PortDescriptionTlv) tlv).Description);
                         break;
                     }
                     case 5:
                     {
-                        Assert.AreEqual(typeof(SystemName), tlv.GetType());
-                        Assert.AreEqual("SEP001B54945A8B.elmec.ad", ((SystemName) tlv).Name);
+                        Assert.AreEqual(typeof(SystemNameTlv), tlv.GetType());
+                        Assert.AreEqual("SEP001B54945A8B.elmec.ad", ((SystemNameTlv) tlv).Name);
                         break;
                     }
                     case 6:
                     {
-                        Assert.AreEqual(typeof(SystemDescription), tlv.GetType());
-                        Assert.AreEqual("Cisco IP Phone CP-7911G,V2, SCCP11.8-4-3S", ((SystemDescription) tlv).Description);
+                        Assert.AreEqual(typeof(SystemDescriptionTlv), tlv.GetType());
+                        Assert.AreEqual("Cisco IP Phone CP-7911G,V2, SCCP11.8-4-3S", ((SystemDescriptionTlv) tlv).Description);
                         break;
                     }
                     case 7:
                     {
-                        Assert.AreEqual(typeof(SystemCapabilities), tlv.GetType());
-                        var systemCapabilities = (SystemCapabilities) tlv;
+                        Assert.AreEqual(typeof(SystemCapabilitiesTlv), tlv.GetType());
+                        var systemCapabilities = (SystemCapabilitiesTlv) tlv;
                         Assert.AreEqual(36, systemCapabilities.Capabilities);
                         Assert.AreEqual(36, systemCapabilities.Enabled);
                         Assert.IsTrue(systemCapabilities.IsCapable(CapabilityOptions.Bridge));
@@ -269,8 +269,8 @@ namespace Test.PacketType
                     }
                     case 8:
                     {
-                        Assert.AreEqual(typeof(ManagementAddress), tlv.GetType());
-                        var managementAddress = (ManagementAddress) tlv;
+                        Assert.AreEqual(typeof(ManagementAddressTlv), tlv.GetType());
+                        var managementAddress = (ManagementAddressTlv) tlv;
                         Assert.AreEqual(5, managementAddress.AddressLength);
                         Assert.AreEqual(1, (int) managementAddress.AddressSubType);
                         var mgmtAddress = new NetworkAddress(new IPAddress(new byte[] { 0xac, 0x10, 0x0a, 0x6d }));
@@ -282,8 +282,8 @@ namespace Test.PacketType
                     }
                     case 9:
                     {
-                        Assert.AreEqual(typeof(OrganizationSpecific), tlv.GetType());
-                        var organizationSpecific = (OrganizationSpecific) tlv;
+                        Assert.AreEqual(typeof(OrganizationSpecificTlv), tlv.GetType());
+                        var organizationSpecific = (OrganizationSpecificTlv) tlv;
                         Assert.AreEqual(new byte[] { 0x00, 0x12, 0x0f }, organizationSpecific.OrganizationUniqueID);
                         Assert.AreEqual(1, organizationSpecific.OrganizationDefinedSubType);
                         var infoString = new byte[] { 0x03, 0x00, 0x36, 0x00, 0x10 };
@@ -292,7 +292,7 @@ namespace Test.PacketType
                     }
                     case 10:
                     {
-                        Assert.AreEqual(typeof(EndOfLldpdu), tlv.GetType());
+                        Assert.AreEqual(typeof(EndOfLldpduTlv), tlv.GetType());
                         break;
                     }
                     default:

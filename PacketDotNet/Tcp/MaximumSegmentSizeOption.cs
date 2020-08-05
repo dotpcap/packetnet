@@ -18,26 +18,26 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
-using System;
+using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// MD5 Signature
-    /// Carries the MD5 Digest used by the BGP protocol to
-    /// ensure security between two endpoints
+    /// Maximum Segment Size Option
+    /// An extension to the DataOffset/HeaderLength field to
+    /// allow sizes greater than 65,535
     /// </summary>
     /// <remarks>
     /// References:
-    /// http://datatracker.ietf.org/doc/rfc2385/
+    /// http://datatracker.ietf.org/doc/rfc793/
     /// </remarks>
-    public class MD5Signature : Option
+    public class MaximumSegmentSizeOption : TcpOption
     {
-        // the offset (in bytes) of the MD5 Digest field
-        private const int MD5DigestFieldOffset = 2;
+        // the offset (in bytes) of the Value Field
+        private const int ValueFieldOffset = 2;
 
         /// <summary>
-        /// Creates a MD5 Signature Option
+        /// Creates a Maximum Segment Size Option
         /// </summary>
         /// <param name="bytes">
         /// A <see cref="T:System.Byte[]" />
@@ -48,22 +48,17 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        public MD5Signature(byte[] bytes, int offset, int length) :
+        public MaximumSegmentSizeOption(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
 
         /// <summary>
-        /// The MD5 Digest
+        /// The Maximum Segment Size
         /// </summary>
-        public byte[] MD5Digest
+        public ushort Value
         {
-            get
-            {
-                var data = new byte[Length - MD5DigestFieldOffset];
-                Array.Copy(OptionData.Bytes, OptionData.Offset + MD5DigestFieldOffset, data, 0, data.Length);
-                return data;
-            }
-            set => Array.Copy(value, 0, OptionData.Bytes, OptionData.Offset + MD5DigestFieldOffset, value.Length);
+            get => EndianBitConverter.Big.ToUInt16(OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
+            set => EndianBitConverter.Big.CopyBytes(value, OptionData.Bytes, OptionData.Offset + ValueFieldOffset);
         }
 
         /// <summary>
@@ -74,7 +69,7 @@ namespace PacketDotNet.Tcp
         /// </returns>
         public override string ToString()
         {
-            return "[" + Kind + ": MD5Digest=0x" + MD5Digest + "]";
+            return "[" + Kind + ": Value=" + Value + " bytes]";
         }
     }
 }

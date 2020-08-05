@@ -19,7 +19,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
 using System.Collections.ObjectModel;
 
 #if DEBUG
@@ -70,7 +69,7 @@ namespace PacketDotNet.Lldp
             if (Count == 0 && item.Type != TlvType.EndOfLldpu)
             {
                 Log.Debug("Inserting EndOfLldpdu");
-                base.InsertItem(0, new EndOfLldpdu());
+                base.InsertItem(0, new EndOfLldpduTlv());
             }
             else if (Count != 0)
             {

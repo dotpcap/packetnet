@@ -26,7 +26,7 @@ namespace PacketDotNet.Tcp
     /// <summary>
     /// A TCP Option
     /// </summary>
-    public abstract class Option
+    public abstract class TcpOption
     {
         /// <summary>The length (in bytes) of the Kind field</summary>
         internal const int KindFieldLength = 1;
@@ -55,7 +55,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        protected Option(byte[] bytes, int offset, int length)
+        protected TcpOption(byte[] bytes, int offset, int length)
         {
             OptionData = new ByteArraySegment(bytes, offset, length);
         }

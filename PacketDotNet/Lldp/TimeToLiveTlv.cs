@@ -19,7 +19,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 #if DEBUG
@@ -33,7 +32,7 @@ namespace PacketDotNet.Lldp
     /// <summary>
     /// A Time to Live Tlv
     /// </summary>
-    public class TimeToLive : Tlv
+    public class TimeToLiveTlv : Tlv
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -59,7 +58,7 @@ namespace PacketDotNet.Lldp
         /// The TTL TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public TimeToLive(byte[] bytes, int offset) :
+        public TimeToLiveTlv(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Log.Debug("");
@@ -72,7 +71,7 @@ namespace PacketDotNet.Lldp
         /// The length in seconds until the LLDP
         /// is refreshed
         /// </param>
-        public TimeToLive(ushort seconds)
+        public TimeToLiveTlv(ushort seconds)
         {
             Log.Debug("");
 

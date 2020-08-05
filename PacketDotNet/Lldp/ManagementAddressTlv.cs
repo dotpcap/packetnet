@@ -36,7 +36,7 @@ namespace PacketDotNet.Lldp
     /// [Tlv Type Length : 2][Mgmt Addr length : 1][Mgmt Addr Subtype : 1][Mgmt Addr : 1-31]
     /// [Interface Subtype : 1][Interface number : 4][OID length : 1][OID : 0-128]
     /// </summary>
-    public class ManagementAddress : Tlv
+    public class ManagementAddressTlv : Tlv
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -82,7 +82,7 @@ namespace PacketDotNet.Lldp
         /// <param name="offset">
         /// The Management Address TLV's offset from the origin of the LLDP
         /// </param>
-        public ManagementAddress(byte[] bytes, int offset) :
+        public ManagementAddressTlv(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Log.Debug("");
@@ -103,7 +103,7 @@ namespace PacketDotNet.Lldp
         /// <param name="oid">
         /// The Object Identifier
         /// </param>
-        public ManagementAddress
+        public ManagementAddressTlv
         (
             NetworkAddress managementAddress,
             InterfaceNumber interfaceSubType,

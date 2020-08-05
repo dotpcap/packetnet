@@ -319,9 +319,18 @@ namespace PacketDotNet
             // Update the payload size of the UDP packet.
             // + 1 for the OptionType and + 1 for the Length of the option, if not a PadOption.
             var previousOptionsSize = currentOptions.Sum(x => 1 + x.Length + (x is PadOption ? 0 : 1));
-            udpPacket.PayloadDataSegment.Length -= previousOptionsSize;
             var optionsSize = options.Sum(x => 1 + x.Length + (x is PadOption ? 0 : 1));
-            udpPacket.PayloadDataSegment.Length += optionsSize;
+
+            if (udpPacket.PayloadDataSegment != null)
+            {
+                udpPacket.PayloadDataSegment.Length -= previousOptionsSize;
+                udpPacket.PayloadDataSegment.Length += optionsSize;
+            }
+            else
+            {
+                Header.Length -= previousOptionsSize;
+                Header.Length += optionsSize;
+            }
 
             // Write the new options.
             var currentPosition = Header.Offset + DhcpV4Fields.OptionsPosition;

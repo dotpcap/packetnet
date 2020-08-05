@@ -19,6 +19,7 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -104,10 +105,12 @@ namespace Test.PacketType
                 var addressRequestOption = options.OfType<AddressRequestOption>().FirstOrDefault();
                 Assert.NotNull(addressRequestOption);
                 Assert.AreEqual(IPAddress.Any, addressRequestOption.RequestedIP);
-
-
+                
                 var clientIdOption = options.OfType<ClientIdOption>().FirstOrDefault();
                 Assert.NotNull(clientIdOption);
+
+                dhcpV4Packet.SetOptions(new List<DhcpV4Option> {new MessageTypeOption(DhcpV4MessageType.Discover), new AddressTimeOption(TimeSpan.FromDays(1)) });
+                Assert.AreEqual(2, dhcpV4Packet.GetOptions().Count);
             }
 
             dev.Close();

@@ -34,7 +34,7 @@ namespace PacketDotNet.Lldp
     /// <summary>
     /// A Chassis ID TLV
     /// </summary>
-    public class ChassisId : Tlv
+    public class ChassisIdTlv : Tlv
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -60,7 +60,7 @@ namespace PacketDotNet.Lldp
         /// The Chassis ID TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public ChassisId(byte[] bytes, int offset) :
+        public ChassisIdTlv(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Log.Debug("");
@@ -75,7 +75,7 @@ namespace PacketDotNet.Lldp
         /// <param name="subTypeValue">
         /// The subtype's value
         /// </param>
-        public ChassisId(ChassisSubType subType, object subTypeValue)
+        public ChassisIdTlv(ChassisSubType subType, object subTypeValue)
         {
             Log.DebugFormat("subType {0}", subType);
 
@@ -95,7 +95,7 @@ namespace PacketDotNet.Lldp
         /// <param name="macAddress">
         /// A <see cref="PhysicalAddress" />
         /// </param>
-        public ChassisId(PhysicalAddress macAddress)
+        public ChassisIdTlv(PhysicalAddress macAddress)
         {
             Log.DebugFormat("MACAddress {0}", macAddress);
 
@@ -114,7 +114,7 @@ namespace PacketDotNet.Lldp
         /// <param name="interfaceName">
         /// A <see cref="string" />
         /// </param>
-        public ChassisId(string interfaceName)
+        public ChassisIdTlv(string interfaceName)
         {
             Log.DebugFormat("InterfaceName {0}", interfaceName);
 

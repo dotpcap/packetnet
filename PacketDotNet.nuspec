@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
         <id>PacketDotNet</id>
-        <version>1.1.0</version>
+        <version>1.1.1</version>
         <authors>Chris Morgan</authors>
 	      <owners>chmorgan</owners>
         <licenseUrl>https://www.gnu.org/licenses/lgpl-3.0.en.html/</licenseUrl>

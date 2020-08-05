@@ -33,7 +33,7 @@ namespace PacketDotNet.Lldp
     /// <summary>
     /// A Port ID TLV
     /// </summary>
-    public class PortId : Tlv
+    public class PortIdTlv : Tlv
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -56,7 +56,7 @@ namespace PacketDotNet.Lldp
         /// The Port ID TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public PortId(byte[] bytes, int offset) :
+        public PortIdTlv(byte[] bytes, int offset) :
             base(bytes, offset)
         {
             Log.Debug("");
@@ -71,7 +71,7 @@ namespace PacketDotNet.Lldp
         /// <param name="subTypeValue">
         /// The subtype's value
         /// </param>
-        public PortId(PortSubType subType, object subTypeValue)
+        public PortIdTlv(PortSubType subType, object subTypeValue)
         {
             Log.Debug("");
 
@@ -90,7 +90,7 @@ namespace PacketDotNet.Lldp
         /// <param name="networkAddress">
         /// A <see cref="NetworkAddress" />
         /// </param>
-        public PortId(NetworkAddress networkAddress)
+        public PortIdTlv(NetworkAddress networkAddress)
         {
             Log.DebugFormat("NetworkAddress {0}", networkAddress);
 

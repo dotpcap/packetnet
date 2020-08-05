@@ -18,21 +18,19 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
+using System;
+
 namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// SACK (Selective Ack) Permitted Option
-    /// Notifies the receiver that SelectiveAcknowledgment is allowed.
-    /// Must only be sent in a SYN segment
+    /// An Echo Option
+    /// throws an exception because Echo Options
+    /// are obsolete as per their spec
     /// </summary>
-    /// <remarks>
-    /// References:
-    /// http://datatracker.ietf.org/doc/rfc2018/
-    /// </remarks>
-    public class SelectiveAcknowledgmentPermitted : Option
+    public class EchoOption : TcpOption
     {
         /// <summary>
-        /// Creates a Sack Permitted Option
+        /// Creates an Echo Option
         /// </summary>
         /// <param name="bytes">
         /// A <see cref="T:System.Byte[]" />
@@ -43,7 +41,7 @@ namespace PacketDotNet.Tcp
         /// <param name="length">
         /// A <see cref="int" />
         /// </param>
-        public SelectiveAcknowledgmentPermitted(byte[] bytes, int offset, int length) :
+        public EchoOption(byte[] bytes, int offset, int length) :
             base(bytes, offset, length)
         { }
     }

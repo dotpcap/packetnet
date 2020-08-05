@@ -183,11 +183,11 @@ namespace Test.PacketType
 
             var options = t.OptionsCollection;
 
-            Assert.AreEqual(true, options.Any(x => x is TimeStamp));
+            Assert.AreEqual(true, options.Any(x => x is TimeStampOption));
 
             foreach (var option in options)
             {
-                if (option is TimeStamp timeStamp)
+                if (option is TimeStampOption timeStamp)
                 {
                     Assert.AreEqual(1326565, timeStamp.Value);
 
@@ -197,12 +197,12 @@ namespace Test.PacketType
                 }
             }
 
-            var optionsCollection = new List<Option>(options);
+            var optionsCollection = new List<TcpOption>(options);
             t.OptionsCollection = optionsCollection;
 
             foreach (var option in t.OptionsCollection)
             {
-                if (option is TimeStamp timeStamp)
+                if (option is TimeStampOption timeStamp)
                 {
                     Assert.AreEqual(1234321, timeStamp.Value);
                 }

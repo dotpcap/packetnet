@@ -19,7 +19,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
@@ -29,7 +28,7 @@ namespace PacketDotNet.Lldp
     /// A System Capabilities Tlv
     /// [TLVTypeLength - 2 bytes][System Capabilities - 2 bytes][Enabled Capabilities - 2 bytes]
     /// </summary>
-    public class SystemCapabilities : Tlv
+    public class SystemCapabilitiesTlv : Tlv
     {
         private const int EnabledCapabilitiesLength = 2;
         private const int SystemCapabilitiesLength = 2;
@@ -43,7 +42,7 @@ namespace PacketDotNet.Lldp
         /// The System Capabilities TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public SystemCapabilities(byte[] bytes, int offset) :
+        public SystemCapabilitiesTlv(byte[] bytes, int offset) :
             base(bytes, offset)
         { }
 
@@ -56,7 +55,7 @@ namespace PacketDotNet.Lldp
         /// <param name="enabled">
         /// A bitmap containing the enabled System Capabilities
         /// </param>
-        public SystemCapabilities(ushort capabilities, ushort enabled)
+        public SystemCapabilitiesTlv(ushort capabilities, ushort enabled)
         {
             const int length = TlvTypeLength.TypeLengthLength + SystemCapabilitiesLength + EnabledCapabilitiesLength;
             var bytes = new byte[length];

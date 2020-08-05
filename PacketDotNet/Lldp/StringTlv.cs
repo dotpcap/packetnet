@@ -28,7 +28,7 @@ namespace PacketDotNet.Lldp
     /// <summary>
     /// Base class for several TLV types that all contain strings
     /// </summary>
-    public class String : Tlv
+    public class StringTlv : Tlv
     {
         /// <summary>
         /// Creates a String Tlv
@@ -39,7 +39,7 @@ namespace PacketDotNet.Lldp
         /// The Port Description TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public String(byte[] bytes, int offset) :
+        public StringTlv(byte[] bytes, int offset) :
             base(bytes, offset)
         { }
 
@@ -52,7 +52,7 @@ namespace PacketDotNet.Lldp
         /// <param name="value">
         /// A <see cref="string" />
         /// </param>
-        public String(TlvType tlvType, string value)
+        public StringTlv(TlvType tlvType, string value)
         {
             var bytes = new byte[TlvTypeLength.TypeLengthLength];
             Data = new ByteArraySegment(bytes, 0, bytes.Length);

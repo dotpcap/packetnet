@@ -19,63 +19,54 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
-
-#if DEBUG
-using log4net;
-using System.Reflection;
-#endif
+using PacketDotNet.Utils;
 
 namespace PacketDotNet.Lldp
 {
     /// <summary>
-    /// A Port Description Tlv
+    /// An End Of LLDPDU Tlv
     /// </summary>
-    public class PortDescription : String
+    public class EndOfLldpduTlv : Tlv
     {
-#if DEBUG
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-#else
-// NOTE: No need to warn about lack of use, the compiler won't
-//       put any calls to 'log' here but we need 'log' to exist to compile
-#pragma warning disable 0169, 0649
-        private static readonly ILogInactive Log;
-#pragma warning restore 0169, 0649
-#endif
-
         /// <summary>
-        /// Creates a Port Description Tlv
+        /// Parses bytes into an End Of LLDPDU Tlv
         /// </summary>
         /// <param name="bytes">
+        /// TLV bytes
         /// </param>
         /// <param name="offset">
-        /// The Port Description TLV's offset from the
+        /// The End Of LLDPDU TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public PortDescription(byte[] bytes, int offset) :
+        public EndOfLldpduTlv(byte[] bytes, int offset) :
             base(bytes, offset)
         {
-            Log.Debug("");
+            Type = 0;
+            Length = 0;
         }
 
         /// <summary>
-        /// Creates a Port Description TLV and sets it value
+        /// Creates an End Of LLDPDU Tlv
         /// </summary>
-        /// <param name="description">
-        /// A textual description of the port
-        /// </param>
-        public PortDescription(string description) : base(TlvType.PortDescription, description)
+        public EndOfLldpduTlv()
         {
-            Log.Debug("");
+            var bytes = new byte[TlvTypeLength.TypeLengthLength];
+            var length = bytes.Length;
+            Data = new ByteArraySegment(bytes, 0, length);
+
+            Type = 0;
+            Length = 0;
         }
 
-        /// <value>
-        /// A textual Description of the port
-        /// </value>
-        public string Description
+        /// <summary>
+        /// Convert this LLDPDU TLV to a string.
+        /// </summary>
+        /// <returns>
+        /// A human readable string
+        /// </returns>
+        public override string ToString()
         {
-            get => Value;
-            set => Value = value;
+            return "[EndOfLldpdu]";
         }
     }
 }

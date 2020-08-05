@@ -16,47 +16,35 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 */
 /*
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
- *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
-
-namespace PacketDotNet.Lldp
+namespace PacketDotNet.Tcp
 {
     /// <summary>
-    /// A System Name Tlv
+    /// SACK (Selective Ack) Permitted Option
+    /// Notifies the receiver that SelectiveAcknowledgment is allowed.
+    /// Must only be sent in a SYN segment
     /// </summary>
-    public class SystemName : String
+    /// <remarks>
+    /// References:
+    /// http://datatracker.ietf.org/doc/rfc2018/
+    /// </remarks>
+    public class SelectiveAcknowledgmentPermittedOption : TcpOption
     {
         /// <summary>
-        /// Creates a System Name Tlv
+        /// Creates a Sack Permitted Option
         /// </summary>
         /// <param name="bytes">
+        /// A <see cref="T:System.Byte[]" />
         /// </param>
         /// <param name="offset">
-        /// The System Name TLV's offset from the
-        /// origin of the LLDP
+        /// A <see cref="int" />
         /// </param>
-        public SystemName(byte[] bytes, int offset) :
-            base(bytes, offset)
-        { }
-
-        /// <summary>
-        /// Creates a System Name TLV and sets it value
-        /// </summary>
-        /// <param name="name">
-        /// A textual Name of the system
+        /// <param name="length">
+        /// A <see cref="int" />
         /// </param>
-        public SystemName(string name) : base(TlvType.SystemName, name)
+        public SelectiveAcknowledgmentPermittedOption(byte[] bytes, int offset, int length) :
+            base(bytes, offset, length)
         { }
-
-        /// <value>
-        /// A textual Name of the system
-        /// </value>
-        public string Name
-        {
-            get => Value;
-            set => Value = value;
-        }
     }
 }

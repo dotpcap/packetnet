@@ -21,7 +21,6 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using PacketDotNet.Tcp;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
@@ -317,7 +316,7 @@ namespace PacketDotNet
         /// <summary>
         /// Contains the Options list attached to the TCP header
         /// </summary>
-        public List<Option> OptionsCollection
+        public List<TcpOption> OptionsCollection
         {
             get => ParseOptions(OptionsSegment);
             set
@@ -545,7 +544,7 @@ namespace PacketDotNet
         /// <returns>
         /// A <see cref="List{Option}" />
         /// </returns>
-        private static List<Option> ParseOptions(ByteArraySegment optionBytes)
+        private static List<TcpOption> ParseOptions(ByteArraySegment optionBytes)
         {
             var offset = optionBytes.Offset;
 
@@ -554,15 +553,15 @@ namespace PacketDotNet
 
 
             // Reset the OptionsCollection list to prepare to be re-populated with new data.
-            var options = new List<Option>();
+            var options = new List<TcpOption>();
 
             // The TCP options should be bound by their options offset + length.
             var maxOffset = optionBytes.Offset + optionBytes.Length;
 
             // Include a basic check against the available length of the options buffer for invalid TCP packet data in the data offset field.
-            while ((offset < maxOffset) && (offset < optionBytes.Bytes.Length - Option.LengthFieldOffset))
+            while ((offset < maxOffset) && (offset < optionBytes.Bytes.Length - TcpOption.LengthFieldOffset))
             {
-                var type = (OptionTypes) optionBytes.Bytes[offset + Option.KindFieldOffset];
+                var type = (OptionTypes) optionBytes.Bytes[offset + TcpOption.KindFieldOffset];
 
                 // Some options have no length field, we cannot read the length field if it isn't present or we risk out-of-bounds issues.
                 byte length;
@@ -570,85 +569,85 @@ namespace PacketDotNet
                 if ((type == OptionTypes.EndOfOptionList) || (type == OptionTypes.NoOperation))
                     length = 1;
                 else
-                    length = optionBytes.Bytes[offset + Option.LengthFieldOffset];
+                    length = optionBytes.Bytes[offset + TcpOption.LengthFieldOffset];
 
                 switch (type)
                 {
                     case OptionTypes.EndOfOptionList:
                     {
-                        options.Add(new EndOfOptions(optionBytes.Bytes, offset, length));
-                        offset += EndOfOptions.OptionLength;
+                        options.Add(new EndOfOptionsOption(optionBytes.Bytes, offset, length));
+                        offset += EndOfOptionsOption.OptionLength;
                         break;
                     }
                     case OptionTypes.NoOperation:
                     {
-                        options.Add(new NoOperation(optionBytes.Bytes, offset, length));
-                        offset += NoOperation.OptionLength;
+                        options.Add(new NoOperationOption(optionBytes.Bytes, offset, length));
+                        offset += NoOperationOption.OptionLength;
                         break;
                     }
                     case OptionTypes.MaximumSegmentSize:
                     {
-                        options.Add(new MaximumSegmentSize(optionBytes.Bytes, offset, length));
+                        options.Add(new MaximumSegmentSizeOption(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }
                     case OptionTypes.WindowScaleFactor:
                     {
-                        options.Add(new WindowScaleFactor(optionBytes.Bytes, offset, length));
+                        options.Add(new WindowScaleFactorOption(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }
                     case OptionTypes.SelectiveAcknowledgmentPermitted:
                     {
-                        options.Add(new SelectiveAcknowledgmentPermitted(optionBytes.Bytes, offset, length));
+                        options.Add(new SelectiveAcknowledgmentPermittedOption(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }
                     case OptionTypes.SelectiveAcknowledgment:
                     {
-                        options.Add(new SelectiveAcknowledgment(optionBytes.Bytes, offset, length));
+                        options.Add(new SelectiveAcknowledgmentOption(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }
                     case OptionTypes.Echo:
                     {
-                        options.Add(new Echo(optionBytes.Bytes, offset, length));
+                        options.Add(new EchoOption(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }
                     case OptionTypes.EchoReply:
                     {
-                        options.Add(new EchoReply(optionBytes.Bytes, offset, length));
+                        options.Add(new EchoReplyOption(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }
                     case OptionTypes.Timestamp:
                     {
-                        options.Add(new TimeStamp(optionBytes.Bytes, offset, length));
+                        options.Add(new TimeStampOption(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }
                     case OptionTypes.AlternateChecksumRequest:
                     {
-                        options.Add(new AlternateChecksumRequest(optionBytes.Bytes, offset, length));
+                        options.Add(new AlternateChecksumRequestOption(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }
                     case OptionTypes.AlternateChecksumData:
                     {
-                        options.Add(new AlternateChecksumData(optionBytes.Bytes, offset, length));
+                        options.Add(new AlternateChecksumDataOption(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }
                     case OptionTypes.MD5Signature:
                     {
-                        options.Add(new MD5Signature(optionBytes.Bytes, offset, length));
+                        options.Add(new MD5SignatureOption(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }
                     case OptionTypes.UserTimeout:
                     {
-                        options.Add(new UserTimeout(optionBytes.Bytes, offset, length));
+                        options.Add(new UserTimeoutOption(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }
@@ -661,7 +660,7 @@ namespace PacketDotNet
                     //case OptionTypes.QuickStartResponse:
                     default:
                     {
-                        options.Add(new Unsupported(optionBytes.Bytes, offset, length));
+                        options.Add(new UnsupportedOption(optionBytes.Bytes, offset, length));
                         offset += length;
                         break;
                     }

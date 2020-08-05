@@ -70,7 +70,7 @@ namespace PacketDotNet
 
             // all lldp packets end with an EndOfLldpdu TLV so add one
             // by default
-            TlvCollection.Add(new EndOfLldpdu());
+            TlvCollection.Add(new EndOfLldpduTlv());
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace PacketDotNet
                 TlvCollection.Add(currentTlv);
 
                 // stop at the first end TLV we run into
-                if (currentTlv is EndOfLldpdu)
+                if (currentTlv is EndOfLldpduTlv)
                     break;
 
 
@@ -202,43 +202,43 @@ namespace PacketDotNet
             {
                 case TlvType.ChassisId:
                 {
-                    return new ChassisId(bytes, offset);
+                    return new ChassisIdTlv(bytes, offset);
                 }
                 case TlvType.PortId:
                 {
-                    return new PortId(bytes, offset);
+                    return new PortIdTlv(bytes, offset);
                 }
                 case TlvType.TimeToLive:
                 {
-                    return new TimeToLive(bytes, offset);
+                    return new TimeToLiveTlv(bytes, offset);
                 }
                 case TlvType.PortDescription:
                 {
-                    return new PortDescription(bytes, offset);
+                    return new PortDescriptionTlv(bytes, offset);
                 }
                 case TlvType.SystemName:
                 {
-                    return new SystemName(bytes, offset);
+                    return new SystemNameTlv(bytes, offset);
                 }
                 case TlvType.SystemDescription:
                 {
-                    return new SystemDescription(bytes, offset);
+                    return new SystemDescriptionTlv(bytes, offset);
                 }
                 case TlvType.SystemCapabilities:
                 {
-                    return new SystemCapabilities(bytes, offset);
+                    return new SystemCapabilitiesTlv(bytes, offset);
                 }
                 case TlvType.ManagementAddress:
                 {
-                    return new ManagementAddress(bytes, offset);
+                    return new ManagementAddressTlv(bytes, offset);
                 }
                 case TlvType.OrganizationSpecific:
                 {
-                    return new OrganizationSpecific(bytes, offset);
+                    return new OrganizationSpecificTlv(bytes, offset);
                 }
                 case TlvType.EndOfLldpu:
                 {
-                    return new EndOfLldpdu(bytes, offset);
+                    return new EndOfLldpduTlv(bytes, offset);
                 }
                 default:
                 {
@@ -262,16 +262,16 @@ namespace PacketDotNet
             var physicalAddressBytes = new byte[EthernetFields.MacAddressLength];
             rnd.NextBytes(physicalAddressBytes);
             var physicalAddress = new PhysicalAddress(physicalAddressBytes);
-            lldpPacket.TlvCollection.Add(new ChassisId(physicalAddress));
+            lldpPacket.TlvCollection.Add(new ChassisIdTlv(physicalAddress));
 
             var networkAddress = new byte[IPv4Fields.AddressLength];
             rnd.NextBytes(networkAddress);
-            lldpPacket.TlvCollection.Add(new PortId(new NetworkAddress(new IPAddress(networkAddress))));
+            lldpPacket.TlvCollection.Add(new PortIdTlv(new NetworkAddress(new IPAddress(networkAddress))));
 
             var seconds = (ushort) rnd.Next(0, 120);
-            lldpPacket.TlvCollection.Add(new TimeToLive(seconds));
+            lldpPacket.TlvCollection.Add(new TimeToLiveTlv(seconds));
 
-            lldpPacket.TlvCollection.Add(new EndOfLldpdu());
+            lldpPacket.TlvCollection.Add(new EndOfLldpduTlv());
 
             return lldpPacket;
         }

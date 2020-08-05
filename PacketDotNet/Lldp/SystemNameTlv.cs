@@ -19,60 +19,39 @@ along with PacketDotNet.  If not, see <http://www.gnu.org/licenses/>.
  *  Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
-#if DEBUG
-using System.Reflection;
-using log4net;
-
-#endif
-
 namespace PacketDotNet.Lldp
 {
     /// <summary>
-    /// A System Description Tlv
+    /// A System Name Tlv
     /// </summary>
-    public class SystemDescription : String
+    public class SystemNameTlv : StringTlv
     {
-#if DEBUG
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-#else
-        // NOTE: No need to warn about lack of use, the compiler won't
-        //       put any calls to 'log' here but we need 'log' to exist to compile
-#pragma warning disable 0169, 0649
-        private static readonly ILogInactive Log;
-#pragma warning restore 0169, 0649
-#endif
-
         /// <summary>
-        /// Creates a System Description Tlv
+        /// Creates a System Name Tlv
         /// </summary>
         /// <param name="bytes">
         /// </param>
         /// <param name="offset">
-        /// The System Description TLV's offset from the
+        /// The System Name TLV's offset from the
         /// origin of the LLDP
         /// </param>
-        public SystemDescription(byte[] bytes, int offset) :
+        public SystemNameTlv(byte[] bytes, int offset) :
             base(bytes, offset)
-        {
-            Log.Debug("");
-        }
+        { }
 
         /// <summary>
-        /// Creates a System Description TLV and sets it value
+        /// Creates a System Name TLV and sets it value
         /// </summary>
-        /// <param name="description">
-        /// A textual Description of the system
+        /// <param name="name">
+        /// A textual Name of the system
         /// </param>
-        public SystemDescription(string description) : base(TlvType.SystemDescription, description)
-        {
-            Log.Debug("");
-        }
+        public SystemNameTlv(string name) : base(TlvType.SystemName, name)
+        { }
 
         /// <value>
-        /// A textual Description of the system
+        /// A textual Name of the system
         /// </value>
-        public string Description
+        public string Name
         {
             get => Value;
             set => Value = value;

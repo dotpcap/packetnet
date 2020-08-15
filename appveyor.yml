@@ -8,17 +8,5 @@ before_build:
 
     cinst WinPcap
 build:
-  publish_nuget: true
-  publish_nuget_symbols: true
-  include_nuget_references: true
+  publish_nuget: false
   verbosity: minimal
-artifacts:
-- path: PacketDotNet*.nupkg
-deploy:
-- provider: NuGet
-  server: https://www.nuget.org/api/v2/package
-  api_key:
-    secure: lBlnNajgaXPew39nVvuY28salUC5p1BxVWL7aui/L5cKev6xeszZC44qFkCRdbHL
-  on:
-    branch: master
-

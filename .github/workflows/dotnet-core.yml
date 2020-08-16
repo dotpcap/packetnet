@@ -19,6 +19,8 @@ jobs:
         dotnet-version: 3.1.301
     - name: Install .net dependencies
       run: dotnet restore
+    - name: Install libpcap
+      run: sudo -E bash Scripts/install-libpcap.sh
     - name: Build
       run: dotnet build PacketDotNet/PacketDotNet.csproj --framework "netstandard2.0" -c Release
     - name: Test

@@ -1,5 +1,6 @@
 [![NuGet](https://img.shields.io/nuget/v/PacketDotNet.svg)](https://www.nuget.org/packages/PacketDotNet/)
 [![master branch build status](https://ci.appveyor.com/api/projects/status/4vjrt4farp86upb0/branch/master?svg=true)](https://ci.appveyor.com/project/chmorgan/packetnet/branch/master)
+![.NET Core](https://github.com/chmorgan/packetnet/workflows/.NET%20Core/badge.svg)
 
 New!
 ==========

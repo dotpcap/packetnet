@@ -24,7 +24,7 @@ jobs:
     - name: Build
       run: dotnet build PacketDotNet/PacketDotNet.csproj --framework "netstandard2.0" -c Release
     - name: Test
-      run: dotnet test
+      run: dotnet test --framework "netcoreapp3.1"
 
   windows:
     runs-on: windows-latest

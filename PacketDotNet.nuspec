@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
-    <metadata>
-        <id>PacketDotNet</id>
-        <version>1.1.1</version>
-        <authors>Chris Morgan</authors>
-	      <owners>chmorgan</owners>
-        <licenseUrl>https://www.mozilla.org/en-US/MPL/2.0/</licenseUrl>
-        <projectUrl>https://github.com/chmorgan/packetnet</projectUrl>
-        <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>High performance .Net assembly for dissecting and constructing network packets such as ethernet, ip, tcp, udp etc.</description>
-        <repository type="git" url="https://github.com/chmorgan/packetnet" />
-    </metadata>
-	<files>
-		<file src="lib\**" target="lib/{framework name}[{version}]" />
-	</files>
+  <metadata>
+    <id>PacketDotNet</id>
+    <version>1.1.2</version>
+    <authors>Chris Morgan</authors>
+    <owners>chmorgan</owners>
+    <licenseUrl>https://www.mozilla.org/en-US/MPL/2.0/</licenseUrl>
+    <projectUrl>https://github.com/chmorgan/packetnet</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>High performance .NET assembly for dissecting and constructing network packets such as ethernet, ip, tcp, udp etc.</description>
+    <repository type="git" url="https://github.com/chmorgan/packetnet" />
+  </metadata>
+  <files>
+    <file src="lib\**" target="lib/{framework name}[{version}]" />
+  </files>
 </package>

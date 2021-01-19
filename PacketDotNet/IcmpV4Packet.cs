@@ -6,8 +6,10 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
+using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
@@ -69,9 +71,9 @@ namespace PacketDotNet
             ParentPacket = parentPacket;
         }
 
-        /// <summary>
-        /// Gets or sets the checksum value.
-        /// </summary>
+        /// <value>
+        /// Checksum value
+        /// </value>
         public ushort Checksum
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
@@ -125,9 +127,9 @@ namespace PacketDotNet
                                                     Header.Offset + IcmpV4Fields.SequencePosition);
         }
 
-        /// <summary>
+        /// <value>
         /// The Type/Code enum value
-        /// </summary>
+        /// </value>
         public IcmpV4TypeCode TypeCode
         {
             get
@@ -146,14 +148,63 @@ namespace PacketDotNet
             }
         }
 
-        /// <inheritdoc cref="Packet.ToString(StringOutputType)" />
+        /// <summary>Check if the ICMP packet is valid, checksum-wise.</summary>
+        public bool ValidChecksum => ValidIcmpChecksum;
+
+        /// <summary>
+        /// Check if the ICMP packet is valid, checksum-wise.
+        /// </summary>
+        public bool ValidIcmpChecksum
+        {
+            get
+            {
+                Log.Debug("");
+
+                var calculatedChecksum = CalculateIcmpChecksum();
+
+                Log.DebugFormat(HexPrinter.GetString(Bytes, 0, Bytes.Length));
+
+                var result = Checksum == calculatedChecksum;
+
+                Log.DebugFormat("calculatedChecksum: {0}, Checksum {1}, returning {2}", calculatedChecksum, Checksum, result);
+
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Calculates the ICMP checksum.
+        /// </summary>
+        /// <returns>The calculated ICMP checksum.</returns>
+        public ushort CalculateIcmpChecksum()
+        {
+            var originalChecksum = Checksum;
+
+            Checksum = 0; // This needs to be reset first to calculate the checksum.
+
+            var calculatedChecksum = ChecksumUtils.OnesComplementSum(Bytes, 0, Bytes.Length);
+
+            Checksum = originalChecksum;
+
+            return (ushort)calculatedChecksum;
+        }
+
+        /// <summary>
+        /// Update the checksum value.
+        /// </summary>
+        public void UpdateIcmpChecksum()
+        {
+            Checksum = CalculateIcmpChecksum();
+        }
+
+        /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
             var color = "";
             var colorEscape = "";
 
-            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
+            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;

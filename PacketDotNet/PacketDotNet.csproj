@@ -5,7 +5,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Description>.Net assembly for dissecting and constructing network packets</Description>
     <Authors>Chris Morgan (chmorgan@gmail.com)</Authors>
-    <Version>1.1.2</Version>
+    <Version>1.2.0</Version>
     <LangVersion>latest</LangVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\packetnet.snk</AssemblyOriginatorKeyFile>

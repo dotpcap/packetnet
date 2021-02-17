@@ -148,11 +148,6 @@ namespace PacketDotNet
                         Type = EthernetType.PppoeSessionStage;
                         break;
                     }
-                    default:
-                    {
-                        Type = EthernetType.None;
-                        break;
-                    }
                 }
             }
         }

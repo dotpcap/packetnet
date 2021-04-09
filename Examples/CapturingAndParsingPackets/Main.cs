@@ -44,6 +44,32 @@ namespace CapturingAndParsingPackets
             Console.Write("-- Please choose a device to capture: ");
             i = int.Parse(Console.ReadLine() ?? throw new InvalidOperationException());
 
+            Console.WriteLine();
+            Console.WriteLine("Output Verbosity Options");
+            Console.WriteLine("----------------------------------------------------");
+            Console.WriteLine();
+            var defaultOutputType = StringOutputType.Normal;
+            var outputTypeValues = Enum.GetValues(typeof(StringOutputType));
+            foreach (StringOutputType outputType in outputTypeValues)
+            {
+                Console.Write("{0} - {1}", (int)outputType, outputType);
+                if (outputType == defaultOutputType)
+                {
+                    Console.Write(" (default)");
+                }
+
+                Console.WriteLine("");
+            }
+
+            Console.WriteLine();
+            Console.Write("-- Please choose a verbosity (or press enter for the default): ");
+            StringOutputType selectedOutputType = defaultOutputType;
+            int userSelectedOutputType;
+            if (int.TryParse(Console.ReadLine(), out userSelectedOutputType))
+            {
+                selectedOutputType = (StringOutputType)userSelectedOutputType;
+            }
+
             // Register a cancel handler that lets us break out of our capture loop
             Console.CancelKeyPress += HandleCancelKeyPress;
 
@@ -74,7 +100,7 @@ namespace CapturingAndParsingPackets
                 // its high level information
                 var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-                Console.WriteLine(p.ToString());
+                Console.WriteLine(p.ToString(selectedOutputType));
             }
 
             Console.WriteLine("-- Capture stopped");

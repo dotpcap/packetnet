@@ -50,6 +50,12 @@ Supported packet formats
 * PPP
 * and probably more, see the source code for the latest list
 
+Capture example
+==============
+See [Capturing packets example](https://github.com/chmorgan/packetnet/tree/master/Examples/CapturingAndParsingPackets)
+
+<p align="center"><img src="/terminalizer/captureexample.gif?raw=true"/></p>
+
 Getting started
 ===============
 

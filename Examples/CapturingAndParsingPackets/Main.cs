@@ -12,7 +12,7 @@ namespace CapturingAndParsingPackets
         public static void Main(string[] args)
         {
             // Print SharpPcap version
-            var ver = SharpPcap.Version.VersionString;
+            var ver = SharpPcap.Pcap.SharpPcapVersion;
             Console.WriteLine("PacketDotNet example using SharpPcap {0}", ver);
 
             // Retrieve the device list
@@ -77,7 +77,7 @@ namespace CapturingAndParsingPackets
 
             // Open the device for capturing
             var readTimeoutMilliseconds = 1000;
-            device.Open(DeviceMode.Promiscuous, readTimeoutMilliseconds);
+            device.Open(DeviceModes.Promiscuous, readTimeoutMilliseconds);
 
             Console.WriteLine();
             Console.WriteLine("-- Listening on {0}, hit 'ctrl-c' to stop...",
@@ -85,16 +85,19 @@ namespace CapturingAndParsingPackets
 
             while (_stopCapturing == false)
             {
-                var rawCapture = device.GetNextPacket();
+                PacketCapture e;
+                var status = device.GetNextPacket(out e);
 
                 // null packets can be returned in the case where
                 // the GetNextRawPacket() timed out, we should just attempt
                 // to retrieve another packet by looping the while() again
-                if (rawCapture == null)
+                if (status != GetPacketStatus.PacketRead)
                 {
                     // go back to the start of the while()
                     continue;
                 }
+
+                var rawCapture = e.GetPacket();
 
                 // use PacketDotNet to parse this packet and print out
                 // its high level information

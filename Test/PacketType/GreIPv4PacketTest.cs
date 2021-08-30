@@ -9,6 +9,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System;
 using NUnit.Framework;
 using PacketDotNet;
+using SharpPcap;
 using SharpPcap.LibPcap;
 
 namespace Test.PacketType
@@ -22,7 +23,11 @@ namespace Test.PacketType
         {
             var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "gre_all_options.pcap");
             dev.Open();
-            var rawCapture = dev.GetNextPacket();
+
+            PacketCapture c;
+            dev.GetNextPacket(out c);
+            var rawCapture = c.GetPacket();
+
             dev.Close();
 
             LinkLayers linkLayers = rawCapture.GetLinkLayers();

@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
@@ -25,6 +26,24 @@ namespace PacketDotNet
     /// </summary>
     public sealed class UdpPacket : TransportPacket
     {
+        public static IDictionary<ushort, Type> PayloadTypeDestinationPortMappingList = new Dictionary<ushort, Type>
+        {
+            { wakeOnLanPort0, typeof(WakeOnLanPacket) },
+            { wakeOnLanPort7, typeof(WakeOnLanPacket) },
+            { wakeOnLanPort9, typeof(WakeOnLanPacket) },
+            { L2tpFields.Port, typeof(L2tpPacket) },
+        };
+
+        public static IDictionary<ushort, Type> PayloadTypeSourcePortMappingList = new Dictionary<ushort, Type>
+        {
+            { L2tpFields.Port, typeof(L2tpPacket) },
+        };
+
+        private const int wakeOnLanPort0 = 0;
+        private const int wakeOnLanPort7 = 7;
+        private const int wakeOnLanPort9 = 9;
+
+
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
@@ -76,17 +95,13 @@ namespace PacketDotNet
 
             PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
             {
-                const int wakeOnLanPort0 = 0;
-                const int wakeOnLanPort7 = 7;
-                const int wakeOnLanPort9 = 9;
-                
                 var result = new PacketOrByteArraySegment();
                 var destinationPort = DestinationPort;
                 var sourcePort = SourcePort;
                 var payload = Header.NextSegment();
 
                 // If this packet is going to port 0, 7 or 9, then it might be a WakeOnLan packet.
-                if (destinationPort == wakeOnLanPort0 || destinationPort == wakeOnLanPort7 || destinationPort == wakeOnLanPort9)
+                if (PayloadTypeDestinationPortMappingList.Any(m => m.Key == destinationPort && m.Value == typeof(WakeOnLanPacket)))
                 {
                     if (WakeOnLanPacket.IsValid(payload))
                     {
@@ -95,7 +110,15 @@ namespace PacketDotNet
                     }
                 }
 
-                if (destinationPort == L2tpFields.Port || sourcePort == L2tpFields.Port)
+                if (PayloadTypeDestinationPortMappingList.Any(m => m.Key == destinationPort && m.Value == typeof(RtpPacket)) ||
+                    PayloadTypeSourcePortMappingList.Any(m => m.Key == sourcePort && m.Value == typeof(RtpPacket)))
+                {
+                    result.Packet = new RtpPacket(payload, this);
+                    return result;
+                }
+
+                if (PayloadTypeDestinationPortMappingList.Any(m => m.Key == destinationPort && m.Value == typeof(L2tpPacket)) ||
+                    PayloadTypeSourcePortMappingList.Any(m => m.Key == sourcePort && m.Value == typeof(L2tpPacket)))
                 {
                     result.Packet = new L2tpPacket(payload, this);
                     return result;

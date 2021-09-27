@@ -1,0 +1,54 @@
+﻿/*
+This file is part of PacketDotNet.
+
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at https://mozilla.org/MPL/2.0/.
+*/
+
+using System;
+using NUnit.Framework;
+using PacketDotNet;
+using SharpPcap;
+using SharpPcap.LibPcap;
+
+namespace Test.PacketType
+{
+    [TestFixture]
+    public class RtpPacketTest
+    {
+        // RTP
+        [Test]
+        public void RtpParsing()
+        {
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "ipv6_rtp.pcap");
+            dev.Open();
+            PacketCapture c;
+            dev.GetNextPacket(out c);
+            var rawCapture = c.GetPacket();
+            dev.Close();
+
+            UdpPacket.PayloadTypeDestinationPortMappingList.Add(6000, typeof(RtpPacket));
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
+
+            Assert.IsNotNull(p);
+
+            var rtp = p.Extract<RtpPacket>();
+            Assert.IsNotNull(rtp);
+            Console.WriteLine(rtp.GetType());
+            Assert.AreEqual(2, rtp.Version);
+            Assert.IsFalse(rtp.HasPadding);
+            Assert.IsFalse(rtp.HasExtension);
+            Assert.AreEqual(0, rtp.CsrcCount);
+            Assert.IsTrue(rtp.Marker);
+            Assert.AreEqual(112, rtp.PayloadType);
+            Assert.AreEqual(0, rtp.SequenceNumber);
+            Assert.AreEqual(600, rtp.Timestamp);
+            Assert.AreEqual(899629540, rtp.SsrcIdentifier);
+            Assert.AreEqual(0, rtp.ExtensionHeaderLength);
+            Assert.IsTrue(rtp.HasPayloadData);
+            Assert.IsNotNull(rtp.PayloadData);
+            Assert.AreEqual(12, rtp.PayloadData.Length);
+        }
+    }
+}

@@ -8,7 +8,6 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
@@ -101,7 +100,8 @@ namespace PacketDotNet
                 var payload = Header.NextSegment();
 
                 // If this packet is going to port 0, 7 or 9, then it might be a WakeOnLan packet.
-                if (PayloadTypeDestinationPortMappingList.Any(m => m.Key == destinationPort && m.Value == typeof(WakeOnLanPacket)))
+                if (PayloadTypeDestinationPortMappingList.ContainsKey(destinationPort) &&
+                    PayloadTypeDestinationPortMappingList[destinationPort] == typeof(WakeOnLanPacket))
                 {
                     if (WakeOnLanPacket.IsValid(payload))
                     {
@@ -110,15 +110,19 @@ namespace PacketDotNet
                     }
                 }
 
-                if (PayloadTypeDestinationPortMappingList.Any(m => m.Key == destinationPort && m.Value == typeof(RtpPacket)) ||
-                    PayloadTypeSourcePortMappingList.Any(m => m.Key == sourcePort && m.Value == typeof(RtpPacket)))
+                if ((PayloadTypeDestinationPortMappingList.ContainsKey(destinationPort) &&
+                    PayloadTypeDestinationPortMappingList[destinationPort] == typeof(RtpPacket)) ||
+                    (PayloadTypeSourcePortMappingList.ContainsKey(sourcePort) &&
+                     PayloadTypeSourcePortMappingList[sourcePort] == typeof(RtpPacket)))
                 {
                     result.Packet = new RtpPacket(payload, this);
                     return result;
                 }
 
-                if (PayloadTypeDestinationPortMappingList.Any(m => m.Key == destinationPort && m.Value == typeof(L2tpPacket)) ||
-                    PayloadTypeSourcePortMappingList.Any(m => m.Key == sourcePort && m.Value == typeof(L2tpPacket)))
+                if ((PayloadTypeDestinationPortMappingList.ContainsKey(destinationPort) &&
+                     PayloadTypeDestinationPortMappingList[destinationPort] == typeof(L2tpPacket)) ||
+                    (PayloadTypeSourcePortMappingList.ContainsKey(sourcePort) &&
+                     PayloadTypeSourcePortMappingList[sourcePort] == typeof(L2tpPacket)))
                 {
                     result.Packet = new L2tpPacket(payload, this);
                     return result;

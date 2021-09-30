@@ -22,12 +22,12 @@ namespace PacketDotNet
     public abstract class TransportPacket : Packet
     {
         /// <summary>
-        /// Callback function for UdpPacket Payload decoding.
-        /// First parameter is the payload, second parameter if the UdpPacket itself
-        /// returned value is the decoded payload as Packet or null if payload is invalid or not supported
+        /// Callback function for TransportPacket Payload decoding.
+        /// First parameter is the payload, second parameter if the TransportPacket itself
+        /// returned value is the decoded payload as PacketOrByteArraySegment or null if payload is invalid or not supported
         /// then internal decoding will continue
         /// </summary>
-        public static Func<ByteArraySegment, TransportPacket, Packet> CustomPayloadDecoder;
+        public static Func<ByteArraySegment, TransportPacket, PacketOrByteArraySegment> CustomPayloadDecoder;
 
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);

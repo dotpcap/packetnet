@@ -85,7 +85,16 @@ namespace PacketDotNet
             // store the payload bytes
             PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() };
+                var result = new PacketOrByteArraySegment();
+                var payload = Header.NextSegment();
+
+                if (CustomPayloadDecoder != null && (result.Packet = CustomPayloadDecoder(payload, this)) != null)
+                {
+                    Log.Debug("Use CustomPayloadDecoder");
+                    return result;
+                }
+
+                result.ByteArraySegment = payload;
                 return result;
             });
         }
@@ -117,7 +126,16 @@ namespace PacketDotNet
             // store the payload bytes
             PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() };
+                var result = new PacketOrByteArraySegment();
+                var payload = Header.NextSegment();
+
+                if (CustomPayloadDecoder != null && (result.Packet = CustomPayloadDecoder(payload, this)) != null)
+                {
+                    Log.Debug("Use CustomPayloadDecoder");
+                    return result;
+                }
+
+                result.ByteArraySegment = payload;
 
                 // if the parent packet is an IPv4Packet we need to adjust
                 // the payload length because it is possible for us to have

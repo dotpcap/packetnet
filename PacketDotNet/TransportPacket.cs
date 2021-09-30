@@ -6,6 +6,7 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
+using System;
 using PacketDotNet.Utils;
 
 #if DEBUG
@@ -20,6 +21,14 @@ namespace PacketDotNet
     /// </summary>
     public abstract class TransportPacket : Packet
     {
+        /// <summary>
+        /// Callback function for UdpPacket Payload decoding.
+        /// First parameter is the payload, second parameter if the UdpPacket itself
+        /// returned value is the decoded payload as Packet or null if payload is invalid or not supported
+        /// then internal decoding will continue
+        /// </summary>
+        public static Func<ByteArraySegment, TransportPacket, Packet> CustomPayloadDecoder;
+
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else

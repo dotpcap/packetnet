@@ -9,6 +9,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System;
 using NUnit.Framework;
 using PacketDotNet;
+using PacketDotNet.Utils;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
@@ -36,6 +37,38 @@ namespace Test.PacketType
             Assert.AreEqual(l2tp.TunnelID, 18994);
             Assert.AreEqual(l2tp.SessionID, 54110);
             Console.WriteLine(l2tp.GetType());
+        }
+
+        [Test]
+        public void L2tpParsingWithUdpCustomDecoder()
+        {
+            UdpPacket.UdpPayloadCustomDecoderFunc = UdpPayloadCustomDecoderFunc;
+            var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "l2tp.pcap");
+            dev.Open();
+            PacketCapture c;
+            dev.GetNextPacket(out c);
+            var rawCapture = c.GetPacket();
+            dev.Close();
+
+            var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
+
+            Assert.IsNotNull(p);
+
+            var l2tp = p.Extract<L2tpPacket>();
+            Assert.AreEqual(l2tp.TunnelID, 18994);
+            Assert.AreEqual(l2tp.SessionID, 54110);
+            Console.WriteLine(l2tp.GetType());
+        }
+
+        private Packet UdpPayloadCustomDecoderFunc(ByteArraySegment payload, UdpPacket udpPacket)
+        {
+            Console.WriteLine($"Udp Packet from {udpPacket.SourcePort} to {udpPacket.DestinationPort}");
+            if (udpPacket.DestinationPort == L2tpFields.Port || udpPacket.SourcePort == L2tpFields.Port)
+            {
+                 return new L2tpPacket(payload, udpPacket);
+            }
+
+            return null;
         }
     }
 }

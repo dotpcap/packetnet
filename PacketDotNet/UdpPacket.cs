@@ -25,6 +25,8 @@ namespace PacketDotNet
     /// </summary>
     public sealed class UdpPacket : TransportPacket
     {
+        public static Func<ByteArraySegment, UdpPacket, Packet> UdpPayloadCustomDecoderFunc;
+
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
@@ -84,6 +86,12 @@ namespace PacketDotNet
                 var destinationPort = DestinationPort;
                 var sourcePort = SourcePort;
                 var payload = Header.NextSegment();
+
+                if (UdpPayloadCustomDecoderFunc != null && (result.Packet = UdpPayloadCustomDecoderFunc(payload, this)) != null)
+                {
+                    Log.Debug("Use UdpPayloadCustomDecoderFunc");
+                    return result;
+                }
 
                 // If this packet is going to port 0, 7 or 9, then it might be a WakeOnLan packet.
                 if (destinationPort == wakeOnLanPort0 || destinationPort == wakeOnLanPort7 || destinationPort == wakeOnLanPort9)

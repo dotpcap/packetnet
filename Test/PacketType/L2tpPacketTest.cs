@@ -42,7 +42,7 @@ namespace Test.PacketType
         [Test]
         public void L2tpParsingWithUdpCustomDecoder()
         {
-            UdpPacket.UdpPayloadCustomDecoderFunc = UdpPayloadCustomDecoderFunc;
+            UdpPacket.CustomPayloadDecoder = UdpPayloadCustomDecoderFunc;
             var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "l2tp.pcap");
             dev.Open();
             PacketCapture c;
@@ -60,12 +60,15 @@ namespace Test.PacketType
             Console.WriteLine(l2tp.GetType());
         }
 
-        private Packet UdpPayloadCustomDecoderFunc(ByteArraySegment payload, UdpPacket udpPacket)
+        private Packet UdpPayloadCustomDecoderFunc(ByteArraySegment payload, TransportPacket udpPacket)
         {
-            Console.WriteLine($"Udp Packet from {udpPacket.SourcePort} to {udpPacket.DestinationPort}");
-            if (udpPacket.DestinationPort == L2tpFields.Port || udpPacket.SourcePort == L2tpFields.Port)
+            if (udpPacket is UdpPacket)
             {
-                 return new L2tpPacket(payload, udpPacket);
+                Console.WriteLine($"Udp Packet from {udpPacket.SourcePort} to {udpPacket.DestinationPort}");
+                if (udpPacket.DestinationPort == L2tpFields.Port || udpPacket.SourcePort == L2tpFields.Port)
+                {
+                    return new L2tpPacket(payload, udpPacket);
+                }
             }
 
             return null;

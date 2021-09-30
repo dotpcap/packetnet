@@ -80,10 +80,18 @@ namespace PacketDotNet
                 const int wakeOnLanPort7 = 7;
                 const int wakeOnLanPort9 = 9;
                 
-                var result = new PacketOrByteArraySegment();
+                PacketOrByteArraySegment result;
                 var destinationPort = DestinationPort;
                 var sourcePort = SourcePort;
                 var payload = Header.NextSegment();
+
+                if (CustomPayloadDecoder != null && (result = CustomPayloadDecoder(payload, this)) != null)
+                {
+                    Log.Debug("Use CustomPayloadDecoder");
+                    return result;
+                }
+
+                result = new PacketOrByteArraySegment();
 
                 // If this packet is going to port 0, 7 or 9, then it might be a WakeOnLan packet.
                 if (destinationPort == wakeOnLanPort0 || destinationPort == wakeOnLanPort7 || destinationPort == wakeOnLanPort9)

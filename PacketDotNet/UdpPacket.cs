@@ -25,6 +25,12 @@ namespace PacketDotNet
     /// </summary>
     public sealed class UdpPacket : TransportPacket
     {
+        /// <summary>
+        /// Callback function for UdpPacket Payload decoding.
+        /// First parameter is the payload, second parameter if the UdpPacket itself
+        /// returned value is the decoded payload as Packet or null if payload is invalid or not supported
+        /// then internal decoding will continue
+        /// </summary>
         public static Func<ByteArraySegment, UdpPacket, Packet> UdpPayloadCustomDecoderFunc;
 
 #if DEBUG

@@ -28,7 +28,19 @@ namespace Test.PacketType
             var rawCapture = c.GetPacket();
             dev.Close();
 
-            UdpPacket.PayloadTypeDestinationPortMappingList.Add(6000, typeof(RtpPacket));
+            TransportPacket.CustomPayloadDecoder = (segment, packet) =>
+            {
+                if (packet is UdpPacket && packet.DestinationPort == 6000)
+                {
+                    return new PacketOrByteArraySegment
+                    {
+                        Packet = new RtpPacket(segment, packet)
+                    };
+                }
+
+                return null;
+            };
+
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
             Assert.IsNotNull(p);

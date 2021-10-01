@@ -25,24 +25,6 @@ namespace PacketDotNet
     /// </summary>
     public sealed class UdpPacket : TransportPacket
     {
-        public static IDictionary<ushort, Type> PayloadTypeDestinationPortMappingList = new Dictionary<ushort, Type>
-        {
-            { wakeOnLanPort0, typeof(WakeOnLanPacket) },
-            { wakeOnLanPort7, typeof(WakeOnLanPacket) },
-            { wakeOnLanPort9, typeof(WakeOnLanPacket) },
-            { L2tpFields.Port, typeof(L2tpPacket) },
-        };
-
-        public static IDictionary<ushort, Type> PayloadTypeSourcePortMappingList = new Dictionary<ushort, Type>
-        {
-            { L2tpFields.Port, typeof(L2tpPacket) },
-        };
-
-        private const int wakeOnLanPort0 = 0;
-        private const int wakeOnLanPort7 = 7;
-        private const int wakeOnLanPort9 = 9;
-
-
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 #else
@@ -94,14 +76,25 @@ namespace PacketDotNet
 
             PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
             {
-                var result = new PacketOrByteArraySegment();
+                const int wakeOnLanPort0 = 0;
+                const int wakeOnLanPort7 = 7;
+                const int wakeOnLanPort9 = 9;
+                
+                PacketOrByteArraySegment result;
                 var destinationPort = DestinationPort;
                 var sourcePort = SourcePort;
                 var payload = Header.NextSegment();
 
+                if (CustomPayloadDecoder != null && (result = CustomPayloadDecoder(payload, this)) != null)
+                {
+                    Log.Debug("Use CustomPayloadDecoder");
+                    return result;
+                }
+
+                result = new PacketOrByteArraySegment();
+
                 // If this packet is going to port 0, 7 or 9, then it might be a WakeOnLan packet.
-                if (PayloadTypeDestinationPortMappingList.ContainsKey(destinationPort) &&
-                    PayloadTypeDestinationPortMappingList[destinationPort] == typeof(WakeOnLanPacket))
+                if (destinationPort == wakeOnLanPort0 || destinationPort == wakeOnLanPort7 || destinationPort == wakeOnLanPort9)
                 {
                     if (WakeOnLanPacket.IsValid(payload))
                     {
@@ -110,19 +103,7 @@ namespace PacketDotNet
                     }
                 }
 
-                if ((PayloadTypeDestinationPortMappingList.ContainsKey(destinationPort) &&
-                    PayloadTypeDestinationPortMappingList[destinationPort] == typeof(RtpPacket)) ||
-                    (PayloadTypeSourcePortMappingList.ContainsKey(sourcePort) &&
-                     PayloadTypeSourcePortMappingList[sourcePort] == typeof(RtpPacket)))
-                {
-                    result.Packet = new RtpPacket(payload, this);
-                    return result;
-                }
-
-                if ((PayloadTypeDestinationPortMappingList.ContainsKey(destinationPort) &&
-                     PayloadTypeDestinationPortMappingList[destinationPort] == typeof(L2tpPacket)) ||
-                    (PayloadTypeSourcePortMappingList.ContainsKey(sourcePort) &&
-                     PayloadTypeSourcePortMappingList[sourcePort] == typeof(L2tpPacket)))
+                if (destinationPort == L2tpFields.Port || sourcePort == L2tpFields.Port)
                 {
                     result.Packet = new L2tpPacket(payload, this);
                     return result;

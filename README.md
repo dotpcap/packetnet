@@ -1,5 +1,5 @@
 [![NuGet](https://img.shields.io/nuget/v/PacketDotNet.svg)](https://www.nuget.org/packages/PacketDotNet/)
-[![Build status](https://github.com/chmorgan/packetnet/workflows/.NET%20Core/badge.svg)](https://github.com/chmorgan/packetnet/actions)
+[![Build status](https://github.com/chmorgan/packetnet/workflows/.NET/badge.svg)](https://github.com/chmorgan/packetnet/actions)
 
 New!
 ==========

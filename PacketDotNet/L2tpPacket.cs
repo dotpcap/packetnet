@@ -98,9 +98,7 @@ namespace PacketDotNet
 
             return buffer.ToString();
         }
-
-
-
+        
         /// <summary>
         /// Determines whether the payload can be decoded by <see cref="L2tpPacket" />.
         /// </summary>

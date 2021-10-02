@@ -142,8 +142,7 @@ namespace PacketDotNet
             set
             {
                 var bytes = value;
-                var headerLength = WakeOnLanFields.PasswordPosition;
-                
+
                 // checks if the new value matches with the specification.
                 if (bytes.Length == 6 || bytes.Length == 4)
                 {
@@ -178,16 +177,28 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Checks the validity of the Wake-On-LAN payload
-        /// - by checking the synchronization sequence
-        /// - by checking to see if there are 16 iterations of the Destination MAC address
+        /// Checks the validity of the Wake-On-LAN payload by checking the synchronization sequence and if there are 16 iterations of the destination MAC address.
         /// </summary>
         /// <returns>
-        /// True if the Wake-On-LAN payload is valid
+        /// <c>true</c> if the Wake-On-LAN payload is valid.
         /// </returns>
         public bool IsValid()
         {
             return IsValid(Header);
+        }
+
+        /// <summary>
+        /// Determines whether the payload can be decoded by <see cref="WakeOnLanPacket" />.
+        /// </summary>
+        /// <param name="payload">The payload.</param>
+        /// <param name="transportPacket">The transport packet.</param>
+        /// <returns>
+        /// <c>true</c> if the payload can be decoded by <see cref="WakeOnLanPacket"/>; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool CanDecode(ByteArraySegment payload, TransportPacket transportPacket)
+        {
+            // If this packet is going to port 0, 7 or 9, then it might be a WakeOnLan packet.
+            return transportPacket.DestinationPort is WakeOnLanFields.Port0 or WakeOnLanFields.Port7 or WakeOnLanFields.Port9 && IsValid(payload);
         }
 
         /// <summary>
@@ -196,30 +207,32 @@ namespace PacketDotNet
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
         /// </param>
-        /// <returns>
-        /// A <see cref="bool" />
-        /// </returns>
-        public static bool IsValid(ByteArraySegment byteArraySegment)
+        /// <returns>A <see cref="bool" />.</returns>
+        private static bool IsValid(ByteArraySegment byteArraySegment)
         {
             // validate the 16 repetitions of the wolDestinationMAC
-            // - verify that the wolDestinationMAC address repeats 16 times in sequence
+            // verify that the wolDestinationMAC address repeats 16 times in sequence
             for (var i = 0; i < EthernetFields.MacAddressLength * WakeOnLanFields.MacAddressRepetition; i += EthernetFields.MacAddressLength)
             {
-                var basOffset = byteArraySegment.Offset + i;
+                var baseOffset = byteArraySegment.Offset + i;
 
-                // check the synchronization sequence on the first pass
                 if (i == 0)
+                {
+                    // Check the synchronization sequence on the first pass.
                     for (var j = 0; j < EthernetFields.MacAddressLength; j++)
                     {
-                        if (byteArraySegment.Bytes[basOffset + j] != SyncSequence[j])
+                        if (byteArraySegment.Bytes[baseOffset + j] != SyncSequence[j])
                             return false;
                     }
+                }
                 else
+                {
                     for (var j = 0; j < EthernetFields.MacAddressLength; j++)
                     {
-                        if (byteArraySegment.Bytes[byteArraySegment.Offset + SyncSequence.Length + j] != byteArraySegment.Bytes[basOffset + j])
+                        if (byteArraySegment.Bytes[byteArraySegment.Offset + SyncSequence.Length + j] != byteArraySegment.Bytes[baseOffset + j])
                             return false;
                     }
+                }
             }
 
             return true;

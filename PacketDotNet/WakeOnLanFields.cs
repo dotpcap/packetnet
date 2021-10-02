@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
 This file is part of PacketDotNet.
 
 This Source Code Form is subject to the terms of the Mozilla Public
@@ -31,6 +30,15 @@ namespace PacketDotNet
 
         /// <summary>Position of the Password within the Wake-On-Lan header.</summary>
         public static readonly int PasswordPosition;
+
+        /// <summary>Port 0.</summary>
+        public const int Port0 = 0;
+
+        /// <summary>Port 7.</summary>
+        public const int Port7 = 7;
+
+        /// <summary>Port 9.</summary>
+        public const int Port9 = 9;
 
         static WakeOnLanFields()
         {

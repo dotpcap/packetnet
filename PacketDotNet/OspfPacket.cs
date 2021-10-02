@@ -49,38 +49,15 @@ namespace PacketDotNet
             OspfV2Packet p;
             var type = (OspfPacketType) payload[offset + OspfV2Fields.TypePosition];
 
-            switch (type)
+            p = type switch
             {
-                case OspfPacketType.Hello:
-                {
-                    p = new OspfV2HelloPacket(payload, offset);
-                    break;
-                }
-                case OspfPacketType.DatabaseDescription:
-                {
-                    p = new OspfV2DatabaseDescriptorPacket(payload, offset);
-                    break;
-                }
-                case OspfPacketType.LinkStateAcknowledgment:
-                {
-                    p = new OspfV2LinkStateAcknowledgmentPacket(payload, offset);
-                    break;
-                }
-                case OspfPacketType.LinkStateRequest:
-                {
-                    p = new OspfV2LinkStateRequestPacket(payload, offset);
-                    break;
-                }
-                case OspfPacketType.LinkStateUpdate:
-                {
-                    p = new OspfV2LinkStateUpdatePacket(payload, offset);
-                    break;
-                }
-                default:
-                {
-                    throw new Exception("Malformed OSPF packet");
-                }
-            }
+                OspfPacketType.Hello => new OspfV2HelloPacket(payload, offset),
+                OspfPacketType.DatabaseDescription => new OspfV2DatabaseDescriptorPacket(payload, offset),
+                OspfPacketType.LinkStateAcknowledgment => new OspfV2LinkStateAcknowledgmentPacket(payload, offset),
+                OspfPacketType.LinkStateRequest => new OspfV2LinkStateRequestPacket(payload, offset),
+                OspfPacketType.LinkStateUpdate => new OspfV2LinkStateUpdatePacket(payload, offset),
+                _ => throw new Exception("Malformed OSPF packet")
+            };
 
             return p;
         }

@@ -129,7 +129,6 @@ namespace PacketDotNet
         /// <summary>
         /// Gets the payload of the extension header.
         /// </summary>
-        public ByteArraySegment Payload =>
-            _data ?? (_data = new ByteArraySegment(ByteArraySegment.Bytes, ByteArraySegment.Offset + IPv6Fields.HeaderExtensionDataPosition, Length - IPv6Fields.HeaderExtensionDataPosition));
+        public ByteArraySegment Payload => _data ??= new ByteArraySegment(ByteArraySegment.Bytes, ByteArraySegment.Offset + IPv6Fields.HeaderExtensionDataPosition, Length - IPv6Fields.HeaderExtensionDataPosition);
     }
 }

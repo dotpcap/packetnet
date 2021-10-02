@@ -13,13 +13,13 @@ namespace PacketDotNet.Utils.Converters
         /// Returns a big-endian bit converter instance. The same instance is
         /// always returned.
         /// </summary>
-        public static BigEndianBitConverter Big { get; } = new BigEndianBitConverter();
+        public static BigEndianBitConverter Big { get; } = new();
 
         /// <summary>
         /// Returns a little-endian bit converter instance. The same instance is
         /// always returned.
         /// </summary>
-        public static LittleEndianBitConverter Little { get; } = new LittleEndianBitConverter();
+        public static LittleEndianBitConverter Little { get; } = new();
 
         /// <summary>
         /// Indicates the byte order ("endianness") in which data is converted using this class.
@@ -30,7 +30,7 @@ namespace PacketDotNet.Utils.Converters
         /// Union used solely for the equivalent of DoubleToInt64Bits and vice versa.
         /// </summary>
         [StructLayout(LayoutKind.Explicit)]
-        private struct Int32SingleUnion
+        private readonly struct Int32SingleUnion
         {
             /// <summary>
             /// Creates an instance representing the given integer.

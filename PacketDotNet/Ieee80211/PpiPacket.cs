@@ -14,7 +14,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using System.Threading;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
@@ -283,13 +282,13 @@ namespace PacketDotNet.Ieee80211
             var color = "";
             var colorEscape = "";
 
-            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            if (outputFormat is StringOutputType.Normal or StringOutputType.Colored)
             {
                 // build the output string
                 buffer.AppendFormat("{0}[Ieee80211PpiPacket: Version={2}, Length={3}, {1}",
@@ -300,7 +299,7 @@ namespace PacketDotNet.Ieee80211
                                    );
             }
 
-            if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat is StringOutputType.Verbose or StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>

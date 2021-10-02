@@ -276,20 +276,22 @@ namespace PacketDotNet
             var color = "";
             var colorEscape = "";
 
-            if ((outputFormat == StringOutputType.Colored) || (outputFormat == StringOutputType.VerboseColored))
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if ((outputFormat == StringOutputType.Normal) || (outputFormat == StringOutputType.Colored))
+            if (outputFormat is StringOutputType.Normal or StringOutputType.Colored)
+            {
                 buffer.AppendFormat("{0}[UDPPacket: SourcePort={2}, DestinationPort={3}]{1}",
                                     color,
                                     colorEscape,
                                     SourcePort,
                                     DestinationPort);
+            }
 
-            if ((outputFormat == StringOutputType.Verbose) || (outputFormat == StringOutputType.VerboseColored))
+            if (outputFormat is StringOutputType.Verbose or StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>

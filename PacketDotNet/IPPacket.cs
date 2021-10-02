@@ -14,7 +14,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using PacketDotNet.Utils;
-using PacketDotNet.Utils.Converters;
 
 #if DEBUG
 using log4net;
@@ -44,9 +43,9 @@ namespace PacketDotNet
         /// </summary>
         protected int DefaultTimeToLive = 64;
 
-        /// <value>
+        /// <summary>
         /// The destination address
-        /// </value>
+        /// </summary>
         public abstract IPAddress DestinationAddress { get; set; }
 
         /// <summary>
@@ -56,10 +55,10 @@ namespace PacketDotNet
         /// </summary>
         public abstract int HeaderLength { get; set; }
 
-        /// <value>
+        /// <summary>
         /// The number of hops remaining for this packet
         /// Included along side of TimeToLive for user convenience
-        /// </value>
+        /// </summary>
         public virtual int HopLimit
         {
             get => TimeToLive;
@@ -72,10 +71,10 @@ namespace PacketDotNet
         /// </summary>
         public abstract ushort PayloadLength { get; set; }
 
-        /// <value>
+        /// <summary>
         /// Payload packet, overridden to set the NextHeader/Protocol based
         /// on the type of payload packet when the payload packet is set
-        /// </value>
+        /// </summary>
         public override Packet PayloadPacket
         {
             get => base.PayloadPacket;
@@ -83,46 +82,18 @@ namespace PacketDotNet
             {
                 base.PayloadPacket = value;
 
-                switch (value)
+                // set NextHeader (Protocol) based on the type of this packet
+
+                Protocol = value switch
                 {
-                    // set NextHeader (Protocol) based on the type of this packet
-                    case TcpPacket _:
-                    {
-                        Protocol = ProtocolType.Tcp;
-                        break;
-                    }
-                    case UdpPacket _:
-                    {
-                        Protocol = ProtocolType.Udp;
-                        break;
-                    }
-                    case IcmpV6Packet _:
-                    {
-                        Protocol = ProtocolType.IcmpV6;
-                        break;
-                    }
-                    case IcmpV4Packet _:
-                    {
-                        Protocol = ProtocolType.Icmp;
-                        break;
-                    }
-                    case IgmpV2Packet _:
-                    {
-                        Protocol = ProtocolType.Igmp;
-                        break;
-                    }
-                    case OspfPacket _:
-                    {
-                        Protocol = ProtocolType.Ospf;
-                        break;
-                    }
-                    // NOTE: new checks go here
-                    default:
-                    {
-                        Protocol = ProtocolType.IPv6NoNextHeader;
-                        break;
-                    }
-                }
+                    TcpPacket _ => ProtocolType.Tcp,
+                    UdpPacket _ => ProtocolType.Udp,
+                    IcmpV6Packet _ => ProtocolType.IcmpV6,
+                    IcmpV4Packet _ => ProtocolType.Icmp,
+                    IgmpV2Packet _ => ProtocolType.Igmp,
+                    OspfPacket _ => ProtocolType.Ospf,
+                    _ => ProtocolType.IPv6NoNextHeader
+                };
 
                 // update the payload length based on the size
                 // of the payload packet
@@ -132,23 +103,23 @@ namespace PacketDotNet
             }
         }
 
-        /// <value>
+        /// <summary>
         /// The protocol of the ip packet's payload
         /// Named 'Protocol' in IPv4
         /// Named 'NextHeader' in IPv6'
-        /// </value>
+        /// </summary>
         public abstract ProtocolType Protocol { get; set; }
 
-        /// <value>
+        /// <summary>
         /// The source address
-        /// </value>
+        /// </summary>
         public abstract IPAddress SourceAddress { get; set; }
 
-        /// <value>
+        /// <summary>
         /// The number of hops remaining before this packet is discarded
         /// Named 'TimeToLive' in IPv4
         /// Named 'HopLimit' in IPv6
-        /// </value>
+        /// </summary>
         public abstract int TimeToLive { get; set; }
 
         /// <summary>
@@ -157,9 +128,9 @@ namespace PacketDotNet
         /// </summary>
         public abstract int TotalLength { get; set; }
 
-        /// <value>
+        /// <summary>
         /// The IP version
-        /// </value>
+        /// </summary>
         public abstract IPVersion Version { get; set; }
 
         /// <summary>
@@ -268,68 +239,49 @@ namespace PacketDotNet
             {
                 case ProtocolType.Tcp:
                 {
-                    payloadPacketOrData.Packet = new TcpPacket(payload,
-                                                               parentPacket);
-
+                    payloadPacketOrData.Packet = new TcpPacket(payload, parentPacket);
                     break;
                 }
                 case ProtocolType.Udp:
                 {
-                    payloadPacketOrData.Packet = new UdpPacket(payload,
-                                                               parentPacket);
-
+                    payloadPacketOrData.Packet = new UdpPacket(payload, parentPacket);
                     break;
                 }
                 case ProtocolType.Icmp:
                 {
-                    payloadPacketOrData.Packet = new IcmpV4Packet(payload,
-                                                                  parentPacket);
-
+                    payloadPacketOrData.Packet = new IcmpV4Packet(payload, parentPacket);
                     break;
                 }
                 case ProtocolType.IcmpV6:
                 {
-                    payloadPacketOrData.Packet = new IcmpV6Packet(payload,
-                                                                  parentPacket);
-
+                    payloadPacketOrData.Packet = new IcmpV6Packet(payload, parentPacket);
                     break;
                 }
                 case ProtocolType.Igmp:
                 {
-                    payloadPacketOrData.Packet = new IgmpV2Packet(payload,
-                                                                  parentPacket);
-
+                    payloadPacketOrData.Packet = new IgmpV2Packet(payload, parentPacket);
                     break;
                 }
                 case ProtocolType.Ospf:
                 {
-                    payloadPacketOrData.Packet = OspfPacket.ConstructOspfPacket(payload.Bytes,
-                                                                                payload.Offset);
-
+                    payloadPacketOrData.Packet = OspfPacket.ConstructOspfPacket(payload.Bytes, payload.Offset);
                     break;
                 }
                 case ProtocolType.IPv4:
                 {
-                    payloadPacketOrData.Packet = new IPv4Packet(payload,
-                                                                parentPacket);
-
+                    payloadPacketOrData.Packet = new IPv4Packet(payload, parentPacket);
                     break;
                 }
                 case ProtocolType.IPv6:
                 {
-                    payloadPacketOrData.Packet = new IPv6Packet(payload,
-                                                                parentPacket);
-
+                    payloadPacketOrData.Packet = new IPv6Packet(payload, parentPacket);
                     break;
                 }
                 case ProtocolType.Gre:
                 {
-                    payloadPacketOrData.Packet = new GrePacket(payload,
-                                                               parentPacket);
-
+                    payloadPacketOrData.Packet = new GrePacket(payload, parentPacket);
                     break;
                 }
-
                 // NOTE: new payload parsing entries go here
                 default:
                 {

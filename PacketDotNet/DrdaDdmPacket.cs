@@ -97,7 +97,7 @@ namespace PacketDotNet
         {
             get
             {
-                if (_parameters == null) _parameters = new List<DrdaDdmParameter>();
+                _parameters ??= new List<DrdaDdmParameter>();
                 if (_parameters.Count > 0) return _parameters;
 
 
@@ -122,7 +122,7 @@ namespace PacketDotNet
                         var startIndex = offset + DrdaDdmFields.ParameterLengthLength + DrdaDdmFields.ParameterCodePointLength;
                         var strLength = length - 4;
                         //For Type=Data or Type=QryDta,Decode bytes as utf-8 ascii string
-                        if (parameter.DrdaCodepoint == DrdaCodePointType.Data || parameter.DrdaCodepoint == DrdaCodePointType.QueryAnswerSetData)
+                        if (parameter.DrdaCodepoint is DrdaCodePointType.Data or DrdaCodePointType.QueryAnswerSetData)
                         {
                             startIndex++;
                             strLength -= 2;
@@ -150,13 +150,13 @@ namespace PacketDotNet
             var color = "";
             var colorEscape = "";
 
-            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            if (outputFormat is StringOutputType.Normal or StringOutputType.Colored)
             {
                 // build the output string
                 buffer.AppendFormat("{0}[DrdaDdmPacket: Length={2}, Magic=0x{3:x2}, Format=0x{4:x2}, CorrelationId={5}, Length2={6}, CodePoint={7}]{1}",

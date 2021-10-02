@@ -47,12 +47,12 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        /// <value>
+        /// <summary>
         /// The version of the IP protocol. The '6' in IPv6 indicates the version of the protocol
-        /// </value>
+        /// </summary>
         public static readonly IPVersion IPVersion = IPVersion.IPv6;
 
-        private static readonly HashSet<ProtocolType> ExtensionHeaderTypes = new HashSet<ProtocolType>
+        private static readonly HashSet<ProtocolType> ExtensionHeaderTypes = new()
         {
             ProtocolType.IPv6HopByHopOptions,
             ProtocolType.IPv6RoutingHeader,
@@ -67,9 +67,9 @@ namespace PacketDotNet
             ProtocolType.Reserved254
         };
 
-        /// <value>
+        /// <summary>
         /// The position of the byte the contains the encapsulated protocol
-        /// </value>
+        /// </summary>
         private int _protocolOffset;
 
         /// <summary>
@@ -209,11 +209,10 @@ namespace PacketDotNet
             }
         }
 
-        /// <value>
+        /// <summary>
         /// Backwards compatibility property for IPv4.HeaderLength
         /// NOTE: This field is the number of 32bit words
-        /// </value>
-        [SuppressMessage("ReSharper", "ValueParameterNotUsed")]
+        /// </summary>
         public override int HeaderLength
         {
             get => IPv6Fields.HeaderLength / 4;
@@ -253,9 +252,9 @@ namespace PacketDotNet
                                                     Header.Offset + IPv6Fields.PayloadLengthPosition);
         }
 
-        /// <value>
+        /// <summary>
         /// The protocol of the packet encapsulated in this ip packet
-        /// </value>
+        /// </summary>
         public override ProtocolType Protocol
         {
             get => (ProtocolType)Header.Bytes[ExtensionHeadersLength == 0 ? Header.Offset + IPv6Fields.NextHeaderPosition : _protocolOffset];
@@ -279,18 +278,18 @@ namespace PacketDotNet
             }
         }
 
-        /// <value>
+        /// <summary>
         /// Helper alias for 'HopLimit'
-        /// </value>
+        /// </summary>
         public override int TimeToLive
         {
             get => HopLimit;
             set => HopLimit = value;
         }
 
-        /// <value>
+        /// <summary>
         /// Backwards compatibility property for IPv4.TotalLength
-        /// </value>
+        /// </summary>
         public override int TotalLength
         {
             get => PayloadLength + (HeaderLength * 4);
@@ -450,13 +449,13 @@ namespace PacketDotNet
             var color = "";
             var colorEscape = "";
 
-            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            if (outputFormat is StringOutputType.Normal or StringOutputType.Colored)
             {
                 // build the output string
                 buffer.AppendFormat("{0}[IPv6Packet: SourceAddress={2}, DestinationAddress={3}, NextHeader={4}]{1}",
@@ -467,7 +466,7 @@ namespace PacketDotNet
                                     Protocol);
             }
 
-            if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat is StringOutputType.Verbose or StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>();

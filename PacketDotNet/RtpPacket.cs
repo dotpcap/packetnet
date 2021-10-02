@@ -138,7 +138,7 @@ namespace PacketDotNet
         /// </summary>
         public int CsrcCount
         {
-            get => (Header.Bytes[Header.Offset] & RtpFields.CsrcCountMask);
+            get => Header.Bytes[Header.Offset] & RtpFields.CsrcCountMask;
             set
             {
                 Header.Bytes[Header.Offset] |= (byte) (value & RtpFields.CsrcCountMask);
@@ -173,7 +173,7 @@ namespace PacketDotNet
         /// </summary>
         public int PayloadType
         {
-            get => (Header.Bytes[Header.Offset + 1] & RtpFields.PayloadTypeMask);
+            get => Header.Bytes[Header.Offset + 1] & RtpFields.PayloadTypeMask;
             set => Header.Bytes[Header.Offset + 1] |= (byte) (value & RtpFields.PayloadTypeMask);
         }
 

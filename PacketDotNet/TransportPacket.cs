@@ -90,7 +90,7 @@ namespace PacketDotNet
 
             var bytes = option == TransportChecksumOption.IncludePseudoIPHeader
                 ? ((IPPacket) ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
-                : new byte[0];
+                : Array.Empty<byte>();
 
             // calculate the one's complement sum of the tcp header
             var cs = ChecksumUtils.OnesComplementSum(dataToChecksum, bytes);
@@ -119,7 +119,7 @@ namespace PacketDotNet
 
             var bytes = option == TransportChecksumOption.IncludePseudoIPHeader
                 ? ((IPPacket) ParentPacket).GetPseudoIPHeader(dataToChecksum.Length)
-                : new byte[0];
+                : Array.Empty<byte>();
 
             var onesSum = ChecksumUtils.OnesSum(dataToChecksum, bytes);
 

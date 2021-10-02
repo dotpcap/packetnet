@@ -68,9 +68,9 @@ namespace PacketDotNet
             ParentPacket = parentPacket;
         }
 
-        /// <value>
+        /// <summary>
         /// Checksum value
-        /// </value>
+        /// </summary>
         public ushort Checksum
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
@@ -94,9 +94,9 @@ namespace PacketDotNet
         /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.LightBlue;
 
-        /// <value>
+        /// <summary>
         /// The Type value
-        /// </value>
+        /// </summary>
         public IcmpV6Type Type
         {
             get => (IcmpV6Type) Header.Bytes[Header.Offset + IcmpV6Fields.TypePosition];
@@ -124,7 +124,7 @@ namespace PacketDotNet
             var dataToChecksum = BytesSegment;
             var ipv6Parent = ParentPacket as IPv6Packet;
 
-            Checksum = (ushort) ChecksumUtils.OnesComplementSum(dataToChecksum, ipv6Parent?.GetPseudoIPHeader(dataToChecksum.Length) ?? new byte[0]);
+            Checksum = (ushort) ChecksumUtils.OnesComplementSum(dataToChecksum, ipv6Parent?.GetPseudoIPHeader(dataToChecksum.Length) ?? Array.Empty<byte>());
 
             // clear the skip variable
             _skipUpdating = false;
@@ -137,7 +137,7 @@ namespace PacketDotNet
             var color = "";
             var colorEscape = "";
 
-            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;

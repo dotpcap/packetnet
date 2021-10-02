@@ -291,7 +291,7 @@ namespace PacketDotNet
             var color = "";
             var colorEscape = "";
 
-            if ((outputFormat == StringOutputType.Colored) || (outputFormat == StringOutputType.VerboseColored))
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;

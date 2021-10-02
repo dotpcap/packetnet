@@ -76,10 +76,6 @@ namespace PacketDotNet
 
             PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
             {
-                const int wakeOnLanPort0 = 0;
-                const int wakeOnLanPort7 = 7;
-                const int wakeOnLanPort9 = 9;
-                
                 PacketOrByteArraySegment result;
                 var destinationPort = DestinationPort;
                 var sourcePort = SourcePort;
@@ -93,14 +89,10 @@ namespace PacketDotNet
 
                 result = new PacketOrByteArraySegment();
 
-                // If this packet is going to port 0, 7 or 9, then it might be a WakeOnLan packet.
-                if (destinationPort == wakeOnLanPort0 || destinationPort == wakeOnLanPort7 || destinationPort == wakeOnLanPort9)
+                if (WakeOnLanPacket.CanDecode(payload, this))
                 {
-                    if (WakeOnLanPacket.IsValid(payload))
-                    {
-                        result.Packet = new WakeOnLanPacket(payload);
-                        return result;
-                    }
+                    result.Packet = new WakeOnLanPacket(payload);
+                    return result;
                 }
 
                 if (destinationPort == L2tpFields.Port || sourcePort == L2tpFields.Port)
@@ -109,8 +101,7 @@ namespace PacketDotNet
                     return result;
                 }
 
-                if ((sourcePort == DhcpV4Fields.ClientPort || sourcePort == DhcpV4Fields.ServerPort) && 
-                    (destinationPort == DhcpV4Fields.ClientPort || destinationPort == DhcpV4Fields.ServerPort))
+                if (sourcePort is DhcpV4Fields.ClientPort or DhcpV4Fields.ServerPort && destinationPort is DhcpV4Fields.ClientPort or DhcpV4Fields.ServerPort)
                 {
                     var nextSegmentLength = byteArraySegment.Length - Header.Length;
                     if (nextSegmentLength >= DhcpV4Fields.MinimumSize)

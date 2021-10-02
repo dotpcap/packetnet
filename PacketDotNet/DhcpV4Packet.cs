@@ -399,6 +399,27 @@ namespace PacketDotNet
                 Flags = (ushort) (Flags & ~mask);
         }
 
+        /// <summary>
+        /// Determines whether the payload can be decoded by <see cref="DhcpV4Packet" />.
+        /// </summary>
+        /// <param name="payload">The payload.</param>
+        /// <param name="udpPacket">The UDP packet.</param>
+        /// <returns>
+        /// <c>true</c> if the payload can be decoded by <see cref="DhcpV4Packet"/>; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool CanDecode(ByteArraySegment payload, UdpPacket udpPacket)
+        {
+            if (udpPacket.SourcePort is DhcpV4Fields.ClientPort or DhcpV4Fields.ServerPort && udpPacket.DestinationPort is DhcpV4Fields.ClientPort or DhcpV4Fields.ServerPort && 
+                payload.Length >= DhcpV4Fields.MinimumSize)
+            {
+                var magicNumber = EndianBitConverter.Big.ToUInt32(payload.Bytes, payload.Offset + DhcpV4Fields.MagicNumberPosition);
+                if (magicNumber == DhcpV4Fields.MagicNumber)
+                    return true;
+            }
+
+            return false;
+        }
+
         /// <inheritdoc />
         public override string ToString(StringOutputType outputFormat)
         {

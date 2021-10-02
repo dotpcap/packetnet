@@ -1,3 +1,5 @@
+using System;
+
 namespace PacketDotNet.Ieee80211
 {
     /// <summary>
@@ -12,7 +14,7 @@ namespace PacketDotNet.Ieee80211
         /// <value>
         /// The bytes.
         /// </value>
-        public override byte[] Bytes => new byte[0];
+        public override byte[] Bytes => Array.Empty<byte>();
 
         /// <summary>Type of the field</summary>
         public override PpiFieldType FieldType => PpiFieldType.PpiCaptureInfo;

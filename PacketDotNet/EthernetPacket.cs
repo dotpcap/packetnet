@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
@@ -108,10 +107,10 @@ namespace PacketDotNet
             }
         }
 
-        /// <value>
+        /// <summary>
         /// Payload packet, overridden to set the 'Type' field based on
         /// the type of packet being used here if the PayloadPacket is being set
-        /// </value>
+        /// </summary>
         public override Packet PayloadPacket
         {
             get => base.PayloadPacket;
@@ -119,36 +118,18 @@ namespace PacketDotNet
             {
                 base.PayloadPacket = value;
 
-                switch (value)
+                // set Type based on the type of the payload
+                // NOTE: new types should be inserted here
+
+                Type = value switch
                 {
-                    // set Type based on the type of the payload
-                    case IPv4Packet _:
-                    {
-                        Type = EthernetType.IPv4;
-                        break;
-                    }
-                    case IPv6Packet _:
-                    {
-                        Type = EthernetType.IPv6;
-                        break;
-                    }
-                    case ArpPacket _:
-                    {
-                        Type = EthernetType.Arp;
-                        break;
-                    }
-                    case LldpPacket _:
-                    {
-                        Type = EthernetType.Lldp;
-                        break;
-                    }
-                    // NOTE: new types should be inserted here
-                    case PppoePacket _:
-                    {
-                        Type = EthernetType.PppoeSessionStage;
-                        break;
-                    }
-                }
+                    IPv4Packet _ => EthernetType.IPv4,
+                    IPv6Packet _ => EthernetType.IPv6,
+                    ArpPacket _ => EthernetType.Arp,
+                    LldpPacket _ => EthernetType.Lldp,
+                    PppoePacket _ => EthernetType.PppoeSessionStage,
+                    _ => Type
+                };
             }
         }
         
@@ -178,9 +159,9 @@ namespace PacketDotNet
             }
         }
 
-        /// <value>
+        /// <summary>
         /// Type of packet that this ethernet packet encapsulates.
-        /// </value>
+        /// </summary>
         public EthernetType Type
         {
             get => (EthernetType) EndianBitConverter.Big.ToInt16(Header.Bytes,
@@ -273,7 +254,7 @@ namespace PacketDotNet
             var color = "";
             var colorEscape = "";
 
-            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;

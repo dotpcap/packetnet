@@ -9,8 +9,6 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
-using System;
-
 namespace PacketDotNet
 {
     /// <summary>

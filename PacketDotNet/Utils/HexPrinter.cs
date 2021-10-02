@@ -20,7 +20,7 @@ namespace PacketDotNet.Utils
         /// Create a string that contains the hex values of byte[] Byte in
         /// text form
         /// </summary>
-        /// <param name="Byte">
+        /// <param name="byte">
         /// A <see cref="byte" />
         /// </param>
         /// <param name="offset">
@@ -32,13 +32,13 @@ namespace PacketDotNet.Utils
         /// <returns>
         /// A <see cref="string" />
         /// </returns>
-        public static string GetString(byte[] Byte, int offset, int length)
+        public static string GetString(byte[] @byte, int offset, int length)
         {
             var sb = new StringBuilder();
 
             for (var i = offset; i < offset + length; i++)
             {
-                sb.AppendFormat("[{0:x2}]", Byte[i]);
+                sb.AppendFormat("[{0:x2}]", @byte[i]);
             }
 
             return sb.ToString();

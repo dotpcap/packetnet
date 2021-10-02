@@ -573,12 +573,7 @@ namespace PacketDotNet
                 var type = (OptionTypes) optionBytes.Bytes[offset + TcpOption.KindFieldOffset];
 
                 // Some options have no length field, we cannot read the length field if it isn't present or we risk out-of-bounds issues.
-                byte length;
-
-                if ((type == OptionTypes.EndOfOptionList) || (type == OptionTypes.NoOperation))
-                    length = 1;
-                else
-                    length = optionBytes.Bytes[offset + TcpOption.LengthFieldOffset];
+                var length = type is OptionTypes.EndOfOptionList or OptionTypes.NoOperation ? (byte) 1 : optionBytes.Bytes[offset + TcpOption.LengthFieldOffset];
 
                 switch (type)
                 {
@@ -686,7 +681,7 @@ namespace PacketDotNet
             var color = "";
             var colorEscape = "";
 
-            if ((outputFormat == StringOutputType.Colored) || (outputFormat == StringOutputType.VerboseColored))
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;

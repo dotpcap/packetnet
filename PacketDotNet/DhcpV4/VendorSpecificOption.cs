@@ -18,7 +18,7 @@ namespace PacketDotNet.DhcpV4
         /// </summary>
         public VendorSpecificOption() : base(DhcpV4OptionType.VendorSpecific)
         {
-            Information = new byte[0];
+            Information = Array.Empty<byte>();
         }
 
         /// <summary>

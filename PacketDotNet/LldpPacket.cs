@@ -50,7 +50,7 @@ namespace PacketDotNet
         /// <summary>
         /// Contains the TLV's in the LLDPDU
         /// </summary>
-        public TlvCollection TlvCollection = new TlvCollection();
+        public TlvCollection TlvCollection = new();
 
         /// <summary>
         /// Create an empty LldpPacket
@@ -189,53 +189,20 @@ namespace PacketDotNet
         /// </returns>
         private static Tlv GetTlv(byte[] bytes, int offset, TlvType type)
         {
-            switch (type)
+            return type switch
             {
-                case TlvType.ChassisId:
-                {
-                    return new ChassisIdTlv(bytes, offset);
-                }
-                case TlvType.PortId:
-                {
-                    return new PortIdTlv(bytes, offset);
-                }
-                case TlvType.TimeToLive:
-                {
-                    return new TimeToLiveTlv(bytes, offset);
-                }
-                case TlvType.PortDescription:
-                {
-                    return new PortDescriptionTlv(bytes, offset);
-                }
-                case TlvType.SystemName:
-                {
-                    return new SystemNameTlv(bytes, offset);
-                }
-                case TlvType.SystemDescription:
-                {
-                    return new SystemDescriptionTlv(bytes, offset);
-                }
-                case TlvType.SystemCapabilities:
-                {
-                    return new SystemCapabilitiesTlv(bytes, offset);
-                }
-                case TlvType.ManagementAddress:
-                {
-                    return new ManagementAddressTlv(bytes, offset);
-                }
-                case TlvType.OrganizationSpecific:
-                {
-                    return new OrganizationSpecificTlv(bytes, offset);
-                }
-                case TlvType.EndOfLldpu:
-                {
-                    return new EndOfLldpduTlv(bytes, offset);
-                }
-                default:
-                {
-                    return null;
-                }
-            }
+                TlvType.ChassisId => new ChassisIdTlv(bytes, offset),
+                TlvType.PortId => new PortIdTlv(bytes, offset),
+                TlvType.TimeToLive => new TimeToLiveTlv(bytes, offset),
+                TlvType.PortDescription => new PortDescriptionTlv(bytes, offset),
+                TlvType.SystemName => new SystemNameTlv(bytes, offset),
+                TlvType.SystemDescription => new SystemDescriptionTlv(bytes, offset),
+                TlvType.SystemCapabilities => new SystemCapabilitiesTlv(bytes, offset),
+                TlvType.ManagementAddress => new ManagementAddressTlv(bytes, offset),
+                TlvType.OrganizationSpecific => new OrganizationSpecificTlv(bytes, offset),
+                TlvType.EndOfLldpu => new EndOfLldpduTlv(bytes, offset),
+                _ => null
+            };
         }
 
         /// <summary>
@@ -274,7 +241,7 @@ namespace PacketDotNet
             var color = "";
             var colorEscape = "";
 
-            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;

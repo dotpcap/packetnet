@@ -6,9 +6,7 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-using System;
 using System.Collections.Generic;
-using System.Threading;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
@@ -75,10 +73,7 @@ namespace PacketDotNet
         {
             get
             {
-                if (_ddmList == null)
-                {
-                    _ddmList = new List<DrdaDdmPacket>();
-                }
+                _ddmList ??= new List<DrdaDdmPacket>();
 
                 if (_ddmList.Count > 0) return _ddmList;
 

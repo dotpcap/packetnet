@@ -130,21 +130,21 @@ namespace PacketDotNet
 
                 // If 6-byte length, it will be dissected as an Ethernet address.
                 // If 4-byte length, it will be dissected as an IPv4 address.
-                if (passwordLength == 6 || passwordLength == 4)
+                if (passwordLength is 6 or 4)
                 {
                     byte[] hwAddress = new byte[passwordLength];
                     Array.Copy(Header.Bytes, Header.Offset + WakeOnLanFields.PasswordPosition,
                                hwAddress, 0, hwAddress.Length);
                     return hwAddress;
                 }
-                return new byte[0];
+                return Array.Empty<byte>();
             }
             set
             {
                 var bytes = value;
 
                 // checks if the new value matches with the specification.
-                if (bytes.Length == 6 || bytes.Length == 4)
+                if (bytes.Length is 6 or 4)
                 {
                     // checks if the byte can fit the current byteArraySegment.
                     if (bytes.Length == Password.Length)
@@ -277,19 +277,21 @@ namespace PacketDotNet
             var color = "";
             var colorEscape = "";
 
-            if ((outputFormat == StringOutputType.Colored) || (outputFormat == StringOutputType.VerboseColored))
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if ((outputFormat == StringOutputType.Normal) || (outputFormat == StringOutputType.Colored))
+            if (outputFormat is StringOutputType.Normal or StringOutputType.Colored)
+            {
                 buffer.AppendFormat("[{0}WakeOnLanPacket{1}: DestinationAddress={2}]",
                                     color,
                                     colorEscape,
                                     DestinationAddress);
+            }
 
-            if ((outputFormat == StringOutputType.Verbose) || (outputFormat == StringOutputType.VerboseColored))
+            if (outputFormat is StringOutputType.Verbose or StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>

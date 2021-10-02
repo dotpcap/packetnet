@@ -9,7 +9,6 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  * Copyright 2011 David Thedens <dthedens@metageek.net>
  */
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace PacketDotNet.Ieee80211

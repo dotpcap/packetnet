@@ -77,8 +77,6 @@ namespace PacketDotNet
             PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
             {
                 PacketOrByteArraySegment result;
-                var destinationPort = DestinationPort;
-                var sourcePort = SourcePort;
                 var payload = Header.NextSegment();
 
                 if (CustomPayloadDecoder != null && (result = CustomPayloadDecoder(payload, this)) != null)
@@ -95,26 +93,19 @@ namespace PacketDotNet
                     return result;
                 }
 
+                var sourcePort = SourcePort;
+                var destinationPort = DestinationPort;
+
                 if (destinationPort == L2tpFields.Port || sourcePort == L2tpFields.Port)
                 {
                     result.Packet = new L2tpPacket(payload, this);
                     return result;
                 }
 
-                if (sourcePort is DhcpV4Fields.ClientPort or DhcpV4Fields.ServerPort && destinationPort is DhcpV4Fields.ClientPort or DhcpV4Fields.ServerPort)
+                if (DhcpV4Packet.CanDecode(payload, this))
                 {
-                    var nextSegmentLength = byteArraySegment.Length - Header.Length;
-                    if (nextSegmentLength >= DhcpV4Fields.MinimumSize)
-                    {
-                        var nextSegment = new ByteArraySegment(byteArraySegment.Bytes, byteArraySegment.Offset + Header.Length, nextSegmentLength);
-
-                        var magicNumber = EndianBitConverter.Big.ToUInt32(nextSegment.Bytes, nextSegment.Offset + DhcpV4Fields.MagicNumberPosition);
-                        if (magicNumber == DhcpV4Fields.MagicNumber)
-                        {
-                            result.Packet = new DhcpV4Packet(nextSegment, this);
-                            return result;
-                        }
-                    }
+                    result.Packet = new DhcpV4Packet(payload, this);
+                    return result;
                 }
                 
                 // Teredo encapsulates IPv6 traffic into UDP packets, parse out the bytes in the payload into packets.
@@ -156,15 +147,8 @@ namespace PacketDotNet
         /// <summary>Fetch the header checksum.</summary>
         public override ushort Checksum
         {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + UdpFields.ChecksumPosition);
-            set
-            {
-                var val = value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 Header.Bytes,
-                                                 Header.Offset + UdpFields.ChecksumPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + UdpFields.ChecksumPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + UdpFields.ChecksumPosition);
         }
 
         /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
@@ -173,32 +157,21 @@ namespace PacketDotNet
         /// <summary>Fetch the port number on the target host.</summary>
         public override ushort DestinationPort
         {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + UdpFields.DestinationPortPosition);
-            set
-            {
-                var val = value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 Header.Bytes,
-                                                 Header.Offset + UdpFields.DestinationPortPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + UdpFields.DestinationPortPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + UdpFields.DestinationPortPosition);
         }
 
-        /// <value>
+        /// <summary>
         /// Length in bytes of the header and payload, minimum size of 8,
         /// the size of the Udp header
-        /// </value>
+        /// </summary>
         public int Length
         {
-            get => EndianBitConverter.Big.ToInt16(Header.Bytes,
-                                                  Header.Offset + UdpFields.HeaderLengthPosition);
+            get => EndianBitConverter.Big.ToInt16(Header.Bytes, Header.Offset + UdpFields.HeaderLengthPosition);
             internal set
             {
                 // Internal because it is updated based on the payload when its bytes are retrieved.
-                var val = (short) value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 Header.Bytes,
-                                                 Header.Offset + UdpFields.HeaderLengthPosition);
+                EndianBitConverter.Big.CopyBytes((short)value,Header.Bytes,Header.Offset + UdpFields.HeaderLengthPosition);
             }
         }
 
@@ -206,11 +179,7 @@ namespace PacketDotNet
         public override ushort SourcePort
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
-            set
-            {
-                var val = value;
-                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
-            }
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
         }
 
         /// <summary>Check if the UDP packet is valid, checksum-wise.</summary>
@@ -228,9 +197,9 @@ namespace PacketDotNet
             }
         }
 
-        /// <value>
+        /// <summary>
         /// True if the UDP checksum is valid
-        /// </value>
+        /// </summary>
         public bool ValidUdpChecksum
         {
             get

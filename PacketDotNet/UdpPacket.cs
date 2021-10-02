@@ -93,10 +93,7 @@ namespace PacketDotNet
                     return result;
                 }
 
-                var sourcePort = SourcePort;
-                var destinationPort = DestinationPort;
-
-                if (destinationPort == L2tpFields.Port || sourcePort == L2tpFields.Port)
+                if (L2tpPacket.CanDecode(payload, this))
                 {
                     result.Packet = new L2tpPacket(payload, this);
                     return result;
@@ -107,10 +104,14 @@ namespace PacketDotNet
                     result.Packet = new DhcpV4Packet(payload, this);
                     return result;
                 }
-                
+
                 // Teredo encapsulates IPv6 traffic into UDP packets, parse out the bytes in the payload into packets.
                 // If it contains a IPV6 packet, it to this current packet as a payload.
                 // https://tools.ietf.org/html/rfc4380#section-5.1.1
+
+                var sourcePort = SourcePort;
+                var destinationPort = DestinationPort;
+
                 if (destinationPort == IPv6Fields.TeredoPort || sourcePort == IPv6Fields.TeredoPort)
                 {
                     if (ContainsIPv6Packet(payload))

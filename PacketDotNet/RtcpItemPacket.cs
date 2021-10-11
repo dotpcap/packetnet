@@ -11,10 +11,12 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 using System;
-using System.Reflection;
-using log4net;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
+#if DEBUG
+using log4net;
+using System.Reflection;
+#endif
 
 namespace PacketDotNet
 {

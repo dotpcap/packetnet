@@ -357,105 +357,33 @@ namespace PacketDotNet
         /// <returns><see cref="DhcpV4Option" />.</returns>
         private static DhcpV4Option GetDhcpV4Option(DhcpV4OptionType optionType, int optionLength, byte[] buffer, int offset)
         {
-            switch (optionType)
+            return optionType switch
             {
-                case DhcpV4OptionType.AddressRequest:
-                {
-                    return new AddressRequestOption(buffer, offset);
-                }
-                case DhcpV4OptionType.AddressTime:
-                {
-                    return new AddressTimeOption(buffer, offset);
-                }
-                case DhcpV4OptionType.BroadcastAddress:
-                {
-                    return new BroadcastAddressOption(buffer, offset);
-                }
-                case DhcpV4OptionType.ClassId:
-                {
-                    return new ClassIdOption(buffer, offset, optionLength);
-                }
-                case DhcpV4OptionType.ClientId:
-                {
-                    return new ClientIdOption(buffer, offset, optionLength);
-                }
-                case DhcpV4OptionType.DHCPMaxMsgSize:
-                {
-                    return new MaxMessageSizeOption(buffer, offset);
-                }
-                case DhcpV4OptionType.DHCPMessage:
-                {
-                    return new MessageOption(buffer, offset, optionLength);
-                }
-                case DhcpV4OptionType.DHCPMsgType:
-                {
-                    return new MessageTypeOption(buffer, offset);
-                }
-                case DhcpV4OptionType.DHCPServerId:
-                {
-                    return new ServerIdOption(buffer, offset);
-                }
-                case DhcpV4OptionType.DomainName:
-                {
-                    return new DomainNameOption(buffer, offset, optionLength);
-                }
-                case DhcpV4OptionType.DomainServer:
-                {
-                    return new DomainNameServerOption(buffer, offset, optionLength);
-                }
-                case DhcpV4OptionType.HostName:
-                {
-                    return new HostNameOption(buffer, offset, optionLength);
-                }
-                case DhcpV4OptionType.NTPServers:
-                {
-                    return new NTPServersOption(buffer, offset, optionLength);
-                }
-                case DhcpV4OptionType.Pad:
-                {
-                    return new PadOption();
-                }
-                case DhcpV4OptionType.ParameterList:
-                {
-                    return new ParameterListOption(buffer, offset, optionLength);
-                }
-                case DhcpV4OptionType.RebindingTime:
-                {
-                    return new RebindingTimeOption(buffer, offset);
-                }
-                case DhcpV4OptionType.RenewalTime:
-                {
-                    return new RenewalTimeOption(buffer, offset);
-                }
-                case DhcpV4OptionType.Router:
-                {
-                    return new RouterOption(buffer, offset, optionLength);
-                }
-                case DhcpV4OptionType.ServerName:
-                {
-                    return new TFTPServerNameOption(buffer, offset, optionLength);
-                }
-                case DhcpV4OptionType.SubnetMask:
-                {
-                    return new SubnetMaskOption(buffer, offset);
-                }
-                case DhcpV4OptionType.TimeOffset:
-                {
-                    return new TimeOffsetOption(buffer, offset);
-                }
-                case DhcpV4OptionType.TimeServer:
-                {
-                    return new TimeServerOption(buffer, offset, optionLength);
-                }
-                case DhcpV4OptionType.VendorSpecific:
-                {
-                    return new VendorSpecificOption(buffer, offset, optionLength);
-                }
-                default:
-                {
-                    return new UnsupportedOption(buffer, offset, optionType, optionLength);
-                }
-            }
+                DhcpV4OptionType.AddressRequest => new AddressRequestOption(buffer, offset),
+                DhcpV4OptionType.AddressTime => new AddressTimeOption(buffer, offset),
+                DhcpV4OptionType.BroadcastAddress => new BroadcastAddressOption(buffer, offset),
+                DhcpV4OptionType.ClassId => new ClassIdOption(buffer, offset, optionLength),
+                DhcpV4OptionType.ClientId => new ClientIdOption(buffer, offset, optionLength),
+                DhcpV4OptionType.DHCPMaxMsgSize => new MaxMessageSizeOption(buffer, offset),
+                DhcpV4OptionType.DHCPMessage => new MessageOption(buffer, offset, optionLength),
+                DhcpV4OptionType.DHCPMsgType => new MessageTypeOption(buffer, offset),
+                DhcpV4OptionType.DHCPServerId => new ServerIdOption(buffer, offset),
+                DhcpV4OptionType.DomainName => new DomainNameOption(buffer, offset, optionLength),
+                DhcpV4OptionType.DomainServer => new DomainNameServerOption(buffer, offset, optionLength),
+                DhcpV4OptionType.HostName => new HostNameOption(buffer, offset, optionLength),
+                DhcpV4OptionType.NTPServers => new NTPServersOption(buffer, offset, optionLength),
+                DhcpV4OptionType.Pad => new PadOption(),
+                DhcpV4OptionType.ParameterList => new ParameterListOption(buffer, offset, optionLength),
+                DhcpV4OptionType.RebindingTime => new RebindingTimeOption(buffer, offset),
+                DhcpV4OptionType.RenewalTime => new RenewalTimeOption(buffer, offset),
+                DhcpV4OptionType.Router => new RouterOption(buffer, offset, optionLength),
+                DhcpV4OptionType.ServerName => new TFTPServerNameOption(buffer, offset, optionLength),
+                DhcpV4OptionType.SubnetMask => new SubnetMaskOption(buffer, offset),
+                DhcpV4OptionType.TimeOffset => new TimeOffsetOption(buffer, offset),
+                DhcpV4OptionType.TimeServer => new TimeServerOption(buffer, offset, optionLength),
+                DhcpV4OptionType.VendorSpecific => new VendorSpecificOption(buffer, offset, optionLength),
+                _ => new UnsupportedOption(buffer, offset, optionType, optionLength)
+            };
         }
 
         /// <summary>
@@ -469,6 +397,27 @@ namespace PacketDotNet
                 Flags = (ushort) (Flags | mask);
             else
                 Flags = (ushort) (Flags & ~mask);
+        }
+
+        /// <summary>
+        /// Determines whether the payload can be decoded by <see cref="DhcpV4Packet" />.
+        /// </summary>
+        /// <param name="payload">The payload.</param>
+        /// <param name="udpPacket">The UDP packet.</param>
+        /// <returns>
+        /// <c>true</c> if the payload can be decoded by <see cref="DhcpV4Packet"/>; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool CanDecode(ByteArraySegment payload, UdpPacket udpPacket)
+        {
+            if (udpPacket.SourcePort is DhcpV4Fields.ClientPort or DhcpV4Fields.ServerPort && udpPacket.DestinationPort is DhcpV4Fields.ClientPort or DhcpV4Fields.ServerPort && 
+                payload.Length >= DhcpV4Fields.MinimumSize)
+            {
+                var magicNumber = EndianBitConverter.Big.ToUInt32(payload.Bytes, payload.Offset + DhcpV4Fields.MagicNumberPosition);
+                if (magicNumber == DhcpV4Fields.MagicNumber)
+                    return true;
+            }
+
+            return false;
         }
 
         /// <inheritdoc />

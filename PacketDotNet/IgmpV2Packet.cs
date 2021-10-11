@@ -15,7 +15,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using PacketDotNet.Utils;
 
 namespace PacketDotNet
@@ -106,13 +105,13 @@ namespace PacketDotNet
             var color = "";
             var colorEscape = "";
 
-            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            if (outputFormat is StringOutputType.Normal or StringOutputType.Colored)
             {
                 // build the output string
                 buffer.AppendFormat("{0}[IgmpV2Packet: Type={2}, MaxResponseTime={3}, GroupAddress={4}]{1}",
@@ -123,7 +122,7 @@ namespace PacketDotNet
                                     GroupAddress);
             }
 
-            if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat is StringOutputType.Verbose or StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>

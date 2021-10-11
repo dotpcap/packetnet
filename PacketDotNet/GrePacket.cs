@@ -12,7 +12,6 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
@@ -79,12 +78,12 @@ namespace PacketDotNet
             var buffer = new StringBuilder();
             var color = "";
 
-            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
             {
                 color = Color;
             }
 
-            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            if (outputFormat is StringOutputType.Normal or StringOutputType.Colored)
             {
                 // build the output string
                 buffer.AppendFormat("{0}[GrePacket: Type={1}",
@@ -92,7 +91,7 @@ namespace PacketDotNet
                                     Protocol);
             }
 
-            if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat is StringOutputType.Verbose or StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
                 var unused = new Dictionary<string, string>

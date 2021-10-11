@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
@@ -42,14 +41,14 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        /// <value>
+        /// <summary>
         /// Number of bytes in the smallest valid IPv4 packet
-        /// </value>
+        /// </summary>
         public const int HeaderMinimumLength = 20;
 
-        /// <value>
+        /// <summary>
         /// Version number of the IP protocol being used
-        /// </value>
+        /// </summary>
         public static readonly IPVersion IPVersion = IPVersion.IPv4;
 
         /// <summary>
@@ -262,9 +261,9 @@ namespace PacketDotNet
                                                     Header.Offset + IPv4Fields.IdPosition);
         }
 
-        /// <value>
+        /// <summary>
         /// Forwards compatibility IPv6.PayloadLength property
-        /// </value>
+        /// </summary>
         public override ushort PayloadLength
         {
             get => (ushort) (TotalLength - (HeaderLength * 4));
@@ -308,25 +307,23 @@ namespace PacketDotNet
             set => Header.Bytes[Header.Offset + IPv4Fields.TtlPosition] = (byte) value;
         }
 
-        /// <value>
+        /// <summary>
         /// The entire datagram size including header and data
-        /// </value>
+        /// </summary>
         public override int TotalLength
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                    Header.Offset + IPv4Fields.TotalLengthPosition);
-            set
-            {
+            set =>
                 EndianBitConverter.Big.CopyBytes((ushort)value,
                                                  Header.Bytes,
                                                  Header.Offset + IPv4Fields.TotalLengthPosition);
-            }
         }
 
-        /// <value>
+        /// <summary>
         /// Renamed to DifferentiatedServices in IPv6 but present here
         /// for backwards compatibility
-        /// </value>
+        /// </summary>
         public int TypeOfService
         {
             get => DifferentiatedServices;
@@ -354,7 +351,7 @@ namespace PacketDotNet
                     return false;
                 }
 
-                var headerOnesSum = ChecksumUtils.OnesSum(Header, new byte[0]);
+                var headerOnesSum = ChecksumUtils.OnesSum(Header, Array.Empty<byte>());
 
                 Log.DebugFormat(HexPrinter.GetString(Header.ActualBytes(), 0, Header.Length));
 
@@ -443,13 +440,13 @@ namespace PacketDotNet
             var color = "";
             var colorEscape = "";
 
-            if (outputFormat == StringOutputType.Colored || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if (outputFormat == StringOutputType.Normal || outputFormat == StringOutputType.Colored)
+            if (outputFormat is StringOutputType.Normal or StringOutputType.Colored)
             {
                 // build the output string
                 buffer.AppendFormat("{0}[IPv4Packet: SourceAddress={2}, DestinationAddress={3}, HeaderLength={4}, Protocol={5}, TimeToLive={6}]{1}",
@@ -462,7 +459,7 @@ namespace PacketDotNet
                                     TimeToLive);
             }
 
-            if (outputFormat == StringOutputType.Verbose || outputFormat == StringOutputType.VerboseColored)
+            if (outputFormat is StringOutputType.Verbose or StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>

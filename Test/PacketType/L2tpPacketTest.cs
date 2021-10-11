@@ -10,6 +10,7 @@ using System;
 using NUnit.Framework;
 using PacketDotNet;
 using PacketDotNet.Utils;
+using PacketDotNet.Utils.Converters;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
@@ -34,8 +35,8 @@ namespace Test.PacketType
             Assert.IsNotNull(p);
 
             var l2tp = p.Extract<L2tpPacket>();
-            Assert.AreEqual(l2tp.TunnelID, 18994);
-            Assert.AreEqual(l2tp.SessionID, 54110);
+            Assert.AreEqual(l2tp.TunnelId, 18994);
+            Assert.AreEqual(l2tp.SessionId, 54110);
             Console.WriteLine(l2tp.GetType());
         }
 
@@ -55,11 +56,11 @@ namespace Test.PacketType
             Assert.IsNotNull(p);
 
             var l2tp = p.Extract<L2tpPacket>();
-            Assert.AreEqual(l2tp.TunnelID, 18994);
-            Assert.AreEqual(l2tp.SessionID, 54110);
+            Assert.AreEqual(l2tp.TunnelId, 18994);
+            Assert.AreEqual(l2tp.SessionId, 54110);
             Console.WriteLine(l2tp.GetType());
         }
-
+        
         private PacketOrByteArraySegment UdpPayloadCustomDecoderFunc(ByteArraySegment payload, TransportPacket udpPacket)
         {
             if (udpPacket is UdpPacket)
@@ -67,7 +68,6 @@ namespace Test.PacketType
                 Console.WriteLine($"Udp Packet from {udpPacket.SourcePort} to {udpPacket.DestinationPort}");
                 if (udpPacket.DestinationPort == L2tpFields.Port || udpPacket.SourcePort == L2tpFields.Port)
                 {
-
                     return new PacketOrByteArraySegment { Packet = new L2tpPacket(payload, udpPacket) };
                 }
             }

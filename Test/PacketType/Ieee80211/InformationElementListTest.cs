@@ -9,6 +9,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
@@ -40,7 +41,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_Bytes_EmptySection()
         {
-            var byteArraySegment = new ByteArraySegment(new byte[0]);
+            var byteArraySegment = new ByteArraySegment(Array.Empty<byte>());
             var ieList = new InformationElementList(byteArraySegment);
 
             Assert.AreEqual(0, ieList.Bytes.Length);
@@ -133,7 +134,7 @@ namespace Test.PacketType.Ieee80211
         [Test]
         public void Test_Constructor_EmptyByteArray()
         {
-            var byteArraySegment = new ByteArraySegment(new byte[0]);
+            var byteArraySegment = new ByteArraySegment(Array.Empty<byte>());
             var ieList = new InformationElementList(byteArraySegment);
 
             Assert.AreEqual(0, ieList.Count);

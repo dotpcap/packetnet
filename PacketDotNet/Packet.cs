@@ -44,7 +44,7 @@ namespace PacketDotNet
         /// <summary>
         /// Used internally when building new packet dissectors
         /// </summary>
-        protected LazySlim<PacketOrByteArraySegment> PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(null);
+        protected LazySlim<PacketOrByteArraySegment> PayloadPacketOrData = new(null);
 
         /// <summary>
         /// Gets the actual bytes containing this packet and its payload.
@@ -52,9 +52,9 @@ namespace PacketDotNet
         /// <remarks>Use <see cref="BytesSegment" /> for optimal performance.</remarks>
         public virtual byte[] Bytes => BytesSegment.ActualBytes();
 
-        /// <value>
+        /// <summary>
         /// Gets a <see cref="ByteArraySegment" /> with the data that can start at an offset other than the first byte.
-        /// </value>
+        /// </summary>
         public virtual ByteArraySegment BytesSegment
         {
             get
@@ -107,9 +107,9 @@ namespace PacketDotNet
             }
         }
 
-        /// <value>
+        /// <summary>
         /// Color used when generating the text description of a packet
-        /// </value>
+        /// </summary>
         public virtual string Color => AnsiEscapeSequences.Black;
 
         /// <summary>
@@ -128,9 +128,9 @@ namespace PacketDotNet
         /// </value>
         public virtual bool HasPayloadPacket => PayloadPacketOrData.Value.Type == PayloadType.Packet;
 
-        /// <value>
+        /// <summary>
         /// Gets the bytes of the header's data.
-        /// </value>
+        /// </summary>
         public virtual byte[] HeaderData => Header.ActualBytes();
 
         /// <summary>
@@ -243,7 +243,7 @@ namespace PacketDotNet
             }
         }
 
-        /// <value>
+        /// <summary>
         /// Returns true if we already have a contiguous byte[] in either
         /// of these conditions:
         /// - This packet's header byte[] and payload byte[] are the same instance
@@ -251,7 +251,7 @@ namespace PacketDotNet
         /// - This packet's header byte[] and this packet's payload packet
         /// are the same instance and the offsets indicate that the bytes
         /// are contiguous
-        /// </value>
+        /// </summary>
         protected bool SharesMemoryWithSubPackets
         {
             get

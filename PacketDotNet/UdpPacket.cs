@@ -76,13 +76,7 @@ namespace PacketDotNet
 
             PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
             {
-                const int wakeOnLanPort0 = 0;
-                const int wakeOnLanPort7 = 7;
-                const int wakeOnLanPort9 = 9;
-                
                 PacketOrByteArraySegment result;
-                var destinationPort = DestinationPort;
-                var sourcePort = SourcePort;
                 var payload = Header.NextSegment();
 
                 if (CustomPayloadDecoder != null && (result = CustomPayloadDecoder(payload, this)) != null)
@@ -93,42 +87,31 @@ namespace PacketDotNet
 
                 result = new PacketOrByteArraySegment();
 
-                // If this packet is going to port 0, 7 or 9, then it might be a WakeOnLan packet.
-                if (destinationPort == wakeOnLanPort0 || destinationPort == wakeOnLanPort7 || destinationPort == wakeOnLanPort9)
+                if (WakeOnLanPacket.CanDecode(payload, this))
                 {
-                    if (WakeOnLanPacket.IsValid(payload))
-                    {
-                        result.Packet = new WakeOnLanPacket(payload);
-                        return result;
-                    }
+                    result.Packet = new WakeOnLanPacket(payload);
+                    return result;
                 }
 
-                if (destinationPort == L2tpFields.Port || sourcePort == L2tpFields.Port)
+                if (L2tpPacket.CanDecode(payload, this))
                 {
                     result.Packet = new L2tpPacket(payload, this);
                     return result;
                 }
 
-                if ((sourcePort == DhcpV4Fields.ClientPort || sourcePort == DhcpV4Fields.ServerPort) && 
-                    (destinationPort == DhcpV4Fields.ClientPort || destinationPort == DhcpV4Fields.ServerPort))
+                if (DhcpV4Packet.CanDecode(payload, this))
                 {
-                    var nextSegmentLength = byteArraySegment.Length - Header.Length;
-                    if (nextSegmentLength >= DhcpV4Fields.MinimumSize)
-                    {
-                        var nextSegment = new ByteArraySegment(byteArraySegment.Bytes, byteArraySegment.Offset + Header.Length, nextSegmentLength);
-
-                        var magicNumber = EndianBitConverter.Big.ToUInt32(nextSegment.Bytes, nextSegment.Offset + DhcpV4Fields.MagicNumberPosition);
-                        if (magicNumber == DhcpV4Fields.MagicNumber)
-                        {
-                            result.Packet = new DhcpV4Packet(nextSegment, this);
-                            return result;
-                        }
-                    }
+                    result.Packet = new DhcpV4Packet(payload, this);
+                    return result;
                 }
-                
+
                 // Teredo encapsulates IPv6 traffic into UDP packets, parse out the bytes in the payload into packets.
                 // If it contains a IPV6 packet, it to this current packet as a payload.
                 // https://tools.ietf.org/html/rfc4380#section-5.1.1
+
+                var sourcePort = SourcePort;
+                var destinationPort = DestinationPort;
+
                 if (destinationPort == IPv6Fields.TeredoPort || sourcePort == IPv6Fields.TeredoPort)
                 {
                     if (ContainsIPv6Packet(payload))
@@ -165,15 +148,8 @@ namespace PacketDotNet
         /// <summary>Fetch the header checksum.</summary>
         public override ushort Checksum
         {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + UdpFields.ChecksumPosition);
-            set
-            {
-                var val = value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 Header.Bytes,
-                                                 Header.Offset + UdpFields.ChecksumPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + UdpFields.ChecksumPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + UdpFields.ChecksumPosition);
         }
 
         /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
@@ -182,32 +158,21 @@ namespace PacketDotNet
         /// <summary>Fetch the port number on the target host.</summary>
         public override ushort DestinationPort
         {
-            get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                   Header.Offset + UdpFields.DestinationPortPosition);
-            set
-            {
-                var val = value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 Header.Bytes,
-                                                 Header.Offset + UdpFields.DestinationPortPosition);
-            }
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + UdpFields.DestinationPortPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + UdpFields.DestinationPortPosition);
         }
 
-        /// <value>
+        /// <summary>
         /// Length in bytes of the header and payload, minimum size of 8,
         /// the size of the Udp header
-        /// </value>
+        /// </summary>
         public int Length
         {
-            get => EndianBitConverter.Big.ToInt16(Header.Bytes,
-                                                  Header.Offset + UdpFields.HeaderLengthPosition);
+            get => EndianBitConverter.Big.ToInt16(Header.Bytes, Header.Offset + UdpFields.HeaderLengthPosition);
             internal set
             {
                 // Internal because it is updated based on the payload when its bytes are retrieved.
-                var val = (short) value;
-                EndianBitConverter.Big.CopyBytes(val,
-                                                 Header.Bytes,
-                                                 Header.Offset + UdpFields.HeaderLengthPosition);
+                EndianBitConverter.Big.CopyBytes((short)value,Header.Bytes,Header.Offset + UdpFields.HeaderLengthPosition);
             }
         }
 
@@ -215,11 +180,7 @@ namespace PacketDotNet
         public override ushort SourcePort
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
-            set
-            {
-                var val = value;
-                EndianBitConverter.Big.CopyBytes(val, Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
-            }
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + UdpFields.SourcePortPosition);
         }
 
         /// <summary>Check if the UDP packet is valid, checksum-wise.</summary>
@@ -237,9 +198,9 @@ namespace PacketDotNet
             }
         }
 
-        /// <value>
+        /// <summary>
         /// True if the UDP checksum is valid
-        /// </value>
+        /// </summary>
         public bool ValidUdpChecksum
         {
             get
@@ -285,20 +246,22 @@ namespace PacketDotNet
             var color = "";
             var colorEscape = "";
 
-            if ((outputFormat == StringOutputType.Colored) || (outputFormat == StringOutputType.VerboseColored))
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
             {
                 color = Color;
                 colorEscape = AnsiEscapeSequences.Reset;
             }
 
-            if ((outputFormat == StringOutputType.Normal) || (outputFormat == StringOutputType.Colored))
+            if (outputFormat is StringOutputType.Normal or StringOutputType.Colored)
+            {
                 buffer.AppendFormat("{0}[UDPPacket: SourcePort={2}, DestinationPort={3}]{1}",
                                     color,
                                     colorEscape,
                                     SourcePort,
                                     DestinationPort);
+            }
 
-            if ((outputFormat == StringOutputType.Verbose) || (outputFormat == StringOutputType.VerboseColored))
+            if (outputFormat is StringOutputType.Verbose or StringOutputType.VerboseColored)
             {
                 // collect the properties and their value
                 var properties = new Dictionary<string, string>

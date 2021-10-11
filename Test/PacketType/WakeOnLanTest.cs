@@ -138,7 +138,7 @@ namespace Test.PacketType
                 Assert.IsNotNull(p);
 
                 if (packetIndex == 0|| packetIndex == 3)
-                    Assert.AreEqual(wol.Password, new byte[0]);
+                    Assert.AreEqual(wol.Password, Array.Empty<byte>());
 
                 if (packetIndex == 1)
                     Assert.AreEqual(wol.Password, new byte[] { 0xc0, 0xa8, 0x01, 0x01 });

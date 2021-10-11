@@ -119,7 +119,7 @@ namespace Test.PacketType
         {
             byte[] data = new byte[] { 0xef, 0x00, 0x00, 0x00, 0xef, 0x00, 0x00, 0x00, 0x6f, 0xef, 0xbb, 0xbf };
 
-            var rtp = new RtpContainerPacket
+            var rtp = new RtpPacket
             {
                 PayloadData = data,
                 Version = 2,

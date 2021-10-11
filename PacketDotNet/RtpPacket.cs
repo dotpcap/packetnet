@@ -24,7 +24,7 @@ namespace PacketDotNet
     /// See: https://en.wikipedia.org/wiki/Real-time_Transport_Protocol
     /// See: https://wiki.wireshark.org/RTP
     /// </summary>
-    public sealed class RtpContainerPacket : Packet
+    public sealed class RtpPacket : Packet
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -39,7 +39,7 @@ namespace PacketDotNet
         /// <summary>
         /// Create from values
         /// </summary>
-        public RtpContainerPacket()
+        public RtpPacket()
         {
             Log.Debug("");
 
@@ -58,7 +58,7 @@ namespace PacketDotNet
         /// <param name="parentPacket">
         /// A <see cref="Packet" />
         /// </param>
-        public RtpContainerPacket(ByteArraySegment byteArraySegment, Packet parentPacket)
+        public RtpPacket(ByteArraySegment byteArraySegment, Packet parentPacket)
         {
             Log.Debug("");
 

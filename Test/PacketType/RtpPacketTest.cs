@@ -34,7 +34,7 @@ namespace Test.PacketType
                 {
                     return new PacketOrByteArraySegment
                     {
-                        Packet = new RtpPacket(segment, packet)
+                        Packet = new RtpContainerPacket(segment, packet)
                     };
                 }
 
@@ -45,7 +45,7 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var rtp = p.Extract<RtpPacket>();
+            var rtp = p.Extract<RtpContainerPacket>();
             Assert.IsNotNull(rtp);
             Console.WriteLine(rtp.GetType());
             Assert.AreEqual(2, rtp.Version);
@@ -68,7 +68,7 @@ namespace Test.PacketType
         {
             byte[] data = new byte[] { 0xef, 0x00, 0x00, 0x00, 0xef, 0x00, 0x00, 0x00, 0x6f, 0xef, 0xbb, 0xbf };
 
-            var rtp = new RtpPacket
+            var rtp = new RtpContainerPacket
             {
                 PayloadData = data,
                 Version = 2,

@@ -34,7 +34,7 @@ namespace Test.PacketType
                 {
                     return new PacketOrByteArraySegment
                     {
-                        Packet = new RtcpPacket(segment, packet)
+                        Packet = new RtcpContainerPacket(segment, packet)
                     };
                 }
 
@@ -45,14 +45,19 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var rtcp = p.Extract<RtcpPacket>();
-            Assert.IsNotNull(rtcp);
-            Console.WriteLine(rtcp.GetType());
+            var rtcpContainer = p.Extract<RtcpContainerPacket>();
+            Assert.IsNotNull(rtcpContainer);
+            Console.WriteLine(rtcpContainer.GetType());
+            Assert.IsFalse(rtcpContainer.HasPayloadData);
+            Assert.IsFalse(rtcpContainer.HasPayloadPacket);
+
+            Assert.AreEqual(1,rtcpContainer.RtcpItems.Count);
+            var rtcp = rtcpContainer.RtcpItems[0];
             Assert.IsTrue(rtcp.IsValid());
             Assert.AreEqual(2, rtcp.Version);
             Assert.IsFalse(rtcp.HasPadding);
             Assert.AreEqual(1, rtcp.ReceptionReportCount);
-            Assert.AreEqual(203, rtcp.PacketType);
+            Assert.AreEqual(RtcpFields.GoodbyeType, rtcp.PacketType);
             Assert.AreEqual(1, rtcp.Length);
             Assert.AreEqual(1199516466, rtcp.SsrcIdentifier);
             Assert.IsFalse(rtcp.HasPayloadData);
@@ -76,7 +81,7 @@ namespace Test.PacketType
                 {
                     return new PacketOrByteArraySegment
                     {
-                        Packet = new RtcpPacket(segment, packet)
+                        Packet = new RtcpContainerPacket(segment, packet)
                     };
                 }
 
@@ -87,30 +92,35 @@ namespace Test.PacketType
 
             Assert.IsNotNull(p);
 
-            var rtcp = p.Extract<RtcpPacket>();
-            Assert.IsNotNull(rtcp);
-            Console.WriteLine(rtcp.GetType());
+            var rtcpContainer = p.Extract<RtcpContainerPacket>();
+            Assert.IsNotNull(rtcpContainer);
+            Console.WriteLine(rtcpContainer.GetType());
+            Assert.IsFalse(rtcpContainer.HasPayloadData);
+            Assert.IsFalse(rtcpContainer.HasPayloadPacket);
+
+            Assert.AreEqual(2,rtcpContainer.RtcpItems.Count);
+            var rtcp = rtcpContainer.RtcpItems[0];
             Assert.IsTrue(rtcp.IsValid());
             Assert.AreEqual(2, rtcp.Version);
             Assert.IsFalse(rtcp.HasPadding);
             Assert.AreEqual(0, rtcp.ReceptionReportCount);
-            Assert.AreEqual(200, rtcp.PacketType);
+            Assert.AreEqual(RtcpFields.SenderReportType, rtcp.PacketType);
             Assert.AreEqual(6, rtcp.Length);
             Assert.AreEqual(899629540, rtcp.SsrcIdentifier);
-            Assert.IsFalse(rtcp.HasPayloadData);
-            Assert.IsTrue(rtcp.HasPayloadPacket);
+            Assert.IsTrue(rtcp.HasPayloadData);
+            Assert.IsFalse(rtcp.HasPayloadPacket);
 
-            var nextRtcp = rtcp.PayloadPacket as RtcpPacket;
+            var nextRtcp = rtcpContainer.RtcpItems[1];
             Assert.IsNotNull(nextRtcp);
             Console.WriteLine(nextRtcp.GetType());
             Assert.IsTrue(nextRtcp.IsValid());
             Assert.AreEqual(2, nextRtcp.Version);
             Assert.IsFalse(nextRtcp.HasPadding);
             Assert.AreEqual(1, nextRtcp.ReceptionReportCount);
-            Assert.AreEqual(202, nextRtcp.PacketType);
+            Assert.AreEqual(RtcpFields.SourceDescriptionType, nextRtcp.PacketType);
             Assert.AreEqual(6, nextRtcp.Length);
             Assert.AreEqual(899629540, nextRtcp.SsrcIdentifier);
-            Assert.IsFalse(nextRtcp.HasPayloadData);
+            Assert.IsTrue(nextRtcp.HasPayloadData);
             Assert.IsFalse(nextRtcp.HasPayloadPacket);
         }
 

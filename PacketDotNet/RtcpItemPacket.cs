@@ -11,12 +11,10 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 using System;
+using System.Reflection;
+using log4net;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
-#if DEBUG
-using log4net;
-using System.Reflection;
-#endif
 
 namespace PacketDotNet
 {
@@ -25,7 +23,7 @@ namespace PacketDotNet
     /// See: https://en.wikipedia.org/wiki/RTP_Control_Protocol
     /// See: https://wiki.wireshark.org/RTCP
     /// </summary>
-    public sealed class RtcpPacket : Packet
+    public sealed class RtcpItemPacket : Packet
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -40,7 +38,7 @@ namespace PacketDotNet
         /// <summary>
         /// Create from values
         /// </summary>
-        public RtcpPacket()
+        public RtcpItemPacket()
         {
             Log.Debug("");
 
@@ -59,7 +57,7 @@ namespace PacketDotNet
         /// <param name="parentPacket">
         /// A <see cref="Packet" />
         /// </param>
-        public RtcpPacket(ByteArraySegment byteArraySegment, Packet parentPacket)
+        public RtcpItemPacket(ByteArraySegment byteArraySegment, Packet parentPacket)
         {
             Log.Debug("");
 
@@ -73,27 +71,14 @@ namespace PacketDotNet
                 var length = Length - 1;
                 var rtcpPayload = new byte[length*4];
                 Buffer.BlockCopy(Header.Bytes, Header.Offset + RtcpFields.HeaderLength, rtcpPayload, 0, length*4);
-                RtpPayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => new PacketOrByteArraySegment
+                PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => new PacketOrByteArraySegment
                 {
                     ByteArraySegment = new ByteArraySegment(rtcpPayload, 0, length)
                 });
-
-                var payload = Header.NextSegment();
-                if (payload.Length > 0)
-                {
-                    // store the payload bytes
-                    PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => new PacketOrByteArraySegment
-                    {
-                        Packet = new RtcpPacket(payload, this)
-                    });
-                }
             }
 
             ParentPacket = parentPacket;
         }
-
-        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
-        public override string Color => AnsiEscapeSequences.BlueBackground;
 
         /// <summary>
         /// Gets or sets the RTP version (2 bits), Indicates the version of the protocol
@@ -159,8 +144,6 @@ namespace PacketDotNet
             get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + 4);
             set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + 4);
         }
-
-        public LazySlim<PacketOrByteArraySegment> RtpPayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(null);
 
         public bool IsValid()
         {

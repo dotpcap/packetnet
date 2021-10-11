@@ -17,5 +17,11 @@ namespace PacketDotNet
         public static readonly int VersionMask = 0xC0;
         public static readonly int PaddingMask = 0x20;
         public static readonly int ReceptionReportCountMask = 0x1F;
+
+        public static readonly int SenderReportType = 200;
+        public static readonly int ReceiverReportType = 201;
+        public static readonly int SourceDescriptionType = 202;
+        public static readonly int GoodbyeType = 203;
+        public static readonly int ApplicationDefinedType = 204;
     }
 }

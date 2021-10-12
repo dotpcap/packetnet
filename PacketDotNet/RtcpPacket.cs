@@ -25,7 +25,7 @@ namespace PacketDotNet
     /// See: https://en.wikipedia.org/wiki/RTP_Control_Protocol
     /// See: https://wiki.wireshark.org/RTCP
     /// </summary>
-    public sealed class RtcpItemPacket : Packet
+    public sealed class RtcpPacket : Packet
     {
 #if DEBUG
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -40,7 +40,7 @@ namespace PacketDotNet
         /// <summary>
         /// Create from values
         /// </summary>
-        public RtcpItemPacket()
+        public RtcpPacket()
         {
             Log.Debug("");
 
@@ -59,7 +59,7 @@ namespace PacketDotNet
         /// <param name="parentPacket">
         /// A <see cref="Packet" />
         /// </param>
-        public RtcpItemPacket(ByteArraySegment byteArraySegment, Packet parentPacket)
+        public RtcpPacket(ByteArraySegment byteArraySegment, Packet parentPacket)
         {
             Log.Debug("");
 
@@ -151,8 +151,10 @@ namespace PacketDotNet
         {
             if (Header.Length < RtcpFields.HeaderLength + (Length - 1) * 4)
                 return false;
+
             if (Version != 2)
                 return false;
+            
             return true;
         }
     }

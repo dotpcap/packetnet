@@ -35,6 +35,7 @@ namespace PacketDotNet
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
+        private LazySlim<List<RtcpPacket>> lazyRtcpPackets { get; } = new (null);
 
         /// <summary>
         /// Create from values
@@ -62,14 +63,14 @@ namespace PacketDotNet
         {
             Log.Debug("");
 
-            LazyRtcpItems = new LazySlim<List<RtcpItemPacket>>(() =>
+            lazyRtcpPackets = new LazySlim<List<RtcpPacket>>(() =>
             {
-                var list = new List<RtcpItemPacket>();
+                var list = new List<RtcpPacket>();
                 ByteArraySegment segment = byteArraySegment;
-                RtcpItemPacket item;
+                RtcpPacket item;
                 do
                 {
-                    item = new RtcpItemPacket(segment, this);
+                    item = new RtcpPacket(segment, this);
                     list.Add(item);
                     segment = item.HeaderDataSegment;
                 } while (segment.Length > 0);
@@ -83,8 +84,9 @@ namespace PacketDotNet
         /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.BlueBackground;
 
-        internal LazySlim<List<RtcpItemPacket>> LazyRtcpItems { get; } = new (null);
-
-        public List<RtcpItemPacket> RtcpItems => this.LazyRtcpItems.Value;
+        /// <summary>
+        /// Gets the Rtcp packets
+        /// </summary>
+        public List<RtcpPacket> Packets => this.lazyRtcpPackets.Value;
     }
 }

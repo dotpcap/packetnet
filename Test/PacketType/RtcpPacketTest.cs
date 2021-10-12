@@ -51,8 +51,8 @@ namespace Test.PacketType
             Assert.IsFalse(rtcpContainer.HasPayloadData);
             Assert.IsFalse(rtcpContainer.HasPayloadPacket);
 
-            Assert.AreEqual(1,rtcpContainer.RtcpItems.Count);
-            var rtcp = rtcpContainer.RtcpItems[0];
+            Assert.AreEqual(1,rtcpContainer.Packets.Count);
+            var rtcp = rtcpContainer.Packets[0];
             Assert.IsTrue(rtcp.IsValid());
             Assert.AreEqual(2, rtcp.Version);
             Assert.IsFalse(rtcp.HasPadding);
@@ -98,8 +98,8 @@ namespace Test.PacketType
             Assert.IsFalse(rtcpContainer.HasPayloadData);
             Assert.IsFalse(rtcpContainer.HasPayloadPacket);
 
-            Assert.AreEqual(2,rtcpContainer.RtcpItems.Count);
-            var rtcp = rtcpContainer.RtcpItems[0];
+            Assert.AreEqual(2,rtcpContainer.Packets.Count);
+            var rtcp = rtcpContainer.Packets[0];
             Assert.IsTrue(rtcp.IsValid());
             Assert.AreEqual(2, rtcp.Version);
             Assert.IsFalse(rtcp.HasPadding);
@@ -110,7 +110,7 @@ namespace Test.PacketType
             Assert.IsTrue(rtcp.HasPayloadData);
             Assert.IsFalse(rtcp.HasPayloadPacket);
 
-            var nextRtcp = rtcpContainer.RtcpItems[1];
+            var nextRtcp = rtcpContainer.Packets[1];
             Assert.IsNotNull(nextRtcp);
             Console.WriteLine(nextRtcp.GetType());
             Assert.IsTrue(nextRtcp.IsValid());

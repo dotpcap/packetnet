@@ -10,6 +10,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
+using System;
 using System.Collections.Generic;
 using PacketDotNet.Utils;
 #if DEBUG
@@ -35,7 +36,7 @@ namespace PacketDotNet
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
-        private LazySlim<List<RtcpPacket>> lazyRtcpPackets { get; set; } = new (null);
+        private LazySlim<List<RtcpPacket>> lazyRtcpPackets { get; set; }
 
         /// <summary>
         /// Create from values
@@ -95,6 +96,13 @@ namespace PacketDotNet
             {
                 this.lazyRtcpPackets = new LazySlim<List<RtcpPacket>>(() => new List<RtcpPacket>());
                 this.lazyRtcpPackets.Value.AddRange(value);
+                var offset = 0;
+                foreach (var packet in value)
+                {
+                    var packetBytes = packet.Bytes;
+                    Array.Copy(packetBytes, 0, Header.Bytes, Header.Offset + offset, packetBytes.Length);
+                    offset += packetBytes.Length;
+                }
             }
         } 
     }

@@ -69,10 +69,9 @@ namespace PacketDotNet
             {
                 var list = new List<RtcpPacket>();
                 ByteArraySegment segment = byteArraySegment;
-                RtcpPacket item;
                 do
                 {
-                    item = new RtcpPacket(segment, this);
+                    var item = new RtcpPacket(segment, this);
                     list.Add(item);
                     segment = item.HeaderDataSegment;
                 } while (segment.Length > 0);

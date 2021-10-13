@@ -35,7 +35,7 @@ namespace PacketDotNet
         private static readonly ILogInactive Log;
 #pragma warning restore 0169, 0649
 #endif
-        private LazySlim<List<RtcpPacket>> lazyRtcpPackets { get; } = new (null);
+        private LazySlim<List<RtcpPacket>> lazyRtcpPackets { get; set; } = new (null);
 
         /// <summary>
         /// Create from values
@@ -48,6 +48,8 @@ namespace PacketDotNet
             var length = RtcpFields.HeaderLength;
             var headerBytes = new byte[length];
             Header = new ByteArraySegment(headerBytes, 0, length);
+
+            lazyRtcpPackets = new LazySlim<List<RtcpPacket>>(() => new List<RtcpPacket>());
         }
 
         /// <summary>
@@ -87,6 +89,14 @@ namespace PacketDotNet
         /// <summary>
         /// Gets the Rtcp packets
         /// </summary>
-        public List<RtcpPacket> Packets => this.lazyRtcpPackets.Value;
+        public List<RtcpPacket> Packets
+        {
+            get => this.lazyRtcpPackets.Value;
+            set
+            {
+                this.lazyRtcpPackets = new LazySlim<List<RtcpPacket>>(() => new List<RtcpPacket>());
+                this.lazyRtcpPackets.Value.AddRange(value);
+            }
+        } 
     }
 }

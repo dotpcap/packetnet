@@ -54,6 +54,9 @@ namespace Test.PacketType
                 SecurityParametersIndex = 156633505,
                 NextHeader = ProtocolType.Tcp,
             };
+
+            Assert.NotNull(esp);
+            Assert.AreEqual(ProtocolType.Tcp, esp.NextHeader);
         }
     }
 }

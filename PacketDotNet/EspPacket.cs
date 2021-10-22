@@ -37,7 +37,7 @@ namespace PacketDotNet
 #endif
 
         /// <summary>
-        /// Create from values
+        /// Create from values.
         /// </summary>
         public EspPacket()
         {
@@ -50,7 +50,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Constructor
+        /// Constructor.
         /// </summary>
         /// <param name="byteArraySegment">
         /// A <see cref="ByteArraySegment" />
@@ -79,7 +79,7 @@ namespace PacketDotNet
                 Array.Copy(next.Bytes, next.BytesLength - 12, AuthenticationData, 0, 12);
                 var nextHeader = next.Bytes[next.BytesLength - 13];
                 // Continue only if next header is Tcp or Udp
-                if (Enum.IsDefined(typeof(ProtocolType), nextHeader) && ((ProtocolType)nextHeader == ProtocolType.Tcp || (ProtocolType)nextHeader == ProtocolType.Udp))
+                if ((ProtocolType)nextHeader == ProtocolType.Tcp || (ProtocolType)nextHeader == ProtocolType.Udp)
                 {
                     NextHeader = (ProtocolType) nextHeader;
                     PadLength = next.Bytes[next.BytesLength - 14];
@@ -118,7 +118,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Gets or sets the SecurityParametersIndex (SPI)
+        /// Gets or sets the SecurityParametersIndex (SPI).
         /// </summary>
         public uint SecurityParametersIndex
         {
@@ -127,7 +127,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Gets or sets the SecurityParametersIndex (SPI)
+        /// Gets or sets the SecurityParametersIndex (SPI).
         /// </summary>
         public uint SequenceNumber
         {
@@ -140,16 +140,16 @@ namespace PacketDotNet
         /// </summary>
         public ProtocolType NextHeader { get; set; }
 
-        /// <summary>Pad length</summary>
+        /// <summary>Pad length.</summary>
         public int PadLength { get; private set; }
 
         /// <summary>
-        /// Gets or sets the Authentication Data
+        /// Gets or sets the Authentication Data.
         /// </summary>
         public byte[] AuthenticationData { get; set; }
         
         /// <summary>
-        /// Gets or sets the Pad
+        /// Gets or sets the Pad.
         /// </summary>
         public byte[] Pad { get; private set; }
     }

@@ -43,20 +43,15 @@ namespace Test.PacketType
             Assert.AreEqual(0, tcp.UrgentPointer);
             Assert.AreEqual(16000, tcp.WindowSize);
             Assert.AreEqual(4, tcp.OptionsCollection.Count);
-        }
 
-        [Test]
-        public void ConstructEspPacketFromValues()
-        {
-            var esp = new EspPacket
+            var espCreated = new EspPacket(tcp, esp.AuthenticationData)
             {
                 SequenceNumber = 1,
-                SecurityParametersIndex = 156633505,
-                NextHeader = ProtocolType.Tcp,
+                SecurityParametersIndex = 156633505
             };
 
-            Assert.NotNull(esp);
-            Assert.AreEqual(ProtocolType.Tcp, esp.NextHeader);
+            Assert.NotNull(espCreated);
+            Assert.AreEqual(ProtocolType.Tcp, espCreated.NextHeader);
         }
     }
 }

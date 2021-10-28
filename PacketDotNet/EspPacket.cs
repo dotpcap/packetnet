@@ -39,7 +39,7 @@ namespace PacketDotNet
         /// <summary>
         /// Create from values.
         /// </summary>
-        public EspPacket()
+        public EspPacket(TransportPacket payloadPacket, byte[] authenticationData)
         {
             Log.Debug("");
 
@@ -47,6 +47,19 @@ namespace PacketDotNet
             var length = EspFields.HeaderLength;
             var headerBytes = new byte[length];
             Header = new ByteArraySegment(headerBytes, 0, length);
+            NextHeader = payloadPacket is TcpPacket ? ProtocolType.Tcp : ProtocolType.Udp;
+            payloadPacket.ParentPacket = this;
+            this.AuthenticationData = authenticationData;
+            this.PadLength = (payloadPacket.TotalPacketLength + 2) % 4;
+            this.Pad = new byte[this.PadLength];
+            for (var i = 0; i < this.PadLength; i++)
+            {
+                this.Pad[i] = (byte) (i + 1);
+            }
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => new PacketOrByteArraySegment
+            {
+                Packet = payloadPacket
+            });
         }
 
         /// <summary>
@@ -105,6 +118,16 @@ namespace PacketDotNet
 
                             return;
                         }
+
+                        if (NextHeader == ProtocolType.Udp && segmentLength > 0)
+                        {
+                            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => new PacketOrByteArraySegment
+                            {
+                                Packet = new UdpPacket(payload, this)
+                            });
+
+                            return;
+                        }
                     }
                 }
             }
@@ -141,7 +164,7 @@ namespace PacketDotNet
         public ProtocolType NextHeader { get; set; }
 
         /// <summary>Pad length.</summary>
-        public int PadLength { get; private set; }
+        public int PadLength { get; }
 
         /// <summary>
         /// Gets or sets the Authentication Data.
@@ -151,6 +174,6 @@ namespace PacketDotNet
         /// <summary>
         /// Gets or sets the Pad.
         /// </summary>
-        public byte[] Pad { get; private set; }
+        public byte[] Pad { get; }
     }
 }

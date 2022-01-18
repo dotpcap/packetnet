@@ -33,7 +33,7 @@ namespace PacketDotNet
     /// </p>
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public enum LinkLayers : byte
+    public enum LinkLayers : ushort
     {
         /// <summary>no link-layer encapsulation.</summary>
         Null = 0,

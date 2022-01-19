@@ -3,8 +3,7 @@
 
 New!
 ==========
-The newly released [PacketDotNet.Connections](http://github.com/chmorgan/packetnet-connections) is a supplement to Packet.NET that
-adds connection tracking and http following support.
+Added support for IGMP version 3.
 
 Packet.Net
 ==========
@@ -35,7 +34,7 @@ Supported packet formats
 * TCP
 * UDP
 * ICMP v4 and v6
-* IGMP
+* IGMP v2 and v3
 * L2TP
 * PPPoE
 * OSPF

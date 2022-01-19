@@ -22,7 +22,7 @@ namespace PacketDotNet
     /// <summary>
     /// An IGMP packet.
     /// </summary>
-    public sealed class IgmpV2Packet : InternetPacket
+    public sealed class IgmpV2Packet : IgmpPacket
     {
         /// <summary>
         /// Constructor
@@ -92,9 +92,9 @@ namespace PacketDotNet
         /// <value>
         /// The type of IGMP message
         /// </value>
-        public IgmpV2MessageType Type
+        public IgmpMessageType Type
         {
-            get => (IgmpV2MessageType) Header.Bytes[Header.Offset + IgmpV2Fields.TypePosition];
+            get => (IgmpMessageType) Header.Bytes[Header.Offset + IgmpV2Fields.TypePosition];
             set => Header.Bytes[Header.Offset + IgmpV2Fields.TypePosition] = (byte) value;
         }
 

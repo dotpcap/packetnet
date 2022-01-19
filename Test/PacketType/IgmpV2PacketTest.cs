@@ -40,7 +40,7 @@ namespace Test.PacketType
 
                 if (packetIndex == 0)
                 {
-                    Assert.AreEqual(igmp.Type, IgmpV2MessageType.MembershipQuery);
+                    Assert.AreEqual(igmp.Type, IgmpMessageType.MembershipQuery);
                     Assert.AreEqual(igmp.MaxResponseTime, 100);
                     Assert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new byte[] { 0xEE, 0x9B }, 0));
                     Assert.AreEqual(igmp.GroupAddress, IPAddress.Parse("0.0.0.0"));
@@ -48,7 +48,7 @@ namespace Test.PacketType
 
                 if (packetIndex == 1)
                 {
-                    Assert.AreEqual(igmp.Type, IgmpV2MessageType.MembershipReportIGMPv2);
+                    Assert.AreEqual(igmp.Type, IgmpMessageType.MembershipReportIGMPv2);
                     Assert.AreEqual(igmp.MaxResponseTime, 0.0);
                     Assert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new byte[] { 0x08, 0xC3 }, 0));
                     Assert.AreEqual(igmp.GroupAddress, IPAddress.Parse("224.0.1.60"));

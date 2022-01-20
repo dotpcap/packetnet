@@ -23,22 +23,28 @@ namespace Test.PacketType
         [Test]
         public void Parsing()
         {
+            bool membershipReportTested = false;
+            bool membershipQueryTested = false;
+
             var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "IGMPv3_Multihost.pcap");
             dev.Open();
 
             PacketCapture c;
             GetPacketStatus status;
             var packetIndex = 0;
+
             while ((status = dev.GetNextPacket(out c)) == GetPacketStatus.PacketRead)
             {
                 var rawCapture = c.GetPacket();
                 var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
                 Assert.IsNotNull(p);
 
-                if (packetIndex == 0)
+                var igmp = p.Extract<PacketDotNet.IgmpPacket>();
+                Assert.IsNotNull(igmp);
+
+                if (packetIndex == 0 && igmp.Type == IgmpMessageType.MembershipReportIGMPv3)
                 {
-                    var igmpv3MemRep = p.Extract<IgmpV3MembershipReportPacket>();
-                    Assert.IsNotNull(igmpv3MemRep);
+                    IgmpV3MembershipReportPacket igmpv3MemRep = (IgmpV3MembershipReportPacket)igmp;
 
                     Assert.AreEqual(igmpv3MemRep.Type, IgmpMessageType.MembershipReportIGMPv3);
                     Assert.AreEqual(igmpv3MemRep.Checksum, BitConverter.ToInt16(new byte[] { 0x4E, 0xEB }, 0));
@@ -48,12 +54,13 @@ namespace Test.PacketType
                     Assert.AreEqual(igmpv3MemRep.GroupRecords[0].NumberOfSources, 1);
                     Assert.AreEqual(igmpv3MemRep.GroupRecords[0].MulticastAddress, IPAddress.Parse("232.2.3.2"));
                     Assert.AreEqual(igmpv3MemRep.GroupRecords[0].SourceAddresses[0], IPAddress.Parse("192.168.224.100"));
+
+                    membershipReportTested = true;
                 }
 
-                if (packetIndex == 20)
+                if (packetIndex == 20 && igmp.Type == IgmpMessageType.MembershipQuery)
                 {
-                    var igmpv3MemQuery = p.Extract<IgmpV3MembershipQueryPacket>();
-                    Assert.IsNotNull(igmpv3MemQuery);
+                    IgmpV3MembershipQueryPacket igmpv3MemQuery = (IgmpV3MembershipQueryPacket)igmp;
 
                     Assert.AreEqual(igmpv3MemQuery.Type, IgmpMessageType.MembershipQuery);
                     Assert.AreEqual(igmpv3MemQuery.MaxResponseTime, 10);
@@ -64,6 +71,8 @@ namespace Test.PacketType
                     Assert.AreEqual(igmpv3MemQuery.QueriersQueryInterval, 60);
                     Assert.AreEqual(igmpv3MemQuery.NumberOfSources, 1);
                     Assert.AreEqual(igmpv3MemQuery.SourceAddresses[0], IPAddress.Parse("192.168.224.200"));
+
+                    membershipQueryTested = true;
                 }
 
                 if (packetIndex == 20)
@@ -71,6 +80,8 @@ namespace Test.PacketType
 
                 packetIndex++;
             }
+
+            Assert.IsTrue(membershipQueryTested && membershipReportTested);
 
             dev.Close();
         }

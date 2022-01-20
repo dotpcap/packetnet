@@ -43,5 +43,14 @@ namespace PacketDotNet
                     return null;
             }
         }
+
+        /// <summary>
+        /// Virtual IgmpMessageType to be set by derived classes.
+        /// </summary>
+        public virtual IgmpMessageType Type
+        {
+            get;
+            set;
+        }
     }
 }

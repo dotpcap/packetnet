@@ -183,7 +183,7 @@ namespace PacketDotNet
         /// <value>
         /// The type of IGMP message
         /// </value>
-        public IgmpMessageType Type
+        public override IgmpMessageType Type
         {
             get => (IgmpMessageType)Header.Bytes[Header.Offset + IgmpV3MembershipQueryFields.TypePosition];
             set => Header.Bytes[Header.Offset + IgmpV3MembershipQueryFields.TypePosition] = (byte)value;

@@ -35,46 +35,46 @@ namespace PacketDotNet
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum LinkLayers : ushort
     {
-        /// <summary>no link-layer encapsulation.</summary>
+        /// <summary>BSD loopback encapsulation.</summary>
         Null = 0,
 
-        /// <summary>Ethernet (10Mb).</summary>
+        /// <summary>IEEE 802.3 Ethernet (10Mb, 100Mb, 1000Mb, and up).</summary>
         Ethernet = 1,
 
-        /// <summary>Experimental Ethernet (3Mb).</summary>
-        ExperimentalEthernet3MB = 2,
+        /// <summary>Xerox experimental 3Mb Ethernet.</summary>
+        ExperimentalEthernet = 2,
 
-        /// <summary>Amateur Radio AX.25.</summary>
-        AmateurRadioAX25 = 3,
+        /// <summary>AX.25 packet.</summary>
+        Ax25 = 3,
 
-        /// <summary>Proteon ProNET Token Ring.</summary>
-        ProteonProNetTokenRing = 4,
+        /// <summary>Reserved for PRONET.</summary>
+        ProNet = 4,
 
-        /// <summary>Chaos.</summary>
+        /// <summary>Reserved for MIT CHAOSNET.</summary>
         Chaos = 5,
 
-        /// <summary>IEEE 802 Networks.</summary>
-        Ieee802 = 6,
+        /// <summary>IEEE 802.5 Token Ring.</summary>
+        Ieee8025 = 6,
 
-        /// <summary>ARCNET.</summary>
-        ArcNet = 7,
+        /// <summary>ARCNET Data Packets with BSD encapsulation.</summary>
+        ArcNetBsd = 7,
 
         /// <summary>Serial Line IP.</summary>
-        Slip = 8,
+        SerialLineIP = 8,
 
-        /// <summary>Point-to-point Protocol.</summary>
+        /// <summary>PPP, as per RFC 1661 and RFC 1662.</summary>
         Ppp = 9,
 
-        /// <summary>FDDI.</summary>
+        /// <summary>FDDI, as specified by ANSI INCITS 239-1994.</summary>
         Fddi = 10,
 
-        /// <summary>Raw IP.</summary>
+        /// <summary>Raw IP - do not use.</summary>
         RawLegacy = 12,
 
-        /// <summary>BSD Slip.</summary>
-        SlipBsd = 15,
+        /// <summary>BSD Serial Line IP - do not use.</summary>
+        SerialLineIPBsd = 15,
 
-        /// <summary>BSD PPP.</summary>
+        /// <summary>BSD PPP - do not use.</summary>
         PppBsd = 16,
 
         /// <summary>IP over ATM.</summary>

@@ -354,7 +354,7 @@ namespace PacketDotNet
                     p = MacFrame.ParsePacket(byteArraySegment);
                     break;
                 }
-                case LinkLayers.Ieee80211Radio:
+                case LinkLayers.Ieee80211RadioTap:
                 {
                     p = new RadioPacket(byteArraySegment);
                     break;

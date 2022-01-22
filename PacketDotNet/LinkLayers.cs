@@ -77,45 +77,91 @@ namespace PacketDotNet
         /// <summary>BSD PPP - do not use.</summary>
         PppBsd = 16,
 
-        /// <summary>IP over ATM.</summary>
-        AtmClip = 19,
+        /// <summary>IP over ATM - do not use.</summary>
+        AtmClipLegacy = 19,
 
-        /// <summary>PPP over HDLC.</summary>
-        PppOverHdlc = 50,
+        /// <summary>PPP in HDLC-like framing, as per RFC 1662.</summary>
+        PppHdlc = 50,
 
-        /// <summary>PPPoE.</summary>
-        Pppoe = 51,
+        /// <summary>PPPoE, as per RFC 2516.</summary>
+        PppEther = 51,
 
-        /// <summary>LLC/SNAP encapsulated atm.</summary>
-        LlcSnapAtm = 100,
+        /// <summary>Reserved for Symantec Firewall.</summary>
+        SymantecFirewall = 99,
+
+        /// <summary>RFC 1483 LLC/SNAP-encapsulated ATM.</summary>
+        AtmRfc1483 = 100,
 
         /// <summary>Raw IP.</summary>
         Raw = 101,
 
-        /// <summary>Cisco HDLC.</summary>
+        /// <summary>Reserved for BSD/OS SLIP BFP header.</summary>
+        SerialLineIPBsdOs = 102,
+
+        /// <summary>Reserved for BSD/OS PPP BFP header.</summary>
+        PppBsdOs = 103,
+
+        /// <summary>Cisco PPP with HDLC framing, as per section 4.3.1 of RFC 1547.</summary>
         CiscoHdlc = 104,
 
-        /// <summary>IEEE 802.11 wireless.</summary>
+        /// <summary>IEEE 802.11 wireless LAN.</summary>
         Ieee80211 = 105,
 
-        /// <summary>OpenBSD loopback.</summary>
+        /// <summary>ATM classical IP.</summary>
+        AtmClip = 106,
+
+        /// <summary>Frame Relay LAPF frames.</summary>
+        FrameRelay = 107,
+
+        /// <summary>OpenBSD loopback encapsulation.</summary>
         Loop = 108,
 
-        /// <summary>Linux cooked sockets.</summary>
+        /// <summary>Reserved for OpenBSD IPSEC encapsulation.</summary>
+        IPsecBsd = 109,
+
+        /// <summary>Reserved for ATM LANE + 802.3.</summary>
+        Lane8023 = 110,
+
+        /// <summary>Reserved for NetBSD HIPPI.</summary>
+        Hippi = 111,
+
+        /// <summary>Reserved for NetBSD HDLC framing.</summary>
+        Hdlc = 112,
+
+        /// <summary>Linux "cooked" capture encapsulation.</summary>
         LinuxSll = 113,
 
-        /// <summary>
-        /// Header for 802.11 plus a number of bits of link-layer information
-        /// including radio information, used by some recent BSD drivers as
-        /// well as the madwifi Atheros driver for Linux.
-        /// </summary>
-        Ieee80211Radio = 127,
+        /// <summary>Radiotap header followed by an 802.11 header.</summary>
+        Ieee80211RadioTap = 127,
 
-        /// <summary>
-        /// Per Packet Information encapsulated packets.
-        /// DLT_ requested by Gianluca Varenni &lt;gianluca.varenni@cacetech.com&gt;.
-        /// See http://www.cacetech.com/documents/PPI%20Header%20format%201.0.7.pdf
-        /// </summary>
-        Ppi = 192
+        /// <summary>ARCNET Data Packets per RFC 1051 frames w/ variations.</summary>
+        ArcNetLinux = 129,
+
+        /// <summary>DOCSIS MAC frames, as described by the DOCSIS 3.1 MAC and Upper Layer Protocols Interface Specification or earlier specifications for MAC frames.</summary>
+        Docsis = 143,
+
+        /// <summary>PPP in HDLC-like encapsulation.</summary>
+        PppPppd = 166,
+
+        /// <summary>FRF.16.1 Multi-Link Frame Relay frames.</summary>
+        Mfr = 182,
+
+        /// <summary>Per-Packet Information information, as specified by the Per-Packet Information Header Specification.</summary>
+        Ppi = 192,
+
+        /// <summary>AX.25 packet, with a 1-byte KISS header containing a type indicator.</summary>
+        Ax25Kiss = 202,
+
+        /// <summary>PPP, as per RFC 1661 and RFC 1662, preceded with a one-byte pseudo-header with a zero value meaning "received by this host" and a non-zero value meaning "sent by this host".</summary>
+        PppWithDir = 204,
+
+        /// <summary>Raw IPv4; the packet begins with an IPv4 header.</summary>
+        IPv4 = 228,
+
+        /// <summary>Raw IPv6; the packet begins with an IPv6 header.</summary>
+        IPv6 = 229,
+
+        /// <summary>Protocol for communication between host and guest machines in VMware and KVM hypervisors.</summary>
+        VSock = 271
     }
 }

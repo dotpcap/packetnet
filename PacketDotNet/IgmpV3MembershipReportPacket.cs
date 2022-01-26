@@ -72,8 +72,6 @@ namespace PacketDotNet
         /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.Brown;
 
-        private List<IgmpV3MembershipReportGroupRecord> groupRecords = null;
-
         /// <summary>
         /// List of IGMPv3 membership query group records.
         /// </summary>
@@ -81,20 +79,70 @@ namespace PacketDotNet
         {
             get
             {
-                if (this.groupRecords == null)
-                {
-                    this.groupRecords = new List<IgmpV3MembershipReportGroupRecord>();
-                    var offset = Header.Offset + IgmpV3MembershipReportFields.GroupRecordStart;
+                List<IgmpV3MembershipReportGroupRecord> groupRecords = new List<IgmpV3MembershipReportGroupRecord>();
+                var offset = Header.Offset + IgmpV3MembershipReportFields.GroupRecordStart;
 
-                    for (int i = 0; i < NumberOfGroupRecords; i++)
-                    {
-                        IgmpV3MembershipReportGroupRecord groupRecord = new IgmpV3MembershipReportGroupRecord(Header, offset);
-                        this.groupRecords.Add(groupRecord);
-                        offset += (IgmpV3MembershipReportGroupRecordFields.IgmpV3MembershipReportGroupRecordHeaderLength + groupRecord.NumberOfSources * IPv4Fields.AddressLength);
-                    }
+                for (int i = 0; i < NumberOfGroupRecords; i++)
+                {
+                    IgmpV3MembershipReportGroupRecord groupRecord = new IgmpV3MembershipReportGroupRecord(Header, offset);
+                    groupRecords.Add(groupRecord);
+                    offset += (IgmpV3MembershipReportGroupRecordFields.IgmpV3MembershipReportGroupRecordHeaderLength + groupRecord.NumberOfSources * IPv4Fields.AddressLength);
                 }
 
-                return this.groupRecords;
+                return groupRecords;
+            }
+            set
+            {
+                if (value.Count > NumberOfGroupRecords)
+                    ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
+
+                var offset = Header.Offset + IgmpV3MembershipReportFields.GroupRecordStart;
+
+                foreach(IgmpV3MembershipReportGroupRecord groupRecord in value)
+                {
+                    // Record type
+                    Header.Bytes[offset + IgmpV3MembershipReportGroupRecordFields.RecordTypePosition] = (byte)groupRecord.RecordType;
+
+                    // Auxiliary data length
+                    Header.Bytes[offset + IgmpV3MembershipReportGroupRecordFields.AuxiliaryDataLengthPosition] = groupRecord.AuxiliaryDataLength;
+
+                    // Number of sources
+                    var v = groupRecord.NumberOfSources;
+                    EndianBitConverter.Big.CopyBytes(v,
+                                                     Header.Bytes,
+                                                     offset + IgmpV3MembershipReportGroupRecordFields.NumberOfSourcesPosition);
+
+                    // Multicast address
+                    // check that the address family is ipv4
+                    if (groupRecord.MulticastAddress.AddressFamily != AddressFamily.InterNetwork)
+                        ThrowHelper.ThrowInvalidAddressFamilyException(groupRecord.MulticastAddress.AddressFamily);
+
+                    var address = groupRecord.MulticastAddress.GetAddressBytes();
+                    Array.Copy(address,
+                               0,
+                               Header.Bytes,
+                               offset + IgmpV3MembershipReportGroupRecordFields.MulticastAddressPosition,
+                               address.Length);
+
+                    // Source addresses
+                    var addressOffset = 0;
+                    foreach(IPAddress sourceAddress in groupRecord.SourceAddresses)
+                    {
+                        // check that the address family is ipv4
+                        if (sourceAddress.AddressFamily != AddressFamily.InterNetwork)
+                            ThrowHelper.ThrowInvalidAddressFamilyException(sourceAddress.AddressFamily);
+
+                        address = sourceAddress.GetAddressBytes();
+                        Array.Copy(address,
+                                   0,
+                                   Header.Bytes,
+                                   offset + IgmpV3MembershipReportGroupRecordFields.SourceAddressStart + addressOffset,
+                                   address.Length);
+                        addressOffset += address.Length;
+                    }
+
+                    offset += (IgmpV3MembershipReportGroupRecordFields.IgmpV3MembershipReportGroupRecordHeaderLength + groupRecord.NumberOfSources * IPv4Fields.AddressLength);
+                }
             }
         }
 

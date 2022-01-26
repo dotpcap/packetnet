@@ -135,8 +135,6 @@ namespace PacketDotNet
             }
         }
 
-        private List<IPAddress> sourceAddresses = null;
-
         /// <summary>
         /// List of IGMPv3 membership query IP unicast source addresses.
         /// </summary>
@@ -144,20 +142,38 @@ namespace PacketDotNet
         {
             get
             {
-                if (this.sourceAddresses == null)
-                {
-                    this.sourceAddresses = new List<IPAddress>();
-                    var offset = Header.Offset + IgmpV3MembershipQueryFields.SourceAddressStart;
+                List<IPAddress> sourceAddresses = new List<IPAddress>();
+                var offset = Header.Offset + IgmpV3MembershipQueryFields.SourceAddressStart;
 
-                    for (int i = 0; i < NumberOfSources; i++)
-                    {
-                        long address = EndianBitConverter.Little.ToUInt32(Header.Bytes, offset);
-                        this.sourceAddresses.Add(new IPAddress(address));
-                        offset += 4;
-                    }
+                for (int i = 0; i < NumberOfSources; i++)
+                {
+                    sourceAddresses.Add(IPPacket.GetIPAddress(AddressFamily.InterNetwork, offset, Header.Bytes));
+                    offset += 4;
                 }
 
-                return this.sourceAddresses;
+                return sourceAddresses;
+            }
+            set
+            {
+                if (value.Count > NumberOfSources)
+                    ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
+
+                var offset = Header.Offset + IgmpV3MembershipQueryFields.SourceAddressStart;
+
+                foreach (IPAddress ipAddress in value)
+                {
+                    // check that the address family is ipv4
+                    if (ipAddress.AddressFamily != AddressFamily.InterNetwork)
+                        ThrowHelper.ThrowInvalidAddressFamilyException(ipAddress.AddressFamily);
+
+                    var address = ipAddress.GetAddressBytes();
+                    Array.Copy(address,
+                               0,
+                               Header.Bytes,
+                               offset,
+                               address.Length);
+                    offset += address.Length;
+                }
             }
         }
 

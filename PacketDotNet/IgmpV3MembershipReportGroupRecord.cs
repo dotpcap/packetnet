@@ -24,12 +24,12 @@ namespace PacketDotNet
         /// <summary>
         /// ByteArraySegment representing the header passed in to the Construtor.
         /// </summary>
-        private ByteArraySegment header;
+        private ByteArraySegment _header;
 
         /// <summary>
         /// recordOffset will be set in the constructor to be used for this instance of the record.
         /// </summary>
-        private int recordOffset;
+        private int _recordOffset;
 
         /// <summary>
         /// Constructor that takes an offset for this instance.
@@ -37,8 +37,8 @@ namespace PacketDotNet
         /// <param name="offset"></param>
         public IgmpV3MembershipReportGroupRecord(ByteArraySegment header, int offset)
         {
-            this.header = header;
-            this.recordOffset = offset;
+            _header = header;
+            _recordOffset = offset;
         }
 
         /// <value>
@@ -46,8 +46,8 @@ namespace PacketDotNet
         /// </value>
         public byte AuxiliaryDataLength
         {
-            get => this.header.Bytes[this.recordOffset + IgmpV3MembershipReportGroupRecordFields.AuxiliaryDataLengthPosition];
-            set => this.header.Bytes[this.recordOffset + IgmpV3MembershipReportGroupRecordFields.AuxiliaryDataLengthPosition] = value;
+            get => _header.Bytes[_recordOffset + IgmpV3MembershipReportGroupRecordFields.AuxiliaryDataLengthPosition];
+            set => _header.Bytes[_recordOffset + IgmpV3MembershipReportGroupRecordFields.AuxiliaryDataLengthPosition] = value;
         }
 
         /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
@@ -55,22 +55,22 @@ namespace PacketDotNet
 
         /// <summary>Fetch the IGMP membership report group record multicast address.</summary>
         public IPAddress MulticastAddress => IPPacket.GetIPAddress(AddressFamily.InterNetwork,
-                                                               this.recordOffset + IgmpV3MembershipReportGroupRecordFields.MulticastAddressPosition,
-                                                               this.header.Bytes);
+                                                               _recordOffset + IgmpV3MembershipReportGroupRecordFields.MulticastAddressPosition,
+                                                               _header.Bytes);
 
         /// <summary>
         /// Fetch the membership report group record number of sources.
         /// </summary>
         public ushort NumberOfSources
         {
-            get => EndianBitConverter.Big.ToUInt16(this.header.Bytes,
-                                                 this.recordOffset + IgmpV3MembershipReportGroupRecordFields.NumberOfSourcesPosition);
+            get => EndianBitConverter.Big.ToUInt16(_header.Bytes,
+                                                 _recordOffset + IgmpV3MembershipReportGroupRecordFields.NumberOfSourcesPosition);
             set
             {
                 var v = value;
                 EndianBitConverter.Big.CopyBytes(v,
-                                                 this.header.Bytes,
-                                                 this.recordOffset + IgmpV3MembershipReportGroupRecordFields.NumberOfSourcesPosition);
+                                                 _header.Bytes,
+                                                 _recordOffset + IgmpV3MembershipReportGroupRecordFields.NumberOfSourcesPosition);
             }
         }
 
@@ -79,11 +79,9 @@ namespace PacketDotNet
         /// </value>
         public IgmpV3MembershipReportGroupRecordType RecordType
         {
-            get => (IgmpV3MembershipReportGroupRecordType)this.header.Bytes[this.recordOffset + IgmpV3MembershipReportGroupRecordFields.RecordTypePosition];
-            set => this.header.Bytes[this.recordOffset + IgmpV3MembershipReportGroupRecordFields.RecordTypePosition] = (byte)value;
+            get => (IgmpV3MembershipReportGroupRecordType)_header.Bytes[_recordOffset + IgmpV3MembershipReportGroupRecordFields.RecordTypePosition];
+            set => _header.Bytes[_recordOffset + IgmpV3MembershipReportGroupRecordFields.RecordTypePosition] = (byte)value;
         }
-
-        private List<IPAddress> sourceAddresses = null;
 
         /// <summary>
         /// List of IGMPv3 membership report group record IP unicast source addresses.
@@ -92,20 +90,38 @@ namespace PacketDotNet
         {
             get
             {
-                if (this.sourceAddresses == null)
-                {
-                    this.sourceAddresses = new List<IPAddress>();
-                    var offset = this.recordOffset + IgmpV3MembershipReportGroupRecordFields.SourceAddressStart;
+                List<IPAddress> sourceAddresses  = new List<IPAddress>();
+                var offset = _recordOffset + IgmpV3MembershipReportGroupRecordFields.SourceAddressStart;
 
-                    for (int i = 0; i < NumberOfSources; i++)
-                    {
-                        long address = EndianBitConverter.Little.ToUInt32(this.header.Bytes, offset);
-                        this.sourceAddresses.Add(new IPAddress(address));
-                        offset += 4;
-                    }
+                for (int i = 0; i < NumberOfSources; i++)
+                {
+                    sourceAddresses.Add(IPPacket.GetIPAddress(AddressFamily.InterNetwork, offset, _header.Bytes));
+                    offset += 4;
                 }
 
-                return this.sourceAddresses;
+                return sourceAddresses;
+            }
+            set
+            {
+                if (value.Count > NumberOfSources)
+                    ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.value);
+
+                var offset = _recordOffset + IgmpV3MembershipReportGroupRecordFields.SourceAddressStart;
+
+                foreach (IPAddress ipAddress in value)
+                {
+                    // check that the address family is ipv4
+                    if (ipAddress.AddressFamily != AddressFamily.InterNetwork)
+                        ThrowHelper.ThrowInvalidAddressFamilyException(ipAddress.AddressFamily);
+
+                    var address = ipAddress.GetAddressBytes();
+                    Array.Copy(address,
+                               0,
+                               _header.Bytes,
+                               offset,
+                               address.Length);
+                    offset += address.Length;
+                }
             }
         }
 

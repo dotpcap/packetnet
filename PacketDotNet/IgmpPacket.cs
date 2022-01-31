@@ -18,16 +18,19 @@ namespace PacketDotNet
     public abstract class IgmpPacket : InternetPacket
     {
         /// <summary>
-        /// Constructs the right version and type of an OspfPacket
+        /// Gets or sets the IGMP message type.
         /// </summary>
-        /// <param name="payload">A ByteArraySegment</param>
-        /// <param name="parentPacket">The parent packet</param>
-        /// <returns>an IGMP packet</returns>
+        public virtual IgmpMessageType Type { get; set; }
+
+        /// <summary>
+        /// Constructs an IGMP packet.
+        /// </summary>
+        /// <param name="payload">The payload.</param>
+        /// <param name="parentPacket">The parent packet.</param>
+        /// <returns><see cref="IgmpPacket" />.</returns>
         public static IgmpPacket ConstructIgmpPacket(ByteArraySegment payload, Packet parentPacket)
         {
-            var type = (IgmpMessageType)payload.Bytes[payload.Offset + IgmpV2Fields.TypePosition];
-
-            switch (type)
+            switch ((IgmpMessageType) payload.Bytes[payload.Offset + IgmpV2Fields.TypePosition])
             {
                 case IgmpMessageType.MembershipQuery:
                     if (payload.Length >= 12)
@@ -42,15 +45,6 @@ namespace PacketDotNet
                 default:
                     return null;
             }
-        }
-
-        /// <summary>
-        /// Virtual IgmpMessageType to be set by derived classes.
-        /// </summary>
-        public virtual IgmpMessageType Type
-        {
-            get;
-            set;
         }
     }
 }

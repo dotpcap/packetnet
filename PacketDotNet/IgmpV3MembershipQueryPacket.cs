@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
@@ -23,11 +22,9 @@ namespace PacketDotNet
     public sealed class IgmpV3MembershipQueryPacket : IgmpPacket
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the <see cref="IgmpV3MembershipQueryPacket" /> class.
         /// </summary>
-        /// <param name="byteArraySegment">
-        /// A <see cref="ByteArraySegment" />
-        /// </param>
+        /// <param name="byteArraySegment">The byte array segment.</param>
         public IgmpV3MembershipQueryPacket(ByteArraySegment byteArraySegment)
         {
             // set the header field, header field values are retrieved from this byte array
@@ -36,31 +33,20 @@ namespace PacketDotNet
             Header.Length = IgmpV3MembershipQueryFields.HeaderLength;
 
             // store the payload bytes
-            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
-            {
-                var result = new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() };
-                return result;
-            });
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => new PacketOrByteArraySegment { ByteArraySegment = Header.NextSegment() });
         }
 
         /// <summary>
-        /// Constructor with parent
+        /// Initializes a new instance of the <see cref="IgmpV3MembershipQueryPacket" /> class.
         /// </summary>
-        /// <param name="byteArraySegment">
-        /// A <see cref="ByteArraySegment" />
-        /// </param>
-        /// <param name="parentPacket">
-        /// A <see cref="Packet" />
-        /// </param>
-        public IgmpV3MembershipQueryPacket
-        (
-            ByteArraySegment byteArraySegment,
-            Packet parentPacket) : this(byteArraySegment)
+        /// <param name="byteArraySegment">The byte array segment.</param>
+        /// <param name="parentPacket">The parent packet.</param>
+        public IgmpV3MembershipQueryPacket(ByteArraySegment byteArraySegment, Packet parentPacket) : this(byteArraySegment)
         {
             ParentPacket = parentPacket;
         }
 
-        /// <summary>Fetch the IGMPv3 membership query header checksum.</summary>
+        /// <summary>Gets or sets the IGMPv3 membership query header checksum.</summary>
         public short Checksum
         {
             get => BitConverter.ToInt16(Header.Bytes,
@@ -72,30 +58,24 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        /// <summary>Gets or sets the ascii escape sequence of the color associated with this packet type.</summary>
         public override string Color => AnsiEscapeSequences.Brown;
 
-        /// <summary>Fetch the IGMPv3 membership query group address.</summary>
+        /// <summary>Gets or sets the IGMPv3 membership query group address.</summary>
         public IPAddress GroupAddress => IPPacket.GetIPAddress(AddressFamily.InterNetwork,
                                                                Header.Offset + IgmpV3MembershipQueryFields.GroupAddressPosition,
                                                                Header.Bytes);
 
-        /// <summary>Fetch the IGMPv3 membership query max response time, in tenths of seconds.</summary>
-        public byte MaxResponseTime
-        {
-            get
-            {
-                return CodeOrFloatingPointValue(MaxResponseCode);
-            }
-        }
+        /// <summary>Gets or sets the IGMPv3 membership query max response time, in tenths of seconds.</summary>
+        public byte MaxResponseTime => CodeOrFloatingPointValue(MaxResponseCode);
 
         /// <summary>
-        /// Fetch the IGMPv3 membership query number of sources.
+        /// Gets or sets the IGMPv3 membership query number of sources.
         /// </summary>
         public ushort NumberOfSources
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                  Header.Offset + IgmpV3MembershipQueryFields.NumberOfSourcesPosition);
+                                                   Header.Offset + IgmpV3MembershipQueryFields.NumberOfSourcesPosition);
             set
             {
                 var v = value;
@@ -106,29 +86,23 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Fetch theIGMPv3 membership query querier's query interval, in seconds.
+        /// Gets or sets theIGMPv3 membership query querier's query interval, in seconds.
         /// </summary>
-        public byte QueriersQueryInterval
-        {
-            get
-            {
-                return CodeOrFloatingPointValue(QueriersQueryIntervalCode);
-            }
-        }
+        public byte QueriersQueryInterval => CodeOrFloatingPointValue(QueriersQueryIntervalCode);
 
         /// <summary>
         /// Gets or sets a value indicating IGMPv3 membership query querier's robustness variable.
         /// </summary>
         public byte QueriersRobustnessVariable
         {
-            get => (byte)(ReservedSFlagAndQRV & 0x07);
+            get => (byte) (ReservedSFlagAndQRV & 0x07);
             set
             {
                 // read the original value
                 byte field = ReservedSFlagAndQRV;
 
                 // mask in the new field
-                field = (byte)((field & 0xF8) | value & 0x07);
+                field = (byte) ((field & 0xF8) | value & 0x07);
 
                 // write the updated value back
                 ReservedSFlagAndQRV = field;
@@ -136,7 +110,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// List of IGMPv3 membership query IP unicast source addresses.
+        /// Gets or sets a list of IGMPv3 membership query IP unicast source addresses.
         /// </summary>
         public List<IPAddress> SourceAddresses
         {
@@ -172,6 +146,7 @@ namespace PacketDotNet
                                Header.Bytes,
                                offset,
                                address.Length);
+
                     offset += address.Length;
                 }
             }
@@ -189,38 +164,23 @@ namespace PacketDotNet
                 byte field = ReservedSFlagAndQRV;
 
                 // mask in the new field
-                field = (byte)((field & 0xF7) | (value ? 1 : 0) & 0x08);
+                field = (byte) ((field & 0xF7) | (value ? 1 : 0) & 0x08);
 
                 // write the updated value back
                 ReservedSFlagAndQRV = field;
             }
         }
 
-        /// <value>
-        /// The type of IGMP message
-        /// </value>
+        /// <summary>
+        /// Gets or sets the type of IGMP message.
+        /// </summary>
         public override IgmpMessageType Type
         {
-            get => (IgmpMessageType)Header.Bytes[Header.Offset + IgmpV3MembershipQueryFields.TypePosition];
-            set => Header.Bytes[Header.Offset + IgmpV3MembershipQueryFields.TypePosition] = (byte)value;
+            get => (IgmpMessageType) Header.Bytes[Header.Offset + IgmpV3MembershipQueryFields.TypePosition];
+            set => Header.Bytes[Header.Offset + IgmpV3MembershipQueryFields.TypePosition] = (byte) value;
         }
 
-        private byte CodeOrFloatingPointValue(byte code)
-        {
-            if (code < 128)
-            {
-                return code;
-            }
-            else    // MaxResponseCode >= 128, calculate floating point value.
-            {
-                int exp = (code & 0x70) >> 4;
-                int mant = code & 0x0F;
-
-                return (byte)((mant | 0x10) << (exp + 3));
-            }
-        }
-
-        /// <summary>Fetch the IGMPv3 membership query max response code.</summary>
+        /// <summary>Gets or sets the IGMPv3 membership query max response code.</summary>
         private byte MaxResponseCode
         {
             get => Header.Bytes[Header.Offset + IgmpV3MembershipQueryFields.MaxResponseCodePosition];
@@ -228,7 +188,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Fetch the IGMPv3 membership query querier's query interval code.
+        /// Gets or sets the IGMPv3 membership query querier's query interval code.
         /// </summary>
         private byte QueriersQueryIntervalCode
         {
@@ -237,12 +197,25 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// IGMPv3 membership query Reserved, Suppress Router-Side Processing Flag, and Querier's Roubustness Variable.
+        /// Gets or sets the IGMPv3 membership query Reserved, Suppress Router-Side Processing Flag, and Querier's Roubustness Variable.
         /// </summary>
         private byte ReservedSFlagAndQRV
         {
             get => Header.Bytes[Header.Offset + IgmpV3MembershipQueryFields.ReservedSFlagAndQRVPosition];
             set => Header.Bytes[Header.Offset + IgmpV3MembershipQueryFields.ReservedSFlagAndQRVPosition] = value;
+        }
+
+        private byte CodeOrFloatingPointValue(byte code)
+        {
+            if (code < 128)
+            {
+                return code;
+            }
+
+            int exp = (code & 0x70) >> 4;
+            int mant = code & 0x0F;
+
+            return (byte) ((mant | 0x10) << (exp + 3));
         }
 
         /// <summary cref="Packet.ToString(StringOutputType)" />
@@ -298,11 +271,11 @@ namespace PacketDotNet
                 var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
 
                 // build the output string
-                buffer.AppendLine("IGMP:  ******* IGMPv3 - \"Internet Group Management Protocol (Version 3) Membership Query\" - offset=? length=" + TotalPacketLength);
+                buffer.Append("IGMP:  ******* IGMPv3 - \"Internet Group Management Protocol (Version 3) Membership Query\" - offset=? length=").Append(TotalPacketLength).AppendLine();
                 buffer.AppendLine("IGMP:");
                 foreach (var property in properties)
                 {
-                    buffer.AppendLine("IGMP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    buffer.Append("IGMP: ").Append(property.Key.PadLeft(padLength)).Append(" = ").AppendLine(property.Value);
                 }
 
                 buffer.AppendLine("IGMP:");

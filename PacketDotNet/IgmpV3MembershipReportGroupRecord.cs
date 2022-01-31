@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
@@ -22,50 +21,44 @@ namespace PacketDotNet
     /// </summary>
     public class IgmpV3MembershipReportGroupRecord
     {
-        /// <summary>
-        /// ByteArraySegment representing the header passed in to the Construtor.
-        /// </summary>
-        private ByteArraySegment _header;
+        private readonly ByteArraySegment _header;
+        private readonly int _recordOffset;
 
         /// <summary>
-        /// recordOffset will be set in the constructor to be used for this instance of the record.
+        /// Initializes a new instance of the <see cref="IgmpV3MembershipReportGroupRecord" /> class.
         /// </summary>
-        private int _recordOffset;
-
-        /// <summary>
-        /// Constructor that takes an offset for this instance.
-        /// </summary>
-        /// <param name="offset"></param>
+        /// <param name="header">The header.</param>
+        /// <param name="offset">The offset.</param>
         public IgmpV3MembershipReportGroupRecord(ByteArraySegment header, int offset)
         {
             _header = header;
             _recordOffset = offset;
         }
 
-        /// <value>
-        /// Fetch the IGMP membership report group record auxiliary data length. 
-        /// </value>
+        /// <summary>
+        /// Gets or sets the IGMP membership report group record auxiliary data length.
+        /// </summary>
         public byte AuxiliaryDataLength
         {
             get => _header.Bytes[_recordOffset + IgmpV3MembershipReportGroupRecordFields.AuxiliaryDataLengthPosition];
             set => _header.Bytes[_recordOffset + IgmpV3MembershipReportGroupRecordFields.AuxiliaryDataLengthPosition] = value;
         }
 
-        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        /// <summary>Gets or sets ascii escape sequence of the color associated with this packet type.</summary>
         public string Color => AnsiEscapeSequences.Brown;
 
-        /// <summary>Fetch the IGMP membership report group record multicast address.</summary>
+        /// <summary>Gets or sets the IGMP membership report group record multicast address.</summary>
         public IPAddress MulticastAddress => IPPacket.GetIPAddress(AddressFamily.InterNetwork,
-                                                               _recordOffset + IgmpV3MembershipReportGroupRecordFields.MulticastAddressPosition,
-                                                               _header.Bytes);
+                                                                   _recordOffset + IgmpV3MembershipReportGroupRecordFields.MulticastAddressPosition,
+                                                                   _header.Bytes);
 
         /// <summary>
-        /// Fetch the membership report group record number of sources.
+        /// Gets or sets the membership report group record number of sources.
         /// </summary>
         public ushort NumberOfSources
         {
             get => EndianBitConverter.Big.ToUInt16(_header.Bytes,
-                                                 _recordOffset + IgmpV3MembershipReportGroupRecordFields.NumberOfSourcesPosition);
+                                                   _recordOffset + IgmpV3MembershipReportGroupRecordFields.NumberOfSourcesPosition);
             set
             {
                 var v = value;
@@ -75,23 +68,23 @@ namespace PacketDotNet
             }
         }
 
-        /// <value>
-        /// Fetch the IGMP membership report group record type. 
-        /// </value>
+        /// <summary>
+        /// Gets or sets the IGMP membership report group record type.
+        /// </summary>
         public IgmpV3MembershipReportGroupRecordType RecordType
         {
-            get => (IgmpV3MembershipReportGroupRecordType)_header.Bytes[_recordOffset + IgmpV3MembershipReportGroupRecordFields.RecordTypePosition];
-            set => _header.Bytes[_recordOffset + IgmpV3MembershipReportGroupRecordFields.RecordTypePosition] = (byte)value;
+            get => (IgmpV3MembershipReportGroupRecordType) _header.Bytes[_recordOffset + IgmpV3MembershipReportGroupRecordFields.RecordTypePosition];
+            set => _header.Bytes[_recordOffset + IgmpV3MembershipReportGroupRecordFields.RecordTypePosition] = (byte) value;
         }
 
         /// <summary>
-        /// List of IGMPv3 membership report group record IP unicast source addresses.
+        /// Gets or sets a list of IGMPv3 membership report group record IP unicast source addresses.
         /// </summary>
         public List<IPAddress> SourceAddresses
         {
             get
             {
-                List<IPAddress> sourceAddresses  = new List<IPAddress>();
+                List<IPAddress> sourceAddresses = new List<IPAddress>();
                 var offset = _recordOffset + IgmpV3MembershipReportGroupRecordFields.SourceAddressStart;
 
                 for (int i = 0; i < NumberOfSources; i++)
@@ -121,6 +114,7 @@ namespace PacketDotNet
                                _header.Bytes,
                                offset,
                                address.Length);
+
                     offset += address.Length;
                 }
             }
@@ -175,7 +169,7 @@ namespace PacketDotNet
                 buffer.AppendLine("IGMP:  ******* \"Group Record\" ");
                 foreach (var property in properties)
                 {
-                    buffer.AppendLine("IGMP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    buffer.Append("IGMP: ").Append(property.Key.PadLeft(padLength)).Append(" = ").AppendLine(property.Value);
                 }
 
                 buffer.AppendLine("IGMP:");

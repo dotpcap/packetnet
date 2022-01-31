@@ -259,7 +259,7 @@ namespace PacketDotNet
                 }
                 case ProtocolType.Igmp:
                 {
-                    payloadPacketOrData.Packet = new IgmpV2Packet(payload, parentPacket);
+                    payloadPacketOrData.Packet = IgmpPacket.ConstructIgmpPacket(payload, parentPacket);
                     break;
                 }
                 case ProtocolType.Ospf:

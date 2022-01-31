@@ -35,7 +35,7 @@ Supported packet formats
 * TCP
 * UDP
 * ICMP v4 and v6
-* IGMP
+* IGMP v2 and v3
 * L2TP
 * PPPoE
 * OSPF

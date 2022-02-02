@@ -67,7 +67,14 @@ namespace PacketDotNet
                                                                Header.Bytes);
 
         /// <summary>Gets or sets the IGMPv3 membership query max response time, in tenths of seconds.</summary>
-        public byte MaxResponseTime => CodeOrFloatingPointValue(MaxResponseCode);
+        public ushort MaxResponseTime
+        {
+            get => CodeOrFloatingPointValue(MaxResponseCode);
+            set
+            {
+                MaxResponseCode = ConvertFloatingPointToCode(value);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the IGMPv3 membership query number of sources.
@@ -88,7 +95,14 @@ namespace PacketDotNet
         /// <summary>
         /// Gets or sets theIGMPv3 membership query querier's query interval, in seconds.
         /// </summary>
-        public byte QueriersQueryInterval => CodeOrFloatingPointValue(QueriersQueryIntervalCode);
+        public ushort QueriersQueryInterval
+        {
+            get => CodeOrFloatingPointValue(QueriersQueryIntervalCode);
+            set
+            {
+                QueriersQueryIntervalCode = ConvertFloatingPointToCode(value);
+            }
+        }
 
         /// <summary>
         /// Gets or sets a value indicating IGMPv3 membership query querier's robustness variable.
@@ -218,6 +232,45 @@ namespace PacketDotNet
             return (byte) ((mant | 0x10) << (exp + 3));
         }
 
+        private int getHighestOneBit(int n)
+        {
+            // Below steps set bits after
+            // MSB (including MSB)
+
+            // Suppose n is 273 (binary
+            // is 100010001). It does following
+            // 100010001 | 010001000 = 110011001
+            n |= n >> 1;
+
+            // This makes sure 4 bits
+            // (From MSB and including MSB)
+            // are set. It does following
+            // 110011001 | 001100110 = 111111111
+            n |= n >> 2;
+
+            n |= n >> 4;
+            n |= n >> 8;
+            n |= n >> 16;
+
+            // Increment n by 1 so that
+            // there is only one set bit
+            // which is just before original
+            // MSB. n now becomes 1000000000
+            n = n + 1;
+
+            // Return original MSB after shifting.
+            // n now becomes 100000000
+            return (n >> 1);
+        }
+
+        private byte ConvertFloatingPointToCode(ushort floatValue)
+        {
+            byte exp = (byte)(Math.Log(getHighestOneBit(floatValue)) / Math.Log(2) - 7);
+            byte mant = (byte)((floatValue >> (exp + 3)) & 0x0f);
+
+            return (byte)(((exp << 4 | mant) ) | 0x80);
+        }
+        
         /// <summary cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {

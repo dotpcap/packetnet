@@ -69,11 +69,8 @@ namespace PacketDotNet
         /// <summary>Gets or sets the IGMPv3 membership query max response time, in tenths of seconds.</summary>
         public ushort MaxResponseTime
         {
-            get => CodeOrFloatingPointValue(MaxResponseCode);
-            set
-            {
-                MaxResponseCode = ConvertFloatingPointToCode(value);
-            }
+            get => GetCodeOrFloatingPointValue(MaxResponseCode);
+            set => MaxResponseCode = ConvertFloatingPointToCode(value);
         }
 
         /// <summary>
@@ -97,11 +94,8 @@ namespace PacketDotNet
         /// </summary>
         public ushort QueriersQueryInterval
         {
-            get => CodeOrFloatingPointValue(QueriersQueryIntervalCode);
-            set
-            {
-                QueriersQueryIntervalCode = ConvertFloatingPointToCode(value);
-            }
+            get => GetCodeOrFloatingPointValue(QueriersQueryIntervalCode);
+            set => QueriersQueryIntervalCode = ConvertFloatingPointToCode(value);
         }
 
         /// <summary>
@@ -219,7 +213,7 @@ namespace PacketDotNet
             set => Header.Bytes[Header.Offset + IgmpV3MembershipQueryFields.ReservedSFlagAndQRVPosition] = value;
         }
 
-        private byte CodeOrFloatingPointValue(byte code)
+        private byte GetCodeOrFloatingPointValue(byte code)
         {
             if (code < 128)
             {
@@ -232,7 +226,7 @@ namespace PacketDotNet
             return (byte) ((mant | 0x10) << (exp + 3));
         }
 
-        private int getHighestOneBit(int n)
+        private int GetHighestOneBit(int n)
         {
             // Below steps set bits after
             // MSB (including MSB)
@@ -265,7 +259,12 @@ namespace PacketDotNet
 
         private byte ConvertFloatingPointToCode(ushort floatValue)
         {
-            byte exp = (byte)(Math.Log(getHighestOneBit(floatValue)) / Math.Log(2) - 7);
+            if (floatValue < 128)
+            {
+                return (byte)floatValue;
+            }
+            
+            byte exp = (byte)(Math.Log(GetHighestOneBit(floatValue)) / Math.Log(2) - 7);
             byte mant = (byte)((floatValue >> (exp + 3)) & 0x0f);
 
             return (byte)(((exp << 4 | mant) ) | 0x80);

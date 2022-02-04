@@ -69,8 +69,8 @@ namespace PacketDotNet
         /// <summary>Gets or sets the IGMPv3 membership query max response time, in tenths of seconds.</summary>
         public ushort MaxResponseTime
         {
-            get => GetCodeOrFloatingPointValue(MaxResponseCode);
-            set => MaxResponseCode = ConvertFloatingPointToCode(value);
+            get => GetFloatingPointValueFromCode(MaxResponseCode);
+            set => MaxResponseCode = GetCodeFromFloatingPointValue(value);
         }
 
         /// <summary>
@@ -94,8 +94,8 @@ namespace PacketDotNet
         /// </summary>
         public ushort QueriersQueryInterval
         {
-            get => GetCodeOrFloatingPointValue(QueriersQueryIntervalCode);
-            set => QueriersQueryIntervalCode = ConvertFloatingPointToCode(value);
+            get => GetFloatingPointValueFromCode(QueriersQueryIntervalCode);
+            set => QueriersQueryIntervalCode = GetCodeFromFloatingPointValue(value);
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace PacketDotNet
             set => Header.Bytes[Header.Offset + IgmpV3MembershipQueryFields.ReservedSFlagAndQRVPosition] = value;
         }
 
-        private byte GetCodeOrFloatingPointValue(byte code)
+        private ushort GetFloatingPointValueFromCode(byte code)
         {
             if (code < 128)
             {
@@ -223,7 +223,7 @@ namespace PacketDotNet
             int exp = (code & 0x70) >> 4;
             int mant = code & 0x0F;
 
-            return (byte) ((mant | 0x10) << (exp + 3));
+            return (ushort) ((mant | 0x10) << (exp + 3));
         }
 
         private int GetHighestOneBit(int n)
@@ -257,7 +257,7 @@ namespace PacketDotNet
             return (n >> 1);
         }
 
-        private byte ConvertFloatingPointToCode(ushort floatValue)
+        private byte GetCodeFromFloatingPointValue(ushort floatValue)
         {
             if (floatValue < 128)
             {

@@ -16,7 +16,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Install .net dependencies
       run: dotnet restore
     - name: Install libpcap
@@ -24,7 +24,7 @@ jobs:
     - name: Build
       run: dotnet build PacketDotNet/PacketDotNet.csproj --framework "netstandard2.0" -c Release
     - name: Test
-      run: dotnet test --framework "net5.0"
+      run: dotnet test --framework "net6.0"
 
   windows:
     runs-on: windows-latest
@@ -34,7 +34,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 6.0.x
     - name: Clear NuGet cache
       run: dotnet nuget locals all --clear
     - name: Install .net dependencies

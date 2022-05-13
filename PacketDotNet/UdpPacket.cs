@@ -199,7 +199,7 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// True if the UDP checksum is valid
+        /// Gets or sets a value indicating whether the UDP checksum is valid.
         /// </summary>
         public bool ValidUdpChecksum
         {

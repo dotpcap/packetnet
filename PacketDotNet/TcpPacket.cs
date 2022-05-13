@@ -445,9 +445,9 @@ namespace PacketDotNet
             }
         }
 
-        /// <value>
-        /// True if the tcp checksum is valid
-        /// </value>
+        /// <summary>
+        /// Gets or sets a value indicating whether the TCP checksum is valid.
+        /// </summary>
         public bool ValidTcpChecksum
         {
             get

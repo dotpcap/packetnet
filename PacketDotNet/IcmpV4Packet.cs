@@ -146,6 +146,46 @@ namespace PacketDotNet
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the ICMPv4 checksum is valid.
+        /// </summary>
+        public bool ValidIcmpV4Checksum
+        {
+            get
+            {
+                Log.Debug("ValidIcmpV4Checksum");
+                var calculatedChecksum = CalculateIcmpChecksum();
+                var result = Checksum == calculatedChecksum;
+                Log.DebugFormat("ValidIcmpV4Checksum: {0}", result);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Calculates the ICMP checksum.
+        /// </summary>
+        /// <returns>The calculated ICMP checksum.</returns>
+        public ushort CalculateIcmpChecksum()
+        {
+            var originalChecksum = Checksum;
+
+            Checksum = 0; // This needs to be reset first to calculate the checksum.
+
+            var calculatedChecksum = ChecksumUtils.OnesComplementSum(Bytes, 0, Bytes.Length);
+
+            Checksum = originalChecksum;
+
+            return (ushort)calculatedChecksum;
+        }
+
+        /// <summary>
+        /// Update the checksum value.
+        /// </summary>
+        public void UpdateIcmpChecksum()
+        {
+            Checksum = CalculateIcmpChecksum();
+        }
+
         /// <inheritdoc cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {

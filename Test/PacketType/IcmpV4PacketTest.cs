@@ -46,7 +46,7 @@ namespace Test.PacketType
             Assert.AreEqual(0xe05b, icmp.Checksum);
             Assert.AreEqual(0x0200, icmp.Id);
             Assert.AreEqual(0x6b00, icmp.Sequence);
-            Assert.True(icmp.ValidIcmpV4Checksum);
+            Assert.True(icmp.ValidIcmpChecksum);
 
             // check that the message matches
             const string expectedString = "abcdefghijklmnopqrstuvwabcdefghi";

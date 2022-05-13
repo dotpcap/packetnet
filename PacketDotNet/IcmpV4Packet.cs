@@ -149,14 +149,14 @@ namespace PacketDotNet
         /// <summary>
         /// Gets or sets a value indicating whether the ICMPv4 checksum is valid.
         /// </summary>
-        public bool ValidIcmpV4Checksum
+        public bool ValidIcmpChecksum
         {
             get
             {
-                Log.Debug("ValidIcmpV4Checksum");
+                Log.Debug("ValidIcmpChecksum");
                 var calculatedChecksum = CalculateIcmpChecksum();
                 var result = Checksum == calculatedChecksum;
-                Log.DebugFormat("ValidIcmpV4Checksum: {0}", result);
+                Log.DebugFormat("ValidIcmpChecksum: {0}", result);
                 return result;
             }
         }
@@ -171,11 +171,11 @@ namespace PacketDotNet
 
             Checksum = 0; // This needs to be reset first to calculate the checksum.
 
-            var calculatedChecksum = ChecksumUtils.OnesComplementSum(Bytes, 0, Bytes.Length);
+            var calculatedChecksum = (ushort) ChecksumUtils.OnesComplementSum(Bytes, 0, Bytes.Length);
 
             Checksum = originalChecksum;
 
-            return (ushort)calculatedChecksum;
+            return calculatedChecksum;
         }
 
         /// <summary>

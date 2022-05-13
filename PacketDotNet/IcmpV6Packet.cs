@@ -101,6 +101,21 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the ICMPv6 checksum is valid.
+        /// </summary>
+        public bool ValidIcmpChecksum
+        {
+            get
+            {
+                Log.Debug("ValidIcmpChecksum");
+                var calculatedChecksum = CalculateIcmpChecksum();
+                var result = Checksum == calculatedChecksum;
+                Log.DebugFormat("ValidIcmpChecksum: {0}", result);
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Parses the next segment.
         /// </summary>
         /// <param name="header">The header.</param>
@@ -139,17 +154,29 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Recalculate the checksum
+        /// Update the checksum value.
         /// </summary>
-        public override void UpdateCalculatedValues()
+        public void UpdateIcmpChecksum()
         {
-            // start with this packet with a zeroed out checksum field
-            Checksum = 0;
+            Checksum = CalculateIcmpChecksum();
+        }
 
-            var dataToChecksum = ParentPacket.HeaderDataSegment;
-            var ipv6Parent = ParentPacket as IPv6Packet;
+        /// <summary>
+        /// Calculates the ICMP checksum.
+        /// </summary>
+        /// <returns>The calculated ICMP checksum.</returns>
+        public ushort CalculateIcmpChecksum()
+        {
+            var originalChecksum = Checksum;
 
-            Checksum = (ushort) ChecksumUtils.OnesComplementSum(dataToChecksum, ipv6Parent?.GetPseudoIPHeader(dataToChecksum.Length) ?? Array.Empty<byte>());
+            Checksum = 0; // This needs to be reset first to calculate the checksum.
+
+            var headerDataSegment = ParentPacket.HeaderDataSegment;
+            var calculatedChecksum = (ushort) ChecksumUtils.OnesComplementSum(headerDataSegment, (ParentPacket as IPv6Packet)?.GetPseudoIPHeader(headerDataSegment.Length) ?? Array.Empty<byte>());
+
+            Checksum = originalChecksum;
+
+            return calculatedChecksum;
         }
 
         /// <inheritdoc cref="Packet.ToString(StringOutputType)" />

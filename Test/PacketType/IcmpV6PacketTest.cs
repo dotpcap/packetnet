@@ -38,12 +38,13 @@ namespace Test.PacketType
             var icmpv6 = p.Extract<IcmpV6Packet>();
             Assert.IsNotNull(icmpv6);
             var savedChecksum = icmpv6.Checksum;
+            Assert.True(icmpv6.ValidIcmpChecksum);
 
             // now zero the checksum out
             icmpv6.Checksum = 0;
 
             // and recalculate the checksum
-            icmpv6.UpdateCalculatedValues();
+            icmpv6.UpdateIcmpChecksum();
 
             // compare the checksum values to ensure that they match
             Assert.AreEqual(savedChecksum, icmpv6.Checksum);

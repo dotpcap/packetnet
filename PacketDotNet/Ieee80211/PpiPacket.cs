@@ -273,7 +273,7 @@ namespace PacketDotNet.Ieee80211
             return PpiFields.FindAll(p => p.FieldType == type).ToArray();
         }
 
-        /// <summary cref="Packet.ToString(StringOutputType)" />
+        /// <inheritdoc cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {
             PayloadPacketOrData.Evaluate();

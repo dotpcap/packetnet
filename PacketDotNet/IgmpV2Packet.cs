@@ -85,7 +85,7 @@ namespace PacketDotNet
             set => Header.Bytes[Header.Offset + IgmpV2Fields.TypePosition] = (byte) value;
         }
 
-        /// <summary cref="Packet.ToString(StringOutputType)" />
+        /// <inheritdoc cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();

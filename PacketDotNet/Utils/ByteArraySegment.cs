@@ -86,15 +86,15 @@ namespace PacketDotNet.Utils
             BytesLength = byteArraySegment.BytesLength;
         }
 
-        /// <value>
+        /// <summary>
         /// Gets the underlying byte array.
-        /// </value>
+        /// </summary>
         public byte[] Bytes { get; }
 
-        /// <value>
+        /// <summary>
         /// Gets or sets the maximum number of bytes we should treat <see cref="Bytes" /> as having.
         /// This allows for controlling the number of bytes produced by <see cref="NextSegment()" />.
-        /// </value>
+        /// </summary>
         public int BytesLength { get; set; }
 
         /// <summary>

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using PacketDotNet.Ndp;
 using PacketDotNet.Utils;
 
@@ -115,6 +116,64 @@ namespace PacketDotNet
                 for (var i = 0; i < address.Length; i++)
                     Header.Bytes[Header.Offset + NdpFields.NeighborAdvertisementTargetAddressOffset + i] = address[i];
             }
+        }
+
+        /// <inheritdoc />
+        public override string ToString(StringOutputType outputFormat)
+        {
+            var buffer = new StringBuilder();
+            var color = "";
+            var colorEscape = "";
+
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
+
+            switch (outputFormat)
+            {
+                case StringOutputType.Normal:
+                case StringOutputType.Colored:
+                    // build the output string
+                    buffer.AppendFormat("{0}[NdpNeighborAdvertisementPacket: Router={2}, Solicited={3}, Override={4}]{1}",
+                                        color,
+                                        colorEscape,
+                                        Router,
+                                        Solicited,
+                                        Override);
+
+                    break;
+
+                case StringOutputType.Verbose:
+                case StringOutputType.VerboseColored:
+                    // collect the properties and their value
+                    var properties = new Dictionary<string, string>
+                    {
+                        { "router", Router.ToString() },
+                        { "solicited", Solicited.ToString() },
+                        { "override", Override.ToString() }
+                    };
+
+                    // calculate the padding needed to right-justify the property names
+                    var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+
+                    // build the output string
+                    buffer.AppendLine("NDP:  ******* NDP - \"Neighbor Advertisement\"- offset=? length=" + TotalPacketLength);
+                    buffer.AppendLine("NDP:");
+                    foreach (var property in properties)
+                    {
+                        buffer.AppendLine("NDP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    }
+
+                    buffer.AppendLine("NDP:");
+                    break;
+            }
+
+            // append the base string output
+            buffer.Append(base.ToString(outputFormat));
+
+            return buffer.ToString();
         }
     }
 }

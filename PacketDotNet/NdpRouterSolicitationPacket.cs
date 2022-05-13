@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using PacketDotNet.Ndp;
 using PacketDotNet.Utils;
 
@@ -53,6 +54,56 @@ namespace PacketDotNet
 
                 return new ByteArraySegment(Header.Bytes, Header.Offset + optionsOffset, optionsLength);
             }
+        }
+
+        /// <inheritdoc />
+        public override string ToString(StringOutputType outputFormat)
+        {
+            var buffer = new StringBuilder();
+            var color = "";
+            var colorEscape = "";
+
+            if (outputFormat is StringOutputType.Colored or StringOutputType.VerboseColored)
+            {
+                color = Color;
+                colorEscape = AnsiEscapeSequences.Reset;
+            }
+
+            switch (outputFormat)
+            {
+                case StringOutputType.Normal:
+                case StringOutputType.Colored:
+                    // build the output string
+                    buffer.AppendFormat("{0}[NdpRouterSolicitationPacket]{1}",
+                                        color,
+                                        colorEscape);
+
+                    break;
+
+                case StringOutputType.Verbose:
+                case StringOutputType.VerboseColored:
+                    // collect the properties and their value
+                    var properties = new Dictionary<string, string>();
+
+                    // calculate the padding needed to right-justify the property names
+                    var padLength = RandomUtils.LongestStringLength(new List<string>(properties.Keys));
+
+                    // build the output string
+                    buffer.AppendLine("NDP:  ******* NDP - \"Router Solicitation\"- offset=? length=" + TotalPacketLength);
+                    buffer.AppendLine("NDP:");
+                    foreach (var property in properties)
+                    {
+                        buffer.AppendLine("NDP: " + property.Key.PadLeft(padLength) + " = " + property.Value);
+                    }
+
+                    buffer.AppendLine("NDP:");
+                    break;
+            }
+
+            // append the base string output
+            buffer.Append(base.ToString(outputFormat));
+
+            return buffer.ToString();
         }
     }
 }

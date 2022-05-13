@@ -49,7 +49,7 @@ jobs:
       run: dotnet test
     - name: publish on version change
       id: publish_nuget
-      uses: rohith/publish-nuget@v2
+      uses: alirezanet/publish-nuget@v3.0.4
       with:
         # Filepath of the project to be packaged, relative to root of repository
         PROJECT_FILE_PATH: PacketDotNet/PacketDotNet.csproj

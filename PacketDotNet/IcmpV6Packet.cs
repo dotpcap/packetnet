@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
-
 #if DEBUG
 using log4net;
 using System.Reflection;
@@ -36,12 +35,6 @@ namespace PacketDotNet
 #endif
 
         /// <summary>
-        /// Used to prevent a recursive stack overflow
-        /// when recalculating in UpdateCalculatedValues()
-        /// </summary>
-        private bool _skipUpdating;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="byteArraySegment">
@@ -51,7 +44,11 @@ namespace PacketDotNet
         {
             Log.Debug("");
 
-            Header = new ByteArraySegment(byteArraySegment);
+            Header = new ByteArraySegment(byteArraySegment.Bytes, byteArraySegment.Offset, 4);
+
+            // parse the payload
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => ParseNextSegment(byteArraySegment,
+                                                                                                Type));
         }
 
         /// <summary>
@@ -104,33 +101,58 @@ namespace PacketDotNet
         }
 
         /// <summary>
+        /// Parses the next segment.
+        /// </summary>
+        /// <param name="header">The header.</param>
+        /// <param name="type">The type.</param>
+        /// <returns><see cref="PacketOrByteArraySegment" />.</returns>
+        internal static PacketOrByteArraySegment ParseNextSegment
+        (
+            ByteArraySegment header,
+            IcmpV6Type type)
+        {
+            var payloadPacketOrData = new PacketOrByteArraySegment();
+
+            switch (type)
+            {
+                case IcmpV6Type.RouterSolicitation:
+                    payloadPacketOrData.Packet = new NdpRouterSolicitationPacket(header);
+                    break;
+                case IcmpV6Type.RouterAdvertisement:
+                    payloadPacketOrData.Packet = new NdpRouterAdvertisementPacket(header);
+                    break;
+                case IcmpV6Type.NeighborSolicitation:
+                    payloadPacketOrData.Packet = new NdpNeighborSolicitationPacket(header);
+                    break;
+                case IcmpV6Type.NeighborAdvertisement:
+                    payloadPacketOrData.Packet = new NdpNeighborAdvertisementPacket(header);
+                    break;
+                case IcmpV6Type.RedirectMessage:
+                    payloadPacketOrData.Packet = new NdpRedirectMessagePacket(header);
+                    break;
+                default:
+                    payloadPacketOrData.ByteArraySegment = new ByteArraySegment(header.Bytes, header.Offset + 4, header.Length - 4);
+                    break;
+            }
+
+            return payloadPacketOrData;
+        }
+
+        /// <summary>
         /// Recalculate the checksum
         /// </summary>
         public override void UpdateCalculatedValues()
         {
-            if (_skipUpdating)
-                return;
-
-
-            // prevent us from entering this routine twice
-            // by setting this flag, the act of retrieving the Bytes
-            // property will cause this routine to be called which will
-            // retrieve Bytes recursively and overflow the stack
-            _skipUpdating = true;
-
             // start with this packet with a zeroed out checksum field
             Checksum = 0;
 
-            var dataToChecksum = BytesSegment;
+            var dataToChecksum = ParentPacket.HeaderDataSegment;
             var ipv6Parent = ParentPacket as IPv6Packet;
 
             Checksum = (ushort) ChecksumUtils.OnesComplementSum(dataToChecksum, ipv6Parent?.GetPseudoIPHeader(dataToChecksum.Length) ?? Array.Empty<byte>());
-
-            // clear the skip variable
-            _skipUpdating = false;
         }
 
-        /// <summary cref="Packet.ToString(StringOutputType)" />
+        /// <inheritdoc cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();
@@ -147,7 +169,6 @@ namespace PacketDotNet
             {
                 case StringOutputType.Normal:
                 case StringOutputType.Colored:
-                {
                     // build the output string
                     buffer.AppendFormat("{0}[IcmpV6Packet: Type={2}, Code={3}]{1}",
                                         color,
@@ -156,10 +177,9 @@ namespace PacketDotNet
                                         Code);
 
                     break;
-                }
+
                 case StringOutputType.Verbose:
                 case StringOutputType.VerboseColored:
-                {
                     // collect the properties and their value
                     var properties = new Dictionary<string, string>
                     {
@@ -183,7 +203,6 @@ namespace PacketDotNet
 
                     buffer.AppendLine("ICMP:");
                     break;
-                }
             }
 
             // append the base string output

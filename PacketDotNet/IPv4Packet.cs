@@ -433,7 +433,7 @@ namespace PacketDotNet
             return headerForChecksum;
         }
 
-        /// <summary cref="Packet.ToString(StringOutputType)" />
+        /// <inheritdoc cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();

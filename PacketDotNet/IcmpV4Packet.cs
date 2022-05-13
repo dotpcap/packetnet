@@ -69,9 +69,9 @@ namespace PacketDotNet
             ParentPacket = parentPacket;
         }
 
-        /// <value>
-        /// Checksum value
-        /// </value>
+        /// <summary>
+        /// Gets or sets the checksum value.
+        /// </summary>
         public ushort Checksum
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
@@ -125,9 +125,9 @@ namespace PacketDotNet
                                                     Header.Offset + IcmpV4Fields.SequencePosition);
         }
 
-        /// <value>
+        /// <summary>
         /// The Type/Code enum value
-        /// </value>
+        /// </summary>
         public IcmpV4TypeCode TypeCode
         {
             get
@@ -146,7 +146,7 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary cref="Packet.ToString(StringOutputType)" />
+        /// <inheritdoc cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();

@@ -43,7 +43,7 @@ namespace Test.PacketType
             Assert.AreEqual(IPAddress.Parse("ff02::2"), ip.DestinationAddress);
             Assert.AreEqual(IPVersion.IPv6, ip.Version);
             Assert.AreEqual(ProtocolType.IcmpV6, ip.Protocol);
-            Assert.AreEqual(16, ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
+            Assert.AreEqual(20, ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
             Assert.AreEqual(255, ip.HopLimit);
             Assert.AreEqual(255, ip.TimeToLive);
             Console.WriteLine("Failed: ip.ComputeIPChecksum() not implemented.");

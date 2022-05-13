@@ -39,9 +39,7 @@ namespace PacketDotNet
 #pragma warning restore 0169, 0649
 #endif
 
-        /// <value>
-        /// 20 bytes is the smallest tcp header
-        /// </value>
+        // 20 bytes is the smallest tcp header
         public const int HeaderMinimumLength = 20;
 
         /// <summary>
@@ -284,9 +282,9 @@ namespace PacketDotNet
             }
         }
 
-        /// <value>
+        /// <summary>
         /// Gets or sets the nonce sum (NS) flag.
-        /// </value>
+        /// </summary>
         public bool NonceSum
         {
             get => (Flags & TcpFields.NonceSumMask) != 0;
@@ -674,7 +672,7 @@ namespace PacketDotNet
             return options;
         }
 
-        /// <summary cref="Packet.ToString(StringOutputType)" />
+        /// <inheritdoc cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();

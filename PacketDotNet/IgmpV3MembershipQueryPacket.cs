@@ -270,7 +270,7 @@ namespace PacketDotNet
             return (byte)(((exp << 4 | mant) ) | 0x80);
         }
         
-        /// <summary cref="Packet.ToString(StringOutputType)" />
+        /// <inheritdoc cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
         {
             var buffer = new StringBuilder();

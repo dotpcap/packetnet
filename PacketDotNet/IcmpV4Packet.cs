@@ -71,9 +71,9 @@ namespace PacketDotNet
             ParentPacket = parentPacket;
         }
 
-        /// <value>
-        /// Checksum value
-        /// </value>
+        /// <summary>
+        /// Gets or sets the checksum value.
+        /// </summary>
         public ushort Checksum
         {
             get => EndianBitConverter.Big.ToUInt16(Header.Bytes,
@@ -127,9 +127,9 @@ namespace PacketDotNet
                                                     Header.Offset + IcmpV4Fields.SequencePosition);
         }
 
-        /// <value>
+        /// <summary>
         /// The Type/Code enum value
-        /// </value>
+        /// </summary>
         public IcmpV4TypeCode TypeCode
         {
             get
@@ -148,26 +148,17 @@ namespace PacketDotNet
             }
         }
 
-        /// <summary>Check if the ICMP packet is valid, checksum-wise.</summary>
-        public bool ValidChecksum => ValidIcmpChecksum;
-
         /// <summary>
-        /// Check if the ICMP packet is valid, checksum-wise.
+        /// Gets or sets a value indicating whether the ICMPv4 checksum is valid.
         /// </summary>
-        public bool ValidIcmpChecksum
+        public bool ValidIcmpV4Checksum
         {
             get
             {
-                Log.Debug("");
-
+                Log.Debug("ValidIcmpV4Checksum");
                 var calculatedChecksum = CalculateIcmpChecksum();
-
-                Log.DebugFormat(HexPrinter.GetString(Bytes, 0, Bytes.Length));
-
                 var result = Checksum == calculatedChecksum;
-
-                Log.DebugFormat("calculatedChecksum: {0}, Checksum {1}, returning {2}", calculatedChecksum, Checksum, result);
-
+                Log.DebugFormat("ValidIcmpV4Checksum: {0}", result);
                 return result;
             }
         }

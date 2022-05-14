@@ -87,4 +87,4 @@ jobs:
             PacketDotNet/bin/Release/netstandard2.0
 
       - name: Publish to NuGet
-        run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}
+        run: nuget push **\*.nupkg -SkipDuplicate -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}

@@ -1,21 +1,34 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net47</TargetFrameworks>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Description>.Net assembly for dissecting and constructing network packets</Description>
     <Authors>Chris Morgan (chmorgan@gmail.com)</Authors>
-    <Version>1.4.0</Version>
     <LangVersion>latest</LangVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\packetnet.snk</AssemblyOriginatorKeyFile>
     <Configurations>Release;Debug</Configurations>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageId>$(AssemblyName)</PackageId>
+    <Description>High performance .NET assembly for dissecting and constructing network packets such as Ethernet, IP, TCP, UDP, etc.</Description>
+    <PackageLicense>https://github.com/dotpcap/packetnet/blob/master/LICENSE</PackageLicense>
+    <PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/dotpcap/packetnet</PackageProjectUrl>
+    <PackageTags>packet packets ethernet ip tcp udp icmp network</PackageTags>
+    <PackageVersion>$(Version)</PackageVersion>
+    <Pack>true</Pack>
+    <RepositoryUrl>https://github.com/dotpcap/packetnet</RepositoryUrl>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DefineConstants>TRACE;RELEASE;</DefineConstants>
     <OutputPath>bin\Release\netstandard2.0</OutputPath>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>  
+  </PropertyGroup> 
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;</DefineConstants>
     <OutputPath>bin\Debug\netstandard2.0</OutputPath>
@@ -23,10 +36,13 @@
     <DebugSymbols>true</DebugSymbols>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>  
+
   <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PackageReference Include="log4net" Version="2.0.12" />
   </ItemGroup>  
+
   <ItemGroup>
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0" />
   </ItemGroup>
+
 </Project>

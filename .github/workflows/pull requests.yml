@@ -71,3 +71,17 @@ jobs:
 
       - name: Test
         run: dotnet test
+
+      - name: Publish net47
+        uses: actions/upload-artifact@v2
+        with:
+          name: PacketDotNet-net47
+          path: |
+            PacketDotNet/bin/Release/net47
+
+      - name: Publish netstandard20
+        uses: actions/upload-artifact@v2
+        with:
+          name: PacketDotNet-netstandard20
+          path: |
+            PacketDotNet/bin/Release/netstandard2.0

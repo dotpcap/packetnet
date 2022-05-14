@@ -72,5 +72,19 @@ jobs:
       - name: Test
         run: dotnet test
 
+      - name: Publish net47
+        uses: actions/upload-artifact@v2
+        with:
+          name: PacketDotNet-net47
+          path: |
+            PacketDotNet/bin/Release/net47
+
+      - name: Publish netstandard20
+        uses: actions/upload-artifact@v2
+        with:
+          name: PacketDotNet-netstandard20
+          path: |
+            PacketDotNet/bin/Release/netstandard2.0
+
       - name: Publish to NuGet
         run: nuget push **\*.nupkg -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}

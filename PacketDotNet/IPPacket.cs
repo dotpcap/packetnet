@@ -141,20 +141,12 @@ namespace PacketDotNet
         internal abstract byte[] GetPseudoIPHeader(int originalHeaderLength);
 
         /// <summary>
-        /// Convert an ip address from a byte[]
+        /// Converts an IP address from a <see cref="byte"/> array.
         /// </summary>
-        /// <param name="ipType">
-        /// A <see cref="AddressFamily" />
-        /// </param>
-        /// <param name="fieldOffset">
-        /// A <see cref="int" />
-        /// </param>
-        /// <param name="bytes">
-        /// A <see cref="byte" />
-        /// </param>
-        /// <returns>
-        /// A <see cref="IPAddress" />
-        /// </returns>
+        /// <param name="ipType">A <see cref="AddressFamily" />.</param>
+        /// <param name="fieldOffset">A <see cref="int" />.</param>
+        /// <param name="bytes">A <see cref="byte" />.</param>
+        /// <returns>A <see cref="IPAddress" />.</returns>
         public static IPAddress GetIPAddress
         (
             AddressFamily ipType,
@@ -165,17 +157,21 @@ namespace PacketDotNet
             {
                 case AddressFamily.InterNetwork:
                 {
-                    var address = Unsafe.As<byte, long>(ref bytes[fieldOffset]) & 0x0FFFFFFFF;
+                    var address = Unsafe.As<byte, long>(ref bytes[fieldOffset]) & 0x00000000FFFFFFFF;
                     return new IPAddress(address);
                 }
                 case AddressFamily.InterNetworkV6:
                 {
+#if NETSTANDARD2_1_OR_GREATER
+                    return new IPAddress(bytes.AsSpan(fieldOffset, 16));
+#else
                     var address = new byte[IPv6Fields.AddressLength];
 
                     Unsafe.WriteUnaligned(ref address[0], Unsafe.As<byte, long>(ref bytes[fieldOffset]));
                     Unsafe.WriteUnaligned(ref address[8], Unsafe.As<byte, long>(ref bytes[fieldOffset + 8]));
 
                     return new IPAddress(address);
+#endif
                 }
                 default:
                 {

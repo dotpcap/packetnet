@@ -122,7 +122,7 @@ namespace PacketDotNet
                 Length = IPv6Fields.HeaderLength
             };
             ParseExtensionHeaders();
-            
+
             Log.DebugFormat("PayloadLength: {0}", PayloadLength);
 
             if (PayloadLength > 0)

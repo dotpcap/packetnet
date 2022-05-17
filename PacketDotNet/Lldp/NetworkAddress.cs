@@ -178,7 +178,6 @@ namespace PacketDotNet.Lldp
             if (obj == null || GetType() != obj.GetType())
                 return false;
 
-
             var na = (NetworkAddress) obj;
 
             return AddressFamily.Equals(na.AddressFamily) && Address.Equals(na.Address);

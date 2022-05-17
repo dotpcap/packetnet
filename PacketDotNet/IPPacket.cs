@@ -163,7 +163,7 @@ namespace PacketDotNet
                 case AddressFamily.InterNetworkV6:
                 {
 #if NETSTANDARD2_1_OR_GREATER
-                    return new IPAddress(bytes.AsSpan(fieldOffset, 16));
+                    return new IPAddress(bytes.AsSpan(fieldOffset, IPv6Fields.AddressLength));
 #else
                     var address = new byte[IPv6Fields.AddressLength];
 

@@ -26,7 +26,7 @@ jobs:
         run: dotnet build PacketDotNet/PacketDotNet.csproj --framework "netstandard2.0" -c Release
 
       - name: Test
-        run: dotnet test --framework "net6.0"
+        run: dotnet test -c Release -f "net6.0"
 
   windows:
     runs-on: windows-latest
@@ -70,7 +70,7 @@ jobs:
         run: dotnet build -c Release
 
       - name: Test
-        run: dotnet test
+        run: dotnet test -c Release
 
       - name: Publish net47
         uses: actions/upload-artifact@v2

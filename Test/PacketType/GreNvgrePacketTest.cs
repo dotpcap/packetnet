@@ -76,7 +76,7 @@ namespace Test.PacketType
             Assert.AreEqual(ProtocolType.Tcp, innerIpv4.Protocol);
             Console.WriteLine("TCP inside inner IPv4");
 
-            // InnerTCP
+            // Inner TCP
             TcpPacket innerTcp = innerIpv4.Extract<TcpPacket>();
             Assert.IsNotNull(innerTcp);
             Assert.IsNotNull(innerTcp.PayloadData);

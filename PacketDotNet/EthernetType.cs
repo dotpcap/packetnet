@@ -25,6 +25,11 @@ namespace PacketDotNet
         None = 0x0000,
 
         /// <summary>
+        /// Transparent Ethernet Bridging, NVGRE (RFC 1701, RFC 7637)
+        /// </summary>
+        TransparentEthernetBridging = 0x6558,
+
+        /// <summary>
         /// Internet Protocol, Version 4 (IPv4)
         /// </summary>
         IPv4 = 0x0800,

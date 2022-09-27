@@ -237,6 +237,11 @@ namespace PacketDotNet
                     payloadPacketOrData.Packet = new Ieee8021QPacket(payload);
                     break;
                 }
+                case EthernetType.TransparentEthernetBridging:
+                {
+                    payloadPacketOrData.Packet = new EthernetPacket(payload);
+                    break;
+                }
                 default: // consider the sub-packet to be a byte array
                 {
                     payloadPacketOrData.ByteArraySegment = payload;

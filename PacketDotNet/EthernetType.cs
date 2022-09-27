@@ -35,6 +35,11 @@ namespace PacketDotNet
         Arp = 0x0806,
 
         /// <summary>
+        /// Transparent Ethernet Bridging, NVGRE (RFC 1701, RFC 7637)
+        /// </summary>
+        TransparentEthernetBridging = 0x6558,
+
+        /// <summary>
         /// Reverse Address Resolution Protocol (RARP)
         /// </summary>
         ReverseArp = 0x8035,

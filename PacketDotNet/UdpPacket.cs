@@ -105,6 +105,12 @@ namespace PacketDotNet
                     return result;
                 }
 
+                if (VxlanPacket.CanDecode(payload, this))
+                {
+                    result.Packet = new VxlanPacket(payload, this);
+                    return result;
+                }
+
                 // Teredo encapsulates IPv6 traffic into UDP packets, parse out the bytes in the payload into packets.
                 // If it contains a IPV6 packet, it to this current packet as a payload.
                 // https://tools.ietf.org/html/rfc4380#section-5.1.1

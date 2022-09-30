@@ -58,12 +58,12 @@ namespace PacketDotNet
         /// <summary>
         /// Gets or sets the VXLAN Network Identifier (VNI)
         /// </summary>
-        public UInt32 Vni
+        public uint Vni
         {
             // Note: VNI is 24-bit so the padding of reserved2 byte needs to be considered.
             get => EndianBitConverter.Big.ToUInt32(Header.Bytes, Header.Offset + VxlanFields.VniPosition) >> 8;
             set => EndianBitConverter.Big.CopyBytes(
-                (value << 8) | (UInt32)Header.Bytes[Header.Offset + VxlanFields.VniPosition + VxlanFields.VniLength],
+                (value << 8) | (uint)Header.Bytes[Header.Offset + VxlanFields.VniPosition + VxlanFields.VniLength],
                 Header.Bytes,
                 Header.Offset + VxlanFields.VniPosition
                 );

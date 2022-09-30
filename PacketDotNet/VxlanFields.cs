@@ -36,9 +36,9 @@ namespace PacketDotNet
         public static readonly int HeaderLength = FlagsLength + Reserved1Length + VniLength + Reserved2Length;
 
         /// <summary>IANA assigned Vxlan destination UDP port by default.</summary>
-        public static readonly ushort DefaultUdpDstPortForVxlan = 4789;
+        public static readonly ushort DefaultDestinationPort = 4789;
 
         /// <summary>The Vxlan port should be configurable according to RFC 7348.</summary>
-        public static ushort UdpDstPortForVxlan = DefaultUdpDstPortForVxlan;
+        public static ushort DestinationPort = DefaultDestinationPort;
     }
 }

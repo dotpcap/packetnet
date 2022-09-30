@@ -21,7 +21,7 @@ namespace Test.PacketType
         [Test]
         public void VxlanParsing()
         {
-            VxlanParsingGeneric(VxlanFields.DefaultUdpDstPortForVxlan, @"vxlan.pcap");
+            VxlanParsingGeneric(VxlanFields.DefaultDestinationPort, @"vxlan.pcap");
         }
 
         // VXLAN with custom port
@@ -30,9 +30,9 @@ namespace Test.PacketType
         public void VxlanCustomPortParsing()
         {
             const ushort CustomVxlanPort = 65530;
-            VxlanFields.UdpDstPortForVxlan = CustomVxlanPort;
+            VxlanFields.DestinationPort = CustomVxlanPort;
             VxlanParsingGeneric(CustomVxlanPort, @"vxlan_custom_port.pcap");
-            VxlanFields.UdpDstPortForVxlan = VxlanFields.DefaultUdpDstPortForVxlan;
+            VxlanFields.DestinationPort = VxlanFields.DefaultDestinationPort;
         }
 
         public static void VxlanParsingGeneric(ushort vxlanPort, string filename)

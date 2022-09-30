@@ -20,11 +20,9 @@ namespace PacketDotNet
     public sealed class VxlanPacket : Packet
     {
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the <see cref="VxlanPacket" /> class.
         /// </summary>
-        /// <param name="byteArraySegment">
-        /// A <see cref="ByteArraySegment" />
-        /// </param>
+        /// <param name="byteArraySegment">The byte array segment.</param>
         public VxlanPacket(ByteArraySegment byteArraySegment)
         {
             // slice off the header portion
@@ -38,14 +36,10 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Constructor
+        /// Initializes a new instance of the <see cref="VxlanPacket" /> class.
         /// </summary>
-        /// <param name="byteArraySegment">
-        /// A <see cref="ByteArraySegment" />
-        /// </param>
-        /// <param name="parentPacket">
-        /// A <see cref="Packet" />
-        /// </param>
+        /// <param name="byteArraySegment">The byte array segment.</param>
+        /// <param name="parentPacket">The parent packet.</param>
         public VxlanPacket(ByteArraySegment byteArraySegment, Packet parentPacket)
             : this(byteArraySegment)
         {
@@ -53,12 +47,16 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// A valid vxlan flag byte should always be 0x08.
+        /// Gets or sets the vxlan flags. A valid flag byte should always be 0x08.
         /// </summary>
-        public byte Flags => Header.Bytes[Header.Offset + VxlanFields.FlagsPosition];
+        public byte Flags
+        {
+            get => Header.Bytes [Header.Offset + VxlanFields.FlagsPosition];
+            set => Header.Bytes [Header.Offset + VxlanFields.FlagsPosition] = value;
+        }
 
         /// <summary>
-        /// VXLAN Network Identifier (VNI)
+        /// Gets or sets the VXLAN Network Identifier (VNI)
         /// </summary>
         public UInt32 Vni
         {
@@ -71,9 +69,10 @@ namespace PacketDotNet
                 );
         }
 
-        /// <summary>Fetch ascii escape sequence of the color associated with this packet type.</summary>
+        /// <summary>
+        /// Fetch ascii escape sequence of the color associated with this packet type.
+        /// </summary>
         public override string Color => AnsiEscapeSequences.LightCyan;
-
 
         /// <inheritdoc cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
@@ -126,6 +125,6 @@ namespace PacketDotNet
         /// <returns>
         /// <c>true</c> if the payload can be decoded by <see cref="VxlanPacket"/>; otherwise, <c>false</c>.
         /// </returns>
-        public static bool CanDecode(ByteArraySegment payload, UdpPacket udpPacket) => udpPacket.DestinationPort == VxlanFields.UdpDstPortForVxlan;
+        public static bool CanDecode(ByteArraySegment payload, UdpPacket udpPacket) => udpPacket.DestinationPort == VxlanFields.DestinationPort;
     }
 }

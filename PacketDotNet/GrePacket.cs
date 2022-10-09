@@ -48,7 +48,16 @@ namespace PacketDotNet
                 Header.Length += GreFields.SequenceLength;
 
             // parse the encapsulated bytes
-            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => EthernetPacket.ParseNextSegment(Header, Protocol));
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
+            {
+                if (CustomProtocolParser.TryGetValue((ushort)Protocol, out var customParser))
+                {
+                    return customParser(Header.NextSegment(), this);
+                }
+
+                // If no custom parser is registered, parse as standard protocols.
+                return EthernetPacket.ParseNextSegment(Header, Protocol);
+            });
             ParentPacket = parentPacket;
         }
 
@@ -70,7 +79,14 @@ namespace PacketDotNet
         public EthernetType Protocol => (EthernetType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                                                        Header.Offset + GreFields.FlagsLength);
 
-        public int Version => Header.Bytes[2] & 0x7;
+        public int Version => Header.Bytes[Header.Offset + 1] & 0x7;
+
+        // Faster access for multiple flags
+        public UInt16 FlagsAndVersion
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + 0);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + 0);
+        }
 
         /// <inheritdoc cref="Packet.ToString(StringOutputType)" />
         public override string ToString(StringOutputType outputFormat)
@@ -105,5 +121,14 @@ namespace PacketDotNet
 
             return buffer.ToString();
         }
+
+        /// <summary>
+        /// Custom parsers for GRE non-IANA assigned protocol numbers or proprietary protocols, e.g. ERSPAN.
+        /// The Key of dictionary is the protocol number. The value is the function of the custom parser.
+        /// The function must take two parameters and return the decoded payload.
+        /// The first parameter is the payload of the GRE packet. The second parameter is the GRE packet itself.
+        /// Returned value is the decoded payload as PacketOrByteArraySegment.
+        /// </summary>
+        public static Dictionary<ushort, Func<ByteArraySegment, GrePacket, PacketOrByteArraySegment>> CustomProtocolParser = new();
     }
 }

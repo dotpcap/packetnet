@@ -15,6 +15,11 @@ using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
+#if DEBUG
+using log4net;
+using System.Reflection;
+#endif
+
 namespace PacketDotNet
 {
     /// <summary>
@@ -22,6 +27,16 @@ namespace PacketDotNet
     /// </summary>
     public sealed class GrePacket : Packet
     {
+#if DEBUG
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+#else
+// NOTE: No need to warn about lack of use, the compiler won't
+//       put any calls to 'log' here but we need 'log' to exist to compile
+#pragma warning disable 0169, 0649
+        private static readonly ILogInactive Log;
+#pragma warning restore 0169, 0649
+#endif
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -50,9 +65,13 @@ namespace PacketDotNet
             // parse the encapsulated bytes
             PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() =>
             {
-                if (CustomProtocolParser.TryGetValue((ushort)Protocol, out var customParser))
+                PacketOrByteArraySegment result;
+                var payload = Header.NextSegment();
+
+                if (CustomPayloadDecoder != null && (result = CustomPayloadDecoder(payload, this)) != null)
                 {
-                    return customParser(Header.NextSegment(), this);
+                    Log.Debug("Use CustomPayloadDecoder");
+                    return result;
                 }
 
                 // If no custom parser is registered, parse as standard protocols.
@@ -79,7 +98,11 @@ namespace PacketDotNet
         public EthernetType Protocol => (EthernetType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
                                                                                        Header.Offset + GreFields.FlagsLength);
 
-        public int Version => Header.Bytes[Header.Offset + 1] & 0x7;
+        public int Version
+        {
+            get => Header.Bytes[Header.Offset + 1] & 0x07;
+            set => Header.Bytes[Header.Offset + 1] = (byte)((Header.Bytes[Header.Offset + 1] & 0xf8) | (value & 0x07));
+        }
 
         // Faster access for multiple flags
         public UInt16 FlagsAndVersion
@@ -123,12 +146,11 @@ namespace PacketDotNet
         }
 
         /// <summary>
-        /// Custom parsers for GRE non-IANA assigned protocol numbers or proprietary protocols, e.g. ERSPAN.
-        /// The Key of dictionary is the protocol number. The value is the function of the custom parser.
+        /// Custom parser for GRE non-IANA assigned protocols or proprietary protocols, e.g. ERSPAN.
         /// The function must take two parameters and return the decoded payload.
         /// The first parameter is the payload of the GRE packet. The second parameter is the GRE packet itself.
         /// Returned value is the decoded payload as PacketOrByteArraySegment.
         /// </summary>
-        public static Dictionary<ushort, Func<ByteArraySegment, GrePacket, PacketOrByteArraySegment>> CustomProtocolParser = new();
+        public static Func<ByteArraySegment, GrePacket, PacketOrByteArraySegment> CustomPayloadDecoder;
     }
 }

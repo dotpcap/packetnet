@@ -67,7 +67,7 @@ namespace Test.PacketType
         [NonParallelizable]
         public void GreWithCustomParserParsing()
         {
-            ErspanPacket.EnableErspan();
+            GrePacket.CustomPayloadDecoder = CustomParser;
 
             var dev = new CaptureFileReaderDevice(NUnitSetupClass.CaptureDirectory + "gre_custom_protocol.pcap");
             dev.Open();
@@ -128,7 +128,18 @@ namespace Test.PacketType
             Assert.AreEqual(0xab, innerTcp.PayloadData[0]);
             Assert.AreEqual(0xcd, innerTcp.PayloadData[1]);
 
-            ErspanPacket.DisableErspan();
+            GrePacket.CustomPayloadDecoder = null;
+        }
+
+        public PacketOrByteArraySegment CustomParser(ByteArraySegment payload, GrePacket parent)
+        {
+            switch ((ushort)parent.Protocol)
+            {
+                case ErspanPacket.ErspanGreProtocol:
+                    return ErspanPacket.CustomErspanGreParser(payload, parent);
+                default:
+                    return null;
+            }
         }
     }
 
@@ -149,16 +160,6 @@ namespace Test.PacketType
             ParentPacket = parentPacket;
         }
 
-        public static void EnableErspan()
-        {
-            GrePacket.CustomProtocolParser.Add(ErspanGreProtocol, CustomErspanGreParser);
-        }
-
-        public static void DisableErspan()
-        {
-            GrePacket.CustomProtocolParser.Remove(ErspanGreProtocol);
-        }
-
         public static PacketOrByteArraySegment CustomErspanGreParser(ByteArraySegment payload, GrePacket parent)
         {
             if (0 == (parent.FlagsAndVersion & 0x1000))
@@ -173,6 +174,6 @@ namespace Test.PacketType
             }
         }
 
-        public static readonly ushort ErspanGreProtocol = 0x88be;
+        public const ushort ErspanGreProtocol = 0x88be;
     }
 }

@@ -95,8 +95,17 @@ namespace PacketDotNet
 
         public bool HasSequence => 0x10 == (Header.Bytes[Header.Offset + 0] & 0x10);
 
-        public EthernetType Protocol => (EthernetType) EndianBitConverter.Big.ToUInt16(Header.Bytes,
-                                                                                       Header.Offset + GreFields.FlagsLength);
+        public EthernetType Protocol
+        {
+            get => (EthernetType)ProtocolId;
+            set => ProtocolId = (UInt16)value;
+        }
+
+        public UInt16 ProtocolId
+        {
+            get => EndianBitConverter.Big.ToUInt16(Header.Bytes, Header.Offset + GreFields.ProtocolPosition);
+            set => EndianBitConverter.Big.CopyBytes(value, Header.Bytes, Header.Offset + GreFields.ProtocolPosition);
+        }
 
         public int Version
         {

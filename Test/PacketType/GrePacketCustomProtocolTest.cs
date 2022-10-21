@@ -133,7 +133,7 @@ namespace Test.PacketType
 
         public PacketOrByteArraySegment CustomParser(ByteArraySegment payload, GrePacket parent)
         {
-            switch ((ushort)parent.Protocol)
+            switch (parent.ProtocolId)
             {
                 case ErspanPacket.ErspanGreProtocol:
                     return ErspanPacket.CustomErspanGreParser(payload, parent);

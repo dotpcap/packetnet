@@ -233,6 +233,8 @@ namespace PacketDotNet
                     break;
                 }
                 case EthernetType.VLanTaggedFrame:
+                case EthernetType.ProviderBridging:
+                case EthernetType.QInQ:
                 {
                     payloadPacketOrData.Packet = new Ieee8021QPacket(payload);
                     break;

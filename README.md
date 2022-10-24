@@ -41,6 +41,7 @@ Supported packet formats
 * OSPF
 * Wake-on-lan
 * IEEE 802.1Q
+* IEEE 802.1ad
 * IEEE 802.11
 * DRDA
 * ARP

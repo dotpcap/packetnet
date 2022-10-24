@@ -232,7 +232,9 @@ namespace PacketDotNet
                     payloadPacketOrData.Packet = new WakeOnLanPacket(payload);
                     break;
                 }
-                case EthernetType.VLanTaggedFrame: case EthernetType.ProviderBridging: case EthernetType.QInQ:
+                case EthernetType.VLanTaggedFrame:
+                case EthernetType.ProviderBridging:
+                case EthernetType.QInQ:
                 {
                     payloadPacketOrData.Packet = new Ieee8021QPacket(payload);
                     break;

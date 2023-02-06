@@ -745,7 +745,7 @@ namespace PacketDotNet
                     properties.Add("      ", ".... .." + flags[6] + ". = [" + flags[6] + "] syn");
                     properties.Add("       ", ".... ..." + flags[7] + " = [" + flags[7] + "] fin");
                     properties.Add("window size", WindowSize.ToString());
-                    properties.Add("checksum", "0x" + Checksum + " [" + (ValidChecksum ? "valid" : "invalid") + "]");
+                    properties.Add("checksum", "0x" + Checksum.ToString("x4") + " [" + (ValidChecksum ? "valid" : "invalid") + "]");
                     properties.Add("options", "0x" + BitConverter.ToString(Options).Replace("-", "").PadLeft(12, '0'));
                     var parsedOptions = OptionsCollection;
                     if (parsedOptions != null)

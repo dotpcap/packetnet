@@ -8,7 +8,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CA0EF028-81F3-4D7F-97DD-B6AA049DB25B}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		appveyor.yml = appveyor.yml
 		ArchitectureNotes = ArchitectureNotes
 		Directory.Build.props = Directory.Build.props
 		LICENSE = LICENSE

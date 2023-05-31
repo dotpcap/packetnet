@@ -11,10 +11,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: |
+            6.0.x
+            7.0.x
 
       - name: Install .NET dependencies
         run: dotnet restore
@@ -23,10 +25,10 @@ jobs:
         run: sudo -E bash Scripts/install-libpcap.sh
 
       - name: Build
-        run: dotnet build PacketDotNet/PacketDotNet.csproj -c Release -f "netstandard2.0"
+        run: dotnet build PacketDotNet/PacketDotNet.csproj -c Release -f "net7.0"
 
       - name: Test
-        run: dotnet test -c Release -f "net6.0"
+        run: dotnet test -c Release -f "net7.0"
 
   windows:
     runs-on: windows-latest
@@ -34,10 +36,12 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: |
+            6.0.x
+            7.0.x
 
       - uses: dorny/paths-filter@v2
         id: changes
@@ -61,30 +65,15 @@ jobs:
       - name: Install .NET dependencies
         run: dotnet restore
 
-      - name: Install winpcap
-        uses: crazy-max/ghaction-chocolatey@v1
-        with:
-          args: install winpcap
-
       - name: Build
         run: dotnet build -c Release
 
-      - name: Test
-        run: dotnet test -c Release
-
-      - name: Publish net47
-        uses: actions/upload-artifact@v2
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
         with:
-          name: PacketDotNet-net47
+          name: PacketDotNet
           path: |
-            PacketDotNet/bin/Release/net47
-
-      - name: Publish netstandard20
-        uses: actions/upload-artifact@v2
-        with:
-          name: PacketDotNet-netstandard20
-          path: |
-            PacketDotNet/bin/Release/netstandard2.0
+            PacketDotNet/bin/Release/net*
 
       - name: Publish to NuGet
         run: nuget push **\*.nupkg -SkipDuplicate -Source 'https://api.nuget.org/v3/index.json' -ApiKey ${{secrets.NUGET_API_KEY}}

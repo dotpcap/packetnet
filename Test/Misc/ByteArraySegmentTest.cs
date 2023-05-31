@@ -10,8 +10,8 @@ using System;
 using NUnit.Framework;
 using PacketDotNet.Utils;
 
-namespace Test.Misc
-{
+namespace Test.Misc;
+
     [TestFixture]
     public class ByteArraySegmentTest
     {
@@ -46,4 +46,3 @@ namespace Test.Misc
             }
         }
     }
-}

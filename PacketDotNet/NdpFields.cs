@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     public struct NdpFields
     {
         public static int NeighborAdvertisementFlagsOffset = 4;
@@ -30,4 +30,3 @@ namespace PacketDotNet
         public static int RedirectMessageDestinationAddressOffset = 24;
         public static int RedirectMessageOptionsOffset = 40;
     }
-}

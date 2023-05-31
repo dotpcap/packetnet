@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>L2TP protocol field encoding information.</summary>
     // ReSharper disable once InconsistentNaming
     public struct L2tpFields
@@ -36,4 +36,3 @@ namespace PacketDotNet
         /// <summary>The port of L2TP.</summary>
         public const int Port = 1701;
     }
-}

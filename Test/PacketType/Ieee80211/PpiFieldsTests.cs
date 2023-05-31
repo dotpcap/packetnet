@@ -2,8 +2,8 @@ using System.IO;
 using NUnit.Framework;
 using PacketDotNet.Ieee80211;
 
-namespace Test.PacketType.Ieee80211
-{
+namespace Test.PacketType.Ieee80211;
+
     [TestFixture]
     public class PpiFieldsTests
     {
@@ -209,4 +209,3 @@ namespace Test.PacketType.Ieee80211
             Assert.AreEqual(new byte[] { 0x1, 0x2, 0x3, 0x4 }, recreatedField.Bytes);
         }
     }
-}

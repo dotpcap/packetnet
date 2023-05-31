@@ -15,8 +15,8 @@ using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class IgmpV2PacketTest
     {
@@ -102,4 +102,3 @@ namespace Test.PacketType
             Console.WriteLine(igmp.ToString(StringOutputType.Verbose));
         }
     }
-}

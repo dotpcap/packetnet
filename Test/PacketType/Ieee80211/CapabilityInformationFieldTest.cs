@@ -12,8 +12,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using NUnit.Framework;
 using PacketDotNet.Ieee80211;
 
-namespace Test.PacketType.Ieee80211
-{
+namespace Test.PacketType.Ieee80211;
+
     [TestFixture]
     public class CapabilityInformationFieldTest
     {
@@ -167,4 +167,3 @@ namespace Test.PacketType.Ieee80211
             Assert.IsTrue(capabilityField.ShortTimeSlot);
         }
     }
-}

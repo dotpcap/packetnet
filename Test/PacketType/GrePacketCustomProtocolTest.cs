@@ -13,8 +13,8 @@ using PacketDotNet.Utils;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class GrePacketCustomProtocolTest
     {
@@ -176,4 +176,3 @@ namespace Test.PacketType
 
         public const ushort ErspanGreProtocol = 0x88be;
     }
-}

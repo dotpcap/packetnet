@@ -14,8 +14,8 @@ using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// An IGMP v3 membership report packet.
     /// </summary>
@@ -220,4 +220,3 @@ namespace PacketDotNet
             return buffer.ToString();
         }
     }
-}

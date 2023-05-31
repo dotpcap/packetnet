@@ -11,8 +11,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Link-layer type codes.
     /// <p>
@@ -164,4 +164,3 @@ namespace PacketDotNet
         /// <summary>Protocol for communication between host and guest machines in VMware and KVM hypervisors.</summary>
         VSock = 271
     }
-}

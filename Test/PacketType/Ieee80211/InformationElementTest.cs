@@ -15,8 +15,8 @@ using NUnit.Framework;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
 
-namespace Test.PacketType.Ieee80211
-{
+namespace Test.PacketType.Ieee80211;
+
     [TestFixture]
     public class InformationElementTest
     {
@@ -132,4 +132,3 @@ namespace Test.PacketType.Ieee80211
             Assert.IsFalse(infoElement.Equals(otherInfoElement));
         }
     }
-}

@@ -3,8 +3,8 @@ using System.Net;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Lsa
-{
+namespace PacketDotNet.Lsa;
+
     /// <summary>
     /// Link state request, send by the LSR packets
     /// </summary>
@@ -101,4 +101,3 @@ namespace PacketDotNet.Lsa
             set => EndianBitConverter.Big.CopyBytes((uint) value, _header.Bytes, _header.Offset + LinkStateRequestFields.LinkStateTypePosition);
         }
     }
-}

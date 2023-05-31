@@ -19,8 +19,8 @@ using log4net;
 
 #endif
 
-namespace PacketDotNet.Lldp
-{
+namespace PacketDotNet.Lldp;
+
     /// <summary>
     /// A Port ID TLV
     /// </summary>
@@ -252,4 +252,3 @@ namespace PacketDotNet.Lldp
             return $"[PortId: SubType={SubType}, SubTypeValue={SubTypeValue}]";
         }
     }
-}

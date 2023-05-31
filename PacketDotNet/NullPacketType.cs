@@ -11,8 +11,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Code constants for link layer null packet payload types.
     /// See http://www.tcpdump.org/linktypes.html
@@ -45,4 +45,3 @@ namespace PacketDotNet
         /// </summary>
         IPX = 23
     }
-}

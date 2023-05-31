@@ -15,8 +15,8 @@ using System.Net.Sockets;
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
 
-namespace PacketDotNet.DhcpV4
-{
+namespace PacketDotNet.DhcpV4;
+
     public class DomainNameServerOption : DhcpV4Option
     {
         /// <summary>
@@ -72,4 +72,3 @@ namespace PacketDotNet.DhcpV4
             return $"Domain Name Servers: {String.Join(", ", DomainNameServers)}";
         }
     }
-}

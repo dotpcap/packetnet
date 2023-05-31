@@ -23,8 +23,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// .Net analog of a ieee80211_radiotap_header from airpcap.h
     /// </summary>
@@ -471,4 +471,3 @@ namespace PacketDotNet.Ieee80211
             return payloadPacketOrData;
         }
     }
-}

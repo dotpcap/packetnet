@@ -14,8 +14,8 @@ using System.Text;
 using PacketDotNet.Ndp;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     public class NdpNeighborAdvertisementPacket : NdpPacket
     {
         /// <summary>
@@ -28,7 +28,7 @@ namespace PacketDotNet
         /// <summary>
         /// Gets or sets the options.
         /// </summary>
-        public List<NdpOption> OptionsCollection
+        public override List<NdpOption> OptionsCollection
         {
             get => ParseOptions(OptionsSegment);
             set
@@ -176,4 +176,3 @@ namespace PacketDotNet
             return buffer.ToString();
         }
     }
-}

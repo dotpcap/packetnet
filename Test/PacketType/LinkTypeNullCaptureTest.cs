@@ -12,8 +12,8 @@ using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class LinkTypeNullCaptureTest
     {
@@ -106,4 +106,3 @@ namespace Test.PacketType
             Console.WriteLine(np.ToString(StringOutputType.Verbose));
         }
     }
-}

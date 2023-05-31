@@ -12,8 +12,8 @@ using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class Vlan802_1QTest
     {
@@ -45,4 +45,3 @@ namespace Test.PacketType
             Assert.AreEqual(false, vlanTag.CanonicalFormatIndicator);
         }
     }
-}

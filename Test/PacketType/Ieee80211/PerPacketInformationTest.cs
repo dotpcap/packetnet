@@ -12,8 +12,8 @@ using PacketDotNet.Ieee80211;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType.Ieee80211
-{
+namespace Test.PacketType.Ieee80211;
+
     [TestFixture]
     public class PerPacketInformationTest
     {
@@ -292,4 +292,3 @@ namespace Test.PacketType.Ieee80211
             Assert.IsTrue(macFrame.FcsValid);
         }
     }
-}

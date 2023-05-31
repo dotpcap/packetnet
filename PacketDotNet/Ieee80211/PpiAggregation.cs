@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// The PPI Aggregation field is used to identify which physical interface a frame was collected on
     /// when multiple capture interfaces are in use.
@@ -69,4 +69,3 @@ namespace PacketDotNet.Ieee80211
         /// </value>
         public override int Length => 4;
     }
-}

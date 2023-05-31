@@ -1,5 +1,5 @@
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     public struct BlockAcknowledgmentFields
     {
         public static readonly int BlockAckBitmapPosition;
@@ -15,4 +15,3 @@ namespace PacketDotNet.Ieee80211
             BlockAckBitmapPosition = BlockAckStartingSequenceControlPosition + BlockAckStartingSequenceControlLength;
         }
     }
-}

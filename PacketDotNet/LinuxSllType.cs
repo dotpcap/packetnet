@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// The types of cooked packets
     /// See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
@@ -39,4 +39,3 @@ namespace PacketDotNet
         /// </summary>
         PacketSentByUs = 0x4
     }
-}

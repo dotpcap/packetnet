@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System;
 using System.Linq;
 
-namespace PacketDotNet.DhcpV4
-{
+namespace PacketDotNet.DhcpV4;
+
     public class VendorSpecificOption : DhcpV4Option
     {
         /// <summary>
@@ -63,4 +63,3 @@ namespace PacketDotNet.DhcpV4
             return $"Vendor Specific: {String.Join(",", Information.Select(x => x.ToString("X2")))}";
         }
     }
-}

@@ -10,8 +10,8 @@ using System;
 using System.Linq;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Information element, a variable-length component of management frames
     /// </summary>
@@ -198,4 +198,3 @@ namespace PacketDotNet.Ieee80211
             return Id.GetHashCode() ^ Value.GetHashCode();
         }
     }
-}

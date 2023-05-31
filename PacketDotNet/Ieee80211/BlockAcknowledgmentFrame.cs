@@ -14,8 +14,8 @@ using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Format of the 802.11 block acknowledgment frame.
     /// http://en.wikipedia.org/wiki/Block_acknowledgement
@@ -243,4 +243,3 @@ namespace PacketDotNet.Ieee80211
             return $"RA {ReceiverAddress} TA {TransmitterAddress}";
         }
     }
-}

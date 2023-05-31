@@ -1,7 +1,7 @@
 using System;
 
-namespace Test
-{
+namespace Test;
+
     /// <summary>
     /// Compute a rate given a start and end DateTime and an event count
     /// </summary>
@@ -33,4 +33,3 @@ namespace Test
             return $" {_eventCount,10} {_eventType} at a rate of {RatePerSecond,12:n} / second ({_elapsed} seconds elapsed)";
         }
     }
-}

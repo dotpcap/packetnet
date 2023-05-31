@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Differentiates between a packet class payload, a byte[] payload
     /// or no payload
@@ -32,4 +32,3 @@ namespace PacketDotNet
         /// </summary>
         None
     }
-}

@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// ICMP protocol field encoding information.
     /// See http://en.wikipedia.org/wiki/ICMPv6
@@ -42,4 +42,3 @@ namespace PacketDotNet
             MessagePosition = ChecksumPosition + ChecksumLength;
         }
     }
-}

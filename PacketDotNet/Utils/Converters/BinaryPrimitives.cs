@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 
-namespace PacketDotNet.Utils.Converters
-{
+namespace PacketDotNet.Utils.Converters;
+
     internal static class BinaryPrimitives
     {
         //
@@ -156,4 +156,3 @@ namespace PacketDotNet.Utils.Converters
         internal static ulong RotateRight(ulong value, int offset)
             => (value >> offset) | (value << (64 - offset));
     }
-}

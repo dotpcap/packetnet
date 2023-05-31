@@ -13,8 +13,8 @@ using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// An L2TP packet.
     /// </summary>
@@ -123,4 +123,3 @@ namespace PacketDotNet
             return false;
         }
     }
-}

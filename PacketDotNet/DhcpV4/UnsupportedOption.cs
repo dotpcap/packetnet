@@ -11,8 +11,8 @@ using System;
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
 
-namespace PacketDotNet.DhcpV4
-{
+namespace PacketDotNet.DhcpV4;
+
     public class UnsupportedOption : DhcpV4Option
     {
         private readonly byte[] _data;
@@ -47,4 +47,3 @@ namespace PacketDotNet.DhcpV4
             return $"Unsupported: {OptionType}";
         }
     }
-}

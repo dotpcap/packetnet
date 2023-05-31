@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Code constants for ICMP message types.
     /// From http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol#List_of_permitted_control_messages_.28incomplete_list.29
@@ -96,4 +96,3 @@ namespace PacketDotNet
 
         //TODO: continue this list as user requested
     }
-}

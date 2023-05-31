@@ -17,8 +17,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Base class of all 802.11 frame types
     /// </summary>
@@ -583,4 +583,3 @@ namespace PacketDotNet.Ieee80211
         /// </returns>
         protected abstract string GetAddressString();
     }
-}

@@ -12,8 +12,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// The Qos null data frame serves the same purpose as <see cref="NullDataFrame" /> but also includes a
     /// quality of service control field.
@@ -115,4 +115,3 @@ namespace PacketDotNet.Ieee80211
             WriteAddressBytes();
         }
     }
-}

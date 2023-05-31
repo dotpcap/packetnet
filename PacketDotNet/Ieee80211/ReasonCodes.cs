@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Specifies the reasons why a station may have been disassociated or deauthenticated by an access point.
     /// </summary>
@@ -181,4 +181,3 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         CipherUnsupported = 45
     }
-}

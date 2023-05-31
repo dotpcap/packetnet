@@ -11,8 +11,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Data data frame.
     /// </summary>
@@ -90,4 +90,3 @@ namespace PacketDotNet.Ieee80211
             WriteAddressBytes();
         }
     }
-}

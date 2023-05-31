@@ -12,8 +12,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace PacketDotNet.Lldp
-{
+namespace PacketDotNet.Lldp;
+
     /// <summary>
     /// The IANA (Internet Assigned Numbers Authority) Address Family
     /// </summary>
@@ -46,4 +46,3 @@ namespace PacketDotNet.Lldp
         // See remarks for more info on where
         // to find more info
     }
-}

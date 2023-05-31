@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     public class LazySlim<T> where T : class
     {
         private readonly Func<T> _valueFactory;
@@ -64,4 +64,3 @@ namespace PacketDotNet
             return _value;
         }
     }
-}

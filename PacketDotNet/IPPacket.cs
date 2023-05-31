@@ -20,8 +20,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Base class for IPv4 and IPv6 packets that exports the common
     /// functionality that both of these classes has in common
@@ -317,4 +317,3 @@ namespace PacketDotNet
             throw new InvalidOperationException("Unknown version of " + version);
         }
     }
-}

@@ -10,8 +10,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  *  Copyright 2010 Evan Plaice <evanplaice@gmail.com>
  */
 
-namespace PacketDotNet.Tcp
-{
+namespace PacketDotNet.Tcp;
+
     /// <summary>
     /// The different types fields that could be found in the Options field
     /// </summary>
@@ -98,4 +98,3 @@ namespace PacketDotNet.Tcp
         /// <remarks>See RFC 5482</remarks>
         UserTimeout = 28
     }
-}

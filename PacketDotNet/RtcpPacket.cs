@@ -18,8 +18,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// RTP Control Protocol
     /// See: https://en.wikipedia.org/wiki/RTP_Control_Protocol
@@ -158,4 +158,3 @@ namespace PacketDotNet
             return true;
         }
     }
-}

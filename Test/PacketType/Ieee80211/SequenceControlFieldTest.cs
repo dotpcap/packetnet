@@ -1,8 +1,8 @@
 using NUnit.Framework;
 using PacketDotNet.Ieee80211;
 
-namespace Test.PacketType.Ieee80211
-{
+namespace Test.PacketType.Ieee80211;
+
     [TestFixture]
     public class SequenceControlFieldTest
     {
@@ -36,4 +36,3 @@ namespace Test.PacketType.Ieee80211
             Assert.AreEqual(2712, field.SequenceNumber);
         }
     }
-}

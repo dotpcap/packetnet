@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Drda Code Point Type
     /// </summary>
@@ -192,4 +192,3 @@ namespace PacketDotNet
         QueryAnswerSetData = 0x241B,
         SqlStatementAttributes = 0x2450
     }
-}

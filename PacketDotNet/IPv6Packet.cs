@@ -25,8 +25,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// IPv6 packet
     /// References
@@ -522,4 +522,3 @@ namespace PacketDotNet
             return new IPv6Packet(srcAddress, dstAddress);
         }
     }
-}

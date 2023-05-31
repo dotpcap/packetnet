@@ -15,8 +15,8 @@ using PacketDotNet.Utils;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class IPv4PacketTest
     {
@@ -95,4 +95,3 @@ namespace Test.PacketType
             IPv4Packet.RandomPacket();
         }
     }
-}

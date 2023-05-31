@@ -14,8 +14,8 @@ using System;
 using System.Text;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.Lldp
-{
+namespace PacketDotNet.Lldp;
+
     /// <summary>
     /// Base class for several TLV types that all contain strings
     /// </summary>
@@ -102,4 +102,3 @@ namespace PacketDotNet.Lldp
             return $"[{Type}: Description={Value}]";
         }
     }
-}

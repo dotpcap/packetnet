@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Tcp
-{
+namespace PacketDotNet.Tcp;
+
     /// <summary>
     /// Maximum Segment Size Option
     /// An extension to the DataOffset/HeaderLength field to
@@ -60,4 +60,3 @@ namespace PacketDotNet.Tcp
             return "[" + Kind + ": Value=" + Value + " bytes]";
         }
     }
-}

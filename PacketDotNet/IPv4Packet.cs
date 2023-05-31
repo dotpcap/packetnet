@@ -22,8 +22,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// IPv4 packet
     /// See http://en.wikipedia.org/wiki/IPv4 for into
@@ -538,4 +538,3 @@ namespace PacketDotNet
             TotalLength = TotalPacketLength;
         }
     }
-}

@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System;
 using NUnit.Framework;
 
-namespace Test.Misc
-{
+namespace Test.Misc;
+
     [TestFixture]
     public class ChecksumUtils
     {
@@ -27,4 +27,3 @@ namespace Test.Misc
             Console.WriteLine("result: {0}", result);
         }
     }
-}

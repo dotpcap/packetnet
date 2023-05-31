@@ -14,8 +14,8 @@ using System.Collections.Generic;
 using System.Linq;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// A <see cref="T:System.Collections.Generic.List" /> of
     /// <see cref="InformationElement">InformationElements</see>.
@@ -169,4 +169,3 @@ namespace PacketDotNet.Ieee80211
             }
         }
     }
-}

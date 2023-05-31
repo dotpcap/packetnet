@@ -1,5 +1,5 @@
-namespace Test
-{
+namespace Test;
+
     public class ByteSetupMethods
     {
         public static void Setup
@@ -24,4 +24,3 @@ namespace Test
             expectedValue = 0x0A0B0C0D;
         }
     }
-}

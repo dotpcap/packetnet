@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Ieee p8021 P priorities.
     /// http://en.wikipedia.org/wiki/IEEE_802.1p
@@ -57,4 +57,3 @@ namespace PacketDotNet
         /// </summary>
         NetworkControl = 7
     }
-}

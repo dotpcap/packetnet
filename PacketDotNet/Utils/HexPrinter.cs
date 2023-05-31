@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System.Net.NetworkInformation;
 using System.Text;
 
-namespace PacketDotNet.Utils
-{
+namespace PacketDotNet.Utils;
+
     /// <summary>
     /// Helper class that prints out an array of hex values
     /// </summary>
@@ -66,4 +66,3 @@ namespace PacketDotNet.Utils
             return output.TrimEnd(':');
         }
     }
-}

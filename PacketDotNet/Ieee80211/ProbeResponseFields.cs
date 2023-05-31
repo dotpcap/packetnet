@@ -1,5 +1,5 @@
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     public struct ProbeResponseFields
     {
         public static readonly int BeaconIntervalLength = 2;
@@ -18,4 +18,3 @@ namespace PacketDotNet.Ieee80211
             InformationElement1Position = CapabilityInformationPosition + CapabilityInformationLength;
         }
     }
-}

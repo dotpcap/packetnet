@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 
-namespace PacketDotNet.Tcp
-{
+namespace PacketDotNet.Tcp;
+
     /// <summary>
     /// MD5 Signature
     /// Carries the MD5 Digest used by the BGP protocol to
@@ -65,4 +65,3 @@ namespace PacketDotNet.Tcp
             return "[" + Kind + ": MD5Digest=0x" + MD5Digest + "]";
         }
     }
-}

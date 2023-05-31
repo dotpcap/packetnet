@@ -11,8 +11,8 @@ using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class TeredoPacketTest
     {
@@ -47,4 +47,3 @@ namespace Test.PacketType
             Assert.AreEqual(typeof(IcmpV6Packet), tunneledTcpPacket.GetType());
         }
     }
-}

@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Code constants for IGMP message types.
     /// From RFC #2236.
@@ -22,4 +22,3 @@ namespace PacketDotNet
         LeaveGroup = 0x17,
 #pragma warning restore 1591
     }
-}

@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// A struct containing length and position information about IPv6 Fields.
     /// </summary>
@@ -112,4 +112,3 @@ namespace PacketDotNet
             HeaderLength = DestinationAddressPosition + AddressLength;
         }
     }
-}

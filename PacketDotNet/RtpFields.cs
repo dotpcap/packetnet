@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     public struct RtpFields
     {
         /// <summary>Length of the Base Header in bytes.</summary>
@@ -30,4 +30,3 @@ namespace PacketDotNet
         public static readonly int MarkerMask = 0x80;
         public static readonly int PayloadTypeMask = 0x7F;
     }
-}

@@ -5,8 +5,8 @@ using PacketDotNet.Lsa;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Database Description packets are OSPF packet type 2.  These packets
     /// are exchanged when an adjacency is being initialized.
@@ -178,4 +178,3 @@ namespace PacketDotNet
             return ToString();
         }
     }
-}

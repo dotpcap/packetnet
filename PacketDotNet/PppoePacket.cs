@@ -17,8 +17,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Point to Point Protocol
     /// See http://tools.ietf.org/html/rfc2516
@@ -269,4 +269,3 @@ namespace PacketDotNet
             return buffer.ToString();
         }
     }
-}

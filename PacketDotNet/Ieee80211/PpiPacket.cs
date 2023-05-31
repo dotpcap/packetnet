@@ -17,8 +17,8 @@ using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// .Net analog of a PpiHeader.h from airpcap
     /// </summary>
@@ -462,4 +462,3 @@ namespace PacketDotNet.Ieee80211
             return length % 4 == 0 ? 0 : 4 - (length % 4);
         }
     }
-}

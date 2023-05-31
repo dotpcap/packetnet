@@ -17,8 +17,8 @@ using PacketDotNet.DhcpV4;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class DhcpV4PacketTest
     {
@@ -108,4 +108,3 @@ namespace Test.PacketType
             dev.Close();
         }
     }
-}

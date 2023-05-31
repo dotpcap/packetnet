@@ -13,8 +13,8 @@ using NUnit.Framework;
 using PacketDotNet;
 using SharpPcap;
 
-namespace Test.Misc
-{
+namespace Test.Misc;
+
     /// <summary>
     /// Unit test that tries to exercise the string output methods in all of the
     /// packet classes to make it easier to identify and fix printing issues
@@ -310,4 +310,3 @@ namespace Test.Misc
             LoggingConfiguration.GlobalLoggingLevel = oldThreshold;
         }
     }
-}

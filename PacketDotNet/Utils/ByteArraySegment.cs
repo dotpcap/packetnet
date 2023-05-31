@@ -15,8 +15,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet.Utils
-{
+namespace PacketDotNet.Utils;
+
     /// <summary>
     /// Container class that refers to a segment of bytes in a byte[]
     /// Used to ensure high performance by allowing memory copies to
@@ -240,4 +240,3 @@ namespace PacketDotNet.Utils
             return $"[ByteArraySegment: Length={Length}, Bytes.Length={Bytes.Length}, BytesLength={BytesLength}, Offset={Offset}, NeedsCopyForActualBytes={NeedsCopyForActualBytes}]";
         }
     }
-}

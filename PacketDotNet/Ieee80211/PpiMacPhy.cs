@@ -1,7 +1,7 @@
 using System.IO;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// The 802.11n MAC + PHY Extension field contains radio information specific to 802.11n.
     /// </summary>
@@ -336,4 +336,3 @@ namespace PacketDotNet.Ieee80211
         /// </value>
         public byte SpatialStreamCount { get; set; }
     }
-}

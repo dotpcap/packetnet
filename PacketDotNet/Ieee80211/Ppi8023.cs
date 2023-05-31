@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Contains information specific to 802.3 packets.
     /// </summary>
@@ -126,4 +126,3 @@ namespace PacketDotNet.Ieee80211
         /// </value>
         public override int Length => 8;
     }
-}

@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     public enum DhcpV4MessageType : byte
     {
         Discover = 1,
@@ -33,4 +33,3 @@ namespace PacketDotNet
         Tls = 18,
         End = 255
     }
-}

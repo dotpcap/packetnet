@@ -14,8 +14,8 @@ using PacketDotNet.Utils.Converters;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType.Ieee80211
-{
+namespace Test.PacketType.Ieee80211;
+
     [TestFixture]
     public class RadioPacketTest
     {
@@ -273,4 +273,3 @@ namespace Test.PacketType.Ieee80211
             Assert.AreEqual(1.0f, rate);
         }
     }
-}

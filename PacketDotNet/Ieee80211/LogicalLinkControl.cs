@@ -10,8 +10,8 @@ using System;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Logical link control.
     /// See https://en.wikipedia.org/wiki/IEEE_802.2 and
@@ -110,4 +110,3 @@ namespace PacketDotNet.Ieee80211
             }
         }
     }
-}

@@ -16,8 +16,8 @@ using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 using PacketDotNet.DhcpV4;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     public sealed class DhcpV4Packet : Packet
     {
         /// <summary>
@@ -442,4 +442,3 @@ namespace PacketDotNet
             return str.Trim();
         }
     }
-}

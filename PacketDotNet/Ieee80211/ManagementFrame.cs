@@ -12,8 +12,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Format of a CTS or an ACK frame
     /// </summary>
@@ -71,4 +71,3 @@ namespace PacketDotNet.Ieee80211
             return $"SA {SourceAddress} DA {DestinationAddress} BSSID {BssId}";
         }
     }
-}

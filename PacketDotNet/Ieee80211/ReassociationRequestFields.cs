@@ -1,5 +1,5 @@
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     public struct ReassociationRequestFields
     {
         public static readonly int CapabilityInformationLength = 2;
@@ -17,4 +17,3 @@ namespace PacketDotNet.Ieee80211
             InformationElement1Position = CurrentAccessPointPosition + MacFields.AddressLength;
         }
     }
-}

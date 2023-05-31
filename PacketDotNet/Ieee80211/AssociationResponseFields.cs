@@ -1,5 +1,5 @@
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     public struct AssociationResponseFields
     {
         public static readonly int AssociationIdLength = 2;
@@ -18,4 +18,3 @@ namespace PacketDotNet.Ieee80211
             InformationElement1Position = AssociationIdPosition + AssociationIdLength;
         }
     }
-}

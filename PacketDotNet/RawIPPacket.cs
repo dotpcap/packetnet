@@ -15,8 +15,8 @@ using System.Collections.Generic;
 using System.Text;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Raw IP packet
     /// See http://www.tcpdump.org/linktypes.html look for LINKTYPE_RAW or DLT_RAW
@@ -126,4 +126,3 @@ namespace PacketDotNet
             return buffer.ToString();
         }
     }
-}

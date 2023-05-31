@@ -17,8 +17,8 @@ using PacketDotNet.Utils;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType.Ieee80211
-{
+namespace Test.PacketType.Ieee80211;
+
     [TestFixture]
     public class ProbeResponseTest
     {
@@ -134,4 +134,3 @@ namespace Test.PacketType.Ieee80211
             Assert.IsFalse(frame.FcsValid);
         }
     }
-}

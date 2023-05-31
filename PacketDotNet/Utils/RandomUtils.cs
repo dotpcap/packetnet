@@ -10,8 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 
-namespace PacketDotNet.Utils
-{
+namespace PacketDotNet.Utils;
+
     /// <summary>
     /// Random utility methods
     /// </summary>
@@ -73,4 +73,3 @@ namespace PacketDotNet.Utils
             return longest.Length;
         }
     }
-}

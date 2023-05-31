@@ -5,8 +5,8 @@ using PacketDotNet.Lsa;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Link State Update packets are OSPF packet type 4.  These packets
     /// implement the flooding of LSAs. See http://www.ietf.org/rfc/rfc2328.txt for details.
@@ -165,4 +165,3 @@ namespace PacketDotNet
             return ToString();
         }
     }
-}

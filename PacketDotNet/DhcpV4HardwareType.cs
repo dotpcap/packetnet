@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     public enum DhcpV4HardwareType : byte
     {
         Reserved = 0,
@@ -52,4 +52,3 @@ namespace PacketDotNet
         HWEXP1 = 36,
         HFI = 37
     }
-}

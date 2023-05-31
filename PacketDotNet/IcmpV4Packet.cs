@@ -16,8 +16,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// An ICMP packet
     /// See http://en.wikipedia.org/wiki/Internet_Control_Message_Protocol
@@ -247,4 +247,3 @@ namespace PacketDotNet
             return buffer.ToString();
         }
     }
-}

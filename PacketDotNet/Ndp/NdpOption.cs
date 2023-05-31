@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.Ndp
-{
+namespace PacketDotNet.Ndp;
+
     public abstract class NdpOption
     {
         /// <summary>The offset (in bytes) of the Length field</summary>
@@ -66,4 +66,3 @@ namespace PacketDotNet.Ndp
             set => OptionData.Bytes[OptionData.Offset + TypeFieldOffset] = (byte)value;
         }
     }
-}

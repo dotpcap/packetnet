@@ -14,8 +14,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Transport layer packet
     /// </summary>
@@ -135,4 +135,3 @@ namespace PacketDotNet
             return onesSum == expectedOnesSum;
         }
     }
-}

@@ -1,7 +1,7 @@
 using System.IO;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// The PpiUnknown field class can be used to represent any field types not
     /// currently supported by PacketDotNet. Any unsupported field types encountered during
@@ -85,4 +85,3 @@ namespace PacketDotNet.Ieee80211
         /// </value>
         public byte[] UnknownBytes { get; set; }
     }
-}

@@ -12,8 +12,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Probe request frames are used by stations to scan the area for existing networks.
     /// </summary>
@@ -134,4 +134,3 @@ namespace PacketDotNet.Ieee80211
             Header.Length = FrameSize;
         }
     }
-}

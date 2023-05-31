@@ -18,8 +18,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Qos data frames are like regualr data frames except they contain a quality of service
     /// field as defined in the 802.11e standard.
@@ -146,4 +146,3 @@ namespace PacketDotNet.Ieee80211
             WriteAddressBytes();
         }
     }
-}

@@ -4,8 +4,8 @@ using System.Net;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Lsa
-{
+namespace PacketDotNet.Lsa;
+
     /// <summary>
     /// Router link contained in a RouterLinksAdvertisement.
     /// </summary>
@@ -163,4 +163,3 @@ namespace PacketDotNet.Lsa
             set => _header.Bytes[_header.Offset + RouterLinkFields.TypePosition] = value;
         }
     }
-}

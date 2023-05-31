@@ -4,8 +4,8 @@ using System.Net;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Lsa
-{
+namespace PacketDotNet.Lsa;
+
     /// <summary>
     /// Summary-LSAs are the Type 3 and 4 LSAs.  These LSAs are originated
     /// by area border routers. Summary-LSAs describe inter-area
@@ -134,4 +134,3 @@ namespace PacketDotNet.Lsa
             }
         }
     }
-}

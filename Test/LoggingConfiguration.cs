@@ -10,8 +10,8 @@ using System.Reflection;
 using log4net;
 using log4net.Repository.Hierarchy;
 
-namespace Test
-{
+namespace Test;
+
     public class LoggingConfiguration
     {
         public static log4net.Core.Level GlobalLoggingLevel
@@ -28,4 +28,3 @@ namespace Test
             }
         }
     }
-}

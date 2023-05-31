@@ -1,8 +1,8 @@
 using System;
 using PacketDotNet;
 
-namespace ConstructingPackets
-{
+namespace ConstructingPackets;
+
     /// <summary>
     /// Example that shows how to construct a packet using packet constructors
     /// to build a tcp/ip ipv4 packet
@@ -38,4 +38,3 @@ namespace ConstructingPackets
             Console.WriteLine(ethernetPacket.ToString());
         }
     }
-}

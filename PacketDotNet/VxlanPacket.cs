@@ -12,8 +12,8 @@ using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Vxlan
     /// </summary>
@@ -127,4 +127,3 @@ namespace PacketDotNet
         /// </returns>
         public static bool CanDecode(ByteArraySegment payload, UdpPacket udpPacket) => udpPacket.DestinationPort == VxlanFields.DestinationPort;
     }
-}

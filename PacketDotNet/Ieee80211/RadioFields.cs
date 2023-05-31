@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// As defined by Airpcap.h
     /// NOTE: PresentPosition may not be the only position present
@@ -55,4 +55,3 @@ namespace PacketDotNet.Ieee80211
             DefaultHeaderLength = PresentPosition + PresentLength;
         }
     }
-}

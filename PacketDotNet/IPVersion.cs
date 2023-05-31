@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Code constants for internet protocol versions.
     /// </summary>
@@ -22,4 +22,3 @@ namespace PacketDotNet
         /// <summary>Internet protocol version 6.</summary>
         IPv6 = 6
     }
-}

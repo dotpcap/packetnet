@@ -1,8 +1,8 @@
 using System;
 using System.IO;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// The PPI Common field contains fields common to all 802.11 specifications.
     /// This field is loosely based on the Radio Tap header format.
@@ -174,4 +174,3 @@ namespace PacketDotNet.Ieee80211
         /// </value>
         public ulong TSFTimer { get; set; }
     }
-}

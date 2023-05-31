@@ -13,8 +13,8 @@ using System;
 using NUnit.Framework;
 using PacketDotNet.Ieee80211;
 
-namespace Test.PacketType.Ieee80211
-{
+namespace Test.PacketType.Ieee80211;
+
     [TestFixture]
     public class FrameControlFieldTest
     {
@@ -233,4 +233,3 @@ namespace Test.PacketType.Ieee80211
             Assert.IsTrue(frameControl.Protected);
         }
     }
-}

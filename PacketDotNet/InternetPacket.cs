@@ -9,12 +9,11 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Internet packets include IPv4, IPv6, IGMP etc, see
     /// http://en.wikipedia.org/wiki/Internet_Layer
     /// </summary>
     public class InternetPacket : Packet
     { }
-}

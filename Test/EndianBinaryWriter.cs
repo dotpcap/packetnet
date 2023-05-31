@@ -3,8 +3,8 @@ using System.IO;
 using System.Text;
 using PacketDotNet.Utils.Converters;
 
-namespace Test
-{
+namespace Test;
+
     /// <summary>
     /// Equivalent of System.IO.BinaryWriter, but with either endianness, depending on
     /// the EndianBitConverter it is constructed with.
@@ -363,4 +363,3 @@ namespace Test
             BaseStream.Write(bytes, 0, length);
         }
     }
-}

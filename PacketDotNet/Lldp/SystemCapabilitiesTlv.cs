@@ -13,8 +13,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Lldp
-{
+namespace PacketDotNet.Lldp;
+
     /// <summary>
     /// A System Capabilities Tlv
     /// [TLVTypeLength - 2 bytes][System Capabilities - 2 bytes][Enabled Capabilities - 2 bytes]
@@ -133,4 +133,3 @@ namespace PacketDotNet.Lldp
             return $"[SystemCapabilities: Capabilities={Capabilities}, Enabled={Enabled}]";
         }
     }
-}

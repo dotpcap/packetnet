@@ -11,8 +11,8 @@ using log4net.Core;
 using NUnit.Framework;
 using PacketDotNet;
 
-namespace Test.Performance
-{
+namespace Test.Performance;
+
     /// <summary>
     /// Compares retrieving a byte[] from a packet that is built from contiguous memory
     /// vs. one that is built from several byte[]. This evaluates the performance cost
@@ -134,4 +134,3 @@ namespace Test.Performance
             Console.WriteLine(rate.ToString());
         }
     }
-}

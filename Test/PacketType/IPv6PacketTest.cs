@@ -17,8 +17,8 @@ using PacketDotNet.Utils;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class IPv6PacketTest
     {
@@ -272,4 +272,3 @@ namespace Test.PacketType
             Assert.AreEqual(s, System.Text.Encoding.Default.GetString(p.PayloadData));
         }
     }
-}

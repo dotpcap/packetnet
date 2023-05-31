@@ -14,8 +14,8 @@ using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class IcmpV4PacketTest
     {
@@ -92,4 +92,3 @@ namespace Test.PacketType
             Console.WriteLine(icmp.ToString(StringOutputType.Verbose));
         }
     }
-}

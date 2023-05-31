@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// The potential results of authentication or association operations.
     /// </summary>
@@ -146,4 +146,3 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         CipherSuitePolicyRejection = 46
     }
-}

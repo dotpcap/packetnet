@@ -20,8 +20,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// An GRE packet.
     /// </summary>
@@ -153,4 +153,3 @@ namespace PacketDotNet
         /// </summary>
         public static Func<ByteArraySegment, GrePacket, PacketOrByteArraySegment> CustomPayloadDecoder;
     }
-}

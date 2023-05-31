@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using NUnit.Framework;
 using PacketDotNet;
 
-namespace Test.Misc
-{
+namespace Test.Misc;
+
     [TestFixture]
     public class PacketTest
     {
@@ -28,4 +28,3 @@ namespace Test.Misc
             var _ = new TcpPacket(10, 10) { PayloadData = data };
         }
     }
-}

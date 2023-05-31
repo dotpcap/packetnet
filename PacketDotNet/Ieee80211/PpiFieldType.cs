@@ -11,8 +11,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// from PPI v 1.0.10
     /// </summary>
@@ -74,4 +74,3 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         PpiReservedAll = 10
     }
-}

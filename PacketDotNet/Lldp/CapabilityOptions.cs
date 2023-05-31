@@ -12,8 +12,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 
-namespace PacketDotNet.Lldp
-{
+namespace PacketDotNet.Lldp;
+
     /// <summary>
     /// The System Capabilities options
     /// </summary>
@@ -56,4 +56,3 @@ namespace PacketDotNet.Lldp
         /// <remarks>IETF RFC 2011</remarks>
         StationOnly = 0x80
     }
-}

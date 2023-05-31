@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet.Tcp
-{
+namespace PacketDotNet.Tcp;
+
     /// <summary>
     /// Specifies the different types of algorithms that the
     /// Alternative Checksum option are allowed to use
@@ -30,4 +30,3 @@ namespace PacketDotNet.Tcp
         /// <summary>Redundant Checksum Avoidance</summary>
         RedundantChecksumAvoidance = 3
     }
-}

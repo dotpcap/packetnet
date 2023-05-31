@@ -14,8 +14,8 @@ using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class IPPacketTest
     {
@@ -93,4 +93,3 @@ namespace Test.PacketType
             Console.WriteLine(ip.ToString());
         }
     }
-}

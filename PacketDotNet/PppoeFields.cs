@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Point to Point Protocol
     /// See http://tools.ietf.org/html/rfc2516
@@ -51,4 +51,3 @@ namespace PacketDotNet
             HeaderLength = LengthPosition + LengthLength;
         }
     }
-}

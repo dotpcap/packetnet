@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet.Tcp
-{
+namespace PacketDotNet.Tcp;
+
     /// <summary>
     /// End-of-Options Option
     /// Marks the end of the Options list
@@ -47,4 +47,3 @@ namespace PacketDotNet.Tcp
         /// </summary>
         public override byte Length => OptionLength;
     }
-}

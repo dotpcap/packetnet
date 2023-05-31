@@ -13,8 +13,8 @@ using PacketDotNet.Utils.Converters;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class DrdaPacketTest
     {
@@ -226,4 +226,3 @@ namespace Test.PacketType
             Assert.AreEqual("QDB2/JVM", StringConverter.EbcdicToAscii(bytes, 0, bytes.Length));
         }
     }
-}

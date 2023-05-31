@@ -11,8 +11,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Null data frames are like normal data frames except they carry no payload. They are primarily used for control purposes
     /// such as power management or telling an Access Point to buffer packets while a station scans other channels.
@@ -85,4 +85,3 @@ namespace PacketDotNet.Ieee80211
             WriteAddressBytes();
         }
     }
-}

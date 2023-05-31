@@ -1,7 +1,7 @@
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Lsa
-{
+namespace PacketDotNet.Lsa;
+
     /// <summary>
     /// Additional TOS-specific information  for backward compatibility
     /// with previous versions of the OSPF specification
@@ -36,4 +36,3 @@ namespace PacketDotNet.Lsa
             }
         }
     }
-}

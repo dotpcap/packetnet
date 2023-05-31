@@ -1,5 +1,5 @@
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     public class ProbeRequestFields
     {
         public static readonly int InformationElement1Position;
@@ -9,4 +9,3 @@ namespace PacketDotNet.Ieee80211
             InformationElement1Position = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
         }
     }
-}

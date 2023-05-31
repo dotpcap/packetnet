@@ -18,8 +18,8 @@ using PacketDotNet.Utils;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class TcpPacketTest
     {
@@ -231,4 +231,3 @@ namespace Test.PacketType
             dev.Close();
         }
     }
-}

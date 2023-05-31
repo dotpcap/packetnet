@@ -1,5 +1,5 @@
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     public struct DeauthenticationFields
     {
         public static readonly int ReasonCodeLength = 2;
@@ -11,4 +11,3 @@ namespace PacketDotNet.Ieee80211
             ReasonCodePosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
         }
     }
-}

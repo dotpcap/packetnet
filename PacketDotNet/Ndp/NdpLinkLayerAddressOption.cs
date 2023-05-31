@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 
-namespace PacketDotNet.Ndp
-{
+namespace PacketDotNet.Ndp;
+
     public class NdpLinkLayerAddressOption : NdpOption
     {
         /// <summary>
@@ -48,4 +48,3 @@ namespace PacketDotNet.Ndp
             }
         }
     }
-}

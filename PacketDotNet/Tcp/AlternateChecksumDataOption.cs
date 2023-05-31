@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 
-namespace PacketDotNet.Tcp
-{
+namespace PacketDotNet.Tcp;
+
     /// <summary>
     /// Alternative Checksum Data
     /// Used as an extension to Alternative Checksum Response when the
@@ -65,4 +65,3 @@ namespace PacketDotNet.Tcp
             return "[" + Kind + ": Data=0x" + Data + "]";
         }
     }
-}

@@ -1,5 +1,5 @@
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     public struct AssociationRequestFields
     {
         public static readonly int CapabilityInformationLength = 2;
@@ -15,4 +15,3 @@ namespace PacketDotNet.Ieee80211
             InformationElement1Position = ListenIntervalPosition + ListenIntervalLength;
         }
     }
-}

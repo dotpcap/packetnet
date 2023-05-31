@@ -14,8 +14,8 @@ using PacketDotNet.Utils.Converters;
 
 // ReSharper disable InconsistentNaming
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     public class IPv6FragmentationExtensionHeader : IPv6ExtensionHeader
     {
         /// <inheritdoc />
@@ -131,4 +131,3 @@ namespace PacketDotNet
         /// </summary>
         public ByteArraySegment Payload => _data ??= new ByteArraySegment(ByteArraySegment.Bytes, ByteArraySegment.Offset + IPv6Fields.HeaderExtensionDataPosition, Length - IPv6Fields.HeaderExtensionDataPosition);
     }
-}

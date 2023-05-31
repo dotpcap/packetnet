@@ -1,5 +1,5 @@
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     public struct QosDataFields
     {
         public static readonly int QosControlLength = 2;
@@ -10,4 +10,3 @@ namespace PacketDotNet.Ieee80211
             QosControlPosition = MacFields.SequenceControlPosition + MacFields.SequenceControlLength;
         }
     }
-}

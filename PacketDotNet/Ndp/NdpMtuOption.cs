@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Ndp
-{
+namespace PacketDotNet.Ndp;
+
     public class NdpMtuOption : NdpOption
     {
         /// <summary>The offset (in bytes) of the MTU field</summary>
@@ -36,4 +36,3 @@ namespace PacketDotNet.Ndp
                                                     OptionData.Offset + MtuOffset);
         }
     }
-}

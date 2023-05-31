@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     public struct MacFields
     {
         public static readonly int Address1Position;
@@ -37,4 +37,3 @@ namespace PacketDotNet.Ieee80211
             SequenceControlPosition = Address1Position + (AddressLength * 3);
         }
     }
-}

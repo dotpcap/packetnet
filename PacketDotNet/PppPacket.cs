@@ -16,8 +16,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// PPP packet
     /// See http://en.wikipedia.org/wiki/Point-to-Point_Protocol
@@ -178,4 +178,3 @@ namespace PacketDotNet
             return buffer.ToString();
         }
     }
-}

@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     public partial class FrameControlField
     {
         /// <summary>
@@ -214,4 +214,3 @@ namespace PacketDotNet.Ieee80211
             QosCFAckAndCFPoll = 0x2F
         }
     }
-}

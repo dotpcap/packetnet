@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Tcp
-{
+namespace PacketDotNet.Tcp;
+
     /// <summary>
     /// SelectiveAcknowledgment (Selective Ack) Option
     /// Provides a means for a receiver to notify the sender about
@@ -85,4 +85,3 @@ namespace PacketDotNet.Tcp
             return output;
         }
     }
-}

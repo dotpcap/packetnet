@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Defines the lengths and positions of the vxlan fields within
     /// a vxlan packet
@@ -41,4 +41,3 @@ namespace PacketDotNet
         /// <summary>The Vxlan port should be configurable according to RFC 7348.</summary>
         public static ushort DestinationPort = DefaultDestinationPort;
     }
-}

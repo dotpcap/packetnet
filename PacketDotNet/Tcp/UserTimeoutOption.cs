@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Tcp
-{
+namespace PacketDotNet.Tcp;
+
     /// <summary>
     /// User Timeout Option
     /// The TCP user timeout controls how long transmitted data may remain
@@ -79,4 +79,3 @@ namespace PacketDotNet.Tcp
             return "[" + Kind + ": Granularity=" + (Granularity ? "minutes" : "seconds") + " Timeout=" + Timeout + "]";
         }
     }
-}

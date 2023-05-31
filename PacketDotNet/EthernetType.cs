@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Code constants for well-defined ethernet protocols.
     /// EtherType is a two-octet field in an Ethernet frame, as defined by the Ethernet II framing networking standard.
@@ -209,4 +209,3 @@ namespace PacketDotNet
         /// </summary>
         Echo = 0x0200
     }
-}

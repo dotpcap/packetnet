@@ -21,8 +21,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// TcpPacket
     /// See: http://en.wikipedia.org/wiki/Transmission_Control_Protocol
@@ -793,4 +793,3 @@ namespace PacketDotNet
             return tcpPacket;
         }
     }
-}

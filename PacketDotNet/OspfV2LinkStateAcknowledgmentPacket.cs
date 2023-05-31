@@ -4,8 +4,8 @@ using System.Text;
 using PacketDotNet.Lsa;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Link State Acknowledgment Packets are OSPF packet type 5.  To make
     /// the flooding of LSAs reliable, flooded LSAs are explicitly
@@ -134,4 +134,3 @@ namespace PacketDotNet
             return ToString();
         }
     }
-}

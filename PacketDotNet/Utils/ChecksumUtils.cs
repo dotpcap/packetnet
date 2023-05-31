@@ -13,8 +13,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 
-namespace PacketDotNet.Utils
-{
+namespace PacketDotNet.Utils;
+
     /// <summary>
     /// Computes the one's sum on a byte array.
     /// Based TCP/IP Illustrated Vol. 2(1995) by Gary R. Wright and W. Richard
@@ -217,4 +217,3 @@ namespace PacketDotNet.Utils
             return ((value & 0xFF00FF00FF00FF00) >> 8) | ((value & 0x00FF00FF00FF00FF) << 8);
         }
     }
-}

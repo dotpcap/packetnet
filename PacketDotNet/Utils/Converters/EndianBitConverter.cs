@@ -2,8 +2,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
-namespace PacketDotNet.Utils.Converters
-{
+namespace PacketDotNet.Utils.Converters;
+
     /// <summary>
     /// Equivalent of System.BitConverter, but with either endianness.
     /// </summary>
@@ -579,4 +579,3 @@ namespace PacketDotNet.Utils.Converters
 
         #endregion
     }
-}

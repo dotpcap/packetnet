@@ -11,8 +11,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.IO;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Abstract class for all PPI fields
     /// </summary>
@@ -104,4 +104,3 @@ namespace PacketDotNet.Ieee80211
             }
         }
     }
-}

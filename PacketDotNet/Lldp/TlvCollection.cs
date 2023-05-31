@@ -17,8 +17,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet.Lldp
-{
+namespace PacketDotNet.Lldp;
+
     /// <summary>
     /// Custom collection for TLV types
     /// Special behavior includes:
@@ -87,4 +87,3 @@ namespace PacketDotNet.Lldp
             base.InsertItem(insertPosition, item);
         }
     }
-}

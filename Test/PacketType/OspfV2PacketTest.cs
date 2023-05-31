@@ -7,8 +7,8 @@ using PacketDotNet.Utils;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class OspfV2PacketTest
     {
@@ -1419,4 +1419,3 @@ namespace Test.PacketType
             Assert.AreEqual(22, sl.TosMetrics[1].Metric);
         }
     }
-}

@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     public struct OspfV2Fields
     {
         /// <summary>Length of the OSPF area ID (ip) field in bytes </summary>
@@ -209,4 +209,3 @@ namespace PacketDotNet
             LSAAckPosition = HeaderLength;
         }
     }
-}

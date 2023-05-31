@@ -25,8 +25,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// A LLDP packet.
     /// As specified in IEEE Std 802.1AB
@@ -296,4 +296,3 @@ namespace PacketDotNet
             return buffer.ToString();
         }
     }
-}

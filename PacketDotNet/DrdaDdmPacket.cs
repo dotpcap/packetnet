@@ -16,8 +16,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// DrdaPacket
     /// See: https://en.wikipedia.org/wiki/DRDA
@@ -186,4 +186,3 @@ namespace PacketDotNet
             return buffer.ToString();
         }
     }
-}

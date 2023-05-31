@@ -1,5 +1,5 @@
-namespace PacketDotNet.Utils.Converters
-{
+namespace PacketDotNet.Utils.Converters;
+
     /// <summary>
     /// Endianness of a converter
     /// </summary>
@@ -15,4 +15,3 @@ namespace PacketDotNet.Utils.Converters
         /// </summary>
         BigEndian
     }
-}

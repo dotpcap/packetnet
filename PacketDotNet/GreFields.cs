@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>GRE protocol field encoding information.</summary>
     public struct GreFields
     {
@@ -35,4 +35,3 @@ namespace PacketDotNet
         /// <summary>Length of the Sequence Number in bytes (Optional).</summary>
         public static readonly int SequenceLength = 4;
     }
-}

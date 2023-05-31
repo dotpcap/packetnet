@@ -13,8 +13,8 @@ using System.Text;
 using System.IO;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Encapsulates and ensures that we have either a Packet OR a ByteArraySegment, but not both.
     /// </summary>
@@ -99,4 +99,3 @@ namespace PacketDotNet
             return buffer.ToString();
         }
     }
-}

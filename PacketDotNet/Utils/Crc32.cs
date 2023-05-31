@@ -13,8 +13,8 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace PacketDotNet.Utils
-{
+namespace PacketDotNet.Utils;
+
     /// <summary>Implements a 32-bits cyclic redundancy check (CRC) hash algorithm.</summary>
     /// <remarks>
     /// This class is not intended to be used for security purposes. For security applications use MD5, SHA1, SHA256, SHA384,
@@ -162,4 +162,3 @@ namespace PacketDotNet.Utils
             return BitConverter.ToInt32(buffer, 0);
         }
     }
-}

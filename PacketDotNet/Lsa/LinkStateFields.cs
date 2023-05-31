@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet.Lsa
-{
+namespace PacketDotNet.Lsa;
+
     /// <summary>
     /// Represents the length (in bytes) and the relative position
     /// of the fields in a LSA header.
@@ -77,4 +77,3 @@ namespace PacketDotNet.Lsa
             HeaderEnd = PacketLength + PacketLengthPosition;
         }
     }
-}

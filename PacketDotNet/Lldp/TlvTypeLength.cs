@@ -19,8 +19,8 @@ using log4net;
 
 #endif
 
-namespace PacketDotNet.Lldp
-{
+namespace PacketDotNet.Lldp;
+
     /// <summary>
     /// TLV type and length are 2 bytes
     /// See http://en.wikipedia.org/wiki/Link_Layer_Discovery_Protocol#Frame_structure
@@ -134,4 +134,3 @@ namespace PacketDotNet.Lldp
             set => EndianBitConverter.Big.CopyBytes(value, _byteArraySegment.Bytes, _byteArraySegment.Offset);
         }
     }
-}

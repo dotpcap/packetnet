@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  * Copyright 2012 Alan Rushforth <alan.rushforth@gmail.com>
  */
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// The Sequence control field occurs in management and data frames and is used to
     /// relate together fragmented payloads carried in multiple 802.11 frames.
@@ -75,4 +75,3 @@ namespace PacketDotNet.Ieee80211
             }
         }
     }
-}

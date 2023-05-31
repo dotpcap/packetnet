@@ -1,7 +1,7 @@
 using System;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// The PPI Capture Info field has been assigned a PPI field type but currently has no defined
     /// field body.
@@ -27,4 +27,3 @@ namespace PacketDotNet.Ieee80211
         /// </value>
         public override int Length => 0;
     }
-}

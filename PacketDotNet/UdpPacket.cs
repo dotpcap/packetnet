@@ -17,8 +17,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// User datagram protocol
     /// See http://en.wikipedia.org/wiki/Udp
@@ -327,4 +327,3 @@ namespace PacketDotNet
                    (packetBytes.Length >= IPv6Fields.HeaderLength + packetBytes.Bytes[packetBytes.Offset + IPv6Fields.PayloadLengthPosition]);
         }
     }
-}

@@ -13,8 +13,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Indicates the protocol encapsulated by the PPP packet
     /// See http://www.iana.org/assignments/ppp-numbers
@@ -28,4 +28,3 @@ namespace PacketDotNet
         /// <summary>IPv6 </summary>
         IPv6 = 6
     }
-}

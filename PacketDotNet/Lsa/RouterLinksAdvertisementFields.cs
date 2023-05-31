@@ -1,5 +1,5 @@
-namespace PacketDotNet.Lsa
-{
+namespace PacketDotNet.Lsa;
+
     /// <summary>
     /// Represents the length (in bytes) and the relative position
     /// of the fields in a Router-LSA
@@ -28,4 +28,3 @@ namespace PacketDotNet.Lsa
             RouterLinksStart = LinkNumberPosition + LinkNumberLength;
         }
     }
-}

@@ -12,8 +12,8 @@ using PacketDotNet;
 using PacketDotNet.Utils;
 using SharpPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class RawPacketTest
     {
@@ -34,4 +34,3 @@ namespace Test.PacketType
             Console.WriteLine(rawPacket.ToString());
         }
     }
-}

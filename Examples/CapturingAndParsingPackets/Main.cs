@@ -2,8 +2,8 @@ using System;
 using PacketDotNet;
 using SharpPcap;
 
-namespace CapturingAndParsingPackets
-{
+namespace CapturingAndParsingPackets;
+
     class MainClass
     {
         // used to stop the capture loop
@@ -126,4 +126,3 @@ namespace CapturingAndParsingPackets
             e.Cancel = true;
         }
     }
-}

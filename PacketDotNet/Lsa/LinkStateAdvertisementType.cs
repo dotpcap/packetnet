@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet.Lsa
-{
+namespace PacketDotNet.Lsa;
+
     /// <summary>
     /// The different LSA types
     /// </summary>
@@ -21,4 +21,3 @@ namespace PacketDotNet.Lsa
         ASExternal = 0x05
 #pragma warning restore 1591
     }
-}

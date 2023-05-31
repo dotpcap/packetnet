@@ -12,8 +12,8 @@ using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class RtcpPacketTest
     {
@@ -158,4 +158,3 @@ namespace Test.PacketType
             Assert.AreEqual(12, rtp.PayloadData.Length);
         }
     }
-}

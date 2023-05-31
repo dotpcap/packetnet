@@ -3,8 +3,8 @@ using System.Net;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Lsa
-{
+namespace PacketDotNet.Lsa;
+
     /// <summary>
     /// Describes a particular external destination
     /// </summary>
@@ -134,4 +134,3 @@ namespace PacketDotNet.Lsa
             }
         }
     }
-}

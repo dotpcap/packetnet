@@ -12,8 +12,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// The possible ARP operation values
     /// </summary>
@@ -111,4 +111,3 @@ namespace PacketDotNet
         /// <summary>OP_EXP2</summary>
         OpExp2 = 25
     }
-}

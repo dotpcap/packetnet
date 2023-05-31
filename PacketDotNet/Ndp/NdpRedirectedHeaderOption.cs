@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.Ndp
-{
+namespace PacketDotNet.Ndp;
+
     public class NdpRedirectedHeaderOption : NdpOption
     {
         /// <summary>The offset (in bytes) of the IP header + data field</summary>
@@ -29,4 +29,3 @@ namespace PacketDotNet.Ndp
         /// </summary>
         public ByteArraySegment IPHeaderAndData => OptionData;
     }
-}

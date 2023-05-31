@@ -13,8 +13,8 @@ using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Format of an 802.11 management beacon frame.
     /// Beacon frames are used to announce the existence of a wireless network. If an
@@ -209,4 +209,3 @@ namespace PacketDotNet.Ieee80211
             Header.Length = FrameSize;
         }
     }
-}

@@ -4,8 +4,8 @@ using System.Text;
 using PacketDotNet.Lsa;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Link State Request packets are OSPF packet type 3.
     /// The Link State Request packet is used to request the pieces of the
@@ -133,4 +133,3 @@ namespace PacketDotNet
             return ToString();
         }
     }
-}

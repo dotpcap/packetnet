@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System;
 using System.Text;
 
-namespace PacketDotNet.Utils.Converters
-{
+namespace PacketDotNet.Utils.Converters;
+
     /// <summary>
     /// String encoding converter
     /// </summary>
@@ -300,4 +300,3 @@ namespace PacketDotNet.Utils.Converters
             return stringBuilder.ToString();
         }
     }
-}

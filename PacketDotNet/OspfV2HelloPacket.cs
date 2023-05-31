@@ -5,8 +5,8 @@ using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Hello packets are OSPF packet type 1.  These packets are sent
     /// periodically on all interfaces (including virtual links) in order to
@@ -258,4 +258,3 @@ namespace PacketDotNet
             return ToString();
         }
     }
-}

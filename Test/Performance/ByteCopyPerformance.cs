@@ -3,8 +3,8 @@ using log4net.Core;
 using NUnit.Framework;
 using PacketDotNet;
 
-namespace Test.Performance
-{
+namespace Test.Performance;
+
     [TestFixture]
     public class ByteCopyPerformance
     {
@@ -91,4 +91,3 @@ namespace Test.Performance
             Console.WriteLine(rate.ToString());
         }
     }
-}

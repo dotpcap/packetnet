@@ -2,8 +2,8 @@
 using PacketDotNet;
 using SharpPcap;
 
-namespace CapturingAndParsingPackets
-{
+namespace CapturingAndParsingPackets;
+
     public static class RawCaptureExtensions
     {
         private static readonly MethodInfo GetLinkLayerType;
@@ -23,4 +23,3 @@ namespace CapturingAndParsingPackets
             return (LinkLayers) (GetLinkLayerType?.Invoke(rawCapture, null) ?? 0);
         }
     }
-}

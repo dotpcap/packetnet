@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Represents an OSPF packet. OSPF is a dynamic routing IGP protocol
     /// OSPF Version 2 (for IPv4) is defined in RFC 2328.
@@ -67,4 +67,3 @@ namespace PacketDotNet
             throw new NotImplementedException("OSPFv3 is not supported yet");
         }
     }
-}

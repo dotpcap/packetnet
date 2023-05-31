@@ -11,8 +11,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Channel flags
     /// </summary>
@@ -46,4 +46,3 @@ namespace PacketDotNet.Ieee80211
         /// <summary>11a static turbo channel only</summary>
         StaticTurbo = 0x2000
     }
-}

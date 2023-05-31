@@ -14,8 +14,8 @@ using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class PppPacketTest
     {
@@ -61,4 +61,3 @@ namespace Test.PacketType
             Console.WriteLine(ppp.ToString(StringOutputType.Verbose));
         }
     }
-}

@@ -1,7 +1,7 @@
 using System.IO;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// The PPI Spectrum field is intended to be compatible with the sweep records
     /// returned by the Wi-Spy spectrum analyzer.
@@ -120,4 +120,3 @@ namespace PacketDotNet.Ieee80211
         /// </value>
         public uint StartingFrequency { get; set; }
     }
-}

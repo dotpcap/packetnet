@@ -4,8 +4,8 @@ using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Lsa
-{
+namespace PacketDotNet.Lsa;
+
     /// <summary>
     /// Router-LSAs are the Type 1 LSAs. The LSA describes the state and cost of
     /// the router's links (i.e., interfaces) to the area.
@@ -152,4 +152,3 @@ namespace PacketDotNet.Lsa
             return ret.ToString();
         }
     }
-}

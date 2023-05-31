@@ -19,8 +19,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// See http://en.wikipedia.org/wiki/Ethernet#Ethernet_frame_types_and_the_EtherType_field
     /// </summary>
@@ -337,4 +337,3 @@ namespace PacketDotNet
                                       EthernetType.None);
         }
     }
-}

@@ -14,8 +14,8 @@ using System;
 using System.Net;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.Lldp
-{
+namespace PacketDotNet.Lldp;
+
     /// <summary>
     /// A Network Address
     /// </summary>
@@ -205,4 +205,3 @@ namespace PacketDotNet.Lldp
             return $"[NetworkAddress: IanaAddressFamily={AddressFamily}, Address={Address}]";
         }
     }
-}

@@ -7,8 +7,8 @@
  * Copyright 2009 Chris Morgan <chmorgan@gmail.com>
  */
 
-namespace PacketDotNet.Utils
-{
+namespace PacketDotNet.Utils;
+
     /// <summary>
     /// String constants for color console output.
     /// <p>
@@ -102,4 +102,3 @@ namespace PacketDotNet.Utils
         public static readonly string LightGrayBackground;
 #pragma warning restore 1591
     }
-}

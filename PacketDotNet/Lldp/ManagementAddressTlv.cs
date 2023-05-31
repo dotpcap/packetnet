@@ -20,8 +20,8 @@ using log4net;
 
 #endif
 
-namespace PacketDotNet.Lldp
-{
+namespace PacketDotNet.Lldp;
+
     /// <summary>
     /// A Time to Live Tlv
     /// [Tlv Type Length : 2][Mgmt Addr length : 1][Mgmt Addr Subtype : 1][Mgmt Addr : 1-31]
@@ -310,4 +310,3 @@ namespace PacketDotNet.Lldp
                 $"[ManagementAddress: AddressLength={AddressLength}, AddressSubType={AddressSubType}, Address={Address}, InterfaceSubType={InterfaceSubType}, InterfaceNumber={InterfaceNumber}, ObjIdLength={ObjIdLength}, ObjectIdentifier={ObjectIdentifier}]";
         }
     }
-}

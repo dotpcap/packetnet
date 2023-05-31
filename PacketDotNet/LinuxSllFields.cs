@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Lengths and offsets to the fields in the LinuxSll packet
     /// See http://github.com/mcr/libpcap/blob/master/pcap/sll.h
@@ -78,4 +78,3 @@ namespace PacketDotNet
             EthernetProtocolTypePosition = LinkLayerAddressPosition + LinkLayerAddressMaximumLength;
         }
     }
-}

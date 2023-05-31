@@ -13,8 +13,8 @@ using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Disassociation frame.
     /// </summary>
@@ -127,4 +127,3 @@ namespace PacketDotNet.Ieee80211
             Header.Length = FrameSize;
         }
     }
-}

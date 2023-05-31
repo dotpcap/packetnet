@@ -1,5 +1,5 @@
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// 802.11n MAC Extension flags.
     /// </summary>
@@ -41,4 +41,3 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         AggregateDelimiterCrc = 0x40
     }
-}

@@ -4,8 +4,8 @@ using System.Net;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Lsa
-{
+namespace PacketDotNet.Lsa;
+
     /// <summary>
     /// AS-external-LSAs are the Type 5 LSAs.  These LSAs are originated by
     /// AS boundary routers, and describe destinations external to the AS.
@@ -110,4 +110,3 @@ namespace PacketDotNet.Lsa
             }
         }
     }
-}

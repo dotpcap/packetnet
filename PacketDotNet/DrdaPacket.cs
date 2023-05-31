@@ -15,8 +15,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// DrdaPacket
     /// See: https://en.wikipedia.org/wiki/Distributed_Data_Management_Architecture
@@ -96,4 +96,3 @@ namespace PacketDotNet
             }
         }
     }
-}

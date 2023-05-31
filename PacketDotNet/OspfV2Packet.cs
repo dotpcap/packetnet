@@ -17,8 +17,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// OSPFv2 packet.
     /// </summary>
@@ -183,4 +183,3 @@ namespace PacketDotNet
             return ToString();
         }
     }
-}

@@ -11,8 +11,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Radio tap flags
     /// </summary>
@@ -54,4 +54,3 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         FailedFcsCheck = 0x40
     }
-}

@@ -11,8 +11,8 @@ using System.Text;
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
 
-namespace PacketDotNet.DhcpV4
-{
+namespace PacketDotNet.DhcpV4;
+
     public class HostNameOption : DhcpV4Option
     {
         /// <summary>
@@ -52,4 +52,3 @@ namespace PacketDotNet.DhcpV4
             return "HostName: " + HostName;
         }
     }
-}

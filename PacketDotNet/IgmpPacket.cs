@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Represents an IGMP packet. IGMP is a network layer protocol used to set up multicasting on networks that use IPv4.
     /// IGMP Version 2 is defined in RFC 2236.
@@ -47,4 +47,3 @@ namespace PacketDotNet
             }
         }
     }
-}

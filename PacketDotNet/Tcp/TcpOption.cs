@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.Tcp
-{
+namespace PacketDotNet.Tcp;
+
     /// <summary>
     /// A TCP Option
     /// </summary>
@@ -95,4 +95,3 @@ namespace PacketDotNet.Tcp
             return "[" + Kind + "]";
         }
     }
-}

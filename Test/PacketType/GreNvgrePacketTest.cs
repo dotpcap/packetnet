@@ -12,8 +12,8 @@ using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class GreNvgrePacketTest
     {
@@ -85,4 +85,3 @@ namespace Test.PacketType
             Assert.AreEqual(0xcd, innerTcp.PayloadData[1]);
         }
     }
-}

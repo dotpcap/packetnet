@@ -12,8 +12,8 @@ using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Lsa
-{
+namespace PacketDotNet.Lsa;
+
     /// <summary>
     /// The LSA header. All LSAs begin with a common 20 byte header.  This header contains
     /// enough information to uniquely identify the LSA (LS type, Link State
@@ -178,4 +178,3 @@ namespace PacketDotNet.Lsa
             return builder.ToString();
         }
     }
-}

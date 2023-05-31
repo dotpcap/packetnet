@@ -2,8 +2,8 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// PPI process info field.
     /// </summary>
@@ -157,4 +157,3 @@ namespace PacketDotNet.Ieee80211
         /// </value>
         public string UserName { get; set; }
     }
-}

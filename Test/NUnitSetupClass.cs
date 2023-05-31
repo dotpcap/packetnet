@@ -2,8 +2,8 @@ using System.Reflection;
 using System.IO;
 using NUnit.Framework;
 
-namespace Test
-{
+namespace Test;
+
     [SetUpFixture]
     public class NUnitSetupClass
     {
@@ -38,4 +38,3 @@ namespace Test
         }
 #pragma warning restore 0169
     }
-}

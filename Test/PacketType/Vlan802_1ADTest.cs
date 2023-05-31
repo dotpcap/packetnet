@@ -12,8 +12,8 @@ using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class Vlan802_1ADTest
     {
@@ -53,4 +53,3 @@ namespace Test.PacketType
             Assert.AreEqual(EthernetType.IPv4, innerVlanTag.Type);
         }
     }
-}

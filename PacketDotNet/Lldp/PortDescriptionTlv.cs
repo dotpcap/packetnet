@@ -15,8 +15,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet.Lldp
-{
+namespace PacketDotNet.Lldp;
+
     /// <summary>
     /// A Port Description Tlv
     /// </summary>
@@ -67,4 +67,3 @@ namespace PacketDotNet.Lldp
             set => Value = value;
         }
     }
-}

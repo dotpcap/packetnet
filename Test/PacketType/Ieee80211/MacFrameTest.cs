@@ -17,8 +17,8 @@ using PacketDotNet.Utils.Converters;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType.Ieee80211
-{
+namespace Test.PacketType.Ieee80211;
+
     [TestFixture]
     public class MacFrameTest
     {
@@ -205,4 +205,3 @@ namespace Test.PacketType.Ieee80211
             dev.Close();
         }
     }
-}

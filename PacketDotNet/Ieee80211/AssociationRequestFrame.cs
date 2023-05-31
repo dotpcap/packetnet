@@ -13,8 +13,8 @@ using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Format of an 802.11 management association frame.
     /// </summary>
@@ -190,4 +190,3 @@ namespace PacketDotNet.Ieee80211
             Header.Length = FrameSize;
         }
     }
-}

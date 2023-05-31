@@ -12,8 +12,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.Lldp
-{
+namespace PacketDotNet.Lldp;
+
     /// <summary>
     /// An End Of LLDPDU Tlv
     /// </summary>
@@ -60,4 +60,3 @@ namespace PacketDotNet.Lldp
             return "[EndOfLldpdu]";
         }
     }
-}

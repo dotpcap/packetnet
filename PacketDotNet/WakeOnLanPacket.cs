@@ -22,8 +22,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Wake-On-Lan
     /// See: http://en.wikipedia.org/wiki/Wake-on-LAN
@@ -317,4 +317,3 @@ namespace PacketDotNet
             return buffer.ToString();
         }
     }
-}

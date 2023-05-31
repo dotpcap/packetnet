@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System;
 using System.Collections.Generic;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Every 802.11 frame has a control field that contains information about the frame including
     /// the 802.11 protocol version, frame type, and various indicators, such as whether WEP is on,
@@ -319,4 +319,3 @@ namespace PacketDotNet.Ieee80211
             return String.Join(" ", flags.ToArray());
         }
     }
-}

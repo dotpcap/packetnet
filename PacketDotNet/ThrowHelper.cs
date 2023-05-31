@@ -10,8 +10,8 @@ using System;
 using System.Net.Sockets;
 
 // ReSharper disable InconsistentNaming
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     internal static class ThrowHelper
     {
         /// <summary>
@@ -195,4 +195,3 @@ namespace PacketDotNet
         TotalLengthBelowMinimumHeaderLength,
         UrgentPointerSet
     }
-}

@@ -11,8 +11,8 @@ using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType.Ieee80211
-{
+namespace Test.PacketType.Ieee80211;
+
     [TestFixture]
     public class RawPacketTest
     {
@@ -46,4 +46,3 @@ namespace Test.PacketType.Ieee80211
             Assert.IsNotNull(p);
         }
     }
-}

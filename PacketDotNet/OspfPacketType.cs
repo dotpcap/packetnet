@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// The five different OSPF packet types
     /// </summary>
@@ -19,4 +19,3 @@ namespace PacketDotNet
         LinkStateUpdate = 0x0004,
         LinkStateAcknowledgment = 0x0005
     }
-}

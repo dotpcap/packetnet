@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet.Ndp
-{
+namespace PacketDotNet.Ndp;
+
     /// <summary>
     /// The different types fields that could be found in the Options field
     /// </summary>
@@ -23,4 +23,3 @@ namespace PacketDotNet.Ndp
         RedirectedHeader = 4,
         Mtu = 5
     }
-}

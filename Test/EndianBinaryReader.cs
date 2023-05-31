@@ -3,8 +3,8 @@ using System.IO;
 using System.Text;
 using PacketDotNet.Utils.Converters;
 
-namespace Test
-{
+namespace Test;
+
     /// <summary>
     /// Equivalent of System.IO.BinaryReader, but with either endianness, depending on
     /// the EndianBitConverter it is constructed with. No data is buffered in the
@@ -582,4 +582,3 @@ namespace Test
             return index;
         }
     }
-}

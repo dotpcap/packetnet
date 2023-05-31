@@ -20,8 +20,8 @@ using log4net;
 
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// An ARP protocol packet.
     /// </summary>
@@ -348,4 +348,3 @@ namespace PacketDotNet
             return buffer.ToString();
         }
     }
-}

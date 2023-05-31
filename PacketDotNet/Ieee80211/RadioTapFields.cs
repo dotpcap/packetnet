@@ -13,8 +13,8 @@ using System;
 using System.IO;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Channel field
     /// </summary>
@@ -1541,4 +1541,3 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         public abstract void CopyTo(byte[] dest, int offset);
     }
-}

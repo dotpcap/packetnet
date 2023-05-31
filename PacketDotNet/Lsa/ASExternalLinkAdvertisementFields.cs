@@ -1,5 +1,5 @@
-namespace PacketDotNet.Lsa
-{
+namespace PacketDotNet.Lsa;
+
     /// <summary>
     /// Represents the length (in bytes) and the relative position
     /// of the fields in a AS-External-LSA
@@ -21,4 +21,3 @@ namespace PacketDotNet.Lsa
             MetricPosition = NetworkMaskPosition + NetworkMaskLength;
         }
     }
-}

@@ -6,8 +6,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// The protocol encapsulated inside of the IP packet
     /// </summary>
@@ -113,4 +113,3 @@ namespace PacketDotNet
         /// <summary>IP protocol mask.</summary>
         Mask = 0xff
     }
-}

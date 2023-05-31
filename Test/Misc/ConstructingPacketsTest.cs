@@ -10,8 +10,8 @@ using System;
 using NUnit.Framework;
 using PacketDotNet;
 
-namespace Test.Misc
-{
+namespace Test.Misc;
+
     [TestFixture]
     public class ConstructingPacketsTest
     {
@@ -41,4 +41,3 @@ namespace Test.Misc
             Console.WriteLine("re-parsed random packet: {0}", newPacket);
         }
     }
-}

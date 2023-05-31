@@ -1,5 +1,5 @@
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     public struct BlockAcknowledgmentRequestFields
     {
         public static readonly int BlockAckRequestControlLength = 2;
@@ -13,4 +13,3 @@ namespace PacketDotNet.Ieee80211
             BlockAckStartingSequenceControlPosition = BlockAckRequestControlPosition + BlockAckRequestControlLength;
         }
     }
-}

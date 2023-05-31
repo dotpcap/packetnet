@@ -17,8 +17,8 @@ using System.Net.Sockets;
 using System.Text;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// An IGMP packet.
     /// </summary>
@@ -141,4 +141,3 @@ namespace PacketDotNet
             return buffer.ToString();
         }
     }
-}

@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// The available types of strings that the ToString(StringOutputType) can handle.
     /// </summary>
@@ -33,4 +33,3 @@ namespace PacketDotNet
         /// </summary>
         VerboseColored
     }
-}

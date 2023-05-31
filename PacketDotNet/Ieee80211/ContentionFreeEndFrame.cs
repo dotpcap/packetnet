@@ -12,8 +12,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Contention free end frame.
     /// </summary>
@@ -106,4 +106,3 @@ namespace PacketDotNet.Ieee80211
             return $"RA {ReceiverAddress} BSSID {BssId}";
         }
     }
-}

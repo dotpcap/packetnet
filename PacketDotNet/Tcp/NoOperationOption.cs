@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet.Tcp
-{
+namespace PacketDotNet.Tcp;
+
     /// <summary>
     /// No Operation Option
     /// Used in the TCP Options field to pad the length to the next 32 byte boundary
@@ -47,4 +47,3 @@ namespace PacketDotNet.Tcp
         /// </summary>
         public override byte Length => OptionLength;
     }
-}

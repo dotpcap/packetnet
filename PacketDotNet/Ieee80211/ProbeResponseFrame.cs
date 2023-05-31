@@ -13,8 +13,8 @@ using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// Probe response frames are sent by Access Points in response to probe requests by stations.
     /// An access point may respond to a probe request if it hosts a network with parameters compatible with those
@@ -210,4 +210,3 @@ namespace PacketDotNet.Ieee80211
             Header.Length = FrameSize;
         }
     }
-}

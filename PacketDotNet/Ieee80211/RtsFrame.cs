@@ -12,8 +12,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System.Net.NetworkInformation;
 using PacketDotNet.Utils;
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// RTS Frame has a ReceiverAddress[6], TransmitterAddress[6] and a FrameCheckSequence[4],
     /// these fields follow the common FrameControl[2] and DurationId[2] fields
@@ -67,4 +67,3 @@ namespace PacketDotNet.Ieee80211
             return $"RA {ReceiverAddress} TA {TransmitterAddress}";
         }
     }
-}

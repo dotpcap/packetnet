@@ -11,8 +11,8 @@ using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// 802.1Q vlan packet
     /// http://en.wikipedia.org/wiki/IEEE_802.1Q
@@ -195,4 +195,3 @@ namespace PacketDotNet
             return buffer.ToString();
         }
     }
-}

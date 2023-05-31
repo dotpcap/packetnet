@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System.Net;
 using System.Net.Sockets;
 
-namespace PacketDotNet.Ndp
-{
+namespace PacketDotNet.Ndp;
+
     public class NdpLinkPrefixInformationOption : NdpOption
     {
         /// <summary>The offset (in bytes) of the Ext field</summary>
@@ -88,4 +88,3 @@ namespace PacketDotNet.Ndp
             set => OptionData.Bytes[OptionData.Offset + PayloadOffset] = value;
         }
     }
-}

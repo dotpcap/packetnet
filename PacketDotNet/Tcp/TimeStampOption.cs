@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.Tcp
-{
+namespace PacketDotNet.Tcp;
+
     /// <summary>
     /// A Time Stamp Option
     /// Used for RTTM (Round Trip Time Measurement)
@@ -69,4 +69,3 @@ namespace PacketDotNet.Tcp
             return "[" + Kind + ": Value=" + Value + " EchoReply=" + EchoReply + "]";
         }
     }
-}

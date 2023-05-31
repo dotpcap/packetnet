@@ -8,8 +8,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet.DhcpV4
-{
+namespace PacketDotNet.DhcpV4;
+
     public class MaxMessageSizeOption : DhcpV4Option
     {
         /// <summary>
@@ -49,4 +49,3 @@ namespace PacketDotNet.DhcpV4
             return $"Max Message Size: {MaxMessageSize}";
         }
     }
-}

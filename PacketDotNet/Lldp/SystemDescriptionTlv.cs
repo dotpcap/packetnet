@@ -16,8 +16,8 @@ using log4net;
 
 #endif
 
-namespace PacketDotNet.Lldp
-{
+namespace PacketDotNet.Lldp;
+
     /// <summary>
     /// A System Description Tlv
     /// </summary>
@@ -68,4 +68,3 @@ namespace PacketDotNet.Lldp
             set => Value = value;
         }
     }
-}

@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-namespace PacketDotNet.Ieee80211
-{
+namespace PacketDotNet.Ieee80211;
+
     /// <summary>
     /// NOTE: Might be out-of-date information since it mentions Ethereal
     /// NOTE: ethereal does NOT handle the following:
@@ -137,4 +137,3 @@ namespace PacketDotNet.Ieee80211
         /// </summary>
         Extended = 31
     }
-}

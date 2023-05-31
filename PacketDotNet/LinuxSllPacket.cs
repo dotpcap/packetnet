@@ -12,8 +12,8 @@ using System.Text;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Represents a Linux cooked capture packet, the kinds of packets
     /// received when capturing on an 'any' device
@@ -195,4 +195,3 @@ namespace PacketDotNet
             return buffer.ToString();
         }
     }
-}

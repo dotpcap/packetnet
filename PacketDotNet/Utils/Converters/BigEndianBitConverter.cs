@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 
-namespace PacketDotNet.Utils.Converters
-{
+namespace PacketDotNet.Utils.Converters;
+
     /// <summary>
     /// Implementation of EndianBitConverter which converts to/from big-endian
     /// byte arrays.
@@ -114,4 +114,3 @@ namespace PacketDotNet.Utils.Converters
             return BinaryPrimitives.ReverseEndianness(Unsafe.As<byte, long>(ref buffer[startIndex]));
         }
     }
-}

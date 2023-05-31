@@ -6,8 +6,8 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
-namespace PacketDotNet.Tcp
-{
+namespace PacketDotNet.Tcp;
+
     /// <summary>
     /// Echo Reply Option
     /// Marked obsolete in the TCP spec Echo Reply Option has been
@@ -35,4 +35,3 @@ namespace PacketDotNet.Tcp
             base(bytes, offset, length)
         { }
     }
-}

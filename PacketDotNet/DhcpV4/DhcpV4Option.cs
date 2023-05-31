@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
 
-namespace PacketDotNet.DhcpV4
-{
+namespace PacketDotNet.DhcpV4;
+
     public abstract class DhcpV4Option
     {
         /// <summary>
@@ -37,4 +37,3 @@ namespace PacketDotNet.DhcpV4
         /// </summary>
         public DhcpV4OptionType OptionType { get; }
     }
-}

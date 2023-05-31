@@ -16,8 +16,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// A packet of link type null.
     /// See http://www.tcpdump.org/linktypes.html
@@ -143,4 +143,3 @@ namespace PacketDotNet
             throw new NotImplementedException();
         }
     }
-}

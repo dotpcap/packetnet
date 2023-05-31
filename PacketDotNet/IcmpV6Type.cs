@@ -9,8 +9,8 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  * Copyright 2010 Chris Morgan <chmorgan@gmail.com>
  */
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// ICMPv6 types, see http://en.wikipedia.org/wiki/ICMPv6 and
     /// http://www.iana.org/assignments/icmpv6-parameters
@@ -62,4 +62,3 @@ namespace PacketDotNet
         PrivateExperimentation4 = 201, // [RFC4443]
         ReservedForExpansion2 = 255 // [RFC4443]
     }
-}

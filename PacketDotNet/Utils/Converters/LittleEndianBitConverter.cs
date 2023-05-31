@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 
-namespace PacketDotNet.Utils.Converters
-{
+namespace PacketDotNet.Utils.Converters;
+
     /// <summary>
     /// Implementation of EndianBitConverter which converts to/from little-endian
     /// byte arrays.
@@ -113,4 +113,3 @@ namespace PacketDotNet.Utils.Converters
             return Unsafe.As<byte, long>(ref buffer[startIndex]);
         }
     }
-}

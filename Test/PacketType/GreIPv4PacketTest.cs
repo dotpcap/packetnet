@@ -12,8 +12,8 @@ using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class GreIPv4PacketTest
     {
@@ -82,4 +82,3 @@ namespace Test.PacketType
             }
         }
     }
-}

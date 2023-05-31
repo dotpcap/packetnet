@@ -14,8 +14,8 @@ using PacketDotNet.Utils.Converters;
 using SharpPcap;
 using SharpPcap.LibPcap;
 
-namespace Test.PacketType
-{
+namespace Test.PacketType;
+
     [TestFixture]
     public class L2tpPacketTest
     {
@@ -75,4 +75,3 @@ namespace Test.PacketType
             return null;
         }
     }
-}

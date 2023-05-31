@@ -17,8 +17,8 @@ using System.Reflection;
 using log4net;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Base class for all packet types.
     /// Defines helper methods and accessors for the architecture that underlies how
@@ -522,4 +522,3 @@ namespace PacketDotNet
             return null;
         }
     }
-}

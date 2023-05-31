@@ -17,8 +17,8 @@ using log4net;
 using System.Reflection;
 #endif
 
-namespace PacketDotNet
-{
+namespace PacketDotNet;
+
     /// <summary>
     /// Real-time Transport Protocol (RTP)
     /// See: https://en.wikipedia.org/wiki/Real-time_Transport_Protocol
@@ -253,4 +253,3 @@ namespace PacketDotNet
             }
         } 
     }
-}

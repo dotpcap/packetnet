@@ -278,6 +278,11 @@ namespace PacketDotNet;
                     payloadPacketOrData.Packet = new GrePacket(payload, parentPacket);
                     break;
                 }
+                case ProtocolType.IPSecEncapsulatingSecurityPayload:
+                {
+                    payloadPacketOrData.Packet = new EspPacket(payload, parentPacket);
+                    break;
+                }
                 // NOTE: new payload parsing entries go here
                 default:
                 {

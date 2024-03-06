@@ -1836,6 +1836,10 @@ namespace PacketDotNet.Ieee80211;
                 {
                     return new HighEfficiencyRadioTapField(br);
                 }
+                case RadioTapType.VeryHighThroughput:
+                {
+                    return new VeryHighThroughputRadioTapField(br);
+                }
                 default:
                 {
                     //the RadioTap fields are extendable so there may be some we dont know about

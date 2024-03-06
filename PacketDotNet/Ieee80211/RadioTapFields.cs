@@ -15,6 +15,306 @@ using PacketDotNet.Utils.Converters;
 
 namespace PacketDotNet.Ieee80211;
 
+
+    /// <summary>
+    /// The presence of this field indicates that the frame was received or transmitted using the VHT PHY (Wi-Fi 5 / ieee802.11ac).
+    /// </summary>
+    public class VeryHighThroughputRadioTapField : RadioTapField
+    {
+        public RadioTapVhtKnown Known { get; set; }
+        public RadioTapVhtFlags Flags { get; set; }
+        public RadioTapVhtBandwidth Bandwidth { get; set; }
+        public RadioTapVhtMcsNss McsNss1 { get; set; }
+        public RadioTapVhtMcsNss McsNss2 { get; set; }
+        public RadioTapVhtMcsNss McsNss3 { get; set; }
+        public RadioTapVhtMcsNss McsNss4 { get; set; }
+
+        /// <summary>
+        /// The coding for a user is only valid if the NSS (in the mcs_nss field) for that user is nonzero.
+        /// </summary>
+        public RadioTapVhtCoding Coding { get; set; }
+        public byte GroupId { get; set; }
+        public ushort PartialAid { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="br">
+        /// A <see cref="BinaryReader" />
+        /// </param>
+        public VeryHighThroughputRadioTapField(BinaryReader br)
+        {
+            Known = (RadioTapVhtKnown)br.ReadUInt16();
+            Flags = (RadioTapVhtFlags)br.ReadByte();
+            Bandwidth = (RadioTapVhtBandwidth)br.ReadByte();
+            McsNss1 = (RadioTapVhtMcsNss)br.ReadByte();
+            McsNss2 = (RadioTapVhtMcsNss)br.ReadByte();
+            McsNss3 = (RadioTapVhtMcsNss)br.ReadByte();
+            McsNss4 = (RadioTapVhtMcsNss)br.ReadByte();
+            Coding = (RadioTapVhtCoding)br.ReadByte();
+            GroupId = br.ReadByte();
+            PartialAid = br.ReadUInt16();
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VeryHighThroughputRadioTapField" /> class.
+        /// </summary>
+        public VeryHighThroughputRadioTapField()
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VeryHighThroughputRadioTapField" /> class.
+        /// </summary>
+        public VeryHighThroughputRadioTapField(
+            RadioTapVhtKnown known, 
+            RadioTapVhtFlags flags, 
+            RadioTapVhtBandwidth bandwidth,
+            RadioTapVhtMcsNss mcsNss1,
+            RadioTapVhtMcsNss mcsNss2,
+            RadioTapVhtMcsNss mcsNss3,
+            RadioTapVhtMcsNss mcsNss4,
+            RadioTapVhtCoding coding,
+            byte groupId,
+            ushort partialAid)
+        {
+            Known = known;
+            Flags = flags;
+            Bandwidth = bandwidth;
+            McsNss1 = mcsNss1;
+            McsNss2 = mcsNss2;
+            McsNss3 = mcsNss3;
+            McsNss4 = mcsNss4;
+            Coding = coding;
+            GroupId = groupId;
+            PartialAid = partialAid;
+        }
+
+        /// <summary>Type of the field</summary>
+        public override RadioTapType FieldType => RadioTapType.VeryHighThroughput;
+
+        /// <summary>
+        /// Gets the length of the field data.
+        /// </summary>
+        /// <value>
+        /// The length.
+        /// </value>
+        public override ushort Length => 12;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => 2;
+
+
+        /// <summary>
+        /// Copies the field data to the destination buffer at the specified offset.
+        /// </summary>
+        public override void CopyTo(byte[] dest, int offset)
+        {
+            EndianBitConverter.Little.CopyBytes((ushort)Known, dest, offset);
+            EndianBitConverter.Little.CopyBytes((byte)Flags, dest, offset + 2);
+            EndianBitConverter.Little.CopyBytes((byte)Bandwidth, dest, offset + 3);
+            EndianBitConverter.Little.CopyBytes((byte)McsNss1, dest, offset + 4);
+            EndianBitConverter.Little.CopyBytes((byte)McsNss2, dest, offset + 5);
+            EndianBitConverter.Little.CopyBytes((byte)McsNss3, dest, offset + 6);
+            EndianBitConverter.Little.CopyBytes((byte)McsNss4, dest, offset + 7);
+            EndianBitConverter.Little.CopyBytes((byte)Coding, dest, offset + 8);
+            EndianBitConverter.Little.CopyBytes(GroupId, dest, offset + 9);
+            EndianBitConverter.Little.CopyBytes(PartialAid, dest, offset + 10);
+        }
+
+        /// <summary>
+        /// ToString() override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="string" />
+        /// </returns>
+        public override string ToString()
+        {
+            return $"Known {Known}, Flags {Flags}, Bandwidth {Bandwidth}, McsNss1 {McsNss1}, McsNss2 {McsNss2}, McsNss3 {McsNss3}, McsNss4 {McsNss4}, Coding {Coding}, GroupId {GroupId}, PartialAid {PartialAid}";
+        }
+    }
+
+    /// <summary>
+    /// The presence of this field indicates that the frame was received or transmitted using the HE PHY (Wi-Fi 6 / ieee802.11ax).
+    /// </summary>
+    public class HighEfficiencyRadioTapField : RadioTapField
+    {
+        public RadioTapHighEfficiencyData1 Data1 { get; set; }
+        public RadioTapHighEfficiencyData2 Data2 { get; set; }
+        public ushort Data3 { get; set; }
+        public ushort Data4 { get; set; }
+        public ushort Data5 { get; set; }
+        public ushort Data6 { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="br">
+        /// A <see cref="BinaryReader" />
+        /// </param>
+        public HighEfficiencyRadioTapField(BinaryReader br)
+        {
+            Data1 = (RadioTapHighEfficiencyData1)br.ReadUInt16();
+            Data2 = (RadioTapHighEfficiencyData2)br.ReadUInt16();
+            Data3 = br.ReadUInt16();
+            Data4 = br.ReadUInt16();
+            Data5 = br.ReadUInt16();
+            Data6 = br.ReadUInt16();
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HighEfficiencyRadioTapField" /> class.
+        /// </summary>
+        public HighEfficiencyRadioTapField()
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HighEfficiencyRadioTapField" /> class.
+        /// </summary>
+        public HighEfficiencyRadioTapField(RadioTapHighEfficiencyData1 data1, RadioTapHighEfficiencyData2 data2, ushort data3, ushort data4, ushort data5, ushort data6)
+        {
+            Data1 = data1;
+            Data2 = data2;
+            Data3 = data3;
+            Data4 = data4;
+            Data5 = data5;
+            Data6 = data6;
+        }
+
+        /// <summary>Type of the field</summary>
+        public override RadioTapType FieldType => RadioTapType.HighEfficiency;
+
+        /// <summary>
+        /// Gets the length of the field data.
+        /// </summary>
+        /// <value>
+        /// The length.
+        /// </value>
+        public override ushort Length => 12;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => 2;
+
+
+        /// <summary>
+        /// Copies the field data to the destination buffer at the specified offset.
+        /// </summary>
+        public override void CopyTo(byte[] dest, int offset)
+        {
+            EndianBitConverter.Little.CopyBytes((ushort)Data1, dest, offset);
+            EndianBitConverter.Little.CopyBytes((ushort)Data2, dest, offset + 2);
+            EndianBitConverter.Little.CopyBytes(Data3, dest, offset + 4);
+            EndianBitConverter.Little.CopyBytes(Data4, dest, offset + 6);
+            EndianBitConverter.Little.CopyBytes(Data5, dest, offset + 8);
+            EndianBitConverter.Little.CopyBytes(Data6, dest, offset + 10);
+        }
+
+        /// <summary>
+        /// ToString() override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="string" />
+        /// </returns>
+        public override string ToString()
+        {
+            return $"Data1 {Data1}, Data2 {Data2}, Data3 {Data3}, Data4 {Data4}, Data5 {Data5}, Data6 {Data6}";
+        }
+    }
+
+    public class McsRadioTapField : RadioTapField
+    {
+        /// <summary>
+        /// Indicates which information is known
+        /// </summary>
+        public RadioTapMcsKnown Known { get; set; }
+
+        /// <summary>
+        /// Indicates which information is known
+        /// </summary>
+        public RadioTapMcsFlags Flags { get; set; }
+
+        public byte Mcs { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="br">
+        /// A <see cref="BinaryReader" />
+        /// </param>
+        public McsRadioTapField(BinaryReader br)
+        {
+            Known = (RadioTapMcsKnown)br.ReadByte();
+            Flags = (RadioTapMcsFlags)br.ReadByte();
+            Mcs = br.ReadByte();
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="McsRadioTapField" /> class.
+        /// </summary>
+        public McsRadioTapField()
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="McsRadioTapField" /> class.
+        /// <param name="known">Known information</param>
+        /// <param name="flags">MCS Flags</param>
+        /// <param name="mcs">Known information</param>
+        /// </summary>
+        public McsRadioTapField(RadioTapMcsKnown known, RadioTapMcsFlags flags, byte mcs)
+        {
+            Known = known;
+            Flags = flags;
+            Mcs = mcs;
+        }
+
+        /// <summary>Type of the field</summary>
+        public override RadioTapType FieldType => RadioTapType.Mcs;
+
+        /// <summary>
+        /// Gets the length of the field data.
+        /// </summary>
+        /// <value>
+        /// The length.
+        /// </value>
+        public override ushort Length => 3;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <value>The alignment.</value>
+        public override ushort Alignment => 1;
+
+
+        /// <summary>
+        /// Copies the field data to the destination buffer at the specified offset.
+        /// </summary>
+        public override void CopyTo(byte[] dest, int offset)
+        {
+            EndianBitConverter.Little.CopyBytes((byte)Known, dest, offset);
+            EndianBitConverter.Little.CopyBytes((byte)Flags, dest, offset + 1);
+            EndianBitConverter.Little.CopyBytes((byte)Mcs, dest, offset + 2);
+        }
+
+        /// <summary>
+        /// ToString() override
+        /// </summary>
+        /// <returns>
+        /// A <see cref="string" />
+        /// </returns>
+        public override string ToString()
+        {
+            return $"Known {Known}, Flags {Flags}, Mcs {Mcs}";
+        }
+    }
+
     /// <summary>
     /// Channel field
     /// </summary>
@@ -1527,6 +1827,14 @@ namespace PacketDotNet.Ieee80211;
                 case RadioTapType.RxFlags:
                 {
                     return new RxFlagsRadioTapField(br);
+                }
+                case RadioTapType.Mcs:
+                {
+                    return new McsRadioTapField(br);
+                }
+                case RadioTapType.HighEfficiency:
+                {
+                    return new HighEfficiencyRadioTapField(br);
                 }
                 default:
                 {

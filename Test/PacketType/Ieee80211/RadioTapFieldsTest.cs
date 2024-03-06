@@ -204,4 +204,70 @@ namespace Test.PacketType.Ieee80211;
 
             Assert.AreEqual(field.TxPower, recreatedField.TxPower);
         }
-    }
+
+        [Test]
+        public void Test_HighEfficiencyRadioTapField()
+        {
+            var field = new HighEfficiencyRadioTapField(RadioTapHighEfficiencyData1.StbcKnown, RadioTapHighEfficiencyData2.PeDisambiguityKnown, 3, 4, 5, 6);
+
+            var bytes = new byte[field.Length];
+            field.CopyTo(bytes, 0);
+
+            var recreatedField = new HighEfficiencyRadioTapField(new BinaryReader(new MemoryStream(bytes)));
+
+            Assert.AreEqual(field.Data1, recreatedField.Data1);
+            Assert.AreEqual(field.Data2, recreatedField.Data2);
+            Assert.AreEqual(field.Data3, recreatedField.Data3);
+            Assert.AreEqual(field.Data4, recreatedField.Data4);
+            Assert.AreEqual(field.Data5, recreatedField.Data5);
+            Assert.AreEqual(field.Data6, recreatedField.Data6);
+        }
+
+
+        [Test]
+        public void Test_VeryHighThroughputRadioTapField()
+        {
+            var field = new VeryHighThroughputRadioTapField(
+                RadioTapVhtKnown.BandwidthKnown | RadioTapVhtKnown.StbcKnown,
+                RadioTapVhtFlags.Stbc,
+                bandwidth: RadioTapVhtBandwidth.MHz160Side20LLU,
+                mcsNss1: (RadioTapVhtMcsNss)0xf1,
+                mcsNss2: (RadioTapVhtMcsNss)0xe2,
+                mcsNss3: (RadioTapVhtMcsNss)0xd3,
+                mcsNss4: (RadioTapVhtMcsNss)0xc4,
+                coding: RadioTapVhtCoding.CodingForUser1 | RadioTapVhtCoding.CodingForUser2 | RadioTapVhtCoding.CodingForUser3 | RadioTapVhtCoding.CodingForUser4,
+                groupId: 6,
+                partialAid: 7
+                );
+
+            var bytes = new byte[field.Length];
+            field.CopyTo(bytes, 0);
+
+            var recreatedField = new VeryHighThroughputRadioTapField(new BinaryReader(new MemoryStream(bytes)));
+
+            Assert.AreEqual(field.Known, recreatedField.Known);
+            Assert.AreEqual(field.Flags, recreatedField.Flags);
+            Assert.AreEqual(field.McsNss1, recreatedField.McsNss1);
+            Assert.AreEqual(field.McsNss2, recreatedField.McsNss2);
+            Assert.AreEqual(field.McsNss3, recreatedField.McsNss3);
+            Assert.AreEqual(field.McsNss4, recreatedField.McsNss4);
+            Assert.AreEqual(field.Coding, recreatedField.Coding);
+            Assert.AreEqual(field.GroupId, recreatedField.GroupId);
+            Assert.AreEqual(field.PartialAid, recreatedField.PartialAid);
+        }
+
+    [Test]
+        public void Test_McsRadioTapField()
+        {
+            var field = new McsRadioTapField(RadioTapMcsKnown.FecType|RadioTapMcsKnown.Bandwidth, RadioTapMcsFlags.Bandwidth, 12);
+
+            var bytes = new byte[field.Length];
+            field.CopyTo(bytes, 0);
+
+            var recreatedField = new McsRadioTapField(new BinaryReader(new MemoryStream(bytes)));
+
+            Assert.AreEqual(field.Known, recreatedField.Known);
+            Assert.AreEqual(field.Flags, recreatedField.Flags);
+            Assert.AreEqual(field.Mcs, recreatedField.Mcs);
+        }
+}

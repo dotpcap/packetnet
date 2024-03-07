@@ -208,7 +208,13 @@ namespace Test.PacketType.Ieee80211;
         [Test]
         public void Test_HighEfficiencyRadioTapField()
         {
-            var field = new HighEfficiencyRadioTapField(RadioTapHighEfficiencyData1.StbcKnown, RadioTapHighEfficiencyData2.PeDisambiguityKnown, 3, 4, 5, 6);
+            var field = new HighEfficiencyRadioTapField(
+                RadioTapHighEfficiencyData1.StbcKnown, 
+                RadioTapHighEfficiencyData2.PeDisambiguityKnown,
+                RadioTapHighEfficiencyData3.Stbc | RadioTapHighEfficiencyData3.BssColor,
+                4,
+                RadioTapHighEfficiencyData5.Gi | RadioTapHighEfficiencyData5.Txbf,
+                RadioTapHighEfficiencyData6.MidamblePeriodicity | RadioTapHighEfficiencyData6.Nsts);
 
             var bytes = new byte[field.Length];
             field.CopyTo(bytes, 0);

@@ -162,5 +162,8 @@ namespace PacketDotNet;
         IPv6 = 229,
 
         /// <summary>Protocol for communication between host and guest machines in VMware and KVM hypervisors.</summary>
-        VSock = 271
-    }
+        VSock = 271,
+
+        /// <summary>Linux "cooked" capture encapsulation v2.</summary>
+        LinuxSll2 = 276,
+}

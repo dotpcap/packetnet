@@ -141,7 +141,7 @@ namespace PacketDotNet;
             get => Header.Bytes[Header.Offset] & RtpFields.CsrcCountMask;
             set
             {
-                Header.Bytes[Header.Offset] |= (byte) (value & RtpFields.CsrcCountMask);
+                Header.Bytes[Header.Offset] = (byte) ((Header.Bytes[Header.Offset] & ~RtpFields.CsrcCountMask) | (value & RtpFields.CsrcCountMask));
                 Header.Length = RtpFields.HeaderLength + CsrcCount * RtpFields.CsrcIdLength;
                 if (HasExtension)
                     Header.Length += RtpFields.ProfileSpecificExtensionHeaderLength + RtpFields.ExtensionLengthLength +
@@ -174,7 +174,7 @@ namespace PacketDotNet;
         public int PayloadType
         {
             get => Header.Bytes[Header.Offset + 1] & RtpFields.PayloadTypeMask;
-            set => Header.Bytes[Header.Offset + 1] |= (byte) (value & RtpFields.PayloadTypeMask);
+            set => Header.Bytes[Header.Offset + 1] = (byte) ((Header.Bytes[Header.Offset + 1] & ~RtpFields.PayloadTypeMask) | (value & RtpFields.PayloadTypeMask));
         }
 
         /// <summary>

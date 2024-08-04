@@ -339,6 +339,11 @@ namespace PacketDotNet;
                     p = new LinuxSllPacket(byteArraySegment);
                     break;
                 }
+                case LinkLayers.LinuxSll2:
+                {
+                    p = new LinuxSll2Packet(byteArraySegment);
+                    break;
+                }
                 case LinkLayers.Null:
                 {
                     p = new NullPacket(byteArraySegment);

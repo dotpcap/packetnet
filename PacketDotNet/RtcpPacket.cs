@@ -117,7 +117,7 @@ namespace PacketDotNet;
         public int ReceptionReportCount
         {
             get => (Header.Bytes[Header.Offset] & RtcpFields.ReceptionReportCountMask);
-            set => Header.Bytes[Header.Offset] |= (byte) (value & RtcpFields.ReceptionReportCountMask);
+            set => Header.Bytes[Header.Offset] = (byte) ((Header.Bytes[Header.Offset] & ~RtcpFields.ReceptionReportCountMask) | (value & RtcpFields.ReceptionReportCountMask));
         }
 
         /// <summary>

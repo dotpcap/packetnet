@@ -133,6 +133,37 @@ namespace PacketDotNet.Ieee80211;
         RxFlags = 14,
 
         /// <summary>
+        /// IEEE80211_RADIOTAP_TX_FLAGS       u_int16_t         bitmap
+        /// Properties of transmitted frames.
+        /// </summary>
+        TxFlags = 15,
+
+        /// <summary>
+        ///  Indicates the MCS rate index as in IEEE_802.11n-2009
+        /// </summary>
+        Mcs = 19,
+
+        /// <summary>
+        /// The presence of this field indicates that the frame was received as part of an a-MPDU.
+        /// </summary>
+        AmpduStatus = 20,
+
+        /// <summary>
+        /// VHT (802.11ac PHY)
+        /// </summary>
+        VeryHighThroughput = 21,
+
+        /// <summary>
+        /// HE (802.11ax PHY)
+        /// </summary>
+        HighEfficiency = 23,
+
+        /// <summary>
+        /// HE MU. MIMO RU tone mapping
+        /// </summary>
+        HighEfficiencyMu = 24,
+
+        /// <summary>
         /// Indicates that the flags bitmaps have been extended
         /// </summary>
         Extended = 31

@@ -112,7 +112,7 @@ namespace PacketDotNet.Utils;
         /// <summary>Routes data written to the object into the hash algorithm for computing the hash.</summary>
         protected override void HashCore(byte[] buffer, int offset, int count)
         {
-            for (var i = offset; i < count; i++)
+            for (var i = offset; i < offset + count; i++)
             {
                 ulong ptr = (_crc & 0xFF) ^ buffer[i];
                 _crc >>= 8;

@@ -9,7 +9,7 @@
     <PackageReference Include="log4net" Version="2.0.15" />
     <PackageReference Include="nunit" Version="4.3.2" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="SharpPcap" Version="6.2.5" />
   </ItemGroup>
 

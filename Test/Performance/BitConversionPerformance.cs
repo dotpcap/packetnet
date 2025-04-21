@@ -11,6 +11,7 @@ using System.IO;
 using System.Net;
 using log4net.Core;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet.Utils.Converters;
 
 namespace Test.Performance;
@@ -38,13 +39,13 @@ namespace Test.Performance;
             {
                 var actualValue = IPAddress.NetworkToHostOrder(BitConverter.ToInt32(bytes, startIndex));
 
-                // NOTE: Assert.AreEqual() significantly slows, by a factor of ~6x
+                // NOTE: ClassicAssert.AreEqual() significantly slows, by a factor of ~6x
                 //       the execution of this loop, so we perform ourself and
-                //       then call Assert.AreEqual() if the comparison fails.
+                //       then call ClassicAssert.AreEqual() if the comparison fails.
                 //       This doesn't reduce performance by a noticable amount
                 if (actualValue != expectedValue)
                 {
-                    Assert.AreEqual(expectedValue, actualValue);
+                    ClassicAssert.AreEqual(expectedValue, actualValue);
                 }
             }
 
@@ -78,13 +79,13 @@ namespace Test.Performance;
             {
                 var actualValue = EndianBitConverter.Big.ToInt32(bytes, startIndex);
 
-                // NOTE: Assert.AreEqual() significantly slows, by a factor of ~6x
+                // NOTE: ClassicAssert.AreEqual() significantly slows, by a factor of ~6x
                 //       the execution of this loop, so we perform ourself and
-                //       then call Assert.AreEqual() if the comparison fails.
+                //       then call ClassicAssert.AreEqual() if the comparison fails.
                 //       This doesn't reduce performance by a noticable amount
                 if (actualValue != expectedValue)
                 {
-                    Assert.AreEqual(expectedValue, actualValue);
+                    ClassicAssert.AreEqual(expectedValue, actualValue);
                 }
             }
 
@@ -122,13 +123,13 @@ namespace Test.Performance;
                 endianReader.Seek(startIndex, SeekOrigin.Begin);
                 var actualValue = endianReader.ReadInt32();
 
-                // NOTE: Assert.AreEqual() significantly slows, by a factor of ~6x
+                // NOTE: ClassicAssert.AreEqual() significantly slows, by a factor of ~6x
                 //       the execution of this loop, so we perform ourself and
-                //       then call Assert.AreEqual() if the comparison fails.
+                //       then call ClassicAssert.AreEqual() if the comparison fails.
                 //       This doesn't reduce performance by a noticable amount
                 if (actualValue != expectedValue)
                 {
-                    Assert.AreEqual(expectedValue, actualValue);
+                    ClassicAssert.AreEqual(expectedValue, actualValue);
                 }
             }
 

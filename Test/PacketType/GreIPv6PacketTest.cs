@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -30,10 +31,10 @@ namespace Test.PacketType;
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
 
             var gerp = p.Extract<GrePacket>();
-            Assert.AreEqual(gerp.Protocol, EthernetType.IPv6);
+            ClassicAssert.AreEqual(gerp.Protocol, EthernetType.IPv6);
             Console.WriteLine(gerp.GetType());
         }
     }

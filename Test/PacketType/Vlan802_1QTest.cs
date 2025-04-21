@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -39,9 +40,9 @@ namespace Test.PacketType;
             Console.WriteLine(p.ToString(StringOutputType.Verbose));
 
             var vlanTag = p.Extract<Ieee8021QPacket>();
-            Assert.AreEqual(IeeeP8021PPriority.BestEffort, vlanTag.PriorityControlPoint);
+            ClassicAssert.AreEqual(IeeeP8021PPriority.BestEffort, vlanTag.PriorityControlPoint);
             var tagId = 102;
-            Assert.AreEqual(tagId, vlanTag.VlanIdentifier);
-            Assert.AreEqual(false, vlanTag.CanonicalFormatIndicator);
+            ClassicAssert.AreEqual(tagId, vlanTag.VlanIdentifier);
+            ClassicAssert.AreEqual(false, vlanTag.CanonicalFormatIndicator);
         }
     }

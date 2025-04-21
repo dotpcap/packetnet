@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using log4net.Core;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 
@@ -138,7 +139,7 @@ namespace Test.Misc;
                                     _totalPacketsReturned,
                                     ExpectedTotalPackets);
 
-                    Assert.AreEqual(ExpectedTotalPackets,
+                    ClassicAssert.AreEqual(ExpectedTotalPackets,
                                     _totalPacketsReturned,
                                     "expectedTotalPackets does not match totalPacketsReturned");
 
@@ -183,7 +184,7 @@ namespace Test.Misc;
                 PacketCapture c;
                 _captureFileReader.GetNextPacket(out c);
                 var packet = c.GetPacket();
-                Assert.IsNotNull(packet, "Expected a valid packet but it was null");
+                ClassicAssert.IsNotNull(packet, "Expected a valid packet but it was null");
                 
                 p = Packet.ParsePacket(packet.GetLinkLayers(), packet.Data);
 

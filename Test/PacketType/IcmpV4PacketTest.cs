@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -36,22 +37,22 @@ namespace Test.PacketType;
             // Parse an icmp request
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
-            Assert.AreEqual(linkLayers, rawCapture.GetLinkLayers());
+            ClassicAssert.IsNotNull(p);
+            ClassicAssert.AreEqual(linkLayers, rawCapture.GetLinkLayers());
 
             var icmp = p.Extract<IcmpV4Packet>();
             Console.WriteLine(icmp.GetType());
 
-            Assert.AreEqual(IcmpV4TypeCode.EchoRequest, icmp.TypeCode);
-            Assert.AreEqual(0xe05b, icmp.Checksum);
-            Assert.AreEqual(0x0200, icmp.Id);
-            Assert.AreEqual(0x6b00, icmp.Sequence);
-            Assert.True(icmp.ValidIcmpChecksum);
+            ClassicAssert.AreEqual(IcmpV4TypeCode.EchoRequest, icmp.TypeCode);
+            ClassicAssert.AreEqual(0xe05b, icmp.Checksum);
+            ClassicAssert.AreEqual(0x0200, icmp.Id);
+            ClassicAssert.AreEqual(0x6b00, icmp.Sequence);
+            ClassicAssert.True(icmp.ValidIcmpChecksum);
 
             // check that the message matches
             const string expectedString = "abcdefghijklmnopqrstuvwabcdefghi";
             var expectedData = System.Text.Encoding.ASCII.GetBytes(expectedString);
-            Assert.AreEqual(expectedData, icmp.Data);
+            ClassicAssert.AreEqual(expectedData, icmp.Data);
         }
 
         [Test]

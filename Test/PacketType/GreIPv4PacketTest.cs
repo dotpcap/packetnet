@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -36,23 +37,23 @@ namespace Test.PacketType;
                 Console.WriteLine("Linklayer is ethernet");
                 // Linklayer
                 Packet p = Packet.ParsePacket(linkLayers, rawCapture.Data);
-                Assert.IsNotNull(p);
+                ClassicAssert.IsNotNull(p);
 
                 // Ethernet
                 EthernetPacket eth = p.Extract<EthernetPacket>();
-                Assert.IsNotNull(eth);
+                ClassicAssert.IsNotNull(eth);
                 if (eth.Type == EthernetType.IPv4)
                 {
                     Console.WriteLine("IPv4 inside ethernet");
                     // IPv4
                     IPv4Packet ipv4 = eth.Extract<IPv4Packet>();
-                    Assert.IsNotNull(ipv4);
+                    ClassicAssert.IsNotNull(ipv4);
                     if (ipv4.Protocol == ProtocolType.Gre)
                     {
                         Console.WriteLine("GRE inside IPv4");
                         // Gre
                         GrePacket grep = ipv4.Extract<GrePacket>();
-                        Assert.IsNotNull(grep);
+                        ClassicAssert.IsNotNull(grep);
 
                         // String output
                         Console.WriteLine(grep.ToString());
@@ -75,8 +76,7 @@ namespace Test.PacketType;
                             Console.WriteLine("GRE has sequence flag");
                         }
 
-                        Assert.AreEqual(grep.Protocol, EthernetType.IPv4);
-                        
+                        ClassicAssert.AreEqual(grep.Protocol, EthernetType.IPv4);
                     }
                 }
             }

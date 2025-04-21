@@ -10,6 +10,7 @@ using System;
 using System.Net;
 using System.Net.NetworkInformation;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using PacketDotNet.Ndp;
 using SharpPcap;
@@ -36,9 +37,9 @@ namespace Test.PacketType;
 
             // save the checksum
             var icmpv6 = p.Extract<IcmpV6Packet>();
-            Assert.IsNotNull(icmpv6);
+            ClassicAssert.IsNotNull(icmpv6);
             var savedChecksum = icmpv6.Checksum;
-            Assert.True(icmpv6.ValidIcmpChecksum);
+            ClassicAssert.True(icmpv6.ValidIcmpChecksum);
 
             // now zero the checksum out
             icmpv6.Checksum = 0;
@@ -47,7 +48,7 @@ namespace Test.PacketType;
             icmpv6.UpdateIcmpChecksum();
 
             // compare the checksum values to ensure that they match
-            Assert.AreEqual(savedChecksum, icmpv6.Checksum);
+            ClassicAssert.AreEqual(savedChecksum, icmpv6.Checksum);
         }
 
         /// <summary>
@@ -64,16 +65,16 @@ namespace Test.PacketType;
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
 
             var icmpv6 = p.Extract<IcmpV6Packet>();
             Console.WriteLine(icmpv6.GetType());
 
-            Assert.AreEqual(4, icmpv6.HeaderSegment.Length);
+            ClassicAssert.AreEqual(4, icmpv6.HeaderSegment.Length);
 
-            Assert.AreEqual(IcmpV6Type.RouterSolicitation, icmpv6.Type);
-            Assert.AreEqual(0, icmpv6.Code);
-            Assert.AreEqual(0x5d50, icmpv6.Checksum);
+            ClassicAssert.AreEqual(IcmpV6Type.RouterSolicitation, icmpv6.Type);
+            ClassicAssert.AreEqual(0, icmpv6.Code);
+            ClassicAssert.AreEqual(0x5d50, icmpv6.Checksum);
 
             // Payload differs based on the icmp.Type field
         }
@@ -89,76 +90,76 @@ namespace Test.PacketType;
             var nsRawCapture = ns.GetPacket();
 
             var pNs = Packet.ParsePacket(nsRawCapture.GetLinkLayers(), nsRawCapture.Data);
-            Assert.IsNotNull(pNs);
+            ClassicAssert.IsNotNull(pNs);
 
             var neighborSolicitationPacket = pNs.Extract<NdpNeighborSolicitationPacket>();
-            Assert.IsNotNull(neighborSolicitationPacket);
-            Assert.AreEqual(IPAddress.Parse("fe80::c000:54ff:fef5:0"), neighborSolicitationPacket.TargetAddress);
+            ClassicAssert.IsNotNull(neighborSolicitationPacket);
+            ClassicAssert.AreEqual(IPAddress.Parse("fe80::c000:54ff:fef5:0"), neighborSolicitationPacket.TargetAddress);
             neighborSolicitationPacket.TargetAddress = IPAddress.Parse("fd00::fd00:fd00:fd00:0");
-            Assert.AreEqual(IPAddress.Parse("fd00::fd00:fd00:fd00:0"), neighborSolicitationPacket.TargetAddress);
+            ClassicAssert.AreEqual(IPAddress.Parse("fd00::fd00:fd00:fd00:0"), neighborSolicitationPacket.TargetAddress);
 
             // Neighbor advertisement.
             dev.GetNextPacket(out PacketCapture na);
             var naRawCapture = na.GetPacket();
 
             var pNa = Packet.ParsePacket(naRawCapture.GetLinkLayers(), naRawCapture.Data);
-            Assert.IsNotNull(pNa);
+            ClassicAssert.IsNotNull(pNa);
 
             var neighborAdvertisementPacket = pNa.Extract<NdpNeighborAdvertisementPacket>();
 
-            Assert.AreEqual(IPAddress.Parse("fe80::c000:54ff:fef5:0"), neighborAdvertisementPacket.TargetAddress);
+            ClassicAssert.AreEqual(IPAddress.Parse("fe80::c000:54ff:fef5:0"), neighborAdvertisementPacket.TargetAddress);
             neighborAdvertisementPacket.TargetAddress = IPAddress.Parse("fd00::fd00:fd00:fd00:0");
-            Assert.AreEqual(IPAddress.Parse("fd00::fd00:fd00:fd00:0"), neighborAdvertisementPacket.TargetAddress);
+            ClassicAssert.AreEqual(IPAddress.Parse("fd00::fd00:fd00:fd00:0"), neighborAdvertisementPacket.TargetAddress);
 
-            Assert.True(neighborAdvertisementPacket.Router);
-            Assert.True(neighborAdvertisementPacket.Override);
-            Assert.False(neighborAdvertisementPacket.Solicited);
+            ClassicAssert.True(neighborAdvertisementPacket.Router);
+            ClassicAssert.True(neighborAdvertisementPacket.Override);
+            ClassicAssert.False(neighborAdvertisementPacket.Solicited);
 
             neighborAdvertisementPacket.Router = false;
-            Assert.False(neighborAdvertisementPacket.Router);
-            Assert.True(neighborAdvertisementPacket.Override);
-            Assert.False(neighborAdvertisementPacket.Solicited);
+            ClassicAssert.False(neighborAdvertisementPacket.Router);
+            ClassicAssert.True(neighborAdvertisementPacket.Override);
+            ClassicAssert.False(neighborAdvertisementPacket.Solicited);
 
-            Assert.AreEqual(1, neighborAdvertisementPacket.OptionsCollection.Count);
+            ClassicAssert.AreEqual(1, neighborAdvertisementPacket.OptionsCollection.Count);
             var option = neighborAdvertisementPacket.OptionsCollection[0];
-            Assert.IsInstanceOf(typeof(NdpLinkLayerAddressOption), option);
+            ClassicAssert.IsInstanceOf(typeof(NdpLinkLayerAddressOption), option);
 
             var ndLinkLayerAddressOption = (NdpLinkLayerAddressOption) option;
-            Assert.AreEqual(PhysicalAddress.Parse("C20054F50000"), ndLinkLayerAddressOption.LinkLayerAddress);
+            ClassicAssert.AreEqual(PhysicalAddress.Parse("C20054F50000"), ndLinkLayerAddressOption.LinkLayerAddress);
 
             // Router advertisement.
             dev.GetNextPacket(out PacketCapture ra);
             var raRawCapture = ra.GetPacket();
 
             var pRa = Packet.ParsePacket(raRawCapture.GetLinkLayers(), raRawCapture.Data);
-            Assert.IsNotNull(pRa);
+            ClassicAssert.IsNotNull(pRa);
 
             var routerAdvertisementPacket = pRa.Extract<NdpRouterAdvertisementPacket>();
-            Assert.AreEqual(0, routerAdvertisementPacket.ReachableTime);
+            ClassicAssert.AreEqual(0, routerAdvertisementPacket.ReachableTime);
             routerAdvertisementPacket.ReachableTime = 1234;
-            Assert.AreEqual(1234, routerAdvertisementPacket.ReachableTime);
+            ClassicAssert.AreEqual(1234, routerAdvertisementPacket.ReachableTime);
 
-            Assert.AreEqual(1800, routerAdvertisementPacket.RouterLifetime);
-            Assert.AreEqual(64, routerAdvertisementPacket.CurrentHopLimit);
-            Assert.False(routerAdvertisementPacket.ManagedAddressConfiguration);
-            Assert.False(routerAdvertisementPacket.OtherConfiguration);
+            ClassicAssert.AreEqual(1800, routerAdvertisementPacket.RouterLifetime);
+            ClassicAssert.AreEqual(64, routerAdvertisementPacket.CurrentHopLimit);
+            ClassicAssert.False(routerAdvertisementPacket.ManagedAddressConfiguration);
+            ClassicAssert.False(routerAdvertisementPacket.OtherConfiguration);
 
-            Assert.AreEqual(3, routerAdvertisementPacket.OptionsCollection.Count);
+            ClassicAssert.AreEqual(3, routerAdvertisementPacket.OptionsCollection.Count);
 
             var prefixOption = routerAdvertisementPacket.OptionsCollection.Find(x => x is NdpLinkPrefixInformationOption) as NdpLinkPrefixInformationOption;
-            Assert.NotNull(prefixOption);
+            ClassicAssert.NotNull(prefixOption);
 
-            Assert.AreEqual(64, prefixOption.PrefixLength);
-            Assert.True(prefixOption.OnLink);
-            Assert.True(prefixOption.AutonomousAddressConfiguration);
-            Assert.AreEqual(IPAddress.Parse("2001:db8:0:1::"), prefixOption.Prefix);
+            ClassicAssert.AreEqual(64, prefixOption.PrefixLength);
+            ClassicAssert.True(prefixOption.OnLink);
+            ClassicAssert.True(prefixOption.AutonomousAddressConfiguration);
+            ClassicAssert.AreEqual(IPAddress.Parse("2001:db8:0:1::"), prefixOption.Prefix);
 
             var mtuOption = routerAdvertisementPacket.OptionsCollection.Find(x => x is NdpMtuOption) as NdpMtuOption;
-            Assert.NotNull(mtuOption);
+            ClassicAssert.NotNull(mtuOption);
 
-            Assert.AreEqual(1500, mtuOption.Mtu);
+            ClassicAssert.AreEqual(1500, mtuOption.Mtu);
             mtuOption.Mtu = 1400;
-            Assert.AreEqual(1400, mtuOption.Mtu);
+            ClassicAssert.AreEqual(1400, mtuOption.Mtu);
 
             dev.Close();
 
@@ -175,13 +176,13 @@ namespace Test.PacketType;
             var rmRawCapture = rm.GetPacket();
 
             var pRm = Packet.ParsePacket(rmRawCapture.GetLinkLayers(), rmRawCapture.Data);
-            Assert.IsNotNull(pRm);
+            ClassicAssert.IsNotNull(pRm);
 
             var redirectMessagePacket = pRm.Extract<NdpRedirectMessagePacket>();
-            Assert.NotNull(redirectMessagePacket);
+            ClassicAssert.NotNull(redirectMessagePacket);
 
-            Assert.AreEqual(IPAddress.Parse("fe80::20c:29ff:fefc:2c3b"), redirectMessagePacket.TargetAddress);
-            Assert.AreEqual(IPAddress.Parse("2001:db8:2::1"), redirectMessagePacket.DestinationAddress);
+            ClassicAssert.AreEqual(IPAddress.Parse("fe80::20c:29ff:fefc:2c3b"), redirectMessagePacket.TargetAddress);
+            ClassicAssert.AreEqual(IPAddress.Parse("2001:db8:2::1"), redirectMessagePacket.DestinationAddress);
 
             dev.Close();
         }

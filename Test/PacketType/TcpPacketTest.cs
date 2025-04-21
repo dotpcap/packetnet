@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using PacketDotNet.Tcp;
 using PacketDotNet.Utils;
@@ -34,17 +35,17 @@ namespace Test.PacketType;
             var rawCapture = c.GetPacket();
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
 
             Console.WriteLine(p.GetType());
             var t = p.Extract<TcpPacket>();
-            Assert.IsNotNull(t, "Expected t not to be null");
+            ClassicAssert.IsNotNull(t, "Expected t not to be null");
 
             // even though the packet has 6 bytes of extra data, the ip packet shows a size of
             // 40 and the ip header has a length of 20. The TCP header is also 20 bytes so
             // there should be zero bytes in the TCPData value
             var expectedTcpDataLength = 0;
-            Assert.AreEqual(expectedTcpDataLength, t.PayloadData.Length);
+            ClassicAssert.AreEqual(expectedTcpDataLength, t.PayloadData.Length);
 
             dev.Close();
         }
@@ -60,14 +61,14 @@ namespace Test.PacketType;
             var rawCapture = c.GetPacket();
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
 
             Console.WriteLine(p.GetType());
 
             var t = p.Extract<TcpPacket>();
-            Assert.IsNotNull(t, "Expected t to not be null");
+            ClassicAssert.IsNotNull(t, "Expected t to not be null");
             Console.WriteLine("Checksum: " + t.Checksum.ToString("X"));
-            Assert.IsTrue(t.ValidChecksum, "ValidChecksum indicates invalid checksum");
+            ClassicAssert.IsTrue(t.ValidChecksum, "ValidChecksum indicates invalid checksum");
 
             dev.Close();
         }
@@ -96,7 +97,7 @@ namespace Test.PacketType;
             p.PayloadData = data;
 
             //sanity check
-            Assert.AreEqual(s, System.Text.Encoding.Default.GetString(p.PayloadData));
+            ClassicAssert.AreEqual(s, System.Text.Encoding.Default.GetString(p.PayloadData));
         }
 
         [Test]
@@ -150,8 +151,8 @@ namespace Test.PacketType;
             ushort destinationPort = 101;
             var tcpPacket = new TcpPacket(sourcePort, destinationPort);
 
-            Assert.AreEqual(sourcePort, tcpPacket.SourcePort);
-            Assert.AreEqual(destinationPort, tcpPacket.DestinationPort);
+            ClassicAssert.AreEqual(sourcePort, tcpPacket.SourcePort);
+            ClassicAssert.AreEqual(destinationPort, tcpPacket.DestinationPort);
         }
 
         [Test]
@@ -165,10 +166,10 @@ namespace Test.PacketType;
             var rawCapture = c.GetPacket();
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
 
             var t = p.Extract<TcpPacket>();
-            Assert.IsNotNull(t, "Expected t to not be null");
+            ClassicAssert.IsNotNull(t, "Expected t to not be null");
 
             // verify that the options byte match what we expect
             byte[] expectedOptions =
@@ -177,21 +178,21 @@ namespace Test.PacketType;
                 0x3d, 0xe5, 0x1d, 0xf5, 0xf8, 0x84
             };
 
-            Assert.AreEqual(expectedOptions, t.Options);
+            ClassicAssert.AreEqual(expectedOptions, t.Options);
 
             var options = t.OptionsCollection;
 
-            Assert.AreEqual(true, options.Any(x => x is TimeStampOption));
+            ClassicAssert.AreEqual(true, options.Any(x => x is TimeStampOption));
 
             foreach (var option in options)
             {
                 if (option is TimeStampOption timeStamp)
                 {
-                    Assert.AreEqual(1326565, timeStamp.Value);
+                    ClassicAssert.AreEqual(1326565, timeStamp.Value);
 
                     timeStamp.Value = 1234321;
 
-                    Assert.AreEqual(1234321, timeStamp.Value);
+                    ClassicAssert.AreEqual(1234321, timeStamp.Value);
                 }
             }
 
@@ -202,7 +203,7 @@ namespace Test.PacketType;
             {
                 if (option is TimeStampOption timeStamp)
                 {
-                    Assert.AreEqual(1234321, timeStamp.Value);
+                    ClassicAssert.AreEqual(1234321, timeStamp.Value);
                 }
             }
 
@@ -223,10 +224,10 @@ namespace Test.PacketType;
             var rawCapture = c.GetPacket();
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
 
             var t = p.Extract<TcpPacket>();
-            Assert.IsNotNull(t, "Expected t to not be null");
+            ClassicAssert.IsNotNull(t, "Expected t to not be null");
 
             dev.Close();
         }

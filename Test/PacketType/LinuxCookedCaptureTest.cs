@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -21,20 +22,20 @@ namespace Test.PacketType;
         {
             // expect an arp packet
             var arpPacket = p.Extract<ArpPacket>();
-            Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
+            ClassicAssert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             // validate some of the LinuxSSLPacket fields
             var l = (LinuxSllPacket) p;
-            Assert.AreEqual(6, l.LinkLayerAddressLength, "Address length");
-            Assert.AreEqual(1, l.LinkLayerAddressType);
-            Assert.AreEqual(LinuxSllType.PacketSentToUs, l.Type);
+            ClassicAssert.AreEqual(6, l.LinkLayerAddressLength, "Address length");
+            ClassicAssert.AreEqual(1, l.LinkLayerAddressType);
+            ClassicAssert.AreEqual(LinuxSllType.PacketSentToUs, l.Type);
 
             // validate some of the arp fields
-            Assert.AreEqual("192.168.1.1",
+            ClassicAssert.AreEqual("192.168.1.1",
                             arpPacket.SenderProtocolAddress.ToString(),
                             "Arp SenderProtocolAddress");
 
-            Assert.AreEqual("192.168.1.102",
+            ClassicAssert.AreEqual("192.168.1.102",
                             arpPacket.TargetProtocolAddress.ToString(),
                             "Arp TargetProtocolAddress");
         }
@@ -42,13 +43,13 @@ namespace Test.PacketType;
         private void VerifyPacket1(Packet p)
         {
             // expect a udp packet
-            Assert.IsNotNull(p.Extract<UdpPacket>(), "expected a udp packet");
+            ClassicAssert.IsNotNull(p.Extract<UdpPacket>(), "expected a udp packet");
         }
 
         private void VerifyPacket2(Packet p)
         {
             // expecting a tcp packet
-            Assert.IsNotNull(p.Extract<TcpPacket>(), "expected a tcp packet");
+            ClassicAssert.IsNotNull(p.Extract<TcpPacket>(), "expected a tcp packet");
         }
 
         [Test]
@@ -83,7 +84,7 @@ namespace Test.PacketType;
                     }
                     default:
                     {
-                        Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
+                        ClassicAssert.Fail("didn't expect to get to packetIndex " + packetIndex);
                         break;
                     }
                 }

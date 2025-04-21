@@ -12,6 +12,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -25,36 +26,36 @@ namespace Test.PacketType;
         private void VerifyPacket0(Packet p)
         {
             var arpPacket = p.Extract<ArpPacket>();
-            Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
+            ClassicAssert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             var senderIp = IPAddress.Parse("192.168.1.202");
             var targetIp = IPAddress.Parse("192.168.1.214");
 
-            Assert.AreEqual(senderIp, arpPacket.SenderProtocolAddress);
-            Assert.AreEqual(targetIp, arpPacket.TargetProtocolAddress);
+            ClassicAssert.AreEqual(senderIp, arpPacket.SenderProtocolAddress);
+            ClassicAssert.AreEqual(targetIp, arpPacket.TargetProtocolAddress);
 
             var senderMacAddress = "000461990154";
             var targetMacAddress = "000000000000";
-            Assert.AreEqual(senderMacAddress, arpPacket.SenderHardwareAddress.ToString());
-            Assert.AreEqual(targetMacAddress, arpPacket.TargetHardwareAddress.ToString());
+            ClassicAssert.AreEqual(senderMacAddress, arpPacket.SenderHardwareAddress.ToString());
+            ClassicAssert.AreEqual(targetMacAddress, arpPacket.TargetHardwareAddress.ToString());
         }
 
         // arp response
         private void VerifyPacket1(Packet p)
         {
             var arp = p.Extract<ArpPacket>();
-            Assert.IsNotNull(arp, "Expected arpPacket to not be null");
+            ClassicAssert.IsNotNull(arp, "Expected arpPacket to not be null");
 
             var senderIp = IPAddress.Parse("192.168.1.214");
             var targetIp = IPAddress.Parse("192.168.1.202");
 
-            Assert.AreEqual(senderIp, arp.SenderProtocolAddress);
-            Assert.AreEqual(targetIp, arp.TargetProtocolAddress);
+            ClassicAssert.AreEqual(senderIp, arp.SenderProtocolAddress);
+            ClassicAssert.AreEqual(targetIp, arp.TargetProtocolAddress);
 
             var senderMacAddress = "00216A020854";
             var targetMacAddress = "000461990154";
-            Assert.AreEqual(senderMacAddress, arp.SenderHardwareAddress.ToString());
-            Assert.AreEqual(targetMacAddress, arp.TargetHardwareAddress.ToString());
+            ClassicAssert.AreEqual(senderMacAddress, arp.SenderHardwareAddress.ToString());
+            ClassicAssert.AreEqual(targetMacAddress, arp.TargetHardwareAddress.ToString());
         }
 
         /// <summary>
@@ -108,7 +109,7 @@ namespace Test.PacketType;
                     }
                     default:
                     {
-                        Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
+                        ClassicAssert.Fail("didn't expect to get to packetIndex " + packetIndex);
                         break;
                     }
                 }

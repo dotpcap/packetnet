@@ -11,6 +11,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Net.NetworkInformation;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils.Converters;
@@ -38,12 +39,12 @@ namespace Test.PacketType.Ieee80211;
             // check that the fcs can be calculated correctly
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var frame = (AssociationRequestFrame) p.PayloadPacket;
-            Assert.AreEqual(0xde82c216, frame.FrameCheckSequence, "FCS mismatch");
-            Assert.IsTrue(frame.FcsValid);
+            ClassicAssert.AreEqual(0xde82c216, frame.FrameCheckSequence, "FCS mismatch");
+            ClassicAssert.IsTrue(frame.FcsValid);
 
             // adjust the fcs of the packet and check that the FcsValid property returns false
             frame.FrameCheckSequence = 0x1;
-            Assert.IsFalse(frame.FcsValid);
+            ClassicAssert.IsFalse(frame.FcsValid);
         }
 
         [Test]
@@ -62,7 +63,7 @@ namespace Test.PacketType.Ieee80211;
 
             //When its raw 802.11 we cant tell if there is an FCS there so even though
             //there is we still expect AppendFcs to be false.
-            Assert.IsFalse(macFrame.AppendFcs);
+            ClassicAssert.IsFalse(macFrame.AppendFcs);
         }
 
         [Test]
@@ -78,7 +79,7 @@ namespace Test.PacketType.Ieee80211;
             //For this test we are just going to ignore the radio packet that precedes the data frame
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var macFrame = p as MacFrame;
-            Assert.IsFalse(macFrame.AppendFcs);
+            ClassicAssert.IsFalse(macFrame.AppendFcs);
         }
 
         [Test]
@@ -98,17 +99,17 @@ namespace Test.PacketType.Ieee80211;
             //Force it to recalculate the FCS and include it when serialized
             dataFrame.UpdateFrameCheckSequence();
             dataFrame.AppendFcs = true;
-            Assert.IsTrue(dataFrame.FcsValid);
+            ClassicAssert.IsTrue(dataFrame.FcsValid);
 
             var expectedLength = dataFrame.FrameSize + dataFrame.PayloadData.Length + 4;
 
             var frameBytes = dataFrame.Bytes;
 
-            Assert.AreEqual(expectedLength, frameBytes.Length);
-            Assert.AreEqual(dataFrame.FrameCheckSequence.ToString("X"),
+            ClassicAssert.AreEqual(expectedLength, frameBytes.Length);
+            ClassicAssert.AreEqual(dataFrame.FrameCheckSequence.ToString("X"),
                             EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4).ToString("X"));
 
-            Assert.AreEqual(dataFrame.FrameCheckSequence,
+            ClassicAssert.AreEqual(dataFrame.FrameCheckSequence,
                             EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4));
         }
 
@@ -133,9 +134,9 @@ namespace Test.PacketType.Ieee80211;
             var expectedLength = dataFrame.FrameSize + dataFrame.PayloadData.Length;
             var frameBytes = dataFrame.Bytes;
 
-            Assert.AreEqual(expectedLength, frameBytes.Length);
+            ClassicAssert.AreEqual(expectedLength, frameBytes.Length);
             //Check that we get last four bytes of data at the end rather than the FCS
-            Assert.AreEqual(0x01020304, EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4));
+            ClassicAssert.AreEqual(0x01020304, EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4));
         }
 
         [Test]
@@ -156,8 +157,8 @@ namespace Test.PacketType.Ieee80211;
 
             var frameBytes = frame.Bytes;
             var expectedLength = frame.FrameSize + frame.PayloadData.Length + 4;
-            Assert.AreEqual(expectedLength, frameBytes.Length);
-            Assert.AreEqual(frame.FrameCheckSequence,
+            ClassicAssert.AreEqual(expectedLength, frameBytes.Length);
+            ClassicAssert.AreEqual(frame.FrameCheckSequence,
                             EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4));
         }
 
@@ -179,9 +180,9 @@ namespace Test.PacketType.Ieee80211;
 
             var frameBytes = frame.Bytes;
             var expectedLength = frame.FrameSize + frame.PayloadData.Length;
-            Assert.AreEqual(expectedLength, frameBytes.Length);
+            ClassicAssert.AreEqual(expectedLength, frameBytes.Length);
 
-            Assert.AreEqual(EndianBitConverter.Big.ToUInt32(frame.PayloadData, frame.PayloadData.Length - 4),
+            ClassicAssert.AreEqual(EndianBitConverter.Big.ToUInt32(frame.PayloadData, frame.PayloadData.Length - 4),
                             EndianBitConverter.Big.ToUInt32(frameBytes, frameBytes.Length - 4));
         }
 
@@ -198,7 +199,7 @@ namespace Test.PacketType.Ieee80211;
             {
                 var rawCapture = c.GetPacket();
                 var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
-                Assert.IsNotNull(p.PayloadPacket);
+                ClassicAssert.IsNotNull(p.PayloadPacket);
             }
 
             // check that the fcs can be calculated correctly

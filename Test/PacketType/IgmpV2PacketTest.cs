@@ -11,6 +11,7 @@ using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -33,25 +34,25 @@ namespace Test.PacketType;
             {
                 var rawCapture = c.GetPacket();
                 var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
-                Assert.IsNotNull(p);
+                ClassicAssert.IsNotNull(p);
 
                 var igmp = p.Extract<IgmpV2Packet>();
-                Assert.IsNotNull(p);
+                ClassicAssert.IsNotNull(p);
 
                 if (packetIndex == 0)
                 {
-                    Assert.AreEqual(igmp.Type, IgmpMessageType.MembershipQuery);
-                    Assert.AreEqual(igmp.MaxResponseTime, 100);
-                    Assert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new byte[] { 0xEE, 0x9B }, 0));
-                    Assert.AreEqual(igmp.GroupAddress, IPAddress.Parse("0.0.0.0"));
+                    ClassicAssert.AreEqual(igmp.Type, IgmpMessageType.MembershipQuery);
+                    ClassicAssert.AreEqual(igmp.MaxResponseTime, 100);
+                    ClassicAssert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new byte[] { 0xEE, 0x9B }, 0));
+                    ClassicAssert.AreEqual(igmp.GroupAddress, IPAddress.Parse("0.0.0.0"));
                 }
 
                 if (packetIndex == 1)
                 {
-                    Assert.AreEqual(igmp.Type, IgmpMessageType.MembershipReportIGMPv2);
-                    Assert.AreEqual(igmp.MaxResponseTime, 0.0);
-                    Assert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new byte[] { 0x08, 0xC3 }, 0));
-                    Assert.AreEqual(igmp.GroupAddress, IPAddress.Parse("224.0.1.60"));
+                    ClassicAssert.AreEqual(igmp.Type, IgmpMessageType.MembershipReportIGMPv2);
+                    ClassicAssert.AreEqual(igmp.MaxResponseTime, 0.0);
+                    ClassicAssert.AreEqual(igmp.Checksum, BitConverter.ToInt16(new byte[] { 0x08, 0xC3 }, 0));
+                    ClassicAssert.AreEqual(igmp.GroupAddress, IPAddress.Parse("224.0.1.60"));
                 }
 
                 if (packetIndex > 1)

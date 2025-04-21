@@ -1,5 +1,6 @@
 using System.IO;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet.Ieee80211;
 
 namespace Test.PacketType.Ieee80211;
@@ -17,7 +18,7 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new AntennaRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.Antenna, recreatedField.Antenna);
+            ClassicAssert.AreEqual(field.Antenna, recreatedField.Antenna);
         }
 
         [Test]
@@ -30,9 +31,9 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new ChannelRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.FrequencyMHz, recreatedField.FrequencyMHz);
-            Assert.AreEqual(field.Channel, recreatedField.Channel);
-            Assert.AreEqual(field.Flags, recreatedField.Flags);
+            ClassicAssert.AreEqual(field.FrequencyMHz, recreatedField.FrequencyMHz);
+            ClassicAssert.AreEqual(field.Channel, recreatedField.Channel);
+            ClassicAssert.AreEqual(field.Flags, recreatedField.Flags);
         }
 
         [Test]
@@ -45,7 +46,7 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new DbAntennaNoiseRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.AntennaNoisedB, recreatedField.AntennaNoisedB);
+            ClassicAssert.AreEqual(field.AntennaNoisedB, recreatedField.AntennaNoisedB);
         }
 
         [Test]
@@ -58,7 +59,7 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new DbAntennaSignalRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.SignalStrengthdB, recreatedField.SignalStrengthdB);
+            ClassicAssert.AreEqual(field.SignalStrengthdB, recreatedField.SignalStrengthdB);
         }
 
         [Test]
@@ -71,7 +72,7 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new DbmAntennaNoiseRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.AntennaNoisedBm, recreatedField.AntennaNoisedBm);
+            ClassicAssert.AreEqual(field.AntennaNoisedBm, recreatedField.AntennaNoisedBm);
         }
 
         [Test]
@@ -84,7 +85,7 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new DbmAntennaSignalRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.AntennaSignalDbm, recreatedField.AntennaSignalDbm);
+            ClassicAssert.AreEqual(field.AntennaSignalDbm, recreatedField.AntennaSignalDbm);
         }
 
         [Test]
@@ -97,7 +98,7 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new DbmTxPowerRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.TxPowerdBm, recreatedField.TxPowerdBm);
+            ClassicAssert.AreEqual(field.TxPowerdBm, recreatedField.TxPowerdBm);
         }
 
         [Test]
@@ -110,7 +111,7 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new DbTxAttenuationRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.TxPowerdB, recreatedField.TxPowerdB);
+            ClassicAssert.AreEqual(field.TxPowerdB, recreatedField.TxPowerdB);
         }
 
         [Test]
@@ -123,8 +124,8 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new FhssRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.ChannelHoppingSet, recreatedField.ChannelHoppingSet);
-            Assert.AreEqual(field.Pattern, recreatedField.Pattern);
+            ClassicAssert.AreEqual(field.ChannelHoppingSet, recreatedField.ChannelHoppingSet);
+            ClassicAssert.AreEqual(field.Pattern, recreatedField.Pattern);
         }
 
         [Test]
@@ -137,7 +138,7 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new FlagsRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.Flags, recreatedField.Flags);
+            ClassicAssert.AreEqual(field.Flags, recreatedField.Flags);
         }
 
         [Test]
@@ -150,7 +151,7 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new LockQualityRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.SignalQuality, recreatedField.SignalQuality);
+            ClassicAssert.AreEqual(field.SignalQuality, recreatedField.SignalQuality);
         }
 
         [Test]
@@ -163,7 +164,7 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new RateRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.RateMbps, recreatedField.RateMbps);
+            ClassicAssert.AreEqual(field.RateMbps, recreatedField.RateMbps);
         }
 
         [Test]
@@ -176,7 +177,7 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new RxFlagsRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.PlcpCrcCheckFailed, recreatedField.PlcpCrcCheckFailed);
+            ClassicAssert.AreEqual(field.PlcpCrcCheckFailed, recreatedField.PlcpCrcCheckFailed);
         }
 
         [Test]
@@ -189,7 +190,7 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new TsftRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.TimestampUsec, recreatedField.TimestampUsec);
+            ClassicAssert.AreEqual(field.TimestampUsec, recreatedField.TimestampUsec);
         }
 
         [Test]
@@ -202,6 +203,6 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedField = new TxAttenuationRadioTapField(new BinaryReader(new MemoryStream(bytes)));
 
-            Assert.AreEqual(field.TxPower, recreatedField.TxPower);
+            ClassicAssert.AreEqual(field.TxPower, recreatedField.TxPower);
         }
     }

@@ -12,6 +12,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System;
 using System.Linq;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
 
@@ -30,13 +31,13 @@ namespace Test.PacketType.Ieee80211;
 
             var ieArray = infoElement.Bytes;
 
-            Assert.AreEqual(7, ieArray.Length);
-            Assert.AreEqual((byte) InformationElement.ElementId.VendorSpecific, ieArray[0]);
-            Assert.AreEqual(5, ieArray[1]);
+            ClassicAssert.AreEqual(7, ieArray.Length);
+            ClassicAssert.AreEqual((byte) InformationElement.ElementId.VendorSpecific, ieArray[0]);
+            ClassicAssert.AreEqual(5, ieArray[1]);
 
             var actualValue = new byte[5];
             Array.Copy(ieArray, 2, actualValue, 0, 5);
-            Assert.IsTrue(value.SequenceEqual(actualValue));
+            ClassicAssert.IsTrue(value.SequenceEqual(actualValue));
         }
 
         [Test]
@@ -47,8 +48,8 @@ namespace Test.PacketType.Ieee80211;
 
             var infoElement = new InformationElement(byteArraySegment);
 
-            Assert.AreEqual(2, infoElement.ValueLength);
-            Assert.AreEqual(2, infoElement.Value.Length);
+            ClassicAssert.AreEqual(2, infoElement.ValueLength);
+            ClassicAssert.AreEqual(2, infoElement.Value.Length);
         }
 
         [Test]
@@ -61,8 +62,8 @@ namespace Test.PacketType.Ieee80211;
 
             var infoElement = new InformationElement(byteArraySegment);
 
-            Assert.AreEqual(2, infoElement.ValueLength);
-            Assert.AreEqual(2, infoElement.Value.Length);
+            ClassicAssert.AreEqual(2, infoElement.ValueLength);
+            ClassicAssert.AreEqual(2, infoElement.Value.Length);
         }
 
         [Test]
@@ -74,8 +75,8 @@ namespace Test.PacketType.Ieee80211;
 
             var infoElement = new InformationElement(byteArraySegment);
 
-            Assert.AreEqual(3, infoElement.ValueLength);
-            Assert.AreEqual(3, infoElement.Value.Length);
+            ClassicAssert.AreEqual(3, infoElement.ValueLength);
+            ClassicAssert.AreEqual(3, infoElement.Value.Length);
         }
 
         [Test]
@@ -86,15 +87,15 @@ namespace Test.PacketType.Ieee80211;
                                                      InformationElement.ElementId.ChallengeText,
                                                      value);
 
-            Assert.AreEqual(InformationElement.ElementId.ChallengeText, infoElement.Id);
-            Assert.AreEqual(value, infoElement.Value);
-            Assert.AreEqual(5, infoElement.ValueLength);
+            ClassicAssert.AreEqual(InformationElement.ElementId.ChallengeText, infoElement.Id);
+            ClassicAssert.AreEqual(value, infoElement.Value);
+            ClassicAssert.AreEqual(5, infoElement.ValueLength);
         }
 
         [Test]
         public void Test_Constructor_ValueTooLong()
         {
-            var ex = Assert.Throws<ArgumentException>(
+            var ex = ClassicAssert.Throws<ArgumentException>(
                 () =>
                 {
                     var value = new byte[300];
@@ -102,7 +103,7 @@ namespace Test.PacketType.Ieee80211;
                                            value);
                 });
 
-            Assert.That(ex.Message, Is.EqualTo("The provided value is too long. Maximum allowed length is 255 bytes."));
+            ClassicAssert.That(ex.Message, Is.EqualTo("The provided value is too long. Maximum allowed length is 255 bytes."));
         }
 
         [Test]
@@ -115,7 +116,7 @@ namespace Test.PacketType.Ieee80211;
             var otherInfoElement = new InformationElement(InformationElement.ElementId.ChallengeText,
                                                           value);
 
-            Assert.IsTrue(infoElement.Equals(otherInfoElement));
+            ClassicAssert.IsTrue(infoElement.Equals(otherInfoElement));
         }
 
         [Test]
@@ -129,6 +130,6 @@ namespace Test.PacketType.Ieee80211;
             var otherInfoElement = new InformationElement(InformationElement.ElementId.ChallengeText,
                                                           otherValue);
 
-            Assert.IsFalse(infoElement.Equals(otherInfoElement));
+            ClassicAssert.IsFalse(infoElement.Equals(otherInfoElement));
         }
     }

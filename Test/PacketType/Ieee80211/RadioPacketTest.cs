@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.IO;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils.Converters;
@@ -25,7 +26,7 @@ namespace Test.PacketType.Ieee80211;
             var p = new RadioPacket();
 
             var expectedLength = 8;
-            Assert.AreEqual(expectedLength, p.Length);
+            ClassicAssert.AreEqual(expectedLength, p.Length);
 
             var flagsField = new FlagsRadioTapField();
             flagsField.Flags |= RadioTapFlags.FcsIncludedInFrame;
@@ -33,7 +34,7 @@ namespace Test.PacketType.Ieee80211;
             p.Add(flagsField);
 
             expectedLength += flagsField.Length;
-            Assert.AreEqual(expectedLength, p.Length);
+            ClassicAssert.AreEqual(expectedLength, p.Length);
 
             //We will add the noise field before the signal field. This is not the order required
             //for radiotap and so will test that the fields are correctly reordered when written
@@ -41,13 +42,13 @@ namespace Test.PacketType.Ieee80211;
             p.Add(dbAntennaNoiseField);
 
             expectedLength += dbAntennaNoiseField.Length;
-            Assert.AreEqual(expectedLength, p.Length);
+            ClassicAssert.AreEqual(expectedLength, p.Length);
 
             var dbAntennaSignalField = new DbAntennaSignalRadioTapField { SignalStrengthdB = 44 };
             p.Add(dbAntennaSignalField);
 
             expectedLength += dbAntennaSignalField.Length;
-            Assert.AreEqual(expectedLength, p.Length);
+            ClassicAssert.AreEqual(expectedLength, p.Length);
 
             //we will just put a single byte of data because we dont want it to be parsed into 
             //an 802.11 frame in this test
@@ -57,10 +58,10 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedFrame = Packet.ParsePacket(LinkLayers.Ieee80211RadioTap, frameBytes) as RadioPacket;
 
-            Assert.IsNotNull(p[RadioTapType.Flags]);
-            Assert.IsNotNull(p[RadioTapType.DbAntennaSignal]);
-            Assert.IsNotNull(p[RadioTapType.DbAntennaNoise]);
-            Assert.AreEqual(new byte[] { 0xFF }, recreatedFrame.PayloadData);
+            ClassicAssert.IsNotNull(p[RadioTapType.Flags]);
+            ClassicAssert.IsNotNull(p[RadioTapType.DbAntennaSignal]);
+            ClassicAssert.IsNotNull(p[RadioTapType.DbAntennaNoise]);
+            ClassicAssert.AreEqual(new byte[] { 0xFF }, recreatedFrame.PayloadData);
         }
 
         /// <summary>
@@ -77,18 +78,18 @@ namespace Test.PacketType.Ieee80211;
             dev.Close();
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as RadioPacket;
-            Assert.IsNotNull(p);
-            Assert.IsNotNull(p[RadioTapType.Flags]);
-            Assert.IsNotNull(p[RadioTapType.Rate]);
-            Assert.IsNotNull(p[RadioTapType.Channel]);
-            Assert.IsNotNull(p[RadioTapType.DbmAntennaSignal]);
-            Assert.IsNotNull(p[RadioTapType.DbmAntennaNoise]);
-            Assert.IsNotNull(p[RadioTapType.LockQuality]);
-            Assert.IsNotNull(p[RadioTapType.Antenna]);
-            Assert.IsNotNull(p[RadioTapType.DbAntennaSignal]);
+            ClassicAssert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p[RadioTapType.Flags]);
+            ClassicAssert.IsNotNull(p[RadioTapType.Rate]);
+            ClassicAssert.IsNotNull(p[RadioTapType.Channel]);
+            ClassicAssert.IsNotNull(p[RadioTapType.DbmAntennaSignal]);
+            ClassicAssert.IsNotNull(p[RadioTapType.DbmAntennaNoise]);
+            ClassicAssert.IsNotNull(p[RadioTapType.LockQuality]);
+            ClassicAssert.IsNotNull(p[RadioTapType.Antenna]);
+            ClassicAssert.IsNotNull(p[RadioTapType.DbAntennaSignal]);
             var macFrame = p.PayloadPacket as MacFrame;
-            Assert.IsNotNull(macFrame);
-            Assert.IsTrue(macFrame.AppendFcs);
+            ClassicAssert.IsNotNull(macFrame);
+            ClassicAssert.IsTrue(macFrame.AppendFcs);
         }
 
         [Test]
@@ -102,45 +103,45 @@ namespace Test.PacketType.Ieee80211;
             dev.Close();
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as RadioPacket;
-            Assert.IsNotNull(p.PayloadPacket);
+            ClassicAssert.IsNotNull(p.PayloadPacket);
 
             var tsftField = p[RadioTapType.Tsft] as TsftRadioTapField;
-            Assert.IsNotNull(tsftField);
-            Assert.AreEqual(38724775, tsftField.TimestampUsec);
+            ClassicAssert.IsNotNull(tsftField);
+            ClassicAssert.AreEqual(38724775, tsftField.TimestampUsec);
 
             var flagsField = p[RadioTapType.Flags] as FlagsRadioTapField;
-            Assert.IsNotNull(flagsField);
-            Assert.AreEqual(0, (int) flagsField.Flags);
+            ClassicAssert.IsNotNull(flagsField);
+            ClassicAssert.AreEqual(0, (int) flagsField.Flags);
 
             var rateField = p[RadioTapType.Rate] as RateRadioTapField;
-            Assert.IsNotNull(rateField);
-            Assert.AreEqual(1, rateField.RateMbps);
+            ClassicAssert.IsNotNull(rateField);
+            ClassicAssert.AreEqual(1, rateField.RateMbps);
 
             var channelField = p[RadioTapType.Channel] as ChannelRadioTapField;
-            Assert.IsNotNull(channelField);
-            Assert.AreEqual(2462, channelField.FrequencyMHz);
-            Assert.AreEqual(11, channelField.Channel);
-            Assert.AreEqual(RadioTapChannelFlags.Channel2Ghz | RadioTapChannelFlags.Cck, channelField.Flags);
+            ClassicAssert.IsNotNull(channelField);
+            ClassicAssert.AreEqual(2462, channelField.FrequencyMHz);
+            ClassicAssert.AreEqual(11, channelField.Channel);
+            ClassicAssert.AreEqual(RadioTapChannelFlags.Channel2Ghz | RadioTapChannelFlags.Cck, channelField.Flags);
 
             var dbmSignalField = p[RadioTapType.DbmAntennaSignal] as DbmAntennaSignalRadioTapField;
-            Assert.IsNotNull(dbmSignalField);
-            Assert.AreEqual(-61, dbmSignalField.AntennaSignalDbm);
+            ClassicAssert.IsNotNull(dbmSignalField);
+            ClassicAssert.AreEqual(-61, dbmSignalField.AntennaSignalDbm);
 
             var dbmNoiseField = p[RadioTapType.DbmAntennaNoise] as DbmAntennaNoiseRadioTapField;
-            Assert.IsNotNull(dbmNoiseField);
-            Assert.AreEqual(-84, dbmNoiseField.AntennaNoisedBm);
+            ClassicAssert.IsNotNull(dbmNoiseField);
+            ClassicAssert.AreEqual(-84, dbmNoiseField.AntennaNoisedBm);
 
             var antennaField = p[RadioTapType.Antenna] as AntennaRadioTapField;
-            Assert.IsNotNull(antennaField);
-            Assert.AreEqual(0, antennaField.Antenna);
+            ClassicAssert.IsNotNull(antennaField);
+            ClassicAssert.AreEqual(0, antennaField.Antenna);
 
             var dbSignalField = p[RadioTapType.DbAntennaSignal] as DbAntennaSignalRadioTapField;
-            Assert.IsNotNull(dbSignalField);
-            Assert.AreEqual(23, dbSignalField.SignalStrengthdB);
+            ClassicAssert.IsNotNull(dbSignalField);
+            ClassicAssert.AreEqual(23, dbSignalField.SignalStrengthdB);
 
             var macFrame = p.PayloadPacket as MacFrame;
-            Assert.IsFalse(macFrame.AppendFcs);
-            Assert.IsFalse(macFrame.FcsValid);
+            ClassicAssert.IsFalse(macFrame.AppendFcs);
+            ClassicAssert.IsFalse(macFrame.FcsValid);
         }
 
         [Test]
@@ -154,38 +155,38 @@ namespace Test.PacketType.Ieee80211;
             dev.Close();
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as RadioPacket;
-            Assert.IsNotNull(p);
-            Assert.IsNotNull(p[RadioTapType.Flags]);
-            Assert.IsNotNull(p[RadioTapType.Rate]);
-            Assert.IsNotNull(p[RadioTapType.Channel]);
-            Assert.IsNotNull(p[RadioTapType.DbmAntennaSignal]);
-            Assert.IsNotNull(p[RadioTapType.DbmAntennaNoise]);
-            Assert.IsNotNull(p[RadioTapType.LockQuality]);
-            Assert.IsNotNull(p[RadioTapType.Antenna]);
-            Assert.IsNotNull(p[RadioTapType.DbAntennaSignal]);
+            ClassicAssert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p[RadioTapType.Flags]);
+            ClassicAssert.IsNotNull(p[RadioTapType.Rate]);
+            ClassicAssert.IsNotNull(p[RadioTapType.Channel]);
+            ClassicAssert.IsNotNull(p[RadioTapType.DbmAntennaSignal]);
+            ClassicAssert.IsNotNull(p[RadioTapType.DbmAntennaNoise]);
+            ClassicAssert.IsNotNull(p[RadioTapType.LockQuality]);
+            ClassicAssert.IsNotNull(p[RadioTapType.Antenna]);
+            ClassicAssert.IsNotNull(p[RadioTapType.DbAntennaSignal]);
             var macFrame = p.PayloadPacket as MacFrame;
-            Assert.IsNotNull(macFrame);
-            Assert.IsTrue(macFrame.AppendFcs);
-            Assert.IsTrue(macFrame.FcsValid);
+            ClassicAssert.IsNotNull(macFrame);
+            ClassicAssert.IsTrue(macFrame.AppendFcs);
+            ClassicAssert.IsTrue(macFrame.FcsValid);
 
             //Now remove a couple of radio tap fields and check that it is still valid
             p.Remove(RadioTapType.Rate);
             p.Remove(RadioTapType.Antenna);
 
             var recreatedFrame = Packet.ParsePacket(rawCapture.GetLinkLayers(), p.Bytes) as RadioPacket;
-            Assert.IsNotNull(recreatedFrame);
-            Assert.IsNotNull(recreatedFrame[RadioTapType.Flags]);
-            Assert.IsNull(recreatedFrame[RadioTapType.Rate]);
-            Assert.IsNotNull(recreatedFrame[RadioTapType.Channel]);
-            Assert.IsNotNull(recreatedFrame[RadioTapType.DbmAntennaSignal]);
-            Assert.IsNotNull(recreatedFrame[RadioTapType.DbmAntennaNoise]);
-            Assert.IsNotNull(recreatedFrame[RadioTapType.LockQuality]);
-            Assert.IsNull(recreatedFrame[RadioTapType.Antenna]);
-            Assert.IsNotNull(recreatedFrame[RadioTapType.DbAntennaSignal]);
+            ClassicAssert.IsNotNull(recreatedFrame);
+            ClassicAssert.IsNotNull(recreatedFrame[RadioTapType.Flags]);
+            ClassicAssert.IsNull(recreatedFrame[RadioTapType.Rate]);
+            ClassicAssert.IsNotNull(recreatedFrame[RadioTapType.Channel]);
+            ClassicAssert.IsNotNull(recreatedFrame[RadioTapType.DbmAntennaSignal]);
+            ClassicAssert.IsNotNull(recreatedFrame[RadioTapType.DbmAntennaNoise]);
+            ClassicAssert.IsNotNull(recreatedFrame[RadioTapType.LockQuality]);
+            ClassicAssert.IsNull(recreatedFrame[RadioTapType.Antenna]);
+            ClassicAssert.IsNotNull(recreatedFrame[RadioTapType.DbAntennaSignal]);
             var recreatedMacFrame = p.PayloadPacket as MacFrame;
-            Assert.IsNotNull(recreatedMacFrame);
-            Assert.IsTrue(recreatedMacFrame.AppendFcs);
-            Assert.IsTrue(recreatedMacFrame.FcsValid);
+            ClassicAssert.IsNotNull(recreatedMacFrame);
+            ClassicAssert.IsTrue(recreatedMacFrame.AppendFcs);
+            ClassicAssert.IsTrue(recreatedMacFrame.FcsValid);
         }
 
         [Test]
@@ -199,9 +200,9 @@ namespace Test.PacketType.Ieee80211;
             dev.Close();
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as RadioPacket;
-            Assert.IsNotNull(p);
-            Assert.IsTrue(p.Contains(RadioTapType.Flags));
-            Assert.IsFalse(p.Contains(RadioTapType.Fhss));
+            ClassicAssert.IsNotNull(p);
+            ClassicAssert.IsTrue(p.Contains(RadioTapType.Flags));
+            ClassicAssert.IsFalse(p.Contains(RadioTapType.Fhss));
         }
 
         [Test]
@@ -235,12 +236,12 @@ namespace Test.PacketType.Ieee80211;
             var p = Packet.ParsePacket(LinkLayers.Ieee80211RadioTap, radioTap) as RadioPacket;
 
             var numberOfPayloadBytesWrittenFromAnotherRadioPacket = 14;
-            Assert.AreEqual(numberOfPayloadBytesWrittenFromAnotherRadioPacket, p.PayloadPacket.Bytes.Length);
-            Assert.AreEqual(originalLength, p.Length);
+            ClassicAssert.AreEqual(numberOfPayloadBytesWrittenFromAnotherRadioPacket, p.PayloadPacket.Bytes.Length);
+            ClassicAssert.AreEqual(originalLength, p.Length);
             ulong newTsftValue = 0x123456789;
             p.Add(new TsftRadioTapField(newTsftValue));
             var timestampUsec = ((TsftRadioTapField)p[RadioTapType.Tsft]).TimestampUsec;
-            Assert.AreEqual(newTsftValue, timestampUsec);
+            ClassicAssert.AreEqual(newTsftValue, timestampUsec);
             var paddingByteCount = 4;
             var tsftLength = 8; // TODO: We have no way to get this without creating an instance of this RadioTapField
             var addedLength = tsftLength + paddingByteCount;
@@ -248,9 +249,9 @@ namespace Test.PacketType.Ieee80211;
 
             var finalFrame = Packet.ParsePacket(LinkLayers.Ieee80211RadioTap, radioTapWithTsftBytes) as RadioPacket;
 
-            Assert.AreEqual(originalLength + addedLength, finalFrame.Length);
-            Assert.AreEqual(0x1234, EndianBitConverter.Little.ToUInt16(finalFrame.Bytes, finalFrame.Length - 2));
-            Assert.AreEqual(numberOfPayloadBytesWrittenFromAnotherRadioPacket, p.PayloadPacket.Bytes.Length);
+            ClassicAssert.AreEqual(originalLength + addedLength, finalFrame.Length);
+            ClassicAssert.AreEqual(0x1234, EndianBitConverter.Little.ToUInt16(finalFrame.Bytes, finalFrame.Length - 2));
+            ClassicAssert.AreEqual(numberOfPayloadBytesWrittenFromAnotherRadioPacket, p.PayloadPacket.Bytes.Length);
         }
 
         [Test]
@@ -267,9 +268,9 @@ namespace Test.PacketType.Ieee80211;
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as RadioPacket;
 
             var timestampUsec = ((TsftRadioTapField)p[RadioTapType.Tsft]).TimestampUsec;
-            Assert.AreEqual(5508414380885, timestampUsec);
+            ClassicAssert.AreEqual(5508414380885, timestampUsec);
 
             var rate = ((RateRadioTapField)p[RadioTapType.Rate]).RateMbps;
-            Assert.AreEqual(1.0f, rate);
+            ClassicAssert.AreEqual(1.0f, rate);
         }
     }

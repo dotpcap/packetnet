@@ -11,6 +11,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet.Ieee80211;
 
 namespace Test.PacketType.Ieee80211;
@@ -23,17 +24,17 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField(0xD410);
 
-            Assert.AreEqual(0x0, frameControl.ProtocolVersion);
-            Assert.AreEqual(FrameControlField.FrameTypes.Control, frameControl.Type);
-            Assert.AreEqual(FrameControlField.FrameSubTypes.ControlAck, frameControl.SubType);
-            Assert.IsFalse(frameControl.FromDS);
-            Assert.IsFalse(frameControl.Protected);
-            Assert.IsFalse(frameControl.ToDS);
-            Assert.IsFalse(frameControl.MoreFragments);
-            Assert.IsFalse(frameControl.Retry);
-            Assert.IsTrue(frameControl.PowerManagement);
-            Assert.IsFalse(frameControl.MoreData);
-            Assert.IsFalse(frameControl.Order);
+            ClassicAssert.AreEqual(0x0, frameControl.ProtocolVersion);
+            ClassicAssert.AreEqual(FrameControlField.FrameTypes.Control, frameControl.Type);
+            ClassicAssert.AreEqual(FrameControlField.FrameSubTypes.ControlAck, frameControl.SubType);
+            ClassicAssert.IsFalse(frameControl.FromDS);
+            ClassicAssert.IsFalse(frameControl.Protected);
+            ClassicAssert.IsFalse(frameControl.ToDS);
+            ClassicAssert.IsFalse(frameControl.MoreFragments);
+            ClassicAssert.IsFalse(frameControl.Retry);
+            ClassicAssert.IsTrue(frameControl.PowerManagement);
+            ClassicAssert.IsFalse(frameControl.MoreData);
+            ClassicAssert.IsFalse(frameControl.Order);
         }
 
         [Test]
@@ -41,17 +42,17 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField(0x8000);
 
-            Assert.AreEqual(0x0, frameControl.ProtocolVersion);
-            Assert.AreEqual(FrameControlField.FrameTypes.Management, frameControl.Type);
-            Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementBeacon, frameControl.SubType);
-            Assert.IsFalse(frameControl.FromDS);
-            Assert.IsFalse(frameControl.Protected);
-            Assert.IsFalse(frameControl.ToDS);
-            Assert.IsFalse(frameControl.MoreFragments);
-            Assert.IsFalse(frameControl.Retry);
-            Assert.IsFalse(frameControl.PowerManagement);
-            Assert.IsFalse(frameControl.MoreData);
-            Assert.IsFalse(frameControl.Order);
+            ClassicAssert.AreEqual(0x0, frameControl.ProtocolVersion);
+            ClassicAssert.AreEqual(FrameControlField.FrameTypes.Management, frameControl.Type);
+            ClassicAssert.AreEqual(FrameControlField.FrameSubTypes.ManagementBeacon, frameControl.SubType);
+            ClassicAssert.IsFalse(frameControl.FromDS);
+            ClassicAssert.IsFalse(frameControl.Protected);
+            ClassicAssert.IsFalse(frameControl.ToDS);
+            ClassicAssert.IsFalse(frameControl.MoreFragments);
+            ClassicAssert.IsFalse(frameControl.Retry);
+            ClassicAssert.IsFalse(frameControl.PowerManagement);
+            ClassicAssert.IsFalse(frameControl.MoreData);
+            ClassicAssert.IsFalse(frameControl.Order);
         }
 
         [Test]
@@ -59,17 +60,17 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField(0xC400);
 
-            Assert.AreEqual(0x0, frameControl.ProtocolVersion);
-            Assert.AreEqual(FrameControlField.FrameTypes.Control, frameControl.Type);
-            Assert.AreEqual(FrameControlField.FrameSubTypes.ControlCts, frameControl.SubType);
-            Assert.IsFalse(frameControl.FromDS);
-            Assert.IsFalse(frameControl.Protected);
-            Assert.IsFalse(frameControl.ToDS);
-            Assert.IsFalse(frameControl.MoreFragments);
-            Assert.IsFalse(frameControl.Retry);
-            Assert.IsFalse(frameControl.PowerManagement);
-            Assert.IsFalse(frameControl.MoreData);
-            Assert.IsFalse(frameControl.Order);
+            ClassicAssert.AreEqual(0x0, frameControl.ProtocolVersion);
+            ClassicAssert.AreEqual(FrameControlField.FrameTypes.Control, frameControl.Type);
+            ClassicAssert.AreEqual(FrameControlField.FrameSubTypes.ControlCts, frameControl.SubType);
+            ClassicAssert.IsFalse(frameControl.FromDS);
+            ClassicAssert.IsFalse(frameControl.Protected);
+            ClassicAssert.IsFalse(frameControl.ToDS);
+            ClassicAssert.IsFalse(frameControl.MoreFragments);
+            ClassicAssert.IsFalse(frameControl.Retry);
+            ClassicAssert.IsFalse(frameControl.PowerManagement);
+            ClassicAssert.IsFalse(frameControl.MoreData);
+            ClassicAssert.IsFalse(frameControl.Order);
         }
 
         [Test]
@@ -77,18 +78,18 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField(0x0801);
 
-            Assert.AreEqual(0x0, frameControl.ProtocolVersion);
-            Assert.AreEqual(FrameControlField.FrameTypes.Data, frameControl.Type);
-            Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
+            ClassicAssert.AreEqual(0x0, frameControl.ProtocolVersion);
+            ClassicAssert.AreEqual(FrameControlField.FrameTypes.Data, frameControl.Type);
+            ClassicAssert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
 
-            Assert.IsTrue(frameControl.ToDS);
-            Assert.IsFalse(frameControl.FromDS);
-            Assert.IsFalse(frameControl.MoreFragments);
-            Assert.IsFalse(frameControl.Retry);
-            Assert.IsFalse(frameControl.PowerManagement);
-            Assert.IsFalse(frameControl.MoreData);
-            Assert.IsFalse(frameControl.Protected);
-            Assert.IsFalse(frameControl.Order);
+            ClassicAssert.IsTrue(frameControl.ToDS);
+            ClassicAssert.IsFalse(frameControl.FromDS);
+            ClassicAssert.IsFalse(frameControl.MoreFragments);
+            ClassicAssert.IsFalse(frameControl.Retry);
+            ClassicAssert.IsFalse(frameControl.PowerManagement);
+            ClassicAssert.IsFalse(frameControl.MoreData);
+            ClassicAssert.IsFalse(frameControl.Protected);
+            ClassicAssert.IsFalse(frameControl.Order);
         }
 
         [Test]
@@ -96,17 +97,17 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField(0xA01B);
 
-            Assert.AreEqual(0x0, frameControl.ProtocolVersion);
-            Assert.AreEqual(FrameControlField.FrameTypes.Management, frameControl.Type);
-            Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementDisassociation, frameControl.SubType);
-            Assert.IsTrue(frameControl.FromDS);
-            Assert.IsTrue(frameControl.ToDS);
-            Assert.IsFalse(frameControl.MoreFragments);
-            Assert.IsFalse(frameControl.MoreData);
-            Assert.IsFalse(frameControl.Protected);
-            Assert.IsTrue(frameControl.Retry);
-            Assert.IsTrue(frameControl.PowerManagement);
-            Assert.IsFalse(frameControl.Order);
+            ClassicAssert.AreEqual(0x0, frameControl.ProtocolVersion);
+            ClassicAssert.AreEqual(FrameControlField.FrameTypes.Management, frameControl.Type);
+            ClassicAssert.AreEqual(FrameControlField.FrameSubTypes.ManagementDisassociation, frameControl.SubType);
+            ClassicAssert.IsTrue(frameControl.FromDS);
+            ClassicAssert.IsTrue(frameControl.ToDS);
+            ClassicAssert.IsFalse(frameControl.MoreFragments);
+            ClassicAssert.IsFalse(frameControl.MoreData);
+            ClassicAssert.IsFalse(frameControl.Protected);
+            ClassicAssert.IsTrue(frameControl.Retry);
+            ClassicAssert.IsTrue(frameControl.PowerManagement);
+            ClassicAssert.IsFalse(frameControl.Order);
         }
 
         [Test]
@@ -114,18 +115,18 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField(0x0842);
 
-            Assert.AreEqual(0x0, frameControl.ProtocolVersion);
-            Assert.AreEqual(FrameControlField.FrameTypes.Data, frameControl.Type);
-            Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
-            Assert.IsTrue(frameControl.FromDS);
-            Assert.IsTrue(frameControl.Protected);
+            ClassicAssert.AreEqual(0x0, frameControl.ProtocolVersion);
+            ClassicAssert.AreEqual(FrameControlField.FrameTypes.Data, frameControl.Type);
+            ClassicAssert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
+            ClassicAssert.IsTrue(frameControl.FromDS);
+            ClassicAssert.IsTrue(frameControl.Protected);
 
-            Assert.IsFalse(frameControl.ToDS);
-            Assert.IsFalse(frameControl.MoreFragments);
-            Assert.IsFalse(frameControl.Retry);
-            Assert.IsFalse(frameControl.PowerManagement);
-            Assert.IsFalse(frameControl.MoreData);
-            Assert.IsFalse(frameControl.Order);
+            ClassicAssert.IsFalse(frameControl.ToDS);
+            ClassicAssert.IsFalse(frameControl.MoreFragments);
+            ClassicAssert.IsFalse(frameControl.Retry);
+            ClassicAssert.IsFalse(frameControl.PowerManagement);
+            ClassicAssert.IsFalse(frameControl.MoreData);
+            ClassicAssert.IsFalse(frameControl.Order);
         }
 
         [Test]
@@ -133,7 +134,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField { FromDS = true };
 
-            Assert.IsTrue(frameControl.FromDS);
+            ClassicAssert.IsTrue(frameControl.FromDS);
         }
 
         [Test]
@@ -141,7 +142,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField { MoreData = true };
 
-            Assert.IsTrue(frameControl.MoreData);
+            ClassicAssert.IsTrue(frameControl.MoreData);
         }
 
         [Test]
@@ -149,7 +150,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField { MoreFragments = true };
 
-            Assert.IsTrue(frameControl.MoreFragments);
+            ClassicAssert.IsTrue(frameControl.MoreFragments);
         }
 
         [Test]
@@ -157,7 +158,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField { Order = true };
 
-            Assert.IsTrue(frameControl.Order);
+            ClassicAssert.IsTrue(frameControl.Order);
         }
 
         [Test]
@@ -165,7 +166,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField { PowerManagement = true };
 
-            Assert.IsTrue(frameControl.PowerManagement);
+            ClassicAssert.IsTrue(frameControl.PowerManagement);
         }
 
         [Test]
@@ -173,26 +174,26 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField { ProtocolVersion = 3 };
 
-            Assert.AreEqual(3, frameControl.ProtocolVersion);
+            ClassicAssert.AreEqual(3, frameControl.ProtocolVersion);
 
             frameControl.ProtocolVersion = 2;
-            Assert.AreEqual(2, frameControl.ProtocolVersion);
+            ClassicAssert.AreEqual(2, frameControl.ProtocolVersion);
 
             frameControl.ProtocolVersion = 1;
-            Assert.AreEqual(1, frameControl.ProtocolVersion);
+            ClassicAssert.AreEqual(1, frameControl.ProtocolVersion);
 
             frameControl.ProtocolVersion = 0;
-            Assert.AreEqual(0, frameControl.ProtocolVersion);
+            ClassicAssert.AreEqual(0, frameControl.ProtocolVersion);
         }
 
         [Test]
         public void Test_SetProtocolVersionProperty_ValueTooLarge()
         {
-            var ex = Assert.Throws<ArgumentException>(
+            var ex = ClassicAssert.Throws<ArgumentException>(
                 () => { var _ = new FrameControlField { ProtocolVersion = 4 }; }
                 );
 
-            Assert.That(ex.Message, Is.EqualTo("Invalid protocol version value. Value must be in the range 0-3."));
+            ClassicAssert.That(ex.Message, Is.EqualTo("Invalid protocol version value. Value must be in the range 0-3."));
         }
 
         [Test]
@@ -200,7 +201,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField { Retry = true };
 
-            Assert.IsTrue(frameControl.Retry);
+            ClassicAssert.IsTrue(frameControl.Retry);
         }
 
         [Test]
@@ -208,7 +209,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField { ToDS = true };
 
-            Assert.IsTrue(frameControl.ToDS);
+            ClassicAssert.IsTrue(frameControl.ToDS);
         }
 
         [Test]
@@ -216,13 +217,13 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField { SubType = FrameControlField.FrameSubTypes.Data };
 
-            Assert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
+            ClassicAssert.AreEqual(FrameControlField.FrameSubTypes.Data, frameControl.SubType);
 
             frameControl.SubType = FrameControlField.FrameSubTypes.ManagementAuthentication;
-            Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementAuthentication, frameControl.SubType);
+            ClassicAssert.AreEqual(FrameControlField.FrameSubTypes.ManagementAuthentication, frameControl.SubType);
 
             frameControl.SubType = FrameControlField.FrameSubTypes.ControlAck;
-            Assert.AreEqual(FrameControlField.FrameSubTypes.ControlAck, frameControl.SubType);
+            ClassicAssert.AreEqual(FrameControlField.FrameSubTypes.ControlAck, frameControl.SubType);
         }
 
         [Test]
@@ -230,6 +231,6 @@ namespace Test.PacketType.Ieee80211;
         {
             var frameControl = new FrameControlField { Protected = true };
 
-            Assert.IsTrue(frameControl.Protected);
+            ClassicAssert.IsTrue(frameControl.Protected);
         }
     }

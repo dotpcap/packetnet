@@ -7,6 +7,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -27,23 +28,23 @@ namespace Test.PacketType;
             dev.Close();
 
             var ethernetPacket = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
-            Assert.IsNotNull(ethernetPacket);
-            Assert.AreEqual(typeof(EthernetPacket), ethernetPacket.GetType());
+            ClassicAssert.IsNotNull(ethernetPacket);
+            ClassicAssert.AreEqual(typeof(EthernetPacket), ethernetPacket.GetType());
 
             var ip4Packet = ethernetPacket.PayloadPacket;
-            Assert.IsNotNull(ip4Packet);
-            Assert.AreEqual(typeof(IPv4Packet), ip4Packet.GetType());
+            ClassicAssert.IsNotNull(ip4Packet);
+            ClassicAssert.AreEqual(typeof(IPv4Packet), ip4Packet.GetType());
 
             var udpPacket = ip4Packet.PayloadPacket;
-            Assert.IsNotNull(udpPacket);
-            Assert.AreEqual(typeof(UdpPacket), udpPacket.GetType());
+            ClassicAssert.IsNotNull(udpPacket);
+            ClassicAssert.AreEqual(typeof(UdpPacket), udpPacket.GetType());
 
             var tunneledIp6Packet = udpPacket.PayloadPacket;
-            Assert.IsNotNull(tunneledIp6Packet);
-            Assert.AreEqual(typeof(IPv6Packet), tunneledIp6Packet.GetType());
+            ClassicAssert.IsNotNull(tunneledIp6Packet);
+            ClassicAssert.AreEqual(typeof(IPv6Packet), tunneledIp6Packet.GetType());
 
             var tunneledTcpPacket = tunneledIp6Packet.PayloadPacket;
-            Assert.IsNotNull(tunneledTcpPacket);
-            Assert.AreEqual(typeof(IcmpV6Packet), tunneledTcpPacket.GetType());
+            ClassicAssert.IsNotNull(tunneledTcpPacket);
+            ClassicAssert.AreEqual(typeof(IcmpV6Packet), tunneledTcpPacket.GetType());
         }
     }

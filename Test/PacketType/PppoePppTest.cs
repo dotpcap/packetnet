@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -71,14 +72,14 @@ namespace Test.PacketType;
             var rawCapture = c.GetPacket();
             var packet = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var udpPacket = packet.Extract<UdpPacket>();
-            Assert.IsNotNull(udpPacket, "Expected a valid udp packet for the first packet");
+            ClassicAssert.IsNotNull(udpPacket, "Expected a valid udp packet for the first packet");
 
             // second packet is the PPPoe Ptp packet
             dev.GetNextPacket(out c);
             rawCapture = c.GetPacket();
             packet = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var anotherUdpPacket = packet.Extract<UdpPacket>();
-            Assert.IsNotNull(anotherUdpPacket, "Expected a valid udp packet for the second packet as well");
+            ClassicAssert.IsNotNull(anotherUdpPacket, "Expected a valid udp packet for the second packet as well");
 
             dev.Close();
         }

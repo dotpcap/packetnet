@@ -7,6 +7,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -28,7 +29,7 @@ namespace Test.PacketType.Ieee80211;
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
         }
 
         [Test]
@@ -43,6 +44,6 @@ namespace Test.PacketType.Ieee80211;
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
         }
     }

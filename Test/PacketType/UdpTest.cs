@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using PacketDotNet.Utils;
 using SharpPcap;
@@ -44,20 +45,20 @@ namespace Test.PacketType;
             // now reparse the packet again
             var udpPacket2 = new UdpPacket(new ByteArraySegment(packetBytes));
 
-            Assert.AreEqual(sourcePort, udpPacket.SourcePort);
-            Assert.AreEqual(destinationPort, udpPacket.DestinationPort);
+            ClassicAssert.AreEqual(sourcePort, udpPacket.SourcePort);
+            ClassicAssert.AreEqual(destinationPort, udpPacket.DestinationPort);
 
             Console.WriteLine("udpPacket.Length {0}", udpPacket.Length);
             udpPacket.PayloadData = dataBytes;
 
-            Assert.AreEqual(sourcePort, udpPacket.SourcePort);
-            Assert.AreEqual(destinationPort, udpPacket.DestinationPort);
+            ClassicAssert.AreEqual(sourcePort, udpPacket.SourcePort);
+            ClassicAssert.AreEqual(destinationPort, udpPacket.DestinationPort);
 
             // make sure the data matches up
-            Assert.AreEqual(dataBytes, udpPacket2.PayloadData, "PayloadData mismatch");
+            ClassicAssert.AreEqual(dataBytes, udpPacket2.PayloadData, "PayloadData mismatch");
 
             // and make sure the length is what we expect
-            Assert.AreEqual(dataBytes.Length + UdpFields.HeaderLength, udpPacket2.Length);
+            ClassicAssert.AreEqual(dataBytes.Length + UdpFields.HeaderLength, udpPacket2.Length);
         }
 
         [Test]
@@ -137,11 +138,11 @@ namespace Test.PacketType;
                 var rawCapture = c.GetPacket();
                 var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
                 var t = p.Extract<UdpPacket>();
-                Assert.IsNotNull(t, "Expected t to not be null");
-                Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
+                ClassicAssert.IsNotNull(t, "Expected t to not be null");
+                ClassicAssert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
 
                 // compare the computed checksum to the expected one
-                Assert.AreEqual(expectedChecksum[packetIndex],
+                ClassicAssert.AreEqual(expectedChecksum[packetIndex],
                                 t.CalculateUdpChecksum(),
                                 "Checksum mismatch");
 
@@ -167,11 +168,11 @@ namespace Test.PacketType;
             var rawCapture = c.GetPacket();
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
 
             var u = p.Extract<UdpPacket>();
-            Assert.IsNotNull(u, "Expected a non-null UdpPacket");
-            Assert.AreEqual(41 - u.HeaderData.Length,
+            ClassicAssert.IsNotNull(u, "Expected a non-null UdpPacket");
+            ClassicAssert.AreEqual(41 - u.HeaderData.Length,
                             u.PayloadData.Length,
                             "UDPData.Length mismatch");
 
@@ -180,11 +181,11 @@ namespace Test.PacketType;
             rawCapture = c.GetPacket();
             p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
 
             u = p.Extract<UdpPacket>();
-            Assert.IsNotNull(u, "Expected u to be a UdpPacket");
-            Assert.AreEqual(356 - u.HeaderData.Length,
+            ClassicAssert.IsNotNull(u, "Expected u to be a UdpPacket");
+            ClassicAssert.AreEqual(356 - u.HeaderData.Length,
                             u.PayloadData.Length,
                             "UDPData.Length mismatch");
 
@@ -212,11 +213,11 @@ namespace Test.PacketType;
                 Console.WriteLine("Converted a raw packet to a Packet");
                 Console.WriteLine(p.ToString());
                 var udp = p.Extract<UdpPacket>();
-                Assert.IsNotNull(udp, "Expected u to not be null");
-                Assert.IsTrue(udp.ValidChecksum, "u.ValidChecksum isn't true");
+                ClassicAssert.IsNotNull(udp, "Expected u to not be null");
+                ClassicAssert.IsTrue(udp.ValidChecksum, "u.ValidChecksum isn't true");
 
                 // compare the computed checksum to the expected one
-                Assert.AreEqual(expectedChecksum[packetIndex],
+                ClassicAssert.AreEqual(expectedChecksum[packetIndex],
                                 udp.CalculateUdpChecksum(),
                                 "Checksum mismatch");
 

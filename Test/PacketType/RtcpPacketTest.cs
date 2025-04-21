@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -43,25 +44,25 @@ namespace Test.PacketType;
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
 
             var rtcpContainer = p.Extract<RtcpContainerPacket>();
-            Assert.IsNotNull(rtcpContainer);
+            ClassicAssert.IsNotNull(rtcpContainer);
             Console.WriteLine(rtcpContainer.GetType());
-            Assert.IsFalse(rtcpContainer.HasPayloadData);
-            Assert.IsFalse(rtcpContainer.HasPayloadPacket);
+            ClassicAssert.IsFalse(rtcpContainer.HasPayloadData);
+            ClassicAssert.IsFalse(rtcpContainer.HasPayloadPacket);
 
-            Assert.AreEqual(1,rtcpContainer.Packets.Count);
+            ClassicAssert.AreEqual(1,rtcpContainer.Packets.Count);
             var rtcp = rtcpContainer.Packets[0];
-            Assert.IsTrue(rtcp.IsValid());
-            Assert.AreEqual(2, rtcp.Version);
-            Assert.IsFalse(rtcp.HasPadding);
-            Assert.AreEqual(1, rtcp.ReceptionReportCount);
-            Assert.AreEqual(RtcpFields.GoodbyeType, rtcp.PacketType);
-            Assert.AreEqual(1, rtcp.Length);
-            Assert.AreEqual(1199516466, rtcp.SsrcIdentifier);
-            Assert.IsFalse(rtcp.HasPayloadData);
-            Assert.IsFalse(rtcp.HasPayloadPacket);
+            ClassicAssert.IsTrue(rtcp.IsValid());
+            ClassicAssert.AreEqual(2, rtcp.Version);
+            ClassicAssert.IsFalse(rtcp.HasPadding);
+            ClassicAssert.AreEqual(1, rtcp.ReceptionReportCount);
+            ClassicAssert.AreEqual(RtcpFields.GoodbyeType, rtcp.PacketType);
+            ClassicAssert.AreEqual(1, rtcp.Length);
+            ClassicAssert.AreEqual(1199516466, rtcp.SsrcIdentifier);
+            ClassicAssert.IsFalse(rtcp.HasPayloadData);
+            ClassicAssert.IsFalse(rtcp.HasPayloadPacket);
         }
 
         // RTCP
@@ -90,38 +91,38 @@ namespace Test.PacketType;
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
 
             var rtcpContainer = p.Extract<RtcpContainerPacket>();
-            Assert.IsNotNull(rtcpContainer);
+            ClassicAssert.IsNotNull(rtcpContainer);
             Console.WriteLine(rtcpContainer.GetType());
-            Assert.IsFalse(rtcpContainer.HasPayloadData);
-            Assert.IsFalse(rtcpContainer.HasPayloadPacket);
+            ClassicAssert.IsFalse(rtcpContainer.HasPayloadData);
+            ClassicAssert.IsFalse(rtcpContainer.HasPayloadPacket);
 
-            Assert.AreEqual(2,rtcpContainer.Packets.Count);
+            ClassicAssert.AreEqual(2,rtcpContainer.Packets.Count);
             var rtcp = rtcpContainer.Packets[0];
-            Assert.IsTrue(rtcp.IsValid());
-            Assert.AreEqual(2, rtcp.Version);
-            Assert.IsFalse(rtcp.HasPadding);
-            Assert.AreEqual(0, rtcp.ReceptionReportCount);
-            Assert.AreEqual(RtcpFields.SenderReportType, rtcp.PacketType);
-            Assert.AreEqual(6, rtcp.Length);
-            Assert.AreEqual(899629540, rtcp.SsrcIdentifier);
-            Assert.IsTrue(rtcp.HasPayloadData);
-            Assert.IsFalse(rtcp.HasPayloadPacket);
+            ClassicAssert.IsTrue(rtcp.IsValid());
+            ClassicAssert.AreEqual(2, rtcp.Version);
+            ClassicAssert.IsFalse(rtcp.HasPadding);
+            ClassicAssert.AreEqual(0, rtcp.ReceptionReportCount);
+            ClassicAssert.AreEqual(RtcpFields.SenderReportType, rtcp.PacketType);
+            ClassicAssert.AreEqual(6, rtcp.Length);
+            ClassicAssert.AreEqual(899629540, rtcp.SsrcIdentifier);
+            ClassicAssert.IsTrue(rtcp.HasPayloadData);
+            ClassicAssert.IsFalse(rtcp.HasPayloadPacket);
 
             var nextRtcp = rtcpContainer.Packets[1];
-            Assert.IsNotNull(nextRtcp);
+            ClassicAssert.IsNotNull(nextRtcp);
             Console.WriteLine(nextRtcp.GetType());
-            Assert.IsTrue(nextRtcp.IsValid());
-            Assert.AreEqual(2, nextRtcp.Version);
-            Assert.IsFalse(nextRtcp.HasPadding);
-            Assert.AreEqual(1, nextRtcp.ReceptionReportCount);
-            Assert.AreEqual(RtcpFields.SourceDescriptionType, nextRtcp.PacketType);
-            Assert.AreEqual(6, nextRtcp.Length);
-            Assert.AreEqual(899629540, nextRtcp.SsrcIdentifier);
-            Assert.IsTrue(nextRtcp.HasPayloadData);
-            Assert.IsFalse(nextRtcp.HasPayloadPacket);
+            ClassicAssert.IsTrue(nextRtcp.IsValid());
+            ClassicAssert.AreEqual(2, nextRtcp.Version);
+            ClassicAssert.IsFalse(nextRtcp.HasPadding);
+            ClassicAssert.AreEqual(1, nextRtcp.ReceptionReportCount);
+            ClassicAssert.AreEqual(RtcpFields.SourceDescriptionType, nextRtcp.PacketType);
+            ClassicAssert.AreEqual(6, nextRtcp.Length);
+            ClassicAssert.AreEqual(899629540, nextRtcp.SsrcIdentifier);
+            ClassicAssert.IsTrue(nextRtcp.HasPayloadData);
+            ClassicAssert.IsFalse(nextRtcp.HasPayloadPacket);
         }
 
         [Test]
@@ -142,19 +143,19 @@ namespace Test.PacketType;
                 Timestamp = 1200,
                 SsrcIdentifier = 899629540
             };
-            Assert.IsNotNull(rtp);
-            Assert.AreEqual(2, rtp.Version);
-            Assert.IsFalse(rtp.HasPadding);
-            Assert.IsFalse(rtp.HasExtension);
-            Assert.AreEqual(3, rtp.CsrcCount);
-            Assert.IsTrue(rtp.Marker);
-            Assert.AreEqual(112, rtp.PayloadType);
-            Assert.AreEqual(1234, rtp.SequenceNumber);
-            Assert.AreEqual(1200, rtp.Timestamp);
-            Assert.AreEqual(899629540, rtp.SsrcIdentifier);
-            Assert.AreEqual(0, rtp.ExtensionHeaderLength);
-            Assert.IsTrue(rtp.HasPayloadData);
-            Assert.IsNotNull(rtp.PayloadData);
-            Assert.AreEqual(12, rtp.PayloadData.Length);
+            ClassicAssert.IsNotNull(rtp);
+            ClassicAssert.AreEqual(2, rtp.Version);
+            ClassicAssert.IsFalse(rtp.HasPadding);
+            ClassicAssert.IsFalse(rtp.HasExtension);
+            ClassicAssert.AreEqual(3, rtp.CsrcCount);
+            ClassicAssert.IsTrue(rtp.Marker);
+            ClassicAssert.AreEqual(112, rtp.PayloadType);
+            ClassicAssert.AreEqual(1234, rtp.SequenceNumber);
+            ClassicAssert.AreEqual(1200, rtp.Timestamp);
+            ClassicAssert.AreEqual(899629540, rtp.SsrcIdentifier);
+            ClassicAssert.AreEqual(0, rtp.ExtensionHeaderLength);
+            ClassicAssert.IsTrue(rtp.HasPayloadData);
+            ClassicAssert.IsNotNull(rtp.PayloadData);
+            ClassicAssert.AreEqual(12, rtp.PayloadData.Length);
         }
     }

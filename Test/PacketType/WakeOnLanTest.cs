@@ -13,6 +13,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System;
 using System.Net.NetworkInformation;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using PacketDotNet.Utils;
 using SharpPcap;
@@ -29,8 +30,8 @@ namespace Test.PacketType;
             var physicalAddress = PhysicalAddress.Parse("CA-FE-BA-BE-C0-01");
             var wol = new WakeOnLanPacket(physicalAddress);
 
-            Assert.IsTrue(wol.IsValid());
-            Assert.AreEqual(wol.DestinationAddress, physicalAddress);
+            ClassicAssert.IsTrue(wol.IsValid());
+            ClassicAssert.AreEqual(wol.DestinationAddress, physicalAddress);
 
             // convert the wol packet back into bytes
             var wolBytes = wol.Bytes;
@@ -39,7 +40,7 @@ namespace Test.PacketType;
             var wol2 = new WakeOnLanPacket(new ByteArraySegment(wolBytes));
 
             // make sure the packets match
-            Assert.AreEqual(wol, wol2);
+            ClassicAssert.AreEqual(wol, wol2);
         }
 
         [Test]
@@ -100,16 +101,16 @@ namespace Test.PacketType;
                 var rawCapture = c.GetPacket();
 
                 var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
-                Assert.IsNotNull(p);
+                ClassicAssert.IsNotNull(p);
 
                 var wol = p.Extract<WakeOnLanPacket>();
-                Assert.IsNotNull(p);
+                ClassicAssert.IsNotNull(p);
 
                 if (packetIndex == 0)
-                    Assert.AreEqual(wol.DestinationAddress, PhysicalAddress.Parse("00-0D-56-DC-9E-35"));
+                    ClassicAssert.AreEqual(wol.DestinationAddress, PhysicalAddress.Parse("00-0D-56-DC-9E-35"));
 
                 if (packetIndex == 3)
-                    Assert.AreEqual(wol.DestinationAddress, PhysicalAddress.Parse("00-90-27-85-CF-01"));
+                    ClassicAssert.AreEqual(wol.DestinationAddress, PhysicalAddress.Parse("00-90-27-85-CF-01"));
 
                 packetIndex++;
             }
@@ -132,19 +133,19 @@ namespace Test.PacketType;
                 var rawCapture = c.GetPacket();
 
                 var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
-                Assert.IsNotNull(p);
+                ClassicAssert.IsNotNull(p);
 
                 var wol = p.Extract<WakeOnLanPacket>();
-                Assert.IsNotNull(p);
+                ClassicAssert.IsNotNull(p);
 
                 if (packetIndex == 0|| packetIndex == 3)
-                    Assert.AreEqual(wol.Password, Array.Empty<byte>());
+                    ClassicAssert.AreEqual(wol.Password, Array.Empty<byte>());
 
                 if (packetIndex == 1)
-                    Assert.AreEqual(wol.Password, new byte[] { 0xc0, 0xa8, 0x01, 0x01 });
+                    ClassicAssert.AreEqual(wol.Password, new byte[] { 0xc0, 0xa8, 0x01, 0x01 });
 
                 if (packetIndex == 2)
-                    Assert.AreEqual(wol.Password, new byte[] { 0x01, 0x23, 0x45, 0x67, 0x89, 0xab });
+                    ClassicAssert.AreEqual(wol.Password, new byte[] { 0x01, 0x23, 0x45, 0x67, 0x89, 0xab });
                 
                 packetIndex++;
             }

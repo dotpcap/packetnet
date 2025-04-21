@@ -12,6 +12,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using PacketDotNet.Utils;
 using SharpPcap;
@@ -25,61 +26,61 @@ namespace Test.PacketType;
         // icmpv6
         public void VerifyPacket0(Packet p, RawCapture rawCapture, LinkLayers linkLayers)
         {
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
             Console.WriteLine(p.ToString());
 
-            Assert.AreEqual(linkLayers, rawCapture.GetLinkLayers());
+            ClassicAssert.AreEqual(linkLayers, rawCapture.GetLinkLayers());
 
             if (linkLayers == LinkLayers.Ethernet)
             {
                 var e = (EthernetPacket) p;
-                Assert.AreEqual(PhysicalAddress.Parse("00-A0-CC-D9-41-75"), e.SourceHardwareAddress);
-                Assert.AreEqual(PhysicalAddress.Parse("33-33-00-00-00-02"), e.DestinationHardwareAddress);
+                ClassicAssert.AreEqual(PhysicalAddress.Parse("00-A0-CC-D9-41-75"), e.SourceHardwareAddress);
+                ClassicAssert.AreEqual(PhysicalAddress.Parse("33-33-00-00-00-02"), e.DestinationHardwareAddress);
             }
 
             var ip = p.Extract<IPPacket>();
             Console.WriteLine("ip {0}", ip);
-            Assert.AreEqual(IPAddress.Parse("fe80::2a0:ccff:fed9:4175"), ip.SourceAddress);
-            Assert.AreEqual(IPAddress.Parse("ff02::2"), ip.DestinationAddress);
-            Assert.AreEqual(IPVersion.IPv6, ip.Version);
-            Assert.AreEqual(ProtocolType.IcmpV6, ip.Protocol);
-            Assert.AreEqual(20, ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
-            Assert.AreEqual(255, ip.HopLimit);
-            Assert.AreEqual(255, ip.TimeToLive);
+            ClassicAssert.AreEqual(IPAddress.Parse("fe80::2a0:ccff:fed9:4175"), ip.SourceAddress);
+            ClassicAssert.AreEqual(IPAddress.Parse("ff02::2"), ip.DestinationAddress);
+            ClassicAssert.AreEqual(IPVersion.IPv6, ip.Version);
+            ClassicAssert.AreEqual(ProtocolType.IcmpV6, ip.Protocol);
+            ClassicAssert.AreEqual(20, ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
+            ClassicAssert.AreEqual(255, ip.HopLimit);
+            ClassicAssert.AreEqual(255, ip.TimeToLive);
             Console.WriteLine("Failed: ip.ComputeIPChecksum() not implemented.");
-            Assert.AreEqual(1221145299, rawCapture.Timeval.Seconds);
-            Assert.AreEqual(453568.000, rawCapture.Timeval.MicroSeconds);
+            ClassicAssert.AreEqual(1221145299, rawCapture.Timeval.Seconds);
+            ClassicAssert.AreEqual(453568.000, rawCapture.Timeval.MicroSeconds);
         }
 
         public void VerifyPacket1(Packet p, RawCapture rawCapture, LinkLayers linkLayers)
         {
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
             Console.WriteLine(p.ToString());
 
-            Assert.AreEqual(linkLayers, rawCapture.GetLinkLayers());
+            ClassicAssert.AreEqual(linkLayers, rawCapture.GetLinkLayers());
 
             if (linkLayers == LinkLayers.Ethernet)
             {
                 var e = (EthernetPacket) p;
-                Assert.AreEqual(PhysicalAddress.Parse("F894C22EFAD1"), e.SourceHardwareAddress);
-                Assert.AreEqual(PhysicalAddress.Parse("333300000016"), e.DestinationHardwareAddress);
+                ClassicAssert.AreEqual(PhysicalAddress.Parse("F894C22EFAD1"), e.SourceHardwareAddress);
+                ClassicAssert.AreEqual(PhysicalAddress.Parse("333300000016"), e.DestinationHardwareAddress);
             }
 
             var ip = p.Extract<IPv6Packet>();
             Console.WriteLine("ip {0}", ip);
-            Assert.AreEqual(IPAddress.Parse("fe80::d802:3589:15cf:3128"), ip.SourceAddress);
-            Assert.AreEqual(IPAddress.Parse("ff02::16"), ip.DestinationAddress);
-            Assert.AreEqual(IPVersion.IPv6, ip.Version);
-            Assert.AreEqual(ProtocolType.IcmpV6, ip.Protocol);
-            Assert.AreEqual(28, ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
-            Assert.AreEqual(1, ip.HopLimit);
-            Assert.AreEqual(1, ip.TimeToLive);
-            Assert.AreEqual(0x3a, (byte) ip.Protocol);
+            ClassicAssert.AreEqual(IPAddress.Parse("fe80::d802:3589:15cf:3128"), ip.SourceAddress);
+            ClassicAssert.AreEqual(IPAddress.Parse("ff02::16"), ip.DestinationAddress);
+            ClassicAssert.AreEqual(IPVersion.IPv6, ip.Version);
+            ClassicAssert.AreEqual(ProtocolType.IcmpV6, ip.Protocol);
+            ClassicAssert.AreEqual(28, ip.PayloadPacket.Bytes.Length, "ip.PayloadPacket.Bytes.Length mismatch");
+            ClassicAssert.AreEqual(1, ip.HopLimit);
+            ClassicAssert.AreEqual(1, ip.TimeToLive);
+            ClassicAssert.AreEqual(0x3a, (byte) ip.Protocol);
             Console.WriteLine("Failed: ip.ComputeIPChecksum() not implemented.");
-            Assert.AreEqual(1543415539, rawCapture.Timeval.Seconds);
-            Assert.AreEqual(841441.000, rawCapture.Timeval.MicroSeconds);
-            Assert.AreEqual(1, ip.ExtensionHeaders.Count);
-            Assert.AreEqual(6, ip.ExtensionHeaders[0].Payload.Length);
+            ClassicAssert.AreEqual(1543415539, rawCapture.Timeval.Seconds);
+            ClassicAssert.AreEqual(841441.000, rawCapture.Timeval.MicroSeconds);
+            ClassicAssert.AreEqual(1, ip.ExtensionHeaders.Count);
+            ClassicAssert.AreEqual(6, ip.ExtensionHeaders[0].Payload.Length);
         }
 
         // Test that we can load and parse an IPv6 packet
@@ -108,7 +109,7 @@ namespace Test.PacketType;
                     }
                     default:
                     {
-                        Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
+                        ClassicAssert.Fail("didn't expect to get to packetIndex " + packetIndex);
                         break;
                     }
                 }
@@ -142,7 +143,7 @@ namespace Test.PacketType;
                     }
                     default:
                     {
-                        Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
+                        ClassicAssert.Fail("didn't expect to get to packetIndex " + packetIndex);
                         break;
                     }
                 }
@@ -160,8 +161,8 @@ namespace Test.PacketType;
             var destinationAddress = RandomUtils.GetIPAddress(IPVersion.IPv6);
             var ipPacket = new IPv6Packet(sourceAddress, destinationAddress);
 
-            Assert.AreEqual(sourceAddress, ipPacket.SourceAddress);
-            Assert.AreEqual(destinationAddress, ipPacket.DestinationAddress);
+            ClassicAssert.AreEqual(sourceAddress, ipPacket.SourceAddress);
+            ClassicAssert.AreEqual(destinationAddress, ipPacket.DestinationAddress);
         }
 
         [Test]
@@ -241,11 +242,11 @@ namespace Test.PacketType;
                 var rawCapture = c.GetPacket();
                 var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
                 var t = p.Extract<TcpPacket>();
-                Assert.IsNotNull(t, "Expected t to not be null");
-                Assert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
+                ClassicAssert.IsNotNull(t, "Expected t to not be null");
+                ClassicAssert.IsTrue(t.ValidChecksum, "t.ValidChecksum isn't true");
 
                 // compare the computed checksum to the expected one
-                Assert.AreEqual(expectedChecksum[packetIndex],
+                ClassicAssert.AreEqual(expectedChecksum[packetIndex],
                                 t.CalculateTcpChecksum(),
                                 "Checksum mismatch");
 
@@ -269,6 +270,6 @@ namespace Test.PacketType;
             p.PayloadData = data;
 
             //sanity check
-            Assert.AreEqual(s, System.Text.Encoding.Default.GetString(p.PayloadData));
+            ClassicAssert.AreEqual(s, System.Text.Encoding.Default.GetString(p.PayloadData));
         }
     }

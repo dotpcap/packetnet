@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -19,14 +20,14 @@ namespace Test.PacketType;
     {
         private static void VerifyPacket0(Packet p)
         {
-            Assert.AreEqual(p.PayloadPacket.GetType(), typeof(IPv4Packet));
-            Assert.AreEqual(p.PayloadPacket.PayloadPacket.GetType(), typeof(TcpPacket));
+            ClassicAssert.AreEqual(p.PayloadPacket.GetType(), typeof(IPv4Packet));
+            ClassicAssert.AreEqual(p.PayloadPacket.PayloadPacket.GetType(), typeof(TcpPacket));
         }
 
         private static void VerifyPacket1(Packet p)
         {
-            Assert.AreEqual(p.PayloadPacket.GetType(), typeof(IPv6Packet));
-            Assert.AreEqual(p.PayloadPacket.PayloadPacket.GetType(), typeof(TcpPacket));
+            ClassicAssert.AreEqual(p.PayloadPacket.GetType(), typeof(IPv6Packet));
+            ClassicAssert.AreEqual(p.PayloadPacket.PayloadPacket.GetType(), typeof(TcpPacket));
         }
 
         [Test]
@@ -57,7 +58,7 @@ namespace Test.PacketType;
                     }
                     default:
                     {
-                        Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
+                        ClassicAssert.Fail("didn't expect to get to packetIndex " + packetIndex);
                         break;
                     }
                 }

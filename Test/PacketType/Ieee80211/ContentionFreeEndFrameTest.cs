@@ -11,6 +11,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Net.NetworkInformation;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
@@ -38,22 +39,22 @@ namespace Test.PacketType.Ieee80211;
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var frame = (ContentionFreeEndFrame) p.PayloadPacket;
 
-            Assert.AreEqual(0, frame.FrameControl.ProtocolVersion);
-            Assert.AreEqual(FrameControlField.FrameSubTypes.ControlCFEnd, frame.FrameControl.SubType);
-            Assert.IsFalse(frame.FrameControl.ToDS);
-            Assert.IsFalse(frame.FrameControl.FromDS);
-            Assert.IsFalse(frame.FrameControl.MoreFragments);
-            Assert.IsFalse(frame.FrameControl.Retry);
-            Assert.IsFalse(frame.FrameControl.PowerManagement);
-            Assert.IsFalse(frame.FrameControl.MoreData);
-            Assert.IsFalse(frame.FrameControl.Protected);
-            Assert.IsTrue(frame.FrameControl.Order);
-            Assert.AreEqual(0, frame.Duration.Field); //this need expanding on in the future
-            Assert.AreEqual("FFFFFFFFFFFF", frame.ReceiverAddress.ToString().ToUpper());
-            Assert.AreEqual("001B2FDCFC12", frame.BssId.ToString().ToUpper());
+            ClassicAssert.AreEqual(0, frame.FrameControl.ProtocolVersion);
+            ClassicAssert.AreEqual(FrameControlField.FrameSubTypes.ControlCFEnd, frame.FrameControl.SubType);
+            ClassicAssert.IsFalse(frame.FrameControl.ToDS);
+            ClassicAssert.IsFalse(frame.FrameControl.FromDS);
+            ClassicAssert.IsFalse(frame.FrameControl.MoreFragments);
+            ClassicAssert.IsFalse(frame.FrameControl.Retry);
+            ClassicAssert.IsFalse(frame.FrameControl.PowerManagement);
+            ClassicAssert.IsFalse(frame.FrameControl.MoreData);
+            ClassicAssert.IsFalse(frame.FrameControl.Protected);
+            ClassicAssert.IsTrue(frame.FrameControl.Order);
+            ClassicAssert.AreEqual(0, frame.Duration.Field); //this need expanding on in the future
+            ClassicAssert.AreEqual("FFFFFFFFFFFF", frame.ReceiverAddress.ToString().ToUpper());
+            ClassicAssert.AreEqual("001B2FDCFC12", frame.BssId.ToString().ToUpper());
 
-            Assert.AreEqual(0x0AE8A403, frame.FrameCheckSequence);
-            Assert.AreEqual(16, frame.FrameSize);
+            ClassicAssert.AreEqual(0x0AE8A403, frame.FrameCheckSequence);
+            ClassicAssert.AreEqual(16, frame.FrameSize);
         }
 
         [Test]
@@ -76,16 +77,16 @@ namespace Test.PacketType.Ieee80211;
             var recreatedFrame = MacFrame.ParsePacket(byteArraySegment) as ContentionFreeEndFrame;
             recreatedFrame.UpdateFrameCheckSequence();
 
-            Assert.AreEqual(FrameControlField.FrameSubTypes.ControlCFEnd, recreatedFrame.FrameControl.SubType);
-            Assert.IsFalse(recreatedFrame.FrameControl.ToDS);
-            Assert.IsTrue(recreatedFrame.FrameControl.FromDS);
-            Assert.IsTrue(recreatedFrame.FrameControl.MoreFragments);
-            Assert.AreEqual(0x1234, recreatedFrame.Duration.Field);
+            ClassicAssert.AreEqual(FrameControlField.FrameSubTypes.ControlCFEnd, recreatedFrame.FrameControl.SubType);
+            ClassicAssert.IsFalse(recreatedFrame.FrameControl.ToDS);
+            ClassicAssert.IsTrue(recreatedFrame.FrameControl.FromDS);
+            ClassicAssert.IsTrue(recreatedFrame.FrameControl.MoreFragments);
+            ClassicAssert.AreEqual(0x1234, recreatedFrame.Duration.Field);
 
-            Assert.AreEqual("111111111111", recreatedFrame.ReceiverAddress.ToString().ToUpper());
-            Assert.AreEqual("222222222222", recreatedFrame.BssId.ToString().ToUpper());
+            ClassicAssert.AreEqual("111111111111", recreatedFrame.ReceiverAddress.ToString().ToUpper());
+            ClassicAssert.AreEqual("222222222222", recreatedFrame.BssId.ToString().ToUpper());
 
-            Assert.AreEqual(fcs, recreatedFrame.FrameCheckSequence);
+            ClassicAssert.AreEqual(fcs, recreatedFrame.FrameCheckSequence);
         }
 
         [Test]
@@ -94,6 +95,6 @@ namespace Test.PacketType.Ieee80211;
             //buffer is way too short for frame. We are just checking it doesn't throw
             byte[] corruptBuffer = { 0x01 };
             var frame = new ContentionFreeEndFrame(new ByteArraySegment(corruptBuffer));
-            Assert.IsFalse(frame.FcsValid);
+            ClassicAssert.IsFalse(frame.FcsValid);
         }
     }

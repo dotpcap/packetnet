@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -31,57 +32,57 @@ namespace Test.PacketType;
             dev.Close();
 
             LinkLayers linkLayers = rawCapture.GetLinkLayers();
-            Assert.AreEqual(LinkLayers.Ethernet, linkLayers);
+            ClassicAssert.AreEqual(LinkLayers.Ethernet, linkLayers);
             Console.WriteLine("Linklayer is ethernet");
 
             // Linklayer
             Packet p = Packet.ParsePacket(linkLayers, rawCapture.Data);
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
 
             // Ethernet
             EthernetPacket eth = p.Extract<EthernetPacket>();
-            Assert.IsNotNull(eth);
-            Assert.AreEqual(EthernetType.IPv4, eth.Type);
+            ClassicAssert.IsNotNull(eth);
+            ClassicAssert.AreEqual(EthernetType.IPv4, eth.Type);
             Console.WriteLine("IPv4 inside ethernet");
 
             // IPv4
             IPv4Packet ipv4 = eth.Extract<IPv4Packet>();
-            Assert.IsNotNull(ipv4);
-            Assert.AreEqual(ProtocolType.Gre, ipv4.Protocol);
+            ClassicAssert.IsNotNull(ipv4);
+            ClassicAssert.AreEqual(ProtocolType.Gre, ipv4.Protocol);
             Console.WriteLine("GRE inside IPv4");
 
             // Gre
             GrePacket grep = ipv4.Extract<GrePacket>();
-            Assert.IsNotNull(grep);
+            ClassicAssert.IsNotNull(grep);
 
             // String output
             Console.WriteLine(grep.ToString());
 
             // Get header
-            Assert.AreEqual(false, grep.HasCheckSum);
-            Assert.AreEqual(true, grep.HasKey);
-            Assert.AreEqual(false, grep.HasSequence);
-            Assert.AreEqual(EthernetType.TransparentEthernetBridging, grep.Protocol);
+            ClassicAssert.AreEqual(false, grep.HasCheckSum);
+            ClassicAssert.AreEqual(true, grep.HasKey);
+            ClassicAssert.AreEqual(false, grep.HasSequence);
+            ClassicAssert.AreEqual(EthernetType.TransparentEthernetBridging, grep.Protocol);
             Console.WriteLine("Transparent Ethernet Bridging over GRE");
 
             // Inner Ethernet
             EthernetPacket innerEth = grep.Extract<EthernetPacket>();
-            Assert.IsNotNull(innerEth);
-            Assert.AreEqual(EthernetType.IPv4, innerEth.Type);
+            ClassicAssert.IsNotNull(innerEth);
+            ClassicAssert.AreEqual(EthernetType.IPv4, innerEth.Type);
             Console.WriteLine("inner IPv4 inside inner ethernet");
 
             // Inner IPv4
             IPv4Packet innerIpv4 = innerEth.Extract<IPv4Packet>();
-            Assert.IsNotNull(innerIpv4);
-            Assert.AreEqual(ProtocolType.Tcp, innerIpv4.Protocol);
+            ClassicAssert.IsNotNull(innerIpv4);
+            ClassicAssert.AreEqual(ProtocolType.Tcp, innerIpv4.Protocol);
             Console.WriteLine("TCP inside inner IPv4");
 
             // Inner TCP
             TcpPacket innerTcp = innerIpv4.Extract<TcpPacket>();
-            Assert.IsNotNull(innerTcp);
-            Assert.IsNotNull(innerTcp.PayloadData);
-            Assert.AreEqual(2, innerTcp.PayloadData.Length);
-            Assert.AreEqual(0xab, innerTcp.PayloadData[0]);
-            Assert.AreEqual(0xcd, innerTcp.PayloadData[1]);
+            ClassicAssert.IsNotNull(innerTcp);
+            ClassicAssert.IsNotNull(innerTcp.PayloadData);
+            ClassicAssert.AreEqual(2, innerTcp.PayloadData.Length);
+            ClassicAssert.AreEqual(0xab, innerTcp.PayloadData[0]);
+            ClassicAssert.AreEqual(0xcd, innerTcp.PayloadData[1]);
         }
     }

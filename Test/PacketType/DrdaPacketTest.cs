@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Collections.Generic;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using PacketDotNet.Utils.Converters;
 using SharpPcap;
@@ -97,26 +98,26 @@ namespace Test.PacketType;
         [Test]
         public void TestAccrdbPacket()
         {
-            Assert.IsNotNull(_accrdbPacket);
-            Assert.IsNotNull(_accrdbPacket.Parameters);
-            Assert.AreEqual(DrdaCodePointType.AccessRdb, _accrdbPacket.CodePoint);
+            ClassicAssert.IsNotNull(_accrdbPacket);
+            ClassicAssert.IsNotNull(_accrdbPacket.Parameters);
+            ClassicAssert.AreEqual(DrdaCodePointType.AccessRdb, _accrdbPacket.CodePoint);
             foreach (var parameter in _accrdbPacket.Parameters)
             {
                 switch (parameter.DrdaCodepoint)
                 {
                     case DrdaCodePointType.RelationalDatabaseName:
                     {
-                        Assert.AreEqual("SAMPLE", parameter.Data);
+                        ClassicAssert.AreEqual("SAMPLE", parameter.Data);
                         break;
                     }
                     case DrdaCodePointType.ProductSpecificIdentifier:
                     {
-                        Assert.AreEqual("JCC03670", parameter.Data);
+                        ClassicAssert.AreEqual("JCC03670", parameter.Data);
                         break;
                     }
                     case DrdaCodePointType.DataTypeDefinitionName:
                     {
-                        Assert.AreEqual("QTDSQLASC", parameter.Data);
+                        ClassicAssert.AreEqual("QTDSQLASC", parameter.Data);
                         break;
                     }
                 }
@@ -126,31 +127,31 @@ namespace Test.PacketType;
         [Test]
         public void TestExcsatPacket()
         {
-            Assert.IsNotNull(_excsatPacket);
-            Assert.IsNotNull(_excsatPacket.Parameters);
-            Assert.AreEqual(DrdaCodePointType.ExchangeServerAttributes, _excsatPacket.CodePoint);
+            ClassicAssert.IsNotNull(_excsatPacket);
+            ClassicAssert.IsNotNull(_excsatPacket.Parameters);
+            ClassicAssert.AreEqual(DrdaCodePointType.ExchangeServerAttributes, _excsatPacket.CodePoint);
             foreach (var parameter in _excsatPacket.Parameters)
             {
                 switch (parameter.DrdaCodepoint)
                 {
                     case DrdaCodePointType.ExternalName:
                     {
-                        Assert.IsTrue(parameter.Data.Contains("db2jcc_application"));
+                        ClassicAssert.IsTrue(parameter.Data.Contains("db2jcc_application"));
                         break;
                     }
                     case DrdaCodePointType.ServerName:
                     {
-                        Assert.AreEqual("192.168.137.1", parameter.Data);
+                        ClassicAssert.AreEqual("192.168.137.1", parameter.Data);
                         break;
                     }
                     case DrdaCodePointType.ServerProductReleaseLevel:
                     {
-                        Assert.AreEqual("JCC03670", parameter.Data);
+                        ClassicAssert.AreEqual("JCC03670", parameter.Data);
                         break;
                     }
                     case DrdaCodePointType.ServerClassName:
                     {
-                        Assert.AreEqual("QDB2/JVM", parameter.Data);
+                        ClassicAssert.AreEqual("QDB2/JVM", parameter.Data);
                         break;
                     }
                 }
@@ -160,26 +161,26 @@ namespace Test.PacketType;
         [Test]
         public void TestSecchkPacket()
         {
-            Assert.IsNotNull(_secchkPacket);
-            Assert.IsNotNull(_secchkPacket.Parameters);
-            Assert.AreEqual(DrdaCodePointType.SecurityCheck, _secchkPacket.CodePoint);
+            ClassicAssert.IsNotNull(_secchkPacket);
+            ClassicAssert.IsNotNull(_secchkPacket.Parameters);
+            ClassicAssert.AreEqual(DrdaCodePointType.SecurityCheck, _secchkPacket.CodePoint);
             foreach (var parameter in _accrdbPacket.Parameters)
             {
                 switch (parameter.DrdaCodepoint)
                 {
                     case DrdaCodePointType.RelationalDatabaseName:
                     {
-                        Assert.AreEqual("SAMPLE", parameter.Data);
+                        ClassicAssert.AreEqual("SAMPLE", parameter.Data);
                         break;
                     }
                     case DrdaCodePointType.UserIdAtTargetSystem:
                     {
-                        Assert.AreEqual("db2inst1", parameter.Data);
+                        ClassicAssert.AreEqual("db2inst1", parameter.Data);
                         break;
                     }
                     case DrdaCodePointType.Password:
                     {
-                        Assert.AreEqual("db2inst1", parameter.Data);
+                        ClassicAssert.AreEqual("db2inst1", parameter.Data);
                         break;
                     }
                 }
@@ -189,12 +190,12 @@ namespace Test.PacketType;
         [Test]
         public void TestSqlattrPacket()
         {
-            Assert.IsNotNull(_sqlattrPacket);
-            Assert.IsNotNull(_sqlattrPacket.Parameters);
-            Assert.AreEqual(DrdaCodePointType.SqlStatementAttributes, _sqlattrPacket.CodePoint);
+            ClassicAssert.IsNotNull(_sqlattrPacket);
+            ClassicAssert.IsNotNull(_sqlattrPacket.Parameters);
+            ClassicAssert.AreEqual(DrdaCodePointType.SqlStatementAttributes, _sqlattrPacket.CodePoint);
             if (_sqlattrPacket.Parameters[0].DrdaCodepoint == DrdaCodePointType.Data)
             {
-                Assert.AreEqual("FOR READ ONLY", _sqlattrPacket.Parameters[0].Data);
+                ClassicAssert.AreEqual("FOR READ ONLY", _sqlattrPacket.Parameters[0].Data);
             }
         }
 
@@ -204,15 +205,15 @@ namespace Test.PacketType;
             var packetIndex = 0;
             foreach (var packet in _sqlsttPackets)
             {
-                Assert.IsNotNull(packet);
-                Assert.IsNotNull(packet.Parameters);
-                Assert.AreEqual(DrdaCodePointType.SqlStatement, packet.CodePoint);
+                ClassicAssert.IsNotNull(packet);
+                ClassicAssert.IsNotNull(packet.Parameters);
+                ClassicAssert.AreEqual(DrdaCodePointType.SqlStatement, packet.CodePoint);
                 if (packet.Parameters[0].DrdaCodepoint == DrdaCodePointType.Data)
                 {
                     if (packetIndex == 0)
-                        Assert.AreEqual("SET CLIENT WRKSTNNAME '192.168.137.1'", packet.Parameters[0].Data);
+                        ClassicAssert.AreEqual("SET CLIENT WRKSTNNAME '192.168.137.1'", packet.Parameters[0].Data);
                     else if (packetIndex == 1)
-                        Assert.AreEqual("SELECT * FROM SYSCAT.TABLES", packet.Parameters[0].Data);
+                        ClassicAssert.AreEqual("SELECT * FROM SYSCAT.TABLES", packet.Parameters[0].Data);
                 }
 
                 packetIndex++;
@@ -223,6 +224,6 @@ namespace Test.PacketType;
         public void TestStringConverter()
         {
             var bytes = new byte[] { 0xd8, 0xc4, 0xc2, 0xf2, 0x61, 0xd1, 0xe5, 0xd4 };
-            Assert.AreEqual("QDB2/JVM", StringConverter.EbcdicToAscii(bytes, 0, bytes.Length));
+            ClassicAssert.AreEqual("QDB2/JVM", StringConverter.EbcdicToAscii(bytes, 0, bytes.Length));
         }
     }

@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -20,34 +21,34 @@ namespace Test.PacketType;
         private void VerifyPacket0(Packet p)
         {
             // expecting a tcp packet
-            Assert.IsNotNull(p.Extract<TcpPacket>(), "expected a tcp packet");
+            ClassicAssert.IsNotNull(p.Extract<TcpPacket>(), "expected a tcp packet");
         }
 
         private void VerifyPacket1(Packet p)
         {
             // expect a udp packet
-            Assert.IsNotNull(p.Extract<UdpPacket>(), "expected a udp packet");
+            ClassicAssert.IsNotNull(p.Extract<UdpPacket>(), "expected a udp packet");
         }
 
         private void VerifyPacket2(Packet p)    
         {
             // expect an arp packet
             var arpPacket = p.Extract<ArpPacket>();
-            Assert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
+            ClassicAssert.IsNotNull(arpPacket, "Expected arpPacket to not be null");
 
             // validate some of the LinuxSSLPacket fields
             var l = (LinuxSll2Packet) p;
-            Assert.AreEqual(2, l.InterfaceIndex, "Interface index");
-            Assert.AreEqual(6, l.LinkLayerAddressLength, "Address length");
-            Assert.AreEqual(1, l.LinkLayerAddressType);
-            Assert.AreEqual(LinuxSll2Type.PacketBroadCast, l.Type);
+            ClassicAssert.AreEqual(2, l.InterfaceIndex, "Interface index");
+            ClassicAssert.AreEqual(6, l.LinkLayerAddressLength, "Address length");
+            ClassicAssert.AreEqual(1, l.LinkLayerAddressType);
+            ClassicAssert.AreEqual(LinuxSll2Type.PacketBroadCast, l.Type);
 
             // validate some of the arp fields
-            Assert.AreEqual("192.168.178.30",
+            ClassicAssert.AreEqual("192.168.178.30",
                             arpPacket.SenderProtocolAddress.ToString(),
                             "Arp SenderProtocolAddress");
 
-            Assert.AreEqual("192.168.178.1",
+            ClassicAssert.AreEqual("192.168.178.1",
                             arpPacket.TargetProtocolAddress.ToString(),
                             "Arp TargetProtocolAddress");
         }
@@ -84,7 +85,7 @@ namespace Test.PacketType;
                     }
                     default:
                     {
-                        Assert.Fail("didn't expect to get to packetIndex " + packetIndex);
+                        ClassicAssert.Fail("didn't expect to get to packetIndex " + packetIndex);
                         break;
                     }
                 }

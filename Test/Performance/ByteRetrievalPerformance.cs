@@ -9,6 +9,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 using System;
 using log4net.Core;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 
 namespace Test.Performance;
@@ -71,7 +72,7 @@ namespace Test.Performance;
                 }
                 else
                 {
-                    Assert.AreSame(bArray, bs);
+                    ClassicAssert.AreSame(bArray, bs);
                 }
 
                 testRuns++;
@@ -116,7 +117,7 @@ namespace Test.Performance;
                 }
                 else
                 {
-                    Assert.AreNotSame(lastByteArray, bs);
+                    ClassicAssert.AreNotSame(lastByteArray, bs);
                     lastByteArray = bs;
                 }
 

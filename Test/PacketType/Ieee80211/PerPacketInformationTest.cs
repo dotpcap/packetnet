@@ -7,6 +7,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
 using SharpPcap;
@@ -34,15 +35,15 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedPacket = Packet.ParsePacket(LinkLayers.Ppi, p.Bytes) as PpiPacket;
 
-            Assert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiCommon));
-            Assert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiMacPhy));
-            Assert.IsTrue(recreatedPacket.Contains((PpiFieldType) 99));
+            ClassicAssert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiCommon));
+            ClassicAssert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiMacPhy));
+            ClassicAssert.IsTrue(recreatedPacket.Contains((PpiFieldType) 99));
             var recreatedUnknownField = recreatedPacket.FindFirstByType((PpiFieldType) 99) as PpiUnknown;
-            Assert.AreEqual(new byte[] { 0xAA, 0xBB, 0xCC, 0xDD }, recreatedUnknownField.UnknownBytes);
+            ClassicAssert.AreEqual(new byte[] { 0xAA, 0xBB, 0xCC, 0xDD }, recreatedUnknownField.UnknownBytes);
 
             var macFrame = recreatedPacket.PayloadPacket as MacFrame;
-            Assert.IsNotNull(macFrame);
-            Assert.IsTrue(macFrame.FcsValid);
+            ClassicAssert.IsNotNull(macFrame);
+            ClassicAssert.IsTrue(macFrame.FcsValid);
         }
 
         [Test]
@@ -54,37 +55,37 @@ namespace Test.PacketType.Ieee80211;
             var commonField = new PpiCommon { ChannelFrequency = 2142, AntennaSignalPower = 50, AntennaSignalNoise = 25 };
             packet.Add(commonField);
 
-            Assert.AreEqual(32, packet.Length);
+            ClassicAssert.AreEqual(32, packet.Length);
 
             var processInfoField = new PpiProcessInfo { UserId = 0x1111, UserName = "Hester the tester", GroupId = 0x2222, GroupName = "Test Group" };
             packet.Add(processInfoField);
 
-            Assert.AreEqual(84, packet.Length);
+            ClassicAssert.AreEqual(84, packet.Length);
 
             var aggregationField = new PpiAggregation(0x3333);
             packet.Add(aggregationField);
 
-            Assert.AreEqual(92, packet.Length);
+            ClassicAssert.AreEqual(92, packet.Length);
 
             var recreatedPacket = Packet.ParsePacket(LinkLayers.Ppi, packet.Bytes) as PpiPacket;
 
             var recreatedCommonField = recreatedPacket[0] as PpiCommon;
-            Assert.IsNotNull(recreatedCommonField);
-            Assert.AreEqual(2142, recreatedCommonField.ChannelFrequency);
-            Assert.AreEqual(50, recreatedCommonField.AntennaSignalPower);
-            Assert.AreEqual(25, recreatedCommonField.AntennaSignalNoise);
+            ClassicAssert.IsNotNull(recreatedCommonField);
+            ClassicAssert.AreEqual(2142, recreatedCommonField.ChannelFrequency);
+            ClassicAssert.AreEqual(50, recreatedCommonField.AntennaSignalPower);
+            ClassicAssert.AreEqual(25, recreatedCommonField.AntennaSignalNoise);
 
             var recreatedProcessField = recreatedPacket[1] as PpiProcessInfo;
-            Assert.IsNotNull(recreatedProcessField);
-            Assert.AreEqual(0x1111, recreatedProcessField.UserId);
-            Assert.AreEqual("Hester the tester", recreatedProcessField.UserName);
-            Assert.AreEqual(0x2222, recreatedProcessField.GroupId);
-            Assert.AreEqual("Test Group", recreatedProcessField.GroupName);
+            ClassicAssert.IsNotNull(recreatedProcessField);
+            ClassicAssert.AreEqual(0x1111, recreatedProcessField.UserId);
+            ClassicAssert.AreEqual("Hester the tester", recreatedProcessField.UserName);
+            ClassicAssert.AreEqual(0x2222, recreatedProcessField.GroupId);
+            ClassicAssert.AreEqual("Test Group", recreatedProcessField.GroupName);
 
             var recreatedAggregationField = recreatedPacket[2] as PpiAggregation;
 
-            Assert.IsNotNull(recreatedAggregationField);
-            Assert.AreEqual(0x3333, recreatedAggregationField.InterfaceId);
+            ClassicAssert.IsNotNull(recreatedAggregationField);
+            ClassicAssert.AreEqual(0x3333, recreatedAggregationField.InterfaceId);
         }
 
         [Test]
@@ -95,37 +96,37 @@ namespace Test.PacketType.Ieee80211;
             var commonField = new PpiCommon { ChannelFrequency = 2142, AntennaSignalPower = 50, AntennaSignalNoise = 25 };
             packet.Add(commonField);
 
-            Assert.AreEqual(32, packet.Length);
+            ClassicAssert.AreEqual(32, packet.Length);
 
             var processInfoField = new PpiProcessInfo { UserId = 0x1111, UserName = "Hester the tester", GroupId = 0x2222, GroupName = "Test Group" };
             packet.Add(processInfoField);
 
-            Assert.AreEqual(82, packet.Length);
+            ClassicAssert.AreEqual(82, packet.Length);
 
             var aggregationField = new PpiAggregation(0x3333);
             packet.Add(aggregationField);
 
-            Assert.AreEqual(90, packet.Length);
+            ClassicAssert.AreEqual(90, packet.Length);
 
             var recreatedPacket = Packet.ParsePacket(LinkLayers.Ppi, packet.Bytes) as PpiPacket;
 
             var recreatedCommonField = recreatedPacket[0] as PpiCommon;
-            Assert.IsNotNull(recreatedCommonField);
-            Assert.AreEqual(2142, recreatedCommonField.ChannelFrequency);
-            Assert.AreEqual(50, recreatedCommonField.AntennaSignalPower);
-            Assert.AreEqual(25, recreatedCommonField.AntennaSignalNoise);
+            ClassicAssert.IsNotNull(recreatedCommonField);
+            ClassicAssert.AreEqual(2142, recreatedCommonField.ChannelFrequency);
+            ClassicAssert.AreEqual(50, recreatedCommonField.AntennaSignalPower);
+            ClassicAssert.AreEqual(25, recreatedCommonField.AntennaSignalNoise);
 
             var recreatedProcessField = recreatedPacket[1] as PpiProcessInfo;
-            Assert.IsNotNull(recreatedProcessField);
-            Assert.AreEqual(0x1111, recreatedProcessField.UserId);
-            Assert.AreEqual("Hester the tester", recreatedProcessField.UserName);
-            Assert.AreEqual(0x2222, recreatedProcessField.GroupId);
-            Assert.AreEqual("Test Group", recreatedProcessField.GroupName);
+            ClassicAssert.IsNotNull(recreatedProcessField);
+            ClassicAssert.AreEqual(0x1111, recreatedProcessField.UserId);
+            ClassicAssert.AreEqual("Hester the tester", recreatedProcessField.UserName);
+            ClassicAssert.AreEqual(0x2222, recreatedProcessField.GroupId);
+            ClassicAssert.AreEqual("Test Group", recreatedProcessField.GroupName);
 
             var recreatedAggregationField = recreatedPacket[2] as PpiAggregation;
 
-            Assert.IsNotNull(recreatedAggregationField);
-            Assert.AreEqual(0x3333, recreatedAggregationField.InterfaceId);
+            ClassicAssert.IsNotNull(recreatedAggregationField);
+            ClassicAssert.AreEqual(0x3333, recreatedAggregationField.InterfaceId);
         }
 
         [Test]
@@ -135,8 +136,8 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedPacket = Packet.ParsePacket(LinkLayers.Ppi, packet.Bytes) as PpiPacket;
 
-            Assert.AreEqual(0, recreatedPacket.Version);
-            Assert.IsFalse((recreatedPacket.Flags & PpiPacket.HeaderFlags.Alignment32Bit) == PpiPacket.HeaderFlags.Alignment32Bit);
+            ClassicAssert.AreEqual(0, recreatedPacket.Version);
+            ClassicAssert.IsFalse((recreatedPacket.Flags & PpiPacket.HeaderFlags.Alignment32Bit) == PpiPacket.HeaderFlags.Alignment32Bit);
         }
 
         [Test]
@@ -150,9 +151,9 @@ namespace Test.PacketType.Ieee80211;
             dev.Close();
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as PpiPacket;
-            Assert.IsTrue(p.Contains(PpiFieldType.PpiCommon));
-            Assert.IsTrue(p.Contains(PpiFieldType.PpiMacPhy));
-            Assert.IsFalse(p.Contains(PpiFieldType.PpiProcessInfo));
+            ClassicAssert.IsTrue(p.Contains(PpiFieldType.PpiCommon));
+            ClassicAssert.IsTrue(p.Contains(PpiFieldType.PpiMacPhy));
+            ClassicAssert.IsFalse(p.Contains(PpiFieldType.PpiProcessInfo));
         }
 
         /// <summary>
@@ -170,27 +171,27 @@ namespace Test.PacketType.Ieee80211;
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as PpiPacket;
 
-            Assert.IsNotNull(p);
-            Assert.AreEqual(0, p.Version);
-            Assert.AreEqual(32, p.Length);
-            Assert.AreEqual(1, p.Count);
+            ClassicAssert.IsNotNull(p);
+            ClassicAssert.AreEqual(0, p.Version);
+            ClassicAssert.AreEqual(32, p.Length);
+            ClassicAssert.AreEqual(1, p.Count);
 
             var commonField = p.FindFirstByType(PpiFieldType.PpiCommon) as PpiCommon;
 
-            Assert.AreEqual(PpiFieldType.PpiCommon, commonField.FieldType);
-            Assert.AreEqual(0, commonField.TSFTimer);
-            Assert.IsTrue((commonField.Flags & PpiCommon.CommonFlags.FcsIncludedInFrame) == PpiCommon.CommonFlags.FcsIncludedInFrame);
-            Assert.AreEqual(2, commonField.Rate);
-            Assert.AreEqual(2437, commonField.ChannelFrequency);
-            Assert.AreEqual(0x00A0, (int) commonField.ChannelFlags);
-            Assert.AreEqual(0, commonField.FhssHopset);
-            Assert.AreEqual(0, commonField.FhssPattern);
-            Assert.AreEqual(-84, commonField.AntennaSignalPower);
-            Assert.AreEqual(-100, commonField.AntennaSignalNoise);
+            ClassicAssert.AreEqual(PpiFieldType.PpiCommon, commonField.FieldType);
+            ClassicAssert.AreEqual(0, commonField.TSFTimer);
+            ClassicAssert.IsTrue((commonField.Flags & PpiCommon.CommonFlags.FcsIncludedInFrame) == PpiCommon.CommonFlags.FcsIncludedInFrame);
+            ClassicAssert.AreEqual(2, commonField.Rate);
+            ClassicAssert.AreEqual(2437, commonField.ChannelFrequency);
+            ClassicAssert.AreEqual(0x00A0, (int) commonField.ChannelFlags);
+            ClassicAssert.AreEqual(0, commonField.FhssHopset);
+            ClassicAssert.AreEqual(0, commonField.FhssPattern);
+            ClassicAssert.AreEqual(-84, commonField.AntennaSignalPower);
+            ClassicAssert.AreEqual(-100, commonField.AntennaSignalNoise);
 
             var macFrame = p.PayloadPacket as MacFrame;
-            Assert.AreEqual(FrameControlField.FrameSubTypes.ControlCts, macFrame.FrameControl.SubType);
-            Assert.IsTrue(macFrame.AppendFcs);
+            ClassicAssert.AreEqual(FrameControlField.FrameSubTypes.ControlCts, macFrame.FrameControl.SubType);
+            ClassicAssert.IsTrue(macFrame.AppendFcs);
         }
 
         [Test]
@@ -207,8 +208,8 @@ namespace Test.PacketType.Ieee80211;
 
             //The packet is corrupted in such a way that the type field has been changed
             //to a reserved/unused type. Therefore we don't expect there to be a packet
-            Assert.IsNull(p.PayloadPacket);
-            Assert.IsNotNull(p.PayloadData);
+            ClassicAssert.IsNull(p.PayloadPacket);
+            ClassicAssert.IsNotNull(p.PayloadData);
         }
 
         [Test]
@@ -222,10 +223,10 @@ namespace Test.PacketType.Ieee80211;
             dev.Close();
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as PpiPacket;
-            Assert.IsNotNull(p.PayloadPacket);
+            ClassicAssert.IsNotNull(p.PayloadPacket);
             var macFrame = p.PayloadPacket as MacFrame;
-            Assert.IsFalse(macFrame.FcsValid);
-            Assert.IsFalse(macFrame.AppendFcs);
+            ClassicAssert.IsFalse(macFrame.FcsValid);
+            ClassicAssert.IsFalse(macFrame.AppendFcs);
         }
 
         [Test]
@@ -239,10 +240,10 @@ namespace Test.PacketType.Ieee80211;
             dev.Close();
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data) as PpiPacket;
-            Assert.IsNotNull(p.PayloadPacket);
+            ClassicAssert.IsNotNull(p.PayloadPacket);
             var macFrame = p.PayloadPacket as MacFrame;
-            Assert.IsTrue(macFrame.FcsValid);
-            Assert.IsTrue(macFrame.AppendFcs);
+            ClassicAssert.IsTrue(macFrame.FcsValid);
+            ClassicAssert.IsTrue(macFrame.AppendFcs);
         }
 
         [Test]
@@ -260,13 +261,13 @@ namespace Test.PacketType.Ieee80211;
             p.Remove(p[1]);
 
             var recreatedPacket = Packet.ParsePacket(LinkLayers.Ppi, p.Bytes) as PpiPacket;
-            Assert.AreEqual(expectedLength, recreatedPacket.Length);
-            Assert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiCommon));
-            Assert.IsFalse(recreatedPacket.Contains(PpiFieldType.PpiMacPhy));
+            ClassicAssert.AreEqual(expectedLength, recreatedPacket.Length);
+            ClassicAssert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiCommon));
+            ClassicAssert.IsFalse(recreatedPacket.Contains(PpiFieldType.PpiMacPhy));
 
             var macFrame = recreatedPacket.PayloadPacket as MacFrame;
-            Assert.IsNotNull(macFrame);
-            Assert.IsTrue(macFrame.FcsValid);
+            ClassicAssert.IsNotNull(macFrame);
+            ClassicAssert.IsTrue(macFrame.FcsValid);
         }
 
         [Test]
@@ -284,11 +285,11 @@ namespace Test.PacketType.Ieee80211;
 
             var recreatedPacket = Packet.ParsePacket(LinkLayers.Ppi, p.Bytes) as PpiPacket;
 
-            Assert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiCommon));
-            Assert.IsFalse(recreatedPacket.Contains(PpiFieldType.PpiMacPhy));
+            ClassicAssert.IsTrue(recreatedPacket.Contains(PpiFieldType.PpiCommon));
+            ClassicAssert.IsFalse(recreatedPacket.Contains(PpiFieldType.PpiMacPhy));
 
             var macFrame = recreatedPacket.PayloadPacket as MacFrame;
-            Assert.IsNotNull(macFrame);
-            Assert.IsTrue(macFrame.FcsValid);
+            ClassicAssert.IsNotNull(macFrame);
+            ClassicAssert.IsTrue(macFrame.FcsValid);
         }
     }

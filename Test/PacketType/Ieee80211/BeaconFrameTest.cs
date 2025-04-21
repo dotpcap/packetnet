@@ -11,6 +11,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System.Net.NetworkInformation;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
@@ -38,31 +39,31 @@ namespace Test.PacketType.Ieee80211;
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
             var beaconFrame = (BeaconFrame) p.PayloadPacket;
 
-            Assert.AreEqual(0, beaconFrame.FrameControl.ProtocolVersion);
-            Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementBeacon, beaconFrame.FrameControl.SubType);
-            Assert.IsFalse(beaconFrame.FrameControl.ToDS);
-            Assert.IsFalse(beaconFrame.FrameControl.FromDS);
-            Assert.IsFalse(beaconFrame.FrameControl.MoreFragments);
-            Assert.IsFalse(beaconFrame.FrameControl.Retry);
-            Assert.IsFalse(beaconFrame.FrameControl.PowerManagement);
-            Assert.IsFalse(beaconFrame.FrameControl.MoreData);
-            Assert.IsFalse(beaconFrame.FrameControl.Protected);
-            Assert.IsFalse(beaconFrame.FrameControl.Order);
-            Assert.AreEqual(0, beaconFrame.Duration.Field); //this need expanding on in the future
-            Assert.AreEqual("FFFFFFFFFFFF", beaconFrame.DestinationAddress.ToString().ToUpper());
-            Assert.AreEqual("0024B2F8D706", beaconFrame.SourceAddress.ToString().ToUpper());
-            Assert.AreEqual("0024B2F8D706", beaconFrame.BssId.ToString().ToUpper());
-            Assert.AreEqual(0, beaconFrame.SequenceControl.FragmentNumber);
-            Assert.AreEqual(2892, beaconFrame.SequenceControl.SequenceNumber);
-            Assert.AreEqual(0x000000A07A7BA566, beaconFrame.Timestamp);
-            Assert.AreEqual(100, beaconFrame.BeaconInterval);
-            Assert.IsTrue(beaconFrame.CapabilityInformation.IsEss);
-            Assert.IsFalse(beaconFrame.CapabilityInformation.IsIbss);
+            ClassicAssert.AreEqual(0, beaconFrame.FrameControl.ProtocolVersion);
+            ClassicAssert.AreEqual(FrameControlField.FrameSubTypes.ManagementBeacon, beaconFrame.FrameControl.SubType);
+            ClassicAssert.IsFalse(beaconFrame.FrameControl.ToDS);
+            ClassicAssert.IsFalse(beaconFrame.FrameControl.FromDS);
+            ClassicAssert.IsFalse(beaconFrame.FrameControl.MoreFragments);
+            ClassicAssert.IsFalse(beaconFrame.FrameControl.Retry);
+            ClassicAssert.IsFalse(beaconFrame.FrameControl.PowerManagement);
+            ClassicAssert.IsFalse(beaconFrame.FrameControl.MoreData);
+            ClassicAssert.IsFalse(beaconFrame.FrameControl.Protected);
+            ClassicAssert.IsFalse(beaconFrame.FrameControl.Order);
+            ClassicAssert.AreEqual(0, beaconFrame.Duration.Field); //this need expanding on in the future
+            ClassicAssert.AreEqual("FFFFFFFFFFFF", beaconFrame.DestinationAddress.ToString().ToUpper());
+            ClassicAssert.AreEqual("0024B2F8D706", beaconFrame.SourceAddress.ToString().ToUpper());
+            ClassicAssert.AreEqual("0024B2F8D706", beaconFrame.BssId.ToString().ToUpper());
+            ClassicAssert.AreEqual(0, beaconFrame.SequenceControl.FragmentNumber);
+            ClassicAssert.AreEqual(2892, beaconFrame.SequenceControl.SequenceNumber);
+            ClassicAssert.AreEqual(0x000000A07A7BA566, beaconFrame.Timestamp);
+            ClassicAssert.AreEqual(100, beaconFrame.BeaconInterval);
+            ClassicAssert.IsTrue(beaconFrame.CapabilityInformation.IsEss);
+            ClassicAssert.IsFalse(beaconFrame.CapabilityInformation.IsIbss);
 
-            Assert.AreEqual(15, beaconFrame.InformationElements.Count);
+            ClassicAssert.AreEqual(15, beaconFrame.InformationElements.Count);
 
-            Assert.AreEqual(0x2BADAF43, beaconFrame.FrameCheckSequence);
-            Assert.AreEqual(262, beaconFrame.FrameSize);
+            ClassicAssert.AreEqual(0x2BADAF43, beaconFrame.FrameCheckSequence);
+            ClassicAssert.AreEqual(262, beaconFrame.FrameSize);
         }
 
         [Test]
@@ -71,7 +72,7 @@ namespace Test.PacketType.Ieee80211;
             //buffer is way too short for frame. We are just checking it doesn't throw
             byte[] corruptBuffer = { 0x01 };
             var frame = new BeaconFrame(new ByteArraySegment(corruptBuffer));
-            Assert.IsFalse(frame.FcsValid);
+            ClassicAssert.IsFalse(frame.FcsValid);
         }
 
         [Test]
@@ -103,18 +104,18 @@ namespace Test.PacketType.Ieee80211;
             var recreatedFrame = MacFrame.ParsePacket(byteArraySegment) as BeaconFrame;
             recreatedFrame.UpdateFrameCheckSequence();
 
-            Assert.AreEqual(FrameControlField.FrameSubTypes.ManagementBeacon, recreatedFrame.FrameControl.SubType);
-            Assert.AreEqual(PhysicalAddress.Parse("11-11-11-11-11-11"), recreatedFrame.SourceAddress);
-            Assert.AreEqual(PhysicalAddress.Parse("FF-FF-FF-FF-FF-FF"), recreatedFrame.DestinationAddress);
-            Assert.AreEqual(PhysicalAddress.Parse("22-22-22-22-22-22"), recreatedFrame.BssId);
-            Assert.IsTrue(recreatedFrame.FrameControl.ToDS);
-            Assert.IsTrue(recreatedFrame.FrameControl.Protected);
-            Assert.AreEqual(12345, recreatedFrame.Duration.Field);
-            Assert.AreEqual(3, recreatedFrame.SequenceControl.SequenceNumber);
-            Assert.AreEqual(123456789, recreatedFrame.Timestamp);
-            Assert.AreEqual(4444, recreatedFrame.BeaconInterval);
-            Assert.AreEqual(ssidInfoElement, recreatedFrame.InformationElements[0]);
+            ClassicAssert.AreEqual(FrameControlField.FrameSubTypes.ManagementBeacon, recreatedFrame.FrameControl.SubType);
+            ClassicAssert.AreEqual(PhysicalAddress.Parse("11-11-11-11-11-11"), recreatedFrame.SourceAddress);
+            ClassicAssert.AreEqual(PhysicalAddress.Parse("FF-FF-FF-FF-FF-FF"), recreatedFrame.DestinationAddress);
+            ClassicAssert.AreEqual(PhysicalAddress.Parse("22-22-22-22-22-22"), recreatedFrame.BssId);
+            ClassicAssert.IsTrue(recreatedFrame.FrameControl.ToDS);
+            ClassicAssert.IsTrue(recreatedFrame.FrameControl.Protected);
+            ClassicAssert.AreEqual(12345, recreatedFrame.Duration.Field);
+            ClassicAssert.AreEqual(3, recreatedFrame.SequenceControl.SequenceNumber);
+            ClassicAssert.AreEqual(123456789, recreatedFrame.Timestamp);
+            ClassicAssert.AreEqual(4444, recreatedFrame.BeaconInterval);
+            ClassicAssert.AreEqual(ssidInfoElement, recreatedFrame.InformationElements[0]);
 
-            Assert.AreEqual(fcs, recreatedFrame.FrameCheckSequence);
+            ClassicAssert.AreEqual(fcs, recreatedFrame.FrameCheckSequence);
         }
     }

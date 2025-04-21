@@ -10,6 +10,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet.Ieee80211;
 
 namespace Test.PacketType.Ieee80211;
@@ -22,7 +23,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var blockAckControl = new BlockAcknowledgmentControlField { CompressedBitmap = true };
 
-            Assert.IsTrue(blockAckControl.CompressedBitmap);
+            ClassicAssert.IsTrue(blockAckControl.CompressedBitmap);
         }
 
         [Test]
@@ -30,7 +31,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var blockAckControl = new BlockAcknowledgmentControlField { MultiTid = true };
 
-            Assert.IsTrue(blockAckControl.MultiTid);
+            ClassicAssert.IsTrue(blockAckControl.MultiTid);
         }
 
         [Test]
@@ -38,10 +39,10 @@ namespace Test.PacketType.Ieee80211;
         {
             var blockAckControl = new BlockAcknowledgmentControlField { Policy = BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed };
 
-            Assert.AreEqual(BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed, blockAckControl.Policy);
+            ClassicAssert.AreEqual(BlockAcknowledgmentControlField.AcknowledgementPolicy.Delayed, blockAckControl.Policy);
 
             blockAckControl.Policy = BlockAcknowledgmentControlField.AcknowledgementPolicy.Immediate;
-            Assert.AreEqual(BlockAcknowledgmentControlField.AcknowledgementPolicy.Immediate, blockAckControl.Policy);
+            ClassicAssert.AreEqual(BlockAcknowledgmentControlField.AcknowledgementPolicy.Immediate, blockAckControl.Policy);
         }
 
         [Test]
@@ -49,6 +50,6 @@ namespace Test.PacketType.Ieee80211;
         {
             var blockAckControl = new BlockAcknowledgmentControlField { Tid = 0xF };
 
-            Assert.AreEqual(0xF, blockAckControl.Tid);
+            ClassicAssert.AreEqual(0xF, blockAckControl.Tid);
         }
     }

@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet.Utils;
 
 namespace Test.Misc;
@@ -25,16 +26,16 @@ namespace Test.Misc;
             }
 
             var byteArraySegment = new ByteArraySegment(data);
-            Assert.AreEqual(byteArraySegment.Length, data.Length);
+            ClassicAssert.AreEqual(byteArraySegment.Length, data.Length);
             for (var i = 0; i < 20; i++)
-                Assert.AreEqual(byteArraySegment[i], i);
+                ClassicAssert.AreEqual(byteArraySegment[i], i);
 
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            ClassicAssert.Throws<ArgumentOutOfRangeException>(() =>
             {
                 var _ = byteArraySegment[20];
             });
 
-            Assert.Throws<ArgumentOutOfRangeException>(() =>
+            ClassicAssert.Throws<ArgumentOutOfRangeException>(() =>
             {
                 var _ = byteArraySegment[-1];
             });
@@ -42,7 +43,7 @@ namespace Test.Misc;
             var t = 0;
             foreach (var c in byteArraySegment)
             {
-                Assert.AreEqual(t++, c);
+                ClassicAssert.AreEqual(t++, c);
             }
         }
     }

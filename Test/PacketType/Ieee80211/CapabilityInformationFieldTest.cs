@@ -10,6 +10,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet.Ieee80211;
 
 namespace Test.PacketType.Ieee80211;
@@ -21,70 +22,70 @@ namespace Test.PacketType.Ieee80211;
         public void Test_GetCfPollableProperty()
         {
             var capabilityField = new CapabilityInformationField(0x0004);
-            Assert.IsTrue(capabilityField.CfPollable);
+            ClassicAssert.IsTrue(capabilityField.CfPollable);
         }
 
         [Test]
         public void Test_GetCfPollRequestProperty()
         {
             var capabilityField = new CapabilityInformationField(0x0008);
-            Assert.IsTrue(capabilityField.CfPollRequest);
+            ClassicAssert.IsTrue(capabilityField.CfPollRequest);
         }
 
         [Test]
         public void Test_GetChannelAgilityProperty()
         {
             var capabilityField = new CapabilityInformationField(0x0080);
-            Assert.IsTrue(capabilityField.ChannelAgility);
+            ClassicAssert.IsTrue(capabilityField.ChannelAgility);
         }
 
         [Test]
         public void Test_GetDssOfdmProperty()
         {
             var capabilityField = new CapabilityInformationField(0x2000);
-            Assert.IsTrue(capabilityField.DssOfdm);
+            ClassicAssert.IsTrue(capabilityField.DssOfdm);
         }
 
         [Test]
         public void Test_GetIsEssProperty()
         {
             var capabilityField = new CapabilityInformationField(0x0001);
-            Assert.IsTrue(capabilityField.IsEss);
+            ClassicAssert.IsTrue(capabilityField.IsEss);
         }
 
         [Test]
         public void Test_GetIsIbssProperty()
         {
             var capabilityField = new CapabilityInformationField(0x0002);
-            Assert.IsTrue(capabilityField.IsIbss);
+            ClassicAssert.IsTrue(capabilityField.IsIbss);
         }
 
         [Test]
         public void Test_GetPbccProperty()
         {
             var capabilityField = new CapabilityInformationField(0x0040);
-            Assert.IsTrue(capabilityField.Pbcc);
+            ClassicAssert.IsTrue(capabilityField.Pbcc);
         }
 
         [Test]
         public void Test_GetPrivacyProperty()
         {
             var capabilityField = new CapabilityInformationField(0x0010);
-            Assert.IsTrue(capabilityField.Privacy);
+            ClassicAssert.IsTrue(capabilityField.Privacy);
         }
 
         [Test]
         public void Test_GetShortPreambleProperty()
         {
             var capabilityField = new CapabilityInformationField(0x0020);
-            Assert.IsTrue(capabilityField.ShortPreamble);
+            ClassicAssert.IsTrue(capabilityField.ShortPreamble);
         }
 
         [Test]
         public void Test_GetShortTimeslotProperty()
         {
             var capabilityField = new CapabilityInformationField(0x0400);
-            Assert.IsTrue(capabilityField.ShortTimeSlot);
+            ClassicAssert.IsTrue(capabilityField.ShortTimeSlot);
         }
 
         [Test]
@@ -92,7 +93,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var capabilityField = new CapabilityInformationField { CfPollable = true };
 
-            Assert.IsTrue(capabilityField.CfPollable);
+            ClassicAssert.IsTrue(capabilityField.CfPollable);
         }
 
         [Test]
@@ -100,7 +101,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var capabilityField = new CapabilityInformationField { CfPollRequest = true };
 
-            Assert.IsTrue(capabilityField.CfPollRequest);
+            ClassicAssert.IsTrue(capabilityField.CfPollRequest);
         }
 
         [Test]
@@ -108,7 +109,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var capabilityField = new CapabilityInformationField { ChannelAgility = true };
 
-            Assert.IsTrue(capabilityField.ChannelAgility);
+            ClassicAssert.IsTrue(capabilityField.ChannelAgility);
         }
 
         [Test]
@@ -116,7 +117,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var capabilityField = new CapabilityInformationField { DssOfdm = true };
 
-            Assert.IsTrue(capabilityField.DssOfdm);
+            ClassicAssert.IsTrue(capabilityField.DssOfdm);
         }
 
         [Test]
@@ -124,7 +125,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var capabilityField = new CapabilityInformationField { IsEss = true };
 
-            Assert.IsTrue(capabilityField.IsEss);
+            ClassicAssert.IsTrue(capabilityField.IsEss);
         }
 
         [Test]
@@ -132,7 +133,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var capabilityField = new CapabilityInformationField { IsIbss = true };
 
-            Assert.IsTrue(capabilityField.IsIbss);
+            ClassicAssert.IsTrue(capabilityField.IsIbss);
         }
 
         [Test]
@@ -140,7 +141,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var capabilityField = new CapabilityInformationField { Pbcc = true };
 
-            Assert.IsTrue(capabilityField.Pbcc);
+            ClassicAssert.IsTrue(capabilityField.Pbcc);
         }
 
         [Test]
@@ -148,7 +149,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var capabilityField = new CapabilityInformationField { Privacy = true };
 
-            Assert.IsTrue(capabilityField.Privacy);
+            ClassicAssert.IsTrue(capabilityField.Privacy);
         }
 
         [Test]
@@ -156,7 +157,7 @@ namespace Test.PacketType.Ieee80211;
         {
             var capabilityField = new CapabilityInformationField { ShortPreamble = true };
 
-            Assert.IsTrue(capabilityField.ShortPreamble);
+            ClassicAssert.IsTrue(capabilityField.ShortPreamble);
         }
 
         [Test]
@@ -164,6 +165,6 @@ namespace Test.PacketType.Ieee80211;
         {
             var capabilityField = new CapabilityInformationField { ShortTimeSlot = true };
 
-            Assert.IsTrue(capabilityField.ShortTimeSlot);
+            ClassicAssert.IsTrue(capabilityField.ShortTimeSlot);
         }
     }

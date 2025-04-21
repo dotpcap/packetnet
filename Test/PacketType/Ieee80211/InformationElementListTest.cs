@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using PacketDotNet.Ieee80211;
 using PacketDotNet.Utils;
@@ -44,7 +45,7 @@ namespace Test.PacketType.Ieee80211;
             var byteArraySegment = new ByteArraySegment(Array.Empty<byte>());
             var ieList = new InformationElementList(byteArraySegment);
 
-            Assert.AreEqual(0, ieList.Bytes.Length);
+            ClassicAssert.AreEqual(0, ieList.Bytes.Length);
         }
 
         [Test]
@@ -64,21 +65,21 @@ namespace Test.PacketType.Ieee80211;
 
             var b = ieList.Bytes;
 
-            Assert.AreEqual(0xD3, b[0]);
-            Assert.AreEqual(0x5, b[1]);
-            Assert.AreEqual(0x1, b[2]);
-            Assert.AreEqual(0x2, b[3]);
-            Assert.AreEqual(0x3, b[4]);
-            Assert.AreEqual(0x4, b[5]);
-            Assert.AreEqual(0x5, b[6]);
-            Assert.AreEqual(0xDD, b[7]);
-            Assert.AreEqual(0x4, b[8]);
-            Assert.AreEqual(0xFF, b[9]);
-            Assert.AreEqual(0xFE, b[10]);
-            Assert.AreEqual(0xFD, b[11]);
-            Assert.AreEqual(0xFC, b[12]);
+            ClassicAssert.AreEqual(0xD3, b[0]);
+            ClassicAssert.AreEqual(0x5, b[1]);
+            ClassicAssert.AreEqual(0x1, b[2]);
+            ClassicAssert.AreEqual(0x2, b[3]);
+            ClassicAssert.AreEqual(0x3, b[4]);
+            ClassicAssert.AreEqual(0x4, b[5]);
+            ClassicAssert.AreEqual(0x5, b[6]);
+            ClassicAssert.AreEqual(0xDD, b[7]);
+            ClassicAssert.AreEqual(0x4, b[8]);
+            ClassicAssert.AreEqual(0xFF, b[9]);
+            ClassicAssert.AreEqual(0xFE, b[10]);
+            ClassicAssert.AreEqual(0xFD, b[11]);
+            ClassicAssert.AreEqual(0xFC, b[12]);
 
-            Assert.IsTrue(ieList.Bytes.SequenceEqual(expectedBytes));
+            ClassicAssert.IsTrue(ieList.Bytes.SequenceEqual(expectedBytes));
         }
 
         [Test]
@@ -95,18 +96,18 @@ namespace Test.PacketType.Ieee80211;
             var byteArraySegment = new ByteArraySegment(ieBytes);
 
             var ieList = new InformationElementList(byteArraySegment);
-            Assert.AreEqual(2, ieList.Count);
+            ClassicAssert.AreEqual(2, ieList.Count);
 
-            Assert.AreEqual(InformationElement.ElementId.ServiceSetIdentity, ieList[0].Id);
-            Assert.AreEqual(5, ieList[0].ValueLength);
-            Assert.AreEqual(5, ieList[0].Value.Length);
-            Assert.AreEqual(7, ieList[0].ElementLength);
+            ClassicAssert.AreEqual(InformationElement.ElementId.ServiceSetIdentity, ieList[0].Id);
+            ClassicAssert.AreEqual(5, ieList[0].ValueLength);
+            ClassicAssert.AreEqual(5, ieList[0].Value.Length);
+            ClassicAssert.AreEqual(7, ieList[0].ElementLength);
 
-            Assert.AreEqual(InformationElement.ElementId.ServiceSetIdentity, ieList[1].Id);
-            Assert.AreEqual(3, ieList[1].ValueLength);
-            Assert.AreEqual(3, ieList[1].Value.Length);
-            Assert.AreEqual(5, ieList[1].ElementLength);
-            Assert.AreEqual(12, ieList.Length);
+            ClassicAssert.AreEqual(InformationElement.ElementId.ServiceSetIdentity, ieList[1].Id);
+            ClassicAssert.AreEqual(3, ieList[1].ValueLength);
+            ClassicAssert.AreEqual(3, ieList[1].Value.Length);
+            ClassicAssert.AreEqual(5, ieList[1].ElementLength);
+            ClassicAssert.AreEqual(12, ieList.Length);
         }
 
         [Test]
@@ -117,7 +118,7 @@ namespace Test.PacketType.Ieee80211;
             var byteArraySegment = new ByteArraySegment(ieBytes);
 
             var ieList = new InformationElementList(byteArraySegment);
-            Assert.AreEqual(0, ieList.Count);
+            ClassicAssert.AreEqual(0, ieList.Count);
         }
 
         [Test]
@@ -128,7 +129,7 @@ namespace Test.PacketType.Ieee80211;
             var byteArraySegment = new ByteArraySegment(ieBytes);
 
             var ieList = new InformationElementList(byteArraySegment);
-            Assert.AreEqual(1, ieList.Count);
+            ClassicAssert.AreEqual(1, ieList.Count);
         }
 
         [Test]
@@ -137,8 +138,8 @@ namespace Test.PacketType.Ieee80211;
             var byteArraySegment = new ByteArraySegment(Array.Empty<byte>());
             var ieList = new InformationElementList(byteArraySegment);
 
-            Assert.AreEqual(0, ieList.Count);
-            Assert.AreEqual(0, ieList.Length);
+            ClassicAssert.AreEqual(0, ieList.Count);
+            ClassicAssert.AreEqual(0, ieList.Length);
         }
 
         [Test]
@@ -146,8 +147,8 @@ namespace Test.PacketType.Ieee80211;
         {
             var ieList = new InformationElementList();
 
-            Assert.AreEqual(0, ieList.Count);
-            Assert.AreEqual(0, ieList.Length);
+            ClassicAssert.AreEqual(0, ieList.Count);
+            ClassicAssert.AreEqual(0, ieList.Length);
         }
 
         [Test]
@@ -165,16 +166,16 @@ namespace Test.PacketType.Ieee80211;
             var byteArraySegment = new ByteArraySegment(ieBytes);
 
             var ieList = new InformationElementList(byteArraySegment);
-            Assert.AreEqual(2, ieList.Count);
-            Assert.AreEqual(13, ieList.Length);
+            ClassicAssert.AreEqual(2, ieList.Count);
+            ClassicAssert.AreEqual(13, ieList.Length);
 
-            Assert.AreEqual(InformationElement.ElementId.WifiProtectedAccess, ieList[0].Id);
-            Assert.AreEqual(5, ieList[0].ValueLength);
-            Assert.IsTrue(ieList[0].Value.SequenceEqual(new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5 }));
+            ClassicAssert.AreEqual(InformationElement.ElementId.WifiProtectedAccess, ieList[0].Id);
+            ClassicAssert.AreEqual(5, ieList[0].ValueLength);
+            ClassicAssert.IsTrue(ieList[0].Value.SequenceEqual(new byte[] { 0x1, 0x2, 0x3, 0x4, 0x5 }));
 
-            Assert.AreEqual(InformationElement.ElementId.VendorSpecific, ieList[1].Id);
-            Assert.AreEqual(4, ieList[1].ValueLength);
-            Assert.IsTrue(ieList[1].Value.SequenceEqual(new byte[] { 0xFF, 0xFE, 0xFD, 0xFC }));
+            ClassicAssert.AreEqual(InformationElement.ElementId.VendorSpecific, ieList[1].Id);
+            ClassicAssert.AreEqual(4, ieList[1].ValueLength);
+            ClassicAssert.IsTrue(ieList[1].Value.SequenceEqual(new byte[] { 0xFF, 0xFE, 0xFD, 0xFC }));
         }
 
         [Test]
@@ -191,21 +192,21 @@ namespace Test.PacketType.Ieee80211;
             var beaconFrame = (BeaconFrame) p.PayloadPacket;
 
             List<InformationElement> infoElements = beaconFrame.InformationElements;
-            Assert.AreEqual(InformationElement.ElementId.ServiceSetIdentity, infoElements[0].Id);
-            Assert.AreEqual(InformationElement.ElementId.SupportedRates, infoElements[1].Id);
-            Assert.AreEqual(InformationElement.ElementId.DsParameterSet, infoElements[2].Id);
-            Assert.AreEqual(InformationElement.ElementId.TrafficIndicationMap, infoElements[3].Id);
-            Assert.AreEqual(InformationElement.ElementId.ErpInformation, infoElements[4].Id);
-            Assert.AreEqual(InformationElement.ElementId.ErpInformation2, infoElements[5].Id);
-            Assert.AreEqual(InformationElement.ElementId.RobustSecurityNetwork, infoElements[6].Id);
-            Assert.AreEqual(InformationElement.ElementId.ExtendedSupportedRates, infoElements[7].Id);
-            Assert.AreEqual(InformationElement.ElementId.HighThroughputCapabilities, infoElements[8].Id);
-            Assert.AreEqual(InformationElement.ElementId.HighThroughputInformation, infoElements[9].Id);
-            Assert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[10].Id);
-            Assert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[11].Id);
-            Assert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[12].Id);
-            Assert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[13].Id);
-            Assert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[14].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.ServiceSetIdentity, infoElements[0].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.SupportedRates, infoElements[1].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.DsParameterSet, infoElements[2].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.TrafficIndicationMap, infoElements[3].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.ErpInformation, infoElements[4].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.ErpInformation2, infoElements[5].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.RobustSecurityNetwork, infoElements[6].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.ExtendedSupportedRates, infoElements[7].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.HighThroughputCapabilities, infoElements[8].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.HighThroughputInformation, infoElements[9].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[10].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[11].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[12].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[13].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[14].Id);
         }
 
         [Test]
@@ -214,7 +215,7 @@ namespace Test.PacketType.Ieee80211;
             var beaconFrame = LoadBeaconFrameFromFile(NUnitSetupClass.CaptureDirectory + "80211_beacon_frame.pcap");
 
             var infoElements = beaconFrame.InformationElements.FindById(InformationElement.ElementId.ChallengeText);
-            Assert.AreEqual(0, infoElements.Length);
+            ClassicAssert.AreEqual(0, infoElements.Length);
         }
 
         [Test]
@@ -224,13 +225,13 @@ namespace Test.PacketType.Ieee80211;
 
             var infoElements = beaconFrame.InformationElements.FindById(InformationElement.ElementId.VendorSpecific);
 
-            Assert.AreEqual(5, infoElements.Length);
+            ClassicAssert.AreEqual(5, infoElements.Length);
 
-            Assert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[0].Id);
-            Assert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[1].Id);
-            Assert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[2].Id);
-            Assert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[3].Id);
-            Assert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[4].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[0].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[1].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[2].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[3].Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.VendorSpecific, infoElements[4].Id);
         }
 
         [Test]
@@ -239,7 +240,7 @@ namespace Test.PacketType.Ieee80211;
             var beaconFrame = LoadBeaconFrameFromFile(NUnitSetupClass.CaptureDirectory + "80211_beacon_frame.pcap");
 
             var infoElement = beaconFrame.InformationElements.FindFirstById(InformationElement.ElementId.ChallengeText);
-            Assert.IsNull(infoElement);
+            ClassicAssert.IsNull(infoElement);
         }
 
         [Test]
@@ -248,6 +249,6 @@ namespace Test.PacketType.Ieee80211;
             var beaconFrame = LoadBeaconFrameFromFile(NUnitSetupClass.CaptureDirectory + "80211_beacon_frame.pcap");
 
             var infoElement = beaconFrame.InformationElements.FindFirstById(InformationElement.ElementId.DsParameterSet);
-            Assert.AreEqual(InformationElement.ElementId.DsParameterSet, infoElement.Id);
+            ClassicAssert.AreEqual(InformationElement.ElementId.DsParameterSet, infoElement.Id);
         }
     }

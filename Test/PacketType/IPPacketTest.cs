@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using SharpPcap;
 using SharpPcap.LibPcap;
@@ -37,11 +38,11 @@ namespace Test.PacketType;
             var secondPacket = Packet.ParsePacket(secondRawPacket.GetLinkLayers(), secondRawPacket.Data);
             var ip = secondPacket.Extract<IPPacket>();
 
-            // Assert
-            Assert.IsNotNull(ip, "The second packet should contain an IP packet within");
-            Assert.IsNull(ip.PayloadPacket, "Since packet is IP fragment, we should not have extracted a child packet");
-            Assert.AreEqual(497, ip.PayloadLength, "The correct payload length for this particular packet should be 497");
-            Assert.AreEqual(497, ip.PayloadData.Length, "The correct payload length for this particular packet should be 497");
+            // ClassicAssert
+            ClassicAssert.IsNotNull(ip, "The second packet should contain an IP packet within");
+            ClassicAssert.IsNull(ip.PayloadPacket, "Since packet is IP fragment, we should not have extracted a child packet");
+            ClassicAssert.AreEqual(497, ip.PayloadLength, "The correct payload length for this particular packet should be 497");
+            ClassicAssert.AreEqual(497, ip.PayloadData.Length, "The correct payload length for this particular packet should be 497");
         }
 
         [Test]
@@ -60,13 +61,13 @@ namespace Test.PacketType;
             var ip = firstPacket.Extract<IPPacket>();
             var udpPacket = ip.Extract<UdpPacket>();
 
-            // Assert
-            Assert.IsNotNull(ip, "The packet should contain an IP packet within");
-            Assert.IsNotNull(ip.PayloadPacket, "This is not a fragment, and should contain an UDP packet");
-            Assert.IsNotNull(udpPacket, "We should have a UDP packet in there");
-            Assert.AreEqual(1977, udpPacket.Length, "We should have the proper length for the packet");
-            Assert.AreEqual(5060, udpPacket.DestinationPort, "We should have extracted the correct destination port");
-            Assert.AreEqual(5060, udpPacket.SourcePort, "We should have extracted the correct source port");
+            // ClassicAssert
+            ClassicAssert.IsNotNull(ip, "The packet should contain an IP packet within");
+            ClassicAssert.IsNotNull(ip.PayloadPacket, "This is not a fragment, and should contain an UDP packet");
+            ClassicAssert.IsNotNull(udpPacket, "We should have a UDP packet in there");
+            ClassicAssert.AreEqual(1977, udpPacket.Length, "We should have the proper length for the packet");
+            ClassicAssert.AreEqual(5060, udpPacket.DestinationPort, "We should have extracted the correct destination port");
+            ClassicAssert.AreEqual(5060, udpPacket.SourcePort, "We should have extracted the correct source port");
         }
 
         /// <summary>
@@ -84,12 +85,12 @@ namespace Test.PacketType;
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
 
             var ip = p.Extract<IPPacket>();
             Console.WriteLine(ip.GetType());
 
-            Assert.AreEqual(20, ip.HeaderData.Length, "Header.Length doesn't match expected length");
+            ClassicAssert.AreEqual(20, ip.HeaderData.Length, "Header.Length doesn't match expected length");
             Console.WriteLine(ip.ToString());
         }
     }

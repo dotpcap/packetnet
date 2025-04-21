@@ -10,6 +10,7 @@ using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using PacketDotNet.Utils;
 using SharpPcap;
@@ -27,11 +28,11 @@ namespace Test.PacketType;
             var destinationAddress = RandomUtils.GetIPAddress(IPVersion.IPv4);
             var ip = new IPv4Packet(sourceAddress, destinationAddress);
 
-            Assert.AreEqual(sourceAddress, ip.SourceAddress);
-            Assert.AreEqual(destinationAddress, ip.DestinationAddress);
+            ClassicAssert.AreEqual(sourceAddress, ip.SourceAddress);
+            ClassicAssert.AreEqual(destinationAddress, ip.DestinationAddress);
 
             // make sure the version is what we expect
-            Assert.AreEqual(IPv4Packet.IPVersion, ip.Version);
+            ClassicAssert.AreEqual(IPv4Packet.IPVersion, ip.Version);
 
             // retrieve the bytes for this IPv4Packet and construct another IPv4 packet from
             // these bytes
@@ -40,7 +41,7 @@ namespace Test.PacketType;
 
             // compare some of the the values
             //TODO: add more values here or implement an IPv4Packet equals method and use that here
-            Assert.AreEqual(ip.Version, ip2.Version);
+            ClassicAssert.AreEqual(ip.Version, ip2.Version);
         }
 
         [Test]
@@ -48,7 +49,7 @@ namespace Test.PacketType;
         {
             var packet = IPv4Packet.RandomPacket();
             packet.Id = 12345;
-            Assert.AreEqual(12345, packet.Id);
+            ClassicAssert.AreEqual(12345, packet.Id);
         }
 
         [Test]

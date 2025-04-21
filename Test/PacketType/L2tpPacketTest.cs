@@ -8,6 +8,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 using System;
 using NUnit.Framework;
+using NUnit.Framework.Legacy;
 using PacketDotNet;
 using PacketDotNet.Utils;
 using PacketDotNet.Utils.Converters;
@@ -32,11 +33,11 @@ namespace Test.PacketType;
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
 
             var l2tp = p.Extract<L2tpPacket>();
-            Assert.AreEqual(l2tp.TunnelId, 18994);
-            Assert.AreEqual(l2tp.SessionId, 54110);
+            ClassicAssert.AreEqual(l2tp.TunnelId, 18994);
+            ClassicAssert.AreEqual(l2tp.SessionId, 54110);
             Console.WriteLine(l2tp.GetType());
         }
 
@@ -53,11 +54,11 @@ namespace Test.PacketType;
 
             var p = Packet.ParsePacket(rawCapture.GetLinkLayers(), rawCapture.Data);
 
-            Assert.IsNotNull(p);
+            ClassicAssert.IsNotNull(p);
 
             var l2tp = p.Extract<L2tpPacket>();
-            Assert.AreEqual(l2tp.TunnelId, 18994);
-            Assert.AreEqual(l2tp.SessionId, 54110);
+            ClassicAssert.AreEqual(l2tp.TunnelId, 18994);
+            ClassicAssert.AreEqual(l2tp.SessionId, 54110);
             Console.WriteLine(l2tp.GetType());
         }
         

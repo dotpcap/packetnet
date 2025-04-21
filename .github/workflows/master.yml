@@ -12,11 +12,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
-            6.0.x
-            7.0.x
+            8.0.x
+            9.0.x
 
       - name: Install .NET dependencies
         run: dotnet restore
@@ -25,10 +25,10 @@ jobs:
         run: sudo -E bash Scripts/install-libpcap.sh
 
       - name: Build
-        run: dotnet build PacketDotNet/PacketDotNet.csproj -c Release -f "net7.0"
+        run: dotnet build PacketDotNet/PacketDotNet.csproj -c Release -f "net9.0"
 
       - name: Test
-        run: dotnet test -c Release -f "net7.0"
+        run: dotnet test -c Release -f "net9.0"
 
   windows:
     runs-on: windows-latest

@@ -4,7 +4,7 @@
 Packet.Net
 ==========
 
-Packet.Net is a high performance .Net assembly for dissecting and constructing
+Packet.Net is a high performance .NET package for dissecting and constructing
 network packets such as Ethernet, IP, TCP, UDP, etc.
 
 Originally created by Chris Morgan <chmorgan@gmail.com>

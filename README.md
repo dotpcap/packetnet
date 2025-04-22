@@ -1,22 +1,13 @@
 [![NuGet](https://img.shields.io/nuget/v/PacketDotNet.svg)](https://www.nuget.org/packages/PacketDotNet/)
-[![Build status](https://github.com/chmorgan/packetnet/workflows/.NET/badge.svg)](https://github.com/chmorgan/packetnet/actions)
-
-New!
-==========
-The newly released [PacketDotNet.Connections](http://github.com/chmorgan/packetnet-connections) is a supplement to Packet.NET that
-adds connection tracking and http following support.
+[![Build status](https://github.com/chmorgan/packetnet/workflows/master/badge.svg)](https://github.com/chmorgan/packetnet/actions)
 
 Packet.Net
 ==========
 
 Packet.Net is a high performance .Net assembly for dissecting and constructing
-network packets such as ethernet, ip, tcp, udp etc.
+network packets such as Ethernet, IP, TCP, UDP, etc.
 
 Originally created by Chris Morgan <chmorgan@gmail.com>
-
-https://github.com/chmorgan/packetnet
-
-Code is found in the PacketDotNet namespace.
 
 Performance
 ======

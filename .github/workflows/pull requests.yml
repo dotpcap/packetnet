@@ -25,10 +25,10 @@ jobs:
         run: sudo -E bash Scripts/install-libpcap.sh
 
       - name: Build
-        run: dotnet build PacketDotNet/PacketDotNet.csproj -c Release -f "net7.0"
+        run: dotnet build PacketDotNet/PacketDotNet.csproj -c Release -f "net9.0"
 
       - name: Test
-        run: dotnet test -c Release -f "net7.0"
+        run: dotnet test -c Release -f "net9.0"
 
   windows:
     runs-on: windows-latest

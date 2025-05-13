@@ -33,7 +33,7 @@
   </PropertyGroup>  
 
   <ItemGroup Condition="'$(Configuration)'=='Debug'">
-    <PackageReference Include="log4net" Version="3.0.4" />
+    <PackageReference Include="log4net" Version="3.1.0" />
   </ItemGroup>  
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">

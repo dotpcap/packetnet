@@ -7,6 +7,7 @@ file, You can obtain one at https://mozilla.org/MPL/2.0/.
 */
 
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using NUnit.Framework;
@@ -91,6 +92,9 @@ namespace Test.PacketType;
 
             var pNs = Packet.ParsePacket(nsRawCapture.GetLinkLayers(), nsRawCapture.Data);
             ClassicAssert.IsNotNull(pNs);
+
+            // Verify the packet is serailized correctly.
+            ClassicAssert.IsTrue(pNs.Bytes.SequenceEqual(nsRawCapture.Data));
 
             var neighborSolicitationPacket = pNs.Extract<NdpNeighborSolicitationPacket>();
             ClassicAssert.IsNotNull(neighborSolicitationPacket);

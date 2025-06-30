@@ -47,7 +47,8 @@ namespace PacketDotNet;
             Header = new ByteArraySegment(byteArraySegment.Bytes, byteArraySegment.Offset, 4);
 
             // parse the payload
-            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => ParseNextSegment(byteArraySegment,
+            var payload = new ByteArraySegment(byteArraySegment.Bytes, byteArraySegment.Offset + Header.Length, byteArraySegment.Length - Header.Length);
+            PayloadPacketOrData = new LazySlim<PacketOrByteArraySegment>(() => ParseNextSegment(payload,
                                                                                                 Type));
         }
 
@@ -146,7 +147,7 @@ namespace PacketDotNet;
                     payloadPacketOrData.Packet = new NdpRedirectMessagePacket(header);
                     break;
                 default:
-                    payloadPacketOrData.ByteArraySegment = new ByteArraySegment(header.Bytes, header.Offset + 4, header.Length - 4);
+                    payloadPacketOrData.ByteArraySegment = new ByteArraySegment(header.Bytes, header.Offset, header.Length);
                     break;
             }
 

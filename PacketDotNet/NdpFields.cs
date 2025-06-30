@@ -10,23 +10,23 @@ namespace PacketDotNet;
 
     public struct NdpFields
     {
-        public static int NeighborAdvertisementFlagsOffset = 4;
-        public static int NeighborAdvertisementOptionsOffset = 24;
-        public static int NeighborAdvertisementTargetAddressOffset = 8;
+        public static int NeighborAdvertisementFlagsOffset = 0;
+        public static int NeighborAdvertisementOptionsOffset = 20;
+        public static int NeighborAdvertisementTargetAddressOffset = 4;
 
-        public static int NeighborSolicitationOptionsAddressOffset = 24;
-        public static int NeighborSolicitationTargetAddressOffset = 8;
+        public static int NeighborSolicitationOptionsAddressOffset = 20;
+        public static int NeighborSolicitationTargetAddressOffset = 4;
 
-        public static int RouterAdvertisementCurrentHopLimitOffset = 4;
-        public static int RouterAdvertisementExtOffset = 5;
-        public static int RouterAdvertisementOptionsOffset = 16;
-        public static int RouterAdvertisementReachableTimeOffset = 8;
-        public static int RouterAdvertisementRetransmitTimerOffset = 12;
-        public static int RouterAdvertisementRouterLifetimeOffset = 6;
+        public static int RouterAdvertisementCurrentHopLimitOffset = 0;
+        public static int RouterAdvertisementExtOffset = 1;
+        public static int RouterAdvertisementOptionsOffset = 12;
+        public static int RouterAdvertisementReachableTimeOffset = 4;
+        public static int RouterAdvertisementRetransmitTimerOffset = 8;
+        public static int RouterAdvertisementRouterLifetimeOffset = 2;
 
-        public static int RouterSolicitationOptionsOffset = 8;
+        public static int RouterSolicitationOptionsOffset = 4;
 
-        public static int RedirectMessageTargetAddressOffset = 8;
-        public static int RedirectMessageDestinationAddressOffset = 24;
-        public static int RedirectMessageOptionsOffset = 40;
+        public static int RedirectMessageTargetAddressOffset = 4;
+        public static int RedirectMessageDestinationAddressOffset = 20;
+        public static int RedirectMessageOptionsOffset = 36;
     }

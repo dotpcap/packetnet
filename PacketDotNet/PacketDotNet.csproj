@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0;net472</TargetFrameworks>
+    <TargetFrameworks>net6.0;net8.0;net9.0;net472</TargetFrameworks>
     <Authors>Chris Morgan (chmorgan@gmail.com)</Authors>
     <LangVersion>latest</LangVersion>
     <SignAssembly>true</SignAssembly>

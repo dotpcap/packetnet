@@ -104,12 +104,12 @@ namespace PacketDotNet.Ieee80211;
             {
                 var length = PpiHeaderFields.PpiPacketHeaderLength;
 
-                foreach (var field in PpiFields)
+                foreach (var @field in PpiFields)
                 {
-                    length += PpiHeaderFields.FieldHeaderLength + field.Length;
+                    length += PpiHeaderFields.FieldHeaderLength + @field.Length;
                     if ((Flags & HeaderFlags.Alignment32Bit) == HeaderFlags.Alignment32Bit)
                     {
-                        length += GetDistanceTo32BitAlignment(field.Length);
+                        length += GetDistanceTo32BitAlignment(@field.Length);
                     }
                 }
 

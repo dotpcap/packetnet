@@ -31,13 +31,13 @@ namespace PacketDotNet;
             set
             {
                 // read the original value
-                var field = (ushort) FragmentOffsetReservedMore;
+                var @field = (ushort) FragmentOffsetReservedMore;
 
                 // mask in the new field
-                field = (ushort) ((field & 0x7) | ((ushort) value << 3) & 0xFFF8);
+                @field = (ushort) ((@field & 0x7) | ((ushort) value << 3) & 0xFFF8);
 
                 // write the updated value back
-                FragmentOffsetReservedMore = (short) field;
+                FragmentOffsetReservedMore = (short) @field;
             }
         }
 
@@ -50,13 +50,13 @@ namespace PacketDotNet;
             set
             {
                 // read the original value
-                var field = (ushort) FragmentOffsetReservedMore;
+                var @field = (ushort) FragmentOffsetReservedMore;
 
                 // mask in the new field
-                field = (ushort) ((field & 0xFFFE) | (value ? 1 : 0) & 0x1);
+                @field = (ushort) ((@field & 0xFFFE) | (value ? 1 : 0) & 0x1);
 
                 // write the updated value back
-                FragmentOffsetReservedMore = (short) field;
+                FragmentOffsetReservedMore = (short) @field;
             }
         }
 

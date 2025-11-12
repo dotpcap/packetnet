@@ -107,13 +107,13 @@ namespace PacketDotNet;
             set
             {
                 // read the original value
-                byte field = ReservedSFlagAndQRV;
+                byte @field = ReservedSFlagAndQRV;
 
                 // mask in the new field
-                field = (byte) ((field & 0xF8) | value & 0x07);
+                @field = (byte) ((@field & 0xF8) | value & 0x07);
 
                 // write the updated value back
-                ReservedSFlagAndQRV = field;
+                ReservedSFlagAndQRV = @field;
             }
         }
 
@@ -169,13 +169,13 @@ namespace PacketDotNet;
             set
             {
                 // read the original value
-                byte field = ReservedSFlagAndQRV;
+                byte @field = ReservedSFlagAndQRV;
 
                 // mask in the new field
-                field = (byte) ((field & 0xF7) | (value ? 1 : 0) & 0x08);
+                @field = (byte) ((@field & 0xF7) | (value ? 1 : 0) & 0x08);
 
                 // write the updated value back
-                ReservedSFlagAndQRV = field;
+                ReservedSFlagAndQRV = @field;
             }
         }
 

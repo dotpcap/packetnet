@@ -199,13 +199,13 @@ namespace PacketDotNet;
             set
             {
                 // read the original value
-                var field = (uint) VersionTrafficClassFlowLabel;
+                var @field = (uint) VersionTrafficClassFlowLabel;
 
                 // make the value in
-                field = (field & 0xFFF00000) | ((uint) value & 0x000FFFFF);
+                @field = (@field & 0xFFF00000) | ((uint) value & 0x000FFFFF);
 
                 // write the updated value back
-                VersionTrafficClassFlowLabel = (int) field;
+                VersionTrafficClassFlowLabel = (int) @field;
             }
         }
 
@@ -305,13 +305,13 @@ namespace PacketDotNet;
             set
             {
                 // read the original value
-                var field = (uint) VersionTrafficClassFlowLabel;
+                var @field = (uint) VersionTrafficClassFlowLabel;
 
                 // mask in the new field
-                field = (field & 0xF00FFFFF) | ((uint) value << 20) & 0x0FF00000;
+                @field = (@field & 0xF00FFFFF) | ((uint) value << 20) & 0x0FF00000;
 
                 // write the updated value back
-                VersionTrafficClassFlowLabel = (int) field;
+                VersionTrafficClassFlowLabel = (int) @field;
             }
         }
 
@@ -326,13 +326,13 @@ namespace PacketDotNet;
                 var v = (int) value;
 
                 // read the existing value
-                var field = (uint) VersionTrafficClassFlowLabel;
+                var @field = (uint) VersionTrafficClassFlowLabel;
 
                 // mask the new field into place
-                field = (uint) ((field & 0x0FFFFFFF) | ((v << 28) & 0xF0000000));
+                @field = (uint) ((@field & 0x0FFFFFFF) | ((v << 28) & 0xF0000000));
 
                 // write the updated value back
-                VersionTrafficClassFlowLabel = (int) field;
+                VersionTrafficClassFlowLabel = (int) @field;
             }
         }
 

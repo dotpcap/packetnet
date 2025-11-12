@@ -14,10 +14,7 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: |
-            8.0.x
-            9.0.x
-            10.0.x
+          dotnet-version: '10.0.x'
 
       - name: Install .NET dependencies
         run: dotnet restore
@@ -29,7 +26,7 @@ jobs:
         run: dotnet build PacketDotNet/PacketDotNet.csproj -c Release -f "net9.0"
 
       - name: Test
-        run: dotnet test -c Release -f "net9.0"
+        run: dotnet test -c Release -f "net10.0"
 
   windows:
     runs-on: windows-latest
@@ -40,10 +37,7 @@ jobs:
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: |
-            8.0.x
-            9.0.x
-            10.0.x
+          dotnet-version: '10.0.x'
 
       - uses: dorny/paths-filter@v3
         id: changes
